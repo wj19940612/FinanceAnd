@@ -45,9 +45,9 @@
     <color name="yellowScoreGrade">#ffC200</color>
     <color name="hint_white_color">#FDFDFD</color>
 
-    <color name="theory_red">#EF5053</color>
-    <color name="technology_violet">#8268E4</color>
-    <color name="fundamentals_yellow">#FFB51F</color>
-    <color name="comprehensive_blue">#53A5F2</color>
+    <color name="theoryRed">#EF5053</color>
+    <color name="technologyViolet">#8268E4</color>
+    <color name="fundamentalsYellow">#FFB51F</color>
+    <color name="comprehensiveBlue">#53A5F2</color>
 
 </resources>

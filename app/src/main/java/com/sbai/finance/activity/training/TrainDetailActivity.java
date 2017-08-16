@@ -127,24 +127,24 @@ public class TrainDetailActivity extends BaseActivity {
 	private void initBackGround(int type) {
 		switch (type) {
 			case TYPE_THEORY:
-				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.theory_red));
-				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.theory_red));
-				mStartTrain.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_train_theory));
+				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.theoryRed));
+				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.theoryRed));
+				mStartTrain.setBackgroundResource(R.drawable.bg_train_theory);
 				break;
 			case TYPE_TECHNOLOGY:
-				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.technology_violet));
-				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.technology_violet));
-				mStartTrain.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_train_technology));
+				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.technologyViolet));
+				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.technologyViolet));
+				mStartTrain.setBackgroundResource(R.drawable.bg_train_technology);
 				break;
 			case TYPE_FUNDAMENTALS:
-				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.fundamentals_yellow));
-				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.fundamentals_yellow));
-				mStartTrain.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_train_fundamentals));
+				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.fundamentalsYellow));
+				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.fundamentalsYellow));
+				mStartTrain.setBackgroundResource(R.drawable.bg_train_fundamentals);
 				break;
 			case TYPE_COMPREHENSIVE:
-				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.comprehensive_blue));
-				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.comprehensive_blue));
-				mStartTrain.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_train_comprehensive));
+				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.comprehensiveBlue));
+				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.comprehensiveBlue));
+				mStartTrain.setBackgroundResource(R.drawable.bg_train_comprehensive);
 				break;
 		}
 	}

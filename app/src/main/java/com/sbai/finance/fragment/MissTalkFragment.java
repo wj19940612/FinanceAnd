@@ -118,7 +118,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
     private PopupWindow mPopupWindow;
     private RefreshReceiver mRefreshReceiver;
     private MediaPlayerManager mMediaPlayerManager;
-    private int mPlayingPosition = -1;
+    private int mPlayingID = -1;
     private AnimationDrawable mAnimation;
 
     @Nullable
@@ -181,66 +181,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initHotQuestionList() {
-        mHotQuestionListAdapter = new HotQuestionListAdapter(getActivity(), TAG);
-        mHotQuestionListAdapter.setItemCallback(new HotQuestionListAdapter.ItemCallback() {
-            @Override
-            public void rewardOnClick(Question item) {
-                if (LocalUser.getUser().isLogin()) {
-                    RewardMissActivity.show(getActivity(), item.getId(), RewardInfo.TYPE_QUESTION);
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-            }
-
-            @Override
-            public void voiceOnClick(final Question item, final int position, final View view) {
-                view.setBackgroundResource(R.drawable.bg_play_voice);
-                mAnimation = (AnimationDrawable) view.getBackground();
-
-                if (mPlayingPosition == position) {
-                    mMediaPlayerManager.release();
-                    view.setBackgroundResource(R.drawable.ic_voice_4);
-                    mPlayingPosition = -1;
-                } else {
-                    mAnimation.start();
-                    if (!MissVoiceRecorder.isHeard(item.getId())) {
-                        Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-                            @Override
-                            protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-                                if (resp.isSuccess()) {
-                                    mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-                                        @Override
-                                        public void onCompletion(MediaPlayer mp) {
-                                            view.setBackgroundResource(R.drawable.ic_voice_4);
-                                        }
-                                    });
-
-                                    MissVoiceRecorder.markHeard(item.getId());
-                                    item.setListenCount(item.getListenCount() + 1);
-                                    mHotQuestionListAdapter.notifyDataSetChanged();
-                                    mPlayingPosition = position;
-                                }
-                            }
-                        }).fire();
-                    } else {
-                        if (mPlayingPosition == position) {
-                            mMediaPlayerManager.release();
-                            view.setBackgroundResource(R.drawable.ic_voice_4);
-                            mPlayingPosition = -1;
-                        } else {
-                            mAnimation.start();
-                            mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-                                @Override
-                                public void onCompletion(MediaPlayer mp) {
-                                    view.setBackgroundResource(R.drawable.ic_voice_4);
-                                }
-                            });
-                            mPlayingPosition = position;
-                        }
-                    }
-                }
-            }
-        });
+        mHotQuestionListAdapter = new HotQuestionListAdapter(getActivity());
         mHotListView.setFocusable(false);
         mHotListView.setAdapter(mHotQuestionListAdapter);
         mHotListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -253,11 +194,8 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 }
             }
         });
-    }
 
-    private void initLatestQuestionList() {
-        mLatestQuestionListAdapter = new LatestQuestionListAdapter(getActivity(), TAG);
-        mLatestQuestionListAdapter.setItemCallback(new LatestQuestionListAdapter.ItemCallback() {
+        mHotQuestionListAdapter.setItemCallback(new HotQuestionListAdapter.ItemCallback() {
             @Override
             public void rewardOnClick(Question item) {
                 if (LocalUser.getUser().isLogin()) {
@@ -268,17 +206,40 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             }
 
             @Override
-            public void voiceOnClick(final Question item, final int position, final View view) {
-                view.setBackgroundResource(R.drawable.bg_play_voice);
-                mAnimation = (AnimationDrawable) view.getBackground();
+            public void voiceOnClick(final Question item) {
+                //播放下一个之前把上一个播放位置的动画停了
+                if (mPlayingID != -1) {
+                    for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
+                        Question question = mHotQuestionListAdapter.getItem(i);
+                        if (question != null) {
+                            if (question.getId() == mPlayingID) {
+                                question.setPlaying(false);
+                                mHotQuestionListAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }
 
-                if (mPlayingPosition == position) {
-                    mMediaPlayerManager.release();
-                    view.setBackgroundResource(R.drawable.ic_voice_4);
-                    mPlayingPosition = -1;
-                } else {
-                    mAnimation.start();
-                    if (!MissVoiceRecorder.isHeard(item.getId())) {
+                if (mPlayingID != -1) {
+                    for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
+                        Question question = mLatestQuestionListAdapter.getItem(i);
+                        if (question != null) {
+                            if (question.getId() == mPlayingID) {
+                                question.setPlaying(false);
+                                mLatestQuestionListAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }
+
+                if (!MissVoiceRecorder.isHeard(item.getId())) {
+                    //没听过的
+                    if (mPlayingID == item.getId()) {
+                        mMediaPlayerManager.release();
+                        item.setPlaying(false);
+                        mHotQuestionListAdapter.notifyDataSetChanged();
+                        mPlayingID = -1;
+                    } else {
                         Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
                             @Override
                             protected void onRespSuccess(Resp<JsonPrimitive> resp) {
@@ -286,36 +247,46 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                                     mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
                                         @Override
                                         public void onCompletion(MediaPlayer mp) {
-                                            view.setBackgroundResource(R.drawable.ic_voice_4);
+                                            item.setPlaying(false);
+                                            mHotQuestionListAdapter.notifyDataSetChanged();
                                         }
                                     });
 
                                     MissVoiceRecorder.markHeard(item.getId());
+                                    item.setPlaying(true);
                                     item.setListenCount(item.getListenCount() + 1);
-                                    mLatestQuestionListAdapter.notifyDataSetChanged();
-                                    mPlayingPosition = position;
+                                    mHotQuestionListAdapter.notifyDataSetChanged();
+                                    mPlayingID = item.getId();
                                 }
                             }
                         }).fire();
+                    }
+                } else {
+                    //听过的
+                    if (mPlayingID == item.getId()) {
+                        mMediaPlayerManager.release();
+                        item.setPlaying(false);
+                        mHotQuestionListAdapter.notifyDataSetChanged();
+                        mPlayingID = -1;
                     } else {
-                        if (mPlayingPosition == position) {
-                            mMediaPlayerManager.release();
-                            view.setBackgroundResource(R.drawable.ic_voice_4);
-                            mPlayingPosition = -1;
-                        } else {
-                            mAnimation.start();
-                            mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-                                @Override
-                                public void onCompletion(MediaPlayer mp) {
-                                    view.setBackgroundResource(R.drawable.ic_voice_4);
-                                }
-                            });
-                            mPlayingPosition = position;
-                        }
+                        mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                item.setPlaying(false);
+                                mHotQuestionListAdapter.notifyDataSetChanged();
+                            }
+                        });
+                        item.setPlaying(true);
+                        mHotQuestionListAdapter.notifyDataSetChanged();
+                        mPlayingID = item.getId();
                     }
                 }
             }
         });
+    }
+
+    private void initLatestQuestionList() {
+        mLatestQuestionListAdapter = new LatestQuestionListAdapter(getActivity());
         mLatestListView.setFocusable(false);
         mLatestListView.setEmptyView(mEmpty);
         mLatestListView.setAdapter(mLatestQuestionListAdapter);
@@ -329,6 +300,95 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 }
             }
         });
+
+        mLatestQuestionListAdapter.setItemCallback(new LatestQuestionListAdapter.ItemCallback() {
+            @Override
+            public void rewardOnClick(Question item) {
+                if (LocalUser.getUser().isLogin()) {
+                    RewardMissActivity.show(getActivity(), item.getId(), RewardInfo.TYPE_QUESTION);
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
+
+            @Override
+            public void voiceOnClick(final Question item) {
+                //播放下一个之前把上一个播放位置的动画停了
+                if (mPlayingID != -1) {
+                    for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
+                        Question question = mHotQuestionListAdapter.getItem(i);
+                        if (question != null) {
+                            if (question.getId() == mPlayingID) {
+                                question.setPlaying(false);
+                                mHotQuestionListAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }
+
+                if (mPlayingID != -1) {
+                    for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
+                        Question question = mLatestQuestionListAdapter.getItem(i);
+                        if (question != null) {
+                            if (question.getId() == mPlayingID) {
+                                question.setPlaying(false);
+                                mLatestQuestionListAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    }
+                }
+
+                if (!MissVoiceRecorder.isHeard(item.getId())) {
+                    //没听过的
+                    if (mPlayingID == item.getId()) {
+                        mMediaPlayerManager.release();
+                        item.setPlaying(false);
+                        mLatestQuestionListAdapter.notifyDataSetChanged();
+                        mPlayingID = -1;
+                    } else {
+                        Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+                                if (resp.isSuccess()) {
+                                    mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+                                        @Override
+                                        public void onCompletion(MediaPlayer mp) {
+                                            item.setPlaying(false);
+                                            mLatestQuestionListAdapter.notifyDataSetChanged();
+                                        }
+                                    });
+
+                                    MissVoiceRecorder.markHeard(item.getId());
+                                    item.setPlaying(true);
+                                    item.setListenCount(item.getListenCount() + 1);
+                                    mLatestQuestionListAdapter.notifyDataSetChanged();
+                                    mPlayingID = item.getId();
+                                }
+                            }
+                        }).fire();
+                    }
+                } else {
+                    //听过的
+                    if (mPlayingID == item.getId()) {
+                        mMediaPlayerManager.release();
+                        item.setPlaying(false);
+                        mLatestQuestionListAdapter.notifyDataSetChanged();
+                        mPlayingID = -1;
+                    } else {
+                        mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp) {
+                                item.setPlaying(false);
+                                mLatestQuestionListAdapter.notifyDataSetChanged();
+                            }
+                        });
+                        item.setPlaying(true);
+                        mLatestQuestionListAdapter.notifyDataSetChanged();
+                        mPlayingID = item.getId();
+                    }
+                }
+            }
+        });
     }
 
     private void initSwipeRefreshLayout() {
@@ -339,6 +399,10 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 mCreateTime = null;
                 requestMissList();
                 requestLatestQuestionList();
+
+                //下拉刷新时关闭语音播放
+                mMediaPlayerManager.release();
+                mPlayingID = -1;
             }
         });
     }
@@ -358,7 +422,33 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
     public void onPause() {
         super.onPause();
         stopScheduleJob();
+        //锁屏或者在后台运行或者跳转页面时停止播放和动画
         mMediaPlayerManager.release();
+        if (mPlayingID != -1) {
+            for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
+                Question question = mHotQuestionListAdapter.getItem(i);
+                if (question != null) {
+                    if (question.getId() == mPlayingID) {
+                        question.setPlaying(false);
+                        mHotQuestionListAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        }
+
+        if (mPlayingID != -1) {
+            for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
+                Question question = mLatestQuestionListAdapter.getItem(i);
+                if (question != null) {
+                    if (question.getId() == mPlayingID) {
+                        question.setPlaying(false);
+                        mLatestQuestionListAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        }
+
+        mPlayingID = -1;
     }
 
     @Override
@@ -372,16 +462,37 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (!isVisibleToUser) {
+            //不可见时停止播放和动画
             if (mMediaPlayerManager != null) {
                 mMediaPlayerManager.release();
             }
-        }
-    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mMediaPlayerManager.release();
+            if (mPlayingID != -1) {
+                for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
+                    Question question = mHotQuestionListAdapter.getItem(i);
+                    if (question != null) {
+                        if (question.getId() == mPlayingID) {
+                            question.setPlaying(false);
+                            mHotQuestionListAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+
+            if (mPlayingID != -1) {
+                for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
+                    Question question = mLatestQuestionListAdapter.getItem(i);
+                    if (question != null) {
+                        if (question.getId() == mPlayingID) {
+                            question.setPlaying(false);
+                            mLatestQuestionListAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+
+            mPlayingID = -1;
+        }
     }
 
     private void requestNewMessageCount() {
@@ -604,11 +715,10 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
     static class HotQuestionListAdapter extends ArrayAdapter<Question> {
 
         private Context mContext;
-        private String TAG;
 
         public interface ItemCallback {
             void rewardOnClick(Question item);
-            void voiceOnClick(Question item, int position, View view);
+            void voiceOnClick(Question item);
         }
 
         private ItemCallback mItemCallback;
@@ -617,10 +727,9 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             mItemCallback = itemCallback;
         }
 
-        private HotQuestionListAdapter(@NonNull Context context, String TAG) {
+        private HotQuestionListAdapter(@NonNull Context context) {
             super(context, 0);
             this.mContext = context;
-            this.TAG = TAG;
         }
 
         @NonNull
@@ -635,7 +744,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindingData(mContext, getItem(position), position, mItemCallback, TAG);
+            viewHolder.bindingData(mContext, getItem(position), position, mItemCallback);
             return convertView;
         }
 
@@ -674,7 +783,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             }
 
             public void bindingData(final Context context, final Question item,
-                                    final int position, final ItemCallback itemCallback, final String TAG) {
+                                    final int position, final ItemCallback itemCallback) {
                 if (item == null) return;
 
                 Glide.with(context).load(item.getUserPortrait())
@@ -746,11 +855,22 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                     }
                 });
 
+                if (!item.isPlaying()) {
+                    mVoiceLevel.clearAnimation();
+                    mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+                } else {
+                    mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
+                    AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
+                    if (animation != null) {
+                        animation.start();
+                    }
+                }
+
                 mVoiceArea.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                       if (itemCallback != null) {
-                          itemCallback.voiceOnClick(item, position, mVoiceLevel);
+                          itemCallback.voiceOnClick(item);
                       }
                     }
                 });
@@ -761,11 +881,10 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
     static class LatestQuestionListAdapter extends ArrayAdapter<Question> {
 
         private Context mContext;
-        private String TAG;
 
         public interface ItemCallback {
             void rewardOnClick(Question item);
-            void voiceOnClick(Question item, int position, View view);
+            void voiceOnClick(Question item);
         }
 
         private ItemCallback mItemCallback;
@@ -774,10 +893,9 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             mItemCallback = itemCallback;
         }
 
-        private LatestQuestionListAdapter(@NonNull Context context, String TAG) {
+        private LatestQuestionListAdapter(@NonNull Context context) {
             super(context, 0);
             this.mContext = context;
-            this.TAG = TAG;
         }
 
         @NonNull
@@ -792,7 +910,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindingData(mContext, getItem(position), position, mItemCallback, TAG);
+            viewHolder.bindingData(mContext, getItem(position), position, mItemCallback);
             return convertView;
         }
 
@@ -832,7 +950,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             }
 
             public void bindingData(final Context context, final Question item,
-                                    final int position, final ItemCallback itemCallback, final String TAG) {
+                                    final int position, final ItemCallback itemCallback) {
                 if (item == null) return;
 
                 Glide.with(context).load(item.getUserPortrait())
@@ -906,12 +1024,23 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                     }
                 });
 
+                if (!item.isPlaying()) {
+                    mVoiceLevel.clearAnimation();
+                    mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+                } else {
+                    mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
+                    AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
+                    if (animation != null) {
+                        animation.start();
+                    }
+                }
+
                 mVoiceArea.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
                         if (itemCallback != null) {
-                            itemCallback.voiceOnClick(item, position, mVoiceLevel);
+                            itemCallback.voiceOnClick(item);
                         }
                     }
                 });
