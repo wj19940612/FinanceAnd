@@ -26,9 +26,9 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
+        android:text="6666666"
         android:textColor="#654DBD"
         android:textSize="16sp"
-        android:visibility="gone"
-        tools:text="hahaha"/>
+        android:visibility="visible"/>
 
 </RelativeLayout>

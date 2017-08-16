@@ -97,9 +97,29 @@ public class StudyRoomActivity extends BaseActivity {
     private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            requestTrainData();
+            requestMyStudyDataForHandPaper();
         }
     };
+
+    private void requestMyStudyDataForHandPaper() {
+        Client.getMyStudyInfo().setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<MyStudyInfo>, MyStudyInfo>() {
+                    @Override
+                    protected void onRespSuccessData(MyStudyInfo data) {
+                        updateMyStudyDataForHandPaper(data);
+                    }
+                }).fireFree();
+    }
+
+    private void updateMyStudyDataForHandPaper(MyStudyInfo data) {
+        if (data.isLearned()) {
+            requestTrainData();
+        } else {
+            requestHandInPaper();
+        }
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -270,7 +290,6 @@ public class StudyRoomActivity extends BaseActivity {
         mTotalScholarship.setText(getString(R.string.ingot_number_no_blank, data.getTotalReward()));
 
         if (!mIsUpdateTrain) return;
-
         if (data.isLearned()) {
             if (data.getAnswer() != null && data.getAnswer().size() > 0) {
                 if (mStudyOption != null && mStudyOption.getId().equalsIgnoreCase(data.getAnswer().get(0).getTopicId())) {

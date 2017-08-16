@@ -147,6 +147,7 @@ public class DiscoveryFragment extends BaseFragment {
 
         initTrainingListView();
         initDailyReportView();
+        requestTrainingList();
         requestDailyReportData();
     }
 

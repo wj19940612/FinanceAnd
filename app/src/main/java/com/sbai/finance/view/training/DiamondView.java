@@ -28,13 +28,14 @@ public class DiamondView extends View {
     private float mLineHeight;
     private float mLineWidth;
     private int mLineColor;
-    private boolean mShowShadow;
+    private boolean mSelected;
 
     private void initPaint() {
         setLayerType(LAYER_TYPE_SOFTWARE, null);
         mPaint = new Paint();
         mPaint.setColor(mColor);
         mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setDither(true);
         mPaint.setAntiAlias(true);
         mPaint.setStrokeWidth(2f);
     }
@@ -71,16 +72,29 @@ public class DiamondView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.translate(mWidth / 2, mHeight / 2);
+        if (mSelected) {
+            Paint paint = new Paint();
+            paint.setColor(Color.WHITE);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setDither(true);
+            paint.setAntiAlias(true);
+            paint.setStrokeWidth(4f);
+            draw(canvas, paint,mHeight-2,mWidth-2);
+        }
+        draw(canvas, mPaint,mHeight,mWidth);
+    }
+
+    private void draw(Canvas canvas, Paint paint,int height,int width) {
+        float h = (float) ((height - width / Math.sqrt(3)) / 2);
         Path path = new Path();
-        float h = (float) ((mHeight - mWidth / Math.sqrt(3)) / 2);
-        path.moveTo(0, -mHeight / 2);
-        path.lineTo(mWidth / 2, -h);
-        path.lineTo(mWidth / 2, h);
-        path.lineTo(0, mHeight / 2);
-        path.lineTo(-mWidth / 2, h);
-        path.lineTo(-mWidth / 2, -h);
+        path.moveTo(0, -height / 2);
+        path.lineTo(width / 2, -h);
+        path.lineTo(width / 2, h);
+        path.lineTo(0, height / 2);
+        path.lineTo(-width / 2, h);
+        path.lineTo(-width / 2, -h);
         path.close();
-        canvas.drawPath(path, mPaint);
+        canvas.drawPath(path, paint);
     }
 
 
@@ -89,10 +103,12 @@ public class DiamondView extends View {
         invalidate();
     }
 
-    public void startErrorAnim() {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(this, "rotation", 0f, -20f, 0f);
-        animator.setInterpolator(new BounceInterpolator());
-        animator.setDuration(1000);
-        animator.start();
+    public void setSelected(boolean selected) {
+        mSelected = selected;
+        invalidate();
+    }
+
+    public boolean getSelected() {
+        return mSelected;
     }
 }
