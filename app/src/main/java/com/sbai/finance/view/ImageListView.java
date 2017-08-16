@@ -1,8 +1,11 @@
 package com.sbai.finance.view;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -71,16 +74,21 @@ public class ImageListView extends RelativeLayout {
     private ImageView createImageView(int index) {
         ImageView image = new ImageView(getContext());
         image.setScaleType(ImageView.ScaleType.FIT_XY);
-        LayoutParams params = new LayoutParams((int) Display.dp2Px(32, getResources()), (int) Display.dp2Px(32, getResources()));
+        LayoutParams params = new LayoutParams((int) Display.dp2Px(34, getResources()), (int) Display.dp2Px(34, getResources()));
+        int padding = (int) Display.dp2Px(1,getResources());
+        image.setPadding(padding,padding,padding,padding);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         switch (index) {
             case 1:
+                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar_image));
                 params.setMargins(0, 0, mMarginRights[0], 0);
                 break;
             case 2:
+                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar_image));
                 params.setMargins(0, 0, mMarginRights[1], 0);
                 break;
             case 3:
+                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar_image));
                 params.setMargins(0, 0, mMarginRights[2], 0);
                 break;
         }

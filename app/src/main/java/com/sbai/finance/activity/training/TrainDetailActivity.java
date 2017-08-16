@@ -24,6 +24,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.CompletePeople;
 import com.sbai.finance.model.training.Experience;
+import com.sbai.finance.model.training.Train;
 import com.sbai.finance.model.training.TrainDetail;
 import com.sbai.finance.model.training.TrainPraise;
 import com.sbai.finance.net.Callback2D;
@@ -49,7 +50,6 @@ import static com.sbai.finance.net.Client.SHARE_URL_TRAIN_EXPERIENCE;
 
 
 public class TrainDetailActivity extends BaseActivity {
-
 	private static final int TYPE_THEORY = 1;
 	private static final int TYPE_TECHNOLOGY = 2;
 	private static final int TYPE_FUNDAMENTALS = 3;
@@ -383,7 +383,7 @@ public class TrainDetailActivity extends BaseActivity {
 				.setTitle(getString(R.string.share_title))
 				.setShareTitle(getString(R.string.train_share_share_title, mTrainDetail.getTrain().getTitle()))
 				.setShareDescription(getString(R.string.train_share_description))
-				.setShareUrl(SHARE_URL_TRAIN_EXPERIENCE)
+				.setShareUrl(String.format(SHARE_URL_TRAIN_EXPERIENCE, mTrainId))
 				.hasFeedback(true)
 				.setListener(new ShareDialog.OnShareDialogCallback() {
 					@Override

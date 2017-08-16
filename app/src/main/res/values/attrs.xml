@@ -204,6 +204,15 @@
         <attr name="hasSplitLine" format="boolean"/>
         <attr name="isUseDefaultProgressDrawable" format="boolean"/>
     </declare-styleable>
+    <!--菱形的背景色-->
+    <declare-styleable name="DiamondView">
+        <attr name="backgroundColor" format="color|reference"/>
+        <attr name="dashWidth" format="dimension|reference"/>
+        <attr name="lineHeight" format="dimension|reference"/>
+        <attr name="lineWidth" format="dimension|reference"/>
+        <attr name="lineColor" format="color|reference"/>
+        <attr name="showSplit" format="boolean"/>
+    </declare-styleable>
 
     <declare-styleable name="CountDownView">
         <attr name="minuteStartTimeTextSize" format="dimension|reference"/>
@@ -217,5 +226,4 @@
         <attr name="showMillisecond" format="boolean"/>
         <attr name="timeViewMarginRight" format="dimension|reference"/>
     </declare-styleable>
-
 </resources>

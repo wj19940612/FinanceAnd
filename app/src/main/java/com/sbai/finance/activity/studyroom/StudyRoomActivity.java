@@ -242,7 +242,7 @@ public class StudyRoomActivity extends BaseActivity {
 
         mTrainId = data.getId();
         //update explain info
-        mTestTitle.setText(data.getTitle());
+        mTestTitle.setText(data.getDigest());
         mAnswerDetail.setText(data.getAnalysis());
         for (StudyOption.ContentBean contentBean : data.getContent()) {
             if (contentBean.isRight()) {

@@ -26,7 +26,7 @@ public class Client {
     //l乐米日报分享地址
     public static final String SHARE_URL_REPORT = API.getHost() + "/admin/lm/arcelor.html?id=%s";
     //乐米训练心得分享地址
-    public static final String SHARE_URL_TRAIN_EXPERIENCE= API.getHost() + "admin/lm/train.html?trainId=2";
+    public static final String SHARE_URL_TRAIN_EXPERIENCE = API.getHost() + "admin/lm/train.html?trainId=%d";
 
     /**
      * 获取期货品种

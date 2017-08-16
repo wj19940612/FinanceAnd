@@ -427,6 +427,12 @@
         <activity
             android:name=".activity.training.HowPlayHorizontalActivity"
             android:screenOrientation="landscape"/>
+        <activity
+            android:name=".activity.training.TrainCountDownActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.training.KlineTrainActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activity.training.AnnalsCreateActivity">
         </activity>
     </application>

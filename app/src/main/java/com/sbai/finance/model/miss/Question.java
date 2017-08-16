@@ -31,7 +31,6 @@ public class Question implements Serializable {
 	 * appointCustomId : 6
 	 * replyCount : 6
 	 */
-	private boolean isPlaying;
 
 	private String answerContext;
 	private int answerCustomId;
@@ -55,6 +54,7 @@ public class Question implements Serializable {
 	private int appointCustomId;
 	private int replyCount;
 	private int soundTime;
+	private boolean isPlaying;
 
 	public boolean isPlaying() {
 		return isPlaying;
@@ -264,6 +264,8 @@ public class Question implements Serializable {
 				", userPortrait='" + userPortrait + '\'' +
 				", appointCustomId=" + appointCustomId +
 				", replyCount=" + replyCount +
+				", soundTime=" + soundTime +
+				", isPlaying=" + isPlaying +
 				'}';
 	}
 }

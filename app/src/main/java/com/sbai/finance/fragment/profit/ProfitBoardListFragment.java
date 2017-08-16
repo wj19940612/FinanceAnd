@@ -256,8 +256,8 @@ public class ProfitBoardListFragment extends BaseFragment implements
                     }
                 }
                 if (dataBean != null) {
-                    if (mType.equalsIgnoreCase(LeaderBoardRank.INGOT)
-                            || mType.equalsIgnoreCase(LeaderBoardRank.PROFIT)) {
+                    if (data.getType().equalsIgnoreCase(LeaderBoardRank.INGOT)
+                            || data.getType().equalsIgnoreCase(LeaderBoardRank.PROFIT)) {
                         if (dataBean.getWorshipCount() > 0) {
                             mIngot.setText(StrUtil.mergeTextWithColor(getString(R.string.ingot_number_no_blank, Math.round(data.getCurr().getScore())),
                                     " +" + getString(R.string.ingot_number_no_blank, dataBean.getWorshipCount())
@@ -265,7 +265,7 @@ public class ProfitBoardListFragment extends BaseFragment implements
                         } else {
                             mIngot.setText(getString(R.string.ingot_number_no_blank, Math.round(data.getCurr().getScore())));
                         }
-                    } else if (mType.equalsIgnoreCase(LeaderBoardRank.SAVANT)) {
+                    } else if (data.getType().equalsIgnoreCase(LeaderBoardRank.SAVANT)) {
                         if (dataBean.getWorshipCount() > 0) {
                             mIngot.setText(StrUtil.mergeTextWithColor(getString(R.string.integrate_number_no_blank, String.valueOf(data.getCurr().getScore())),
                                     " +" + getString(R.string.ingot_number_no_blank, dataBean.getWorshipCount())
