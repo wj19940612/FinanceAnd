@@ -1,9 +1,15 @@
 package com.sbai.finance.view.training;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -65,10 +71,6 @@ public class DiamondGroupView extends RelativeLayout {
         }
     }
 
-    public void startAnim() {
-        mKlineView.startErrorAnim();
-    }
-
     @OnClick({R.id.klineImg, R.id.describe})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -78,4 +80,34 @@ public class DiamondGroupView extends RelativeLayout {
                 break;
         }
     }
+
+    public void startErrorAnim() {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(this, "rotation", 0f, -20f, 0f);
+        animator.setInterpolator(new BounceInterpolator());
+        animator.setDuration(1000);
+        animator.start();
+    }
+
+    public void startDisappearAnim() {
+        ObjectAnimator rotation = ObjectAnimator.ofFloat(this, "rotation", 0f, 360f);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(this, "scaleX", 1f, 0.1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(this, "scaleY", 1f, 0.1f);
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(this, "alpha", 1f, 0f);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(rotation).with(scaleX).with(scaleY).with(alpha);
+        animSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                setVisibility(INVISIBLE);
+            }
+        });
+        animSet.setInterpolator(new AccelerateInterpolator());
+        animSet.setDuration(2000);
+        animSet.start();
+    }
+    public void setSelected(boolean selected){
+        mKlineView.setSelected(selected);
+    }
+
 }

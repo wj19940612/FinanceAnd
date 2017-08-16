@@ -23,6 +23,7 @@ import com.igexin.sdk.message.SetTagCmdMessage;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.FutureBattleActivity;
+import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.web.EventDetailActivity;
 import com.sbai.finance.model.push.PushMessageModel;
@@ -131,9 +132,9 @@ public class PushIntentService extends GTIntentService {
     @NonNull
     private PendingIntent setPendingIntent(Context context, PushMessageModel data) {
         Intent intent = null;
-        if (data.isEventDetail()) {
-            intent = new Intent(context, EventDetailActivity.class);
-            intent.putExtra(Launcher.EX_PAYLOAD, data.getDataId());
+        if (data.isDailyReportDetail()) {
+            intent = new Intent(context, DailyReportDetailActivity.class);
+            intent.putExtra(DailyReportDetailActivity.EX_ID, data.getDataId());
         } else if (data.isBattleMatchSuccess()) {
             if (!Preference.get().isForeground() && data.getData() != null) {
                 intent = new Intent(context, FutureBattleActivity.class);

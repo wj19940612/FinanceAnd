@@ -88,11 +88,21 @@ public class KlineTrainView extends RelativeLayout {
         params.setMargins((int) Display.dp2Px(12, getResources()), 0, 0, 0);
         views[5].setLayoutParams(params);
         addView(views[5], params);
+
+        views[0].setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                views[0].setSelected(true);
+            }
+        });
         views[5].setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                views[1].startAnim();
-                views[0].startAnim();
+                views[1].startErrorAnim();
+                views[0].startErrorAnim();
+                views[2].startErrorAnim();
+                views[3].startErrorAnim();
+                views[4].startErrorAnim();
             }
         });
 

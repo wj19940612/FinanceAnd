@@ -23,6 +23,15 @@ public class DailyReport {
     private long createTime;
     private int format;
     private String content;
+    private String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public boolean isHtml() {
         return format == 1;
