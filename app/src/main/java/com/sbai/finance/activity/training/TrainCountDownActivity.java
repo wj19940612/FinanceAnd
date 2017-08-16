@@ -20,7 +20,7 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.training.Train;
+import com.sbai.finance.model.training.Training;
 import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
@@ -80,15 +80,15 @@ public class TrainCountDownActivity extends BaseActivity {
         int drawable = 0;
         int color = 0;
         switch (mType) {
-            case Train.TRAIN_TYPE_THEORY:
+            case Training.TYPE_THEORY:
                 drawable = R.drawable.ic_count_down_theory;
                 color = Color.parseColor("#e44b58");
                 break;
-            case Train.TRAIN_TYPE_TECHNOLOGY:
+            case Training.TYPE_TECHNOLOGY:
                 drawable = R.drawable.ic_count_down_technology;
                 color = Color.parseColor("#6843c4");
                 break;
-            case Train.TRAIN_TYPE_FUNDAMENTAL:
+            case Training.TYPE_FUNDAMENTAL:
                 drawable = R.drawable.ic_count_down_fundamentals;
                 color = Color.parseColor("#f9b727");
                 break;

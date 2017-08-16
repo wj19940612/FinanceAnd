@@ -22,10 +22,11 @@ import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.training.CompletePeople;
 import com.sbai.finance.model.training.Experience;
-import com.sbai.finance.model.training.TrainDetail;
 import com.sbai.finance.model.training.TrainPraise;
+import com.sbai.finance.model.training.TrainedUserRecord;
+import com.sbai.finance.model.training.Training;
+import com.sbai.finance.model.training.TrainingDetail;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -49,12 +50,6 @@ import static com.sbai.finance.net.Client.SHARE_URL_TRAIN_EXPERIENCE;
 
 
 public class TrainDetailActivity extends BaseActivity {
-
-    private static final int TYPE_THEORY = 1;
-    private static final int TYPE_TECHNOLOGY = 2;
-    private static final int TYPE_FUNDAMENTALS = 3;
-    private static final int TYPE_COMPREHENSIVE = 4;
-
     @BindView(R.id.back)
     ImageView mBack;
     @BindView(R.id.titleName)
@@ -94,7 +89,7 @@ public class TrainDetailActivity extends BaseActivity {
     private int mType;
     private int mPage = 0;
     private int mPageSize = 3;
-    private TrainDetail mTrainDetail;
+    private TrainingDetail mTrainDetail;
     private List<String> mCompletePeopleList;
     private List<Experience> mHotExperienceList;
     private HotExperienceListAdapter mHotExperienceListAdapter;
@@ -128,22 +123,22 @@ public class TrainDetailActivity extends BaseActivity {
 
     private void initBackGround(int type) {
         switch (type) {
-            case TYPE_THEORY:
+            case Training.TYPE_THEORY:
                 mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
                 mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
                 mStartTrain.setBackgroundResource(R.drawable.bg_train_theory);
                 break;
-            case TYPE_TECHNOLOGY:
+            case Training.TYPE_TECHNOLOGY:
                 mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.violetTechnologyTraining));
                 mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.violetTechnologyTraining));
                 mStartTrain.setBackgroundResource(R.drawable.bg_train_technology);
                 break;
-            case TYPE_FUNDAMENTALS:
+            case Training.TYPE_FUNDAMENTAL:
                 mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.yellowFundamentalTraining));
                 mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.yellowFundamentalTraining));
                 mStartTrain.setBackgroundResource(R.drawable.bg_train_fundamentals);
                 break;
-            case TYPE_COMPREHENSIVE:
+            case Training.TYPE_COMPREHENSIVE:
                 mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blueComprehensiveTraining));
                 mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blueComprehensiveTraining));
                 mStartTrain.setBackgroundResource(R.drawable.bg_train_comprehensive);
@@ -152,24 +147,24 @@ public class TrainDetailActivity extends BaseActivity {
     }
 
     private void requestTrainDetail() {
-        Client.getTrainDetail(mTrainId).setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<TrainDetail>, TrainDetail>() {
+        Client.getTrainingDetail(mTrainId).setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<TrainingDetail>, TrainingDetail>() {
                     @Override
-                    protected void onRespSuccessData(TrainDetail trainDetail) {
-                        mTrainDetail = trainDetail;
-                        updateTrainDetail(trainDetail);
+                    protected void onRespSuccessData(TrainingDetail data) {
+                        mTrainDetail = data;
+                        updateTrainDetail(mTrainDetail);
                     }
                 }).fire();
     }
 
     private void requestFinishPeopleList() {
-        Client.getFinishPeopleList(mPage, mPageSize, mTrainId).setTag(TAG)
+        Client.getTrainedUserRecords(mPage, mPageSize, mTrainId).setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<CompletePeople>>, List<CompletePeople>>() {
+                .setCallback(new Callback2D<Resp<List<TrainedUserRecord>>, List<TrainedUserRecord>>() {
                     @Override
-                    protected void onRespSuccessData(List<CompletePeople> completePeopleList) {
-                        for (CompletePeople completePeople : completePeopleList) {
-                            mCompletePeopleList.add(completePeople.getUser().getUserPortrait());
+                    protected void onRespSuccessData(List<TrainedUserRecord> data) {
+                        for (TrainedUserRecord userRecord : data) {
+                            mCompletePeopleList.add(userRecord.getUser().getUserPortrait());
                         }
                         mImageListView.setImages(mCompletePeopleList, R.drawable.ic_board_head_more_grey);
                     }
@@ -194,7 +189,7 @@ public class TrainDetailActivity extends BaseActivity {
         mHotExperienceListAdapter.addAll(experienceList);
     }
 
-    private void updateTrainDetail(TrainDetail trainDetail) {
+    private void updateTrainDetail(TrainingDetail trainDetail) {
         if (trainDetail.getTrain() != null) {
             mTitle.setText(trainDetail.getTrain().getTitle());
             mIntroduce.setText(trainDetail.getTrain().getRemark());

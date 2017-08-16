@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.sbai.finance.model.training.Train;
+import com.sbai.finance.model.training.Training;
 import com.sbai.finance.utils.Display;
 
 import java.util.List;
@@ -16,10 +16,10 @@ import java.util.List;
  */
 
 public class KlineTrainView extends RelativeLayout {
-    private List<Train> mTrainData;
+    private List<Training> mTrainData;
     private DiamondGroupView[] views;
 
-    public void setTrainData(List<Train> data) {
+    public void setTrainData(List<Training> data) {
         mTrainData = data;
         refresh();
     }
