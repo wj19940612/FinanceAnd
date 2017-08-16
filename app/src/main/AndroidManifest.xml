@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.sbai.finance"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.sbai.finance">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -428,9 +428,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/PageBottomEnter"/>
         <activity
-            android:name=".activity.training.HowPlayHorizontalActivity"
-            android:screenOrientation="landscape"/>
-        <activity
             android:name=".activity.training.TrainCountDownActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -439,6 +436,9 @@
         <activity
             android:name=".activity.training.AnnalsCreateActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.training.HowPlayActivity"
+            android:theme="@style/DialogTheme.NoTitle"/>
     </application>
 
 </manifest>

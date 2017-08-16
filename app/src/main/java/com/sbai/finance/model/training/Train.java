@@ -4,6 +4,10 @@ package com.sbai.finance.model.training;
  * 训练
  */
 public class Train {
+    public static final int TRAIN_TYPE_KLINE = 0;
+    public static final int TRAIN_TYPE_AVERAGE_LINE = 1;
+    public static final int TRAIN_TYPE_IDENTIFICATION = 2;
+    public static final int TRAIN_TYPE_ANNUAL_REPORT = 3;
 
     public static final int TRAIN_TYPE_THEORY = 1;
     public static final int TRAIN_TYPE_TECHNOLOGY = 2;

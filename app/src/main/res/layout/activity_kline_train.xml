@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#694fc8"
                 android:orientation="vertical">
-    <com.sbai.finance.view.TitleBar
+
+    <com.sbai.finance.view.training.TrainHeaderView
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:backIcon="@drawable/ic_close"
-        app:backFeature="true"/>
+        android:layout_alignParentTop="true"/>
 
     <com.sbai.finance.view.training.KlineTrainView
         android:layout_width="wrap_content"
         android:layout_height="320dp"
         android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        tools:text="6/6"/>
 </RelativeLayout>
