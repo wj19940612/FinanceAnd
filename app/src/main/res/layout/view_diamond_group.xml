@@ -5,7 +5,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-    <com.sbai.finance.view.train.DiamondView
+    <com.sbai.finance.view.training.DiamondView
         android:id="@+id/klineView"
         android:layout_width="106dp"
         android:layout_height="122dp"

@@ -51,7 +51,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/quick_trade_offer_by_company"
             android:textColor="@color/unluckyText"
-            android:textSize="@dimen/sp_12"/>
+            android:textSize="12sp"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/login"

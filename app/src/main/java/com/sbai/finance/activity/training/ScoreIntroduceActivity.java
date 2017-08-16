@@ -15,7 +15,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.leveltest.ScoreView;
-import com.sbai.finance.view.train.ScoreProgressView;
+import com.sbai.finance.view.training.ScoreProgressView;
 
 import java.util.ArrayList;
 

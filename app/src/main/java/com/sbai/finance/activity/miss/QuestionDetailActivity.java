@@ -165,12 +165,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				.setShareUrl(String.format(SHARE_URL_QUESTION, mQuestionId))
 				.hasFeedback(false)
 				.setListener(new ShareDialog.OnShareDialogCallback() {
-					@Override
-					public void onShareSuccess(ShareDialog.SHARE_PLATFORM platform) {
-						Client.share().setTag(TAG).fire();
-					}
+                    @Override
+                    public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
+                        Client.share().setTag(TAG).fire();
+                    }
 
-					@Override
+                    @Override
 					public void onFeedbackClick(View view) {
 					}
 				}).show();

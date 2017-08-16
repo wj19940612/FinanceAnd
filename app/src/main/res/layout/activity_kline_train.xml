@@ -12,7 +12,7 @@
         app:backIcon="@drawable/ic_close"
         app:backFeature="true"/>
 
-    <com.sbai.finance.view.train.KlineTrainView
+    <com.sbai.finance.view.training.KlineTrainView
         android:layout_width="wrap_content"
         android:layout_height="320dp"
         android:layout_centerInParent="true"/>

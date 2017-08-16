@@ -26,7 +26,7 @@ import com.umeng.socialize.media.UMWeb;
  * .setShareUrl(String.format(Client.SHARE_URL_QUESTION, 1234))
  * .setListener(new ShareDialog.OnShareDialogCallback() {
  *
- * @Override public void onShareSuccess(ShareDialog.SHARE_PLATFORM platform) {
+ * @Override public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
  * }
  * @Override public void onFeedbackClick(View view) {
  * }
@@ -35,7 +35,7 @@ import com.umeng.socialize.media.UMWeb;
 public class ShareDialog {
 
     public interface OnShareDialogCallback {
-        void onShareSuccess(SHARE_PLATFORM platform);
+        void onSharePlatformClick(SHARE_PLATFORM platform);
 
         void onFeedbackClick(View view);
     }
@@ -55,7 +55,6 @@ public class ShareDialog {
     private String mShareDescription;
     private String mShareUrl;
     private boolean mHasFeedback;
-    private SHARE_PLATFORM mPlatform;
 
     private OnShareDialogCallback mListener;
 
@@ -67,8 +66,8 @@ public class ShareDialog {
                 case R.id.weChatFriend:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.WEIXIN)) {
                         mShareUrl += "&userFrom=friend";
-                        mPlatform = SHARE_PLATFORM.WECHAT_FRIEND;
                         shareToPlatform(SHARE_MEDIA.WEIXIN);
+                        onSharePlatformClicked(SHARE_PLATFORM.WECHAT_FRIEND);
                     } else {
                         ToastUtil.show(R.string.you_not_install_weixin);
                     }
@@ -76,8 +75,8 @@ public class ShareDialog {
                 case R.id.weChatFriendCircle:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.WEIXIN_CIRCLE)) {
                         mShareUrl += "&userFrom=friend";
-                        mPlatform = SHARE_PLATFORM.WECHAT_CIRCLE;
                         shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
+                        onSharePlatformClicked(SHARE_PLATFORM.WECHAT_CIRCLE);
                     } else {
                         ToastUtil.show(R.string.you_not_install_weixin);
                     }
@@ -85,8 +84,8 @@ public class ShareDialog {
                 case R.id.sinaWeibo:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.SINA)) {
                         mShareUrl += "&userFrom=weibo";
-                        mPlatform = SHARE_PLATFORM.SINA_WEIBO;
                         shareToPlatform(SHARE_MEDIA.SINA);
+                        onSharePlatformClicked(SHARE_PLATFORM.SINA_WEIBO);
                     } else {
                         ToastUtil.show(R.string.you_not_install_weibo);
                     }
@@ -124,6 +123,12 @@ public class ShareDialog {
         }
     }
 
+    private void onSharePlatformClicked(SHARE_PLATFORM platform) {
+        if (mListener != null) {
+            mListener.onSharePlatformClick(platform);
+        }
+    }
+
     private UMShareListener mUMShareListener = new UMShareListener() {
         @Override
         public void onStart(SHARE_MEDIA share_media) {
@@ -132,9 +137,6 @@ public class ShareDialog {
         @Override
         public void onResult(SHARE_MEDIA share_media) {
             ToastUtil.show(R.string.share_succeed);
-            if (mListener != null) {
-                mListener.onShareSuccess(mPlatform);
-            }
         }
 
         @Override

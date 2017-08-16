@@ -1,4 +1,4 @@
-package com.sbai.finance.view.train;
+package com.sbai.finance.view.training;
 
 import android.content.Context;
 import android.content.res.TypedArray;
