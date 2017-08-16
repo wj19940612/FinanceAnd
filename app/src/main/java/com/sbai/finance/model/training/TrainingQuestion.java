@@ -1,4 +1,4 @@
-package com.sbai.finance.model.leveltest;
+package com.sbai.finance.model.training;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * 水平测试题目model
  */
 
-public class ExamQuestionsModel implements Parcelable {
+public class TrainingQuestion implements Parcelable {
 
     /**
      * analysis : 打算大苏打打算大苏打
@@ -38,7 +38,6 @@ public class ExamQuestionsModel implements Parcelable {
     private int type;
     private String createTime;
     private ArrayList<ContentBean> content;
-
 
     public String getAnalysis() {
         return analysis;
@@ -248,10 +247,10 @@ public class ExamQuestionsModel implements Parcelable {
         dest.writeTypedList(this.content);
     }
 
-    public ExamQuestionsModel() {
+    public TrainingQuestion() {
     }
 
-    protected ExamQuestionsModel(Parcel in) {
+    protected TrainingQuestion(Parcel in) {
         this.analysis = in.readString();
         this.digest = in.readString();
         this.id = in.readString();
@@ -265,15 +264,15 @@ public class ExamQuestionsModel implements Parcelable {
         this.content = in.createTypedArrayList(ContentBean.CREATOR);
     }
 
-    public static final Creator<ExamQuestionsModel> CREATOR = new Creator<ExamQuestionsModel>() {
+    public static final Creator<TrainingQuestion> CREATOR = new Creator<TrainingQuestion>() {
         @Override
-        public ExamQuestionsModel createFromParcel(Parcel source) {
-            return new ExamQuestionsModel(source);
+        public TrainingQuestion createFromParcel(Parcel source) {
+            return new TrainingQuestion(source);
         }
 
         @Override
-        public ExamQuestionsModel[] newArray(int size) {
-            return new ExamQuestionsModel[size];
+        public TrainingQuestion[] newArray(int size) {
+            return new TrainingQuestion[size];
         }
     };
 

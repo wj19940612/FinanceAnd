@@ -8,10 +8,10 @@ import android.os.Parcelable;
  */
 public class Training implements Parcelable {
 
-    public static final int TRAIN_TYPE_KLINE = 0;
-    public static final int TRAIN_TYPE_AVERAGE_LINE = 1;
-    public static final int TRAIN_TYPE_IDENTIFICATION = 2;
-    public static final int TRAIN_TYPE_ANNUAL_REPORT = 3;
+    public static final int PLAY_TYPE_REMOVE = 1;
+    public static final int PLAY_TYPE_MATCH_STAR = 2;
+    public static final int PLAY_TYPE_JUDGEMENT = 3;
+    public static final int PLAY_TYPE_SORT = 4;
 
     public static final int TYPE_THEORY = 1;
     public static final int TYPE_TECHNOLOGY = 2;

@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.training;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -14,10 +13,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Training;
-import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +27,6 @@ import butterknife.OnClick;
  */
 
 public class HowPlayActivity extends BaseActivity {
-    public static final String TRAIN_TYPE = "type";
 
     @BindView(R.id.close)
     ImageView mClose;
@@ -48,27 +46,25 @@ public class HowPlayActivity extends BaseActivity {
     TextView mConfirm1;
     @BindView(R.id.verticalView)
     CardView mVerticalView;
-    private int mTrainType;
-    private boolean mIsHorizontal;
 
-    public static void show(Activity activity, int trainType) {
-        Launcher.with(activity, HowPlayActivity.class)
-                .putExtra(TRAIN_TYPE, trainType)
-                .execute();
-    }
+    private Training mTraining;
+    private boolean mIsHorizontal;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_how_play);
         ButterKnife.bind(this);
+
         initData(getIntent());
+
         initView();
+
         requestTrainGuide();
     }
 
     private void initData(Intent intent) {
-        mTrainType = intent.getIntExtra(TRAIN_TYPE, -1);
+        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
     }
 
     private void initView() {
@@ -76,20 +72,20 @@ public class HowPlayActivity extends BaseActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         mClose.setVisibility(View.GONE);
         int drawable = 0;
-        switch (mTrainType) {
-            case Training.TRAIN_TYPE_KLINE:
+        switch (mTraining.getPlayType()) {
+            case Training.PLAY_TYPE_REMOVE:
                 mIsHorizontal = false;
                 drawable = R.drawable.ic_kline_train;
                 break;
-            case Training.TRAIN_TYPE_ANNUAL_REPORT:
+            case Training.PLAY_TYPE_SORT:
                 mIsHorizontal = false;
                 drawable = R.drawable.ic_annual_report_train;
                 break;
-            case Training.TRAIN_TYPE_IDENTIFICATION:
+            case Training.PLAY_TYPE_MATCH_STAR:
                 mIsHorizontal = false;
                 drawable = R.drawable.ic_identification_train;
                 break;
-            case Training.TRAIN_TYPE_AVERAGE_LINE:
+            case Training.PLAY_TYPE_JUDGEMENT:
                 drawable = R.drawable.ic_average_line_train;
                 mIsHorizontal = true;
                 break;
@@ -122,6 +118,7 @@ public class HowPlayActivity extends BaseActivity {
     }
 
     private void requestTrainGuide() {
+
     }
 
     @OnClick({R.id.close, R.id.confirm, R.id.confirm1})

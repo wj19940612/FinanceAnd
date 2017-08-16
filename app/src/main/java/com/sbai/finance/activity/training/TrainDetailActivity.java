@@ -35,7 +35,6 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.ImageListView;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.dialog.ShareDialog;
@@ -369,8 +368,9 @@ public class TrainDetailActivity extends BaseActivity {
                         .execute();
                 break;
             case R.id.startTrain:
-                // TODO: 2017/8/10 开始训练
-                ToastUtil.show("开始训练");
+                Launcher.with(getActivity(), TrainingCountDownActivity.class)
+                        .putExtra(ExtraKeys.TRAINING, mTraining)
+                        .execute();
                 break;
         }
     }

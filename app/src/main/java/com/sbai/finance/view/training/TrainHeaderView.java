@@ -28,7 +28,7 @@ public class TrainHeaderView extends LinearLayout {
     TextView mHowPlay;
     @BindView(R.id.progress)
     TrainProgressBar mProgress;
-    @BindView(R.id.mainArea)
+    @BindView(R.id.content)
     LinearLayout mMainArea;
 
     private Callback mCallback;

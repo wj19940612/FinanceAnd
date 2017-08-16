@@ -48,4 +48,7 @@
     <color name="violetTechnologyTraining">#8268E4</color>
     <color name="yellowFundamentalTraining">#FFB51F</color>
     <color name="blueComprehensiveTraining">#53A5F2</color>
+    <color name="redTheoryCountDown">#E44B58</color>
+    <color name="violetTechnologyCountDown">#6843C4</color>
+    <color name="yellowFundamentalCountDown">#F9B727</color>
 </resources>

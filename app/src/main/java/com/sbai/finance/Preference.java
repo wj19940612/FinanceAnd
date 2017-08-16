@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.sbai.finance.model.payment.UsablePlatform;
-import com.sbai.finance.model.studyroom.StudyOption;
 
 public class Preference {
     private static final String SHARED_PREFERENCES_NAME = BuildConfig.FLAVOR + "_prefs";
@@ -17,15 +16,13 @@ public class Preference {
         String PUSH_CLIENT_ID = "PUSH_CLIENT_ID";
         String SERVER_IP_PORT = "server_ip_port";
         String SERVER_TIME = "server_time";
-        String AVAILABLE_MARGIN = "available_margin";
-        String USER_HAS_HOLDING_ORDER = "has_order";
-        String DATA_SOURCE = "data_source";
         String AUTHORIZATION_LOGIN_TIME = "authorization_login_time";
         String RECHARGE_WAY = "recharge_way_string";
         String IS_FIRST_WITH_DRAW = "is_first_with_draw";
         String USER_HAS_SafePass = "user_has_safe_pass";
         String MISS_TALK_ANSWERS = "miss_talk_answers";
         String USER_LOOK_DETAIL = "user_look_detail";
+        String IS_FIRST_TRAIN = "IS_FIRST_TRAIN";
     }
 
     private static Preference sInstance;
@@ -177,5 +174,13 @@ public class Preference {
 
     public void setStudyData(String id, String data) {
         apply(id, data);
+    }
+
+    public boolean isFirstTrain(int trainId) {
+        return mPrefs.getBoolean(Key.IS_FIRST_TRAIN + trainId, true);
+    }
+
+    public void setIsFirstTrainFalse(int trainId, boolean isFirst) {
+        apply(Key.IS_FIRST_TRAIN + trainId, isFirst);
     }
 }
