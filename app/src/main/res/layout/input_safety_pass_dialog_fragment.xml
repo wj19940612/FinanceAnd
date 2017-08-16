@@ -10,7 +10,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_login_close"
+        android:drawableLeft="@drawable/ic_black_close"
         android:gravity="center_horizontal|center_vertical"
         android:padding="@dimen/common_padding"
         android:text="@string/please_input_pass"

@@ -55,6 +55,5 @@
         app:rowText="@string/choice_location"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="@dimen/list_title_size"
-        app:subTextColor="@color/assistText"
-        app:subTextSize="@dimen/sp_14"/>
+        app:subTextColor="@color/assistText"/>
 </LinearLayout>

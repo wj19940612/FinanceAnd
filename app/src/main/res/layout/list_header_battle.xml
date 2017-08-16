@@ -43,7 +43,7 @@
                 android:gravity="center"
                 android:text="@string/versus_rule"
                 android:textColor="@color/unluckyText"
-                android:textSize="@dimen/sp_12"/>
+                android:textSize="12sp"/>
         </LinearLayout>
     </RelativeLayout>
 </FrameLayout>
