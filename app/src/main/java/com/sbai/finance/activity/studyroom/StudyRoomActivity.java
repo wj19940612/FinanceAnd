@@ -97,7 +97,7 @@ public class StudyRoomActivity extends BaseActivity {
     private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            requestMyStudyData();
+            requestTrainData();
         }
     };
 
