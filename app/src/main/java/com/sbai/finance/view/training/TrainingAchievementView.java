@@ -14,8 +14,6 @@ import com.sbai.finance.R;
 
 public class TrainingAchievementView extends LinearLayout {
 
-    private boolean mAchieved;
-
     private ImageView mAchieveIcon;
     private TextView mContent;
     private TextView mAchieveFlag;
