@@ -37,6 +37,12 @@ public class KlineTrainActivity extends BaseActivity {
         initView();
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mTrainView.startAppearAnim();
+    }
+
     private void initView() {
         mTitle.setCallback(new TrainHeaderView.Callback() {
             @Override

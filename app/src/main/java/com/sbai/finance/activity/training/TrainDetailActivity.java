@@ -370,6 +370,7 @@ public class TrainDetailActivity extends BaseActivity {
                 break;
             case R.id.startTrain:
                 // TODO: 2017/8/10 开始训练
+                Launcher.with(getActivity(),KlineTrainActivity.class).execute();
                 ToastUtil.show("开始训练");
                 break;
         }
