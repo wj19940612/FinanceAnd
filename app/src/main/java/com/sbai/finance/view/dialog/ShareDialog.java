@@ -72,6 +72,7 @@ public class ShareDialog {
                     } else {
                         ToastUtil.show(R.string.you_not_install_weixin);
                     }
+                    mSmartDialog.dismiss();
                     break;
                 case R.id.weChatFriendCircle:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.WEIXIN_CIRCLE)) {
@@ -82,6 +83,7 @@ public class ShareDialog {
                     } else {
                         ToastUtil.show(R.string.you_not_install_weixin);
                     }
+                    mSmartDialog.dismiss();
                     break;
                 case R.id.sinaWeibo:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.SINA)) {
@@ -92,6 +94,7 @@ public class ShareDialog {
                     } else {
                         ToastUtil.show(R.string.you_not_install_weibo);
                     }
+                    mSmartDialog.dismiss();
                     break;
             }
         }
