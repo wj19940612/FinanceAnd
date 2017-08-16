@@ -291,6 +291,18 @@ public class Client {
                 .put("platform", 0));
     }
 
+    /**
+     * 注册和找回密码的情况下验证手机号
+     *
+     * @param phone
+     * @param type 0 注册，1 忘记密码
+     * @return
+     */
+    public static API checkPhone(String phone, int type) {
+        return new API("/user/registerLogin/checkAccount.do", new ApiParams()
+                .put("phone", phone)
+                .put("type", type));
+    }
 
     /**
      * 忘记密码：更新新密码
