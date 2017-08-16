@@ -8,6 +8,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
@@ -106,7 +107,24 @@ public class DiamondGroupView extends RelativeLayout {
         animSet.setDuration(2000);
         animSet.start();
     }
-    public void setSelected(boolean selected){
+
+    public void startAppearAnim() {
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(this, "scaleX", 0f, 1.2f, 1f,1.2f,1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(this, "scaleY", 0f, 1.2f, 1f,1.2f,1f);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(scaleX).with(scaleY);
+        animSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+            }
+        });
+        animSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animSet.setDuration(1000);
+        animSet.start();
+    }
+
+    public void setSelected(boolean selected) {
         mKlineView.setSelected(selected);
     }
 

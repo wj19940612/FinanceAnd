@@ -105,6 +105,11 @@ public class KlineTrainView extends RelativeLayout {
                 views[4].startErrorAnim();
             }
         });
+    }
 
+    public void startAppearAnim(){
+        for (int i=0;i<views.length;i++){
+            views[i].startAppearAnim();
+        }
     }
 }
