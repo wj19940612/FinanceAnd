@@ -4,7 +4,7 @@ import com.android.volley.Request;
 import com.google.gson.Gson;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.leveltest.TestAnswerUtils;
+import com.sbai.finance.model.levelevaluation.TestAnswerUtils;
 import com.sbai.httplib.ApiParams;
 
 
@@ -2341,35 +2341,39 @@ public class Client {
                 new ApiParams()
                         .put("ids", ids));
     }
-	/**
-	 * 获取训练详情
-	 * @param trainId
-	 * @return
-	 */
-	public static API getTrainDetail(int trainId) {
-		return new API("/train/train/detail.do",
-				new ApiParams()
-						.put("trainId", trainId));
-	}
 
-	/**
-	 * 最近完成训练的人
-	 * @param page
-	 * @param pageSize
-	 * @param trainId
-	 * @return
-	 */
-	public static API getFinishPeopleList(int page, int pageSize, int trainId) {
-		return new API("/train/train/finishUser.do",
-				new ApiParams()
-						.put("page", page)
-						.put("pageSize", pageSize)
-						.put("trainId", trainId));
-	}
+    /**
+     * 获取训练详情
+     *
+     * @param trainId
+     * @return
+     */
+    public static API getTrainDetail(int trainId) {
+        return new API("/train/train/detail.do",
+                new ApiParams()
+                        .put("trainId", trainId));
+    }
+
+    /**
+     * 最近完成训练的人
+     *
+     * @param page
+     * @param pageSize
+     * @param trainId
+     * @return
+     */
+    public static API getFinishPeopleList(int page, int pageSize, int trainId) {
+        return new API("/train/train/finishUser.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", pageSize)
+                        .put("trainId", trainId));
+    }
 
 
     /**
      * 训练点赞
+     *
      * @param praiseId
      * @param isPraise
      * @return
@@ -2382,5 +2386,18 @@ public class Client {
 
     public static API share() {
         return new API("/explain/question/share.do");
+    }
+
+
+    /**
+     * /train/train/start.do
+     * GET
+     * 获得训练关联题目
+     *
+     * @param trainId 训练id
+     * @return
+     */
+    public static API requestTrainQuestions(int trainId) {
+        return new API("/train/train/start.do", new ApiParams().put("trainId", trainId));
     }
 }

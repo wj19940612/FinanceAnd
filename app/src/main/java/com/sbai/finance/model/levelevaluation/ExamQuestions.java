@@ -1,4 +1,4 @@
-package com.sbai.finance.model.leveltest;
+package com.sbai.finance.model.levelevaluation;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 /**
  * Created by ${wangJie} on 2017/7/31.
- * 水平测试题目model
+ * 水平测试题目   训练模块 只读图、选择题、图线题 model
  */
 
-public class ExamQuestionsModel implements Parcelable {
+public class ExamQuestions implements Parcelable {
 
     /**
      * analysis : 打算大苏打打算大苏打
@@ -26,18 +26,20 @@ public class ExamQuestionsModel implements Parcelable {
      * createTime : 2017-08-02 09:19:40
      */
 
-    //题目解析
-    private String analysis;
-    private String digest;
+    private String analysis;     //题目解析
+    private String digest;       //提干
     private String id;
-    private double levelRatio;
-    private String modifyTime;
-    private boolean option;
+    private double levelRatio;   //难度比例
+    private String modifyTime;   //是否可跳过 （有的题是只读的）
+    private boolean option;      //是否可跳过 （有的题是只读的）
     private int status;
     private String title;
-    private int type;
+    private int type;            // 1到6 分别为 排序，单选，多选，连连看，只读的题目（比如看漫画） ,K平均线
     private String createTime;
     private ArrayList<ContentBean> content;
+
+
+    private String source;       // future 期货 stock 股票
 
 
     public String getAnalysis() {
@@ -146,8 +148,8 @@ public class ExamQuestionsModel implements Parcelable {
         private boolean isSelect;
         private String content;
         private long id;
-        private boolean right;
-        private int seq;
+        private boolean right;   //是否是正确答案
+        private int seq;         //seq 排序
 
         public String getContent() {
             return content;
@@ -248,10 +250,10 @@ public class ExamQuestionsModel implements Parcelable {
         dest.writeTypedList(this.content);
     }
 
-    public ExamQuestionsModel() {
+    public ExamQuestions() {
     }
 
-    protected ExamQuestionsModel(Parcel in) {
+    protected ExamQuestions(Parcel in) {
         this.analysis = in.readString();
         this.digest = in.readString();
         this.id = in.readString();
@@ -265,15 +267,15 @@ public class ExamQuestionsModel implements Parcelable {
         this.content = in.createTypedArrayList(ContentBean.CREATOR);
     }
 
-    public static final Creator<ExamQuestionsModel> CREATOR = new Creator<ExamQuestionsModel>() {
+    public static final Creator<ExamQuestions> CREATOR = new Creator<ExamQuestions>() {
         @Override
-        public ExamQuestionsModel createFromParcel(Parcel source) {
-            return new ExamQuestionsModel(source);
+        public ExamQuestions createFromParcel(Parcel source) {
+            return new ExamQuestions(source);
         }
 
         @Override
-        public ExamQuestionsModel[] newArray(int size) {
-            return new ExamQuestionsModel[size];
+        public ExamQuestions[] newArray(int size) {
+            return new ExamQuestions[size];
         }
     };
 

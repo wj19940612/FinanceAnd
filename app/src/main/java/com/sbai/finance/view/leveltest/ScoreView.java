@@ -18,7 +18,7 @@ import android.util.TypedValue;
 import android.view.View;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.leveltest.TestResultModel;
+import com.sbai.finance.model.levelevaluation.TestResultModel;
 
 
 /**

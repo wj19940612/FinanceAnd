@@ -19,7 +19,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.training.ScoreIntroduceActivity;
-import com.sbai.finance.model.leveltest.TestResultModel;
+import com.sbai.finance.model.levelevaluation.TestResultModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;

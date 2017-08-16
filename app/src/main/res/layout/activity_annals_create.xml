@@ -10,22 +10,45 @@
     tools:context="com.sbai.finance.activity.training.AnnalsCreateActivity">
 
     <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/yellowAssist"
         android:fitsSystemWindows="true"
         app:backFeature="true"
-        app:backIcon="@drawable/ic_tb_back_white"/>
+        app:backIcon="@drawable/ic_close"
+        app:rightText="@string/how_play"
+        app:rightTextColor="@android:color/white"
+        app:rightTextSize="14sp"
+        app:rightVisible="true"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
+    <com.sbai.finance.view.train.TrainProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:background="@drawable/ic_confirm_report"
-        app:borderWidth="0dp"
-        app:elevation="8dp"
-        app:pressedTranslationZ="16dp"
-        app:rippleColor="#33728dff"/>
+        android:layout_below="@+id/titleBar"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/annalsData"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/progressBar"
+        android:layout_marginTop="30dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/annalsAddRecycleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/annalsData"
+        android:layout_marginTop="35dp"/>
+
+    <ImageView
+        android:id="@+id/confirmAnnals"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="24dp"
+        android:src="@drawable/ic_confirm_report"/>
 </RelativeLayout>

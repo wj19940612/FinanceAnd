@@ -1,4 +1,4 @@
-package com.sbai.finance.model.leveltest;
+package com.sbai.finance.model.levelevaluation;
 
 import android.os.Parcel;
 import android.os.Parcelable;

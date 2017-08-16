@@ -11,7 +11,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.RewardGetActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.leveltest.TestResultModel;
+import com.sbai.finance.model.levelevaluation.TestResultModel;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.view.TitleBar;

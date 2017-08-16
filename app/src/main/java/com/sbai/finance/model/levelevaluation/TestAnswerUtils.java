@@ -1,4 +1,4 @@
-package com.sbai.finance.model.leveltest;
+package com.sbai.finance.model.levelevaluation;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

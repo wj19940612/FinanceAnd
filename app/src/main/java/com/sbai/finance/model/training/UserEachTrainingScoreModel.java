@@ -3,7 +3,7 @@ package com.sbai.finance.model.training;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.sbai.finance.model.leveltest.TestResultModel;
+import com.sbai.finance.model.levelevaluation.TestResultModel;
 import com.sbai.finance.utils.FinanceUtil;
 
 import java.util.List;

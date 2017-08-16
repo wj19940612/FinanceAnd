@@ -1,4 +1,4 @@
-package com.sbai.finance.model.leveltest;
+package com.sbai.finance.model.levelevaluation;
 
 /**
  * Created by ${wangJie} on 2017/8/4.
