@@ -3,7 +3,6 @@ package com.sbai.finance.activity.training;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -88,8 +87,6 @@ public class TrainDetailActivity extends BaseActivity {
     @BindView(R.id.background)
     RelativeLayout mBackground;
 
-    private int mTrainId;
-    private int mType;
     private int mPage = 0;
     private int mPageSize = 3;
     private TrainingDetail mTrainDetail;
@@ -105,7 +102,7 @@ public class TrainDetailActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         initData(getIntent());
-        initBackGround(mType);
+        initBackground();
 
         mCompletePeopleList = new ArrayList<>();
         mHotExperienceList = new ArrayList<>();
@@ -124,8 +121,8 @@ public class TrainDetailActivity extends BaseActivity {
         mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
     }
 
-    private void initBackGround(int type) {
-        switch (type) {
+    private void initBackground() {
+        switch (mTraining.getType()) {
             case Training.TYPE_THEORY:
                 mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
                 mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
@@ -150,7 +147,7 @@ public class TrainDetailActivity extends BaseActivity {
     }
 
     private void requestTrainDetail() {
-        Client.getTrainingDetail(mTrainId).setTag(TAG).setIndeterminate(this)
+        Client.getTrainingDetail(mTraining.getId()).setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<TrainingDetail>, TrainingDetail>() {
                     @Override
                     protected void onRespSuccessData(TrainingDetail data) {
