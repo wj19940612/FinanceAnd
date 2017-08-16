@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.training.Train;
+import com.sbai.finance.model.training.Training;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.training.DiamondView;
 import com.sbai.finance.view.training.TrainHeaderView;
@@ -45,7 +45,7 @@ public class KlineTrainActivity extends BaseActivity {
 
             @Override
             public void onHowPlayClick() {
-                HowPlayActivity.show(getActivity(), Train.TRAIN_TYPE_KLINE);
+                HowPlayActivity.show(getActivity(), Training.TRAIN_TYPE_KLINE);
             }
 
             @Override

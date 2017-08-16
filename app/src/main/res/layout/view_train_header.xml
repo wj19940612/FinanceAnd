@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/ic_close"/>
+            android:drawableLeft="@drawable/ic_close"
+            android:paddingRight="20dp"/>
 
         <com.sbai.finance.view.training.CountDownView
             android:id="@+id/countdown"

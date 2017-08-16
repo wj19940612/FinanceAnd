@@ -14,10 +14,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.training.Train;
+import com.sbai.finance.model.training.Training;
 import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
@@ -78,19 +77,19 @@ public class HowPlayActivity extends BaseActivity {
         mClose.setVisibility(View.GONE);
         int drawable = 0;
         switch (mTrainType) {
-            case Train.TRAIN_TYPE_KLINE:
+            case Training.TRAIN_TYPE_KLINE:
                 mIsHorizontal = false;
                 drawable = R.drawable.ic_kline_train;
                 break;
-            case Train.TRAIN_TYPE_ANNUAL_REPORT:
+            case Training.TRAIN_TYPE_ANNUAL_REPORT:
                 mIsHorizontal = false;
                 drawable = R.drawable.ic_annual_report_train;
                 break;
-            case Train.TRAIN_TYPE_IDENTIFICATION:
+            case Training.TRAIN_TYPE_IDENTIFICATION:
                 mIsHorizontal = false;
                 drawable = R.drawable.ic_identification_train;
                 break;
-            case Train.TRAIN_TYPE_AVERAGE_LINE:
+            case Training.TRAIN_TYPE_AVERAGE_LINE:
                 drawable = R.drawable.ic_average_line_train;
                 mIsHorizontal = true;
                 break;
