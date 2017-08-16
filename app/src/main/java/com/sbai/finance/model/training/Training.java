@@ -1,9 +1,12 @@
 package com.sbai.finance.model.training;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * 单个训练的完整数据结构
  */
-public class Training {
+public class Training implements Parcelable {
 
     public static final int TRAIN_TYPE_KLINE = 0;
     public static final int TRAIN_TYPE_AVERAGE_LINE = 1;
@@ -189,4 +192,61 @@ public class Training {
                 ", playType=" + playType +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.createTime);
+        dest.writeInt(this.finishCount);
+        dest.writeInt(this.id);
+        dest.writeString(this.imageUrl);
+        dest.writeString(this.image2Url);
+        dest.writeString(this.knowledgeUrl);
+        dest.writeInt(this.level);
+        dest.writeString(this.modifyTime);
+        dest.writeInt(this.recommend);
+        dest.writeString(this.remark);
+        dest.writeInt(this.status);
+        dest.writeInt(this.time);
+        dest.writeString(this.title);
+        dest.writeInt(this.type);
+        dest.writeInt(this.playType);
+    }
+
+    public Training() {
+    }
+
+    protected Training(Parcel in) {
+        this.createTime = in.readString();
+        this.finishCount = in.readInt();
+        this.id = in.readInt();
+        this.imageUrl = in.readString();
+        this.image2Url = in.readString();
+        this.knowledgeUrl = in.readString();
+        this.level = in.readInt();
+        this.modifyTime = in.readString();
+        this.recommend = in.readInt();
+        this.remark = in.readString();
+        this.status = in.readInt();
+        this.time = in.readInt();
+        this.title = in.readString();
+        this.type = in.readInt();
+        this.playType = in.readInt();
+    }
+
+    public static final Parcelable.Creator<Training> CREATOR = new Parcelable.Creator<Training>() {
+        @Override
+        public Training createFromParcel(Parcel source) {
+            return new Training(source);
+        }
+
+        @Override
+        public Training[] newArray(int size) {
+            return new Training[size];
+        }
+    };
 }

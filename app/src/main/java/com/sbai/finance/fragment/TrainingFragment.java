@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
@@ -128,8 +129,7 @@ public class TrainingFragment extends BaseFragment {
             public void onTrainClick(MyTrainingRecord myTrainingRecord, int position) {
                 if (myTrainingRecord.getTrain() != null) {
                     Launcher.with(getActivity(), TrainDetailActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, myTrainingRecord.getTrain().getType())
-                            .putExtra(Launcher.EX_PAYLOAD_1, myTrainingRecord.getTrain().getId())
+                            .putExtra(ExtraKeys.TRAINING, myTrainingRecord.getTrain())
                             .execute();
                 }
             }
