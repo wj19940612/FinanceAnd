@@ -68,6 +68,7 @@ public class ShareDialog {
                         mShareUrl += "&userFrom=friend";
                         shareToPlatform(SHARE_MEDIA.WEIXIN);
                         onSharePlatformClicked(SHARE_PLATFORM.WECHAT_FRIEND);
+                        mSmartDialog.dismiss();
                     } else {
                         ToastUtil.show(R.string.you_not_install_weixin);
                     }
@@ -77,6 +78,7 @@ public class ShareDialog {
                         mShareUrl += "&userFrom=friend";
                         shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
                         onSharePlatformClicked(SHARE_PLATFORM.WECHAT_CIRCLE);
+                        mSmartDialog.dismiss();
                     } else {
                         ToastUtil.show(R.string.you_not_install_weixin);
                     }
@@ -86,6 +88,7 @@ public class ShareDialog {
                         mShareUrl += "&userFrom=weibo";
                         shareToPlatform(SHARE_MEDIA.SINA);
                         onSharePlatformClicked(SHARE_PLATFORM.SINA_WEIBO);
+                        mSmartDialog.dismiss();
                     } else {
                         ToastUtil.show(R.string.you_not_install_weibo);
                     }
