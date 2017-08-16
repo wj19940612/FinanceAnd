@@ -246,7 +246,7 @@ public class StudyRoomActivity extends BaseActivity {
         mAnswerDetail.setText(data.getAnalysis());
         for (StudyOption.ContentBean contentBean : data.getContent()) {
             if (contentBean.isRight()) {
-                mRightAnswer.setText(getString(R.string.right_answer, data.getTitle() + ":" + contentBean.getContent()));
+                mRightAnswer.setText(getString(R.string.right_answer, contentBean.getContent()));
                 break;
             }
         }

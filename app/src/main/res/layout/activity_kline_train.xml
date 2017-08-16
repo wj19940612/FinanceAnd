@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#6f56ca"
+                android:background="#694fc8"
                 android:orientation="vertical">
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:backIcon="@drawable/ic_close"
+        app:backFeature="true"/>
 
     <com.sbai.finance.view.training.KlineTrainView
         android:layout_width="wrap_content"

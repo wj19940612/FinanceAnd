@@ -60,7 +60,7 @@ public class KlineTrainView extends RelativeLayout {
         views[2].setId(View.generateViewId());
         params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(CENTER_VERTICAL);
-        params.setMargins((int) Display.dp2Px(56, getResources()), 0, 0, 0);
+        params.setMargins((int) Display.dp2Px(57.5f, getResources()), 0, 0, 0);
         views[2].setLayoutParams(params);
         addView(views[2], params);
 
