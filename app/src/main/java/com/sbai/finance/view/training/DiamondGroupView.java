@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by houcc on 2017-08-15.
+ * K线训练 菱形加K线知识组合布局页面
  */
 
 public class DiamondGroupView extends RelativeLayout {
@@ -65,7 +65,7 @@ public class DiamondGroupView extends RelativeLayout {
         }
     }
 
-    public void startAnim(){
+    public void startAnim() {
         mKlineView.startErrorAnim();
     }
 
