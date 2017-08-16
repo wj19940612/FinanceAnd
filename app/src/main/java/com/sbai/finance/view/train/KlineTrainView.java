@@ -12,7 +12,7 @@ import com.sbai.finance.utils.Display;
 import java.util.List;
 
 /**
- * Created by houcc on 2017-08-15.
+ * K线训练页面菱形组合布局
  */
 
 public class KlineTrainView extends RelativeLayout {
