@@ -1,6 +1,5 @@
 package com.sbai.finance.view.train;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -10,16 +9,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.training.Train;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by houcc on 2017-08-15.
+ * K线训练 菱形加K线知识组合布局页面
  */
 
 public class DiamondGroupView extends RelativeLayout {
@@ -69,7 +65,7 @@ public class DiamondGroupView extends RelativeLayout {
         }
     }
 
-    public void startAnim(){
+    public void startAnim() {
         mKlineView.startErrorAnim();
     }
 
