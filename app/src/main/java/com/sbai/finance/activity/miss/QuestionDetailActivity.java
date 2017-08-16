@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,30 +25,30 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.miss.RewardInfo;
-import com.sbai.finance.model.miss.RewardMoney;
 import com.sbai.finance.model.miss.Prise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.QuestionReply;
+import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -123,10 +125,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private HashSet<String> mSet;
 	private View mFootView;
 	private QuestionReplyListAdapter mQuestionReplyListAdapter;
-	private RewardInfo mRewardInfo;
 	private Question mQuestionDetail;
 	private RefreshReceiver mRefreshReceiver;
 	private MediaPlayerManager mMediaPlayerManager;
+	private int mPlayingID;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +137,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		ButterKnife.bind(this);
 
 		initData(getIntent());
-		initRewardInfo();
 		mSet = new HashSet<>();
 		mMediaPlayerManager = new MediaPlayerManager(this);
 		mQuestionReplyListAdapter = new QuestionReplyListAdapter(this);
@@ -165,12 +166,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				.setShareUrl(String.format(SHARE_URL_QUESTION, mQuestionId))
 				.hasFeedback(false)
 				.setListener(new ShareDialog.OnShareDialogCallback() {
-                    @Override
-                    public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
-                        Client.share().setTag(TAG).fire();
-                    }
+					@Override
+					public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
+						Client.share().setTag(TAG).fire();
+					}
 
-                    @Override
+					@Override
 					public void onFeedbackClick(View view) {
 					}
 				}).show();
@@ -185,23 +186,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 						mQuestionDetail = question;
 					}
 				}).fire();
-	}
-
-	private void initRewardInfo() {
-		mRewardInfo = new RewardInfo();
-		mRewardInfo.setId(mQuestionId);
-		mRewardInfo.setType(RewardInfo.TYPE_QUESTION);
-		List<RewardMoney> list = new ArrayList<>();
-		RewardMoney rewardMoney = new RewardMoney();
-		rewardMoney.setMoney(10);
-		list.add(rewardMoney);
-		rewardMoney = new RewardMoney();
-		rewardMoney.setMoney(100);
-		list.add(rewardMoney);
-		rewardMoney = new RewardMoney();
-		rewardMoney.setMoney(1000);
-		list.add(rewardMoney);
-		mRewardInfo.setMoneyList(list);
 	}
 
 	private void initSwipeRefreshLayout() {
@@ -221,17 +205,15 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	protected void onPause() {
 		super.onPause();
 		mMediaPlayerManager.release();
+		mVoiceLevel.clearAnimation();
+		mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+		mPlayingID = -1;
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mMediaPlayerManager.release();
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
-	}
-
-	public RewardInfo getRewardInfo() {
-		return mRewardInfo;
 	}
 
 	private void initData(Intent intent) {
@@ -249,24 +231,18 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				.transform(new GlideCircleTransform(this))
 				.into(mMissAvatar);
 
-		if (question.getIsPrise() == 0) {
-			mLoveImage.setImageResource(R.drawable.ic_miss_love);
-		} else {
-			mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
-		}
-
 		mName.setText(question.getUserName());
 		mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(question.getCreateTime()));
 		mQuestion.setText(question.getQuestionContext());
 		mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
 		mLoveNumber.setText(getString(R.string.love_miss, StrFormatter.getFormatCount(question.getPriseCount())));
 		mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(question.getAwardCount())));
-		//mCommentNumber.setText(getString(R.string.comment_number_string, StrFormatter.getFormatCount(question.getReplyCount())));
 		mVoice.setText(getString(R.string.voice_time, question.getSoundTime()));
 
-		if (question.getReplyCount() > 0) {
-			mNoComment.setVisibility(View.GONE);
-			mCommentArea.setBackgroundColor(ContextCompat.getColor(this, R.color.background));
+		if (question.getIsPrise() == 0) {
+			mLoveImage.setImageResource(R.drawable.ic_miss_love);
+		} else {
+			mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
 		}
 
 		if (MissVoiceRecorder.isHeard(question.getId())) {
@@ -285,10 +261,56 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		});
 
 		mVoiceArea.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
+				if (!MissVoiceRecorder.isHeard(question.getId())) {
+					//没听过
+					Client.listen(question.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+						@Override
+						protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+							if (resp.isSuccess()) {
+								mMediaPlayerManager.play(question.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+									@Override
+									public void onCompletion(MediaPlayer mp) {
+										mVoiceLevel.clearAnimation();
+										mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+									}
+								});
 
+								mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
+								AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
+								animation.start();
+
+								MissVoiceRecorder.markHeard(question.getId());
+								question.setListenCount(question.getListenCount() + 1);
+								mListenerNumber.setTextColor(ContextCompat.getColor(QuestionDetailActivity.this, R.color.unluckyText));
+								mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
+								mPlayingID = question.getId();
+							}
+						}
+					}).fire();
+				} else {
+					//听过了
+					if (mPlayingID == question.getId()) {
+						mMediaPlayerManager.release();
+						mVoiceLevel.clearAnimation();
+						mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+						mPlayingID = -1;
+					} else {
+						mMediaPlayerManager.play(question.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+							@Override
+							public void onCompletion(MediaPlayer mp) {
+								mVoiceLevel.clearAnimation();
+								mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+							}
+						});
+
+						mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
+						AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
+						animation.start();
+						mPlayingID = question.getId();
+					}
+				}
 			}
 		});
 	}
@@ -319,6 +341,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 	private void updateQuestionReplyList(List<QuestionReply.DataBean> questionReplyList, int resultCount) {
 		mCommentNumber.setText(getString(R.string.comment_number_string, StrFormatter.getFormatCount(resultCount)));
+		if (resultCount > 0) {
+			mNoComment.setVisibility(View.GONE);
+			mCommentArea.setBackgroundColor(ContextCompat.getColor(this, R.color.background));
+		}
+
 		if (questionReplyList == null) {
 			stopRefreshAnimation();
 			return;
@@ -485,6 +512,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				mOpinionContent.setText(item.getContent());
 
 				if (item.getReplys() != null) {
+					mReplyArea.setVisibility(View.VISIBLE);
 					if (item.getReplys().size() == 0) {
 						mReplyArea.setVisibility(View.GONE);
 					} else {
@@ -527,9 +555,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 						.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
 						.executeForResult(REQ_COMMENT);
 			}
-		}
-
-		if (requestCode == REQ_REWARD_LOGIN && resultCode == RESULT_OK) {
 		}
 	}
 

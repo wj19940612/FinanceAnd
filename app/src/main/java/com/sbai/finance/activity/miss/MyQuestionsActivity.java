@@ -118,33 +118,26 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 
 				if (!MissVoiceRecorder.isHeard(item.getId())) {
 					//没听过的
-					if (mPlayingID == item.getId()) {
-						mMediaPlayerManager.release();
-						item.setPlaying(false);
-						mMyQuestionAdapter.notifyDataSetChanged();
-						mPlayingID = -1;
-					} else {
-						Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-							@Override
-							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-								if (resp.isSuccess()) {
-									mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-										@Override
-										public void onCompletion(MediaPlayer mp) {
-											item.setPlaying(false);
-											mMyQuestionAdapter.notifyDataSetChanged();
-										}
-									});
+					Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+						@Override
+						protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+							if (resp.isSuccess()) {
+								mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+									@Override
+									public void onCompletion(MediaPlayer mp) {
+										item.setPlaying(false);
+										mMyQuestionAdapter.notifyDataSetChanged();
+									}
+								});
 
-									MissVoiceRecorder.markHeard(item.getId());
-									item.setPlaying(true);
-									item.setListenCount(item.getListenCount() + 1);
-									mMyQuestionAdapter.notifyDataSetChanged();
-									mPlayingID = item.getId();
-								}
+								MissVoiceRecorder.markHeard(item.getId());
+								item.setPlaying(true);
+								item.setListenCount(item.getListenCount() + 1);
+								mMyQuestionAdapter.notifyDataSetChanged();
+								mPlayingID = item.getId();
 							}
-						}).fire();
-					}
+						}
+					}).fire();
 				} else {
 					//听过的
 					if (mPlayingID == item.getId()) {
