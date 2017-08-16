@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
@@ -86,8 +87,7 @@ public class TrainDetailActivity extends BaseActivity {
 	@BindView(R.id.background)
 	RelativeLayout mBackground;
 
-	private int mTrainId;
-	private int mType;
+    private Training mTraining;
 	private int mPage = 0;
 	private int mPageSize = 3;
 	private TrainingDetail mTrainDetail;
@@ -102,7 +102,7 @@ public class TrainDetailActivity extends BaseActivity {
 		ButterKnife.bind(this);
 
 		initData(getIntent());
-		initBackGround(mType);
+		initBackground();
 
 		mCompletePeopleList = new ArrayList<>();
 		mHotExperienceList = new ArrayList<>();
@@ -117,13 +117,11 @@ public class TrainDetailActivity extends BaseActivity {
 	}
 
 	private void initData(Intent intent) {
-		mType = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
-		mTrainId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-		// TODO: 15/08/2017 直接接收一个  training 修改 extraKey
-	}
+        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
+    }
 
-	private void initBackGround(int type) {
-		switch (type) {
+	private void initBackground() {
+		switch (mTraining.getType()) {
 			case Training.TYPE_THEORY:
 				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
 				mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
@@ -148,7 +146,7 @@ public class TrainDetailActivity extends BaseActivity {
 	}
 
 	private void requestTrainDetail() {
-		Client.getTrainingDetail(mTrainId).setTag(TAG).setIndeterminate(this)
+		Client.getTrainingDetail(mTraining.getId()).setTag(TAG).setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<TrainingDetail>, TrainingDetail>() {
                     @Override
                     protected void onRespSuccessData(TrainingDetail data) {
@@ -159,7 +157,7 @@ public class TrainDetailActivity extends BaseActivity {
 	}
 
 	private void requestFinishPeopleList() {
-		Client.getTrainedUserRecords(mPage, mPageSize, mTrainId).setTag(TAG)
+		Client.getTrainedUserRecords(mPage, mPageSize, mTraining.getId()).setTag(TAG)
 				.setIndeterminate(this)
 				.setCallback(new Callback2D<Resp<List<TrainedUserRecord>>, List<TrainedUserRecord>>() {
                     @Override
@@ -173,7 +171,7 @@ public class TrainDetailActivity extends BaseActivity {
 	}
 
 	private void requestHotExperienceList() {
-		Client.getHotExperienceList(mTrainId).setTag(TAG)
+		Client.getHotExperienceList(mTraining.getId()).setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
 					@Override
 					protected void onRespSuccessData(List<Experience> experienceList) {
@@ -361,12 +359,12 @@ public class TrainDetailActivity extends BaseActivity {
 				break;
 			case R.id.hotExperience:
 				Launcher.with(getActivity(), TrainExperienceActivity.class)
-						.putExtra(Launcher.EX_PAYLOAD_1, mTrainId)
+						.putExtra(Launcher.EX_PAYLOAD_1, mTraining.getId())
 						.execute();
 				break;
 			case R.id.writeExperience:
 				Launcher.with(getActivity(), WriteExperienceActivity.class)
-						.putExtra(Launcher.EX_PAYLOAD, mType)
+						.putExtra(Launcher.EX_PAYLOAD, mTraining.getType())
 						.execute();
 				break;
 			case R.id.startTrain:
@@ -381,7 +379,7 @@ public class TrainDetailActivity extends BaseActivity {
 				.setTitle(getString(R.string.share_title))
 				.setShareTitle(getString(R.string.train_share_share_title, mTrainDetail.getTrain().getTitle()))
 				.setShareDescription(getString(R.string.train_share_description))
-				.setShareUrl(String.format(SHARE_URL_TRAIN_EXPERIENCE, mTrainId))
+				.setShareUrl(String.format(SHARE_URL_TRAIN_EXPERIENCE, mTraining.getId()))
 				.hasFeedback(true)
 				.setListener(new ShareDialog.OnShareDialogCallback() {
 					@Override

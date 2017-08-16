@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.discovery.DailyReportActivity;
@@ -206,8 +207,7 @@ public class DiscoveryFragment extends BaseFragment {
                 Training trainProgram = (Training) parent.getItemAtPosition(position);
                 if (trainProgram != null) {
                     Launcher.with(getActivity(), TrainDetailActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, trainProgram.getId())
-                            .putExtra(Launcher.EX_PAYLOAD_1, trainProgram.getType())
+                            .putExtra(ExtraKeys.TRAINING, trainProgram)
                             .execute();
                 }
             }
