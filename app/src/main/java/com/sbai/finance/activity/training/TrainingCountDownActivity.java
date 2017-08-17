@@ -23,6 +23,7 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Training;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
@@ -96,7 +97,7 @@ public class TrainingCountDownActivity extends BaseActivity {
     }
 
     private void requestTrainingContent() {
-
+        Client.requestExamQuestions()
     }
 
     @Override
