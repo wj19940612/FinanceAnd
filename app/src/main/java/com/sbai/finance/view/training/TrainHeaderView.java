@@ -83,4 +83,30 @@ public class TrainHeaderView extends LinearLayout {
                 break;
         }
     }
+
+    /**
+     * @param time 毫秒级的时间 倒计时将进行time时常
+     */
+    public void setMillisecondTime(long time) {
+        mCountdown.setMillisecondTime(time);
+        mProgress.setMillisecondTime(time);
+    }
+
+    /**
+     * 将进行多少秒
+     *
+     * @param secondTime
+     */
+    public void setSecondTime(long secondTime) {
+        mCountdown.setSecondTime(secondTime);
+        mProgress.setSecondTime(secondTime);
+    }
+
+    /**
+     * @param minuteTime 多少分钟
+     */
+    public void setMinuteTime(long minuteTime) {
+        mCountdown.setMinuteTime(minuteTime);
+        mProgress.setMinuteTime(minuteTime);
+    }
 }

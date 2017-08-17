@@ -19,8 +19,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.TrainingQuestion;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.view.TitleBar;
-import com.sbai.finance.view.training.TrainProgressBar;
+import com.sbai.finance.view.training.TrainHeaderView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,20 +33,18 @@ import butterknife.ButterKnife;
  */
 public class SortQuestionActivity extends BaseActivity {
 
-    @BindView(R.id.titleBar)
-    TitleBar mTitleBar;
-    @BindView(R.id.progressBar)
-    TrainProgressBar mProgressBar;
+
+    @BindView(R.id.trainHeaderView)
+    TrainHeaderView mTrainHeaderView;
     @BindView(R.id.sortQuestionRecyclerView)
     RecyclerView mSortQuestionRecyclerView;
     @BindView(R.id.sortResultRecycleView)
     RecyclerView mSortResultRecycleView;
     @BindView(R.id.confirmAnnals)
-    ImageView mConfirmResult;
-
+    ImageView mConfirmAnnals;
     //用來记录底部界面选择答案的索引
     private HashSet<Integer> mResultSet;
-    private TrainingQuestion mTrainingQuestions;
+    private TrainingQuestion mTrainingQuestion;
 
     private int mAnnalsMaterialsBgDrawables[] = new int[]{R.drawable.bg_annals_materials_1, R.drawable.bg_annals_materials_2,
             R.drawable.bg_annals_materials_3, R.drawable.bg_annals_materials_4,
@@ -71,11 +68,13 @@ public class SortQuestionActivity extends BaseActivity {
         translucentStatusBar();
         Intent intent = getIntent();
         mResultSet = new HashSet<>();
-        mTrainingQuestions = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
+        mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
         // TODO: 2017/8/16 倒计时时间
         long longExtra = intent.getIntExtra(ExtraKeys.TRAIN_TARGET_TIME, 0);
 
-        mQuestionResultList = mTrainingQuestions.getContent();
+        mTrainHeaderView.setMinuteTime(1);
+
+        mQuestionResultList = mTrainingQuestion.getContent();
         if (mQuestionResultList == null || mQuestionResultList.isEmpty()) return;
         initSortQuestionAdapter(mQuestionResultList);
         initSortResultAdapter(mQuestionResultList);

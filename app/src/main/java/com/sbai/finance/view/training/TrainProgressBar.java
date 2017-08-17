@@ -5,16 +5,13 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.sbai.finance.R;
-import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 
 /**
@@ -22,6 +19,7 @@ import com.sbai.finance.utils.Display;
  */
 
 public class TrainProgressBar extends ProgressBar {
+
 
     private static final String TAG = "TrainProgressBar";
 
@@ -31,22 +29,35 @@ public class TrainProgressBar extends ProgressBar {
     private float mHintSplitLineWidth;
     private Paint mBoundaryPaint;
     private Paint mHintSplitLinePaint;
-    private long mTimeSpace;
     private int mProgress;
     private float mHintSplitScale;
     private boolean mHasSplitLine;
 
     private OnProgressCompleteListener mOnProgressCompleteListener;
+    private OnProgressFinishListener mOnProgressFinishListener;
 
     //因为目前的样式差不多，所以设置一个通用的，可以关闭
     private boolean mUseDefaultProgressDrawable;
+    //进度条每隔多久变化一次
+    private int mProgressChangeTime;
+
+    private long mProgressTotalTime;
 
     public interface OnProgressCompleteListener {
         void onProgressComplete(int progress);
     }
 
+    public interface OnProgressFinishListener {
+        void onProgressFinish();
+    }
+
+
     public void setOnProgressCompleteListener(OnProgressCompleteListener onProgressCompleteListener) {
         this.mOnProgressCompleteListener = onProgressCompleteListener;
+    }
+
+    public void setOnProgressFinishListener(OnProgressFinishListener onProgressFinishListener) {
+        this.mOnProgressFinishListener = onProgressFinishListener;
     }
 
     public TrainProgressBar(Context context) {
@@ -102,17 +113,28 @@ public class TrainProgressBar extends ProgressBar {
     }
 
 
-    public void setTime(long time) {
-        mTimeSpace = time / 100;
-        mTimeHandler.sendEmptyMessageDelayed(0, mTimeSpace);
+    /**
+     * @param time 毫秒级的时间 倒计时将进行time时常
+     */
+    public void setMillisecondTime(long time) {
+        mProgressChangeTime = (int) (time / 100);
+        mTimeHandler.sendEmptyMessageDelayed(0, 0);
     }
 
-    public void setTime(String time) {
-        setTime(DateUtil.getStringToDate(time));
+    /**
+     * 将进行多少秒
+     *
+     * @param secondTime
+     */
+    public void setSecondTime(long secondTime) {
+        setMillisecondTime(secondTime * 1000);
     }
 
-    public void setTime(String time, String format) {
-        setTime(DateUtil.getStringToDate(time, format));
+    /**
+     * @param minuteTime 多少分钟
+     */
+    public void setMinuteTime(long minuteTime) {
+        setSecondTime(minuteTime * 60);
     }
 
 
@@ -132,18 +154,19 @@ public class TrainProgressBar extends ProgressBar {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (mProgress < 101) {
+            if (mProgress < 100) {
                 mProgress++;
-                Log.d(TAG, "handleMessage: " + mProgress);
+                setProgress(mProgress);
+
                 if (mOnProgressCompleteListener != null) {
                     mOnProgressCompleteListener.onProgressComplete(mProgress);
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    setProgress(mProgress, true);
-                } else {
-                    setProgress(mProgress);
+                mTimeHandler.sendEmptyMessageDelayed(0, mProgressChangeTime);
+            } else {
+                mTimeHandler.removeCallbacksAndMessages(null);
+                if (mOnProgressFinishListener != null) {
+                    mOnProgressFinishListener.onProgressFinish();
                 }
-                mTimeHandler.sendEmptyMessageDelayed(mProgress, mTimeSpace);
             }
         }
     };

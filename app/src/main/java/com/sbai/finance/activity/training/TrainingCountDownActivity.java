@@ -23,8 +23,14 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Training;
+import com.sbai.finance.model.training.TrainingQuestion;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.SecurityUtil;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +51,9 @@ public class TrainingCountDownActivity extends BaseActivity {
     private int mGifRes;
     private int mBackgroundRes;
 
+    private TrainingQuestion mTrainingQuestion;
+
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -58,6 +67,12 @@ public class TrainingCountDownActivity extends BaseActivity {
                     case Training.PLAY_TYPE_MATCH_STAR:
                         break;
                     case Training.PLAY_TYPE_SORT:
+                        if (mTrainingQuestion != null && mTraining != null) {
+                            Launcher.with(getActivity(), SortQuestionActivity.class)
+                                    .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
+                                    .putExtra(ExtraKeys.TRAIN_TARGET_TIME, mTraining.getTime())
+                                    .execute();
+                        }
                         break;
                     case Training.PLAY_TYPE_JUDGEMENT:
                         Launcher.with(getActivity(), JudgeTrainingActivity.class).execute();
@@ -68,6 +83,7 @@ public class TrainingCountDownActivity extends BaseActivity {
             }
         }
     };
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,7 +113,22 @@ public class TrainingCountDownActivity extends BaseActivity {
     }
 
     private void requestTrainingContent() {
-        Client.requestExamQuestions()
+        Client.getTrainingContent(mTraining.getId())
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<String>, List<TrainingQuestion>>() {
+                    @Override
+                    protected void onRespSuccessData(List<TrainingQuestion> data) {
+                        if (data != null && !data.isEmpty()) {
+                            mTrainingQuestion = data.get(0);
+                        }
+                    }
+
+                    @Override
+                    protected String onInterceptData(String data) {
+                        return SecurityUtil.AESDecrypt(data);
+                    }
+                })
+                .fireFree();
     }
 
     @Override

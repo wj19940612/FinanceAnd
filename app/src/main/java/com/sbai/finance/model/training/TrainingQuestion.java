@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Created by ${wangJie} on 2017/7/31.
- * 水平测试题目model
+ * 水平测试题目model   排序 单选题
  */
 
 public class TrainingQuestion implements Parcelable {
