@@ -89,10 +89,15 @@ public class IntroduceFragment extends BaseFragment {
     private void requestVarietyTradeIntroduce() {
         Client.getVarietyTradeIntroduce(mVariety.getVarietyId())
                 .setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<FutureIntroduce>, FutureIntroduce>(false) {
+                .setCallback(new Callback2D<Resp<FutureIntroduce>, FutureIntroduce>() {
                     @Override
                     protected void onRespSuccessData(FutureIntroduce data) {
                         updateFutureIntroduce(data);
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
                     }
                 }).fireFree();
     }

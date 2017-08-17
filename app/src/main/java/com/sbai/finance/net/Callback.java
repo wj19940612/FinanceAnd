@@ -32,16 +32,6 @@ import com.sbai.httplib.RequestManager;
  */
 public abstract class Callback<T> extends ApiCallback<T> {
 
-    private boolean mErrorToast;
-
-    public Callback() {
-        mErrorToast = true;
-    }
-
-    public Callback(boolean errorToast) {
-        mErrorToast = errorToast;
-    }
-
     @Override
     public void onSuccess(T t) {
         if (t instanceof Resp) {
@@ -99,7 +89,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
             toastResId = R.string.http_lib_error_server;
         }
 
-        if (mErrorToast) {
+        if (onErrorToast()) {
             ToastUtil.show(toastResId);
         }
     }
@@ -121,8 +111,12 @@ public abstract class Callback<T> extends ApiCallback<T> {
     protected abstract void onRespSuccess(T resp);
 
     protected void onRespFailure(Resp failedResp) {
-        if (mErrorToast) {
+        if (onErrorToast()) {
             ToastUtil.show(failedResp.getMsg());
         }
+    }
+
+    protected boolean onErrorToast() {
+        return true;
     }
 }

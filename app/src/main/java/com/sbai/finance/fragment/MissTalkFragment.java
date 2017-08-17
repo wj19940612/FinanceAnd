@@ -482,7 +482,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 
 	private void requestNewMessageCount() {
 		Client.getNewMessageCount().setTag(TAG)
-				.setCallback(new Callback2D<Resp<List<NewMessage>>, List<NewMessage>>(false) {
+				.setCallback(new Callback2D<Resp<List<NewMessage>>, List<NewMessage>>() {
 
 					@Override
 					protected void onRespSuccessData(List<NewMessage> newMessagesList) {
@@ -496,6 +496,11 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 						if (count > 0) {
 							mRedPoint.setVisibility(View.VISIBLE);
 						}
+					}
+
+					@Override
+					protected boolean onErrorToast() {
+						return false;
 					}
 				}).fire();
 

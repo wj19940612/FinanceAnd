@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.training;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -35,12 +34,6 @@ import butterknife.ButterKnife;
 public class TrainingCountDownActivity extends BaseActivity {
 
     private static final int REQ_CODE_SHOW_RULE = 434;
-
-    public static void show(Activity activity, Training training) {
-        Launcher.with(activity, TrainingCountDownActivity.class)
-                .putExtra(ExtraKeys.TRAINING, training)
-                .execute();
-    }
 
     @BindView(R.id.gif)
     ImageView mGif;
@@ -98,6 +91,12 @@ public class TrainingCountDownActivity extends BaseActivity {
         } else {
             startGifAnimation();
         }
+
+        requestTrainingContent();
+    }
+
+    private void requestTrainingContent() {
+
     }
 
     @Override

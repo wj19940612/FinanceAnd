@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -243,13 +242,18 @@ public class StudyRoomActivity extends BaseActivity {
     private void requestTrainData() {
         Client.getTrainCourse(null).setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Object>, Object>() {
+                .setCallback(new Callback2D<Resp<String>, StudyOption>() {
                     @Override
-                    protected void onRespSuccessData(Object data) {
-                        StudyOption studyOption = new Gson().fromJson(SecurityUtil.AESDecrypt((String) data), StudyOption.class);
+                    protected void onRespSuccessData(StudyOption data) {
+                        StudyOption studyOption = data;
                         updateTrainData(studyOption);
                         mStudyOption = studyOption;
                         requestMyStudyData();
+                    }
+
+                    @Override
+                    protected String onInterceptData(String data) {
+                        return SecurityUtil.AESDecrypt(data);
                     }
                 }).fireFree();
     }

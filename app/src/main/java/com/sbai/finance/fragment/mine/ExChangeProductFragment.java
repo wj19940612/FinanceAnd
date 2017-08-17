@@ -212,7 +212,7 @@ public class ExChangeProductFragment extends BaseFragment {
         Client.exchange(item.getId(), passWord, item.getFromRealMoney(), item.getToRealMoney())
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback<Resp<Object>>(false) {
+                .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (mOnUserFundChangeListener != null) {

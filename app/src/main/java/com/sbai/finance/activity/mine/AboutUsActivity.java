@@ -89,7 +89,7 @@ public class AboutUsActivity extends BaseActivity {
 
     private void openUserProtocolPage() {
         Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER).setTag(TAG)
-                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>(false) {
+                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                     @Override
                     protected void onRespSuccessData(ArticleProtocol data) {
                         Launcher.with(getActivity(), WebActivity.class)
