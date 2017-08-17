@@ -30,9 +30,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * 年报出炉界面
+ * 年报出炉界面  排序题
  */
-public class AnnalsCreateActivity extends BaseActivity {
+public class SortQuestionActivity extends BaseActivity {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;

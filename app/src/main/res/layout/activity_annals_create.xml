@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/yellowAssist"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.training.AnnalsCreateActivity">
+    tools:context="com.sbai.finance.activity.training.SortQuestionActivity">
 
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"

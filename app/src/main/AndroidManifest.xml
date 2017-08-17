@@ -434,7 +434,7 @@
             android:name=".activity.training.KlineTrainActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.training.AnnalsCreateActivity"
+            android:name=".activity.training.SortQuestionActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.training.HowPlayActivity"
