@@ -109,8 +109,8 @@ public class DiamondGroupView extends RelativeLayout {
     }
 
     public void startAppearAnim() {
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(this, "scaleX", 0f, 1.2f, 1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(this, "scaleY", 0f, 1.2f, 1f);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(this, "scaleX", 0f, 1.1f, 1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(this, "scaleY", 0f, 1.1f, 1f);
         AnimatorSet animSet = new AnimatorSet();
         animSet.play(scaleX).with(scaleY);
         animSet.addListener(new AnimatorListenerAdapter() {
