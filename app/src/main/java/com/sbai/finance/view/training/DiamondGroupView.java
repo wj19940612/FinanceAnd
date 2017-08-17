@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 
 import butterknife.BindView;
@@ -32,6 +33,15 @@ public class DiamondGroupView extends RelativeLayout {
     ImageView mKlineImg;
     @BindView(R.id.describe)
     TextView mDescribe;
+    private OnClearCallback mOnClearCallback;
+
+    public interface OnClearCallback {
+        void onClear();
+    }
+
+    public void setOnClearCallback(OnClearCallback onClearCallback) {
+        mOnClearCallback = onClearCallback;
+    }
 
     public DiamondGroupView(Context context) {
         this(context, null);
@@ -50,26 +60,6 @@ public class DiamondGroupView extends RelativeLayout {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_diamond_group, null, false);
         addView(view);
         ButterKnife.bind(this);
-    }
-
-    public void setBackground(int color) {
-        mKlineView.setBackgroundColor(color);
-    }
-
-    public void setKlineImageVisible(boolean visible) {
-        if (visible) {
-            mKlineImg.setVisibility(VISIBLE);
-        } else {
-            mKlineImg.setVisibility(GONE);
-        }
-    }
-
-    public void setKlineDescribeVisible(boolean visible) {
-        if (visible) {
-            mDescribe.setVisibility(VISIBLE);
-        } else {
-            mDescribe.setVisibility(GONE);
-        }
     }
 
     @OnClick({R.id.klineImg, R.id.describe})
@@ -101,10 +91,13 @@ public class DiamondGroupView extends RelativeLayout {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 setVisibility(INVISIBLE);
+                if (mOnClearCallback != null) {
+                    mOnClearCallback.onClear();
+                }
             }
         });
         animSet.setInterpolator(new AccelerateInterpolator());
-        animSet.setDuration(2000);
+        animSet.setDuration(500);
         animSet.start();
     }
 
@@ -126,6 +119,45 @@ public class DiamondGroupView extends RelativeLayout {
 
     public void setSelected(boolean selected) {
         mKlineView.setSelected(selected);
+    }
+
+    public boolean getSelected() {
+        return mKlineView.getSelected();
+    }
+
+    public DiamondGroupView setImageVisible(boolean visible) {
+        if (visible) {
+            mKlineImg.setVisibility(VISIBLE);
+        } else {
+            mKlineImg.setVisibility(GONE);
+        }
+        return this;
+    }
+
+    public DiamondGroupView setDescribeVisible(boolean visible) {
+        if (visible) {
+            mDescribe.setVisibility(VISIBLE);
+        } else {
+            mDescribe.setVisibility(GONE);
+        }
+        return this;
+    }
+
+    public DiamondGroupView setImageUrl(String url) {
+        Glide.with(getContext())
+                .load(url)
+                .into(mKlineImg);
+        return this;
+    }
+
+    public DiamondGroupView setDescribe(String content) {
+        mDescribe.setText(content);
+        return this;
+    }
+
+    public DiamondGroupView setBackground(int color) {
+        mKlineView.setBackgroundColor(color);
+        return this;
     }
 
 }

@@ -122,4 +122,9 @@ public class HowPlayActivity extends BaseActivity {
     public void onViewClicked(View view) {
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

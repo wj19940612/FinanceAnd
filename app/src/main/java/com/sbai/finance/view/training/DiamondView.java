@@ -73,7 +73,7 @@ public class DiamondView extends View {
         super.onDraw(canvas);
         canvas.translate(mWidth / 2, mHeight / 2);
         if (mSelected) {
-            mPaint.setColor(Color.WHITE);
+            mPaint.setColor(Color.RED);
             drawView(canvas, mHeight, mWidth);
             mPaint.setColor(mColor);
             drawView(canvas, mHeight - 4, mWidth - 4);
