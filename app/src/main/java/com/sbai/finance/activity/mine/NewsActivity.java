@@ -19,11 +19,13 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.cornucopia.EarningsAndExpendDetailsActivity;
 import com.sbai.finance.activity.mine.wallet.WithDrawActivity;
 import com.sbai.finance.activity.opinion.OpinionActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.UserInfo;
+import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -203,6 +205,13 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                 case HistoryNewsModel.WITH_DRAW_FAIL:
                     if (!historyNewsModel.isLossEfficacy()) {
                         Launcher.with(getActivity(), WithDrawActivity.class).execute();
+                    }
+                    break;
+                case HistoryNewsModel.WORSHIP_REWARD:
+                    if (!historyNewsModel.isLossEfficacy()) {
+                        Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class)
+                                .putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_INGOT)
+                                .execute();
                     }
                     break;
 

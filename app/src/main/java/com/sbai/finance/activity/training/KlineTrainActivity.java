@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.training.KlineTrainView;
 import com.sbai.finance.view.training.TrainHeaderView;
