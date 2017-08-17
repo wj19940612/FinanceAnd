@@ -17,10 +17,10 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.levelevaluation.TrainingQuestions;
+import com.sbai.finance.model.training.TrainingQuestion;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.TitleBar;
-import com.sbai.finance.view.train.TrainProgressBar;
+import com.sbai.finance.view.training.TrainProgressBar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,7 +47,7 @@ public class AnnalsCreateActivity extends BaseActivity {
 
     //用來记录底部界面选择答案的索引
     private HashSet<Integer> mResultSet;
-    private TrainingQuestions mTrainingQuestions;
+    private TrainingQuestion mTrainingQuestions;
 
     private int mAnnalsMaterialsBgDrawables[] = new int[]{R.drawable.bg_annals_materials_1, R.drawable.bg_annals_materials_2,
             R.drawable.bg_annals_materials_3, R.drawable.bg_annals_materials_4,
@@ -56,11 +56,11 @@ public class AnnalsCreateActivity extends BaseActivity {
 
     private SortResultAdapter mSortResultAdapter;
     private SortQuestionAdapter mSortQuestionAdapter;
-    private List<TrainingQuestions.ContentBean> mQuestionResultList;
+    private List<TrainingQuestion.ContentBean> mQuestionResultList;
 
 
     public interface OnItemClickListener {
-        void onItemClick(TrainingQuestions.ContentBean data, int position);
+        void onItemClick(TrainingQuestion.ContentBean data, int position);
     }
 
     @Override
@@ -81,20 +81,20 @@ public class AnnalsCreateActivity extends BaseActivity {
         initSortResultAdapter(mQuestionResultList);
     }
 
-    private void initSortResultAdapter(List<TrainingQuestions.ContentBean> content) {
-        mSortResultAdapter = new SortResultAdapter(new ArrayList<TrainingQuestions.ContentBean>(), this);
+    private void initSortResultAdapter(List<TrainingQuestion.ContentBean> content) {
+        mSortResultAdapter = new SortResultAdapter(new ArrayList<TrainingQuestion.ContentBean>(), this);
         mSortResultRecycleView.setLayoutManager(new LinearLayoutManager(this));
         mSortResultRecycleView.setAdapter(mSortResultAdapter);
         mSortResultAdapter.addData(content);
         mSortResultAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(TrainingQuestions.ContentBean data, int position) {
+            public void onItemClick(TrainingQuestion.ContentBean data, int position) {
                 updateResult(data, position);
             }
         });
     }
 
-    private void updateResult(TrainingQuestions.ContentBean data, int position) {
+    private void updateResult(TrainingQuestion.ContentBean data, int position) {
         data.setSelect(false);
         mResultSet.remove(position);
         mSortResultAdapter.notifyItemChanged(position, data);
@@ -102,15 +102,15 @@ public class AnnalsCreateActivity extends BaseActivity {
 
     }
 
-    private void initSortQuestionAdapter(List<TrainingQuestions.ContentBean> content) {
-        mSortQuestionAdapter = new SortQuestionAdapter(new ArrayList<TrainingQuestions.ContentBean>(), this);
+    private void initSortQuestionAdapter(List<TrainingQuestion.ContentBean> content) {
+        mSortQuestionAdapter = new SortQuestionAdapter(new ArrayList<TrainingQuestion.ContentBean>(), this);
         mSortQuestionAdapter.setItemBgDrawables(mAnnalsMaterialsBgDrawables);
         mSortQuestionRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mSortQuestionRecyclerView.setAdapter(mSortQuestionAdapter);
         mSortQuestionAdapter.addData(content);
         mSortQuestionAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(TrainingQuestions.ContentBean data, int position) {
+            public void onItemClick(TrainingQuestion.ContentBean data, int position) {
                 chooseResult(position);
             }
         });
@@ -118,7 +118,7 @@ public class AnnalsCreateActivity extends BaseActivity {
 
     private void chooseResult(int position) {
         mSortQuestionAdapter.notifyItemRemovedData(position);
-        ArrayList<TrainingQuestions.ContentBean> resultData = mSortResultAdapter.getResultData();
+        List<TrainingQuestion.ContentBean> resultData = mSortResultAdapter.getResultData();
         if (!resultData.isEmpty()) {
             for (int i = 0; i < resultData.size(); i++) {
                 if (mResultSet.add(i)) {
@@ -131,24 +131,24 @@ public class AnnalsCreateActivity extends BaseActivity {
 
 
     static class SortQuestionAdapter extends RecyclerView.Adapter<SortQuestionAdapter.AnnalsMaterialsViewHolder> {
-        ArrayList<TrainingQuestions.ContentBean> mSortQuestionList;
+        ArrayList<TrainingQuestion.ContentBean> mSortQuestionList;
         Context mContext;
         private int[] mItemBgDrawables;
         private OnItemClickListener mOnItemClickListener;
 
-        public SortQuestionAdapter(ArrayList<TrainingQuestions.ContentBean> annalsMaterialsList, Context context) {
+        public SortQuestionAdapter(ArrayList<TrainingQuestion.ContentBean> annalsMaterialsList, Context context) {
             this.mSortQuestionList = annalsMaterialsList;
             this.mContext = context;
         }
 
-        public void addData(List<TrainingQuestions.ContentBean> materialsList) {
+        public void addData(List<TrainingQuestion.ContentBean> materialsList) {
             mSortQuestionList.clear();
             notifyItemRangeRemoved(0, mSortQuestionList.size());
             mSortQuestionList.addAll(materialsList);
             notifyItemRangeChanged(0, mSortQuestionList.size());
         }
 
-        public ArrayList<TrainingQuestions.ContentBean> getQuestionData() {
+        public ArrayList<TrainingQuestion.ContentBean> getQuestionData() {
             return mSortQuestionList;
         }
 
@@ -158,7 +158,7 @@ public class AnnalsCreateActivity extends BaseActivity {
             notifyItemChanged(0, mSortQuestionList.size());
         }
 
-        public void insert(int position, TrainingQuestions.ContentBean data) {
+        public void insert(int position, TrainingQuestion.ContentBean data) {
             mSortQuestionList.add(0, data);
             notifyItemInserted(position);
         }
@@ -201,7 +201,7 @@ public class AnnalsCreateActivity extends BaseActivity {
             }
 
 
-            public void bindDataWithView(final TrainingQuestions.ContentBean contentBean, Context context, final int position, final OnItemClickListener onItemClickListener) {
+            public void bindDataWithView(final TrainingQuestion.ContentBean contentBean, Context context, final int position, final OnItemClickListener onItemClickListener) {
                 if (contentBean == null) return;
                 mMaterialsText.setText(contentBean.getContent());
                 mMaterialsText.setBackgroundResource(mItemBgDrawables[position % mItemBgDrawables.length]);
@@ -220,11 +220,11 @@ public class AnnalsCreateActivity extends BaseActivity {
 
     static class SortResultAdapter extends RecyclerView.Adapter<SortResultAdapter.ViewHolder> {
 
-        private ArrayList<TrainingQuestions.ContentBean> mSortResultList;
+        private ArrayList<TrainingQuestion.ContentBean> mSortResultList;
         private Context mContext;
         private OnItemClickListener mOnItemClickListener;
 
-        public SortResultAdapter(ArrayList<TrainingQuestions.ContentBean> sortResultList, Context context) {
+        public SortResultAdapter(ArrayList<TrainingQuestion.ContentBean> sortResultList, Context context) {
             mSortResultList = sortResultList;
             mContext = context;
         }
@@ -235,7 +235,7 @@ public class AnnalsCreateActivity extends BaseActivity {
             return new ViewHolder(view);
         }
 
-        public void addData(List<TrainingQuestions.ContentBean> materialsList) {
+        public void addData(List<TrainingQuestion.ContentBean> materialsList) {
             mSortResultList.clear();
             notifyItemRangeRemoved(0, mSortResultList.size());
             mSortResultList.addAll(materialsList);
@@ -244,13 +244,13 @@ public class AnnalsCreateActivity extends BaseActivity {
 
         public void changeItemData(int position) {
             if (position <= mSortResultList.size()) {
-                TrainingQuestions.ContentBean contentBean = mSortResultList.get(position);
+                TrainingQuestion.ContentBean contentBean = mSortResultList.get(position);
                 contentBean.setSelect(true);
                 notifyItemChanged(position, contentBean);
             }
         }
 
-        public ArrayList<TrainingQuestions.ContentBean> getResultData() {
+        public ArrayList<TrainingQuestion.ContentBean> getResultData() {
             return mSortResultList;
         }
 
@@ -282,7 +282,7 @@ public class AnnalsCreateActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(final TrainingQuestions.ContentBean contentBean, final int position, Context context, final OnItemClickListener onItemClickListener) {
+            public void bindDataWithView(final TrainingQuestion.ContentBean contentBean, final int position, Context context, final OnItemClickListener onItemClickListener) {
                 if (contentBean == null) return;
                 mLineNumber.setText(String.valueOf(position + 1));
                 if (contentBean.isSelect()) {

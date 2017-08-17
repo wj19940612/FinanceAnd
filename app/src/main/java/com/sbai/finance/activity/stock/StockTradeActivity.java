@@ -345,13 +345,18 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private void requestStockRTData() {
         Client.getStockRealtimeData(mVariety.getVarietyType())
-                .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>(false) {
+                .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>() {
                     @Override
                     protected void onRespSuccessData(StockRTData result) {
                         mStockRTData = result;
                         updateStockTrendView();
                         updateMarketDataView();
                         requestExchangeStatus();
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
                     }
                 }).fireFree();
     }
@@ -466,12 +471,17 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private void requestStockTrendDataAndSet() {
         Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<StockTrendData>>, List<StockTrendData>>(false) {
+                .setCallback(new Callback2D<Resp<List<StockTrendData>>, List<StockTrendData>>() {
                     @Override
                     protected void onRespSuccessData(List<StockTrendData> result) {
                         if (!result.isEmpty()) {
                             mStockTrendView.setDataList(result);
                         }
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
                     }
                 }).fireFree();
     }

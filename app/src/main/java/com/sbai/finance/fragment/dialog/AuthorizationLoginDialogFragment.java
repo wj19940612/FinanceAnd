@@ -113,7 +113,7 @@ public class AuthorizationLoginDialogFragment extends DialogFragment {
 
     private void openUserProtocolPage() {
         Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER)
-                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>(false) {
+                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                     @Override
                     protected void onRespSuccessData(ArticleProtocol data) {
                         Launcher.with(getActivity(), WebActivity.class)
@@ -131,6 +131,11 @@ public class AuthorizationLoginDialogFragment extends DialogFragment {
                                 .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
                                 .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                                 .execute();
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
                     }
                 }).fire();
     }

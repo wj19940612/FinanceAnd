@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -27,24 +23,22 @@ import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.levelevaluation.TrainingQuestions;
-import com.sbai.finance.model.training.CompletePeople;
 import com.sbai.finance.model.training.Experience;
-import com.sbai.finance.model.training.TrainDetail;
 import com.sbai.finance.model.training.TrainPraise;
+import com.sbai.finance.model.training.TrainedUserRecord;
+import com.sbai.finance.model.training.Training;
+import com.sbai.finance.model.training.TrainingDetail;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.view.ImageListView;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.dialog.ShareDialog;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +46,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.net.Client.SHARE_URL_TRAIN_EXPERIENCE;
 
 
 public class TrainDetailActivity extends BaseActivity {
@@ -96,22 +89,23 @@ public class TrainDetailActivity extends BaseActivity {
     @BindView(R.id.background)
     RelativeLayout mBackground;
 
-    private int mTrainId;
-    private int mType;
     private int mPage = 0;
     private int mPageSize = 3;
-    private TrainDetail mTrainDetail;
+    private TrainingDetail mTrainDetail;
     private List<String> mCompletePeopleList;
     private List<Experience> mHotExperienceList;
     private HotExperienceListAdapter mHotExperienceListAdapter;
+    private Training mTraining;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_detail);
         ButterKnife.bind(this);
+
+
         initData(getIntent());
-        initBackGround(mType);
+        initBackground();
 
         mCompletePeopleList = new ArrayList<>();
         mHotExperienceList = new ArrayList<>();
@@ -126,54 +120,53 @@ public class TrainDetailActivity extends BaseActivity {
     }
 
     private void initData(Intent intent) {
-        mType = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
-        mTrainId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
     }
 
-    private void initBackGround(int type) {
-        switch (type) {
-            case TYPE_THEORY:
-                mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.theory_red));
-                mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.theory_red));
-                mStartTrain.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_train_theory));
+    private void initBackground() {
+        switch (mTraining.getType()) {
+            case Training.TYPE_THEORY:
+                mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
+                mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
+                mStartTrain.setBackgroundResource(R.drawable.bg_train_theory);
                 break;
-            case TYPE_TECHNOLOGY:
-                mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.technology_violet));
-                mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.technology_violet));
-                mStartTrain.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_train_technology));
+            case Training.TYPE_TECHNOLOGY:
+                mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.violetTechnologyTraining));
+                mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.violetTechnologyTraining));
+                mStartTrain.setBackgroundResource(R.drawable.bg_train_technology);
                 break;
-            case TYPE_FUNDAMENTALS:
-                mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.fundamentals_yellow));
-                mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.fundamentals_yellow));
-                mStartTrain.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_train_fundamentals));
+            case Training.TYPE_FUNDAMENTAL:
+                mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.yellowFundamentalTraining));
+                mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.yellowFundamentalTraining));
+                mStartTrain.setBackgroundResource(R.drawable.bg_train_fundamentals);
                 break;
-            case TYPE_COMPREHENSIVE:
-                mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.comprehensive_blue));
-                mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.comprehensive_blue));
-                mStartTrain.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.bg_train_comprehensive));
+            case Training.TYPE_COMPREHENSIVE:
+                mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blueComprehensiveTraining));
+                mBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blueComprehensiveTraining));
+                mStartTrain.setBackgroundResource(R.drawable.bg_train_comprehensive);
                 break;
         }
     }
 
     private void requestTrainDetail() {
-        Client.getTrainDetail(mTrainId).setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<TrainDetail>, TrainDetail>() {
+        Client.getTrainingDetail(mTraining.getId()).setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<TrainingDetail>, TrainingDetail>() {
                     @Override
-                    protected void onRespSuccessData(TrainDetail trainDetail) {
-                        mTrainDetail = trainDetail;
-                        updateTrainDetail(trainDetail);
+                    protected void onRespSuccessData(TrainingDetail data) {
+                        mTrainDetail = data;
+                        updateTrainDetail(mTrainDetail);
                     }
                 }).fire();
     }
 
     private void requestFinishPeopleList() {
-        Client.getFinishPeopleList(mPage, mPageSize, mTrainId).setTag(TAG)
+        Client.getTrainedUserRecords(mPage, mPageSize, mTraining.getId()).setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<CompletePeople>>, List<CompletePeople>>() {
+                .setCallback(new Callback2D<Resp<List<TrainedUserRecord>>, List<TrainedUserRecord>>() {
                     @Override
-                    protected void onRespSuccessData(List<CompletePeople> completePeopleList) {
-                        for (CompletePeople completePeople : completePeopleList) {
-                            mCompletePeopleList.add(completePeople.getUser().getUserPortrait());
+                    protected void onRespSuccessData(List<TrainedUserRecord> data) {
+                        for (TrainedUserRecord userRecord : data) {
+                            mCompletePeopleList.add(userRecord.getUser().getUserPortrait());
                         }
                         mImageListView.setImages(mCompletePeopleList, R.drawable.ic_board_head_more_grey);
                     }
@@ -181,7 +174,8 @@ public class TrainDetailActivity extends BaseActivity {
     }
 
     private void requestHotExperienceList() {
-        Client.getHotExperienceList(mTrainId).setTag(TAG)
+
+        Client.getHotExperienceList(mTraining.getId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
                     @Override
                     protected void onRespSuccessData(List<Experience> experienceList) {
@@ -197,8 +191,7 @@ public class TrainDetailActivity extends BaseActivity {
         mHotExperienceListAdapter.clear();
         mHotExperienceListAdapter.addAll(experienceList);
     }
-
-    private void updateTrainDetail(TrainDetail trainDetail) {
+    private void updateTrainDetail(TrainingDetail trainDetail) {
         if (trainDetail.getTrain() != null) {
             mTitle.setText(trainDetail.getTrain().getTitle());
             mIntroduce.setText(trainDetail.getTrain().getRemark());
@@ -369,78 +362,33 @@ public class TrainDetailActivity extends BaseActivity {
                 break;
             case R.id.hotExperience:
                 Launcher.with(getActivity(), TrainExperienceActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD_1, mTrainId)
+             .putExtra(Launcher.EX_PAYLOAD_1, mTraining.getId())
                         .execute();
                 break;
             case R.id.writeExperience:
                 Launcher.with(getActivity(), WriteExperienceActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mType)
+                        .putExtra(Launcher.EX_PAYLOAD, mTraining.getType())
                         .execute();
                 break;
             case R.id.startTrain:
-                // TODO: 2017/8/10 开始训练
-                if (mTrainDetail != null) {
-                    Client.requestTrainQuestions(mTrainId)
-                            .setTag(TAG)
-                            .setIndeterminate(this)
-                            .setCallback(new Callback2D<Resp<String>, String>() {
-                                @Override
-                                protected void onRespSuccessData(String data) {
-                                    ArrayList<TrainingQuestions> trainingQuestionsList = getExamQuestionsList(data);
-                                    if (trainingQuestionsList != null && !trainingQuestionsList.isEmpty()) {
-                                        TrainingQuestions trainingQuestions = trainingQuestionsList.get(0);
-                                        openTrainPage(trainingQuestions);
-                                    }
-                                }
-                            })
-                            .fire();
-                }
-                break;
-
-
-        }
-
-
-    }
-
-    private void openTrainPage(TrainingQuestions trainingQuestions) {
-        TrainDetail.TrainBean train = mTrainDetail.getTrain();
-        if (train == null) return;
-        switch (trainingQuestions.getType()) {
-            case TrainingQuestions.TYPE_SINGLE_CHOICE:
-                Launcher.with(getActivity(), AnnalsCreateActivity.class)
-                        .putExtra(ExtraKeys.TRAIN_QUESTIONS, trainingQuestions)
-                        .putExtra(ExtraKeys.TRAIN_TARGET_TIME, train.getTime())
+                Launcher.with(getActivity(), TrainingCountDownActivity.class)
+                        .putExtra(ExtraKeys.TRAINING, mTraining)
                         .execute();
                 break;
         }
     }
 
-    private ArrayList<TrainingQuestions> getExamQuestionsList(String data) {
-        //需要对其进行AES解密
-        try {
-            String s = SecurityUtil.AESDecrypt(data);
-            Log.d(TAG, "getExamQuestionsList: " + s);
-            Type type = new TypeToken<ArrayList<TrainingQuestions>>() {
-            }.getType();
-            return new Gson().fromJson(s, type);
-        } catch (JsonSyntaxException e) {
-            Log.d(TAG, "getExamQuestionsList: " + e);
-        }
-        return null;
-
-    }
 
     private void share() {
         ShareDialog.with(getActivity())
                 .setTitle(getString(R.string.share_title))
                 .setShareTitle(getString(R.string.train_share_share_title, mTrainDetail.getTrain().getTitle()))
                 .setShareDescription(getString(R.string.train_share_description))
-                .setShareUrl(String.format(SHARE_URL_TRAIN_EXPERIENCE, mTrainId))
+                .setShareUrl(String.format(Client.SHARE_URL_TRAIN_EXPERIENCE, mTraining.getId()))
                 .hasFeedback(true)
                 .setListener(new ShareDialog.OnShareDialogCallback() {
                     @Override
-                    public void onShareSuccess(ShareDialog.SHARE_PLATFORM platform) {
+                    public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
                         Client.share().setTag(TAG).fire();
                     }
 

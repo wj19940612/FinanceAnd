@@ -94,7 +94,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
             Client.queryCertification(mDataId)
                     .setTag(TAG)
                     .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>(false) {
+                    .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>() {
                         @Override
                         protected void onRespSuccessData(UserIdentityCardInfo data) {
                             Log.d(TAG, "onRespSuccessData: " + data.toString());
@@ -103,13 +103,18 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                             updateUserCreditStatus(data);
                             mUserIdentityCardInfo = data;
                         }
+
+                        @Override
+                        protected boolean onErrorToast() {
+                            return false;
+                        }
                     })
                     .fireFree();
         } else {
             Client.getUserCreditApproveStatus()
                     .setTag(TAG)
                     .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>(false) {
+                    .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>() {
                         @Override
                         protected void onRespSuccessData(UserIdentityCardInfo data) {
                             UserInfo userInfo = LocalUser.getUser().getUserInfo();
@@ -119,6 +124,11 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                             mImagePath.append(1, data.getCertBack());
                             updateUserCreditStatus(data);
                             mUserIdentityCardInfo = data;
+                        }
+
+                        @Override
+                        protected boolean onErrorToast() {
+                            return false;
                         }
                     })
                     .fireFree();

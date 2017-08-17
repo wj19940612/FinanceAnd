@@ -20,8 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
@@ -31,7 +31,9 @@ import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.training.ScoreIntroduceActivity;
 import com.sbai.finance.activity.training.TrainDetailActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.training.TrainProjectModel;
+import com.sbai.finance.model.training.MyTrainingRecord;
+import com.sbai.finance.model.training.Training;
+import com.sbai.finance.model.training.TrainingRecord;
 import com.sbai.finance.model.training.UserEachTrainingScoreModel;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -43,6 +45,7 @@ import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.StrUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -115,7 +118,7 @@ public class TrainingFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         showJoinTestHint = true;
-        mTrainAdapter = new TrainAdapter(getActivity(), new ArrayList<TrainProjectModel>());
+        mTrainAdapter = new TrainAdapter(getActivity(), new ArrayList<MyTrainingRecord>());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -123,18 +126,17 @@ public class TrainingFragment extends BaseFragment {
         mRecyclerView.setAdapter(mTrainAdapter);
         mTrainAdapter.setOnTrainClickListener(new TrainAdapter.OnTrainClickListener() {
             @Override
-            public void onTrainClick(TrainProjectModel trainProjectModel, int position) {
-                if (trainProjectModel.getTrain() != null) {
+            public void onTrainClick(MyTrainingRecord myTrainingRecord, int position) {
+                if (myTrainingRecord.getTrain() != null) {
                     Launcher.with(getActivity(), TrainDetailActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, trainProjectModel.getTrain().getType())
-                            .putExtra(Launcher.EX_PAYLOAD_1, trainProjectModel.getTrain().getId())
+                            .putExtra(ExtraKeys.TRAINING, myTrainingRecord.getTrain())
                             .execute();
                 }
             }
         });
         requestUserScore();
         updateUserScore(null);
-        requestMineTrainingProjectList();
+        requestMyTrainingList();
     }
 
     @Override
@@ -142,94 +144,48 @@ public class TrainingFragment extends BaseFragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isAdded()) {
             requestUserScore();
-            requestMineTrainingProjectList();
+            requestMyTrainingList();
         }
     }
 
-    private void requestMineTrainingProjectList() {
-        if (LocalUser.getUser().isLogin()) {
-            Client.requestMineTrainProjectList()
-                    .setTag(TAG)
-                    .setCallback(new Callback2D<Resp<ArrayList<TrainProjectModel>>, ArrayList<TrainProjectModel>>() {
-                        @Override
-                        protected void onRespSuccessData(ArrayList<TrainProjectModel> data) {
-                            if (data != null && !data.isEmpty()) {
-                                mTrainAdapter.setIsMineTrained(true);
-                                mRecommendTrainTitle.setText(R.string.mine_train);
-                                updateTrainProjectList(data);
-                            } else {
-                                requestRecommendTrainProjectList();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
-                            requestRecommendTrainProjectList();
-                        }
-                    })
-                    .fire();
-        } else {
-            requestRecommendTrainProjectList();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        requestUserScore();
-        requestMineTrainingProjectList();
-    }
-
-    private void requestRecommendTrainProjectList() {
-        Client.requestTrainProjectList()
-                .setTag(TAG)
-                .setCallback(new Callback2D<Resp<ArrayList<TrainProjectModel>>, ArrayList<TrainProjectModel>>() {
+    private void requestMyTrainingList() {
+        Client.requestMineTrainProjectList().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<MyTrainingRecord>>, List<MyTrainingRecord>>() {
                     @Override
-                    protected void onRespSuccessData(ArrayList<TrainProjectModel> data) {
-                        mTrainAdapter.setIsMineTrained(false);
-                        updateTrainProjectList(data);
-                    }
+                    protected void onRespSuccessData(List<MyTrainingRecord> data) {
+                        if (!data.isEmpty()) {
+                            mEmpty.setVisibility(View.GONE);
+                            mRecommendTrainTitle.setVisibility(View.VISIBLE);
+                            mRecyclerView.setVisibility(View.VISIBLE);
 
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        updateTrainProjectList(null);
+                            showMyTrainingList(data);
+                        } else {
+                            mEmpty.setVisibility(View.VISIBLE);
+                            mRecommendTrainTitle.setVisibility(View.GONE);
+                            mRecyclerView.setVisibility(View.GONE);
+                        }
                     }
                 }).fire();
     }
 
-    private void updateTrainProjectList(ArrayList<TrainProjectModel> trainProjectModels) {
-        if (trainProjectModels == null || trainProjectModels.isEmpty()) {
-            mEmpty.setVisibility(View.VISIBLE);
-            mRecommendTrainTitle.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.GONE);
+    private void showMyTrainingList(List<MyTrainingRecord> data) {
+        // 我的训练记录里面如果有记录，那就是我的训练数据；不然为推荐训练数据（记录对象都空）
+        boolean hasTrainingRecord = data.get(0).getRecord() != null;
+        if (hasTrainingRecord) {
+            mTrainAdapter.setIsMineTrained(true);
+            mRecommendTrainTitle.setText(R.string.mine_train);
         } else {
-            mEmpty.setVisibility(View.GONE);
-            mRecommendTrainTitle.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-            mTrainAdapter.clear();
-            mTrainAdapter.addAll(trainProjectModels);
-            showJoinTestLayout(trainProjectModels);
+            mTrainAdapter.setIsMineTrained(false);
+            mRecommendTrainTitle.setText(R.string.recommend_train);
+            updateCreditMessage(hasTrainingRecord);
         }
+        mTrainAdapter.clear();
+        mTrainAdapter.addAll(data);
     }
 
-    private void showJoinTestLayout(ArrayList<TrainProjectModel> trainProjectModels) {
-        int joinTestCount = 0;
-        if (trainProjectModels == null) return;
-        for (TrainProjectModel data : trainProjectModels) {
-            TrainProjectModel.RecordBean record = data.getRecord();
-            if (record != null) {
-                joinTestCount += record.getFinish();
-            }
-        }
-        changeUserJoinTestStatus(joinTestCount);
-
-    }
-
-    private void changeUserJoinTestStatus(int joinTestCount) {
+    private void updateCreditMessage(boolean hasTrainingRecord) {
         if (LocalUser.getUser().isLogin()) {
-            if (joinTestCount > 0) {
+            if (hasTrainingRecord) {
                 double rank = mUserEachTrainingScoreModel != null ? mUserEachTrainingScoreModel.getRank() : 0;
                 mScoreProgress.setText(getString(R.string.more_than_number, NumberFormatUtils.formatPercentString(rank)));
             } else {
@@ -238,6 +194,13 @@ public class TrainingFragment extends BaseFragment {
         } else {
             mScoreProgress.setText(R.string.login_look_detail);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requestUserScore();
+        requestMyTrainingList();
     }
 
     private void updateUserScore(UserEachTrainingScoreModel data) {
@@ -382,7 +345,7 @@ public class TrainingFragment extends BaseFragment {
                 }
                 break;
             case android.R.id.empty:
-                requestMineTrainingProjectList();
+                requestMyTrainingList();
                 break;
         }
     }
@@ -392,31 +355,31 @@ public class TrainingFragment extends BaseFragment {
         private OnTrainClickListener mOnTrainClickListener;
 
         interface OnTrainClickListener {
-            void onTrainClick(TrainProjectModel trainProjectModel, int position);
+            void onTrainClick(MyTrainingRecord myTrainingRecord, int position);
         }
 
         public void setOnTrainClickListener(OnTrainClickListener onTrainClickListener) {
             this.mOnTrainClickListener = onTrainClickListener;
         }
 
-        private ArrayList<TrainProjectModel> mTrainProjectModels;
+        private ArrayList<MyTrainingRecord> mMyTrainingRecords;
         private Context mContext;
         //用来区分自己的训练还是推荐训练
         private boolean mIsMineTrained;
 
-        public TrainAdapter(Context context, ArrayList<TrainProjectModel> trainProjectModels) {
-            this.mTrainProjectModels = trainProjectModels;
+        public TrainAdapter(Context context, ArrayList<MyTrainingRecord> myTrainingRecords) {
+            this.mMyTrainingRecords = myTrainingRecords;
             mContext = context;
         }
 
-        public void addAll(ArrayList<TrainProjectModel> trainProjectModels) {
-            mTrainProjectModels.addAll(trainProjectModels);
-            notifyItemRangeChanged(0, mTrainProjectModels.size());
+        public void addAll(List<MyTrainingRecord> myTrainingRecords) {
+            mMyTrainingRecords.addAll(myTrainingRecords);
+            notifyItemRangeChanged(0, mMyTrainingRecords.size());
         }
 
         public void clear() {
-            mTrainProjectModels.clear();
-            notifyItemRangeRemoved(0, mTrainProjectModels.size());
+            mMyTrainingRecords.clear();
+            notifyItemRangeRemoved(0, mMyTrainingRecords.size());
         }
 
         @Override
@@ -427,13 +390,13 @@ public class TrainingFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mTrainProjectModels.get(position),
+            holder.bindDataWithView(mMyTrainingRecords.get(position),
                     mContext, mIsMineTrained, mOnTrainClickListener, position);
         }
 
         @Override
         public int getItemCount() {
-            return mTrainProjectModels != null ? mTrainProjectModels.size() : 0;
+            return mMyTrainingRecords != null ? mMyTrainingRecords.size() : 0;
         }
 
         public void setIsMineTrained(boolean isMineTrained) {
@@ -461,19 +424,19 @@ public class TrainingFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(final TrainProjectModel trainProjectModel, Context context,
+            public void bindDataWithView(final MyTrainingRecord myTrainingRecord, Context context,
                                          boolean isMineTrained, final OnTrainClickListener onTrainClickListener,
                                          final int position) {
-                if (trainProjectModel == null) return;
+                if (myTrainingRecord == null) return;
 
-                TrainProjectModel.RecordBean record = trainProjectModel.getRecord();
-                TrainProjectModel.TrainBean train = trainProjectModel.getTrain();
+                TrainingRecord record = myTrainingRecord.getRecord();
+                Training train = myTrainingRecord.getTrain();
 
                 mCardLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (onTrainClickListener != null) {
-                            onTrainClickListener.onTrainClick(trainProjectModel, position);
+                            onTrainClickListener.onTrainClick(myTrainingRecord, position);
                         }
                     }
                 });
@@ -503,7 +466,6 @@ public class TrainingFragment extends BaseFragment {
                 } else {
                     mTrainIcon.setBackgroundResource(R.drawable.bg_common_replace_image);
                 }
-
 
                 if (isMineTrained) {
                     mTrainStatus.setVisibility(View.GONE);

@@ -291,6 +291,18 @@ public class Client {
                 .put("platform", 0));
     }
 
+    /**
+     * 注册和找回密码的情况下验证手机号
+     *
+     * @param phone
+     * @param type 0 注册，1 忘记密码
+     * @return
+     */
+    public static API checkPhone(String phone, int type) {
+        return new API("/user/registerLogin/checkAccount.do", new ApiParams()
+                .put("phone", phone)
+                .put("type", type));
+    }
 
     /**
      * 忘记密码：更新新密码
@@ -2204,15 +2216,23 @@ public class Client {
     }
 
     /**
-     * 推荐训练列表  一般不会很多
+     * 获取训练列表
+     *
+     * @return
      */
-    public static API getRecommendTrainList(int page) {
-        return new API("/train/train/recommendList.do",
+    public static API getRecommendTrainList() {
+        return new API("/train/train/list.do",
                 new ApiParams()
-                        .put("page", page)
+                        .put("page", 0)
                         .put("pageSize", 100));
     }
 
+    /**
+     *
+     *
+     * @param deviceId
+     * @return
+     */
     public static API getTrainCourse(String deviceId) {
         return new API(POST, "/train/course/task.do",
                 new ApiParams()
@@ -2342,33 +2362,33 @@ public class Client {
                         .put("ids", ids));
     }
 
-    /**
-     * 获取训练详情
+	/**
+	 * 获取训练详情
      *
-     * @param trainId
-     * @return
-     */
-    public static API getTrainDetail(int trainId) {
-        return new API("/train/train/detail.do",
-                new ApiParams()
-                        .put("trainId", trainId));
-    }
+	 * @param trainId
+	 * @return
+	 */
+	public static API getTrainingDetail(int trainId) {
+		return new API("/train/train/detail.do",
+				new ApiParams()
+						.put("trainId", trainId));
+	}
 
-    /**
-     * 最近完成训练的人
+	/**
+	 * 最近完成训练的人 以及训练记录
      *
-     * @param page
-     * @param pageSize
-     * @param trainId
-     * @return
-     */
-    public static API getFinishPeopleList(int page, int pageSize, int trainId) {
-        return new API("/train/train/finishUser.do",
-                new ApiParams()
-                        .put("page", page)
-                        .put("pageSize", pageSize)
-                        .put("trainId", trainId));
-    }
+	 * @param page
+	 * @param pageSize
+	 * @param trainId
+	 * @return
+	 */
+	public static API getTrainedUserRecords(int page, int pageSize, int trainId) {
+		return new API("/train/train/finishUser.do",
+				new ApiParams()
+						.put("page", page)
+						.put("pageSize", pageSize)
+						.put("trainId", trainId));
+	}
 
 
     /**

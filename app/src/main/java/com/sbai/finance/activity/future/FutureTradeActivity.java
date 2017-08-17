@@ -259,10 +259,15 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
 
     private void requestTrendDataAndSet() {
         Client.getTrendData(mVariety.getContractsCode()).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<TrendViewData>>, List<TrendViewData>>(false) {
+                .setCallback(new Callback2D<Resp<List<TrendViewData>>, List<TrendViewData>>() {
                     @Override
                     protected void onRespSuccessData(List<TrendViewData> data) {
                         mTrendView.setDataList(data);
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return true;
                     }
                 }).fireFree();
     }

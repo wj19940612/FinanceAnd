@@ -11,8 +11,8 @@ public class PushMessageModel {
     private static final int CLASSIFY_SYS = 0;
     private static final int CLASSIFY_USER = 1;
 
-    //大事件
-    private static final int TYPE_EVENT = 0;
+    //日报
+    private static final int TYPE_REPORT = 0;
 
 //    "msg":"对战匹配成功,赶紧加入吧！","classify":2,"data":"hall","createTime":1499052945482,"title":"对战匹配成功","type":1
 
@@ -43,8 +43,8 @@ public class PushMessageModel {
     private DataBean data;
 
 
-    public boolean isEventDetail() {
-        return getClassify() == PushMessageModel.CLASSIFY_SYS && getType() == PushMessageModel.TYPE_EVENT;
+    public boolean isDailyReportDetail() {
+        return getClassify() == PushMessageModel.CLASSIFY_SYS && getType() == PushMessageModel.TYPE_REPORT;
     }
 
     public boolean isBorrowInfo() {

@@ -1,6 +1,8 @@
 package com.sbai.finance.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -21,6 +23,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.discovery.DailyReportActivity;
@@ -34,8 +37,8 @@ import com.sbai.finance.activity.training.MoreTrainFeedbackActivity;
 import com.sbai.finance.activity.training.TrainDetailActivity;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.training.Train;
-import com.sbai.finance.model.training.TrainProgram;
+import com.sbai.finance.model.training.MyTrainingRecord;
+import com.sbai.finance.model.training.Training;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -104,6 +107,14 @@ public class DiscoveryFragment extends BaseFragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            requestTrainingList();
+        }
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mFeaturesNavigation.setOnNavItemClickListener(new FeaturesNavigation.OnNavItemClickListener() {
@@ -136,7 +147,6 @@ public class DiscoveryFragment extends BaseFragment {
 
         initTrainingListView();
         initDailyReportView();
-
         requestTrainingList();
         requestDailyReportData();
     }
@@ -151,20 +161,20 @@ public class DiscoveryFragment extends BaseFragment {
     }
 
     private void requestTrainingList() {
-        Client.getRecommendTrainList(0).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Train>>, List<Train>>() {
+        Client.getRecommendTrainList().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<MyTrainingRecord>>, List<MyTrainingRecord>>() {
                     @Override
-                    protected void onRespSuccessData(List<Train> data) {
+                    protected void onRespSuccessData(List<MyTrainingRecord> data) {
                         updateTrainData(data);
                     }
                 }).fireFree();
     }
 
-    private void updateTrainData(List<Train> data) {
+    private void updateTrainData(List<MyTrainingRecord> data) {
         mTrainAdapter.clear();
-        for (Train train : data) {
-            if (train.getTrain() != null) {
-                mTrainAdapter.add(train.getTrain());
+        for (MyTrainingRecord trainingRecord : data) {
+            if (trainingRecord.getTrain() != null) {
+                mTrainAdapter.add(trainingRecord);
             }
         }
         mTrainAdapter.notifyDataSetChanged();
@@ -203,11 +213,10 @@ public class DiscoveryFragment extends BaseFragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TrainProgram trainProgram = (TrainProgram) parent.getItemAtPosition(position);
+                MyTrainingRecord trainProgram = (MyTrainingRecord) parent.getItemAtPosition(position);
                 if (trainProgram != null) {
                     Launcher.with(getActivity(), TrainDetailActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, trainProgram.getId())
-                            .putExtra(Launcher.EX_PAYLOAD_1, trainProgram.getType())
+                            .putExtra(ExtraKeys.TRAINING, trainProgram.getTrain())
                             .execute();
                 }
             }
@@ -246,7 +255,7 @@ public class DiscoveryFragment extends BaseFragment {
         }
     }
 
-    static class TrainAdapter extends ArrayAdapter<TrainProgram> {
+    static class TrainAdapter extends ArrayAdapter<MyTrainingRecord> {
 
         public TrainAdapter(@NonNull Context context) {
             super(context, 0);
@@ -284,32 +293,32 @@ public class DiscoveryFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindDataWithView(TrainProgram item, Context context) {
+            private void bindDataWithView(MyTrainingRecord item, Context context) {
                 Glide.with(context)
-                        .load(item.getImageUrl())
+                        .load(item.getTrain().getImageUrl())
                         .into(mTrainImg);
-                mTrainType.setText(item.getTitle());
-                if (item.getFinishCount() == 0) {
-                    mTrainCount.setText(context.getString(R.string.have_no_train));
+                mTrainType.setText(item.getTrain().getTitle());
+                if (!LocalUser.getUser().isLogin()) {
+                    mTrainCount.setText(context.getString(R.string.train_count, 0));
                 } else {
-                    mTrainCount.setText(context.getString(R.string.train_count, item.getFinishCount()));
+                    if (item.getRecord() == null) {
+                        mTrainCount.setText(context.getString(R.string.have_no_train));
+                    } else {
+                        mTrainCount.setText(context.getString(R.string.train_count, item.getRecord().getFinish()));
+                    }
                 }
-                mGrade.setText(context.getString(R.string.level, item.getLevel()));
-                switch (item.getType()) {
-                    case Train.TRAIN_THEORY:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
-                        } else {
-                            mContent.setBackgroundDrawable(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
-                        }
+                mGrade.setText(context.getString(R.string.level, item.getTrain().getLevel()));
+                switch (item.getTrain().getType()) {
+                    case Training.TYPE_THEORY:
+                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
                         break;
-                    case Train.TRAIN_TECHNOLOGY:
+                    case Training.TYPE_TECHNOLOGY:
                         mContent.setBackground(createDrawable(new int[]{Color.parseColor("#694FC8"), Color.parseColor("#C86DD7")}, context));
                         break;
-                    case Train.TRAIN_BASIS:
+                    case Training.TYPE_FUNDAMENTAL:
                         mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FF8930"), Color.parseColor("#F7D34C")}, context));
                         break;
-                    case Train.TRAIN_COMPREHENSIVE:
+                    case Training.TYPE_COMPREHENSIVE:
                         mContent.setBackground(createDrawable(new int[]{Color.parseColor("#4F8CFE"), Color.parseColor("#33BCFE")}, context));
                         break;
                 }

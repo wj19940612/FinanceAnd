@@ -127,7 +127,7 @@ public class MineFragment extends BaseFragment {
 
     private void requestNoReadNewsNumber() {
         Client.getNoReadMessageNumber().setTag(TAG)
-                .setCallback(new Callback2D<Resp<ArrayList<NotReadMessageNumberModel>>, ArrayList<NotReadMessageNumberModel>>(false) {
+                .setCallback(new Callback2D<Resp<ArrayList<NotReadMessageNumberModel>>, ArrayList<NotReadMessageNumberModel>>() {
                     @Override
                     protected void onRespSuccessData(ArrayList<NotReadMessageNumberModel> data) {
                         int count = 0;
@@ -142,6 +142,11 @@ public class MineFragment extends BaseFragment {
                         } else {
                             mMessage.setSubTextVisible(View.GONE);
                         }
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
                     }
                 }).fireFree();
     }

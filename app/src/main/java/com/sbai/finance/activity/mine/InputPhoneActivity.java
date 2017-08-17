@@ -17,6 +17,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.model.mutual.ArticleProtocol;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -167,10 +168,7 @@ public class InputPhoneActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.next:
-                Launcher.with(getActivity(), AuthCodeActivity.class)
-                        .putExtra(ExtraKeys.PAGE_TYPE, mPageType)
-                        .putExtra(ExtraKeys.PHONE, getPhoneNumber())
-                        .executeForResult(REQ_CODE_SUB_OPERATION);
+                checkPhoneAndNext();
                 break;
             case R.id.rootView:
                 KeyBoardUtils.closeKeyboard(mRootView);
@@ -184,9 +182,23 @@ public class InputPhoneActivity extends BaseActivity {
         }
     }
 
+    private void checkPhoneAndNext() {
+        int type = (mPageType == PAGE_TYPE_REGISTER ? 0 : 1);
+        Client.checkPhone(getPhoneNumber(), type).setTag(TAG)
+                .setCallback(new Callback<Resp>() {
+                    @Override
+                    protected void onRespSuccess(Resp resp) {
+                        Launcher.with(getActivity(), AuthCodeActivity.class)
+                                .putExtra(ExtraKeys.PAGE_TYPE, mPageType)
+                                .putExtra(ExtraKeys.PHONE, getPhoneNumber())
+                                .executeForResult(REQ_CODE_SUB_OPERATION);
+                    }
+                }).fire();
+    }
+
     private void openUserProtocolPage() {
         Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER).setTag(TAG)
-                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>(false) {
+                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                     @Override
                     protected void onRespSuccessData(ArticleProtocol data) {
                         Launcher.with(getActivity(), WebActivity.class)
@@ -204,6 +216,11 @@ public class InputPhoneActivity extends BaseActivity {
                                 .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
                                 .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                                 .execute();
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
                     }
                 }).fire();
     }

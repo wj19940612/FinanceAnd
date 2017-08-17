@@ -13,7 +13,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.RewardGetActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.levelevaluation.TrainingQuestions;
+import com.sbai.finance.model.training.TrainingQuestion;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -106,7 +106,8 @@ public class EvaluationStartActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<String>, String>() {
                     @Override
                     protected void onRespSuccessData(String data) {
-                        ArrayList<TrainingQuestions> trainingQuestionsList = getExamQuestionsList(data);
+
+                        ArrayList<TrainingQuestion> trainingQuestionsList = getExamQuestionsList(data);
                         if (trainingQuestionsList != null && !trainingQuestionsList.isEmpty()) {
                             Launcher.with(getActivity(), EvaluationQuestionsActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, trainingQuestionsList)
@@ -120,12 +121,12 @@ public class EvaluationStartActivity extends BaseActivity {
 
     }
 
-    private ArrayList<TrainingQuestions> getExamQuestionsList(String data) {
+    private ArrayList<TrainingQuestion> getExamQuestionsList(String data) {
         //需要对其进行AES解密
         try {
             String s = SecurityUtil.AESDecrypt(data);
             Log.d(TAG, "getExamQuestionsList: " + s);
-            Type type = new TypeToken<ArrayList<TrainingQuestions>>() {
+            Type type = new TypeToken<ArrayList<TrainingQuestion>>() {
             }.getType();
             return new Gson().fromJson(s, type);
         } catch (JsonSyntaxException e) {

@@ -29,12 +29,17 @@ public class SysTime {
 
         Client.getSystemTime()
                 .setRetryPolicy(new DefaultRetryPolicy(5 * 1000, 3, 1))
-                .setCallback(new Callback2D<Resp<Long>, Long>(false) {
+                .setCallback(new Callback2D<Resp<Long>, Long>() {
                     @Override
                     protected void onRespSuccessData(Long data) {
                         mSystemTime = data.longValue();
                         Preference.get().setServerTime(mSystemTime);
                         TimeRecorder.record(RECORD_KEY);
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
                     }
                 }).fire();
     }

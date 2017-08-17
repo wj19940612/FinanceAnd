@@ -21,10 +21,6 @@ public abstract class StockCallback<T, D> extends Callback<T> {
         super();
     }
 
-    public StockCallback(boolean errorToast) {
-        super(errorToast);
-    }
-
     @Override
     public void onSuccess(T t) {
         Log.d(RequestManager.TAG, getUrl() + " onSuccess: " + t.toString());

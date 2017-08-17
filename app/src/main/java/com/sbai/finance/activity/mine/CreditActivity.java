@@ -55,12 +55,17 @@ public class CreditActivity extends BaseActivity {
         Client.getUserCreditApproveStatus()
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>(false) {
+                .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>() {
                     @Override
                     protected void onRespSuccessData(UserIdentityCardInfo data) {
                         if (data.getStatus() != null) {
                             updateUserCreditStatus(data.getStatus());
                         }
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
                     }
                 })
                 .fireFree();

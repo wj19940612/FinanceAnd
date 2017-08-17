@@ -77,7 +77,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	private List<Question> mMyQuestionList;
 	private RefreshReceiver mRefreshReceiver;
 	private MediaPlayerManager mMediaPlayerManager;
-	private int mPlayingPosition = -1;
+	private int mPlayingID = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +88,13 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		mMediaPlayerManager = new MediaPlayerManager(this);
 		mMyQuestionList = new ArrayList<>();
 		mMyQuestionAdapter = new MyQuestionAdapter(this);
+		mListView.setEmptyView(mEmpty);
+		mListView.setAdapter(mMyQuestionAdapter);
+		mListView.setOnItemClickListener(this);
+		mListView.setOnScrollListener(this);
+		initSwipeRefreshLayout();
+		registerRefreshReceiver();
+
 		mMyQuestionAdapter.setOnClickCallback(new MyQuestionAdapter.OnClickCallback() {
 			@Override
 			public void onRewardClick(Question item) {
@@ -95,56 +102,49 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 			}
 
 			@Override
-			public void onVoiceClick(final Question item, final int position, final View view) {
-				view.setBackgroundResource(R.drawable.bg_play_voice);
-
+			public void onVoiceClick(final Question item) {
 				//播放下一个之前把上一个播放位置的动画停了
-				if (mPlayingPosition != -1) {
-					Question question = mMyQuestionAdapter.getItem(mPlayingPosition);
-					if (question != null) {
-						question.setPlaying(false);
-						mMyQuestionAdapter.notifyDataSetChanged();
+				if (mPlayingID != -1) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == mPlayingID) {
+								question.setPlaying(false);
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
+						}
 					}
 				}
 
 				if (!MissVoiceRecorder.isHeard(item.getId())) {
 					//没听过的
-					if (mPlayingPosition == position) {
-						mMediaPlayerManager.release();
-						view.setBackgroundResource(R.drawable.ic_voice_4);
-						mPlayingPosition = -1;
-					} else {
-						Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-							@Override
-							protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-								if (resp.isSuccess()) {
-									mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-										@Override
-										public void onCompletion(MediaPlayer mp) {
-											item.setPlaying(false);
-											mMyQuestionAdapter.notifyDataSetChanged();
-										}
-									});
+					Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+						@Override
+						protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+							if (resp.isSuccess()) {
+								mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+									@Override
+									public void onCompletion(MediaPlayer mp) {
+										item.setPlaying(false);
+										mMyQuestionAdapter.notifyDataSetChanged();
+									}
+								});
 
-									MissVoiceRecorder.markHeard(item.getId());
-									item.setPlaying(true);
-									item.setListenCount(item.getListenCount() + 1);
-									mMyQuestionAdapter.notifyDataSetChanged();
-									mPlayingPosition = position;
-								}
+								MissVoiceRecorder.markHeard(item.getId());
+								item.setPlaying(true);
+								item.setListenCount(item.getListenCount() + 1);
+								mMyQuestionAdapter.notifyDataSetChanged();
+								mPlayingID = item.getId();
 							}
-						}).fire();
-					}
+						}
+					}).fire();
 				} else {
 					//听过的
-					if (mPlayingPosition == position) {
+					if (mPlayingID == item.getId()) {
 						mMediaPlayerManager.release();
-						Question question = mMyQuestionAdapter.getItem(mPlayingPosition);
-						if (question != null) {
-							question.setPlaying(false);
-							mMyQuestionAdapter.notifyDataSetChanged();
-						}
-						mPlayingPosition = -1;
+						item.setPlaying(false);
+						mMyQuestionAdapter.notifyDataSetChanged();
+						mPlayingID = -1;
 					} else {
 						mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
 							@Override
@@ -155,17 +155,11 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 						});
 						item.setPlaying(true);
 						mMyQuestionAdapter.notifyDataSetChanged();
-						mPlayingPosition = position;
+						mPlayingID = item.getId();
 					}
 				}
 			}
 		});
-		mListView.setEmptyView(mEmpty);
-		mListView.setAdapter(mMyQuestionAdapter);
-		mListView.setOnItemClickListener(this);
-		mListView.setOnScrollListener(this);
-		initSwipeRefreshLayout();
-		registerRefreshReceiver();
 	}
 
 	@Override
@@ -179,14 +173,18 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		super.onPause();
 		//锁屏或者在后台运行或者跳转页面时停止播放和动画
 		mMediaPlayerManager.release();
-		if (mPlayingPosition != -1) {
-			Question question = mMyQuestionAdapter.getItem(mPlayingPosition);
-			if (question != null) {
-				question.setPlaying(false);
-				mMyQuestionAdapter.notifyDataSetChanged();
+		if (mPlayingID != -1) {
+			for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+				Question question = mMyQuestionAdapter.getItem(i);
+				if (question != null) {
+					if (question.getId() == mPlayingID) {
+						question.setPlaying(false);
+						mMyQuestionAdapter.notifyDataSetChanged();
+					}
+				}
 			}
-			mPlayingPosition = -1;
 		}
+		mPlayingID = -1;
 	}
 
 	private void initSwipeRefreshLayout() {
@@ -196,6 +194,9 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				mSet.clear();
 				mCreateTime = null;
 				requestMyQuestionList();
+				//下拉刷新时关闭语音播放
+				mMediaPlayerManager.release();
+				mPlayingID = -1;
 			}
 		});
 	}
@@ -300,7 +301,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		interface OnClickCallback {
 			void onRewardClick(Question item);
 
-			void onVoiceClick(Question item, int position, View view);
+			void onVoiceClick(Question item);
 		}
 
 		private MyQuestionAdapter(@NonNull Context context) {
@@ -459,12 +460,13 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 						animation.start();
 					}
 				}
+
 				mVoiceArea.setOnClickListener(new View.OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
 						if (onClickCallback != null) {
-							onClickCallback.onVoiceClick(item, position, mVoiceLevel);
+							onClickCallback.onVoiceClick(item);
 						}
 					}
 				});
@@ -487,12 +489,15 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
 					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
 						Question question = mMyQuestionAdapter.getItem(i);
-						if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
-							int questionRewardCount = question.getAwardCount() + 1;
-							question.setAwardCount(questionRewardCount);
-							mMyQuestionAdapter.notifyDataSetChanged();
-							break;
+						if (question != null) {
+							if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
+								int questionRewardCount = question.getAwardCount() + 1;
+								question.setAwardCount(questionRewardCount);
+								mMyQuestionAdapter.notifyDataSetChanged();
+								break;
+							}
 						}
+
 					}
 				}
 			}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.sbai.finance">
+<manifest package="com.sbai.finance"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -86,7 +86,7 @@
         <activity
             android:name=".activity.mine.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/LoginPageEnter"/>
+            android:theme="@style/PageBottomEnter"/>
         <activity
             android:name=".activity.mine.InputPhoneActivity"
             android:screenOrientation="portrait"/>
@@ -262,8 +262,8 @@
         <activity
             android:name=".activity.stock.CompanyIntroActivity"
             android:screenOrientation="portrait"/>
-        <!-- 相册图片预览 -->
 
+        <!-- 第三方 -->
         <activity
             android:name=".activity.recharge.WeChatPayActivity"
             android:screenOrientation="portrait"/>
@@ -329,6 +329,12 @@
         <activity
             android:name=".activity.leaderboard.LeaderBoardDetailActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leaderboard.ProfitBoardListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leaderboard.IngotOrSavantLeaderBoardActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- 小姐姐 -->
         <activity
@@ -351,8 +357,7 @@
         <activity
             android:name=".activity.miss.CommentActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.miss.RewardActivity"
             android:screenOrientation="portrait"/>
@@ -391,6 +396,11 @@
             android:name=".activity.discovery.DailyReportActivity"
             android:screenOrientation="portrait"/>
 
+        <!-- 自习室 -->
+        <activity
+            android:name=".activity.studyroom.StudyRoomActivity"
+            android:screenOrientation="portrait"/>
+
         <!-- 训练 -->
         <activity
             android:name=".activity.training.MoreTrainFeedbackActivity"
@@ -404,15 +414,6 @@
             android:name=".activity.training.TrainExperienceActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.leaderboard.ProfitBoardListActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.leaderboard.IngotOrSavantLeaderBoardActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.studyroom.StudyRoomActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.training.LookBigPictureActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -422,19 +423,25 @@
             android:name=".activity.training.TrainDetailActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.training.HowPlayVerticalActivity"
-            android:screenOrientation="portrait"/>
+            android:name=".activity.training.TrainingResultActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/PageBottomEnter"/>
         <activity
-            android:name=".activity.training.HowPlayHorizontalActivity"
-            android:screenOrientation="landscape"/>
-        <activity
-            android:name=".activity.training.TrainCountDownActivity"
+            android:name=".activity.training.TrainingCountDownActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.training.KlineTrainActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.training.AnnalsCreateActivity">
-        </activity>
+        <activity
+            android:name=".activity.training.AnnalsCreateActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.training.HowPlayActivity"
+            android:theme="@style/DialogTheme.NoTitle"/>
+        <activity
+            android:name=".activity.training.JudgeTrainingActivity"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

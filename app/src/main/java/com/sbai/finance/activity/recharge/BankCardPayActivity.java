@@ -219,7 +219,7 @@ public class BankCardPayActivity extends BaseActivity {
 
     private void openUserProtocolPage() {
         Client.getArticleProtocol(ArticleProtocol.PROTOCOL_RECHARGE_SERVICE).setTag(TAG)
-                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>(false) {
+                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                     @Override
                     protected void onRespSuccessData(ArticleProtocol data) {
 
@@ -238,6 +238,11 @@ public class BankCardPayActivity extends BaseActivity {
                                 .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
                                 .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                                 .execute();
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
                     }
                 }).fire();
     }

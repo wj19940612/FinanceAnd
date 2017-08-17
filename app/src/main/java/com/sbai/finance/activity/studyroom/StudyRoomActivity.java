@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -97,9 +96,29 @@ public class StudyRoomActivity extends BaseActivity {
     private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            requestMyStudyData();
+            requestMyStudyDataForHandPaper();
         }
     };
+
+    private void requestMyStudyDataForHandPaper() {
+        Client.getMyStudyInfo().setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<MyStudyInfo>, MyStudyInfo>() {
+                    @Override
+                    protected void onRespSuccessData(MyStudyInfo data) {
+                        updateMyStudyDataForHandPaper(data);
+                    }
+                }).fireFree();
+    }
+
+    private void updateMyStudyDataForHandPaper(MyStudyInfo data) {
+        if (data.isLearned()) {
+            requestTrainData();
+        } else {
+            requestHandInPaper();
+        }
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -223,13 +242,18 @@ public class StudyRoomActivity extends BaseActivity {
     private void requestTrainData() {
         Client.getTrainCourse(null).setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Object>, Object>() {
+                .setCallback(new Callback2D<Resp<String>, StudyOption>() {
                     @Override
-                    protected void onRespSuccessData(Object data) {
-                        StudyOption studyOption = new Gson().fromJson(SecurityUtil.AESDecrypt((String) data), StudyOption.class);
+                    protected void onRespSuccessData(StudyOption data) {
+                        StudyOption studyOption = data;
                         updateTrainData(studyOption);
                         mStudyOption = studyOption;
                         requestMyStudyData();
+                    }
+
+                    @Override
+                    protected String onInterceptData(String data) {
+                        return SecurityUtil.AESDecrypt(data);
                     }
                 }).fireFree();
     }
@@ -246,7 +270,7 @@ public class StudyRoomActivity extends BaseActivity {
         mAnswerDetail.setText(data.getAnalysis());
         for (StudyOption.ContentBean contentBean : data.getContent()) {
             if (contentBean.isRight()) {
-                mRightAnswer.setText(getString(R.string.right_answer, data.getTitle() + ":" + contentBean.getContent()));
+                mRightAnswer.setText(getString(R.string.right_answer, contentBean.getContent()));
                 break;
             }
         }
@@ -270,7 +294,6 @@ public class StudyRoomActivity extends BaseActivity {
         mTotalScholarship.setText(getString(R.string.ingot_number_no_blank, data.getTotalReward()));
 
         if (!mIsUpdateTrain) return;
-
         if (data.isLearned()) {
             if (data.getAnswer() != null && data.getAnswer().size() > 0) {
                 if (mStudyOption != null && mStudyOption.getId().equalsIgnoreCase(data.getAnswer().get(0).getTopicId())) {

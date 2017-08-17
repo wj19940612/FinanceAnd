@@ -18,10 +18,10 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="LoginPageEnter" parent="Theme.AppCompat.Light.NoActionBar">
+    <!-- 底部出现的 Activity 主题 -->
+    <style name="PageBottomEnter" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/EnterFromBottom</item>
     </style>
-
     <style name="EnterFromBottom" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_from_bottom</item>
         <item name="android:activityOpenExitAnimation">@anim/hold</item>

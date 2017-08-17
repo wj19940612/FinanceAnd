@@ -754,8 +754,16 @@
     <string name="question_share_share_title">这个小姐姐对于金融的见解好独特！</string>
     <string name="question_share_description">快来一起听小姐姐的语音回答,学金融知识,乐米金融,金融小白的第一站!</string>
 
-
-    <!--训练-->
-    <string name="how_play">怎么玩？</string>
+    <!--Training-->
+    <string name="my_grade">我的成绩</string>
+    <string name="achieveGoal">完成目标</string>
+    <string name="what_a_pity_you_do_not_finish">真可惜，没有完成训练哦</string>
+    <string name="not_achieved">未达成</string>
+    <string name="retry">再试一次</string>
+    <string name="how_play">怎么玩?</string>
     <string name="data">%1$s%2$s</string>
+    <string name="exit_train_will_not_save_train_record">现在退出训练，训练记录将不会保存的哟</string>
+    <string name="is_sure_exit_train">确定要退出训练吗?</string>
+    <string name="exit_train">退出训练</string>
+    <string name="continue_train">继续训练</string>
 </resources>

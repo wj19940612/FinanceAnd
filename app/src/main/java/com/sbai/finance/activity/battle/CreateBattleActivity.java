@@ -337,7 +337,7 @@ public class CreateBattleActivity extends BaseActivity {
 
     private void launchBattle() {
         Client.launchBattle(mVarietyId, mCoinType, mReward, mEndTime).setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Battle>, Battle>(false) {
+                .setCallback(new Callback2D<Resp<Battle>, Battle>() {
                     @Override
                     protected void onRespSuccessData(Battle battle) {
                         Launcher.with(getActivity(), FutureBattleActivity.class)

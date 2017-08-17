@@ -82,6 +82,7 @@ public class DailyReportDetailActivity extends BaseActivity {
     protected String mPureHtml;
     private String mId;
     private int mFormat;
+    private String mShareTitle;
 
     private BroadcastReceiver mNetworkChangeReceiver;
     private WebViewClient mWebViewClient;
@@ -136,7 +137,7 @@ public class DailyReportDetailActivity extends BaseActivity {
             mFirstContent = content.substring(0, content.indexOf("\n"));
         } else {
             mTitleArea.setVisibility(View.GONE);
-            mPageUrl = data.getContent();
+            mPageUrl = data.getUrl();
             mFirstContent = getString(R.string.latest_finance_hot_from_lemi);
         }
         loadPage();
@@ -180,8 +181,8 @@ public class DailyReportDetailActivity extends BaseActivity {
                 ShareDialog.with(getActivity())
                         .hasFeedback(false)
                         .setTitle(R.string.share_to)
-                        .setShareTitle(getString(R.string.share_to))
-                        .setShareDescription(getString(R.string.share_desc))
+                        .setShareTitle(mTitle.getText().toString())
+                        .setShareDescription(mFirstContent)
                         .setShareUrl(String.format(Client.SHARE_URL_REPORT, mId))
                         .show();
                 break;
