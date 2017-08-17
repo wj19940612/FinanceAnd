@@ -28,8 +28,6 @@ import butterknife.OnClick;
 
 public class HowPlayActivity extends BaseActivity {
 
-    @BindView(R.id.close)
-    ImageView mClose;
     @BindView(R.id.trainImg)
     ImageView mTrainImg;
     @BindView(R.id.content)
@@ -70,7 +68,6 @@ public class HowPlayActivity extends BaseActivity {
     private void initView() {
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        mClose.setVisibility(View.GONE);
         int drawable = 0;
         switch (mTraining.getPlayType()) {
             case Training.PLAY_TYPE_REMOVE:
@@ -121,7 +118,7 @@ public class HowPlayActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.close, R.id.confirm, R.id.confirm1})
+    @OnClick({R.id.confirm, R.id.confirm1})
     public void onViewClicked(View view) {
         finish();
     }

@@ -4,15 +4,8 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#40000000"
+                android:background="@android:color/transparent"
                 android:orientation="vertical">
-
-    <ImageView
-        android:id="@+id/close"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/ic_close"/>
 
     <android.support.v7.widget.CardView
         android:id="@+id/horizontalView"
