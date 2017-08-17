@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.training;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,6 +20,8 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.TrainingQuestion;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.training.TrainHeaderView;
 
 import java.util.ArrayList;
@@ -66,6 +69,7 @@ public class SortQuestionActivity extends BaseActivity {
         setContentView(R.layout.activity_annals_create);
         ButterKnife.bind(this);
         translucentStatusBar();
+        initHeaderView();
         Intent intent = getIntent();
         mResultSet = new HashSet<>();
         mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
@@ -78,6 +82,38 @@ public class SortQuestionActivity extends BaseActivity {
         if (mQuestionResultList == null || mQuestionResultList.isEmpty()) return;
         initSortQuestionAdapter(mQuestionResultList);
         initSortResultAdapter(mQuestionResultList);
+    }
+
+    private void initHeaderView() {
+        mTrainHeaderView.setCallback(new TrainHeaderView.Callback() {
+            @Override
+            public void onBackClick() {
+                SmartDialog.with(getActivity(), R.string.is_sure_exit_train)
+                        .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                SortQuestionActivity.this.finish();
+                            }
+                        })
+                        .show();
+            }
+
+            @Override
+            public void onHowPlayClick() {
+
+            }
+
+            @Override
+            public void onEndOfTimer() {
+                ToastUtil.show("时间到了");
+            }
+        });
     }
 
     private void initSortResultAdapter(List<TrainingQuestion.ContentBean> content) {
@@ -160,6 +196,7 @@ public class SortQuestionActivity extends BaseActivity {
         public void insert(int position, TrainingQuestion.ContentBean data) {
             mSortQuestionList.add(0, data);
             notifyItemInserted(position);
+            notifyItemRangeChanged(0, mSortQuestionList.size());
         }
 
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
