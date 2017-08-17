@@ -295,7 +295,7 @@ public class DiscoveryFragment extends BaseFragment {
 
             private void bindDataWithView(MyTrainingRecord item, Context context) {
                 Glide.with(context)
-                        .load(item.getTrain().getImageUrl())
+                        .load(item.getTrain().getImage2Url())
                         .into(mTrainImg);
                 mTrainType.setText(item.getTrain().getTitle());
                 if (!LocalUser.getUser().isLogin()) {
