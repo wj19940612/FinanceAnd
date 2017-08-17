@@ -2239,6 +2239,16 @@ public class Client {
     }
 
     /**
+     * 提交 训练结果
+     *
+     * @param result
+     * @return
+     */
+    public static API submitTrainingResult(String result) {
+        return new API(POST, "/train/course/finishTask.do", result);
+    }
+
+    /**
      * @param deviceId
      * @return
      */
