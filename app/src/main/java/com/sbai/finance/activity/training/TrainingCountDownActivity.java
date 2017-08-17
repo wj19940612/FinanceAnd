@@ -62,7 +62,9 @@ public class TrainingCountDownActivity extends BaseActivity {
 
                 switch (mTraining.getPlayType()) {
                     case Training.PLAY_TYPE_REMOVE:
-                        Launcher.with(getActivity(), KlineTrainActivity.class).execute();
+                        Launcher.with(getActivity(), KlineTrainActivity.class)
+                                .putExtra(ExtraKeys.TRAINING,mTraining)
+                                .execute();
                         break;
                     case Training.PLAY_TYPE_MATCH_STAR:
                         break;
