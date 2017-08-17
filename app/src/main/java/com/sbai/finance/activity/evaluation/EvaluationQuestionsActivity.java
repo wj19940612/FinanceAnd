@@ -15,9 +15,9 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.levelevaluation.ExamQuestions;
 import com.sbai.finance.model.levelevaluation.TestAnswerUtils;
 import com.sbai.finance.model.levelevaluation.TestResultModel;
+import com.sbai.finance.model.levelevaluation.TrainingQuestions;
 import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -29,6 +29,7 @@ import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.autofit.AutofitTextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,15 +43,15 @@ public class EvaluationQuestionsActivity extends BaseActivity {
     AutofitTextView mExam;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    private ArrayList<ExamQuestions> mExamQuestionsList;
+    private ArrayList<TrainingQuestions> mTrainingQuestionsList;
     private int mExamPosition = 0;
     private ExamQuestionsAdapter mExamQuestionsAdapter;
-    private ExamQuestions.ContentBean mSelectResult;
+    private TrainingQuestions.ContentBean mSelectResult;
     private int mSelectPosition = -1;
 
     private TestAnswerUtils mTestAnswerUtils;
     private ArrayList<TestAnswerUtils.AnswersBean> mTestAnswerList;
-    private ExamQuestions mSelectQuestion;
+    private TrainingQuestions mSelectQuestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,15 +63,15 @@ public class EvaluationQuestionsActivity extends BaseActivity {
         mTestAnswerList = new ArrayList<>();
 
         mTitleBar.setTitleSize(17);
-        mExamQuestionsList = getIntent().getParcelableArrayListExtra(Launcher.EX_PAYLOAD);
-        mExamQuestionsAdapter = new ExamQuestionsAdapter(new ArrayList<ExamQuestions.ContentBean>());
+        mTrainingQuestionsList = getIntent().getParcelableArrayListExtra(Launcher.EX_PAYLOAD);
+        mExamQuestionsAdapter = new ExamQuestionsAdapter(new ArrayList<TrainingQuestions.ContentBean>());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mExamQuestionsAdapter);
         mRecyclerView.setItemAnimator(new BaseItemAnimator());
 
         mExamQuestionsAdapter.setOnExamResultSelectListener(new ExamQuestionsAdapter.OnExamResultSelectListener() {
             @Override
-            public void onExamResultSelect(ExamQuestions.ContentBean examQuestionsModel, int position) {
+            public void onExamResultSelect(TrainingQuestions.ContentBean examQuestionsModel, int position) {
                 changeExam(examQuestionsModel, position);
             }
         });
@@ -78,7 +79,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
         updateExam();
     }
 
-    private void changeExam(ExamQuestions.ContentBean examQuestionsModel, int position) {
+    private void changeExam(TrainingQuestions.ContentBean examQuestionsModel, int position) {
         if (mSelectPosition != position && mSelectPosition != -1) {
             if (mSelectResult != null) {
                 mSelectResult.setSelect(false);
@@ -92,7 +93,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
     }
 
     //组装答案
-    private void saveSelectedResult(ExamQuestions.ContentBean examQuestionsModel) {
+    private void saveSelectedResult(TrainingQuestions.ContentBean examQuestionsModel) {
 
         TestAnswerUtils.AnswersBean.AnswerIdsBean answerIdsBean = new TestAnswerUtils.AnswersBean.AnswerIdsBean();
         answerIdsBean.setOptionId(examQuestionsModel.getId());
@@ -105,23 +106,23 @@ public class EvaluationQuestionsActivity extends BaseActivity {
             answersBean.setTopicId(mSelectQuestion.getId());
         }
         answersBean.setAnswerIds(answerIdsBeen);
-        if (mExamPosition == mExamQuestionsList.size()) {
+        if (mExamPosition == mTrainingQuestionsList.size()) {
             mTestAnswerList.remove(mExamPosition - 1);
         }
         mTestAnswerList.add(answersBean);
     }
 
     private boolean hasExamQuestions() {
-        return mExamQuestionsList != null &&
-                !mExamQuestionsList.isEmpty();
+        return mTrainingQuestionsList != null &&
+                !mTrainingQuestionsList.isEmpty();
     }
 
     private void updateExam() {
-        if (hasExamQuestions() && mExamPosition <= mExamQuestionsList.size()) {
-            mSelectQuestion = mExamQuestionsList.get(mExamPosition);
+        if (hasExamQuestions() && mExamPosition <= mTrainingQuestionsList.size()) {
+            mSelectQuestion = mTrainingQuestionsList.get(mExamPosition);
             if (mSelectQuestion != null) {
                 mExam.setText(mSelectQuestion.getDigest());
-                ArrayList<ExamQuestions.ContentBean> dataList = mSelectQuestion.getContent();
+                List<TrainingQuestions.ContentBean> dataList = mSelectQuestion.getContent();
                 if (dataList != null && !dataList.isEmpty()) {
                     mExamQuestionsAdapter.updateData(dataList);
                 }
@@ -133,7 +134,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (hasExamQuestions() &&
-                mExamPosition < (mExamQuestionsList.size() + 1)) {
+                mExamPosition < (mTrainingQuestionsList.size() + 1)) {
             SmartDialog.with(getActivity(), R.string.is_exit_test)
                     .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                         @Override
@@ -150,8 +151,8 @@ public class EvaluationQuestionsActivity extends BaseActivity {
 
     private void changeExamProgress() {
         if (!hasExamQuestions()) return;
-        if (mExamPosition > mExamQuestionsList.size()) return;
-        String examProgress = (mExamPosition + 1) + "/" + mExamQuestionsList.size();
+        if (mExamPosition > mTrainingQuestionsList.size()) return;
+        String examProgress = (mExamPosition + 1) + "/" + mTrainingQuestionsList.size();
         mTitleBar.setTitle(examProgress);
     }
 
@@ -159,10 +160,10 @@ public class EvaluationQuestionsActivity extends BaseActivity {
     //提交答案
     private void selectResult() {
         if (!hasExamQuestions()) return;
-        if (mExamPosition < mExamQuestionsList.size()) {
+        if (mExamPosition < mTrainingQuestionsList.size()) {
             mExamPosition++;
         }
-        if (mExamPosition == mExamQuestionsList.size()) {
+        if (mExamPosition == mTrainingQuestionsList.size()) {
             confirmResult();
         } else {
             updateExam();
@@ -197,19 +198,19 @@ public class EvaluationQuestionsActivity extends BaseActivity {
     static class ExamQuestionsAdapter extends RecyclerView.Adapter<ExamQuestionsAdapter.ExamQuestionsViewHolder> {
 
         interface OnExamResultSelectListener {
-            void onExamResultSelect(ExamQuestions.ContentBean examQuestionsModel, int position);
+            void onExamResultSelect(TrainingQuestions.ContentBean examQuestionsModel, int position);
         }
 
         public OnExamResultSelectListener mOnExamResultSelectListener;
 
-        private ArrayList<ExamQuestions.ContentBean> mExamQuestionsModelList;
+        private ArrayList<TrainingQuestions.ContentBean> mExamQuestionsModelList;
         private int mShowCount;
 
-        public ExamQuestionsAdapter(ArrayList<ExamQuestions.ContentBean> examQuestionsModelArrayList) {
+        public ExamQuestionsAdapter(ArrayList<TrainingQuestions.ContentBean> examQuestionsModelArrayList) {
             mExamQuestionsModelList = examQuestionsModelArrayList;
         }
 
-        public void updateData(ArrayList<ExamQuestions.ContentBean> examQuestionsModels) {
+        public void updateData(List<TrainingQuestions.ContentBean> examQuestionsModels) {
             if (mShowCount > 0) {
                 mExamQuestionsModelList.clear();
                 notifyItemRangeRemoved(0, mShowCount);
@@ -254,7 +255,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(final ExamQuestions.ContentBean examQuestionsModel,
+            public void bindDataWithView(final TrainingQuestions.ContentBean examQuestionsModel,
                                          final OnExamResultSelectListener onExamResultSelectListener,
                                          final int position) {
                 if (examQuestionsModel == null) return;

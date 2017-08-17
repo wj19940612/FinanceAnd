@@ -3,14 +3,18 @@ package com.sbai.finance.model.levelevaluation;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ${wangJie} on 2017/7/31.
  * 水平测试题目   训练模块 只读图、选择题、图线题 model
  */
 
-public class ExamQuestions implements Parcelable {
+public class TrainingQuestions implements Parcelable {
+
+
+    //  type  1到6 分别为 排序，单选，多选，连连看，只读的题目（比如看漫画） ,K平均线
+    public static final int TYPE_SINGLE_CHOICE = 1;
 
     /**
      * analysis : 打算大苏打打算大苏打
@@ -36,8 +40,7 @@ public class ExamQuestions implements Parcelable {
     private String title;
     private int type;            // 1到6 分别为 排序，单选，多选，连连看，只读的题目（比如看漫画） ,K平均线
     private String createTime;
-    private ArrayList<ContentBean> content;
-
+    private List<ContentBean> content;
 
     private String source;       // future 期货 stock 股票
 
@@ -122,11 +125,11 @@ public class ExamQuestions implements Parcelable {
         this.createTime = createTime;
     }
 
-    public ArrayList<ContentBean> getContent() {
+    public List<ContentBean> getContent() {
         return content;
     }
 
-    public void setContent(ArrayList<ContentBean> content) {
+    public void setContent(List<ContentBean> content) {
         this.content = content;
     }
 
@@ -230,6 +233,25 @@ public class ExamQuestions implements Parcelable {
         }
     }
 
+
+
+    @Override
+    public String toString() {
+        return "ExamQuestionsModel{" +
+                "analysis='" + analysis + '\'' +
+                ", digest='" + digest + '\'' +
+                ", id='" + id + '\'' +
+                ", levelRatio=" + levelRatio +
+                ", modifyTime='" + modifyTime + '\'' +
+                ", option=" + option +
+                ", status=" + status +
+                ", title='" + title + '\'' +
+                ", type=" + type +
+                ", createTime='" + createTime + '\'' +
+                ", content=" + content +
+                '}';
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -248,12 +270,13 @@ public class ExamQuestions implements Parcelable {
         dest.writeInt(this.type);
         dest.writeString(this.createTime);
         dest.writeTypedList(this.content);
+        dest.writeString(this.source);
     }
 
-    public ExamQuestions() {
+    public TrainingQuestions() {
     }
 
-    protected ExamQuestions(Parcel in) {
+    protected TrainingQuestions(Parcel in) {
         this.analysis = in.readString();
         this.digest = in.readString();
         this.id = in.readString();
@@ -265,34 +288,18 @@ public class ExamQuestions implements Parcelable {
         this.type = in.readInt();
         this.createTime = in.readString();
         this.content = in.createTypedArrayList(ContentBean.CREATOR);
+        this.source = in.readString();
     }
 
-    public static final Creator<ExamQuestions> CREATOR = new Creator<ExamQuestions>() {
+    public static final Creator<TrainingQuestions> CREATOR = new Creator<TrainingQuestions>() {
         @Override
-        public ExamQuestions createFromParcel(Parcel source) {
-            return new ExamQuestions(source);
+        public TrainingQuestions createFromParcel(Parcel source) {
+            return new TrainingQuestions(source);
         }
 
         @Override
-        public ExamQuestions[] newArray(int size) {
-            return new ExamQuestions[size];
+        public TrainingQuestions[] newArray(int size) {
+            return new TrainingQuestions[size];
         }
     };
-
-    @Override
-    public String toString() {
-        return "ExamQuestionsModel{" +
-                "analysis='" + analysis + '\'' +
-                ", digest='" + digest + '\'' +
-                ", id='" + id + '\'' +
-                ", levelRatio=" + levelRatio +
-                ", modifyTime='" + modifyTime + '\'' +
-                ", option=" + option +
-                ", status=" + status +
-                ", title='" + title + '\'' +
-                ", type=" + type +
-                ", createTime='" + createTime + '\'' +
-                ", content=" + content +
-                '}';
-    }
 }

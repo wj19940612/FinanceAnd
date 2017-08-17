@@ -52,7 +52,7 @@ public class ShieldedUserModel {
 //        this.total = total;
 //    }
 //
-//    public List<DataBean> getData() {
+//    public List<DataBean> getQuestionData() {
 //        return data;
 //    }
 //

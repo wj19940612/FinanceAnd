@@ -29,18 +29,35 @@
         android:layout_below="@+id/titleBar"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/annalsData"
+        android:id="@+id/sortQuestionRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/progressBar"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:minHeight="40dp"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/annalsAddRecycleView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/annalsData"
-        android:layout_marginTop="35dp"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sortQuestionRecyclerView"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="35dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/bg_annals_materials_create_top"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/sortResultRecycleView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"/>
+    </LinearLayout>
+
 
     <ImageView
         android:id="@+id/confirmAnnals"
