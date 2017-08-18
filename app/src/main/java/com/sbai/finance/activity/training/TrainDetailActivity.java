@@ -368,9 +368,14 @@ public class TrainDetailActivity extends BaseActivity {
                         .execute();
                 break;
             case R.id.startTrain:
-                Launcher.with(getActivity(), TrainingCountDownActivity.class)
-                        .putExtra(ExtraKeys.TRAINING, mTraining)
-                        .execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), TrainingCountDownActivity.class)
+                            .putExtra(ExtraKeys.TRAINING, mTraining)
+                            .execute();
+                } else {
+                    // TODO: 17/08/2017 登录后要做页面更新
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
         }
     }

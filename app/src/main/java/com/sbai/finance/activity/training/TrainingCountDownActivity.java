@@ -2,7 +2,6 @@ package com.sbai.finance.activity.training;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,9 +21,17 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
+import com.sbai.finance.model.training.question.KData;
+import com.sbai.finance.net.API;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.SecurityUtil;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +49,8 @@ public class TrainingCountDownActivity extends BaseActivity {
     RelativeLayout mBackground;
 
     private Training mTraining;
+    private Question mQuestion;
+
     private int mGifRes;
     private int mBackgroundRes;
 
@@ -50,18 +59,22 @@ public class TrainingCountDownActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 0) {
-
-                switch (mTraining.getPlayType()) {
-                    case Training.PLAY_TYPE_REMOVE:
-                        Launcher.with(getActivity(), KlineTrainActivity.class).execute();
-                        break;
-                    case Training.PLAY_TYPE_MATCH_STAR:
-                        break;
-                    case Training.PLAY_TYPE_SORT:
-                        break;
-                    case Training.PLAY_TYPE_JUDGEMENT:
-                        Launcher.with(getActivity(), JudgeTrainingActivity.class).execute();
-                        break;
+                if (mQuestion != null) {
+                    switch (mTraining.getPlayType()) {
+                        case Training.PLAY_TYPE_REMOVE:
+                            Launcher.with(getActivity(), KlineTrainActivity.class).execute();
+                            break;
+                        case Training.PLAY_TYPE_MATCH_STAR:
+                            break;
+                        case Training.PLAY_TYPE_SORT:
+                            break;
+                        case Training.PLAY_TYPE_JUDGEMENT:
+                            Launcher.with(getActivity(), JudgeTrainingActivity.class)
+                                    .putExtra(ExtraKeys.TRAINING, mTraining)
+                                    .putExtra(ExtraKeys.QUESTION, mQuestion)
+                                    .execute();
+                            break;
+                    }
                 }
 
                 finish();
@@ -97,7 +110,30 @@ public class TrainingCountDownActivity extends BaseActivity {
     }
 
     private void requestTrainingContent() {
-        Client.requestExamQuestions()
+        API api = Client.getTrainingContent(mTraining.getId()).setTag(TAG);
+        switch (mTraining.getPlayType()) {
+            case Training.PLAY_TYPE_REMOVE:
+                break;
+            case Training.PLAY_TYPE_MATCH_STAR:
+                break;
+            case Training.PLAY_TYPE_JUDGEMENT:
+                api.setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Question<KData>> data) {
+                        if (!data.isEmpty()) {
+                            mQuestion = data.get(0);
+                        }
+                    }
+
+                    @Override
+                    protected String onInterceptData(String data) {
+                        return SecurityUtil.AESDecrypt(data);
+                    }
+                }).fire();
+                break;
+            case Training.PLAY_TYPE_SORT:
+                break;
+        }
     }
 
     @Override
@@ -106,11 +142,6 @@ public class TrainingCountDownActivity extends BaseActivity {
         if (requestCode == REQ_CODE_SHOW_RULE) {
             startGifAnimation();
         }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
     }
 
     private void updateScreenOrientation() {
@@ -133,6 +164,8 @@ public class TrainingCountDownActivity extends BaseActivity {
             case Training.TYPE_FUNDAMENTAL:
                 mGifRes = R.drawable.ic_count_down_fundamentals;
                 mBackgroundRes = R.color.yellowFundamentalCountDown;
+                break;
+            case Training.TYPE_COMPREHENSIVE:
                 break;
         }
     }
