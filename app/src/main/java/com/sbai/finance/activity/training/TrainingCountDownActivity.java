@@ -1,7 +1,6 @@
 package com.sbai.finance.activity.training;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -77,7 +76,7 @@ public class TrainingCountDownActivity extends BaseActivity {
                         if (mTrainingQuestion != null && mTraining != null) {
                             Launcher.with(getActivity(), SortQuestionActivity.class)
                                     .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
-                                    .putExtra(ExtraKeys.TRAIN_TARGET_TIME, mTraining.getTime())
+                                    .putExtra(ExtraKeys.TRAIN_TARGET_TIME, mTraining)
                                     .execute();
                         }
                         break;

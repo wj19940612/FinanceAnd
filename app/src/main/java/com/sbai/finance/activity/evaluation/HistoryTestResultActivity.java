@@ -175,8 +175,8 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
                 mTime.setText(DateUtil.format(item.getCreateTime(), DateUtil.DEFAULT_FORMAT, "yyyy-MM-dd"));
                 mGrade.setText(getTestGrade(item.getLevel()));
                 mAccuracy.setText(context.getString(R.string.accuracy_ranking,
-                        NumberFormatUtils.formatPercentString(item.getAllAccuracy(), 1),
-                        NumberFormatUtils.formatPercentString(item.getPassPercent())));
+                        NumberFormatUtils.formatPercentStringEndReplaceZero(item.getAllAccuracy(),2),
+                        NumberFormatUtils.formatPercentStringEndReplaceZero(item.getPassPercent(),2)));
             }
 
 

@@ -2,7 +2,6 @@ package com.sbai.finance.model.training;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -153,6 +152,9 @@ public class TrainingQuestion implements Parcelable {
 
         private RemoveTraining key;
         private RemoveTraining value;
+
+        //排序页面用来记录背景图的索引位置
+        private int bgPosition;
 
         public boolean isSelect() {
             return isSelect;
