@@ -197,7 +197,7 @@ public class Kline extends ChartView {
                                     Canvas canvas) {
         if (mDataList != null && mDataList.size() > 0) {
             for (int i = mStart; i < mEnd; i++) {
-                KlineViewData data = mDataList.get(i).getK();
+                KData data = mDataList.get(i);
                 float chartX = getChartX(i);
                 drawCandle(chartX, data, canvas);
             }
@@ -228,15 +228,19 @@ public class Kline extends ChartView {
         }
     }
 
-    private void drawCandle(float chartX, KlineViewData data, Canvas canvas) {
+    private void drawCandle(float chartX, KData kData, Canvas canvas) {
         // default line is positive line
         String color = COLOR_RED;
+        KlineViewData data = kData.getK();
         float topPrice = data.getClosePrice();
         float bottomPrice = data.getOpenPrice();
         if (data.getClosePrice() < data.getOpenPrice()) { // negative line
             color = COLOR_GREEN;
             topPrice = data.getOpenPrice();
             bottomPrice = data.getClosePrice();
+        }
+        if (kData.isOption()) {
+            color = "#ffffff"; // TODO: 18/08/2017 remove
         }
         drawTopCandleLine(data.getMaxPrice(), topPrice, color, chartX, canvas);
         drawCandleBody(topPrice, bottomPrice, color, chartX, canvas);

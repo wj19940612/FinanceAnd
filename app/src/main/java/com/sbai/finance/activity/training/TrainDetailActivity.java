@@ -24,16 +24,20 @@ import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.Experience;
+import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.TrainPraise;
 import com.sbai.finance.model.training.TrainedUserRecord;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingDetail;
+import com.sbai.finance.model.training.question.KData;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.view.ImageListView;
 import com.sbai.finance.view.MyListView;
@@ -369,15 +373,46 @@ public class TrainDetailActivity extends BaseActivity {
                 break;
             case R.id.startTrain:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), TrainingCountDownActivity.class)
-                            .putExtra(ExtraKeys.TRAINING, mTraining)
-                            .execute();
+                    requestTrainingContent();
                 } else {
                     // TODO: 17/08/2017 登录后要做页面更新
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
         }
+    }
+
+    private void requestTrainingContent() {
+        API api = Client.getTrainingContent(mTraining.getId()).setTag(TAG).setIndeterminate(this);
+        switch (mTraining.getPlayType()) {
+            case Training.PLAY_TYPE_REMOVE:
+                break;
+            case Training.PLAY_TYPE_MATCH_STAR:
+                break;
+            case Training.PLAY_TYPE_JUDGEMENT:
+                api.setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Question<KData>> data) {
+                        if (!data.isEmpty()) {
+                            startTraining(data.get(0));
+                        }
+                    }
+                    @Override
+                    protected String onInterceptData(String data) {
+                        return SecurityUtil.AESDecrypt(data);
+                    }
+                }).fire();
+                break;
+            case Training.PLAY_TYPE_SORT:
+                break;
+        }
+    }
+
+    private void startTraining(Question question) {
+        Launcher.with(getActivity(), TrainingCountDownActivity.class)
+                .putExtra(ExtraKeys.TRAINING, mTraining)
+                .putExtra(ExtraKeys.QUESTION, question)
+                .execute();
     }
 
     private void share() {

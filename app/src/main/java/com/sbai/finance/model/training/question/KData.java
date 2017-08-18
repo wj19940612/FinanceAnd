@@ -16,10 +16,10 @@ public class KData implements Parcelable {
      */
 
     private String id;
-    private boolean isOption;
+    private boolean isOption; //是否当天买卖
     private KlineViewData k;
     private String remark;
-    private int type;
+    private int type; // 1 看涨 0看跌
 
     public String getId() {
         return id;
@@ -27,14 +27,6 @@ public class KData implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public boolean isIsOption() {
-        return isOption;
-    }
-
-    public void setIsOption(boolean isOption) {
-        this.isOption = isOption;
     }
 
     public boolean isOption() {

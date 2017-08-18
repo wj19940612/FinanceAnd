@@ -125,6 +125,8 @@ public class Question<T extends Parcelable> implements Parcelable {
         return 0;
     }
 
+    private String clazz;
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.analysis);
@@ -138,7 +140,10 @@ public class Question<T extends Parcelable> implements Parcelable {
         dest.writeString(this.title);
         dest.writeInt(this.type);
 
-        dest.writeString(content.getClass().getName());
+        if (clazz == null) {
+            clazz = content.getClass().getName();
+        }
+        dest.writeString(clazz);
         dest.writeParcelableArray(this.content, flags);
     }
 
@@ -157,7 +162,7 @@ public class Question<T extends Parcelable> implements Parcelable {
         this.title = in.readString();
         this.type = in.readInt();
 
-        String clazz = in.readString();
+        this.clazz = in.readString();
         try {
             this.content = (T[]) in.readParcelableArray(Class.forName(clazz).getClassLoader());
         } catch (ClassNotFoundException e) {

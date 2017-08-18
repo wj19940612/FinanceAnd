@@ -24,14 +24,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.question.KData;
-import com.sbai.finance.net.API;
-import com.sbai.finance.net.Callback2D;
-import com.sbai.finance.net.Client;
-import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.SecurityUtil;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,7 +64,7 @@ public class TrainingCountDownActivity extends BaseActivity {
                         case Training.PLAY_TYPE_JUDGEMENT:
                             Launcher.with(getActivity(), JudgeTrainingActivity.class)
                                     .putExtra(ExtraKeys.TRAINING, mTraining)
-                                    .putExtra(ExtraKeys.QUESTION, mQuestion)
+                                    .putExtra(ExtraKeys.QUESTION, (Question<KData>) mQuestion)
                                     .execute();
                             break;
                     }
@@ -105,35 +98,6 @@ public class TrainingCountDownActivity extends BaseActivity {
         } else {
             startGifAnimation();
         }
-
-        requestTrainingContent();
-    }
-
-    private void requestTrainingContent() {
-        API api = Client.getTrainingContent(mTraining.getId()).setTag(TAG);
-        switch (mTraining.getPlayType()) {
-            case Training.PLAY_TYPE_REMOVE:
-                break;
-            case Training.PLAY_TYPE_MATCH_STAR:
-                break;
-            case Training.PLAY_TYPE_JUDGEMENT:
-                api.setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
-                    @Override
-                    protected void onRespSuccessData(List<Question<KData>> data) {
-                        if (!data.isEmpty()) {
-                            mQuestion = data.get(0);
-                        }
-                    }
-
-                    @Override
-                    protected String onInterceptData(String data) {
-                        return SecurityUtil.AESDecrypt(data);
-                    }
-                }).fire();
-                break;
-            case Training.PLAY_TYPE_SORT:
-                break;
-        }
     }
 
     @Override
@@ -152,6 +116,8 @@ public class TrainingCountDownActivity extends BaseActivity {
 
     private void initData(Intent intent) {
         mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
+        mQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
+
         switch (mTraining.getType()) {
             case Training.TYPE_THEORY:
                 mGifRes = R.drawable.ic_count_down_theory;
