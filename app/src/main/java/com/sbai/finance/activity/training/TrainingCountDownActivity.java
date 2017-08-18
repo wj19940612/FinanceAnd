@@ -71,6 +71,12 @@ public class TrainingCountDownActivity extends BaseActivity {
                         }
                         break;
                     case Training.PLAY_TYPE_MATCH_STAR:
+                        if (mTrainingQuestion != null && mTraining != null) {
+                            Launcher.with(getActivity(), NounExplanationActivity.class)
+                                    .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
+                                    .putExtra(ExtraKeys.TRAIN_TARGET_TIME, mTraining.getTime())
+                                    .execute();
+                        }
                         break;
                     case Training.PLAY_TYPE_SORT:
                         if (mTrainingQuestion != null && mTraining != null) {
