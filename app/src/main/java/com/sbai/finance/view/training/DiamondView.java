@@ -34,7 +34,7 @@ public class DiamondView extends View {
         setLayerType(LAYER_TYPE_SOFTWARE, null);
         mPaint = new Paint();
         mPaint.setColor(mColor);
-        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setDither(true);
         mPaint.setAntiAlias(true);
         mPaint.setStrokeWidth(2f);
@@ -73,18 +73,17 @@ public class DiamondView extends View {
         super.onDraw(canvas);
         canvas.translate(mWidth / 2, mHeight / 2);
         if (mSelected) {
-            Paint paint = new Paint();
-            paint.setColor(Color.WHITE);
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setDither(true);
-            paint.setAntiAlias(true);
-            paint.setStrokeWidth(4f);
-            draw(canvas, paint,mHeight-2,mWidth-2);
+            mPaint.setColor(Color.RED);
+            drawView(canvas, mHeight, mWidth);
+            mPaint.setColor(mColor);
+            drawView(canvas, mHeight - 4, mWidth - 4);
+        } else {
+            mPaint.setColor(mColor);
+            drawView(canvas, mHeight, mWidth);
         }
-        draw(canvas, mPaint,mHeight,mWidth);
     }
 
-    private void draw(Canvas canvas, Paint paint,int height,int width) {
+    private void drawView(Canvas canvas, int height, int width) {
         float h = (float) ((height - width / Math.sqrt(3)) / 2);
         Path path = new Path();
         path.moveTo(0, -height / 2);
@@ -94,7 +93,7 @@ public class DiamondView extends View {
         path.lineTo(-width / 2, h);
         path.lineTo(-width / 2, -h);
         path.close();
-        canvas.drawPath(path, paint);
+        canvas.drawPath(path, mPaint);
     }
 
 

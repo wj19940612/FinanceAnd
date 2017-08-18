@@ -135,13 +135,6 @@ public class TrainingQuestion implements Parcelable {
     }
 
     public static class ContentBean implements Parcelable {
-        public boolean isSelect() {
-            return isSelect;
-        }
-
-        public void setSelect(boolean select) {
-            isSelect = select;
-        }
 
         /**
          * content : 法撒旦发是的
@@ -154,6 +147,17 @@ public class TrainingQuestion implements Parcelable {
         private long id;
         private boolean right;   //是否是正确答案
         private int seq;         //seq 排序
+
+        private RemoveTraining key;
+        private RemoveTraining value;
+
+        public boolean isSelect() {
+            return isSelect;
+        }
+
+        public void setSelect(boolean select) {
+            isSelect = select;
+        }
 
         public String getContent() {
             return content;
@@ -187,6 +191,22 @@ public class TrainingQuestion implements Parcelable {
             this.seq = seq;
         }
 
+        public RemoveTraining getKey() {
+            return key;
+        }
+
+        public void setKey(RemoveTraining key) {
+            this.key = key;
+        }
+
+        public RemoveTraining getValue() {
+            return value;
+        }
+
+        public void setValue(RemoveTraining value) {
+            this.value = value;
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -194,20 +214,26 @@ public class TrainingQuestion implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            dest.writeByte(this.isSelect ? (byte) 1 : (byte) 0);
             dest.writeString(this.content);
             dest.writeLong(this.id);
             dest.writeByte(this.right ? (byte) 1 : (byte) 0);
             dest.writeInt(this.seq);
+            dest.writeParcelable(this.key, flags);
+            dest.writeParcelable(this.value, flags);
         }
 
         public ContentBean() {
         }
 
         protected ContentBean(Parcel in) {
+            this.isSelect = in.readByte() != 0;
             this.content = in.readString();
             this.id = in.readLong();
             this.right = in.readByte() != 0;
             this.seq = in.readInt();
+            this.key = in.readParcelable(RemoveTraining.class.getClassLoader());
+            this.value = in.readParcelable(RemoveTraining.class.getClassLoader());
         }
 
         public static final Creator<ContentBean> CREATOR = new Creator<ContentBean>() {
@@ -221,19 +247,7 @@ public class TrainingQuestion implements Parcelable {
                 return new ContentBean[size];
             }
         };
-
-        @Override
-        public String toString() {
-            return "ContentBean{" +
-                    "isSelect=" + isSelect +
-                    ", content='" + content + '\'' +
-                    ", id=" + id +
-                    ", right=" + right +
-                    ", seq=" + seq +
-                    '}';
-        }
     }
-
 
 
     @Override
