@@ -16,8 +16,8 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 
-import com.sbai.finance.model.levelevaluation.TestAnswerUtils;
-import com.sbai.finance.model.levelevaluation.TestResultModel;
+import com.sbai.finance.model.levelevaluation.QuestionAnswer;
+import com.sbai.finance.model.levelevaluation.EvaluationResult;
 
 import com.sbai.finance.model.training.TrainingQuestion;
 
@@ -54,8 +54,8 @@ public class EvaluationQuestionsActivity extends BaseActivity {
 
     private int mSelectPosition = -1;
 
-    private TestAnswerUtils mTestAnswerUtils;
-    private ArrayList<TestAnswerUtils.AnswersBean> mTestAnswerList;
+    private QuestionAnswer mQuestionAnswer;
+    private ArrayList<QuestionAnswer.AnswersBean> mTestAnswerList;
 
     private TrainingQuestion mSelectQuestion;
 
@@ -65,7 +65,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
         setContentView(R.layout.activity_evaluation_questions);
         ButterKnife.bind(this);
 
-        mTestAnswerUtils = new TestAnswerUtils();
+        mQuestionAnswer = new QuestionAnswer();
         mTestAnswerList = new ArrayList<>();
 
         mTitleBar.setTitleSize(17);
@@ -107,13 +107,13 @@ public class EvaluationQuestionsActivity extends BaseActivity {
 
     private void saveSelectedResult(TrainingQuestion.ContentBean examQuestionsModel) {
 
-        TestAnswerUtils.AnswersBean.AnswerIdsBean answerIdsBean = new TestAnswerUtils.AnswersBean.AnswerIdsBean();
+        QuestionAnswer.AnswersBean.AnswerIdsBean answerIdsBean = new QuestionAnswer.AnswersBean.AnswerIdsBean();
         answerIdsBean.setOptionId(examQuestionsModel.getId());
 
-        ArrayList<TestAnswerUtils.AnswersBean.AnswerIdsBean> answerIdsBeen = new ArrayList<>();
+        ArrayList<QuestionAnswer.AnswersBean.AnswerIdsBean> answerIdsBeen = new ArrayList<>();
         answerIdsBeen.add(answerIdsBean);
 
-        TestAnswerUtils.AnswersBean answersBean = new TestAnswerUtils.AnswersBean();
+        QuestionAnswer.AnswersBean answersBean = new QuestionAnswer.AnswersBean();
         if (mSelectQuestion != null) {
             answersBean.setTopicId(mSelectQuestion.getId());
         }
@@ -186,13 +186,13 @@ public class EvaluationQuestionsActivity extends BaseActivity {
     }
 
     private void confirmResult() {
-        mTestAnswerUtils.setAnswers(mTestAnswerList);
-        Client.confirmLevelTestResult(mTestAnswerUtils)
+        mQuestionAnswer.setAnswers(mTestAnswerList);
+        Client.confirmLevelTestResult(mQuestionAnswer)
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<TestResultModel>, TestResultModel>() {
+                .setCallback(new Callback2D<Resp<EvaluationResult>, EvaluationResult>() {
                     @Override
-                    protected void onRespSuccessData(TestResultModel data) {
+                    protected void onRespSuccessData(EvaluationResult data) {
                         Log.d(TAG, "onRespSuccessData: " + data.toString());
 
                         UserInfo userInfo = LocalUser.getUser().getUserInfo();

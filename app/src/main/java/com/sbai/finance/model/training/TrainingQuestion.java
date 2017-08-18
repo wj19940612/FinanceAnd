@@ -2,9 +2,12 @@ package com.sbai.finance.model.training;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
-
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by ${wangJie} on 2017/7/31.
@@ -12,7 +15,7 @@ import java.util.List;
  */
 
 public class TrainingQuestion implements Parcelable {
-
+    private static final String TAG = "TrainingQuestion";
 
     //  type  1到6 分别为 排序，单选，多选，连连看，只读的题目（比如看漫画） ,K平均线
     public static final int TYPE_SINGLE_CHOICE = 1;
@@ -235,7 +238,6 @@ public class TrainingQuestion implements Parcelable {
     }
 
 
-
     @Override
     public String toString() {
         return "ExamQuestionsModel{" +
@@ -304,4 +306,31 @@ public class TrainingQuestion implements Parcelable {
             return new TrainingQuestion[size];
         }
     };
+
+    public List<TrainingQuestion.ContentBean> getRandRomResultList(List<TrainingQuestion.ContentBean> content) {
+        if (content == null || content.isEmpty()) return null;
+        ArrayList<TrainingQuestion.ContentBean> questionResultList = new ArrayList<>();
+        HashSet<Integer> integers = new HashSet<>();
+        Random random = new Random();
+
+        int position = -1;
+        for (int i = 0; i < content.size(); i++) {
+            int nextInt = random.nextInt(Math.abs(content.size()));
+            if (integers.add(nextInt)) {
+                position++;
+                questionResultList.add(position, content.get(nextInt));
+            }
+        }
+        int oldDataSize = content.size();
+        int newDataSize = questionResultList.size();
+        if (oldDataSize != newDataSize) {
+
+            for (int i = 0; i < content.size(); i++) {
+                if (integers.add(i)) {
+                    questionResultList.add(position++, content.get(i));
+                }
+            }
+        }
+        return questionResultList;
+    }
 }

@@ -200,7 +200,8 @@ public class CountDownView extends LinearLayout {
                         mTimeHandler.sendEmptyMessageDelayed(MESSAGE_WHAT_SECOND, 1000);
                     }
 
-                    if (mTotalTime < mTotalChangeTime) {
+                    if (mTotalTime <= mTotalChangeTime) {
+                        mMinuteSecondTextView.setText("00");
                         mTimeHandler.removeCallbacksAndMessages(null);
                         if (mOnTimeStopChangeListener != null) {
                             mOnTimeStopChangeListener.StopChange();

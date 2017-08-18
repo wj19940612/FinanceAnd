@@ -10,10 +10,10 @@
     tools:context="com.sbai.finance.activity.training.SortQuestionActivity">
 
     <com.sbai.finance.view.training.TrainHeaderView
+        android:fitsSystemWindows="true"
         android:id="@+id/trainHeaderView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"/>
+        android:layout_height="wrap_content"/>
 
 
     <android.support.v7.widget.RecyclerView
@@ -21,15 +21,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/trainHeaderView"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="30dp"
-        android:minHeight="40dp"/>
+        android:minHeight="50dp"/>
 
     <LinearLayout
+        android:id="@+id/sortResultLL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/sortQuestionRecyclerView"
-        android:layout_marginTop="35dp"
         android:orientation="vertical">
 
         <ImageView
@@ -37,15 +36,26 @@
             android:layout_height="wrap_content"
             android:src="@drawable/bg_annals_materials_create_top"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:id="@+id/sortResultRecycleView"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"/>
-    </LinearLayout>
+            android:layout_height="wrap_content"
 
+            android:scrollbars="none">
+                <LinearLayout
+                    android:layout_marginBottom="-35dp"
+                    android:background="@drawable/bg_sort_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <android.support.v7.widget.RecyclerView
+                        android:paddingRight="25dp"
+                        android:id="@+id/sortResultRecycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingBottom="30dp"/>
+                </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/confirmAnnals"
@@ -53,7 +63,8 @@
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="15dp"
         android:layout_marginRight="24dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:paddingBottom="15dp"
         android:src="@drawable/ic_confirm_report"/>
 </RelativeLayout>

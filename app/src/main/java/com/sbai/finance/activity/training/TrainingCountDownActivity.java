@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -59,7 +60,7 @@ public class TrainingCountDownActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 0) {
-
+                Log.d(TAG, "handleMessage: " + mTraining);
                 switch (mTraining.getPlayType()) {
                     case Training.PLAY_TYPE_REMOVE:
                         Launcher.with(getActivity(), KlineTrainActivity.class).execute();
@@ -88,13 +89,12 @@ public class TrainingCountDownActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initData(getIntent());
-
         updateScreenOrientation();
 
         setContentView(R.layout.activity_training_count_down);
         ButterKnife.bind(this);
+        requestTrainingContent();
 
         if (mBackgroundRes != 0) {
             mBackground.setBackgroundResource(mBackgroundRes);
@@ -108,8 +108,6 @@ public class TrainingCountDownActivity extends BaseActivity {
         } else {
             startGifAnimation();
         }
-
-        requestTrainingContent();
     }
 
     private void requestTrainingContent() {
@@ -128,8 +126,11 @@ public class TrainingCountDownActivity extends BaseActivity {
                         return SecurityUtil.AESDecrypt(data);
                     }
                 })
+
                 .fireFree();
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
