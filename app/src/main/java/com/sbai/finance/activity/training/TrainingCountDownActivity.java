@@ -142,7 +142,6 @@ public class TrainingCountDownActivity extends BaseActivity {
     }
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -176,6 +175,10 @@ public class TrainingCountDownActivity extends BaseActivity {
             case Training.TYPE_FUNDAMENTAL:
                 mGifRes = R.drawable.ic_count_down_fundamentals;
                 mBackgroundRes = R.color.yellowFundamentalCountDown;
+                break;
+            case Training.TYPE_COMPREHENSIVE:
+                mGifRes = R.drawable.ic_count_down_fundamentals;
+                mBackgroundRes = R.color.blueComprehensiveTraining;
                 break;
         }
     }
