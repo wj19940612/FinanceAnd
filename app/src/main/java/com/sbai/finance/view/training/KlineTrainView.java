@@ -2,7 +2,6 @@ package com.sbai.finance.view.training;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +9,10 @@ import android.widget.RelativeLayout;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.training.RemoveTraining;
-import com.sbai.finance.model.training.Training;
 import com.sbai.finance.utils.Display;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
 
 /**
  * K线训练页面菱形组合布局
@@ -48,16 +43,20 @@ public class KlineTrainView extends RelativeLayout {
         for (int i = 0; i < trainData.size(); i++) {
             RemoveTraining training = trainData.get(i);
             views[i].setTag(training);
-            views[i].setVisibility(VISIBLE);
+            if (views[i].getVisibility() == INVISIBLE) {
+                views[i].resetView();
+                views[i].setVisibility(VISIBLE);
+            }
+            views[i].setSelected(false);
             if (training.isImage()) {
-                views[i].setBackground(R.color.violetTechnologyCountDown)
+                views[i].setBackgroundType(DiamondView.TYPE_DARK)
                         .setImageVisible(true)
                         .setImageUrl(training.getImageUrl())
                         .setDescribeVisible(false);
             } else {
-                views[i].setBackground(R.color.yellowAssist)
+                views[i].setBackgroundType(DiamondView.TYPE_WHITE)
                         .setImageVisible(false)
-                        .setDescribe(String.valueOf(training.getSeq()))
+                        .setDescribe(String.valueOf(training.getContent()))
                         .setDescribeVisible(true);
             }
         }

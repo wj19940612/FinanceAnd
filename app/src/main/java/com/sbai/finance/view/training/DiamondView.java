@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -25,6 +26,9 @@ import java.util.List;
  */
 
 public class DiamondView extends View {
+    public static final String TAG = "DiamondView";
+    public static final int TYPE_WHITE = 0;
+    public static final int TYPE_DARK = 1;
     private Paint mPaint;
     private Paint mEdgePaint;
     private int mWidth;
@@ -36,25 +40,6 @@ public class DiamondView extends View {
     private int mCurrentIndex;
     private Point mCurrentPoint;
 
-    private void initPaint() {
-        setLayerType(LAYER_TYPE_SOFTWARE, null);
-        mPaint = new Paint();
-        mPaint.setColor(mColor);
-        mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setDither(true);
-        mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(2f);
-
-        mEdgePaint = new Paint();
-        mEdgePaint.setColor(Color.RED);
-        mEdgePaint.setStyle(Paint.Style.STROKE);
-        mEdgePaint.setDither(true);
-        mEdgePaint.setAntiAlias(true);
-        mEdgePaint.setStrokeWidth(2f);
-
-
-    }
-
     public DiamondView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         processAttrs(attrs);
@@ -65,6 +50,24 @@ public class DiamondView extends View {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.DiamondView);
         mColor = typedArray.getColor(R.styleable.DiamondView_backgroundColor, Color.WHITE);
         typedArray.recycle();
+    }
+
+    private void initPaint() {
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
+        mPaint = new Paint();
+        mPaint.setColor(mColor);
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setDither(true);
+        mPaint.setAntiAlias(true);
+        mPaint.setStrokeWidth(2f);
+
+        mEdgePaint = new Paint();
+//        mEdgePaint.setColor(Color.parseColor("#6F56CA"));
+        mEdgePaint.setColor(Color.RED);
+        mEdgePaint.setStyle(Paint.Style.STROKE);
+        mEdgePaint.setDither(true);
+        mEdgePaint.setAntiAlias(true);
+        mEdgePaint.setStrokeWidth(2f);
     }
 
     @Override
@@ -153,8 +156,8 @@ public class DiamondView extends View {
         }
         mPoints.clear();
         mPoints.add(new Point(0, -mHeight / 2));
-        mPoints.add(new Point(-mWidth / 2, -h));
-        mPoints.add(new Point(-mWidth / 2, h));
+        mPoints.add(new Point(-mWidth / 2 + 1, -h));
+        mPoints.add(new Point(-mWidth / 2 + 1, h));
         mPoints.add(new Point(0, mHeight / 2));
         mPoints.add(new Point(mWidth / 2, h));
         mPoints.add(new Point(mWidth / 2, -h));
@@ -167,6 +170,9 @@ public class DiamondView extends View {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
+                if (mCurrentIndex == mPoints.size() - 2) {
+                    return;
+                }
                 mCurrentIndex++;
                 mCurrentPoint = null;
                 if (mCurrentIndex < mPoints.size() - 1) {
@@ -179,17 +185,22 @@ public class DiamondView extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 mCurrentPoint = (Point) animation.getAnimatedValue();
-                if (mCurrentPoint != null&&(mCurrentIndex < mPoints.size() - 1)) {
+                if (mCurrentPoint != null && (mCurrentIndex < mPoints.size() - 1)) {
                     invalidate();
                 }
             }
         });
-        anim.setDuration(100);
+        anim.setDuration(50);
         anim.start();
     }
 
-    public void setBackground(int color) {
-        mColor = color;
+    public void setBackgroundType(int type) {
+        if (TYPE_DARK == type) {
+            mColor = Color.parseColor("#372F54");
+        } else {
+            mColor = Color.WHITE;
+        }
+        mPaint.setColor(mColor);
         mSelected = false;
         invalidate();
     }

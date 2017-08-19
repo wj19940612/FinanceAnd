@@ -14,8 +14,8 @@ public class RemoveTraining implements Parcelable {
     private int type;
     private String imageUrl;
 
-    public boolean isImage(){
-        return type==1;
+    public boolean isImage() {
+        return type == 1;
     }
 
     public String getContent() {

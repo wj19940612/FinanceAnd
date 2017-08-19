@@ -35,6 +35,9 @@ public class DiamondGroupView extends RelativeLayout {
     TextView mDescribe;
     private OnClearCallback mOnClearCallback;
 
+    private float mHeight;
+    private float mWidth;
+
     public interface OnClearCallback {
         void onClear();
     }
@@ -117,6 +120,12 @@ public class DiamondGroupView extends RelativeLayout {
         animSet.start();
     }
 
+    public void resetView() {
+        setScaleX(10f);
+        setScaleY(10f);
+        setAlpha(1f);
+    }
+
     public void setSelected(boolean selected) {
         mKlineView.setSelected(selected);
     }
@@ -155,8 +164,8 @@ public class DiamondGroupView extends RelativeLayout {
         return this;
     }
 
-    public DiamondGroupView setBackground(int color) {
-        mKlineView.setBackground(color);
+    public DiamondGroupView setBackgroundType(int type) {
+        mKlineView.setBackgroundType(type);
         return this;
     }
 
