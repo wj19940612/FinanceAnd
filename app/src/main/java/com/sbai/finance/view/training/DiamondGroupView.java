@@ -156,8 +156,15 @@ public class DiamondGroupView extends RelativeLayout {
     }
 
     public DiamondGroupView setBackground(int color) {
-        mKlineView.setBackgroundColor(color);
+        mKlineView.setBackground(color);
         return this;
     }
 
+    public TextView getDescribe() {
+        return mDescribe;
+    }
+
+    public ImageView getKlineImg() {
+        return mKlineImg;
+    }
 }

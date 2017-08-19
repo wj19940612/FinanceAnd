@@ -677,7 +677,7 @@
     <string name="me">我</string>
     <string name="nobody_enter_leader_board">暂时无人上榜</string>
     <string name="every_day_re_calculate">每天24:00重新计算</string>
-    <string name="every_week_re_calculate">每周一24:00重新计算</string>
+    <string name="every_week_re_calculate">每周日24:00重新计算</string>
 
     <!--miss_talk-->
     <string name="her_answer">她的回答</string>

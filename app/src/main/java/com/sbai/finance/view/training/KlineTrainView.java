@@ -49,13 +49,13 @@ public class KlineTrainView extends RelativeLayout {
             RemoveTraining training = trainData.get(i);
             views[i].setTag(training);
             views[i].setVisibility(VISIBLE);
-            if (trainData.get(i).isImage()) {
-                views[i].setBackground(ContextCompat.getColor(getContext(), R.color.violetTechnologyCountDown))
+            if (training.isImage()) {
+                views[i].setBackground(R.color.violetTechnologyCountDown)
                         .setImageVisible(true)
                         .setImageUrl(training.getImageUrl())
                         .setDescribeVisible(false);
             } else {
-                views[i].setBackground(Color.WHITE)
+                views[i].setBackground(R.color.yellowAssist)
                         .setImageVisible(false)
                         .setDescribe(String.valueOf(training.getSeq()))
                         .setDescribeVisible(true);
@@ -129,6 +129,8 @@ public class KlineTrainView extends RelativeLayout {
 
         for (int i = 0; i < views.length; i++) {
             setOnClickListener(views[i], i);
+            setOnClickListener(views[i].getDescribe(), i);
+            setOnClickListener(views[i].getKlineImg(), i);
         }
 
         for (int i = 0; i < views.length; i++) {
@@ -145,26 +147,26 @@ public class KlineTrainView extends RelativeLayout {
         });
     }
 
-    private void setOnClickListener(final DiamondGroupView view, final int index) {
+    private void setOnClickListener(View view, final int index) {
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!view.getSelected()) {
-                    view.setSelected(true);
+                if (!views[index].getSelected()) {
+                    views[index].setSelected(true);
                     if (mPriSelectedIndex == -1) {
                         mPriSelectedIndex = index;
                     } else {
                         RemoveTraining training1 = (RemoveTraining) views[mPriSelectedIndex].getTag();
-                        RemoveTraining training2 = (RemoveTraining) view.getTag();
+                        RemoveTraining training2 = (RemoveTraining) views[index].getTag();
                         if (training1 != null && training2 != null) {
                             if (training1.getSeq() == training2.getSeq()) {
                                 views[mPriSelectedIndex].startDisappearAnim();
-                                view.startDisappearAnim();
+                                views[index].startDisappearAnim();
                             } else {
                                 views[mPriSelectedIndex].startErrorAnim();
                                 views[mPriSelectedIndex].setSelected(false);
-                                view.startErrorAnim();
-                                view.setSelected(false);
+                                views[index].startErrorAnim();
+                                views[index].setSelected(false);
                             }
                             mPriSelectedIndex = -1;
                         }

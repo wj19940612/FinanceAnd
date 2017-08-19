@@ -114,8 +114,6 @@ public class StudyRoomActivity extends BaseActivity {
     private void updateMyStudyDataForHandPaper(MyStudyInfo data) {
         if (data.isLearned()) {
             requestTrainData();
-        } else {
-            requestHandInPaper();
         }
     }
 

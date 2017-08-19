@@ -1,6 +1,9 @@
 package com.sbai.finance.view.training;
 
-import android.animation.ObjectAnimator;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.TypeEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -9,11 +12,13 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.animation.BounceInterpolator;
+import android.view.animation.LinearInterpolator;
 
 import com.sbai.finance.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 菱形
@@ -21,23 +26,33 @@ import com.sbai.finance.R;
 
 public class DiamondView extends View {
     private Paint mPaint;
+    private Paint mEdgePaint;
     private int mWidth;
     private int mHeight;
     private int mColor;
-    private float mDashWidth;
-    private float mLineHeight;
-    private float mLineWidth;
-    private int mLineColor;
     private boolean mSelected;
+    private List<Point> mPoints;
+
+    private int mCurrentIndex;
+    private Point mCurrentPoint;
 
     private void initPaint() {
         setLayerType(LAYER_TYPE_SOFTWARE, null);
         mPaint = new Paint();
         mPaint.setColor(mColor);
-        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mPaint.setStyle(Paint.Style.FILL);
         mPaint.setDither(true);
         mPaint.setAntiAlias(true);
         mPaint.setStrokeWidth(2f);
+
+        mEdgePaint = new Paint();
+        mEdgePaint.setColor(Color.RED);
+        mEdgePaint.setStyle(Paint.Style.STROKE);
+        mEdgePaint.setDither(true);
+        mEdgePaint.setAntiAlias(true);
+        mEdgePaint.setStrokeWidth(2f);
+
+
     }
 
     public DiamondView(Context context, @Nullable AttributeSet attrs) {
@@ -48,16 +63,7 @@ public class DiamondView extends View {
 
     private void processAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.DiamondView);
-        int defaultDashWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3,
-                getResources().getDisplayMetrics());
-        int defaultLineHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1,
-                getResources().getDisplayMetrics());
-
         mColor = typedArray.getColor(R.styleable.DiamondView_backgroundColor, Color.WHITE);
-        mDashWidth = typedArray.getDimensionPixelOffset(R.styleable.DiamondView_dashWidth, defaultDashWidth);
-        mLineHeight = typedArray.getDimensionPixelOffset(R.styleable.DiamondView_lineHeight, defaultLineHeight);
-        mLineWidth = typedArray.getDimensionPixelOffset(R.styleable.DiamondView_lineWidth, defaultLineHeight);
-        mLineColor = typedArray.getColor(R.styleable.DiamondView_lineColor, Color.WHITE);
         typedArray.recycle();
     }
 
@@ -66,6 +72,7 @@ public class DiamondView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         mWidth = w;
         mHeight = h;
+        initPoints();
     }
 
     @Override
@@ -73,14 +80,57 @@ public class DiamondView extends View {
         super.onDraw(canvas);
         canvas.translate(mWidth / 2, mHeight / 2);
         if (mSelected) {
-            mPaint.setColor(Color.RED);
-            drawView(canvas, mHeight, mWidth);
-            mPaint.setColor(mColor);
-            drawView(canvas, mHeight - 4, mWidth - 4);
+            drawView(canvas, mHeight - 2, mWidth - 2);
+            if (mCurrentPoint == null && mCurrentIndex < mPoints.size() - 1) {
+                startAnimation(mPoints.get(mCurrentIndex), mPoints.get(mCurrentIndex + 1));
+            }
+            if (mCurrentPoint != null && mCurrentIndex < mPoints.size()) {
+                Point startPoint = mPoints.get(mCurrentIndex);
+                switch (mCurrentIndex) {
+                    case 0:
+                        drawLine(canvas, startPoint, mCurrentPoint);
+                        break;
+                    case 1:
+                        drawLine(canvas, mPoints.get(0), mPoints.get(1));
+                        drawLine(canvas, startPoint, mCurrentPoint);
+                        break;
+                    case 2:
+                        drawLine(canvas, mPoints.get(0), mPoints.get(1));
+                        drawLine(canvas, mPoints.get(1), mPoints.get(2));
+                        drawLine(canvas, startPoint, mCurrentPoint);
+                        break;
+                    case 3:
+                        drawLine(canvas, mPoints.get(0), mPoints.get(1));
+                        drawLine(canvas, mPoints.get(1), mPoints.get(2));
+                        drawLine(canvas, mPoints.get(2), mPoints.get(3));
+                        drawLine(canvas, startPoint, mCurrentPoint);
+                        break;
+                    case 4:
+                        drawLine(canvas, mPoints.get(0), mPoints.get(1));
+                        drawLine(canvas, mPoints.get(1), mPoints.get(2));
+                        drawLine(canvas, mPoints.get(2), mPoints.get(3));
+                        drawLine(canvas, mPoints.get(3), mPoints.get(4));
+                        drawLine(canvas, startPoint, mCurrentPoint);
+                        break;
+                    case 5:
+                        drawLine(canvas, mPoints.get(0), mPoints.get(1));
+                        drawLine(canvas, mPoints.get(1), mPoints.get(2));
+                        drawLine(canvas, mPoints.get(2), mPoints.get(3));
+                        drawLine(canvas, mPoints.get(3), mPoints.get(4));
+                        drawLine(canvas, mPoints.get(4), mPoints.get(5));
+                        drawLine(canvas, startPoint, mCurrentPoint);
+                        break;
+                }
+            }
         } else {
-            mPaint.setColor(mColor);
+            mCurrentIndex = 0;
+            mCurrentPoint = null;
             drawView(canvas, mHeight, mWidth);
         }
+    }
+
+    private void drawLine(Canvas canvas, Point startPoint, Point endPoint) {
+        canvas.drawLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY(), mEdgePaint);
     }
 
     private void drawView(Canvas canvas, int height, int width) {
@@ -96,9 +146,51 @@ public class DiamondView extends View {
         canvas.drawPath(path, mPaint);
     }
 
+    private void initPoints() {
+        float h = (float) ((mHeight - mWidth / Math.sqrt(3)) / 2);
+        if (mPoints == null) {
+            mPoints = new ArrayList<>();
+        }
+        mPoints.clear();
+        mPoints.add(new Point(0, -mHeight / 2));
+        mPoints.add(new Point(-mWidth / 2, -h));
+        mPoints.add(new Point(-mWidth / 2, h));
+        mPoints.add(new Point(0, mHeight / 2));
+        mPoints.add(new Point(mWidth / 2, h));
+        mPoints.add(new Point(mWidth / 2, -h));
+        mPoints.add(new Point(0, -mHeight / 2));
+    }
 
-    public void setBackgroundColor(int color) {
+    private void startAnimation(Point startPoint, Point endPoint) {
+        ValueAnimator anim = ValueAnimator.ofObject(new PointEvaluator(), startPoint, endPoint);
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mCurrentIndex++;
+                mCurrentPoint = null;
+                if (mCurrentIndex < mPoints.size() - 1) {
+                    invalidate();
+                }
+            }
+        });
+        anim.setInterpolator(new LinearInterpolator());
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mCurrentPoint = (Point) animation.getAnimatedValue();
+                if (mCurrentPoint != null&&(mCurrentIndex < mPoints.size() - 1)) {
+                    invalidate();
+                }
+            }
+        });
+        anim.setDuration(100);
+        anim.start();
+    }
+
+    public void setBackground(int color) {
         mColor = color;
+        mSelected = false;
         invalidate();
     }
 
@@ -109,5 +201,38 @@ public class DiamondView extends View {
 
     public boolean getSelected() {
         return mSelected;
+    }
+
+    public class PointEvaluator implements TypeEvaluator<Point> {
+
+        @Override
+        public Point evaluate(float fraction, Point startValue, Point endValue) {
+            float x = startValue.getX() + fraction * (endValue.getX() - startValue.getX());
+            float y = startValue.getY() + fraction * (endValue.getY() - startValue.getY());
+            Point point = new Point(x, y);
+            return point;
+        }
+
+    }
+
+    public static class Point {
+
+        private float x;
+
+        private float y;
+
+        public Point(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public float getX() {
+            return x;
+        }
+
+        public float getY() {
+            return y;
+        }
+
     }
 }
