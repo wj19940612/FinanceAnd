@@ -50,14 +50,15 @@
                                 android:src="@drawable/ic_default_avatar_big"/>
                         </FrameLayout>
 
-                        <RelativeLayout
+                        <LinearLayout
                             android:id="@+id/hotArea"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="14dp"
-                            android:layout_toRightOf="@+id/avatarBackground">
+                            android:layout_toRightOf="@+id/avatarBackground"
+                            android:orientation="horizontal">
 
-                            <TextView
+                            <com.sbai.finance.view.autofit.AutofitTextView
                                 android:id="@+id/name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -79,22 +80,27 @@
                                 android:textSize="14sp"
                                 tools:text="@string/voice_time"/>
 
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"/>
+
                             <TextView
                                 android:id="@+id/lovePeopleNumber"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:textColor="@android:color/white"
                                 android:textSize="10sp"
                                 tools:text="@string/love_people_number"/>
-                        </RelativeLayout>
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/introduce"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/hotArea"
+                            android:layout_marginRight="14dp"
                             android:layout_marginTop="10dp"
                             android:layout_toRightOf="@+id/avatarBackground"
                             android:ellipsize="end"

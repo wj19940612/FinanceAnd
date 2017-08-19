@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
-              android:paddingLeft="20dp"
               android:layout_height="wrap_content"
               android:background="@android:color/white"
               android:gravity="center_horizontal"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:paddingLeft="20dp">
 
     <ImageView
         android:id="@+id/avatar"
@@ -16,10 +16,13 @@
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="14dp"
         android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
         android:text="小金"
         android:textColor="@color/luckyText"
         android:textSize="12sp"/>
