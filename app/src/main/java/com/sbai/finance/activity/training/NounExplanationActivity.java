@@ -20,6 +20,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.training.ExplanationFragment;
+import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingQuestion;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.training.DragImageView;
@@ -34,7 +35,7 @@ import butterknife.OnClick;
 
 
 public class NounExplanationActivity extends BaseActivity implements View.OnTouchListener {
-
+	
 	@BindView(R.id.trainHeaderView)
 	TrainHeaderView mTrainHeaderView;
 	@BindView(R.id.star1)
@@ -61,7 +62,8 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	CardView mCardView;
 
 	private TrainingQuestion mTrainingQuestion;
-	private long mCountDown;
+	private long mCountDownTime;
+	private Training mTraining;
 	private List<TrainingQuestion.ContentBean> mNounExplanationList;
 	private List<TrainingQuestion.ContentBean> mNewNounExplanationList;
 	private List<Fragment> mFragments;
@@ -89,7 +91,8 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 
 	private void initData(Intent intent) {
 		mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
-		mCountDown = intent.getIntExtra(ExtraKeys.TRAIN_TARGET_TIME, 0);
+		mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
+		mCountDownTime = mTraining.getTime();
 		mNounExplanationList = mTrainingQuestion.getContent();
 		mNewNounExplanationList = new ArrayList<>();
 		if (mNounExplanationList.size() > 5) {

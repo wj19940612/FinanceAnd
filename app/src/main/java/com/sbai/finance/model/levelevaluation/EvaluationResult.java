@@ -8,7 +8,7 @@ import android.os.Parcelable;
  * 测评结果
  */
 
-public class TestResultModel implements Parcelable{
+public class EvaluationResult implements Parcelable{
 
 
         //正确率
@@ -36,6 +36,9 @@ public class TestResultModel implements Parcelable{
     private int topicId;
     private String updateTime;
     private int userId;
+
+
+
 
     public double getAllAccuracy() {
         return allAccuracy;
@@ -190,10 +193,10 @@ public class TestResultModel implements Parcelable{
         dest.writeInt(this.userId);
     }
 
-    public TestResultModel() {
+    public EvaluationResult() {
     }
 
-    protected TestResultModel(Parcel in) {
+    protected EvaluationResult(Parcel in) {
         this.allAccuracy = in.readDouble();
         this.createTime = in.readString();
         this.finishStatus = in.readInt();
@@ -210,15 +213,15 @@ public class TestResultModel implements Parcelable{
         this.userId = in.readInt();
     }
 
-    public static final Creator<TestResultModel> CREATOR = new Creator<TestResultModel>() {
+    public static final Creator<EvaluationResult> CREATOR = new Creator<EvaluationResult>() {
         @Override
-        public TestResultModel createFromParcel(Parcel source) {
-            return new TestResultModel(source);
+        public EvaluationResult createFromParcel(Parcel source) {
+            return new EvaluationResult(source);
         }
 
         @Override
-        public TestResultModel[] newArray(int size) {
-            return new TestResultModel[size];
+        public EvaluationResult[] newArray(int size) {
+            return new EvaluationResult[size];
         }
     };
 

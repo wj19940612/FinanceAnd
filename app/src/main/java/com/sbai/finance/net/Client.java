@@ -4,7 +4,7 @@ import com.android.volley.Request;
 import com.google.gson.Gson;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.levelevaluation.TestAnswerUtils;
+import com.sbai.finance.model.levelevaluation.QuestionAnswer;
 import com.sbai.httplib.ApiParams;
 
 
@@ -1882,7 +1882,7 @@ public class Client {
      *
      * @return
      */
-    public static API confirmLevelTestResult(TestAnswerUtils finishPO) {
+    public static API confirmLevelTestResult(QuestionAnswer finishPO) {
         return new API(POST, "/train/evaluate/End.do", new Gson().toJson(finishPO));
     }
 
@@ -2438,5 +2438,24 @@ public class Client {
      */
     public static API requestTrainQuestions(int trainId) {
         return new API("/train/train/start.do", new ApiParams().put("trainId", trainId));
+    }
+
+    /**
+     * /train/train/finish.do
+     * POST
+     * 提交训练结果
+     *
+     * @param trainId  训练id
+     * @param time     时间
+     * @param isFinish 是否完成
+     * @param rate     成功率
+     * @return
+     */
+    public static API confirmQuestionResult(int trainId, int time, boolean isFinish, double rate) {
+        return new API(POST, "/train/train/finish.do", new ApiParams()
+                .put("trainId", trainId)
+                .put("time", time)
+                .put("isFinish", isFinish)
+                .put("rate", rate));
     }
 }

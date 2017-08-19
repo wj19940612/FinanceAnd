@@ -19,7 +19,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.training.ScoreIntroduceActivity;
-import com.sbai.finance.model.levelevaluation.TestResultModel;
+import com.sbai.finance.model.levelevaluation.EvaluationResult;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -76,9 +76,9 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
     private void requestHistoryTestResultList() {
         Client.requestHistoryTestResultList()
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<TestResultModel>>, List<TestResultModel>>() {
+                .setCallback(new Callback2D<Resp<List<EvaluationResult>>, List<EvaluationResult>>() {
                     @Override
-                    protected void onRespSuccessData(List<TestResultModel> data) {
+                    protected void onRespSuccessData(List<EvaluationResult> data) {
                         updateHistoryTestResultList(data);
                     }
 
@@ -93,7 +93,7 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
     }
 
 
-    private void updateHistoryTestResultList(List<TestResultModel> data) {
+    private void updateHistoryTestResultList(List<EvaluationResult> data) {
         if (data == null || data.isEmpty()) {
             stopRefreshAnimation();
             return;
@@ -108,7 +108,7 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
             mHistoryTestResultAdapter.clear();
         }
         stopRefreshAnimation();
-        for (TestResultModel dataResult : data) {
+        for (EvaluationResult dataResult : data) {
             if (mSet.add(dataResult.getCreateTime())) {
                 mHistoryTestResultAdapter.add(dataResult);
             }
@@ -127,15 +127,15 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        TestResultModel testResultModel = (TestResultModel) parent.getAdapter().getItem(position);
-        if (testResultModel != null) {
+        EvaluationResult evaluationResult = (EvaluationResult) parent.getAdapter().getItem(position);
+        if (evaluationResult != null) {
             Launcher.with(getActivity(), ScoreIntroduceActivity.class)
-                    .putExtra(ExtraKeys.HISTORY_TEST_RESULT, testResultModel)
+                    .putExtra(ExtraKeys.HISTORY_TEST_RESULT, evaluationResult)
                     .execute();
         }
     }
 
-    static class HistoryTestResultAdapter extends ArrayAdapter<TestResultModel> {
+    static class HistoryTestResultAdapter extends ArrayAdapter<EvaluationResult> {
 
         private Context mContext;
 
@@ -171,12 +171,12 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(TestResultModel item, int position, Context context) {
+            public void bindDataWithView(EvaluationResult item, int position, Context context) {
                 mTime.setText(DateUtil.format(item.getCreateTime(), DateUtil.DEFAULT_FORMAT, "yyyy-MM-dd"));
                 mGrade.setText(getTestGrade(item.getLevel()));
                 mAccuracy.setText(context.getString(R.string.accuracy_ranking,
-                        NumberFormatUtils.formatPercentString(item.getAllAccuracy(), 1),
-                        NumberFormatUtils.formatPercentString(item.getPassPercent())));
+                        NumberFormatUtils.formatPercentStringEndReplaceZero(item.getAllAccuracy(),2),
+                        NumberFormatUtils.formatPercentStringEndReplaceZero(item.getPassPercent(),2)));
             }
 
 

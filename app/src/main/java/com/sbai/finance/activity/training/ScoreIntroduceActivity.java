@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.levelevaluation.TestResultModel;
+import com.sbai.finance.model.levelevaluation.EvaluationResult;
 import com.sbai.finance.model.training.TrainAppraiseAndRemark;
 import com.sbai.finance.model.training.UserEachTrainingScoreModel;
 import com.sbai.finance.net.Callback2D;
@@ -44,9 +44,9 @@ public class ScoreIntroduceActivity extends BaseActivity {
 
         mUserEachTrainingScoreModel = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
         //测评结果页数据
-        TestResultModel historyTestResultModel = getIntent().getParcelableExtra(ExtraKeys.HISTORY_TEST_RESULT);
-        if (historyTestResultModel != null) {
-            updateScoreViewData(historyTestResultModel);
+        EvaluationResult historyEvaluationResult = getIntent().getParcelableExtra(ExtraKeys.HISTORY_TEST_RESULT);
+        if (historyEvaluationResult != null) {
+            updateScoreViewData(historyEvaluationResult);
         }
 
         requestUserScore();
@@ -54,9 +54,9 @@ public class ScoreIntroduceActivity extends BaseActivity {
         //训练首页数据
         if (mUserEachTrainingScoreModel != null) {
             Log.d(TAG, "onCreate: " + mUserEachTrainingScoreModel.toString());
-            TestResultModel testResultModel = mUserEachTrainingScoreModel.getTestResultModel();
-            Log.d(TAG, "onCreate   testResultModel: " + testResultModel.toString());
-            updateScoreViewData(testResultModel);
+            EvaluationResult evaluationResult = mUserEachTrainingScoreModel.getTestResultModel();
+            Log.d(TAG, "onCreate   testResultModel: " + evaluationResult.toString());
+            updateScoreViewData(evaluationResult);
         }
 
         requestScoreStageAndRemark();
@@ -75,9 +75,9 @@ public class ScoreIntroduceActivity extends BaseActivity {
                 }).fire();
     }
 
-    private void updateScoreViewData(TestResultModel testResultModel) {
-        if (testResultModel != null) {
-            mScore.setUserTrainScoreData(testResultModel);
+    private void updateScoreViewData(EvaluationResult evaluationResult) {
+        if (evaluationResult != null) {
+            mScore.setUserTrainScoreData(evaluationResult);
         }
     }
 

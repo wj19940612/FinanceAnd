@@ -2,7 +2,6 @@ package com.sbai.finance.view.training;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +9,10 @@ import android.widget.RelativeLayout;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.training.RemoveTraining;
-import com.sbai.finance.model.training.Training;
 import com.sbai.finance.utils.Display;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
 
 /**
  * K线训练页面菱形组合布局
@@ -48,16 +43,20 @@ public class KlineTrainView extends RelativeLayout {
         for (int i = 0; i < trainData.size(); i++) {
             RemoveTraining training = trainData.get(i);
             views[i].setTag(training);
-            views[i].setVisibility(VISIBLE);
-            if (trainData.get(i).isImage()) {
-                views[i].setBackground(ContextCompat.getColor(getContext(), R.color.violetTechnologyCountDown))
+            if (views[i].getVisibility() == INVISIBLE) {
+                views[i].resetView();
+                views[i].setVisibility(VISIBLE);
+            }
+            views[i].setSelected(false);
+            if (training.isImage()) {
+                views[i].setBackgroundType(DiamondView.TYPE_DARK)
                         .setImageVisible(true)
                         .setImageUrl(training.getImageUrl())
                         .setDescribeVisible(false);
             } else {
-                views[i].setBackground(Color.WHITE)
+                views[i].setBackgroundType(DiamondView.TYPE_WHITE)
                         .setImageVisible(false)
-                        .setDescribe(String.valueOf(training.getSeq()))
+                        .setDescribe(String.valueOf(training.getContent()))
                         .setDescribeVisible(true);
             }
         }
@@ -129,6 +128,8 @@ public class KlineTrainView extends RelativeLayout {
 
         for (int i = 0; i < views.length; i++) {
             setOnClickListener(views[i], i);
+            setOnClickListener(views[i].getDescribe(), i);
+            setOnClickListener(views[i].getKlineImg(), i);
         }
 
         for (int i = 0; i < views.length; i++) {
@@ -145,26 +146,26 @@ public class KlineTrainView extends RelativeLayout {
         });
     }
 
-    private void setOnClickListener(final DiamondGroupView view, final int index) {
+    private void setOnClickListener(View view, final int index) {
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!view.getSelected()) {
-                    view.setSelected(true);
+                if (!views[index].getSelected()) {
+                    views[index].setSelected(true);
                     if (mPriSelectedIndex == -1) {
                         mPriSelectedIndex = index;
                     } else {
                         RemoveTraining training1 = (RemoveTraining) views[mPriSelectedIndex].getTag();
-                        RemoveTraining training2 = (RemoveTraining) view.getTag();
+                        RemoveTraining training2 = (RemoveTraining) views[index].getTag();
                         if (training1 != null && training2 != null) {
                             if (training1.getSeq() == training2.getSeq()) {
                                 views[mPriSelectedIndex].startDisappearAnim();
-                                view.startDisappearAnim();
+                                views[index].startDisappearAnim();
                             } else {
                                 views[mPriSelectedIndex].startErrorAnim();
                                 views[mPriSelectedIndex].setSelected(false);
-                                view.startErrorAnim();
-                                view.setSelected(false);
+                                views[index].startErrorAnim();
+                                views[index].setSelected(false);
                             }
                             mPriSelectedIndex = -1;
                         }

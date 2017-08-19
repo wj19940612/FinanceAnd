@@ -47,7 +47,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-
 public class TrainDetailActivity extends BaseActivity {
     private static final int TYPE_THEORY = 1;
     private static final int TYPE_TECHNOLOGY = 2;
@@ -191,6 +190,7 @@ public class TrainDetailActivity extends BaseActivity {
         mHotExperienceListAdapter.clear();
         mHotExperienceListAdapter.addAll(experienceList);
     }
+
     private void updateTrainDetail(TrainingDetail trainDetail) {
         if (trainDetail.getTrain() != null) {
             mTitle.setText(trainDetail.getTrain().getTitle());
@@ -362,7 +362,7 @@ public class TrainDetailActivity extends BaseActivity {
                 break;
             case R.id.hotExperience:
                 Launcher.with(getActivity(), TrainExperienceActivity.class)
-             .putExtra(Launcher.EX_PAYLOAD_1, mTraining.getId())
+                        .putExtra(Launcher.EX_PAYLOAD_1, mTraining.getId())
                         .execute();
                 break;
             case R.id.writeExperience:

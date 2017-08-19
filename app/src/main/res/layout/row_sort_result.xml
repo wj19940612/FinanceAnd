@@ -3,6 +3,9 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:layout_marginLeft="5dp"
+              android:layout_marginRight="5dp"
+              android:foreground="?android:attr/selectableItemBackground"
               android:minHeight="114dp"
               android:orientation="horizontal">
 
@@ -14,13 +17,8 @@
         android:gravity="center"
         android:textColor="@color/unluckyText"
         android:textSize="30sp"
-        android:textStyle="bold"
         tools:text="1"/>
 
-    <View
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:background="@color/split"/>
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -45,14 +43,11 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="5dp"
+            android:layout_height="2dp"
             android:layout_alignParentBottom="true"
+            android:layout_marginLeft="5dp"
             android:background="@drawable/line_broken"
             android:layerType="software"/>
     </RelativeLayout>
 
-    <View
-        android:layout_width="10dp"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_sort_result_item"/>
 </LinearLayout>

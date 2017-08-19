@@ -69,22 +69,27 @@ public class HowPlayActivity extends BaseActivity {
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         int drawable = 0;
+        int content = 0;
         switch (mTraining.getPlayType()) {
             case Training.PLAY_TYPE_REMOVE:
                 mIsHorizontal = false;
                 drawable = R.drawable.ic_kline_train;
+                content = R.string.remove_train_rule;
                 break;
             case Training.PLAY_TYPE_SORT:
                 mIsHorizontal = false;
                 drawable = R.drawable.ic_annual_report_train;
+                content = R.string.sort_train_rule;
                 break;
             case Training.PLAY_TYPE_MATCH_STAR:
                 mIsHorizontal = false;
                 drawable = R.drawable.ic_identification_train;
+                content = R.string.match_star_train_rule;
                 break;
             case Training.PLAY_TYPE_JUDGEMENT:
                 drawable = R.drawable.ic_average_line_train;
                 mIsHorizontal = true;
+                content = R.string.judgement_train_rule;
                 break;
 
         }
@@ -99,6 +104,9 @@ public class HowPlayActivity extends BaseActivity {
                         .priority(Priority.HIGH)
                         .into(mTrainImg);
             }
+            if (content != 0) {
+                mContent.setText(content);
+            }
         } else {
             mVerticalView.setVisibility(View.VISIBLE);
             mHorizontalView.setVisibility(View.GONE);
@@ -109,6 +117,9 @@ public class HowPlayActivity extends BaseActivity {
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .priority(Priority.HIGH)
                         .into(mTrainImg1);
+            }
+            if (content != 0) {
+                mContent1.setText(content);
             }
         }
         // TODO: 2017-08-14 load gif

@@ -30,7 +30,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#8268E4"/>
+                android:scaleType="fitXY"/>
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -97,7 +97,7 @@
                 android:id="@+id/trainImg1"
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
-                android:background="#8268E4"/>
+                android:scaleType="fitXY"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
