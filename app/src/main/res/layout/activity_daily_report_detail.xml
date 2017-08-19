@@ -15,142 +15,138 @@
         android:layout_marginTop="11dp"
         app:cardCornerRadius="8dp">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:descendantFocusability="blocksDescendants"
-            android:scrollbars="none">
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/titleArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp">
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        tools:src="@drawable/ic_feedback_time_bg"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="@dimen/common_padding"
+                        android:layout_marginTop="@dimen/common_padding"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="4dp"
+                            android:layout_height="4dp"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="4dp"
+                            android:background="@drawable/bg_white_dot"/>
+
+                        <TextView
+                            android:id="@+id/click"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            tools:text="100 次阅读"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:lineSpacingExtra="2dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="10dp"
+                    android:textColor="@color/blackPrimary"
+                    android:textSize="18sp"
+                    tools:text="乐米专访：葛卫东，从百万到百亿是怎样达成的"/>
+
+                <TextView
+                    android:id="@+id/sourceAndTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:textColor="@color/blackPrimary"
+                    android:textSize="12sp"
+                    tools:text="来源: 若愚"/>
+
+                <View
+                    android:layout_width="60dp"
+                    android:layout_height="6dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/colorPrimary"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
                 android:background="@android:color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="visible">
 
-                <LinearLayout
-                    android:id="@+id/titleArea"
+                <WebView
+                    android:id="@+id/webView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@android:color/white"
+                    android:scrollbars="none"/>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="214dp">
-
-                        <ImageView
-                            android:id="@+id/image"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="fitXY"
-                            tools:src="@drawable/ic_feedback_time_bg"/>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginRight="@dimen/common_padding"
-                            android:layout_marginTop="@dimen/common_padding"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="4dp"
-                                android:layout_height="4dp"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="4dp"
-                                android:background="@drawable/bg_white_dot"/>
-
-                            <TextView
-                                android:id="@+id/click"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@android:color/white"
-                                android:textSize="12sp"
-                                tools:text="100 次阅读"/>
-                        </LinearLayout>
-                    </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/white"
-                        android:lineSpacingExtra="2dp"
-                        android:padding="20dp"
-                        android:textColor="@color/blackPrimary"
-                        android:textSize="20sp"
-                        tools:text="乐米专访：葛卫东，从百万到百亿是怎样达成的"/>
-
-                    <TextView
-                        android:id="@+id/sourceAndTime"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/white"
-                        android:paddingBottom="20dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        android:textColor="@color/blackPrimary"
-                        android:textSize="12sp"
-                        tools:text="来源: 若愚"/>
-
-                    <View
-                        android:layout_width="80dp"
-                        android:layout_height="6dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:background="@color/colorPrimary"/>
-                </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/progress"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:progressDrawable="@drawable/progress_horizontal"/>
 
                 <LinearLayout
+                    android:id="@+id/errorPage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="20dp"
-                    android:background="@android:color/white"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
-                    <WebView
-                        android:id="@+id/webView"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:background="@android:color/white"
-                        android:scrollbars="none"/>
-
-                    <ProgressBar
-                        android:id="@+id/progress"
-                        style="@android:style/Widget.ProgressBar.Horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:progressDrawable="@drawable/progress_horizontal"/>
-
-                    <LinearLayout
-                        android:id="@+id/errorPage"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                        android:text="@string/network_error_please_reload"/>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/network_error_please_reload"/>
-
-                        <Button
-                            android:id="@+id/refreshButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="16dp"
-                            android:background="@drawable/btn_refresh"
-                            android:text="@string/refresh"
-                            android:textSize="16sp"/>
-                    </LinearLayout>
+                    <Button
+                        android:id="@+id/refreshButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:background="@drawable/btn_refresh"
+                        android:text="@string/refresh"
+                        android:textSize="16sp"/>
                 </LinearLayout>
             </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 

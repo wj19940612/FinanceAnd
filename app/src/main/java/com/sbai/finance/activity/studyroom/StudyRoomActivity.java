@@ -118,7 +118,7 @@ public class StudyRoomActivity extends BaseActivity {
     }
 
 
-//     else if (mStudyOption == null) {
+    //     else if (mStudyOption == null) {
 //        //取缓存的数据
 //        StudyOption studyOption = (StudyOption) SerializeObjectUtil.String2Object(Preference.get().getStudyData(data.getAnswer().get(0).getTopicId()));
 //        if (studyOption != null) {
