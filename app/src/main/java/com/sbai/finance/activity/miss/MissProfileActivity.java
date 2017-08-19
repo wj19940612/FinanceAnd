@@ -33,11 +33,11 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.Attention;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.Prise;
 import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -49,7 +49,9 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.ObservableScrollView;
+import com.sbai.finance.view.autofit.AutofitTextView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -85,7 +87,7 @@ public class MissProfileActivity extends BaseActivity implements
 	@BindView(R.id.avatar)
 	ImageView mAvatar;
 	@BindView(R.id.name)
-	TextView mName;
+	AutofitTextView mName;
 	@BindView(R.id.voice)
 	TextView mVoice;
 	@BindView(R.id.lovePeopleNumber)
@@ -418,6 +420,10 @@ public class MissProfileActivity extends BaseActivity implements
 					Launcher.with(this, MissAvatarActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
 							.execute();
+				} else {
+					Launcher.with(this, MissAvatarActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, "")
+							.execute();
 				}
 				break;
 			case R.id.voice:
@@ -443,6 +449,8 @@ public class MissProfileActivity extends BaseActivity implements
 					} else {
 						Launcher.with(getActivity(), LoginActivity.class).execute();
 					}
+				} else {
+					ToastUtil.show(getString(R.string.no_miss));
 				}
 				break;
 			case R.id.reward:
@@ -453,6 +461,8 @@ public class MissProfileActivity extends BaseActivity implements
 						Intent intent = new Intent(getActivity(), LoginActivity.class);
 						startActivityForResult(intent, REQ_MISS_REWARD_LOGIN);
 					}
+				} else {
+					ToastUtil.show(getString(R.string.no_miss));
 				}
 				break;
 			case R.id.askHerQuestion:

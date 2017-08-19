@@ -8,9 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
 
 import com.sbai.finance.R;
 import com.sbai.finance.utils.Display;
@@ -71,32 +69,33 @@ public class DragImageView extends android.support.v7.widget.AppCompatImageView 
 
 	}
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-				mDownX = event.getRawX();
-				mDownY = event.getRawY();
-
-				break;
-			case MotionEvent.ACTION_MOVE:
-				mDx = event.getRawX() - mDownX;
-				mDy = event.getRawY() - mDownY;
-				setTranslationX(mDx);
-				setTranslationY(mDy);
-				break;
-			case MotionEvent.ACTION_UP:
-				AnimatorSet animatorSet = new AnimatorSet();
-				animatorSet.playTogether(
-						ObjectAnimator.ofFloat(this, "translationX", 0f),
-						ObjectAnimator.ofFloat(this, "translationY", 0f));
-				animatorSet.setDuration(200 * 2).setInterpolator(new OvershootInterpolator());
-				animatorSet.start();
-				break;
-		}
-
-		return true;
-	}
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event) {
+//		switch (event.getAction()) {
+//			case MotionEvent.ACTION_DOWN:
+//				mDownX = event.getRawX();
+//				mDownY = event.getRawY();
+//
+//				break;
+//			case MotionEvent.ACTION_MOVE:
+//				mDx = event.getRawX() - mDownX;
+//				mDy = event.getRawY() - mDownY;
+//				setTranslationX(mDx);
+//				setTranslationY(mDy);
+//				break;
+//			case MotionEvent.ACTION_UP:
+//
+//				AnimatorSet animatorSet = new AnimatorSet();
+//				animatorSet.playTogether(
+//						ObjectAnimator.ofFloat(this, "translationX", 0f),
+//						ObjectAnimator.ofFloat(this, "translationY", 0f));
+//				animatorSet.setDuration(400).setInterpolator(new OvershootInterpolator());
+//				animatorSet.start();
+//				break;
+//		}
+//
+//		return true;
+//	}
 
 	public void setText(String text){
 		mText = text;
