@@ -68,6 +68,13 @@ public class TrainHeaderView extends LinearLayout {
         });
     }
 
+    public long getCountDownTotalChangeTime() {
+        if (mCountdown != null) {
+            return mCountdown.getTotalChangeTime();
+        }
+        return 0;
+    }
+
     @OnClick({R.id.back, R.id.howPlay})
     public void onViewClicked(View view) {
         switch (view.getId()) {

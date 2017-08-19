@@ -158,6 +158,25 @@ public class SmartDialog {
         }
     }
 
+    public static void showExitTrainDialog(Activity activity, final OnClickListener negativeListener) {
+        single(activity).setTitle(R.string.is_sure_exit_train)
+                .setMessage(R.string.exit_train_will_not_save_train_record)
+                .setPositive(R.string.continue_train, new OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegative(R.string.exit_train, new OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        negativeListener.onClick(dialog);
+                        dialog.dismiss();
+                    }
+                }).show();
+
+    }
+
     private SmartDialog(Activity activity) {
         mActivity = activity;
         init();
@@ -390,7 +409,7 @@ public class SmartDialog {
         mDialog.setCanceledOnTouchOutside(mCancelableOnTouchOutside);
         mDialog.setCancelable(mCancelableOnTouchOutside);
 
-        if (mCustomView != null)  {
+        if (mCustomView != null) {
             mDialog.setContentView(mCustomView);
         } else {
             mDialog.setContentView(mDialogView);

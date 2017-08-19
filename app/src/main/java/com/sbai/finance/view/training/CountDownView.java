@@ -125,6 +125,10 @@ public class CountDownView extends LinearLayout {
     }
 
 
+    public long getTotalChangeTime() {
+        return mTotalChangeTime;
+    }
+
     /**
      * @param time 毫秒级的时间 倒计时将进行time时常
      */
