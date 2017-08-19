@@ -5,16 +5,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 
 import com.sbai.chart.ChartSettings;
 import com.sbai.chart.ChartView;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.model.training.question.KData;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 public class Kline extends ChartView {
@@ -30,18 +30,19 @@ public class Kline extends ChartView {
     private static final String COLOR_VIOLET = "#694FC8";
 
     private List<KData> mDataList;
-    private int[] mMovingAverages;
+    private SparseArray<IntersectionPoint> mIntersectionPointArray;
+    private MvKlineView.Settings mSettings;
 
-    private int mStart;
-    private int mLength;
-    private int mEnd;
     private float mCandleWidth;
-    private float mMaxBaseLine;
-    private float mMinBaseLine;
-
     private float mBaseLineWidth;
     private float mButtonsAreaWidth;
     private float mMvWidth;
+    private Line[] mLines;
+    private OnDrawCompletedListener mOnDrawCompletedListener;
+
+    public interface OnDrawCompletedListener {
+        void onDrawCompleted();
+    }
 
     protected void setBaseLinePaint(Paint paint) {
         paint.setColor(Color.parseColor("#2a2a2a"));
@@ -53,9 +54,9 @@ public class Kline extends ChartView {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(mMvWidth);
         paint.setPathEffect(null);
-        if (movingAverage == mMovingAverages[0]) {
+        if (movingAverage == mSettings.getMovingAverages()[0]) {
             paint.setColor(Color.parseColor(COLOR_VIOLET));
-        } else if (movingAverage == mMovingAverages[1]) {
+        } else if (movingAverage == mSettings.getMovingAverages()[1]) {
             paint.setColor(Color.parseColor(COLOR_YELLOW));
         }
     }
@@ -83,88 +84,28 @@ public class Kline extends ChartView {
         init();
     }
 
-
     private void init() {
         mCandleWidth = dp2Px(CANDLES_WIDTH_DP);
-        mMovingAverages = new int[]{5, 30};
-
-        mMaxBaseLine = Float.MIN_VALUE;
-        mMinBaseLine = Float.MAX_VALUE;
-
         mBaseLineWidth = dp2Px(0.5f);
         mButtonsAreaWidth = dp2Px(BUTTONS_AREA_WIDTH);
         mMvWidth = dp2Px(MV_WIDTH);
-
-        ChartSettings settings = new ChartSettings();
-        settings.setXAxis(60);
-        settings.setBaseLines(7);
-        setSettings(settings);
+        mLines = new Line[2];
+        for (int i = 0; i < mLines.length; i++) {
+            mLines[i] = new Line();
+        }
     }
 
     @Override
     protected void calculateBaseLines(float[] baselines) {
-        if (mDataList != null && mDataList.size() > 0) {
-            float max = mMaxBaseLine;
-            float min = mMinBaseLine;
-            for (int i = mStart; i < mEnd; i++) {
-                KlineViewData data = mDataList.get(i).getK();
-                if (max < data.getMaxPrice()) max = data.getMaxPrice();
-                if (min > data.getMinPrice()) min = data.getMinPrice();
-            }
-
-            float priceRange = BigDecimal.valueOf(max).subtract(new BigDecimal(min))
-                    .divide(new BigDecimal(baselines.length - 1),
-                            mSettings.getNumberScale() + 1, RoundingMode.HALF_EVEN).floatValue();
-
-            baselines[0] = max;
-            baselines[baselines.length - 1] = min;
-            for (int i = baselines.length - 2; i > 0; i--) {
-                baselines[i] = baselines[i + 1] + priceRange;
-            }
-        }
-    }
-
-    @Override
-    protected boolean enableMovingAverages() {
-        return true;
-    }
-
-    @Override
-    protected void calculateMovingAverages(boolean indexesEnable) {
-        if (mDataList != null && mDataList.size() > 0) {
-            float max = Float.MIN_VALUE;
-            float min = Float.MAX_VALUE;
-            for (int movingAverage : mMovingAverages) {
-                for (int i = mStart; i < mEnd; i++) {
-                    int start = i - movingAverage + 1;
-                    if (start < 0) continue;
-                    float movingAverageValue = calculateMovingAverageValue(start, movingAverage);
-                    mDataList.get(i).getK().addMovingAverage(movingAverage, movingAverageValue);
-                    if (max < movingAverageValue) max = movingAverageValue;
-                    if (min > movingAverageValue) min = movingAverageValue;
-                }
-            }
-            mMaxBaseLine = max;
-            mMinBaseLine = min;
-        }
-    }
-
-    private float calculateMovingAverageValue(int start, int movingAverage) {
-        float result = 0;
-        for (int i = start; i < start + movingAverage; i++) {
-            result += mDataList.get(i).getK().getClosePrice();
-        }
-        return result / movingAverage;
     }
 
     @Override
     protected void calculateIndexesBaseLines(long[] indexesBaseLines) {
-
     }
 
     @Override
     protected float getChartX(int index) {
-        index = index - mStart;
+        index = index - mSettings.start;
         float width = getWidth() - getPaddingLeft() - getPaddingRight() - mButtonsAreaWidth;
         float offset = width * 1.0f / mSettings.getXAxis() / 2;
         float chartX = getPaddingLeft() + index * width * 1.0f / mSettings.getXAxis();
@@ -196,7 +137,7 @@ public class Kline extends ChartView {
                                     int left2, int top2, int width2, int height2,
                                     Canvas canvas) {
         if (mDataList != null && mDataList.size() > 0) {
-            for (int i = mStart; i < mEnd; i++) {
+            for (int i = mSettings.start; i < mSettings.end; i++) {
                 KData data = mDataList.get(i);
                 float chartX = getChartX(i);
                 drawCandle(chartX, data, canvas);
@@ -206,15 +147,16 @@ public class Kline extends ChartView {
     }
 
     private void drawMovingAverageLines(Canvas canvas) {
-        for (int movingAverage : mMovingAverages) {
+        for (int movingAverage : mSettings.getMovingAverages()) {
             setMovingAveragesPaint(sPaint, movingAverage);
             float startX = -1;
             float startY = -1;
-            for (int i = mStart; i < mEnd; i++) {
+            for (int i = mSettings.start; i < mSettings.end; i++) {
                 int start = i - movingAverage + 1;
                 if (start < 0) continue;
+                KData kData = mDataList.get(i);
                 float chartX = getChartX(i);
-                float movingAverageValue = mDataList.get(i).getK().getMovingAverage(movingAverage);
+                float movingAverageValue = kData.getK().getMovingAverage(movingAverage);
                 float chartY = getChartY(movingAverageValue);
                 if (startX == -1 && startY == -1) { // start
                     startX = chartX;
@@ -280,23 +222,171 @@ public class Kline extends ChartView {
     protected void drawTimeLine(int left, int top, int width, Canvas canvas) {
     }
 
-    private void calculateStartAndEndPosition() {
-        if (mDataList != null) {
-            mStart = mDataList.size() - mSettings.getXAxis() < 0
-                    ? 0 : (mDataList.size() - mSettings.getXAxis() - getStartPointOffset());
-            mLength = Math.min(mDataList.size(), mSettings.getXAxis());
-            mEnd = mStart + mLength;
-        }
-    }
-
     public void setDataList(List<KData> dataList) {
         mDataList = dataList;
         redraw();
     }
 
+    public void setIntersectionPointArray(SparseArray<IntersectionPoint> pointSparseArray) {
+        mIntersectionPointArray = pointSparseArray;
+    }
+
+    public SparseArray<IntersectionPoint> getIntersectionPointArray() {
+        return mIntersectionPointArray;
+    }
+
+    public void setOnDrawCompletedListener(OnDrawCompletedListener onDrawCompletedListener) {
+        mOnDrawCompletedListener = onDrawCompletedListener;
+    }
+
+    @Override
+    public void setSettings(ChartSettings settings) {
+        mSettings = (MvKlineView.Settings) settings;
+        super.setSettings(settings);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
-        calculateStartAndEndPosition();
         super.onDraw(canvas);
+        updateIntersectionPointList();
+        if (mOnDrawCompletedListener != null) {
+            mOnDrawCompletedListener.onDrawCompleted();
+        }
+
+        for (int i = 0; i < mIntersectionPointArray.size(); i++) {
+            sPaint.setColor(Color.parseColor("#ffffff"));
+            sPaint.setStyle(Paint.Style.STROKE);
+            sPaint.setStrokeWidth(1);
+            IntersectionPoint point = mIntersectionPointArray.valueAt(i);
+            canvas.drawLine(point.getPoint().x, 0, point.getPoint().x, getHeight(), sPaint);
+        }
+    }
+
+    private void updateIntersectionPointList() {
+        if (mDataList != null && mDataList.size() > 0) {
+            for (int i = mSettings.start + 1; i < mSettings.end; i++) {
+                KData kData = mDataList.get(i);
+                if (kData.isOption()) {
+                    KData preKData = mDataList.get(i - 1);
+                    for (int j = 0; j < mLines.length; j++) {
+                        int ma = mSettings.getMovingAverages()[j];
+                        if (i - ma < 0) break; // (i - 1) no MA data
+                        mLines[j].start.set(getChartX(i - 1), getChartY(preKData.getK().getMovingAverage(ma)));
+                        mLines[j].end.set(getChartX(i), getChartY(kData.getK().getMovingAverage(ma)));
+                    }
+                    if (Line.isIntersected(mLines[0], mLines[1])) {
+                        IntersectionPoint point = mIntersectionPointArray.get(i);
+                        if (point != null) {
+                            Line.updateIntersectionPoint(mLines[0], mLines[1], point);
+                            point.setType(kData.getType());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static class Line {
+        PointF start;
+        PointF end;
+
+        public Line() {
+            start = new PointF();
+            end = new PointF();
+        }
+
+        private float maxX() {
+            return Math.max(start.x, end.x);
+        }
+
+        private float minX() {
+            return Math.min(start.x, end.x);
+        }
+
+        private float maxY() {
+            return Math.max(start.y, end.y);
+        }
+
+        private float minY() {
+            return Math.min(start.y, end.y);
+        }
+
+        public static boolean isIntersected(Line line1, Line line2) {
+            if (line1.maxX() < line2.minX()) {
+                return false;
+            }
+            if (line1.maxY() < line2.minY()) {
+                return false;
+            }
+            if (line2.maxX() < line1.minX()) {
+                return false;
+            }
+            if (line2.maxY() < line1.minY()) {
+                return false;
+            }
+            if (mult(line2.start, line1.end, line1.start) * mult(line1.end, line2.end, line1.start) < 0) {
+                return false;
+            }
+            if (mult(line1.start, line2.end, line2.start) * mult(line2.end, line1.end, line2.start) < 0) {
+                return false;
+            }
+            return true;
+        }
+
+        /**
+         * 向量积 向量ca * 向量cb
+         *
+         * @param a
+         * @param b
+         * @param c
+         * @return
+         */
+        private static float mult(PointF a, PointF b, PointF c) {
+            return (a.x - c.x) * (b.y - c.y) - (b.x - c.x) * (a.y - c.y);
+        }
+
+        public static void updateIntersectionPoint(Line line1, Line line2, IntersectionPoint intersectionPoint) {
+            // line1 方程 y - y1 = k1 * (x - x1) [x1, y1] 可以是 line1 其中一个点
+            float k1 = getLineSlope(line1);
+            float y1 = line1.start.y;
+            float x1 = line1.start.x;
+            // line2 方程 y - y2 = k2 * (x - x2) 同理
+            float k2 = getLineSlope(line2);
+            float y2 = line2.start.y;
+            float x2 = line2.start.x;
+            // 连解方程
+            float x = (y2 - y1 - k2 * x2 + k1 * x1) / (k1 - k2);
+            float y = k1 * x - k1 * x1 + y1;
+            intersectionPoint.getPoint().set(x, y);
+        }
+
+        private static float getLineSlope(Line line) {
+            return (line.end.y - line.start.y) / (line.end.x - line.start.x);
+        }
+    }
+
+    public static class IntersectionPoint {
+        private PointF point;
+        private int type;
+
+        public IntersectionPoint() {
+            this.point = new PointF();
+        }
+
+        public PointF getPoint() {
+            return point;
+        }
+
+        public void setPoint(PointF point) {
+            this.point = point;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
     }
 }

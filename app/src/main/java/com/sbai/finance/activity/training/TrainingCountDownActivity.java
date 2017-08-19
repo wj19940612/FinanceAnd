@@ -23,7 +23,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
-import com.sbai.finance.model.training.question.KData;
 import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
@@ -64,7 +63,7 @@ public class TrainingCountDownActivity extends BaseActivity {
                         case Training.PLAY_TYPE_JUDGEMENT:
                             Launcher.with(getActivity(), JudgeTrainingActivity.class)
                                     .putExtra(ExtraKeys.TRAINING, mTraining)
-                                    .putExtra(ExtraKeys.QUESTION, (Question<KData>) mQuestion)
+                                    .putExtra(ExtraKeys.QUESTION, mQuestion)
                                     .execute();
                             break;
                     }

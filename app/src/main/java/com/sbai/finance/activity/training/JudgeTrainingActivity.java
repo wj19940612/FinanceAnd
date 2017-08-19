@@ -11,6 +11,8 @@ import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.question.KData;
 import com.sbai.finance.view.training.Kline.MvKlineView;
 
+import java.util.Collections;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -30,6 +32,7 @@ public class JudgeTrainingActivity extends BaseActivity {
 
         initData(getIntent());
 
+        Collections.reverse(mQuestion.getContent()); // first is the last data
         mKlineView.setDataList(mQuestion.getContent());
     }
 

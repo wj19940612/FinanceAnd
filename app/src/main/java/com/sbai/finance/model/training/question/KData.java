@@ -7,6 +7,9 @@ import com.sbai.chart.domain.KlineViewData;
 
 public class KData implements Parcelable {
 
+    public static final int TYPE_LONG = 1;
+    public static final int TYPE_SHORT = 0;
+
     /**
      * id : 893313204497801217
      * isOption : true
