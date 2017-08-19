@@ -226,4 +226,8 @@
         <attr name="showMillisecond" format="boolean"/>
         <attr name="timeViewMarginRight" format="dimension|reference"/>
     </declare-styleable>
+
+    <declare-styleable name="DragImageView">
+        <attr name="delayTime" format="float"/>
+    </declare-styleable>
 </resources>
