@@ -187,6 +187,12 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		mPlayingID = -1;
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
+	}
+
 	private void initSwipeRefreshLayout() {
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
@@ -497,7 +503,6 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 								break;
 							}
 						}
-
 					}
 				}
 			}

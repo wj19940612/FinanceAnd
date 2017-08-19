@@ -175,7 +175,8 @@ public class KlineTrainActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             ToastUtil.show(resp.getMsg());
-                            // TODO: 2017-08-17 调转到结果也 
+                            // TODO: 2017-08-17 调转到结果也
+                            Launcher.with(getActivity(), TrainingResultActivity.class).execute();
                             finish();
                         } else {
                             ToastUtil.show(resp.getMsg());
