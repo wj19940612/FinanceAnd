@@ -2444,18 +2444,9 @@ public class Client {
      * /train/train/finish.do
      * POST
      * 提交训练结果
-     *
-     * @param trainId  训练id
-     * @param time     时间
-     * @param isFinish 是否完成
-     * @param rate     成功率
-     * @return
      */
-    public static API confirmQuestionResult(int trainId, int time, boolean isFinish, double rate) {
+    public static API confirmQuestionResult(String data) {
         return new API(POST, "/train/train/finish.do", new ApiParams()
-                .put("trainId", trainId)
-                .put("time", time)
-                .put("isFinish", isFinish)
-                .put("rate", rate));
+                .put("data", data));
     }
 }
