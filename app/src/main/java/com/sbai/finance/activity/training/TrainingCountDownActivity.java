@@ -74,7 +74,7 @@ public class TrainingCountDownActivity extends BaseActivity {
                         if (mTrainingQuestion != null && mTraining != null) {
                             Launcher.with(getActivity(), NounExplanationActivity.class)
                                     .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
-                                    .putExtra(ExtraKeys.TRAIN_TARGET_TIME, mTraining.getTime())
+                                    .putExtra(ExtraKeys.TRAINING, mTraining)
                                     .execute();
                         }
                         break;
@@ -82,7 +82,7 @@ public class TrainingCountDownActivity extends BaseActivity {
                         if (mTrainingQuestion != null && mTraining != null) {
                             Launcher.with(getActivity(), SortQuestionActivity.class)
                                     .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
-                                    .putExtra(ExtraKeys.TRAIN_TARGET_TIME, mTraining)
+                                    .putExtra(ExtraKeys.TRAINING, mTraining)
                                     .execute();
                         }
                         break;

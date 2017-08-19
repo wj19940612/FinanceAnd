@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +24,9 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingQuestion;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.TypefaceUtil;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.training.TrainHeaderView;
@@ -65,14 +66,18 @@ public class SortQuestionActivity extends BaseActivity {
 
 
     private ArrayList<Integer> mSortQuestionBgDrawables;
-
     private ArrayList<int[]> mResultBgColors;
 
     private SortResultAdapter mSortResultAdapter;
     private SortQuestionAdapter mSortQuestionAdapter;
     private List<TrainingQuestion.ContentBean> mRandRomQuestionResultList;
+    private SparseArray<TrainingQuestion.ContentBean> mUserChooseResultList;
+    private Training mTraining;
 
-    private List<TrainingQuestion.ContentBean> mUserChooseResultList;
+    private int mFinishExpandTime;
+
+
+    private ArrayList<TrainingQuestion.ContentBean> mData;
 
     public interface OnItemClickListener {
         void onItemClick(TrainingQuestion.ContentBean data, int position);
@@ -84,21 +89,37 @@ public class SortQuestionActivity extends BaseActivity {
         setContentView(R.layout.activity_sort_question);
         ButterKnife.bind(this);
         translucentStatusBar();
-        initHeaderView();
         Intent intent = getIntent();
+        initHeaderView();
+
         mResultSet = new HashSet<>();
         createResultBgColors();
         createSortQuestionBgDrawables();
-        mUserChooseResultList = new ArrayList<>();
-        mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
-        // TODO: 2017/8/16 倒计时时间
-        long longExtra = intent.getIntExtra(ExtraKeys.TRAIN_TARGET_TIME, 0);
+        mUserChooseResultList = new SparseArray<>();
+        mData = new ArrayList<>();
 
-        mTrainHeaderView.setMinuteTime(1);
+        startScheduleJob(1000);
+
+        mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
+        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
+
+        mTrainHeaderView.setSecondTime(mTraining.getTime());
 
         mRandRomQuestionResultList = mTrainingQuestion.getRandRomResultList(mTrainingQuestion.getContent());
 
+
+        for (int i = 0; i < mRandRomQuestionResultList.size(); i++) {
+            TrainingQuestion.ContentBean contentBean = mRandRomQuestionResultList.get(i);
+            mData.add(contentBean);
+        }
+
         if (mRandRomQuestionResultList == null || mRandRomQuestionResultList.isEmpty()) return;
+
+
+        for (TrainingQuestion.ContentBean result : mRandRomQuestionResultList) {
+            Log.d(TAG, "原始: " + result.getContent() + " " + result.getBgPosition());
+        }
+
         initSortQuestionAdapter(mRandRomQuestionResultList);
         initSortResultAdapter(mRandRomQuestionResultList);
 
@@ -160,9 +181,14 @@ public class SortQuestionActivity extends BaseActivity {
 
             @Override
             public void onEndOfTimer() {
-                ToastUtil.show("时间到了");
+                showResultDialog(false);
             }
+
         });
+    }
+
+    private void showResultDialog(boolean isRight) {
+
     }
 
     private void initSortResultAdapter(List<TrainingQuestion.ContentBean> content) {
@@ -170,8 +196,8 @@ public class SortQuestionActivity extends BaseActivity {
         mSortResultRecycleView.setLayoutManager(new LinearLayoutManager(this));
         mSortResultRecycleView.setAdapter(mSortResultAdapter);
         mSortResultRecycleView.setItemAnimator(new DefaultItemAnimator());
+        mSortResultAdapter.setItemBgColors(mResultBgColors);
         mSortResultAdapter.addData(content);
-//        mSortResultAdapter.setItemBgColors(mResultBgColors);
         mSortResultAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(TrainingQuestion.ContentBean data, int position) {
@@ -179,13 +205,14 @@ public class SortQuestionActivity extends BaseActivity {
                 mSortQuestionRecyclerView.scrollToPosition(0);
             }
         });
+
     }
 
     private void updateResult(TrainingQuestion.ContentBean data, int position) {
         data.setSelect(false);
         mResultSet.remove(position);
         mSortResultAdapter.notifyItemChanged(position, data);
-        mSortQuestionAdapter.insert(0, data, mAnnalsMaterialsBgDrawables[position]);
+        mSortQuestionAdapter.insert(0, data, mAnnalsMaterialsBgDrawables[data.getBgPosition()]);
     }
 
     private void initSortQuestionAdapter(List<TrainingQuestion.ContentBean> content) {
@@ -195,66 +222,67 @@ public class SortQuestionActivity extends BaseActivity {
         mSortQuestionRecyclerView.setAdapter(mSortQuestionAdapter);
         mSortQuestionRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mSortQuestionAdapter.addData(content);
+
         mSortQuestionAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(TrainingQuestion.ContentBean data, int position) {
-                Log.d(TAG, "onItemClick: " + data.getContent() + "  " + position);
                 chooseResult(position, data);
             }
         });
+
     }
 
     private void chooseResult(int position, TrainingQuestion.ContentBean data) {
-        mSortQuestionAdapter.notifyItemRemovedData(position);
+
+        Log.d(TAG, "选中: " + data.getContent() + " 索引 " + position + "  " + data.getBgPosition());
+
         List<TrainingQuestion.ContentBean> resultData = mSortResultAdapter.getResultData();
-        if (!resultData.isEmpty()) {
-            for (int i = 0; i < resultData.size(); i++) {
-                if (mResultSet.add(i)) {
-                    mSortResultAdapter.changeItemData(i, mResultBgColors.get(position), data);
-                    break;
-                }
+        for (int i = 0; i < resultData.size(); i++) {
+            if (mResultSet.add(i)) {
+                TrainingQuestion.ContentBean contentBean = resultData.get(i);
+                contentBean.setSelect(true);
+                contentBean.setBgPosition(data.getBgPosition());
+                contentBean.setId(data.getId());
+                contentBean.setContent(data.getContent());
+                int[] ints = mResultBgColors.get(data.getBgPosition());
+
+                mSortResultAdapter.changeItemData(i, ints, contentBean);
+                break;
             }
         }
+
+        mSortQuestionAdapter.notifyItemRemovedData(position, data);
+
     }
 
     @OnClick(R.id.confirmAnnals)
     public void onViewClicked() {
-
         if (mUserChooseResultList.size() == mRandRomQuestionResultList.size()) {
             boolean isRight = true;
-            for (int i = 0; i < mUserChooseResultList.size(); i++) {
-                TrainingQuestion.ContentBean chooseResult = mUserChooseResultList.get(i);
-                TrainingQuestion.ContentBean randRomResult = mRandRomQuestionResultList.get(i);
-                if (chooseResult == null ||
-                        randRomResult == null ||
-                        chooseResult.getId() == randRomResult.getId()) {
-                    isRight = false;
-                    break;
+            if (mFinishExpandTime > mTraining.getTime()) {
+                isRight = false;
+            } else {
+                for (int i = 0; i < mUserChooseResultList.size(); i++) {
+                    TrainingQuestion.ContentBean chooseResult = mUserChooseResultList.get(i);
+                    TrainingQuestion.ContentBean randRomResult = mRandRomQuestionResultList.get(i);
+                    if (chooseResult == null ||
+                            randRomResult == null ||
+                            chooseResult.getId() == randRomResult.getId()) {
+                        isRight = false;
+                        break;
+                    }
                 }
             }
-
-
-//            Client.confirmQuestionResult(sortResult)
-//                    .setTag(TAG)
-//                    .setIndeterminate(this)
-//                    .setCallback(new Callback<Resp<String>>() {
-//                        @Override
-//                        protected void onRespSuccess(Resp<String> resp) {
-//                            Log.d(TAG, "onRespSuccess: " + resp.toString());
-//                        }
-//                    })
-//                    .fire();
-            startResultListScaleAnimation();
-        } else {
-            ToastUtil.show("完成提交");
+            startResultListScaleAnimation(isRight);
         }
     }
 
-    private void startResultListScaleAnimation() {
+    private void startResultListScaleAnimation(final boolean isRight) {
         ScaleAnimation scaleAnimation = new ScaleAnimation(1, 0f, 1, 0f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        scaleAnimation.setDuration(5000);
+        scaleAnimation.setDuration(1000);
         scaleAnimation.setFillAfter(true);
+        mConfirmAnnals.startAnimation(scaleAnimation);
         mSortResultLL.startAnimation(scaleAnimation);
         scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -264,7 +292,7 @@ public class SortQuestionActivity extends BaseActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                ToastUtil.show("动画结束");
+                showResultDialog(isRight);
             }
 
             @Override
@@ -275,13 +303,25 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopScheduleJob();
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        mFinishExpandTime = count;
+    }
+
     static class SortQuestionAdapter extends RecyclerView.Adapter<SortQuestionAdapter.AnnalsMaterialsViewHolder> {
-        ArrayList<TrainingQuestion.ContentBean> mSortQuestionList;
-        Context mContext;
+        private List<TrainingQuestion.ContentBean> mSortQuestionList;
+        private Context mContext;
         private OnItemClickListener mOnItemClickListener;
         private ArrayList<Integer> mItemBgDrawables;
 
-        public SortQuestionAdapter(ArrayList<TrainingQuestion.ContentBean> annalsMaterialsList, Context context) {
+        public SortQuestionAdapter(List<TrainingQuestion.ContentBean> annalsMaterialsList, Context context) {
             this.mSortQuestionList = annalsMaterialsList;
             this.mContext = context;
         }
@@ -293,31 +333,25 @@ public class SortQuestionActivity extends BaseActivity {
             notifyItemRangeChanged(0, mSortQuestionList.size());
         }
 
-        public ArrayList<TrainingQuestion.ContentBean> getQuestionData() {
-            return mSortQuestionList;
-        }
+        public void notifyItemRemovedData(int position, TrainingQuestion.ContentBean result) {
 
-        public void notifyItemRemovedData(int position) {
-            Log.d("SortQues", "notifyItemRemovedData: " + mItemBgDrawables.size() + " " + position);
-
-
-            if (position < mItemBgDrawables.size()) {
-                mItemBgDrawables.remove(position);
-            } else {
-//                mItemBgDrawables.remove(mItemBgDrawables.size() - 1);
-            }
 
             mSortQuestionList.remove(position);
             this.notifyItemRemoved(position);
-            if (position == mSortQuestionList.size() - 1) {
-                notifyItemChanged(position);
-            } else {
-                notifyItemRangeChanged(position, mSortQuestionList.size());
+            this.notifyItemRangeChanged(position, 1);
+
+            for (int i = 0; i < mSortQuestionList.size(); i++) {
+                Log.d("SortQues", "移除后数据: " + mSortQuestionList.get(i).getContent());
             }
+
         }
 
+        public List<TrainingQuestion.ContentBean> getQuestionData() {
+            return mSortQuestionList;
+        }
+
+
         public void insert(int position, TrainingQuestion.ContentBean data, int annalsMaterialsBgDrawable) {
-            mItemBgDrawables.add(0, annalsMaterialsBgDrawable);
             mSortQuestionList.add(0, data);
             notifyItemInserted(position);
             notifyItemRangeChanged(0, mSortQuestionList.size());
@@ -346,8 +380,8 @@ public class SortQuestionActivity extends BaseActivity {
             return mSortQuestionList != null ? mSortQuestionList.size() : 0;
         }
 
-        public void setItemBgDrawables(ArrayList<Integer> itemBgDrawables) {
-            this.mItemBgDrawables = itemBgDrawables;
+        public void setItemBgDrawables(ArrayList<Integer> sortQuestionBgDrawables) {
+            this.mItemBgDrawables = sortQuestionBgDrawables;
         }
 
 
@@ -367,7 +401,7 @@ public class SortQuestionActivity extends BaseActivity {
                                          int size) {
                 if (contentBean == null) return;
                 mMaterialsText.setText(contentBean.getContent());
-                mMaterialsText.setBackgroundResource(mItemBgDrawables.get(position % mItemBgDrawables.size()));
+                mMaterialsText.setBackgroundResource(mItemBgDrawables.get(contentBean.getBgPosition()));
                 mMaterialsText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -381,7 +415,7 @@ public class SortQuestionActivity extends BaseActivity {
         }
     }
 
-    static class SortResultAdapter extends RecyclerView.Adapter<SortResultAdapter.ViewHolder> {
+    class SortResultAdapter extends RecyclerView.Adapter<SortResultAdapter.ViewHolder> {
 
         private ArrayList<TrainingQuestion.ContentBean> mSortResultList;
         private Context mContext;
@@ -408,13 +442,22 @@ public class SortQuestionActivity extends BaseActivity {
         }
 
         public void changeItemData(int position, int[] ints, TrainingQuestion.ContentBean data) {
-            if (position <= mSortResultList.size()) {
-                mItemBgColors.add(position, ints);
-                TrainingQuestion.ContentBean contentBean = mSortResultList.get(position);
-                contentBean.setSelect(true);
-                contentBean.setContent(data.getContent());
-                notifyItemChanged(position, contentBean);
+
+            mUserChooseResultList.put(position, data);
+
+            for (int i = 0; i < mUserChooseResultList.size(); i++) {
+                Log.d(TAG, "changeItemData: " + mUserChooseResultList.get(i));
             }
+
+            if (position <= mSortResultList.size()) {
+//                mItemBgColors.add(position, ints);
+
+                this.notifyItemChanged(position, data);
+            }
+        }
+
+        public void setItemBgColors(ArrayList<int[]> itemColors) {
+            this.mItemBgColors = itemColors;
         }
 
         public ArrayList<TrainingQuestion.ContentBean> getResultData() {
@@ -439,7 +482,7 @@ public class SortQuestionActivity extends BaseActivity {
         }
 
 
-        static class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.lineNumber)
             TextView mLineNumber;
             @BindView(R.id.materials)
@@ -457,7 +500,7 @@ public class SortQuestionActivity extends BaseActivity {
                 if (contentBean.isSelect()) {
                     mMaterials.setText(contentBean.getContent());
                     if (itemBgColors != null && !itemBgColors.isEmpty()) {
-                        mMaterials.setBackground(createDrawable(itemBgColors.get(position % itemBgColors.size()), context));
+                        mMaterials.setBackground(createDrawable(itemBgColors.get(contentBean.getBgPosition()), context));
                     }
                     mMaterials.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -481,5 +524,6 @@ public class SortQuestionActivity extends BaseActivity {
             }
         }
     }
+
 
 }

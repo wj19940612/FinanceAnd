@@ -18,5 +18,4 @@ public interface ExtraKeys {
     String HISTORY_TEST_RESULT = "history_test_result";
 
     String TRAIN_QUESTIONS = "train_questions";
-    String TRAIN_TARGET_TIME = "train_target_time";
 }

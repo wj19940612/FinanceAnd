@@ -10,10 +10,10 @@
     tools:context="com.sbai.finance.activity.training.SortQuestionActivity">
 
     <com.sbai.finance.view.training.TrainHeaderView
-        android:fitsSystemWindows="true"
         android:id="@+id/trainHeaderView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"/>
 
 
     <android.support.v7.widget.RecyclerView
@@ -41,18 +41,21 @@
             android:layout_height="wrap_content"
 
             android:scrollbars="none">
-                <LinearLayout
-                    android:layout_marginBottom="-35dp"
-                    android:background="@drawable/bg_sort_result"
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="-35dp"
+                android:background="@drawable/bg_sort_result">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/sortResultRecycleView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <android.support.v7.widget.RecyclerView
-                        android:paddingRight="25dp"
-                        android:id="@+id/sortResultRecycleView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingBottom="30dp"/>
-                </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:paddingBottom="30dp"
+                    android:paddingRight="25dp"/>
+
+            </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>
     </LinearLayout>

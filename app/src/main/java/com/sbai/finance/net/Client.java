@@ -2445,10 +2445,17 @@ public class Client {
      * POST
      * 提交训练结果
      *
-     * @param questionAnswer 答案
+     * @param trainId  训练id
+     * @param time     时间
+     * @param isFinish 是否完成
+     * @param rate     成功率
      * @return
      */
-    public static API confirmQuestionResult(QuestionAnswer questionAnswer) {
-        return new API(POST, "/train/train/finish.do", new Gson().toJson(questionAnswer));
+    public static API confirmQuestionResult(int trainId, int time, boolean isFinish, double rate) {
+        return new API(POST, "/train/train/finish.do", new ApiParams()
+                .put("trainId", trainId)
+                .put("time", time)
+                .put("isFinish", isFinish)
+                .put("rate", rate));
     }
 }
