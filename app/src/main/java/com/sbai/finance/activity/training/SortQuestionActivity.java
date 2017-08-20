@@ -101,19 +101,33 @@ public class SortQuestionActivity extends BaseActivity {
 
         mTrainHeaderView.setSecondTime(mTraining.getTime());
 
-        mWebTrainResult = mTrainingQuestion.getContent();
+        int size = mTrainingQuestion.getContent().size();
 
+        saveWebResultData(size);
         mRandRomQuestionResultList = mTrainingQuestion.getRandRomResultList();
 
         initSortQuestionAdapter(mRandRomQuestionResultList);
 
         ArrayList<TrainingQuestion.ContentBean> contentBeenList = new ArrayList<>();
-        int size = mWebTrainResult.size();
+
         for (int i = 0; i < size; i++) {
             TrainingQuestion.ContentBean contentBean = new TrainingQuestion.ContentBean();
             contentBeenList.add(contentBean);
         }
         initSortResultAdapter(contentBeenList);
+    }
+
+    private void saveWebResultData(int size) {
+        mWebTrainResult = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            TrainingQuestion.ContentBean oldData = mTrainingQuestion.getContent().get(i);
+            TrainingQuestion.ContentBean contentBean = new TrainingQuestion.ContentBean();
+            contentBean.setSeq(oldData.getSeq());
+            contentBean.setContent(oldData.getContent());
+            contentBean.setId(oldData.getId());
+            contentBean.setRight(oldData.isRight());
+            mWebTrainResult.add(contentBean);
+        }
     }
 
     private void createSortQuestionBgDrawables() {
@@ -143,7 +157,6 @@ public class SortQuestionActivity extends BaseActivity {
         mResultBgColors.add(seventhColors);
         mResultBgColors.add(eighthColors);
     }
-
 
     private void initHeaderView() {
         mTrainHeaderView.setCallback(new TrainHeaderView.Callback() {
