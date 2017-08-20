@@ -2,16 +2,16 @@ package com.sbai.finance.activity.training;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
+import android.os.CountDownTimer;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +21,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.BuildConfig;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingQuestion;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.TypefaceUtil;
 import com.sbai.finance.view.SmartDialog;
-import com.sbai.finance.view.training.TrainHeaderView;
+import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.dialog.SortTrainResultDialog;
+import com.sbai.finance.view.training.TrainProgressBar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,9 +50,9 @@ import butterknife.OnClick;
  */
 public class SortQuestionActivity extends BaseActivity {
 
+    private static final int DEFAULT_BIG_QUESTION_NUMBER = 8;
 
-    @BindView(R.id.trainHeaderView)
-    TrainHeaderView mTrainHeaderView;
+
     @BindView(R.id.sortQuestionRecyclerView)
     RecyclerView mSortQuestionRecyclerView;
     @BindView(R.id.sortResultRecycleView)
@@ -55,6 +61,10 @@ public class SortQuestionActivity extends BaseActivity {
     ImageView mConfirmAnnals;
     @BindView(R.id.sortResultLL)
     LinearLayout mSortResultLL;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
+    @BindView(R.id.progressBar)
+    TrainProgressBar mProgressBar;
     //用來记录底部界面选择答案的索引
     private HashSet<Integer> mResultSet;
     private TrainingQuestion mTrainingQuestion;
@@ -71,13 +81,17 @@ public class SortQuestionActivity extends BaseActivity {
     private SortResultAdapter mSortResultAdapter;
     private SortQuestionAdapter mSortQuestionAdapter;
     private List<TrainingQuestion.ContentBean> mRandRomQuestionResultList;
-    private SparseArray<TrainingQuestion.ContentBean> mUserChooseResultList;
     private Training mTraining;
+    //服务端返回的数据
+    private List<TrainingQuestion.ContentBean> mWebTrainResult;
+    private CountDownTimer mCountDownTimer;
 
-    private int mFinishExpandTime;
+    //游戏进行的时间
+    private long mTrainingCountTime;
 
+    private int mTrainTargetTime;
 
-    private ArrayList<TrainingQuestion.ContentBean> mData;
+    private boolean isConfirmResult;
 
     public interface OnItemClickListener {
         void onItemClick(TrainingQuestion.ContentBean data, int position);
@@ -90,39 +104,46 @@ public class SortQuestionActivity extends BaseActivity {
         ButterKnife.bind(this);
         translucentStatusBar();
         Intent intent = getIntent();
+        mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
+        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
+
         initHeaderView();
 
         mResultSet = new HashSet<>();
         createResultBgColors();
         createSortQuestionBgDrawables();
-        mUserChooseResultList = new SparseArray<>();
-        mData = new ArrayList<>();
+        initQuestionData();
 
-        startScheduleJob(1000);
+    }
 
-        mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
-        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
+    private void initQuestionData() {
+        int size = mTrainingQuestion.getContent().size();
+        saveWebResultData(size);
 
-        mTrainHeaderView.setSecondTime(mTraining.getTime());
-
-        mRandRomQuestionResultList = mTrainingQuestion.getRandRomResultList(mTrainingQuestion.getContent());
-
-
-        for (int i = 0; i < mRandRomQuestionResultList.size(); i++) {
-            TrainingQuestion.ContentBean contentBean = mRandRomQuestionResultList.get(i);
-            mData.add(contentBean);
-        }
-
-        if (mRandRomQuestionResultList == null || mRandRomQuestionResultList.isEmpty()) return;
-
-
-        for (TrainingQuestion.ContentBean result : mRandRomQuestionResultList) {
-            Log.d(TAG, "原始: " + result.getContent() + " " + result.getBgPosition());
-        }
+        mRandRomQuestionResultList = mTrainingQuestion.getRandRomResultList();
 
         initSortQuestionAdapter(mRandRomQuestionResultList);
-        initSortResultAdapter(mRandRomQuestionResultList);
 
+        //底部答案区域创建数据源
+        ArrayList<TrainingQuestion.ContentBean> contentBeenList = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            TrainingQuestion.ContentBean contentBean = new TrainingQuestion.ContentBean();
+            contentBeenList.add(contentBean);
+        }
+        initSortResultAdapter(contentBeenList);
+    }
+
+    private void saveWebResultData(int size) {
+        mWebTrainResult = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            TrainingQuestion.ContentBean oldData = mTrainingQuestion.getContent().get(i);
+            TrainingQuestion.ContentBean contentBean = new TrainingQuestion.ContentBean();
+            contentBean.setSeq(oldData.getSeq());
+            contentBean.setContent(oldData.getContent());
+            contentBean.setId(oldData.getId());
+            contentBean.setRight(oldData.isRight());
+            mWebTrainResult.add(contentBean);
+        }
     }
 
     private void createSortQuestionBgDrawables() {
@@ -153,56 +174,97 @@ public class SortQuestionActivity extends BaseActivity {
         mResultBgColors.add(eighthColors);
     }
 
-
     private void initHeaderView() {
-        mTrainHeaderView.setCallback(new TrainHeaderView.Callback() {
+        if (mTraining == null) return;
+        mTrainTargetTime = mTraining.getTime() * 1000;
+        mProgressBar.setTotalSecondTime(mTraining.getTime());
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
-            public void onBackClick() {
-                SmartDialog.with(getActivity(), R.string.is_sure_exit_train)
-                        .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog) {
-                                SortQuestionActivity.this.finish();
-                            }
-                        })
-                        .show();
+            public void onClick(View v) {
+                Launcher.with(getActivity(), HowPlayActivity.class)
+                        .putExtra(ExtraKeys.TRAINING, mTraining)
+                        .execute();
             }
+        });
 
+        View customView = mTitleBar.getCustomView();
+        if (customView != null) {
+            final TextView countDownTimeTextView = (TextView) customView.findViewById(R.id.countdownTime);
+            mCountDownTimer = new CountDownTimer(mTrainTargetTime, 1) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    mTrainingCountTime = mTrainTargetTime - millisUntilFinished;
+                    countDownTimeTextView.setText(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
+                    mProgressBar.setTrainChangeTime(mTrainingCountTime);
+                }
+
+                @Override
+                public void onFinish() {
+                    mCountDownTimer.cancel();
+                    countDownTimeTextView.setText(DateUtil.format(mTrainTargetTime, "mm: ss. SS"));
+                    if (!isConfirmResult) {
+                        showResultDialog(false);
+                    }
+                }
+            }.start();
+        }
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        SmartDialog.with(this, R.string.is_sure_exit_train, R.string.exit_train_will_not_save_train_record)
+                .setNegative(R.string.exit_train, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        SortQuestionActivity.this.finish();
+                    }
+                })
+                .setPositive(R.string.continue_train, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                }).show();
+    }
+
+    private void showResultDialog(final boolean isRight) {
+        if (isFinishing()) {
+            return;
+        }
+        SortTrainResultDialog sortTrainResultDialog = new SortTrainResultDialog(this);
+        sortTrainResultDialog.show();
+        sortTrainResultDialog.setResult(isRight);
+        sortTrainResultDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onHowPlayClick() {
-
+            public void onDismiss(DialogInterface dialog) {
+                dialog.dismiss();
+                openTrainingResultPage(isRight);
             }
-
-            @Override
-            public void onEndOfTimer() {
-                showResultDialog(false);
-            }
-
         });
     }
 
-    private void showResultDialog(boolean isRight) {
-
+    private void openTrainingResultPage(boolean isRight) {
+        mCountDownTimer.cancel();
+        TrainingResultActivity.show(this, mTraining, mTrainTargetTime / 1000, isRight);
+        finish();
     }
 
     private void initSortResultAdapter(List<TrainingQuestion.ContentBean> content) {
         mSortResultAdapter = new SortResultAdapter(new ArrayList<TrainingQuestion.ContentBean>(), this);
         mSortResultRecycleView.setLayoutManager(new LinearLayoutManager(this));
         mSortResultRecycleView.setAdapter(mSortResultAdapter);
-        mSortResultRecycleView.setItemAnimator(new DefaultItemAnimator());
+        mSortResultRecycleView.setItemAnimator(null);
         mSortResultAdapter.setItemBgColors(mResultBgColors);
         mSortResultAdapter.addData(content);
         mSortResultAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(TrainingQuestion.ContentBean data, int position) {
-                updateResult(data, position);
-                mSortQuestionRecyclerView.scrollToPosition(0);
+                if (data.isSelect()) {
+                    updateResult(data, position);
+                }
             }
         });
 
@@ -212,7 +274,16 @@ public class SortQuestionActivity extends BaseActivity {
         data.setSelect(false);
         mResultSet.remove(position);
         mSortResultAdapter.notifyItemChanged(position, data);
-        mSortQuestionAdapter.insert(0, data, mAnnalsMaterialsBgDrawables[data.getBgPosition()]);
+
+        TrainingQuestion.ContentBean contentBean = new TrainingQuestion.ContentBean();
+        contentBean.setId(data.getId());
+        contentBean.setContent(data.getContent());
+        contentBean.setBgPosition(data.getBgPosition());
+        contentBean.setSelect(false);
+        contentBean.setSeq(data.getSeq());
+
+        mSortQuestionAdapter.insert(0, contentBean);
+        mSortQuestionRecyclerView.scrollToPosition(0);
     }
 
     private void initSortQuestionAdapter(List<TrainingQuestion.ContentBean> content) {
@@ -220,7 +291,7 @@ public class SortQuestionActivity extends BaseActivity {
         mSortQuestionAdapter.setItemBgDrawables(mSortQuestionBgDrawables);
         mSortQuestionRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mSortQuestionRecyclerView.setAdapter(mSortQuestionAdapter);
-        mSortQuestionRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mSortQuestionRecyclerView.setItemAnimator(null);
         mSortQuestionAdapter.addData(content);
 
         mSortQuestionAdapter.setOnItemClickListener(new OnItemClickListener() {
@@ -233,48 +304,57 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
     private void chooseResult(int position, TrainingQuestion.ContentBean data) {
-
-        Log.d(TAG, "选中: " + data.getContent() + " 索引 " + position + "  " + data.getBgPosition());
-
         List<TrainingQuestion.ContentBean> resultData = mSortResultAdapter.getResultData();
         for (int i = 0; i < resultData.size(); i++) {
             if (mResultSet.add(i)) {
                 TrainingQuestion.ContentBean contentBean = resultData.get(i);
                 contentBean.setSelect(true);
                 contentBean.setBgPosition(data.getBgPosition());
-                contentBean.setId(data.getId());
                 contentBean.setContent(data.getContent());
-                int[] ints = mResultBgColors.get(data.getBgPosition());
-
-                mSortResultAdapter.changeItemData(i, ints, contentBean);
+                contentBean.setId(data.getId());
+                contentBean.setSeq(data.getSeq());
+                mSortResultAdapter.changeItemData(i, contentBean);
                 break;
             }
         }
-
         mSortQuestionAdapter.notifyItemRemovedData(position, data);
-
     }
 
     @OnClick(R.id.confirmAnnals)
     public void onViewClicked() {
-        if (mUserChooseResultList.size() == mRandRomQuestionResultList.size()) {
-            boolean isRight = true;
-            if (mFinishExpandTime > mTraining.getTime()) {
-                isRight = false;
-            } else {
-                for (int i = 0; i < mUserChooseResultList.size(); i++) {
-                    TrainingQuestion.ContentBean chooseResult = mUserChooseResultList.get(i);
-                    TrainingQuestion.ContentBean randRomResult = mRandRomQuestionResultList.get(i);
-                    if (chooseResult == null ||
-                            randRomResult == null ||
-                            chooseResult.getId() == randRomResult.getId()) {
-                        isRight = false;
-                        break;
-                    }
+        boolean isFinish = true;
+        ArrayList<TrainingQuestion.ContentBean> resultData = mSortResultAdapter.getResultData();
+        for (TrainingQuestion.ContentBean result : resultData) {
+            if (!result.isSelect()) {
+                isFinish = false;
+                break;
+            }
+        }
+
+        if (!isFinish) {
+            if (BuildConfig.DEBUG) {
+                ToastUtil.show("未完成");
+            }
+            return;
+        }
+        boolean isRight = true;
+        if (mTrainingCountTime > mTrainTargetTime) {
+            isRight = false;
+        } else {
+            for (int i = 0; i < mWebTrainResult.size(); i++) {
+                TrainingQuestion.ContentBean chooseResult = mWebTrainResult.get(i);
+                TrainingQuestion.ContentBean randRomResult = resultData.get(i);
+                if (chooseResult == null ||
+                        randRomResult == null ||
+                        chooseResult.getId() != randRomResult.getId()) {
+                    isRight = false;
+                    break;
                 }
             }
-            startResultListScaleAnimation(isRight);
         }
+        isConfirmResult = true;
+        Log.d(TAG, "onViewClicked: " + isRight);
+        startResultListScaleAnimation(isRight);
     }
 
     private void startResultListScaleAnimation(final boolean isRight) {
@@ -303,18 +383,6 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopScheduleJob();
-    }
-
-    @Override
-    public void onTimeUp(int count) {
-        super.onTimeUp(count);
-        mFinishExpandTime = count;
-    }
-
     static class SortQuestionAdapter extends RecyclerView.Adapter<SortQuestionAdapter.AnnalsMaterialsViewHolder> {
         private List<TrainingQuestion.ContentBean> mSortQuestionList;
         private Context mContext;
@@ -335,13 +403,10 @@ public class SortQuestionActivity extends BaseActivity {
 
         public void notifyItemRemovedData(int position, TrainingQuestion.ContentBean result) {
 
-
-            mSortQuestionList.remove(position);
-            this.notifyItemRemoved(position);
-            this.notifyItemRangeChanged(position, 1);
-
-            for (int i = 0; i < mSortQuestionList.size(); i++) {
-                Log.d("SortQues", "移除后数据: " + mSortQuestionList.get(i).getContent());
+            if (position < mSortQuestionList.size()) {
+                mSortQuestionList.remove(position);
+                this.notifyItemRemoved(position);
+                this.notifyItemRangeChanged(position, getItemCount());
             }
 
         }
@@ -351,7 +416,7 @@ public class SortQuestionActivity extends BaseActivity {
         }
 
 
-        public void insert(int position, TrainingQuestion.ContentBean data, int annalsMaterialsBgDrawable) {
+        public void insert(int position, TrainingQuestion.ContentBean data) {
             mSortQuestionList.add(0, data);
             notifyItemInserted(position);
             notifyItemRangeChanged(0, mSortQuestionList.size());
@@ -377,13 +442,18 @@ public class SortQuestionActivity extends BaseActivity {
 
         @Override
         public int getItemCount() {
-            return mSortQuestionList != null ? mSortQuestionList.size() : 0;
+            if (mSortQuestionList != null) {
+                if (mSortQuestionList.size() > DEFAULT_BIG_QUESTION_NUMBER) {
+                    return DEFAULT_BIG_QUESTION_NUMBER;
+                }
+                return mSortQuestionList.size();
+            }
+            return 0;
         }
 
         public void setItemBgDrawables(ArrayList<Integer> sortQuestionBgDrawables) {
             this.mItemBgDrawables = sortQuestionBgDrawables;
         }
-
 
         class AnnalsMaterialsViewHolder extends RecyclerView.ViewHolder {
 
@@ -441,18 +511,9 @@ public class SortQuestionActivity extends BaseActivity {
             notifyItemRangeChanged(0, mSortResultList.size());
         }
 
-        public void changeItemData(int position, int[] ints, TrainingQuestion.ContentBean data) {
-
-            mUserChooseResultList.put(position, data);
-
-            for (int i = 0; i < mUserChooseResultList.size(); i++) {
-                Log.d(TAG, "changeItemData: " + mUserChooseResultList.get(i));
-            }
-
+        public void changeItemData(int position, TrainingQuestion.ContentBean data) {
             if (position <= mSortResultList.size()) {
-//                mItemBgColors.add(position, ints);
-
-                this.notifyItemChanged(position, data);
+                notifyItemChanged(position, data);
             }
         }
 
@@ -478,7 +539,13 @@ public class SortQuestionActivity extends BaseActivity {
 
         @Override
         public int getItemCount() {
-            return mSortResultList != null ? mSortResultList.size() : 0;
+            if (mSortResultList != null) {
+                if (mSortResultList.size() > DEFAULT_BIG_QUESTION_NUMBER) {
+                    return DEFAULT_BIG_QUESTION_NUMBER;
+                }
+                return mSortResultList.size();
+            }
+            return 0;
         }
 
 

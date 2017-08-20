@@ -134,7 +134,11 @@ public class DailyReportDetailActivity extends BaseActivity {
             mPureHtml = data.getContent();
             //获取第一段内容
             String content = Html.fromHtml(data.getContent()).toString().trim();
-            mFirstContent = content.substring(0, content.indexOf("\n"));
+            if (content.indexOf("\n") > -1) {
+                mFirstContent = content.substring(0, content.indexOf("\n"));
+            } else {
+                mFirstContent = content;
+            }
         } else {
             mTitleArea.setVisibility(View.GONE);
             mPageUrl = data.getUrl();

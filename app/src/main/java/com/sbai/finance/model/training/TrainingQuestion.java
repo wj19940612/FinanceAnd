@@ -4,9 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by ${wangJie} on 2017/7/31.
@@ -346,34 +345,45 @@ public class TrainingQuestion implements Parcelable {
         }
     };
 
-    public List<TrainingQuestion.ContentBean> getRandRomResultList(List<TrainingQuestion.ContentBean> content) {
-        if (content == null || content.isEmpty()) return null;
-        ArrayList<TrainingQuestion.ContentBean> questionResultList = new ArrayList<>();
-        HashSet<Integer> integers = new HashSet<>();
-        Random random = new Random();
+//    public List<TrainingQuestion.ContentBean> getRandRomResultList(List<TrainingQuestion.ContentBean> content) {
+//        if (content == null || content.isEmpty()) return null;
+//        ArrayList<TrainingQuestion.ContentBean> questionResultList = new ArrayList<>();
+//        HashSet<Integer> integers = new HashSet<>();
+//        Random random = new Random();
+//
+//        int position = -1;
+//        for (int i = 0; i < content.size(); i++) {
+//            int nextInt = random.nextInt(Math.abs(content.size()));
+//            if (integers.add(nextInt)) {
+//                position++;
+//                ContentBean contentBean = content.get(nextInt);
+//                contentBean.setBgPosition(position);
+//                questionResultList.add(position, contentBean);
+//            }
+//        }
+//        int oldDataSize = content.size();
+//        int newDataSize = questionResultList.size();
+//        if (oldDataSize != newDataSize) {
+//            for (int i = 0; i < content.size(); i++) {
+//                if (integers.add(i)) {
+//                     position++;
+//                    ContentBean contentBean = content.get(i);
+//                    contentBean.setBgPosition(position);
+//                    questionResultList.add(position, contentBean);
+//                }
+//            }
+//        }
+//        return questionResultList;
+//    }
 
-        int position = -1;
-        for (int i = 0; i < content.size(); i++) {
-            int nextInt = random.nextInt(Math.abs(content.size()));
-            if (integers.add(nextInt)) {
-                position++;
-                ContentBean contentBean = content.get(nextInt);
-                contentBean.setBgPosition(position);
-                questionResultList.add(position, contentBean);
-            }
+    public List<TrainingQuestion.ContentBean> getRandRomResultList() {
+        Collections.shuffle(getContent());
+        ArrayList<TrainingQuestion.ContentBean> trainingQuestions = new ArrayList<>();
+        for (int i = 0; i < getContent().size(); i++) {
+            ContentBean contentBean = getContent().get(i);
+            contentBean.setBgPosition(i);
+            trainingQuestions.add(contentBean);
         }
-        int oldDataSize = content.size();
-        int newDataSize = questionResultList.size();
-        if (oldDataSize != newDataSize) {
-            for (int i = 0; i < content.size(); i++) {
-                if (integers.add(i)) {
-                     position++;
-                    ContentBean contentBean = content.get(i);
-                    contentBean.setBgPosition(position);
-                    questionResultList.add(position, contentBean);
-                }
-            }
-        }
-        return questionResultList;
+        return trainingQuestions;
     }
 }

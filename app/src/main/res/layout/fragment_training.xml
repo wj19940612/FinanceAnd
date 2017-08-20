@@ -133,13 +133,13 @@
                         android:gravity="center">
 
                         <TextView
+                            android:paddingTop="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:drawableLeft="@drawable/ic_home_ranking"
                             android:drawablePadding="8dp"
                             android:gravity="center"
-                            android:paddingTop="5dp"
                             android:text="@string/ranking"
                             android:textColor="@color/blackPrimary"/>
                     </LinearLayout>
@@ -164,9 +164,6 @@
                             android:drawableLeft="@drawable/ic_home_review_lesson_room"
                             android:drawablePadding="8dp"
                             android:gravity="center"
-                            android:paddingBottom="5dp"
-                            android:paddingLeft="49dp"
-                            android:paddingRight="20dp"
                             android:paddingTop="5dp"
                             android:text="@string/review_lesson_room"
                             android:textColor="@color/blackPrimary"/>

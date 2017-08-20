@@ -42,16 +42,16 @@ public class SerializeObjectUtil {
      * @param objectString 待解密的String
      * @return object      解密后的object
      */
-    public static Object String2Object(String objectString) {
+    public static <T> T String2Object(String objectString, T t) {
         if (TextUtils.isEmpty(objectString)) return null;
         byte[] mobileBytes = Base64.decode(objectString.getBytes(), Base64.DEFAULT);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(mobileBytes);
         ObjectInputStream objectInputStream = null;
         try {
             objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            Object object = objectInputStream.readObject();
+            t = (T) objectInputStream.readObject();
             objectInputStream.close();
-            return object;
+            return t;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
