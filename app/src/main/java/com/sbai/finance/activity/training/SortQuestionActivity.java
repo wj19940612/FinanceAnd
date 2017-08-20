@@ -89,6 +89,10 @@ public class SortQuestionActivity extends BaseActivity {
     //游戏进行的时间
     private long mTrainingCountTime;
 
+    private int mTrainTargetTime;
+
+    private boolean isConfirmResult;
+
     public interface OnItemClickListener {
         void onItemClick(TrainingQuestion.ContentBean data, int position);
     }
@@ -172,6 +176,7 @@ public class SortQuestionActivity extends BaseActivity {
 
     private void initHeaderView() {
         if (mTraining == null) return;
+        mTrainTargetTime = mTraining.getTime() * 1000;
         mProgressBar.setTotalSecondTime(mTraining.getTime());
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
@@ -185,10 +190,10 @@ public class SortQuestionActivity extends BaseActivity {
         View customView = mTitleBar.getCustomView();
         if (customView != null) {
             final TextView countDownTimeTextView = (TextView) customView.findViewById(R.id.countdownTime);
-            mCountDownTimer = new CountDownTimer(mTraining.getTime() * 1000, 1) {
+            mCountDownTimer = new CountDownTimer(mTrainTargetTime, 1) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    mTrainingCountTime = mTraining.getTime() * 1000 - millisUntilFinished;
+                    mTrainingCountTime = mTrainTargetTime - millisUntilFinished;
                     countDownTimeTextView.setText(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
                     mProgressBar.setTrainChangeTime(mTrainingCountTime);
                 }
@@ -196,8 +201,10 @@ public class SortQuestionActivity extends BaseActivity {
                 @Override
                 public void onFinish() {
                     mCountDownTimer.cancel();
-                    countDownTimeTextView.setText(DateUtil.format(mTraining.getTime() * 1000, "mm: ss. SS"));
-                    showResultDialog(false);
+                    countDownTimeTextView.setText(DateUtil.format(mTrainTargetTime, "mm: ss. SS"));
+                    if (!isConfirmResult) {
+                        showResultDialog(false);
+                    }
                 }
             }.start();
         }
@@ -241,7 +248,7 @@ public class SortQuestionActivity extends BaseActivity {
 
     private void openTrainingResultPage(boolean isRight) {
         mCountDownTimer.cancel();
-        TrainingResultActivity.show(this, mTraining, (int) mTrainingCountTime, isRight);
+        TrainingResultActivity.show(this, mTraining, mTrainTargetTime / 1000, isRight);
         finish();
     }
 
@@ -331,7 +338,7 @@ public class SortQuestionActivity extends BaseActivity {
             return;
         }
         boolean isRight = true;
-        if (mTrainingCountTime > mTraining.getTime()) {
+        if (mTrainingCountTime > mTrainTargetTime) {
             isRight = false;
         } else {
             for (int i = 0; i < mWebTrainResult.size(); i++) {
@@ -345,6 +352,7 @@ public class SortQuestionActivity extends BaseActivity {
                 }
             }
         }
+        isConfirmResult = true;
         Log.d(TAG, "onViewClicked: " + isRight);
         startResultListScaleAnimation(isRight);
     }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
@@ -23,7 +24,6 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AnimUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.training.TrainingAchievementView;
 
 import java.util.List;
@@ -68,6 +68,9 @@ public class TrainingResultActivity extends BaseActivity {
     private Training mTraining;
     private TrainingSubmit mTrainingSubmit;
     private TrainingSubmitResult mTrainingSubmitResult;
+
+
+    private int mConfirmCount;
 
     public static void show(Activity activity, Training training, int time, boolean isFinish) {
         Launcher.with(activity, TrainingResultActivity.class)
@@ -119,11 +122,15 @@ public class TrainingResultActivity extends BaseActivity {
                             mTrainingSubmitResult = resp.getData();
                             updateTrainTitle();
                             requestTrainDetail();
-                        } else {
-                            ToastUtil.show(resp.getMsg());
                         }
                     }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                    }
                 }).fireFree();
+
     }
 
     private void updateTrainTitle() {
@@ -232,6 +239,7 @@ public class TrainingResultActivity extends BaseActivity {
                 Launcher.with(getActivity(), TrainingCountDownActivity.class)
                         .putExtra(ExtraKeys.TRAINING, mTraining)
                         .execute();
+                finish();
                 break;
         }
     }
