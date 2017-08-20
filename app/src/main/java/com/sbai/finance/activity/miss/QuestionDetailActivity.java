@@ -129,6 +129,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private RefreshReceiver mRefreshReceiver;
 	private MediaPlayerManager mMediaPlayerManager;
 	private int mPlayingID;
+	private Prise mPrise;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -418,6 +419,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 							@Override
 							protected void onRespSuccessData(Prise prise) {
+								mPrise = prise;
 								int praiseCount;
 								if (prise.getIsPrise() == 0) {
 									mLoveImage.setImageResource(R.drawable.ic_miss_love);
@@ -566,7 +568,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
 	}
 
-
 	private class RefreshReceiver extends BroadcastReceiver {
 
 		@Override
@@ -586,5 +587,17 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(rewardCount)));
 			}
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent();
+		intent.putExtra(Launcher.QUESTION_ID, mQuestionDetail.getId());
+		intent.putExtra(Launcher.EX_PAYLOAD, mPrise);
+		intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getReplyCount());
+		intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionDetail.getAwardCount());
+		intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionDetail.getListenCount());
+		setResult(RESULT_OK, intent);
+		super.onBackPressed();
 	}
 }

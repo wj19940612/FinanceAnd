@@ -29,9 +29,9 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.Prise;
 import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -187,6 +187,12 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		mPlayingID = -1;
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
+	}
+
 	private void initSwipeRefreshLayout() {
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
@@ -268,7 +274,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		Question item = (Question) parent.getItemAtPosition(position);
 		if (item != null && item.getSolve() == 1) {
 			Launcher.with(getActivity(), QuestionDetailActivity.class)
-					.putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
+					.putExtra(Launcher.EX_PAYLOAD, item.getId()).executeForResult(REQ_QUESTION_DETAIL);
 		}
 	}
 
@@ -474,6 +480,67 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
+			if (data!= null) {
+				Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+				int replyCount  = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+				int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+				int listenCount = data.getIntExtra(Launcher.EX_PAYLOAD_3, -1);
+				if (prise != null) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setIsPrise(prise.getIsPrise());
+								question.setPriseCount(prise.getPriseCount());
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
+				if (replyCount != -1) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setReplyCount(replyCount);
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
+				if (rewardCount != -1) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setAwardCount(rewardCount);
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
+				if (listenCount != -1) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setListenCount(listenCount);
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	private void registerRefreshReceiver() {
 		mRefreshReceiver = new RefreshReceiver();
 		IntentFilter filter = new IntentFilter();
@@ -497,7 +564,6 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 								break;
 							}
 						}
-
 					}
 				}
 			}

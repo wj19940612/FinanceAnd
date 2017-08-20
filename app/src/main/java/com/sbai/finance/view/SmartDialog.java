@@ -390,7 +390,7 @@ public class SmartDialog {
         mDialog.setCanceledOnTouchOutside(mCancelableOnTouchOutside);
         mDialog.setCancelable(mCancelableOnTouchOutside);
 
-        if (mCustomView != null)  {
+        if (mCustomView != null) {
             mDialog.setContentView(mCustomView);
         } else {
             mDialog.setContentView(mDialogView);

@@ -4,7 +4,7 @@ import com.android.volley.Request;
 import com.google.gson.Gson;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.leveltest.TestAnswerUtils;
+import com.sbai.finance.model.levelevaluation.QuestionAnswer;
 import com.sbai.httplib.ApiParams;
 
 
@@ -504,7 +504,7 @@ public class Client {
      *                latitude  经度
      * @return
      */
-    public static API updateUserInfo(int age, String land, Integer userSex) {
+    public static API updateUserInfo(Integer age, String land, Integer userSex) {
         return new API(POST, "/user/user/updateUser.do", new ApiParams()
                 .put("age", age)
                 .put("land", land)
@@ -1882,7 +1882,7 @@ public class Client {
      *
      * @return
      */
-    public static API confirmLevelTestResult(TestAnswerUtils finishPO) {
+    public static API confirmLevelTestResult(QuestionAnswer finishPO) {
         return new API(POST, "/train/evaluate/End.do", new Gson().toJson(finishPO));
     }
 
@@ -2245,7 +2245,8 @@ public class Client {
      * @return
      */
     public static API submitTrainingResult(String result) {
-        return new API(POST, "/train/course/finishTask.do", result);
+        return new API(POST, "/train/train/finish.do", new ApiParams()
+                .put("data", result));
     }
 
     /**

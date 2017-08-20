@@ -18,7 +18,7 @@ import android.util.TypedValue;
 import android.view.View;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.leveltest.TestResultModel;
+import com.sbai.finance.model.levelevaluation.EvaluationResult;
 
 
 /**
@@ -78,7 +78,7 @@ public class ScoreView extends View {
 
     //是否显示外围5个点
     private boolean mShowFivePoint;
-    private TestResultModel mTestResultModel;
+    private EvaluationResult mEvaluationResult;
     private int mScoreTextColor;
     private int mTitleTextColor;
     private boolean mHasInsideCircle;
@@ -207,12 +207,12 @@ public class ScoreView extends View {
         mRadius = Math.min(h, w) / 2 * 0.5f;
         mMaxValue = mRadius;
 
-        if (mTestResultModel != null) {
-            double[] dataScore = {mTestResultModel.getProfitAccuracy() * mMaxValue,
-                    mTestResultModel.getSkillAccuracy() * mMaxValue,
-                    mTestResultModel.getBaseAccuracy() * mMaxValue,
-                    mTestResultModel.getRiskAccuracy() * mMaxValue,
-                    mTestResultModel.getTheoryAccuracy() * mMaxValue};
+        if (mEvaluationResult != null) {
+            double[] dataScore = {mEvaluationResult.getProfitAccuracy() * mMaxValue,
+                    mEvaluationResult.getSkillAccuracy() * mMaxValue,
+                    mEvaluationResult.getBaseAccuracy() * mMaxValue,
+                    mEvaluationResult.getRiskAccuracy() * mMaxValue,
+                    mEvaluationResult.getTheoryAccuracy() * mMaxValue};
 
             mData = dataScore;
         }
@@ -426,13 +426,13 @@ public class ScoreView extends View {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, sp, getResources().getDisplayMetrics());
     }
 
-    public void setData(TestResultModel data) {
-        mTestResultModel = data;
+    public void setData(EvaluationResult data) {
+        mEvaluationResult = data;
         postInvalidate();
     }
 
     //了解分页数据
-    public void setUserTrainScoreData(TestResultModel testResultModel) {
+    public void setUserTrainScoreData(EvaluationResult evaluationResult) {
 //        TestResultModel testResultModel = new TestResultModel();
 //        testResultModel.setAllAccuracy(0.50);
 //        testResultModel.setPassPercent(0.20);
@@ -445,7 +445,7 @@ public class ScoreView extends View {
 //        testResultModel.setTheoryAccuracy(0.3);
 //        mTestResultModel = testResultModel;
 
-        mTestResultModel = testResultModel;
+        mEvaluationResult = evaluationResult;
         mValuePaint.reset();
         mValuePaint.setAntiAlias(true);
         int startColor = Color.parseColor("#64A0FE");

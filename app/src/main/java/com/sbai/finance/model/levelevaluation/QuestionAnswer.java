@@ -1,21 +1,18 @@
-package com.sbai.finance.model.leveltest;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+package com.sbai.finance.model.levelevaluation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ${wangJie} on 2017/8/4.
- * 测试提交答案的model
+ * 测试提交答案的model    排序 单选 等也使用这个model
  * {"answers":[{"answerIds":[{"optionId":892321037251899393}],"topicId":"5980309868fad7db045c8986"}]}
  * <p>
  * answerIds 可能有多个答案 optionId 选择的答案ID
  * topicId 题目ID
  */
 
-public class TestAnswerUtils {
+public class QuestionAnswer {
 
     private List<AnswersBean> answers;
 
@@ -92,9 +89,4 @@ public class TestAnswerUtils {
                 '}';
     }
 
-    public JsonObject toJsonObject(TestAnswerUtils testAnswerUtils) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("finishPO", new Gson().toJson(testAnswerUtils));
-        return jsonObject;
-    }
 }

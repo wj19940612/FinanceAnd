@@ -1,14 +1,17 @@
 package com.sbai.finance.view.training;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.sbai.finance.model.training.Training;
+import com.sbai.finance.R;
+import com.sbai.finance.model.training.RemoveTraining;
 import com.sbai.finance.utils.Display;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -16,16 +19,50 @@ import java.util.List;
  */
 
 public class KlineTrainView extends RelativeLayout {
-    private List<Training> mTrainData;
-    private DiamondGroupView[] views;
 
-    public void setTrainData(List<Training> data) {
-        mTrainData = data;
-        refresh();
+    private DiamondGroupView[] views;
+    private int mPriSelectedIndex;
+    private OnEndCallback mOnEndCallback;
+
+    public interface OnEndCallback {
+        void onEnd();
     }
 
-    private void refresh() {
+    public void setOnEndCallback(OnEndCallback onEndCallback) {
+        mOnEndCallback = onEndCallback;
+    }
 
+    public void setTrainData(List<RemoveTraining> data) {
+        if (data == null) return;
+        Collections.shuffle(data);
+        refresh(data);
+    }
+
+    private void refresh(List<RemoveTraining> trainData) {
+        mPriSelectedIndex = -1;
+        for (int i = 0; i < trainData.size(); i++) {
+            RemoveTraining training = trainData.get(i);
+            views[i].setTag(training);
+            if (views[i].getVisibility() == INVISIBLE) {
+                views[i].resetView();
+                views[i].setVisibility(VISIBLE);
+            }
+            views[i].setSelected(false);
+            if (training.isImage()) {
+                views[i].setBackgroundType(DiamondView.TYPE_DARK)
+                        .setImageVisible(true)
+                        .setImageUrl(training.getImageUrl())
+                        .setDescribeVisible(false);
+            } else {
+                views[i].setBackgroundType(DiamondView.TYPE_WHITE)
+                        .setImageVisible(false)
+                        .setDescribe(String.valueOf(training.getContent()))
+                        .setDescribeVisible(true);
+            }
+        }
+        for (int i = trainData.size(); i < views.length; i++) {
+            views[i].setVisibility(INVISIBLE);
+        }
     }
 
     public KlineTrainView(Context context, AttributeSet attrs) {
@@ -89,26 +126,70 @@ public class KlineTrainView extends RelativeLayout {
         views[5].setLayoutParams(params);
         addView(views[5], params);
 
-        views[0].setOnClickListener(new OnClickListener() {
+        for (int i = 0; i < views.length; i++) {
+            setOnClickListener(views[i], i);
+            setOnClickListener(views[i].getDescribe(), i);
+            setOnClickListener(views[i].getKlineImg(), i);
+        }
+
+        for (int i = 0; i < views.length; i++) {
+            setOnDisappearListener(views[i]);
+        }
+    }
+
+    private void setOnDisappearListener(DiamondGroupView view) {
+        view.setOnClearCallback(new DiamondGroupView.OnClearCallback() {
             @Override
-            public void onClick(View v) {
-                views[0].setSelected(true);
-            }
-        });
-        views[5].setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                views[1].startErrorAnim();
-                views[0].startErrorAnim();
-                views[2].startErrorAnim();
-                views[3].startErrorAnim();
-                views[4].startErrorAnim();
+            public void onClear() {
+                updateIsEnd();
             }
         });
     }
 
-    public void startAppearAnim(){
-        for (int i=0;i<views.length;i++){
+    private void setOnClickListener(View view, final int index) {
+        view.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!views[index].getSelected()) {
+                    views[index].setSelected(true);
+                    if (mPriSelectedIndex == -1) {
+                        mPriSelectedIndex = index;
+                    } else {
+                        RemoveTraining training1 = (RemoveTraining) views[mPriSelectedIndex].getTag();
+                        RemoveTraining training2 = (RemoveTraining) views[index].getTag();
+                        if (training1 != null && training2 != null) {
+                            if (training1.getSeq() == training2.getSeq()) {
+                                views[mPriSelectedIndex].startDisappearAnim();
+                                views[index].startDisappearAnim();
+                            } else {
+                                views[mPriSelectedIndex].startErrorAnim();
+                                views[mPriSelectedIndex].setSelected(false);
+                                views[index].startErrorAnim();
+                                views[index].setSelected(false);
+                            }
+                            mPriSelectedIndex = -1;
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void updateIsEnd() {
+        boolean end = true;
+        for (int i = 0; i < views.length; i++) {
+            if (views[i].getVisibility() == VISIBLE) {
+                end = false;
+                break;
+            }
+        }
+        if (end && mOnEndCallback != null) {
+            mOnEndCallback.onEnd();
+        }
+    }
+
+    public void startAppearAnim() {
+        for (int i = 0; i < views.length; i++) {
             views[i].startAppearAnim();
         }
     }

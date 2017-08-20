@@ -6,22 +6,20 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.sbai.finance.R;
-import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.FinanceUtil;
 
 /**
  * Created by ${wangJie} on 2017/8/14.
  */
 
 public class TrainProgressBar extends ProgressBar {
+
 
     private static final String TAG = "TrainProgressBar";
 
@@ -31,22 +29,32 @@ public class TrainProgressBar extends ProgressBar {
     private float mHintSplitLineWidth;
     private Paint mBoundaryPaint;
     private Paint mHintSplitLinePaint;
-    private long mTimeSpace;
-    private int mProgress;
     private float mHintSplitScale;
     private boolean mHasSplitLine;
 
     private OnProgressCompleteListener mOnProgressCompleteListener;
+    private OnProgressFinishListener mOnProgressFinishListener;
 
     //因为目前的样式差不多，所以设置一个通用的，可以关闭
     private boolean mUseDefaultProgressDrawable;
+
+    private long mProgressTotalTime;
 
     public interface OnProgressCompleteListener {
         void onProgressComplete(int progress);
     }
 
+    public interface OnProgressFinishListener {
+        void onProgressFinish();
+    }
+
+
     public void setOnProgressCompleteListener(OnProgressCompleteListener onProgressCompleteListener) {
         this.mOnProgressCompleteListener = onProgressCompleteListener;
+    }
+
+    public void setOnProgressFinishListener(OnProgressFinishListener onProgressFinishListener) {
+        this.mOnProgressFinishListener = onProgressFinishListener;
     }
 
     public TrainProgressBar(Context context) {
@@ -92,29 +100,43 @@ public class TrainProgressBar extends ProgressBar {
 
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if (mTimeHandler != null) {
-            mTimeHandler.removeCallbacksAndMessages(null);
-            mTimeHandler = null;
+    public void setViewProgress(int progress) {
+        this.setViewProgress(progress, false);
+    }
+
+
+    public void setTotalMinuteTime(long minuteTime) {
+        setTotalSecondTime(minuteTime * 60);
+    }
+
+    public void setTotalMillisecondTime(long time) {
+        mProgressTotalTime = time;
+    }
+
+    /**
+     * 将进行多少秒
+     *
+     * @param secondTime
+     */
+    public void setTotalSecondTime(long secondTime) {
+        setTotalMillisecondTime(secondTime * 1000);
+    }
+
+    public void setTrainChangeTime(long changeTime) {
+        if (mProgressTotalTime > 0) {
+            double v = FinanceUtil.divide(changeTime, mProgressTotalTime).doubleValue();
+            int progress = FinanceUtil.multiply(v, 100).intValue();
+            this.setViewProgress(progress, false);
         }
     }
 
-
-    public void setTime(long time) {
-        mTimeSpace = time / 100;
-        mTimeHandler.sendEmptyMessageDelayed(0, mTimeSpace);
+    public void setViewProgress(int progress, boolean animate) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            this.setProgress(progress, animate);
+        } else {
+            this.setProgress(progress);
+        }
     }
-
-    public void setTime(String time) {
-        setTime(DateUtil.getStringToDate(time));
-    }
-
-    public void setTime(String time, String format) {
-        setTime(DateUtil.getStringToDate(time, format));
-    }
-
 
     @Override
     protected synchronized void onDraw(Canvas canvas) {
@@ -128,24 +150,5 @@ public class TrainProgressBar extends ProgressBar {
         }
     }
 
-    private Handler mTimeHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (mProgress < 101) {
-                mProgress++;
-                Log.d(TAG, "handleMessage: " + mProgress);
-                if (mOnProgressCompleteListener != null) {
-                    mOnProgressCompleteListener.onProgressComplete(mProgress);
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    setProgress(mProgress, true);
-                } else {
-                    setProgress(mProgress);
-                }
-                mTimeHandler.sendEmptyMessageDelayed(mProgress, mTimeSpace);
-            }
-        }
-    };
 
 }

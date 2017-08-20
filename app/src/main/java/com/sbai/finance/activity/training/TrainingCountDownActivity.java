@@ -23,7 +23,15 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
+import com.sbai.finance.model.training.TrainingQuestion;
+import com.sbai.finance.model.training.question.KData;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.SecurityUtil;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,44 +54,62 @@ public class TrainingCountDownActivity extends BaseActivity {
     private int mGifRes;
     private int mBackgroundRes;
 
+    private TrainingQuestion mTrainingQuestion;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 0) {
-                if (mQuestion != null) {
-                    switch (mTraining.getPlayType()) {
-                        case Training.PLAY_TYPE_REMOVE:
-                            Launcher.with(getActivity(), KlineTrainActivity.class).execute();
-                            break;
-                        case Training.PLAY_TYPE_MATCH_STAR:
-                            break;
-                        case Training.PLAY_TYPE_SORT:
-                            break;
-                        case Training.PLAY_TYPE_JUDGEMENT:
-                            Launcher.with(getActivity(), JudgeTrainingActivity.class)
+                switch (mTraining.getPlayType()) {
+                    case Training.PLAY_TYPE_REMOVE:
+                        if (mTrainingQuestion != null && mTraining != null) {
+                            Launcher.with(getActivity(), KlineTrainActivity.class)
+                                    .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
                                     .putExtra(ExtraKeys.TRAINING, mTraining)
-                                    .putExtra(ExtraKeys.QUESTION, mQuestion)
                                     .execute();
-                            break;
-                    }
-                }
+                        }
+                        break;
+                    case Training.PLAY_TYPE_MATCH_STAR:
+                        if (mTrainingQuestion != null && mTraining != null) {
+                            Launcher.with(getActivity(), NounExplanationActivity.class)
+                                    .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
+                                    .putExtra(ExtraKeys.TRAINING, mTraining)
+                                    .execute();
+                        }
+                        break;
+                    case Training.PLAY_TYPE_SORT:
+                        if (mTrainingQuestion != null && mTraining != null) {
+                            Launcher.with(getActivity(), SortQuestionActivity.class)
+                                    .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
+                                    .putExtra(ExtraKeys.TRAINING, mTraining)
+                                    .execute();
+                        }
+                        break;
+                    case Training.PLAY_TYPE_JUDGEMENT:
+                        Launcher.with(getActivity(), JudgeTrainingActivity.class)
+                                .putExtra(ExtraKeys.TRAINING, mTraining)
+                                .putExtra(ExtraKeys.QUESTION, mQuestion)
+                                .execute();
 
+                        break;
+                }
                 finish();
             }
         }
     };
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initData(getIntent());
-
         updateScreenOrientation();
 
         setContentView(R.layout.activity_training_count_down);
         ButterKnife.bind(this);
+
+        requestTrainingContent();
 
         if (mBackgroundRes != 0) {
             mBackground.setBackgroundResource(mBackgroundRes);
@@ -98,6 +124,40 @@ public class TrainingCountDownActivity extends BaseActivity {
             startGifAnimation();
         }
     }
+
+    private void requestTrainingContent() {
+        if (mTraining.getPlayType() != Training.PLAY_TYPE_JUDGEMENT) {
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<TrainingQuestion>>() {
+                        @Override
+                        protected void onRespSuccessData(List<TrainingQuestion> data) {
+                            if (!data.isEmpty()) {
+                                mTrainingQuestion = data.get(0);
+                            }
+                        }
+
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+                    }).fireFree();
+        } else {
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
+                        @Override
+                        protected void onRespSuccessData(List<Question<KData>> data) {
+                            if (!data.isEmpty()) {
+                                mQuestion = data.get(0);;
+                            }
+                        }
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+                    }).fireFree();
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -131,6 +191,8 @@ public class TrainingCountDownActivity extends BaseActivity {
                 mBackgroundRes = R.color.yellowFundamentalCountDown;
                 break;
             case Training.TYPE_COMPREHENSIVE:
+                mGifRes = R.drawable.ic_count_down_fundamentals;
+                mBackgroundRes = R.color.blueComprehensiveTraining;
                 break;
         }
     }

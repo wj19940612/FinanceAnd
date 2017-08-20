@@ -677,7 +677,7 @@
     <string name="me">我</string>
     <string name="nobody_enter_leader_board">暂时无人上榜</string>
     <string name="every_day_re_calculate">每天24:00重新计算</string>
-    <string name="every_week_re_calculate">每周一24:00重新计算</string>
+    <string name="every_week_re_calculate">每周日24:00重新计算</string>
 
     <!--miss_talk-->
     <string name="her_answer">她的回答</string>
@@ -733,7 +733,7 @@
     <string name="trade_level">我的交易水平:%1$s  （超过了%2$s的交易用户）</string>
     <string name="advise">建议:%1$s</string>
     <string name="click_refresh">点击刷新</string>
-
+    <string name="no_miss">小姐姐不存在</string>
     <string name="ask_miss">点击右上角+号,对小姐姐提问吧</string>
     <string name="miss_first_time">快用提问夺走小姐姐的“第一次”吧</string>
 
@@ -776,4 +776,16 @@
     <string name="forecast_up_down">预测一下涨跌吧</string>
     <string name="judge_right">Nice~正确</string>
     <string name="judge_wrong">ohoh～错了</string>
+    <string name="explanation_number">%1$d/%2$d</string>
+    <string name="remove_train_rule">将相对应的K线牌与名词牌顺序翻过就能成功消除，所有卡牌全部消除，完成训练。5分钟内未完成，则训练失败。\n速度决定成绩，而稳固的知识将是速度的保障！加油！</string>
+    <string name="match_star_train_rule">将相对应的解释牌与名词牌顺序翻过就能成功消除，所有卡牌全部消除，完成训练。5分钟内未完成，则训练失败。\n速度决定成绩，而稳固的知识将是速度的保障！加油！</string>
+    <string name="sort_train_rule">按照年报生成顺序，将材料投入生成炉内，成功生成年报，则完成训练。\n年报需要在五分钟内生成。</string>
+    <string name="judgement_train_rule">均线会自动移动，移动到某些交叉点，均线会停止，此时用户需要选择这个交叉点后的行情是涨还是跌。\n15分钟内未完成训练，则训练失败</string>
+    <string name="complete_training">完成训练</string>
+    <string name="congratulation">恭喜</string>
+    <string name="create_fail">生成失败</string>
+    <string name="your_company_is_close">您的公司被关停了</string>
+    <string name="success_create_report">成功出炉年报</string>
+    <string name="train_use_time">%1$d分%2$d秒</string>
+    <string name="train_finish_less_minutes">%1$d分钟内完成</string>
 </resources>

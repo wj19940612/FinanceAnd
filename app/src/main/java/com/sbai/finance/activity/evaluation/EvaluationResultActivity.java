@@ -11,7 +11,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.RewardGetActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.leveltest.TestResultModel;
+import com.sbai.finance.model.levelevaluation.EvaluationResult;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.view.TitleBar;
@@ -52,11 +52,11 @@ public class EvaluationResultActivity extends BaseActivity {
         setContentView(R.layout.activity_evaluation_result);
         ButterKnife.bind(this);
         translucentStatusBar();
-        TestResultModel data = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+        EvaluationResult data = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
         updateUserResult(data);
     }
 
-    private void updateUserResult(TestResultModel data) {
+    private void updateUserResult(EvaluationResult data) {
         if (data == null) return;
         mScoreView.setData(data);
         setScoreView(data.getLevel());

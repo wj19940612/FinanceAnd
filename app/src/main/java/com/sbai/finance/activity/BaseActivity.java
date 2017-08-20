@@ -53,8 +53,8 @@ public class BaseActivity extends AppCompatActivity implements
 
     public static final int REQ_CODE_TOKEN_EXPIRED_LOGIN = 800;
 
-    public static final int REQ_CODE_USERDATA = 1001;
-    public static final int REQ_QUESTION_DETAIL = 1002;
+    public static final int REQ_CODE_USERDATA = 801;
+    public static final int REQ_QUESTION_DETAIL = 802;
 
     protected String TAG;
 

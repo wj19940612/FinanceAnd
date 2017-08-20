@@ -4,6 +4,10 @@ package com.sbai.finance.model.training;
  * 训练目标
  */
 public class TrainingTarget {
+    // 1 按时间 2 按概率 3完成即可
+    public static final int TYPE_TIME = 1;
+    public static final int TYPE_RATE = 2;
+    public static final int TYPE_FINISH = 3;
 
     /**
      * id : 5

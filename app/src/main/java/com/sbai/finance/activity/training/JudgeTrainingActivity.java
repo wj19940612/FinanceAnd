@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.training;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.sbai.finance.model.training.question.KData;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.training.Kline.MvKlineView;
 
 import java.util.Collections;
@@ -140,7 +142,20 @@ public class JudgeTrainingActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        // TODO: 20/08/2017 退出确认弹框
+        SmartDialog.single(getActivity(), getString(R.string.exit_train_will_not_save_train_record))
+                .setTitle(getString(R.string.is_sure_exit_train))
+                .setNegative(R.string.exit_train, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                })
+                .setPositive(R.string.continue_train, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 }

@@ -106,10 +106,11 @@ public class EvaluationStartActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<String>, String>() {
                     @Override
                     protected void onRespSuccessData(String data) {
-                        ArrayList<TrainingQuestion> examQuestionsList = getExamQuestionsList(data);
-                        if (examQuestionsList != null && !examQuestionsList.isEmpty()) {
+
+                        ArrayList<TrainingQuestion> trainingQuestionsList = getExamQuestionsList(data);
+                        if (trainingQuestionsList != null && !trainingQuestionsList.isEmpty()) {
                             Launcher.with(getActivity(), EvaluationQuestionsActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, examQuestionsList)
+                                    .putExtra(Launcher.EX_PAYLOAD, trainingQuestionsList)
                                     .execute();
                         } else {
                             ToastUtil.show(R.string.get_exam_questions_fail);

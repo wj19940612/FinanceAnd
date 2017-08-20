@@ -114,11 +114,22 @@ public class StudyRoomActivity extends BaseActivity {
     private void updateMyStudyDataForHandPaper(MyStudyInfo data) {
         if (data.isLearned()) {
             requestTrainData();
-        } else {
-            requestHandInPaper();
         }
     }
 
+
+    //     else if (mStudyOption == null) {
+//        //取缓存的数据
+//        StudyOption studyOption = (StudyOption) SerializeObjectUtil.String2Object(Preference.get().getStudyData(data.getAnswer().get(0).getTopicId()));
+//        if (studyOption != null) {
+//            updateTrainEndView(studyOption, data);
+//        }
+//    }
+    private void saveStudyDataToFile() {
+        if (mStudyOption != null) {
+            Preference.get().setStudyData(mStudyOption.getId(), SerializeObjectUtil.Object2String(mStudyOption));
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -298,12 +309,6 @@ public class StudyRoomActivity extends BaseActivity {
             if (data.getAnswer() != null && data.getAnswer().size() > 0) {
                 if (mStudyOption != null && mStudyOption.getId().equalsIgnoreCase(data.getAnswer().get(0).getTopicId())) {
                     updateTrainEndView(mStudyOption, data);
-                } else if (mStudyOption == null) {
-                    //取缓存的数据
-                    StudyOption studyOption = (StudyOption) SerializeObjectUtil.String2Object(Preference.get().getStudyData(data.getAnswer().get(0).getTopicId()));
-                    if (studyOption != null) {
-                        updateTrainEndView(studyOption, data);
-                    }
                 }
             }
         } else {
@@ -358,11 +363,6 @@ public class StudyRoomActivity extends BaseActivity {
                 }).fireFree();
     }
 
-    private void saveStudyDataToFile() {
-        if (mStudyOption != null) {
-            Preference.get().setStudyData(mStudyOption.getId(), SerializeObjectUtil.Object2String(mStudyOption));
-        }
-    }
 
     private void showRewardView(double gold) {
         if (gold > 0) {

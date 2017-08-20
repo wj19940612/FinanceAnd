@@ -50,8 +50,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.net.Client.SHARE_URL_TRAIN_EXPERIENCE;
-
 
 public class TrainDetailActivity extends BaseActivity {
 
@@ -104,6 +102,7 @@ public class TrainDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_train_detail);
         ButterKnife.bind(this);
 
+
         initData(getIntent());
         initBackground();
 
@@ -118,7 +117,6 @@ public class TrainDetailActivity extends BaseActivity {
         requestFinishPeopleList();
         requestHotExperienceList();
     }
-
 
     private void initData(Intent intent) {
         mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
@@ -175,6 +173,7 @@ public class TrainDetailActivity extends BaseActivity {
     }
 
     private void requestHotExperienceList() {
+
         Client.getHotExperienceList(mTraining.getId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
                     @Override
@@ -373,7 +372,11 @@ public class TrainDetailActivity extends BaseActivity {
                 break;
             case R.id.startTrain:
                 if (LocalUser.getUser().isLogin()) {
-                    requestTrainingContent();
+                    //requestTrainingContent();
+                    // TODO: 20/08/2017 后期和产品商量训练题目请求位置
+                    Launcher.with(getActivity(), TrainingCountDownActivity.class)
+                            .putExtra(ExtraKeys.TRAINING, mTraining)
+                            .execute();
                 } else {
                     // TODO: 17/08/2017 登录后要做页面更新
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -420,7 +423,7 @@ public class TrainDetailActivity extends BaseActivity {
                 .setTitle(getString(R.string.share_title))
                 .setShareTitle(getString(R.string.train_share_share_title, mTrainDetail.getTrain().getTitle()))
                 .setShareDescription(getString(R.string.train_share_description))
-                .setShareUrl(String.format(SHARE_URL_TRAIN_EXPERIENCE, mTraining.getId()))
+                .setShareUrl(String.format(Client.SHARE_URL_TRAIN_EXPERIENCE, mTraining.getId()))
                 .hasFeedback(true)
                 .setListener(new ShareDialog.OnShareDialogCallback() {
                     @Override

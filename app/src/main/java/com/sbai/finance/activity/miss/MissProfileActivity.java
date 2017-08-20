@@ -33,11 +33,11 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.Attention;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.Prise;
 import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -49,7 +49,9 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.ObservableScrollView;
+import com.sbai.finance.view.autofit.AutofitTextView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -85,7 +87,7 @@ public class MissProfileActivity extends BaseActivity implements
 	@BindView(R.id.avatar)
 	ImageView mAvatar;
 	@BindView(R.id.name)
-	TextView mName;
+	AutofitTextView mName;
 	@BindView(R.id.voice)
 	TextView mVoice;
 	@BindView(R.id.lovePeopleNumber)
@@ -155,14 +157,16 @@ public class MissProfileActivity extends BaseActivity implements
 							item.setPriseCount(prise.getPriseCount());
 							mHerAnswerAdapter.notifyDataSetChanged();
 							int praiseCount;
-							if (prise.getIsPrise() == 0) {
-								praiseCount = mMiss.getTotalPrise() - 1;
-								mMiss.setTotalPrise(praiseCount);
-							} else {
-								praiseCount = mMiss.getTotalPrise() + 1;
-								mMiss.setTotalPrise(praiseCount);
+							if (mMiss != null) {
+								if (prise.getIsPrise() == 0) {
+									praiseCount = mMiss.getTotalPrise() - 1;
+									mMiss.setTotalPrise(praiseCount);
+								} else {
+									praiseCount = mMiss.getTotalPrise() + 1;
+									mMiss.setTotalPrise(praiseCount);
+								}
+								mLovePeopleNumber.setText(getString(R.string.love_people_number, StrFormatter.getFormatCount(praiseCount)));
 							}
-							mLovePeopleNumber.setText(getString(R.string.love_people_number, StrFormatter.getFormatCount(praiseCount)));
 						}
 					}).fire();
 				} else {
@@ -325,7 +329,7 @@ public class MissProfileActivity extends BaseActivity implements
 		Question item = (Question) parent.getItemAtPosition(position);
 		if (item != null) {
 			Launcher.with(this, QuestionDetailActivity.class)
-					.putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
+					.putExtra(Launcher.EX_PAYLOAD, item.getId()).executeForResult(REQ_QUESTION_DETAIL);
 		}
 	}
 
@@ -418,6 +422,10 @@ public class MissProfileActivity extends BaseActivity implements
 					Launcher.with(this, MissAvatarActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
 							.execute();
+				} else {
+					Launcher.with(this, MissAvatarActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, "")
+							.execute();
 				}
 				break;
 			case R.id.voice:
@@ -443,6 +451,8 @@ public class MissProfileActivity extends BaseActivity implements
 					} else {
 						Launcher.with(getActivity(), LoginActivity.class).execute();
 					}
+				} else {
+					ToastUtil.show(getString(R.string.no_miss));
 				}
 				break;
 			case R.id.reward:
@@ -453,6 +463,8 @@ public class MissProfileActivity extends BaseActivity implements
 						Intent intent = new Intent(getActivity(), LoginActivity.class);
 						startActivityForResult(intent, REQ_MISS_REWARD_LOGIN);
 					}
+				} else {
+					ToastUtil.show(getString(R.string.no_miss));
 				}
 				break;
 			case R.id.askHerQuestion:
@@ -649,6 +661,74 @@ public class MissProfileActivity extends BaseActivity implements
 			Launcher.with(getActivity(), SubmitQuestionActivity.class)
 					.putExtra(Launcher.EX_PAYLOAD, mCustomId)
 					.execute();
+		}
+
+		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
+			if (data!= null) {
+				Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+				int replyCount  = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+				int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+				int listenCount = data.getIntExtra(Launcher.EX_PAYLOAD_3, -1);
+				if (prise != null) {
+					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
+						Question question = mHerAnswerAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setIsPrise(prise.getIsPrise());
+								question.setPriseCount(prise.getPriseCount());
+								mHerAnswerAdapter.notifyDataSetChanged();
+								int praiseCount;
+								if (mMiss != null) {
+									if (prise.getIsPrise() == 0) {
+										praiseCount = mMiss.getTotalPrise() - 1;
+										mMiss.setTotalPrise(praiseCount);
+									} else {
+										praiseCount = mMiss.getTotalPrise() + 1;
+										mMiss.setTotalPrise(praiseCount);
+									}
+									mLovePeopleNumber.setText(getString(R.string.love_people_number, StrFormatter.getFormatCount(praiseCount)));
+								}
+							}
+						}
+					}
+				}
+
+				if (replyCount != -1) {
+					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
+						Question question = mHerAnswerAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setReplyCount(replyCount);
+								mHerAnswerAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
+				if (rewardCount != -1) {
+					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
+						Question question = mHerAnswerAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setAwardCount(rewardCount);
+								mHerAnswerAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
+				if (listenCount != -1) {
+					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
+						Question question = mHerAnswerAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setListenCount(listenCount);
+								mHerAnswerAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 

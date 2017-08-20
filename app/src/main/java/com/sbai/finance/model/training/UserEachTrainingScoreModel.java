@@ -3,7 +3,7 @@ package com.sbai.finance.model.training;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.sbai.finance.model.leveltest.TestResultModel;
+import com.sbai.finance.model.levelevaluation.EvaluationResult;
 import com.sbai.finance.utils.FinanceUtil;
 
 import java.util.List;
@@ -183,8 +183,8 @@ public class UserEachTrainingScoreModel implements Parcelable {
     }
 
     // 计算每一项的分数所占各个总分的比例
-    public TestResultModel getTestResultModel() {
-        TestResultModel testResultModel = new TestResultModel();
+    public EvaluationResult getTestResultModel() {
+        EvaluationResult evaluationResult = new EvaluationResult();
         for (ScoresBean data : getScores()) {
             double scale = 0;
             if (data.getTotalScore() != 0) {
@@ -192,22 +192,22 @@ public class UserEachTrainingScoreModel implements Parcelable {
             }
             switch (data.getClassifyName()) {
                 case "盈利能力":
-                    testResultModel.setProfitAccuracy(scale);
+                    evaluationResult.setProfitAccuracy(scale);
                     break;
                 case "风险控制":
-                    testResultModel.setRiskAccuracy(scale);
+                    evaluationResult.setRiskAccuracy(scale);
                     break;
                 case "基本面分析":
-                    testResultModel.setBaseAccuracy(scale);
+                    evaluationResult.setBaseAccuracy(scale);
                     break;
                 case "指标分析":
-                    testResultModel.setSkillAccuracy(scale);
+                    evaluationResult.setSkillAccuracy(scale);
                     break;
                 case "理论掌握":
-                    testResultModel.setTheoryAccuracy(scale);
+                    evaluationResult.setTheoryAccuracy(scale);
                     break;
             }
         }
-        return testResultModel;
+        return evaluationResult;
     }
 }

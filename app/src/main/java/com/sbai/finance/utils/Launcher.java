@@ -31,7 +31,7 @@ public class Launcher {
 
     public static final String EX_PAY_END="pay";
 
-    public static final String USER_ID = "userId";
+    public static final String QUESTION_ID = "questionId";
 
     public static final int REQ_CODE_LOGIN = 620;
 

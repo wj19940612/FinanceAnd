@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="5dp"
+              android:layout_marginRight="5dp"
+              android:foreground="?android:attr/selectableItemBackground"
+              android:minHeight="114dp"
+              android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/lineNumber"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:textColor="@color/unluckyText"
+        android:textSize="30sp"
+        tools:text="1"/>
+
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/materials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="40dp"
+            android:background="@drawable/bg_broken_line_oval"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:minWidth="60dp"
+            android:paddingLeft="21dp"
+            android:paddingRight="21dp"
+            android:textColor="@android:color/white"
+            tools:text="提前预结算"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/line_broken"
+            android:layerType="software"/>
+    </RelativeLayout>
+
+</LinearLayout>

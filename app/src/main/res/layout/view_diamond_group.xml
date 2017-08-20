@@ -10,7 +10,8 @@
         android:layout_width="106dp"
         android:layout_height="122dp"
         android:layout_centerInParent="true"
-        app:backgroundColor="#372f54"/>
+        android:background="@android:color/transparent"
+        app:backgroundColor="#372F54"/>
 
     <ImageView
         android:id="@+id/klineImg"
@@ -25,8 +26,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:ellipsize="end"
         android:gravity="center"
-        android:text="6666666"
+        android:maxLines="1"
         android:textColor="#654DBD"
         android:textSize="16sp"
         android:visibility="visible"/>
