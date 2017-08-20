@@ -44,7 +44,8 @@
         android:layout_marginTop="20dp"
         android:text="@string/what_a_pity_you_do_not_finish"
         android:textColor="@color/colorPrimary"
-        android:textSize="26sp"/>
+        android:textSize="26sp"
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -111,5 +112,6 @@
         android:minHeight="44dp"
         android:text="@string/retry"
         android:textColor="@android:color/white"
-        android:textSize="15sp"/>
+        android:textSize="15sp"
+        android:visibility="gone"/>
 </LinearLayout>
