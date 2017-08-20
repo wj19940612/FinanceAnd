@@ -504,7 +504,7 @@ public class Client {
      *                latitude  经度
      * @return
      */
-    public static API updateUserInfo(int age, String land, Integer userSex) {
+    public static API updateUserInfo(Integer age, String land, Integer userSex) {
         return new API(POST, "/user/user/updateUser.do", new ApiParams()
                 .put("age", age)
                 .put("land", land)

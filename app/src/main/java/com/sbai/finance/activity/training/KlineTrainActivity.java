@@ -229,4 +229,10 @@ public class KlineTrainActivity extends BaseActivity {
     public void onViewClicked() {
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCountDownTimer.cancel();
+    }
 }

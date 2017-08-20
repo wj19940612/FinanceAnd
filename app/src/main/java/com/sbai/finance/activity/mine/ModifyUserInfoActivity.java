@@ -130,7 +130,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     }
 
     private void submitUserInfo() {
-        int age = 0;
+        Integer age = null;
         if (!TextUtils.isEmpty(mAge.getSubText().trim())) {
             age = Integer.parseInt(mAge.getSubText().trim());
         }
@@ -144,7 +144,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
         if (LocalUser.getUser().getUserInfo().getUserSex() != 0) {
             sex = LocalUser.getUser().getUserInfo().getUserSex() == UserInfo.SEX_BOY ? 2 : 1;
         }
-        if (age != 0 || !TextUtils.isEmpty(land) || sex != null) {
+        if (age != null || !TextUtils.isEmpty(land) || sex != null) {
             Client.updateUserInfo(age, land, sex)
                     .setTag(TAG)
                     .setIndeterminate(this)
@@ -208,7 +208,11 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
         if (LocalUser.getUser().getUserInfo().getAge() == null) {
             mSelectAgeListIndex = 73;
         } else {
-            mSelectAgeListIndex = 100 - LocalUser.getUser().getUserInfo().getAge();
+            if (LocalUser.getUser().getUserInfo().getAge() <= 100) {
+                mSelectAgeListIndex = 100 - LocalUser.getUser().getUserInfo().getAge();
+            } else {
+                mSelectAgeListIndex = 100;
+            }
         }
         picker.setSelectedItem(mAgeList[mSelectAgeListIndex]);
         picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));

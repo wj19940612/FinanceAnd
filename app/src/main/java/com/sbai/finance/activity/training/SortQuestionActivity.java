@@ -240,6 +240,7 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
     private void openTrainingResultPage(boolean isRight) {
+        mCountDownTimer.cancel();
         TrainingResultActivity.show(this, mTraining, (int) mTrainingCountTime, isRight);
         finish();
     }

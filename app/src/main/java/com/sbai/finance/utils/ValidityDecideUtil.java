@@ -16,8 +16,8 @@ public class ValidityDecideUtil {
      * @param nickName
      * @return
      */
-    public static boolean isLegalNickName(String nickName) {
-        nickName = nickName.trim();
+    public static boolean isLegalNickName(CharSequence nickName) {
+        nickName = nickName.toString().trim();
         Pattern letter = Pattern.compile("^[A-Za-z0-9\u4e00-\u9fa5]+$");
         Matcher letterMatcher = letter.matcher(nickName);
         return letterMatcher.matches();
@@ -29,8 +29,8 @@ public class ValidityDecideUtil {
      * @param realName
      * @return
      */
-    public static boolean isOnlyAChineseName(String realName) {
-        realName = realName.trim();
+    public static boolean isOnlyAChineseName(CharSequence realName) {
+        realName = realName.toString().trim();
         Pattern letter = Pattern.compile("^[\u4e00-\u9fa5]+$");
         Matcher letterMatcher = letter.matcher(realName);
         return letterMatcher.matches();

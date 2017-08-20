@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -42,7 +44,17 @@ public class ModifyUserNameActivity extends BaseActivity {
         setContentView(R.layout.activity_modify_user_name);
         ButterKnife.bind(this);
         mUserName.addTextChangedListener(mValidationWatcher);
+        mUserName.setFilters(new InputFilter[]{new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                if (ValidityDecideUtil.isLegalNickName(source)) {
+                    return source;
+                }
+                return "";
+            }
+        }, new InputFilter.LengthFilter(8)});
         mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
+
     }
 
     @Override

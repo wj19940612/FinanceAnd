@@ -180,6 +180,8 @@ public class MineFragment extends BaseFragment {
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
         } else {
             mUserName.setText(R.string.login);
+            mMessage.setSubTextVisible(View.GONE);
+            mFeedback.setSubTextVisible(View.GONE);
         }
     }
 

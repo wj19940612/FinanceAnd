@@ -13,9 +13,9 @@
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
-        android:background="@android:color/white"
         app:titleText="@string/modify_user_name"
         app:titleTextColor="@color/primaryText"/>
 
@@ -54,6 +54,7 @@
     <android.support.v7.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:inputType="text"
         android:paddingLeft="@dimen/common_padding"
         android:paddingTop="10dp"
         android:text="@string/nick_name_hint"
