@@ -91,7 +91,6 @@ public class OverLayer extends View {
             if (startX > point.getPoint().x) {
                 mNextStopIndex++;
                 onFocusIntersectionPoint(point);
-
             }
         }
 

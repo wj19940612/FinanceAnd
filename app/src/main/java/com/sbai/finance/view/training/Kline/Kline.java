@@ -279,6 +279,7 @@ public class Kline extends ChartView {
                         if (point != null) {
                             Line.updateIntersectionPoint(mLines[0], mLines[1], point);
                             point.setType(kData.getType());
+                            point.setAnalysis(kData.getRemark());
                         }
                     }
                 }
@@ -368,6 +369,7 @@ public class Kline extends ChartView {
     public static class IntersectionPoint {
         private PointF point;
         private int type;
+        private String analysis;
 
         public IntersectionPoint() {
             this.point = new PointF();
@@ -387,6 +389,14 @@ public class Kline extends ChartView {
 
         public void setType(int type) {
             this.type = type;
+        }
+
+        public String getAnalysis() {
+            return analysis;
+        }
+
+        public void setAnalysis(String analysis) {
+            this.analysis = analysis;
         }
     }
 }

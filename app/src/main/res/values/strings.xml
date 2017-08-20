@@ -766,4 +766,11 @@
     <string name="is_sure_exit_train">确定要退出训练吗?</string>
     <string name="exit_train">退出训练</string>
     <string name="continue_train">继续训练</string>
+    <string name="accuracy">准确率</string>
+    <string name="ma5">MA5</string>
+    <string name="ma5_chinese">5日移动平均线</string>
+    <string name="ma30">MA30</string>
+    <string name="ma30_chinese">30日移动平均线</string>
+    <string name="knowledge">小知识</string>
+    <string name="i_see">知道了</string>
 </resources>

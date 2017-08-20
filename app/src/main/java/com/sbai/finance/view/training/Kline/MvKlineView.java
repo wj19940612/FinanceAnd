@@ -29,6 +29,16 @@ public class MvKlineView extends RelativeLayout {
     private SparseArray<Kline.IntersectionPoint> mIntersectionPointArray;
     private Button mJudgeUpBtn;
     private Button mJudgeDownBtn;
+    private Kline.IntersectionPoint mFocusedPoint;
+    private OnAnswerSelectedListener mOnAnswerSelectedListener;
+    private int mRightAnswers;
+
+    public interface OnAnswerSelectedListener {
+
+        void onRightAnswerSelected(float accuracy);
+
+        void onWrongAnswerSelected(String analysis);
+    }
 
     public MvKlineView(Context context) {
         super(context);
@@ -70,6 +80,7 @@ public class MvKlineView extends RelativeLayout {
             public void onFocus(Kline.IntersectionPoint point) {
                 mJudgeUpBtn.setEnabled(true);
                 mJudgeDownBtn.setEnabled(true);
+                mFocusedPoint = point;
             }
         });
         addView(mOverLayer, params);
@@ -89,7 +100,14 @@ public class MvKlineView extends RelativeLayout {
                 if (!mJudgeUpBtn.isSelected()){
                     mJudgeUpBtn.setSelected(true);
                     mJudgeDownBtn.setEnabled(false);
-                    v.postDelayed(new ResumeTask(), 1000);
+                    if (mFocusedPoint.getType() == KData.TYPE_LONG) {
+                        onRightAnswerSelected();
+                        // TODO: 20/08/2017 显示答对的提示控件
+                        v.postDelayed(new ResumeTask(), 1000);
+                    } else {
+                        // TODO: 20/08/2017 显示答错的提示控件
+                        onWrongAnswerSelected();
+                    }
                 }
             }
         });
@@ -99,10 +117,39 @@ public class MvKlineView extends RelativeLayout {
                 if (!mJudgeDownBtn.isSelected()) {
                     mJudgeDownBtn.setSelected(true);
                     mJudgeUpBtn.setEnabled(false);
-                    v.postDelayed(new ResumeTask(), 1000);
+                    if (mFocusedPoint.getType() == KData.TYPE_SHORT) {
+                        onRightAnswerSelected();
+                        // TODO: 20/08/2017 显示答对的提示控件
+                        v.postDelayed(new ResumeTask(), 1000);
+                    } else {
+                        // TODO: 20/08/2017 显示答错的提示控件
+                        onWrongAnswerSelected();
+                    }
                 }
             }
         });
+    }
+
+    private void onWrongAnswerSelected() {
+        if (mOnAnswerSelectedListener != null) {
+            mOnAnswerSelectedListener.onWrongAnswerSelected(mFocusedPoint.getAnalysis());
+        }
+    }
+
+    private void onRightAnswerSelected() {
+        mRightAnswers++;
+        float accuracy = mRightAnswers * 1.0f / mIntersectionPointArray.size();
+        if (mOnAnswerSelectedListener != null) {
+            mOnAnswerSelectedListener.onRightAnswerSelected(accuracy);
+        }
+    }
+
+    public void setOnAnswerSelectedListener(OnAnswerSelectedListener onAnswerSelectedListener) {
+        mOnAnswerSelectedListener = onAnswerSelectedListener;
+    }
+
+    public void resume() {
+        post(new ResumeTask());
     }
 
     private class ResumeTask implements Runnable {
