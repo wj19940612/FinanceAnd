@@ -74,6 +74,30 @@ public class SecurityUtil {
         }
     }
 
+    /**
+     * 使用AES算法加密字符串.
+     *
+     * @param message 要加密的字符串.
+     *                rawKey  密钥字符串, 要求为一个32位(或64位，或128位)的16进制数的字符串,否则会出错.
+     *                可以使用{@link #AESKey()}方法生成一个密钥,
+     * @return 加密之后的字符串
+     * @see #AESDecrypt(String, String)
+     */
+
+    public static String AESEncrypt(String message) {
+        byte[] key = Str2Byte(AES_SECRET_KEY);
+        try {
+            SecretKeySpec sks = new SecretKeySpec(key, "AES");
+            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM_CBC);
+            cipher.init(Cipher.ENCRYPT_MODE, sks, new IvParameterSpec(getIV()));
+            byte[] encrypted = cipher.doFinal(message.getBytes());
+
+            return byte2Str(encrypted);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static String AESDecrypt(String encrypted) {
         byte[] tmp = Str2Byte(encrypted);
         byte[] key = Str2Byte(AES_SECRET_KEY);
