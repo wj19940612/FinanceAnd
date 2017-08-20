@@ -66,6 +66,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private static final int REQ_COMMENT = 1001;
 	private static final int REQ_COMMENT_LOGIN = 1002;
 	private static final int REQ_REWARD_LOGIN = 1003;
+	public static final int PRAISE_SUCCESS = 1004;
+	public static final int COMMENT_REPLY_SUCCESS = 1005;
+	public static final int VOICE_SUCCESS = 1006;
 
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
@@ -429,6 +432,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 									mQuestionDetail.setPriseCount(praiseCount);
 								}
 								mLoveNumber.setText(getString(R.string.love_miss, StrFormatter.getFormatCount(praiseCount)));
+
+								Intent intent = new Intent();
+								intent.putExtra(Launcher.EX_PAYLOAD, prise);
+								intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId());
+								setResult(PRAISE_SUCCESS, intent);
 							}
 						}).fire();
 					} else {
@@ -566,7 +574,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
 	}
 
-
 	private class RefreshReceiver extends BroadcastReceiver {
 
 		@Override
@@ -586,5 +593,14 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(rewardCount)));
 			}
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent();
+		intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId());
+		intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionDetail.getReplyCount());
+		setResult(COMMENT_REPLY_SUCCESS, intent);
+		super.onBackPressed();
 	}
 }

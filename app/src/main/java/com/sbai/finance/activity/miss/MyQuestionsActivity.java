@@ -52,6 +52,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.sbai.finance.activity.miss.QuestionDetailActivity.COMMENT_REPLY_SUCCESS;
+import static com.sbai.finance.activity.miss.QuestionDetailActivity.PRAISE_SUCCESS;
+
 
 /**
  * 我的提问页面
@@ -274,7 +277,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		Question item = (Question) parent.getItemAtPosition(position);
 		if (item != null && item.getSolve() == 1) {
 			Launcher.with(getActivity(), QuestionDetailActivity.class)
-					.putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
+					.putExtra(Launcher.EX_PAYLOAD, item.getId()).executeForResult(REQ_QUESTION_DETAIL);
 		}
 	}
 
@@ -476,6 +479,41 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 						}
 					}
 				});
+			}
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQ_QUESTION_DETAIL && resultCode == PRAISE_SUCCESS) {
+			if (data!= null) {
+				Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+				for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+					Question question = mMyQuestionAdapter.getItem(i);
+					if (question != null) {
+						if (question.getId() == data.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
+							question.setIsPrise(prise.getIsPrise());
+							question.setPriseCount(prise.getPriseCount());
+							mMyQuestionAdapter.notifyDataSetChanged();
+						}
+					}
+				}
+			}
+		}
+
+		if (requestCode == REQ_QUESTION_DETAIL && resultCode == COMMENT_REPLY_SUCCESS) {
+			if (data!= null) {
+				int replyCount  = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+				for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+					Question question = mMyQuestionAdapter.getItem(i);
+					if (question != null) {
+						if (question.getId() == data.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
+							question.setReplyCount(replyCount);
+							mMyQuestionAdapter.notifyDataSetChanged();
+						}
+					}
+				}
 			}
 		}
 	}
