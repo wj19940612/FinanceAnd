@@ -16,7 +16,7 @@ import java.lang.ref.WeakReference;
 public class OverLayer extends View {
 
     private static final int LINE = 7;
-    private static final int DENSITY = 1000;
+    private static final int LAYER_PIECES = 1000;
     private static final int MARGIN_BOTTOM_DP = 30; // because kline has a 30dp height timeline area
     private static final int BUTTONS_AREA_WIDTH = 80; //dp
     private SparseArray<Kline.IntersectionPoint> mIntersectionPointArray;
@@ -31,6 +31,7 @@ public class OverLayer extends View {
     private boolean mStarted;
     private int mNextStopIndex;
     private OnFocusIntersectionPointListener mOnFocusIntersectionPointListener;
+    private long mRefreshSchedule;
 
     public interface OnFocusIntersectionPointListener {
         void onFocus(Kline.IntersectionPoint point);
@@ -44,17 +45,20 @@ public class OverLayer extends View {
         mButtonsAreaWidth = dp2Px(BUTTONS_AREA_WIDTH);
         mMarginBottom = dp2Px(MARGIN_BOTTOM_DP);
 
-        mHandler = new RedrawHandler(this);
+        mRefreshSchedule = 30;
+        mHandler = new RedrawHandler(this, mRefreshSchedule);
         mNextStopIndex = 0;
     }
 
     private static class RedrawHandler extends Handler {
         private WeakReference<View> mRefs;
         private int mCounter;
+        private long mRefreshSchedule;
 
-        public RedrawHandler(View view) {
+        public RedrawHandler(View view, long refreshSchedule) {
             mRefs = new WeakReference<>(view);
             mCounter = 0;
+            mRefreshSchedule = refreshSchedule;
         }
 
         @Override
@@ -62,7 +66,7 @@ public class OverLayer extends View {
             View view = mRefs.get();
             if (view != null) {
                 mCounter++;
-                view.postInvalidateDelayed(30);
+                view.postInvalidateDelayed(mRefreshSchedule);
             }
         }
 
@@ -82,7 +86,7 @@ public class OverLayer extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        float startX = mHandler.getCounter() * 1.0f / DENSITY * getWidth();
+        float startX = mHandler.getCounter() * (getLayerWidth() / LAYER_PIECES) ;
         drawBackground(startX, canvas);
         drawBaseLines(startX, canvas);
 
@@ -94,7 +98,7 @@ public class OverLayer extends View {
             }
         }
 
-        if (mHandler.getCounter() < DENSITY && mStarted) {
+        if (mHandler.getCounter() < LAYER_PIECES && mStarted) {
             mHandler.sendEmptyMessage(0);
         }
     }
@@ -102,15 +106,23 @@ public class OverLayer extends View {
     private void drawBackground(float startX, Canvas canvas) {
         sPaint.setColor(Color.parseColor("#222222"));
         sPaint.setStyle(Paint.Style.FILL);
-        sRectF.set(startX, 0, getWidth() - mButtonsAreaWidth, getHeight() - mMarginBottom);
+        sRectF.set(startX, 0, getLayerWidth(), getLayerHeight());
 
         canvas.drawRect(sRectF, sPaint);
     }
 
+    private float getLayerWidth() {
+        return getWidth() - mButtonsAreaWidth;
+    }
+
+    private float getLayerHeight() {
+        return getHeight() - mMarginBottom;
+    }
+
     private void drawBaseLines(float startX, Canvas canvas) {
-        float verticalInterval = (getHeight() - mMarginBottom) / (LINE - 1);
+        float verticalInterval = getLayerHeight() / (LINE - 1);
         float topY = 0;
-        float stopX = getWidth() - mButtonsAreaWidth;
+        float stopX = getLayerWidth();
         for (int i = 0; i < LINE; i++) {
             sPaint.setColor(Color.parseColor("#2a2a2a"));
             sPaint.setStyle(Paint.Style.STROKE);
@@ -134,6 +146,10 @@ public class OverLayer extends View {
     public void stop() {
         mStarted = false;
         mHandler.removeCallbacksAndMessages(null);
+    }
+
+    public void setDurationTime(long durationTime) {
+        mRefreshSchedule = durationTime / LAYER_PIECES;
     }
 
     private void onFocusIntersectionPoint(Kline.IntersectionPoint point) {

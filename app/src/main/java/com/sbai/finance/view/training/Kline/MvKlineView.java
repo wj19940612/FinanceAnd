@@ -7,7 +7,9 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.sbai.chart.ChartSettings;
@@ -32,6 +34,8 @@ public class MvKlineView extends RelativeLayout {
     private Kline.IntersectionPoint mFocusedPoint;
     private OnAnswerSelectedListener mOnAnswerSelectedListener;
     private int mRightAnswers;
+    private ImageView mFocusView;
+    private PopupWindow mHintView;
 
     public interface OnAnswerSelectedListener {
 
@@ -81,6 +85,8 @@ public class MvKlineView extends RelativeLayout {
                 mJudgeUpBtn.setEnabled(true);
                 mJudgeDownBtn.setEnabled(true);
                 mFocusedPoint = point;
+
+                translateFocusView();
             }
         });
         addView(mOverLayer, params);
@@ -97,7 +103,7 @@ public class MvKlineView extends RelativeLayout {
         mJudgeUpBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mJudgeUpBtn.isSelected()){
+                if (!mJudgeUpBtn.isSelected()) {
                     mJudgeUpBtn.setSelected(true);
                     mJudgeDownBtn.setEnabled(false);
                     if (mFocusedPoint.getType() == KData.TYPE_LONG) {
@@ -128,6 +134,28 @@ public class MvKlineView extends RelativeLayout {
                 }
             }
         });
+
+        mFocusView = new ImageView(getContext());
+        mFocusView.setImageResource(R.drawable.ic_judge_focus);
+        mFocusView.setVisibility(INVISIBLE);
+        addView(mFocusView);
+    }
+
+    private void translateFocusView() {
+        mFocusView.setTranslationX(mFocusedPoint.getPoint().x - mFocusView.getWidth() / 2);
+        mFocusView.setTranslationY(mFocusedPoint.getPoint().y - mFocusView.getHeight() / 2);
+        showFocusView();
+    }
+
+    private void showFocusView() {
+        mFocusView.setVisibility(VISIBLE);
+        mFocusView.setAlpha(0f);
+        mFocusView.setScaleX(3f);
+        mFocusView.setScaleY(3f);
+        mFocusView.animate()
+                .alpha(1).scaleX(1).scaleY(1)
+                .setDuration(250)
+                .start();
     }
 
     private void onWrongAnswerSelected() {
@@ -152,6 +180,10 @@ public class MvKlineView extends RelativeLayout {
         post(new ResumeTask());
     }
 
+    public void setDurationTime(long milliseconds) {
+        mOverLayer.setDurationTime(milliseconds);
+    }
+
     private class ResumeTask implements Runnable {
 
         @Override
@@ -160,6 +192,7 @@ public class MvKlineView extends RelativeLayout {
             mJudgeUpBtn.setSelected(false);
             mJudgeDownBtn.setEnabled(false);
             mJudgeDownBtn.setSelected(false);
+            mFocusView.setVisibility(INVISIBLE);
             mOverLayer.start();
         }
     }

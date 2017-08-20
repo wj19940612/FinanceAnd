@@ -2,6 +2,7 @@ package com.sbai.finance.activity.training;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,6 +17,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.question.KData;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.view.training.Kline.MvKlineView;
@@ -54,6 +56,7 @@ public class JudgeTrainingActivity extends BaseActivity {
 
     private Training mTraining;
     private Question<KData> mQuestion;
+    private CountDownTimer mCountDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,7 @@ public class JudgeTrainingActivity extends BaseActivity {
                 mKnowledge.setText(analysis);
             }
         });
+        mKlineView.setDurationTime(mTraining.getTime() * 1000 / 3); // seconds to milliseconds
         mKlineView.setDataList(mQuestion.getContent());
 
         Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
@@ -84,6 +88,19 @@ public class JudgeTrainingActivity extends BaseActivity {
                 .placeholder(R.drawable.ic_default_avatar_big)
                 .into(mUserPortrait);
         mUsername.setText(LocalUser.getUser().getUserInfo().getUserName());
+
+        mCountDownTimer = new CountDownTimer(mTraining.getTime() * 1000, 1) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long pastTime = mTraining.getTime() * 1000 - millisUntilFinished;
+                mTimer.setText(DateUtil.format(pastTime, "mm:ss.SS"));
+            }
+
+            @Override
+            public void onFinish() {
+                // TODO: 20/08/2017 跳转结果页面
+            }
+        }.start();
     }
 
     private void initData(Intent intent) {
@@ -103,6 +120,14 @@ public class JudgeTrainingActivity extends BaseActivity {
                 mKnowledgeArea.setVisibility(View.GONE);
                 mKlineView.resume();
                 break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
         }
     }
 

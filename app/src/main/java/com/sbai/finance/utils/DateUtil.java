@@ -560,37 +560,36 @@ public class DateUtil {
 
 
     /**
-     * string类型转换为long类型  strTime的时间格式和formatType的时间格式必须相同
+     * string 类型转换为 long 类型  strTime 的时间格式和 formatType 的时间格式必须相同
      *
-     * @param strTime    要转换的String类型的时间
-     * @param formatType 时间格式
+     * @param time
+     * @param fromFormat 时间格式
      * @return
      * @throws ParseException
      */
-    public static long stringToLong(String strTime, String formatType) {
-        Date date = stringToDate(strTime, formatType); // String类型转成date类型
+    public static long convertString2Long(String time, String fromFormat) {
+        Date date = convertString2Date(time, fromFormat); // String类型转成date类型
         if (date == null) {
             return 0;
         } else {
-            long currentTime = dateToLong(date); // date类型转成long类型
-            return currentTime;
+            return date.getTime();
         }
     }
 
 
     /**
-     * string类型转换为date类型
+     * string 类型转换为 date 类型
      *
-     * @param strTime    要转换的string类型的时间
-     * @param formatType 要转换的格式yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日
+     * @param time
+     * @param fromFormat 要转换的格式 yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日
      * @return
      * @throws ParseException
      */
-    public static Date stringToDate(String strTime, String formatType) {
-        SimpleDateFormat formatter = new SimpleDateFormat(formatType);
+    public static Date convertString2Date(String time, String fromFormat) {
+        SimpleDateFormat formatter = new SimpleDateFormat(fromFormat);
         Date date = null;
         try {
-            date = formatter.parse(strTime);
+            date = formatter.parse(time);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -636,10 +635,6 @@ public class DateUtil {
                 return "四";
         }
         return "";
-    }
-
-    public static long dateToLong(Date date) {
-        return date.getTime();
     }
 
     //return xx:xx

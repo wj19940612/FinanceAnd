@@ -53,4 +53,5 @@ public class AnimUtils {
         animation.setAnimationListener(listener);
         return animation;
     }
+
 }
