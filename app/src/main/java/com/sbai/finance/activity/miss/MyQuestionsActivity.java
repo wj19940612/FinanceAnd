@@ -29,9 +29,9 @@ import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.Prise;
 import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -51,9 +51,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.sbai.finance.activity.miss.QuestionDetailActivity.COMMENT_REPLY_SUCCESS;
-import static com.sbai.finance.activity.miss.QuestionDetailActivity.PRAISE_SUCCESS;
 
 
 /**
@@ -486,31 +483,57 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == REQ_QUESTION_DETAIL && resultCode == PRAISE_SUCCESS) {
+		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
 			if (data!= null) {
 				Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-				for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
-					Question question = mMyQuestionAdapter.getItem(i);
-					if (question != null) {
-						if (question.getId() == data.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
-							question.setIsPrise(prise.getIsPrise());
-							question.setPriseCount(prise.getPriseCount());
-							mMyQuestionAdapter.notifyDataSetChanged();
+				int replyCount  = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+				int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+				int listenCount = data.getIntExtra(Launcher.EX_PAYLOAD_3, -1);
+				if (prise != null) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setIsPrise(prise.getIsPrise());
+								question.setPriseCount(prise.getPriseCount());
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
 						}
 					}
 				}
-			}
-		}
 
-		if (requestCode == REQ_QUESTION_DETAIL && resultCode == COMMENT_REPLY_SUCCESS) {
-			if (data!= null) {
-				int replyCount  = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
-				for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
-					Question question = mMyQuestionAdapter.getItem(i);
-					if (question != null) {
-						if (question.getId() == data.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
-							question.setReplyCount(replyCount);
-							mMyQuestionAdapter.notifyDataSetChanged();
+				if (replyCount != -1) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setReplyCount(replyCount);
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
+				if (rewardCount != -1) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setAwardCount(rewardCount);
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
+				if (listenCount != -1) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setListenCount(listenCount);
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
 						}
 					}
 				}

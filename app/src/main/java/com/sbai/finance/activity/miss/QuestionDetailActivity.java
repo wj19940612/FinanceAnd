@@ -66,9 +66,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private static final int REQ_COMMENT = 1001;
 	private static final int REQ_COMMENT_LOGIN = 1002;
 	private static final int REQ_REWARD_LOGIN = 1003;
-	public static final int PRAISE_SUCCESS = 1004;
-	public static final int COMMENT_REPLY_SUCCESS = 1005;
-	public static final int VOICE_SUCCESS = 1006;
 
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
@@ -132,6 +129,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private RefreshReceiver mRefreshReceiver;
 	private MediaPlayerManager mMediaPlayerManager;
 	private int mPlayingID;
+	private Prise mPrise;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -421,6 +419,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 							@Override
 							protected void onRespSuccessData(Prise prise) {
+								mPrise = prise;
 								int praiseCount;
 								if (prise.getIsPrise() == 0) {
 									mLoveImage.setImageResource(R.drawable.ic_miss_love);
@@ -432,11 +431,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 									mQuestionDetail.setPriseCount(praiseCount);
 								}
 								mLoveNumber.setText(getString(R.string.love_miss, StrFormatter.getFormatCount(praiseCount)));
-
-								Intent intent = new Intent();
-								intent.putExtra(Launcher.EX_PAYLOAD, prise);
-								intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId());
-								setResult(PRAISE_SUCCESS, intent);
 							}
 						}).fire();
 					} else {
@@ -598,9 +592,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent();
-		intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId());
-		intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionDetail.getReplyCount());
-		setResult(COMMENT_REPLY_SUCCESS, intent);
+		intent.putExtra(Launcher.QUESTION_ID, mQuestionDetail.getId());
+		intent.putExtra(Launcher.EX_PAYLOAD, mPrise);
+		intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getReplyCount());
+		intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionDetail.getAwardCount());
+		intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionDetail.getListenCount());
+		setResult(RESULT_OK, intent);
 		super.onBackPressed();
 	}
 }

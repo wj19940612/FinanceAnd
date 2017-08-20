@@ -72,6 +72,7 @@ import static android.app.Activity.RESULT_OK;
 import static com.sbai.finance.R.id.missAvatar;
 import static com.sbai.finance.R.id.recyclerView;
 import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
+import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
 public class MissTalkFragment extends BaseFragment implements View.OnClickListener {
 
@@ -188,8 +189,9 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Question item = (Question) parent.getItemAtPosition(position);
 				if (item != null) {
-					Launcher.with(getActivity(), QuestionDetailActivity.class)
-							.putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
+					Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
+					intent.putExtra(Launcher.EX_PAYLOAD, item.getId());
+					startActivityForResult(intent, REQ_QUESTION_DETAIL);
 				}
 			}
 		});
@@ -287,8 +289,9 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Question item = (Question) parent.getItemAtPosition(position);
 				if (item != null) {
-					Launcher.with(getActivity(), QuestionDetailActivity.class)
-							.putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
+					Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
+					intent.putExtra(Launcher.EX_PAYLOAD, item.getId());
+					startActivityForResult(intent, REQ_QUESTION_DETAIL);
 				}
 			}
 		});
@@ -1117,6 +1120,104 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 
 		if (requestCode == MESSAGE && resultCode == RESULT_OK) {
 			Launcher.with(getActivity(), MessagesActivity.class).execute();
+		}
+
+		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
+			if (data!= null) {
+				Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+				int replyCount  = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+				int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+				int listenCount = data.getIntExtra(Launcher.EX_PAYLOAD_3, -1);
+				if (prise != null) {
+					for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
+						Question question = mHotQuestionListAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setIsPrise(prise.getIsPrise());
+								question.setPriseCount(prise.getPriseCount());
+								mHotQuestionListAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+
+					for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
+						Question question = mLatestQuestionListAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setIsPrise(prise.getIsPrise());
+								question.setPriseCount(prise.getPriseCount());
+								mLatestQuestionListAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
+				if (replyCount != -1) {
+					for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
+						Question question = mHotQuestionListAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setReplyCount(replyCount);
+								mHotQuestionListAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+
+					for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
+						Question question = mLatestQuestionListAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setReplyCount(replyCount);
+								mLatestQuestionListAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
+				if (rewardCount != -1) {
+					for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
+						Question question = mHotQuestionListAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setAwardCount(rewardCount);
+								mHotQuestionListAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+
+					for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
+						Question question = mLatestQuestionListAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setAwardCount(rewardCount);
+								mLatestQuestionListAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
+				if (listenCount != -1) {
+					for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
+						Question question = mHotQuestionListAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setListenCount(listenCount);
+								mHotQuestionListAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+
+					for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
+						Question question = mLatestQuestionListAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setListenCount(listenCount);
+								mLatestQuestionListAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 

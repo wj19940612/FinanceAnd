@@ -157,14 +157,16 @@ public class MissProfileActivity extends BaseActivity implements
 							item.setPriseCount(prise.getPriseCount());
 							mHerAnswerAdapter.notifyDataSetChanged();
 							int praiseCount;
-							if (prise.getIsPrise() == 0) {
-								praiseCount = mMiss.getTotalPrise() - 1;
-								mMiss.setTotalPrise(praiseCount);
-							} else {
-								praiseCount = mMiss.getTotalPrise() + 1;
-								mMiss.setTotalPrise(praiseCount);
+							if (mMiss != null) {
+								if (prise.getIsPrise() == 0) {
+									praiseCount = mMiss.getTotalPrise() - 1;
+									mMiss.setTotalPrise(praiseCount);
+								} else {
+									praiseCount = mMiss.getTotalPrise() + 1;
+									mMiss.setTotalPrise(praiseCount);
+								}
+								mLovePeopleNumber.setText(getString(R.string.love_people_number, StrFormatter.getFormatCount(praiseCount)));
 							}
-							mLovePeopleNumber.setText(getString(R.string.love_people_number, StrFormatter.getFormatCount(praiseCount)));
 						}
 					}).fire();
 				} else {
@@ -327,7 +329,7 @@ public class MissProfileActivity extends BaseActivity implements
 		Question item = (Question) parent.getItemAtPosition(position);
 		if (item != null) {
 			Launcher.with(this, QuestionDetailActivity.class)
-					.putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
+					.putExtra(Launcher.EX_PAYLOAD, item.getId()).executeForResult(REQ_QUESTION_DETAIL);
 		}
 	}
 
@@ -659,6 +661,74 @@ public class MissProfileActivity extends BaseActivity implements
 			Launcher.with(getActivity(), SubmitQuestionActivity.class)
 					.putExtra(Launcher.EX_PAYLOAD, mCustomId)
 					.execute();
+		}
+
+		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
+			if (data!= null) {
+				Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+				int replyCount  = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+				int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+				int listenCount = data.getIntExtra(Launcher.EX_PAYLOAD_3, -1);
+				if (prise != null) {
+					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
+						Question question = mHerAnswerAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setIsPrise(prise.getIsPrise());
+								question.setPriseCount(prise.getPriseCount());
+								mHerAnswerAdapter.notifyDataSetChanged();
+								int praiseCount;
+								if (mMiss != null) {
+									if (prise.getIsPrise() == 0) {
+										praiseCount = mMiss.getTotalPrise() - 1;
+										mMiss.setTotalPrise(praiseCount);
+									} else {
+										praiseCount = mMiss.getTotalPrise() + 1;
+										mMiss.setTotalPrise(praiseCount);
+									}
+									mLovePeopleNumber.setText(getString(R.string.love_people_number, StrFormatter.getFormatCount(praiseCount)));
+								}
+							}
+						}
+					}
+				}
+
+				if (replyCount != -1) {
+					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
+						Question question = mHerAnswerAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setReplyCount(replyCount);
+								mHerAnswerAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
+				if (rewardCount != -1) {
+					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
+						Question question = mHerAnswerAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setAwardCount(rewardCount);
+								mHerAnswerAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
+				if (listenCount != -1) {
+					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
+						Question question = mHerAnswerAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setListenCount(listenCount);
+								mHerAnswerAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 

@@ -77,18 +77,18 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     private float mDownY;
     private float mDx;
     private float mDy;
-    private Rect mRect;
-    private Rect mImageRect;
+    private Rect mCardRect;
+    private Rect mStarImageRect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_noun_explanation);
         ButterKnife.bind(this);
-        translucentStatusBar();
-        mImageRect = new Rect();
-        mRect = new Rect();
         initData(getIntent());
+        translucentStatusBar();
+        mStarImageRect = new Rect();
+        mCardRect = new Rect();
         mFragments = getFragments();
         initViewPager();
         initStar();
@@ -113,7 +113,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
         List<Fragment> mFragments = new ArrayList<>();
         for (int i = 0; i < mNewNounExplanationList.size(); i++) {
             mFragments.add(ExplanationFragment.newInstance(mNewNounExplanationList.get(i).getKey().getContent(),
-                    mNewNounExplanationList.get(i).getKey().getSeq(), i));
+                    mNewNounExplanationList.get(i).getKey().getSeq()));
         }
         return mFragments;
     }
@@ -127,7 +127,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
         mViewPager.post(new Runnable() {
             @Override
             public void run() {
-                mViewPager.getHitRect(mRect);
+                mViewPager.getHitRect(mCardRect);
             }
         });
     }
@@ -251,8 +251,8 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     }
 
     private boolean starIsInside(View view) {
-        view.getHitRect(mImageRect);
-        return mRect.contains(mImageRect);
+        view.getHitRect(mStarImageRect);
+        return mStarImageRect.contains(mStarImageRect);
     }
 
     private void matchAnswer(View view) {

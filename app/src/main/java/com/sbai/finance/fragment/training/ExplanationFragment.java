@@ -25,13 +25,11 @@ public class ExplanationFragment extends Fragment {
 
 	private String mText;
 	private int mTag;
-	private int mStar;
 
-	public static ExplanationFragment newInstance(String explanation, int tag, int star) {
+	public static ExplanationFragment newInstance(String explanation, int tag) {
 		Bundle args = new Bundle();
 		args.putString("explanation", explanation);
 		args.putInt("tag", tag);
-		args.putInt("star", star);
 		ExplanationFragment fragment = new ExplanationFragment();
 		fragment.setArguments(args);
 		return fragment;
@@ -43,7 +41,6 @@ public class ExplanationFragment extends Fragment {
 		if (getArguments() != null) {
 			mText = getArguments().getString("explanation");
 			mTag = getArguments().getInt("tag");
-			mStar = getArguments().getInt("star");
 		}
 	}
 
@@ -52,29 +49,8 @@ public class ExplanationFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_explanation, container, false);
 		unbinder = ButterKnife.bind(this, view);
-		initView();
-		return view;
-	}
-
-	private void initView() {
 		mExplanation.setText(mText);
-		switch (mStar) {
-			case 0:
-				mStarImage.setImageResource(R.drawable.ic_star_1s);
-				break;
-			case 1:
-				mStarImage.setImageResource(R.drawable.ic_star_2s);
-				break;
-			case 2:
-				mStarImage.setImageResource(R.drawable.ic_star_3s);
-				break;
-			case 3:
-				mStarImage.setImageResource(R.drawable.ic_star_4s);
-				break;
-			case 4:
-				mStarImage.setImageResource(R.drawable.ic_star_5s);
-				break;
-		}
+		return view;
 	}
 
 	@Override
@@ -85,13 +61,5 @@ public class ExplanationFragment extends Fragment {
 
 	public int getStarTag() {
 		return mTag;
-	}
-
-	public void setStarVisible() {
-		mStarImage.setVisibility(View.VISIBLE);
-	}
-
-	public void setTextInvisible() {
-		mExplanation.setText("");
 	}
 }
