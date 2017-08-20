@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -110,10 +109,14 @@ public class SortQuestionActivity extends BaseActivity {
             Log.d(TAG, "原始: " + result.getContent() + " " + result.getBgPosition());
         }
         initSortQuestionAdapter(mRandRomQuestionResultList);
-        initSortResultAdapter(mRandRomQuestionResultList);
 
-        showResultDialog(true);
-
+        ArrayList<TrainingQuestion.ContentBean> contentBeenList = new ArrayList<>();
+        int size = mWebTrainResult.size();
+        for (int i = 0; i < size; i++) {
+            TrainingQuestion.ContentBean contentBean = new TrainingQuestion.ContentBean();
+            contentBeenList.add(contentBean);
+        }
+        initSortResultAdapter(contentBeenList);
     }
 
     private void createSortQuestionBgDrawables() {
@@ -159,7 +162,9 @@ public class SortQuestionActivity extends BaseActivity {
 
             @Override
             public void onHowPlayClick() {
-                Launcher.with(getActivity(), HowPlayActivity.class).execute();
+                Launcher.with(getActivity(), HowPlayActivity.class)
+                        .putExtra(ExtraKeys.TRAINING, mTraining)
+                        .execute();
             }
 
             @Override
@@ -170,7 +175,7 @@ public class SortQuestionActivity extends BaseActivity {
         });
     }
 
-    private void showResultDialog(boolean isRight) {
+    private void showResultDialog(final boolean isRight) {
 
         SortTrainResultDialog sortTrainResultDialog = new SortTrainResultDialog(this);
         sortTrainResultDialog.show();
@@ -179,28 +184,35 @@ public class SortQuestionActivity extends BaseActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 dialog.dismiss();
-                // TODO: 2017/8/19 跳转至结果页
+                openTrainingResultPage(isRight);
             }
         });
         sortTrainResultDialog.setOnCompleteBtnClickListener(new SortTrainResultDialog.OnCompleteBtnClickListener() {
             @Override
             public void onClick() {
-
+                openTrainingResultPage(isRight);
             }
         });
+    }
+
+    private void openTrainingResultPage(boolean isRight) {
+        // TODO: 2017/8/19 跳转至结果页
+
     }
 
     private void initSortResultAdapter(List<TrainingQuestion.ContentBean> content) {
         mSortResultAdapter = new SortResultAdapter(new ArrayList<TrainingQuestion.ContentBean>(), this);
         mSortResultRecycleView.setLayoutManager(new LinearLayoutManager(this));
         mSortResultRecycleView.setAdapter(mSortResultAdapter);
-        mSortResultRecycleView.setItemAnimator(new DefaultItemAnimator());
+        mSortResultRecycleView.setItemAnimator(null);
         mSortResultAdapter.setItemBgColors(mResultBgColors);
         mSortResultAdapter.addData(content);
         mSortResultAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(TrainingQuestion.ContentBean data, int position) {
-                updateResult(data, position);
+                if (data.isSelect()) {
+                    updateResult(data, position);
+                }
             }
         });
 
@@ -210,7 +222,15 @@ public class SortQuestionActivity extends BaseActivity {
         data.setSelect(false);
         mResultSet.remove(position);
         mSortResultAdapter.notifyItemChanged(position, data);
-        mSortQuestionAdapter.insert(0, data);
+
+        TrainingQuestion.ContentBean contentBean = new TrainingQuestion.ContentBean();
+        contentBean.setId(data.getId());
+        contentBean.setContent(data.getContent());
+        contentBean.setBgPosition(data.getBgPosition());
+        contentBean.setSelect(false);
+        contentBean.setSeq(data.getSeq());
+
+        mSortQuestionAdapter.insert(0, contentBean);
         mSortQuestionRecyclerView.scrollToPosition(0);
     }
 
@@ -219,7 +239,7 @@ public class SortQuestionActivity extends BaseActivity {
         mSortQuestionAdapter.setItemBgDrawables(mSortQuestionBgDrawables);
         mSortQuestionRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mSortQuestionRecyclerView.setAdapter(mSortQuestionAdapter);
-        mSortQuestionRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mSortQuestionRecyclerView.setItemAnimator(null);
         mSortQuestionAdapter.addData(content);
 
         mSortQuestionAdapter.setOnItemClickListener(new OnItemClickListener() {
@@ -232,9 +252,6 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
     private void chooseResult(int position, TrainingQuestion.ContentBean data) {
-
-        Log.d(TAG, "选中: " + data.getContent() + " 索引 " + position + "  " + data.getId());
-
         List<TrainingQuestion.ContentBean> resultData = mSortResultAdapter.getResultData();
         for (int i = 0; i < resultData.size(); i++) {
             if (mResultSet.add(i)) {
@@ -274,15 +291,16 @@ public class SortQuestionActivity extends BaseActivity {
         } else {
             for (int i = 0; i < mWebTrainResult.size(); i++) {
                 TrainingQuestion.ContentBean chooseResult = mWebTrainResult.get(i);
-                TrainingQuestion.ContentBean randRomResult = mRandRomQuestionResultList.get(i);
+                TrainingQuestion.ContentBean randRomResult = resultData.get(i);
                 if (chooseResult == null ||
                         randRomResult == null ||
-                        chooseResult.getId() == randRomResult.getId()) {
+                        chooseResult.getId() != randRomResult.getId()) {
                     isRight = false;
                     break;
                 }
             }
         }
+        Log.d(TAG, "onViewClicked: " + isRight);
         startResultListScaleAnimation(isRight);
     }
 
@@ -332,15 +350,10 @@ public class SortQuestionActivity extends BaseActivity {
 
         public void notifyItemRemovedData(int position, TrainingQuestion.ContentBean result) {
 
-            TrainingQuestion.ContentBean contentBean = mSortQuestionList.get(position);
-            Log.d("SortQu", "list 数据: " + contentBean.getContent() + "  " + contentBean.getId());
-
-            mSortQuestionList.remove(position);
-            this.notifyItemRemoved(position);
-            this.notifyItemRangeChanged(position, 1);
-
-            for (int i = 0; i < mSortQuestionList.size(); i++) {
-                Log.d("SortQues", "移除后数据: " + mSortQuestionList.get(i).getContent());
+            if (position < mSortQuestionList.size()) {
+                mSortQuestionList.remove(position);
+                this.notifyItemRemoved(position);
+                this.notifyItemRangeChanged(position, getItemCount());
             }
 
         }
@@ -446,10 +459,8 @@ public class SortQuestionActivity extends BaseActivity {
         }
 
         public void changeItemData(int position, TrainingQuestion.ContentBean data) {
-            Log.d(TAG, "changeItemData: " + position + "  " + mSortResultList.size());
             if (position <= mSortResultList.size()) {
-                data.setSelect(true);
-                this.notifyItemChanged(position, data);
+                notifyItemChanged(position, data);
             }
         }
 
