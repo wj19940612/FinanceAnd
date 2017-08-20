@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.training;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -57,6 +58,12 @@ public class JudgeTrainingActivity extends BaseActivity {
     private Training mTraining;
     private Question<KData> mQuestion;
     private CountDownTimer mCountDownTimer;
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

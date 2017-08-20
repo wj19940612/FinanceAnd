@@ -98,14 +98,14 @@ public class OverLayer extends View {
                 mHandler.sendEmptyMessage(0); // keep remove piece
             }
         } else {
-            
+
         }
     }
 
     private void checkIntersectionPoint(float startX) {
         if (mStarted && mNextStopIndex < mIntersectionPointArray.size()) {
             Kline.IntersectionPoint point = mIntersectionPointArray.valueAt(mNextStopIndex);
-            if (startX > point.getPoint().x) {
+            if (startX > point.getPoint().x && point.getPoint().x > 0) {
                 mNextStopIndex++;
 
                 stop();
