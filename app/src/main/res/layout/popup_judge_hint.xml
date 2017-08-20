@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              tools:background="@color/blackPrimary">
+
+    <TextView
+        android:id="@+id/hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_judge_hint"
+        android:gravity="center_horizontal"
+        android:paddingTop="8dp"
+        android:text="@string/forecast_up_down"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"/>
+</LinearLayout>

@@ -773,4 +773,7 @@
     <string name="ma30_chinese">30日移动平均线</string>
     <string name="knowledge">小知识</string>
     <string name="i_see">知道了</string>
+    <string name="forecast_up_down">预测一下涨跌吧</string>
+    <string name="judge_right">Nice~正确</string>
+    <string name="judge_wrong">ohoh～错了</string>
 </resources>

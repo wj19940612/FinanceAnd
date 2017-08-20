@@ -1,16 +1,21 @@
 package com.sbai.finance.view.training.Kline;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.sbai.chart.ChartSettings;
 import com.sbai.chart.domain.KlineViewData;
@@ -54,6 +59,14 @@ public class MvKlineView extends RelativeLayout {
         init();
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (mOverLayer != null && !mOverLayer.isStarted()) {
+            mOverLayer.start();
+        }
+    }
+
     private void init() {
         mIntersectionPointArray = new SparseArray<>();
 
@@ -67,12 +80,6 @@ public class MvKlineView extends RelativeLayout {
         mSettings.setMovingAverages(new int[]{5, 30});
         mKline.setSettings(mSettings);
         mKline.setIntersectionPointArray(mIntersectionPointArray);
-        mKline.setOnDrawCompletedListener(new Kline.OnDrawCompletedListener() {
-            @Override
-            public void onDrawCompleted() {
-                mOverLayer.start();
-            }
-        });
         addView(mKline, params);
 
         params = new LayoutParams(LayoutParams.MATCH_PARENT,
@@ -87,6 +94,8 @@ public class MvKlineView extends RelativeLayout {
                 mFocusedPoint = point;
 
                 translateFocusView();
+                showHintView();
+                updateHint(R.string.forecast_up_down);
             }
         });
         addView(mOverLayer, params);
@@ -108,10 +117,12 @@ public class MvKlineView extends RelativeLayout {
                     mJudgeDownBtn.setEnabled(false);
                     if (mFocusedPoint.getType() == KData.TYPE_LONG) {
                         onRightAnswerSelected();
-                        // TODO: 20/08/2017 显示答对的提示控件
+                        showHintView();
+                        updateHint(R.string.judge_right);
                         v.postDelayed(new ResumeTask(), 1000);
                     } else {
-                        // TODO: 20/08/2017 显示答错的提示控件
+                        showHintView();
+                        updateHint(R.string.judge_wrong);
                         onWrongAnswerSelected();
                     }
                 }
@@ -125,10 +136,12 @@ public class MvKlineView extends RelativeLayout {
                     mJudgeUpBtn.setEnabled(false);
                     if (mFocusedPoint.getType() == KData.TYPE_SHORT) {
                         onRightAnswerSelected();
-                        // TODO: 20/08/2017 显示答对的提示控件
+                        showHintView();
+                        updateHint(R.string.judge_right);
                         v.postDelayed(new ResumeTask(), 1000);
                     } else {
-                        // TODO: 20/08/2017 显示答错的提示控件
+                        showHintView();
+                        updateHint(R.string.judge_wrong);
                         onWrongAnswerSelected();
                     }
                 }
@@ -139,6 +152,43 @@ public class MvKlineView extends RelativeLayout {
         mFocusView.setImageResource(R.drawable.ic_judge_focus);
         mFocusView.setVisibility(INVISIBLE);
         addView(mFocusView);
+
+        initHintView();
+    }
+
+    private void initHintView() {
+        View popupView = LayoutInflater.from(getContext()).inflate(R.layout.popup_judge_hint, null);
+        mHintView = new PopupWindow(popupView,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT);
+        mHintView.setOutsideTouchable(false);
+        mHintView.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
+        mHintView.setClippingEnabled(true);
+    }
+
+    private void showHintView() {
+        if (mHintView.isShowing()) {
+            mHintView.dismiss();
+        }
+
+        if (!mHintView.isShowing()) {
+            View popupView = mHintView.getContentView();
+            popupView.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+            int[] location = new int[2];
+            getLocationOnScreen(location);
+            int offsetX = (int) (location[0] + mFocusView.getTranslationX()
+                    + mFocusView.getWidth() / 2 - popupView.getMeasuredWidth() / 2);
+            int offsetY = (int) (location[1] + mFocusView.getTranslationY()
+                    - popupView.getMeasuredHeight() - mOverLayer.dp2Px(5));
+            mHintView.showAtLocation(this, Gravity.NO_GRAVITY, offsetX, offsetY);
+        }
+    }
+
+    private void updateHint(int strRes) {
+        View popupView = mHintView.getContentView();
+        TextView hint = (TextView) popupView.findViewById(R.id.hint);
+        hint.setText(strRes);
     }
 
     private void translateFocusView() {
@@ -154,7 +204,7 @@ public class MvKlineView extends RelativeLayout {
         mFocusView.setScaleY(3f);
         mFocusView.animate()
                 .alpha(1).scaleX(1).scaleY(1)
-                .setDuration(250)
+                .setDuration(300)
                 .start();
     }
 
@@ -181,7 +231,7 @@ public class MvKlineView extends RelativeLayout {
     }
 
     public void setDurationTime(long milliseconds) {
-        mOverLayer.setDurationTime(milliseconds);
+        mOverLayer.setAnimTime(milliseconds);
     }
 
     private class ResumeTask implements Runnable {
@@ -193,6 +243,7 @@ public class MvKlineView extends RelativeLayout {
             mJudgeDownBtn.setEnabled(false);
             mJudgeDownBtn.setSelected(false);
             mFocusView.setVisibility(INVISIBLE);
+            mHintView.dismiss();
             mOverLayer.start();
         }
     }

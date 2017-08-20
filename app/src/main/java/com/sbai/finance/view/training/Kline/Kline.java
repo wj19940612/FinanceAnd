@@ -38,11 +38,6 @@ public class Kline extends ChartView {
     private float mButtonsAreaWidth;
     private float mMvWidth;
     private Line[] mLines;
-    private OnDrawCompletedListener mOnDrawCompletedListener;
-
-    public interface OnDrawCompletedListener {
-        void onDrawCompleted();
-    }
 
     protected void setBaseLinePaint(Paint paint) {
         paint.setColor(Color.parseColor("#2a2a2a"));
@@ -235,10 +230,6 @@ public class Kline extends ChartView {
         return mIntersectionPointArray;
     }
 
-    public void setOnDrawCompletedListener(OnDrawCompletedListener onDrawCompletedListener) {
-        mOnDrawCompletedListener = onDrawCompletedListener;
-    }
-
     @Override
     public void setSettings(ChartSettings settings) {
         mSettings = (MvKlineView.Settings) settings;
@@ -249,9 +240,6 @@ public class Kline extends ChartView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         updateIntersectionPointList();
-        if (mOnDrawCompletedListener != null) {
-            mOnDrawCompletedListener.onDrawCompleted();
-        }
 
         for (int i = 0; i < mIntersectionPointArray.size(); i++) {
             sPaint.setColor(Color.parseColor("#ffffff"));

@@ -31,7 +31,6 @@ public class OverLayer extends View {
     private boolean mStarted;
     private int mNextStopIndex;
     private OnFocusIntersectionPointListener mOnFocusIntersectionPointListener;
-    private long mRefreshSchedule;
 
     public interface OnFocusIntersectionPointListener {
         void onFocus(Kline.IntersectionPoint point);
@@ -45,33 +44,35 @@ public class OverLayer extends View {
         mButtonsAreaWidth = dp2Px(BUTTONS_AREA_WIDTH);
         mMarginBottom = dp2Px(MARGIN_BOTTOM_DP);
 
-        mRefreshSchedule = 30;
-        mHandler = new RedrawHandler(this, mRefreshSchedule);
+        mHandler = new RedrawHandler(this);
         mNextStopIndex = 0;
     }
 
     private static class RedrawHandler extends Handler {
         private WeakReference<View> mRefs;
-        private int mCounter;
-        private long mRefreshSchedule;
+        private int mRemovedPieces;
+        private long mRemoveOnePieceTime;
 
-        public RedrawHandler(View view, long refreshSchedule) {
+        public RedrawHandler(View view) {
             mRefs = new WeakReference<>(view);
-            mCounter = 0;
-            mRefreshSchedule = refreshSchedule;
+            mRemovedPieces = 0;
         }
 
         @Override
         public void handleMessage(Message msg) {
             View view = mRefs.get();
             if (view != null) {
-                mCounter++;
-                view.postInvalidateDelayed(mRefreshSchedule);
+                mRemovedPieces++;
+                view.postInvalidateDelayed(30);
             }
         }
 
-        public int getCounter() {
-            return mCounter;
+        public int getRemovedPieces() {
+            return mRemovedPieces;
+        }
+
+        public void setRemoveOnePieceTime(long removeOnePieceTime) {
+            mRemoveOnePieceTime = removeOnePieceTime;
         }
     }
 
@@ -86,20 +87,31 @@ public class OverLayer extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        float startX = mHandler.getCounter() * (getLayerWidth() / LAYER_PIECES) ;
-        drawBackground(startX, canvas);
-        drawBaseLines(startX, canvas);
+        if (mHandler.getRemovedPieces() <= LAYER_PIECES) {
+            float startX = mHandler.getRemovedPieces() * (getLayerWidth() / LAYER_PIECES);
+            drawBackground(startX, canvas);
+            drawBaseLines(startX, canvas);
 
-        if (mNextStopIndex < mIntersectionPointArray.size()) {
+            checkIntersectionPoint(startX);
+
+            if (mStarted) {
+                mHandler.sendEmptyMessage(0); // keep remove piece
+            }
+        } else {
+            
+        }
+    }
+
+    private void checkIntersectionPoint(float startX) {
+        if (mStarted && mNextStopIndex < mIntersectionPointArray.size()) {
             Kline.IntersectionPoint point = mIntersectionPointArray.valueAt(mNextStopIndex);
             if (startX > point.getPoint().x) {
                 mNextStopIndex++;
+
+                stop();
+
                 onFocusIntersectionPoint(point);
             }
-        }
-
-        if (mHandler.getCounter() < LAYER_PIECES && mStarted) {
-            mHandler.sendEmptyMessage(0);
         }
     }
 
@@ -148,13 +160,15 @@ public class OverLayer extends View {
         mHandler.removeCallbacksAndMessages(null);
     }
 
-    public void setDurationTime(long durationTime) {
-        mRefreshSchedule = durationTime / LAYER_PIECES;
+    public boolean isStarted() {
+        return mStarted;
+    }
+
+    public void setAnimTime(long animTime) {
+        mHandler.setRemoveOnePieceTime(animTime / LAYER_PIECES);
     }
 
     private void onFocusIntersectionPoint(Kline.IntersectionPoint point) {
-        stop();
-
         if (mOnFocusIntersectionPointListener != null) {
             mOnFocusIntersectionPointListener.onFocus(point);
         }
