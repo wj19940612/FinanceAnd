@@ -147,7 +147,7 @@ public class TrainingResultActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<TrainingDetail>, TrainingDetail>() {
                     @Override
                     protected void onRespSuccessData(TrainingDetail data) {
-                        if (data.getTargets() != null && !data.getTargets().isEmpty()) {
+                        if (data.getTargets() != null && !data.getTargets().isEmpty() && mTrainingSubmitResult != null) {
                             updateTrainResult(data.getTargets());
                         }
                     }

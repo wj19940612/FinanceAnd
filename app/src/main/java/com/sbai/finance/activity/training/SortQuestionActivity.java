@@ -105,9 +105,6 @@ public class SortQuestionActivity extends BaseActivity {
 
         mRandRomQuestionResultList = mTrainingQuestion.getRandRomResultList();
 
-        for (TrainingQuestion.ContentBean result : mRandRomQuestionResultList) {
-            Log.d(TAG, "原始: " + result.getContent() + " " + result.getBgPosition());
-        }
         initSortQuestionAdapter(mRandRomQuestionResultList);
 
         ArrayList<TrainingQuestion.ContentBean> contentBeenList = new ArrayList<>();
@@ -187,17 +184,11 @@ public class SortQuestionActivity extends BaseActivity {
                 openTrainingResultPage(isRight);
             }
         });
-        sortTrainResultDialog.setOnCompleteBtnClickListener(new SortTrainResultDialog.OnCompleteBtnClickListener() {
-            @Override
-            public void onClick() {
-                openTrainingResultPage(isRight);
-            }
-        });
     }
 
     private void openTrainingResultPage(boolean isRight) {
-        // TODO: 2017/8/19 跳转至结果页
-
+        TrainingResultActivity.show(this, mTraining, (int) mTrainHeaderView.getCountDownTotalChangeTime(), isRight);
+        finish();
     }
 
     private void initSortResultAdapter(List<TrainingQuestion.ContentBean> content) {

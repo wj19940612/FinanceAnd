@@ -8,13 +8,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_white_round_eight_top">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/yellowFundamentalTraining"
+            android:background="@drawable/bg_yellow_round_eight_top"
             android:gravity="center"
             android:minHeight="140dp">
 

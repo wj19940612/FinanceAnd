@@ -15,7 +15,6 @@ import com.sbai.finance.utils.Display;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -59,6 +58,16 @@ public class SortTrainResultDialog extends AppCompatDialog {
         View view = getLayoutInflater().inflate(R.layout.dialog_fragment_sort_training_result, null);
         mBind = ButterKnife.bind(this, view);
         setContentView(view);
+
+        mCompleteTraining.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnCompleteBtnClickListener != null) {
+                    mOnCompleteBtnClickListener.onClick();
+                }
+                SortTrainResultDialog.this.dismiss();
+            }
+        });
     }
 
     @Override
@@ -130,11 +139,4 @@ public class SortTrainResultDialog extends AppCompatDialog {
         return gradient;
     }
 
-    @OnClick(R.id.completeTraining)
-    public void onViewClicked() {
-        if (mOnCompleteBtnClickListener != null) {
-            this.dismiss();
-            mOnCompleteBtnClickListener.onClick();
-        }
-    }
 }
