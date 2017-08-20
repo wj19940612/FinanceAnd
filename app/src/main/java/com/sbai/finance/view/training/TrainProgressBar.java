@@ -5,14 +5,14 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Handler;
-import android.os.Message;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.ProgressBar;
 
 import com.sbai.finance.R;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.FinanceUtil;
 
 /**
  * Created by ${wangJie} on 2017/8/14.
@@ -29,7 +29,6 @@ public class TrainProgressBar extends ProgressBar {
     private float mHintSplitLineWidth;
     private Paint mBoundaryPaint;
     private Paint mHintSplitLinePaint;
-    private int mProgress;
     private float mHintSplitScale;
     private boolean mHasSplitLine;
 
@@ -38,8 +37,6 @@ public class TrainProgressBar extends ProgressBar {
 
     //因为目前的样式差不多，所以设置一个通用的，可以关闭
     private boolean mUseDefaultProgressDrawable;
-    //进度条每隔多久变化一次
-    private int mProgressChangeTime;
 
     private long mProgressTotalTime;
 
@@ -103,22 +100,17 @@ public class TrainProgressBar extends ProgressBar {
 
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if (mTimeHandler != null) {
-            mTimeHandler.removeCallbacksAndMessages(null);
-            mTimeHandler = null;
-        }
+    public void setViewProgress(int progress) {
+        this.setViewProgress(progress, false);
     }
 
 
-    /**
-     * @param time 毫秒级的时间 倒计时将进行time时常
-     */
-    public void setMillisecondTime(long time) {
-        mProgressChangeTime = (int) (time / 100);
-        mTimeHandler.sendEmptyMessageDelayed(0, 0);
+    public void setTotalMinuteTime(long minuteTime) {
+        setTotalSecondTime(minuteTime * 60);
+    }
+
+    public void setTotalMillisecondTime(long time) {
+        mProgressTotalTime = time;
     }
 
     /**
@@ -126,17 +118,25 @@ public class TrainProgressBar extends ProgressBar {
      *
      * @param secondTime
      */
-    public void setSecondTime(long secondTime) {
-        setMillisecondTime(secondTime * 1000);
+    public void setTotalSecondTime(long secondTime) {
+        setTotalMillisecondTime(secondTime * 1000);
     }
 
-    /**
-     * @param minuteTime 多少分钟
-     */
-    public void setMinuteTime(long minuteTime) {
-        setSecondTime(minuteTime * 60);
+    public void setTrainChangeTime(long changeTime) {
+        if (mProgressTotalTime > 0) {
+            double v = FinanceUtil.divide(changeTime, mProgressTotalTime).doubleValue();
+            int progress = FinanceUtil.multiply(v, 100).intValue();
+            this.setViewProgress(progress, false);
+        }
     }
 
+    public void setViewProgress(int progress, boolean animate) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            this.setProgress(progress, animate);
+        } else {
+            this.setProgress(progress);
+        }
+    }
 
     @Override
     protected synchronized void onDraw(Canvas canvas) {
@@ -150,25 +150,5 @@ public class TrainProgressBar extends ProgressBar {
         }
     }
 
-    private Handler mTimeHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (mProgress < 100) {
-                mProgress++;
-                setProgress(mProgress);
-
-                if (mOnProgressCompleteListener != null) {
-                    mOnProgressCompleteListener.onProgressComplete(mProgress);
-                }
-                mTimeHandler.sendEmptyMessageDelayed(0, mProgressChangeTime);
-            } else {
-                mTimeHandler.removeCallbacksAndMessages(null);
-                if (mOnProgressFinishListener != null) {
-                    mOnProgressFinishListener.onProgressFinish();
-                }
-            }
-        }
-    };
 
 }

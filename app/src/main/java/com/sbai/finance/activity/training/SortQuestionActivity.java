@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,13 +27,15 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingQuestion;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.TypefaceUtil;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.SortTrainResultDialog;
-import com.sbai.finance.view.training.TrainHeaderView;
+import com.sbai.finance.view.training.TrainProgressBar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -49,8 +52,7 @@ public class SortQuestionActivity extends BaseActivity {
 
     private static final int DEFAULT_BIG_QUESTION_NUMBER = 8;
 
-    @BindView(R.id.trainHeaderView)
-    TrainHeaderView mTrainHeaderView;
+
     @BindView(R.id.sortQuestionRecyclerView)
     RecyclerView mSortQuestionRecyclerView;
     @BindView(R.id.sortResultRecycleView)
@@ -59,6 +61,10 @@ public class SortQuestionActivity extends BaseActivity {
     ImageView mConfirmAnnals;
     @BindView(R.id.sortResultLL)
     LinearLayout mSortResultLL;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
+    @BindView(R.id.progressBar)
+    TrainProgressBar mProgressBar;
     //用來记录底部界面选择答案的索引
     private HashSet<Integer> mResultSet;
     private TrainingQuestion mTrainingQuestion;
@@ -78,6 +84,10 @@ public class SortQuestionActivity extends BaseActivity {
     private Training mTraining;
     //服务端返回的数据
     private List<TrainingQuestion.ContentBean> mWebTrainResult;
+    private CountDownTimer mCountDownTimer;
+
+    //游戏进行的时间
+    private long mTrainingCountTime;
 
     public interface OnItemClickListener {
         void onItemClick(TrainingQuestion.ContentBean data, int position);
@@ -90,26 +100,28 @@ public class SortQuestionActivity extends BaseActivity {
         ButterKnife.bind(this);
         translucentStatusBar();
         Intent intent = getIntent();
+        mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
+        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
+
         initHeaderView();
 
         mResultSet = new HashSet<>();
         createResultBgColors();
         createSortQuestionBgDrawables();
+        initQuestionData();
 
-        mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
-        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
+    }
 
-        mTrainHeaderView.setSecondTime(mTraining.getTime());
-
+    private void initQuestionData() {
         int size = mTrainingQuestion.getContent().size();
-
         saveWebResultData(size);
+
         mRandRomQuestionResultList = mTrainingQuestion.getRandRomResultList();
 
         initSortQuestionAdapter(mRandRomQuestionResultList);
 
+        //底部答案区域创建数据源
         ArrayList<TrainingQuestion.ContentBean> contentBeenList = new ArrayList<>();
-
         for (int i = 0; i < size; i++) {
             TrainingQuestion.ContentBean contentBean = new TrainingQuestion.ContentBean();
             contentBeenList.add(contentBean);
@@ -159,34 +171,62 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
     private void initHeaderView() {
-        mTrainHeaderView.setCallback(new TrainHeaderView.Callback() {
+        if (mTraining == null) return;
+        mProgressBar.setTotalSecondTime(mTraining.getTime());
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
-            public void onBackClick() {
-                SmartDialog.showExitTrainDialog(SortQuestionActivity.this, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        SortQuestionActivity.this.finish();
-                    }
-                });
-            }
-
-            @Override
-            public void onHowPlayClick() {
+            public void onClick(View v) {
                 Launcher.with(getActivity(), HowPlayActivity.class)
                         .putExtra(ExtraKeys.TRAINING, mTraining)
                         .execute();
             }
-
-            @Override
-            public void onEndOfTimer() {
-                showResultDialog(false);
-            }
-
         });
+
+        View customView = mTitleBar.getCustomView();
+        if (customView != null) {
+            final TextView countDownTimeTextView = (TextView) customView.findViewById(R.id.countdownTime);
+            mCountDownTimer = new CountDownTimer(mTraining.getTime() * 1000, 1) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    mTrainingCountTime = mTraining.getTime() * 1000 - millisUntilFinished;
+                    countDownTimeTextView.setText(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
+                    mProgressBar.setTrainChangeTime(mTrainingCountTime);
+                }
+
+                @Override
+                public void onFinish() {
+                    mCountDownTimer.cancel();
+                    countDownTimeTextView.setText(DateUtil.format(mTraining.getTime() * 1000, "mm: ss. SS"));
+                    showResultDialog(false);
+                }
+            }.start();
+        }
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        SmartDialog.with(this, R.string.is_sure_exit_train, R.string.exit_train_will_not_save_train_record)
+                .setNegative(R.string.exit_train, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        SortQuestionActivity.this.finish();
+                    }
+                })
+                .setPositive(R.string.continue_train, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
     private void showResultDialog(final boolean isRight) {
-
+        if (isFinishing()) {
+            return;
+        }
         SortTrainResultDialog sortTrainResultDialog = new SortTrainResultDialog(this);
         sortTrainResultDialog.show();
         sortTrainResultDialog.setResult(isRight);
@@ -200,7 +240,7 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
     private void openTrainingResultPage(boolean isRight) {
-        TrainingResultActivity.show(this, mTraining, (int) mTrainHeaderView.getCountDownTotalChangeTime(), isRight);
+        TrainingResultActivity.show(this, mTraining, (int) mTrainingCountTime, isRight);
         finish();
     }
 
@@ -290,7 +330,7 @@ public class SortQuestionActivity extends BaseActivity {
             return;
         }
         boolean isRight = true;
-        if (mTrainHeaderView.getCountDownTotalChangeTime() > mTraining.getTime()) {
+        if (mTrainingCountTime > mTraining.getTime()) {
             isRight = false;
         } else {
             for (int i = 0; i < mWebTrainResult.size(); i++) {

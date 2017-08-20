@@ -3,16 +3,30 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:background="#6F56CA"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:orientation="vertical">
 
-    <com.sbai.finance.view.training.TrainHeaderView
-        android:id="@+id/title"
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"/>
+        android:background="@android:color/transparent"
+        android:fitsSystemWindows="true"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_close"
+        app:customView="@layout/layout_count_down"
+        app:rightText="@string/how_play"
+        app:rightTextColor="@android:color/white"
+        app:rightVisible="true"/>
+
+    <com.sbai.finance.view.training.TrainProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleBar"/>
 
     <com.sbai.finance.view.training.KlineTrainView
         android:id="@+id/trainView"
