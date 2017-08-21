@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -19,21 +18,15 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.training.ExplanationFragment;
-import com.sbai.finance.model.training.SubmitRemoveTrain;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingQuestion;
-import com.sbai.finance.net.Callback;
-import com.sbai.finance.net.Client;
-import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.training.DragImageView;
@@ -80,7 +73,6 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     TrainProgressBar mProgressBar;
 
     private TrainingQuestion mTrainingQuestion;
-    private long mCountDownTime;
     private Training mTraining;
     private List<TrainingQuestion.ContentBean> mNounExplanationList;
     private List<TrainingQuestion.ContentBean> mNewNounExplanationList;
@@ -94,9 +86,9 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     private Rect mStarImageRect;
     private List<Integer> mStarColor;
     private int mCompleteCount = 0;
-    private CountDownTimer mCountDownTimer;
     //游戏进行的时间
     private long mTrainingCountTime;
+    private int mTrainTargetTime;
     private boolean mIsSuccess;
 
     @Override
@@ -117,6 +109,21 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     private void initView() {
         if (mTraining == null) return;
         mProgressBar.setTotalSecondTime(mTraining.getTime());
+        mTrainTargetTime = mTraining.getTime() * 1000;
+        mProgressBar.setOnTimeUpListener(new TrainProgressBar.OnTimeUpListener() {
+            @Override
+            public void onTick(long millisUntilUp) {
+                mTrainingCountTime = millisUntilUp;
+                mTitleBar.setTitle(DateUtil.format(mTrainingCountTime, "mm:ss.SS"));
+            }
+
+            @Override
+            public void onFinish() {
+                mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
+                mIsSuccess = false;
+                requestEndTrain();
+            }
+        });
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,76 +132,16 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
                         .execute();
             }
         });
-
-        View customView = mTitleBar.getCustomView();
-        if (customView != null) {
-            final TextView countDownTimeTextView = (TextView) customView.findViewById(R.id.countdownTime);
-            mCountDownTimer = new CountDownTimer(mTraining.getTime() * 1000, 1) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    mTrainingCountTime = mTraining.getTime() * 1000 - millisUntilFinished;
-                    countDownTimeTextView.setText(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
-                    mProgressBar.setTrainChangeTime(mTrainingCountTime);
-                }
-
-                @Override
-                public void onFinish() {
-                    mCountDownTimer.cancel();
-                    countDownTimeTextView.setText(DateUtil.format(mTraining.getTime() * 1000, "mm: ss. SS"));
-                    mIsSuccess = false;
-                    requestEndTrain();
-                }
-            }.start();
-        }
     }
 
     private void requestEndTrain() {
-        SubmitRemoveTrain removeTrain = new SubmitRemoveTrain();
-        removeTrain.setDataId(mTraining.getId());
-        if (mIsSuccess) {
-            List<SubmitRemoveTrain.AnswersBean> answerList = new ArrayList<>();
-            SubmitRemoveTrain.AnswersBean answersBean = new SubmitRemoveTrain.AnswersBean();
-            answersBean.setTopicId(mTrainingQuestion.getId());
-
-            List<SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean> answerIdsMapBeanList = new ArrayList<>();
-            for (TrainingQuestion.ContentBean contentBean : mTrainingQuestion.getContent()) {
-                SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean answerIdsMapBean = new SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean();
-                SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean.KBean kBean = new SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean.KBean();
-                SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean.VBean vBean = new SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean.VBean();
-                if (contentBean.getKey() != null) {
-                    kBean.setOptionId(contentBean.getKey().getId());
-                }
-                if (contentBean.getValue() != null) {
-                    vBean.setOptionId(contentBean.getValue().getId());
-                }
-                answerIdsMapBean.setK(kBean);
-                answerIdsMapBean.setV(vBean);
-                answerIdsMapBeanList.add(answerIdsMapBean);
-            }
-            answersBean.setAnswerIdsMap(answerIdsMapBeanList);
-            answerList.add(answersBean);
-            removeTrain.setAnswers(answerList);
-        }
-        Client.submitTrainingResult(new Gson().toJson(removeTrain)).setTag(TAG)
-                .setCallback(new Callback<Resp<Object>>() {
-
-                    @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()) {
-                            ToastUtil.show(resp.getMsg());
-                            TrainingResultActivity.show(getActivity(), mTraining, mTraining.getTime(), true);
-                            finish();
-                        } else {
-                            ToastUtil.show(resp.getMsg());
-                        }
-                    }
-                }).fireFree();
+        TrainingResultActivity.show(getActivity(), mTraining, (int) mTrainingCountTime / 1000, mIsSuccess);
+        finish();
     }
 
     private void initData(Intent intent) {
         mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
         mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
-        mCountDownTime = mTraining.getTime();
         mNounExplanationList = mTrainingQuestion.getContent();
         mNewNounExplanationList = new ArrayList<>();
         mStarColor = new ArrayList<>();
@@ -462,7 +409,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mCountDownTimer.cancel();
+        mProgressBar.cancelCountDownTimer();
     }
 
     @Override
