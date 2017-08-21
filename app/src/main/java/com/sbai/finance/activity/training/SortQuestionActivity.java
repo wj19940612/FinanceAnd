@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -18,6 +19,7 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.BuildConfig;
@@ -29,6 +31,7 @@ import com.sbai.finance.model.training.TrainingQuestion;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.RenderScriptGaussianBlur;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.TypefaceUtil;
 import com.sbai.finance.view.SmartDialog;
@@ -64,6 +67,10 @@ public class SortQuestionActivity extends BaseActivity {
     TitleBar mTitleBar;
     @BindView(R.id.progressBar)
     TrainProgressBar mProgressBar;
+    @BindView(R.id.bg)
+    ImageView mBg;
+    @BindView(R.id.content)
+    RelativeLayout mContent;
     //用來记录底部界面选择答案的索引
     private HashSet<Integer> mResultSet;
     private TrainingQuestion mTrainingQuestion;
@@ -91,6 +98,8 @@ public class SortQuestionActivity extends BaseActivity {
 
     private boolean isConfirmResult;
 
+    private RenderScriptGaussianBlur mRenderScriptGaussianBlur;
+
     public interface OnItemClickListener {
         void onItemClick(TrainingQuestion.ContentBean data, int position);
     }
@@ -104,14 +113,13 @@ public class SortQuestionActivity extends BaseActivity {
         Intent intent = getIntent();
         mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
         mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
-
+        mRenderScriptGaussianBlur = new RenderScriptGaussianBlur(this);
         initHeaderView();
 
         mResultSet = new HashSet<>();
         createResultBgColors();
         createSortQuestionBgDrawables();
         initQuestionData();
-        showResultDialog(true);
     }
 
     private void initQuestionData() {
@@ -230,12 +238,23 @@ public class SortQuestionActivity extends BaseActivity {
         if (isFinishing()) {
             return;
         }
+
+        mBg.setVisibility(View.VISIBLE);
+        mContent.setDrawingCacheEnabled(true);
+        mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+        Bitmap bitmap = mContent.getDrawingCache();
+        mBg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
+        mContent.setVisibility(View.INVISIBLE);
+
         SortTrainResultDialog sortTrainResultDialog = new SortTrainResultDialog(this);
         sortTrainResultDialog.show();
         sortTrainResultDialog.setResult(isRight);
         sortTrainResultDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
+                mBg.setVisibility(View.GONE);
+                mContent.setVisibility(View.VISIBLE);
                 dialog.dismiss();
                 openTrainingResultPage(isRight);
             }
