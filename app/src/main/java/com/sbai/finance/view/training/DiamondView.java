@@ -67,7 +67,7 @@ public class DiamondView extends View {
         mEdgePaint.setStyle(Paint.Style.STROKE);
         mEdgePaint.setDither(true);
         mEdgePaint.setAntiAlias(true);
-        mEdgePaint.setStrokeWidth(4f);
+        mEdgePaint.setStrokeWidth(8f);
     }
 
     @Override
@@ -155,13 +155,13 @@ public class DiamondView extends View {
             mPoints = new ArrayList<>();
         }
         mPoints.clear();
-        mPoints.add(new Point(0, -mHeight / 2 + 1));
+        mPoints.add(new Point(0, -mHeight / 2 + 2));
         mPoints.add(new Point(-mWidth / 2 + 2, -h));
-        mPoints.add(new Point(-mWidth / 2 + 1, h));
-        mPoints.add(new Point(0, mHeight / 2-1));
-        mPoints.add(new Point(mWidth / 2 - 1, h));
-        mPoints.add(new Point(mWidth / 2 - 1, -h));
-        mPoints.add(new Point(0, -mHeight / 2 + 1));
+        mPoints.add(new Point(-mWidth / 2 + 2, h));
+        mPoints.add(new Point(0, mHeight / 2 - 1));
+        mPoints.add(new Point(mWidth / 2 - 2, h));
+        mPoints.add(new Point(mWidth / 2 - 2, -h));
+        mPoints.add(new Point(0, -mHeight / 2 + 2));
     }
 
     private void startAnimation(Point startPoint, Point endPoint) {
