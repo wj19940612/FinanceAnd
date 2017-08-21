@@ -8,6 +8,7 @@
           android:layout_marginRight="@dimen/common_padding"
           android:foreground="?android:attr/selectableItemBackground"
           android:gravity="center"
+          android:minHeight="40dp"
           android:paddingBottom="11dp"
           android:paddingLeft="20dp"
           android:paddingRight="20dp"

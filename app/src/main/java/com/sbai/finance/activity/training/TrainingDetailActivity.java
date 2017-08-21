@@ -31,11 +31,13 @@ import com.sbai.finance.model.training.TrainingDetail;
 import com.sbai.finance.model.training.TrainingRecord;
 import com.sbai.finance.model.training.TrainingTarget;
 import com.sbai.finance.model.training.question.KData;
-import com.sbai.finance.net.API;
+import com.sbai.finance.model.training.question.RemoveData;
+import com.sbai.finance.model.training.question.SortData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
@@ -132,16 +134,48 @@ public class TrainingDetailActivity extends BaseActivity {
     }
 
     private void updateAchievementViews() {
-        List<TrainingTarget> targets = mTrainingDetail.getTargets();
-        if (targets != null && !targets.isEmpty()) {
-            for (int i = 0; i < targets.size() && i < mAchievementView2s.length; i++) {
-                TrainingTarget target = targets.get(i);
-                mAchievementView2s[i].setVisibility(View.VISIBLE);
-                // TODO: 21/08/2017 更加训练目标类型更新不同文字
-                if (mMyTrainingRecord != null && mMyTrainingRecord.getMaxLevel() >= target.getLevel()) {
-                    mAchievementView2s[i].setAchieved(true);
+        if (mTrainingDetail != null) {
+            List<TrainingTarget> targets = mTrainingDetail.getTargets();
+            if (targets != null && !targets.isEmpty()) {
+                for (int i = 0; i < targets.size() && i < mAchievementView2s.length; i++) {
+                    TrainingTarget target = targets.get(i);
+                    mAchievementView2s[i].setVisibility(View.VISIBLE);
+
+                    updateAchievementView(mAchievementView2s[i], target);
+
+                    if (mMyTrainingRecord != null && mMyTrainingRecord.getMaxLevel() >= target.getLevel()) {
+                        mAchievementView2s[i].setAchieved(true);
+                    }
                 }
             }
+        }
+    }
+
+    private void updateAchievementView(TrainingAchievementView2 achievementView, TrainingTarget target) {
+        switch (target.getType()) {
+            case TrainingTarget.TYPE_FINISH:
+                achievementView.setContent(R.string.mission_complete);
+                break;
+            case TrainingTarget.TYPE_RATE:
+                achievementView.setContent(getString(R.string.accuracy_to_,
+                        FinanceUtil.formatToPercentage(target.getRate(), 0)));
+                break;
+            case TrainingTarget.TYPE_TIME:
+                achievementView.setContent(formatTime(target.getTime(),
+                        R.string._seconds_complete,
+                        R.string._minutes_complete,
+                        R.string._minutes_x_seconds_complete));
+                break;
+        }
+    }
+
+    private String formatTime(int seconds, int secondRes, int minRes, int minSecondRes) {
+        if (seconds / 60 == 0) {
+            return getString(secondRes, seconds);
+        } else if (seconds % 60 == 0) {
+            return getString(minRes, seconds / 60);
+        } else {
+            return getString(minSecondRes, seconds / 60, seconds % 60);
         }
     }
 
@@ -164,7 +198,7 @@ public class TrainingDetailActivity extends BaseActivity {
                                 mWriteExperience.setVisibility(View.VISIBLE);
                             }
                         }
-                    });
+                    }).fireFree();
         }
     }
 
@@ -410,21 +444,17 @@ public class TrainingDetailActivity extends BaseActivity {
                 break;
             case R.id.trainingExperience:
                 Launcher.with(getActivity(), TrainExperienceActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD_1, mTraining.getId())
+                        .putExtra(ExtraKeys.TRAINING, mTraining)
                         .execute();
                 break;
             case R.id.writeExperience:
                 Launcher.with(getActivity(), WriteExperienceActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mTraining.getType())
+                        .putExtra(ExtraKeys.TRAINING, mTraining)
                         .execute();
                 break;
             case R.id.startTraining:
                 if (LocalUser.getUser().isLogin()) {
-                    //requestTrainingContent();
-                    // TODO: 20/08/2017 后期和产品商量训练题目请求位置
-                    Launcher.with(getActivity(), TrainingCountDownActivity.class)
-                            .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
-                            .execute();
+                    requestTrainingContent();
                 } else {
                     // TODO: 17/08/2017 登录后要做页面更新
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -434,35 +464,59 @@ public class TrainingDetailActivity extends BaseActivity {
     }
 
     private void requestTrainingContent() {
-        API api = Client.getTrainingContent(mTraining.getId()).setTag(TAG).setIndeterminate(this);
-        switch (mTraining.getPlayType()) {
-            case Training.PLAY_TYPE_REMOVE:
-                break;
-            case Training.PLAY_TYPE_MATCH_STAR:
-                break;
-            case Training.PLAY_TYPE_JUDGEMENT:
-                api.setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
-                    @Override
-                    protected void onRespSuccessData(List<Question<KData>> data) {
-                        if (!data.isEmpty()) {
-                            startTraining(data.get(0));
-                        }
-                    }
+        if (mTraining.getPlayType() == Training.PLAY_TYPE_REMOVE
+                || mTraining.getPlayType() == Training.PLAY_TYPE_MATCH_STAR) {
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<Question<RemoveData>>>() {
 
-                    @Override
-                    protected String onInterceptData(String data) {
-                        return SecurityUtil.AESDecrypt(data);
-                    }
-                }).fire();
-                break;
-            case Training.PLAY_TYPE_SORT:
-                break;
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+
+                        @Override
+                        protected void onRespSuccessData(List<Question<RemoveData>> data) {
+                            if (!data.isEmpty()) {
+                                startTraining(data.get(0));
+                            }
+                        }
+                    }).fireFree();
+        } else if (mTraining.getPlayType() == Training.PLAY_TYPE_SORT) {
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<Question<SortData>>>() {
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+
+                        @Override
+                        protected void onRespSuccessData(List<Question<SortData>> data) {
+                            if (!data.isEmpty()) {
+                                startTraining(data.get(0));
+                            }
+                        }
+                    }).fireFree();
+        } else if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
+                        @Override
+                        protected void onRespSuccessData(List<Question<KData>> data) {
+                            if (!data.isEmpty()) {
+                                startTraining(data.get(0));
+                            }
+                        }
+
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+                    }).fireFree();
         }
     }
 
     private void startTraining(Question question) {
         Launcher.with(getActivity(), TrainingCountDownActivity.class)
-                .putExtra(ExtraKeys.TRAINING, mTraining)
+                .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
                 .putExtra(ExtraKeys.QUESTION, question)
                 .execute();
     }

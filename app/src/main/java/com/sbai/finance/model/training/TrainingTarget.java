@@ -139,4 +139,5 @@ public class TrainingTarget implements Parcelable {
             return new TrainingTarget[size];
         }
     };
+
 }

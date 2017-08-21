@@ -66,10 +66,12 @@ public class TrainingAchievementView2 extends LinearLayout {
             mAchieveIcon.setImageResource(R.drawable.ic_small_training_goal_gold);
             mAchieveFlag.setText(R.string.achieved);
             mAchieveFlag.setEnabled(true);
+            mContent.setEnabled(true);
         } else {
             mAchieveIcon.setImageResource(R.drawable.ic_small_training_goal_gray);
             mAchieveFlag.setText(R.string.not_achieved);
             mAchieveFlag.setEnabled(false);
+            mContent.setEnabled(false);
         }
     }
 

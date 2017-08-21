@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.training;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,12 +11,17 @@ import com.google.gson.Gson;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingDetail;
 import com.sbai.finance.model.training.TrainingResult;
 import com.sbai.finance.model.training.TrainingSubmit;
 import com.sbai.finance.model.training.TrainingTarget;
+import com.sbai.finance.model.training.question.KData;
+import com.sbai.finance.model.training.question.RemoveData;
+import com.sbai.finance.model.training.question.SortData;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AnimUtils;
@@ -42,10 +46,6 @@ public class TrainingResultActivity extends BaseActivity {
     private static final long ANIM_DURATION = 500;
     private static final long ENTER_OFFSET = (long) (0.4f * ANIM_DURATION);
 
-    public static final String TYPE_TIME = "time";
-    public static final String TYPE_FINISH = "finish";
-    public static final String TYPE_RATE = "RATE";
-
     // Activity enter anim duration is 400ms.
     // And onEnterAnimationComplete is not work when user close screen before activity show completely
     private static final long ANIM_DELAY = 410;
@@ -66,24 +66,6 @@ public class TrainingResultActivity extends BaseActivity {
     private Training mTraining;
     private TrainingDetail mTrainingDetail;
     private TrainingSubmit mTrainingSubmit;
-
-    public static void show(Activity activity, Training training, int time, boolean isFinish) {
-        Launcher.with(activity, TrainingResultActivity.class)
-                .putExtra(ExtraKeys.TRAINING, training)
-                .putExtra(TYPE_TIME, time)
-                .putExtra(TYPE_FINISH, isFinish)
-                .execute();
-
-    }
-
-    public static void show(Activity activity, Training training, int time, boolean isFinish, double rate) {
-        Launcher.with(activity, TrainingResultActivity.class)
-                .putExtra(ExtraKeys.TRAINING, training)
-                .putExtra(TYPE_TIME, time)
-                .putExtra(TYPE_FINISH, isFinish)
-                .putExtra(TYPE_RATE, rate)
-                .execute();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +91,8 @@ public class TrainingResultActivity extends BaseActivity {
             mRetry.setVisibility(View.GONE);
             mMyGrade.setVisibility(View.VISIBLE);
             mFailedMessage.setVisibility(View.GONE);
-            mMyGrade.setText(getString(R.string.train_use_time, mTrainingSubmit.getTime() / 60, mTrainingSubmit.getTime() % 60));
+            mMyGrade.setText(formatTime(mTrainingSubmit.getTime(),
+                    R.string._seconds, R.string._minutes, R.string._minutes_x_seconds));
         } else {
             mRecordTrainingExperience.setVisibility(View.GONE);
             mRetry.setVisibility(View.VISIBLE);
@@ -153,40 +136,50 @@ public class TrainingResultActivity extends BaseActivity {
                 case TrainingTarget.TYPE_FINISH:
                     mAchievementViews[0].setAchieved(mTrainingSubmit.isFinish());
                     mAchievementViews[0].setContent(R.string.mission_complete);
-                    showResultsWithAnim(1);
+                    showResultsWithAnim(trainTargets.size());
                     break;
                 case TrainingTarget.TYPE_RATE:
-                    int finalTargetIndex = -1;
                     for (int i = 0; i < mAchievementViews.length; i++) {
                         mAchievementViews[i].setContent(getString(R.string.accuracy_to_,
                                 FinanceUtil.formatToPercentage(trainTargets.get(i).getRate(), 0)));
                         if (mTrainingSubmit.getRate() >= trainTargets.get(i).getRate()) {
                             mAchievementViews[i].setAchieved(true);
-                            finalTargetIndex = i;
+                        } else {
+                            mAchievementViews[i].setAchieved(false);
                         }
                     }
-                    if (finalTargetIndex >= 0) {
-                        showResultsWithAnim(finalTargetIndex + 1);
-                    }
+                    showResultsWithAnim(trainTargets.size());
                     break;
                 case TrainingTarget.TYPE_TIME:
-                    finalTargetIndex = -1;
                     for (int i = 0; i < mAchievementViews.length; i++) {
-                        mAchievementViews[i].setContent(getString(R.string._minutes_complete,
-                                trainTargets.get(i).getTime() / 60));
-                        if (mTrainingSubmit.getTime() >= trainTargets.get(i).getTime()) {
+                        mAchievementViews[i].setContent(
+                                formatTime(trainTargets.get(i).getTime(),
+                                        R.string._seconds_complete,
+                                        R.string._minutes_complete,
+                                        R.string._minutes_x_seconds_complete));
+
+                        if (mTrainingSubmit.getTime() > trainTargets.get(i).getTime()) {
+                            mAchievementViews[i].setAchieved(false);
+                        } else {
                             mAchievementViews[i].setAchieved(true);
                         }
                     }
-                    if (finalTargetIndex >= 0) {
-                        showResultsWithAnim(finalTargetIndex + 1);
-                    }
+                    showResultsWithAnim(trainTargets.size());
                     break;
             }
         }
     }
 
-    public void showResultsWithAnim(int count) {
+    public void showResultsWithAnim(final int count) {
+        mAchievementViews[0].postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showWithAnim(count);
+            }
+        }, ANIM_DELAY);
+    }
+
+    private void showWithAnim(int count) {
         if (count > 0) {
             mAchievementViews[0].startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION,
                     new AnimUtils.AnimEndListener() {
@@ -227,16 +220,85 @@ public class TrainingResultActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.recordTrainingExperience:
                 Launcher.with(getActivity(), WriteExperienceActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mTraining.getType())
+                        .putExtra(ExtraKeys.TRAINING, mTraining)
+                        //.putExtra(ExtraKeys.TRAIN_LEVEL, mCount)
                         .execute();
                 finish();
                 break;
             case R.id.retry:
-                Launcher.with(getActivity(), TrainingCountDownActivity.class)
-                        .putExtra(ExtraKeys.TRAINING, mTraining)
-                        .execute();
-                finish();
+                requestTrainingContent();
                 break;
         }
+    }
+
+    private String formatTime(int seconds, int secondRes, int minRes, int minSecondRes) {
+        if (seconds / 60 == 0) {
+            return getString(secondRes, seconds);
+        } else if (seconds % 60 == 0) {
+            return getString(minRes, seconds / 60);
+        } else {
+            return getString(minSecondRes, seconds / 60, seconds % 60);
+        }
+    }
+
+    private void requestTrainingContent() {
+        if (mTraining.getPlayType() == Training.PLAY_TYPE_REMOVE
+                || mTraining.getPlayType() == Training.PLAY_TYPE_MATCH_STAR) {
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<Question<RemoveData>>>() {
+
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+
+                        @Override
+                        protected void onRespSuccessData(List<Question<RemoveData>> data) {
+                            if (!data.isEmpty()) {
+                                startTraining(data.get(0));
+                            }
+                        }
+                    }).fireFree();
+        }
+        if (mTraining.getPlayType() == Training.PLAY_TYPE_SORT) {
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<Question<SortData>>>() {
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+
+                        @Override
+                        protected void onRespSuccessData(List<Question<SortData>> data) {
+                            if (!data.isEmpty()) {
+                                startTraining(data.get(0));
+                            }
+                        }
+                    }).fireFree();
+        } else if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
+
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
+                        @Override
+                        protected void onRespSuccessData(List<Question<KData>> data) {
+                            if (!data.isEmpty()) {
+                                startTraining(data.get(0));
+                            }
+                        }
+
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+                    }).fireFree();
+        }
+    }
+
+    private void startTraining(Question question) {
+        Launcher.with(getActivity(), TrainingCountDownActivity.class)
+                .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
+                .putExtra(ExtraKeys.QUESTION, question)
+                .execute();
+        finish();
     }
 }

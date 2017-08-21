@@ -3,6 +3,8 @@ package com.sbai.finance.model.training;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -113,7 +115,7 @@ public class Question<T extends Parcelable> implements Parcelable {
     }
 
     public List<T> getContent() {
-        return Arrays.asList(content);
+        return new ArrayList<>(Arrays.asList(content));
     }
 
     public void setContent(List<T> content) {

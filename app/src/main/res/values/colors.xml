@@ -51,4 +51,6 @@
     <color name="redTheoryCountDown">#E44B58</color>
     <color name="violetTechnologyCountDown">#6843C4</color>
     <color name="yellowFundamentalCountDown">#F9B727</color>
+
+    <color name="evaluationQuestionBg">#F7FBFF</color>
 </resources>

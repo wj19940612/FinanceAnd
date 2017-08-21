@@ -68,11 +68,13 @@ public class TrainingAchievementView extends LinearLayout {
             mAchieveFlag.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_training_result_tick, 0, 0, 0);
             mAchieveFlag.setText(null);
             mAchieveFlag.setEnabled(true);
+            mContent.setEnabled(true);
         } else {
             mAchieveIcon.setImageResource(R.drawable.ic_training_result_grey);
             mAchieveFlag.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             mAchieveFlag.setText(R.string.not_achieved);
             mAchieveFlag.setEnabled(false);
+            mContent.setEnabled(false);
         }
     }
 
