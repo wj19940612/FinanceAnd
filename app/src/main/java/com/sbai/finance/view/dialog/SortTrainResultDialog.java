@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDialog;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,12 +49,18 @@ public class SortTrainResultDialog extends AppCompatDialog {
     }
 
     public SortTrainResultDialog(Context context) {
-        this(context, R.style.DialogTheme_NoTitle);
+        this(context, R.style.custom_dialog);
     }
 
     public SortTrainResultDialog(Context context, int theme) {
         super(context, theme);
         this.mContext = context;
+
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = 1f;
+        lp.dimAmount=0.5f;
+        getWindow().setAttributes(lp);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
         View view = getLayoutInflater().inflate(R.layout.dialog_fragment_sort_training_result, null);
         mBind = ButterKnife.bind(this, view);

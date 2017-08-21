@@ -111,7 +111,7 @@ public class SortQuestionActivity extends BaseActivity {
         createResultBgColors();
         createSortQuestionBgDrawables();
         initQuestionData();
-
+        showResultDialog(true);
     }
 
     private void initQuestionData() {
@@ -353,7 +353,7 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
     private void startResultListScaleAnimation(final boolean isRight) {
-        ScaleAnimation scaleAnimation = new ScaleAnimation(1, 0f, 1, 0f,
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1, 0.6f, 1, 0.6f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         scaleAnimation.setDuration(1000);
         scaleAnimation.setFillAfter(true);
@@ -424,7 +424,7 @@ public class SortQuestionActivity extends BaseActivity {
 
         @Override
         public AnnalsMaterialsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_annals_materials, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_sort_question, parent, false);
             return new AnnalsMaterialsViewHolder(view);
         }
 

@@ -19,10 +19,35 @@
     </style>
 
     <style name="DialogTheme.NoTitle.Background" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowBackground">@color/colorDark</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowNoTitle">true</item>
+        <!--<item name="android:windowIsTranslucent">false</item> &lt;!&ndash; 半透明 &ndash;&gt;-->
+        <item name="android:backgroundDimEnabled">true</item> <!-- 背景内容模糊 -->
+        <!--<item name="android:windowIsFloating">false</item>-->
+
     </style>
+
+    <style name="custom_dialog" parent="android:style/Theme.Dialog">
+        <!--&lt;!&ndash;<item name="android:colorBackground">@android:color/holo_red_dark</item>&ndash;&gt;-->
+        <!--<item name="android:background">#00000000</item>-->
+        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <!--&lt;!&ndash;<item name="android:windowIsFloating">true</item>&ndash;&gt;-->
+        <!--<item name="android:backgroundDimEnabled">false</item>-->
+
+        <item name="android:windowFrame">@null</item><!-- 边框 -->
+        <item name="android:windowIsFloating">true</item><!-- 是否悬浮在activity上 -->
+        <item name="android:windowIsTranslucent">true</item><!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item><!-- 无标题 -->
+        <item name="android:windowBackground">@android:color/transparent</item><!-- 背景透明 -->
+        <item name="android:backgroundDimEnabled">true</item><!-- 模糊 -->
+        <item name="android:backgroundDimAmount">0.6</item><!-- 灰度 -->
+        <item name="android:windowContentOverlay">@null</item><!-- 对话框是否有遮盖 -->
+        <item name="android:colorBackgroundCacheHint">@null</item><!-- 背景缓存颜色 -->
+
+    </style>
+
 
     <!-- 底部出现的 Activity 主题 -->
     <style name="PageBottomEnter" parent="Theme.AppCompat.Light.NoActionBar">
