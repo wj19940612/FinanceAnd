@@ -1,8 +1,10 @@
 package com.sbai.chart.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.SparseArray;
 
-public class KlineViewData {
+public class KlineViewData implements Parcelable {
 
     /**
      * closePrice : 1179.2
@@ -88,4 +90,49 @@ public class KlineViewData {
                 ", timeStamp=" + timeStamp +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeFloat(this.closePrice);
+        dest.writeFloat(this.maxPrice);
+        dest.writeFloat(this.minPrice);
+        dest.writeFloat(this.openPrice);
+        dest.writeLong(this.nowVolume);
+        dest.writeString(this.day);
+        dest.writeString(this.time);
+        dest.writeLong(this.timeStamp);
+        dest.writeSparseArray((SparseArray) this.movingAverages);
+    }
+
+    public KlineViewData() {
+    }
+
+    protected KlineViewData(Parcel in) {
+        this.closePrice = in.readFloat();
+        this.maxPrice = in.readFloat();
+        this.minPrice = in.readFloat();
+        this.openPrice = in.readFloat();
+        this.nowVolume = in.readLong();
+        this.day = in.readString();
+        this.time = in.readString();
+        this.timeStamp = in.readLong();
+        this.movingAverages = in.readSparseArray(Float.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<KlineViewData> CREATOR = new Parcelable.Creator<KlineViewData>() {
+        @Override
+        public KlineViewData createFromParcel(Parcel source) {
+            return new KlineViewData(source);
+        }
+
+        @Override
+        public KlineViewData[] newArray(int size) {
+            return new KlineViewData[size];
+        }
+    };
 }

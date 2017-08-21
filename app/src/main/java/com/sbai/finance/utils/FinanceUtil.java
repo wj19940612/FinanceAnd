@@ -56,6 +56,18 @@ public class FinanceUtil {
     }
 
     /**
+     * 格式化 double 数据成百分数格式，并使用‘银行家算法’精确（保留）到小数点后 scale 位
+     *
+     * @param value
+     * @param scale
+     * @return
+     */
+    public static String formatToPercentage(double value, int scale) {
+        BigDecimal bigDecimal = multiply(value, 100d);
+        return formatWithScale(bigDecimal.doubleValue(), scale) + "%";
+    }
+
+    /**
      * 当数字大于 10,000 或小于 -10,000 时候，添加‘万’单位，并使用‘银行家算法’精确（保留）到小数点后两位
      *
      * @param value
@@ -197,14 +209,6 @@ public class FinanceUtil {
      */
     public static String formatWithScale(double value, int scale) {
         DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-
-//        String pattern = "##0"; // not work for android 4.4
-//        for (int i = 1; i <= scale; i++) {
-//            if (i == 1) pattern += ".0";
-//            else pattern += "0";
-//        }
-//        decimalFormat.applyPattern(pattern);
-
         decimalFormat.setMaximumFractionDigits(scale);
         decimalFormat.setMinimumFractionDigits(scale);
         decimalFormat.setMinimumIntegerDigits(1);

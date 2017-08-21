@@ -20,6 +20,7 @@ import java.util.List;
 public class KlineChart extends ChartView {
 
     private static final int CANDLES_WIDTH_DP = 6; //dp
+    private static final int BUTTONS_AREA_WIDTH = 80; //dp
 
     private static final String MA_BLUE = "#6a96ef";
     private static final String MA_PURPLE = "#dc6aef";

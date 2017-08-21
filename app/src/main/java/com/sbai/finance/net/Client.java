@@ -2245,7 +2245,8 @@ public class Client {
      * @return
      */
     public static API submitTrainingResult(String result) {
-        return new API(POST, "/train/course/finishTask.do", result);
+        return new API(POST, "/train/train/finish.do", new ApiParams()
+                .put("data", result));
     }
 
     /**
@@ -2425,28 +2426,5 @@ public class Client {
 
     public static API share() {
         return new API("/explain/question/share.do");
-    }
-
-
-    /**
-     * /train/train/start.do
-     * GET
-     * 获得训练关联题目
-     *
-     * @param trainId 训练id
-     * @return
-     */
-    public static API requestTrainQuestions(int trainId) {
-        return new API("/train/train/start.do", new ApiParams().put("trainId", trainId));
-    }
-
-    /**
-     * /train/train/finish.do
-     * POST
-     * 提交训练结果
-     */
-    public static API confirmQuestionResult(String data) {
-        return new API(POST, "/train/train/finish.do", new ApiParams()
-                .put("data", data));
     }
 }

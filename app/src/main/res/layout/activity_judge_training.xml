@@ -1,10 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blackPrimary"
+    android:orientation="vertical"
     tools:context="com.sbai.finance.activity.training.JudgeTrainingActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/topArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="22dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="14dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_close"/>
+
+        <TextView
+            android:id="@+id/timer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="41dp"
+            android:text="00:00:00"
+            android:textColor="@color/unluckyText"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topArea"
+        android:orientation="vertical">
+
+        <com.sbai.finance.view.training.Kline.MvKlineView
+            android:id="@+id/klineView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:id="@+id/accuracyArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="11dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/bg_judge_accuracy"
+            android:gravity="center_vertical"
+            android:minHeight="54dp"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/userPortrait"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/bg_avatar_yellow"
+                android:padding="0.5dp"
+                android:src="@drawable/ic_default_avatar"/>
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:maxWidth="55dp"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                tools:text="耶路撒冷"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/accuracy"
+                android:textColor="#FEC022"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/accuracy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:gravity="left"
+                android:minWidth="100dp"
+                android:text="0%"
+                android:textColor="#FEC022"
+                android:textSize="35sp"/>
+
+            <View
+                android:layout_width="9dp"
+                android:layout_height="3dp"
+                android:background="#694FC8"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="@string/ma5"
+                android:textColor="@color/luckyText"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="@string/ma5_chinese"
+                android:textColor="@color/luckyText"
+                android:textSize="12sp"/>
+
+            <View
+                android:layout_width="9dp"
+                android:layout_height="3dp"
+                android:layout_marginLeft="17dp"
+                android:background="#FFC336"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="@string/ma30"
+                android:textColor="@color/luckyText"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="@string/ma30_chinese"
+                android:textColor="@color/luckyText"
+                android:textSize="12sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/knowledgeArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/knowledge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/bg_ma_knowledge"
+            android:gravity="center_vertical"
+            android:lineSpacingExtra="2dp"
+            android:minHeight="84dp"
+            android:paddingLeft="14dp"
+            android:paddingRight="185dp"
+            android:paddingTop="5dp"
+            android:textColor="@android:color/white"
+            tools:text="股价位于均线以下运行,突然暴跌,距离均线太远,极有可能向均线靠近(物极必反,下跌反弹),此时为买进时机"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:background="@drawable/bg_ma_knowledge_title"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:text="@string/knowledge"
+            android:textColor="@android:color/white"/>
+
+        <TextView
+            android:id="@+id/iSeeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/btn_primary_large_rounded"
+            android:paddingBottom="8dp"
+            android:paddingLeft="33dp"
+            android:paddingRight="33dp"
+            android:paddingTop="8dp"
+            android:text="@string/i_see"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"/>
+    </RelativeLayout>
+</RelativeLayout>

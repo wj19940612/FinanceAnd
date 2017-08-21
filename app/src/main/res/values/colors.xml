@@ -40,7 +40,7 @@
     <color name="creditEndColor">#C286F9</color>
 
     <color name="yellowShallow">#FFFCF5</color>
-    <color name="yellowShallowBorder">#F3B071</color>
+    <color name="yellowBorder">#F3B071</color>
     <color name="yellowScoreGrade">#ffC200</color>
 
     <!-- Training color -->

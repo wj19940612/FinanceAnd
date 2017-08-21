@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:background="#6F56CA"
                 android:clipChildren="false"
                 android:clipToPadding="false"
@@ -17,12 +17,11 @@
         android:fitsSystemWindows="true"
         app:backFeature="true"
         app:backIcon="@drawable/ic_close"
-        app:customView="@layout/layout_count_down"
         app:rightText="@string/how_play"
         app:rightTextColor="@android:color/white"
         app:rightVisible="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
+        app:titleTextColor="@android:color/white"
+        app:titleTextSize="20sp"/>
 
     <com.sbai.finance.view.training.TrainProgressBar
         android:id="@+id/progressBar"
@@ -48,4 +47,11 @@
         android:textColor="@android:color/white"
         android:textSize="20sp"
         tools:text="6/6"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_train_remove"/>
 </RelativeLayout>

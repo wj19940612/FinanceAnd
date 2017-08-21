@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -84,7 +83,6 @@ public class SortQuestionActivity extends BaseActivity {
     private Training mTraining;
     //服务端返回的数据
     private List<TrainingQuestion.ContentBean> mWebTrainResult;
-    private CountDownTimer mCountDownTimer;
 
     //游戏进行的时间
     private long mTrainingCountTime;
@@ -178,6 +176,21 @@ public class SortQuestionActivity extends BaseActivity {
         if (mTraining == null) return;
         mTrainTargetTime = mTraining.getTime() * 1000;
         mProgressBar.setTotalSecondTime(mTraining.getTime());
+        mProgressBar.setOnTimeUpListener(new TrainProgressBar.OnTimeUpListener() {
+            @Override
+            public void onTick(long millisUntilUp) {
+                mTrainingCountTime = millisUntilUp;
+                mTitleBar.setTitle(DateUtil.format(mTrainingCountTime, "mm:ss.SS"));
+            }
+
+            @Override
+            public void onFinish() {
+                mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
+                if (!isConfirmResult) {
+                    showResultDialog(false);
+                }
+            }
+        });
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,40 +199,23 @@ public class SortQuestionActivity extends BaseActivity {
                         .execute();
             }
         });
+    }
 
-        View customView = mTitleBar.getCustomView();
-        if (customView != null) {
-            final TextView countDownTimeTextView = (TextView) customView.findViewById(R.id.countdownTime);
-            mCountDownTimer = new CountDownTimer(mTrainTargetTime, 1) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    mTrainingCountTime = mTrainTargetTime - millisUntilFinished;
-                    countDownTimeTextView.setText(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
-                    mProgressBar.setTrainChangeTime(mTrainingCountTime);
-                }
-
-                @Override
-                public void onFinish() {
-                    mCountDownTimer.cancel();
-                    countDownTimeTextView.setText(DateUtil.format(mTrainTargetTime, "mm: ss. SS"));
-                    if (!isConfirmResult) {
-                        showResultDialog(false);
-                    }
-                }
-            }.start();
-        }
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mProgressBar.cancelCountDownTimer();
     }
 
     @Override
     public void onBackPressed() {
-        SmartDialog.with(this, R.string.is_sure_exit_train, R.string.exit_train_will_not_save_train_record)
+        SmartDialog.single(getActivity(), getString(R.string.exit_train_will_not_save_train_record))
+                .setTitle(getString(R.string.is_sure_exit_train))
                 .setNegative(R.string.exit_train, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        SortQuestionActivity.this.finish();
+                        finish();
                     }
                 })
                 .setPositive(R.string.continue_train, new SmartDialog.OnClickListener() {
@@ -247,7 +243,6 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
     private void openTrainingResultPage(boolean isRight) {
-        mCountDownTimer.cancel();
         TrainingResultActivity.show(this, mTraining, mTrainTargetTime / 1000, isRight);
         finish();
     }

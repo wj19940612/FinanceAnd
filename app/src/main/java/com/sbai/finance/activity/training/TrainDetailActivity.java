@@ -24,16 +24,20 @@ import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.Experience;
+import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.TrainPraise;
 import com.sbai.finance.model.training.TrainedUserRecord;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingDetail;
+import com.sbai.finance.model.training.question.KData;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.view.ImageListView;
 import com.sbai.finance.view.MyListView;
@@ -48,10 +52,6 @@ import butterknife.OnClick;
 
 
 public class TrainDetailActivity extends BaseActivity {
-    private static final int TYPE_THEORY = 1;
-    private static final int TYPE_TECHNOLOGY = 2;
-    private static final int TYPE_FUNDAMENTALS = 3;
-    private static final int TYPE_COMPREHENSIVE = 4;
 
     @BindView(R.id.back)
     ImageView mBack;
@@ -371,13 +371,52 @@ public class TrainDetailActivity extends BaseActivity {
                         .execute();
                 break;
             case R.id.startTrain:
-                Launcher.with(getActivity(), TrainingCountDownActivity.class)
-                        .putExtra(ExtraKeys.TRAINING, mTraining)
-                        .execute();
+                if (LocalUser.getUser().isLogin()) {
+                    //requestTrainingContent();
+                    // TODO: 20/08/2017 后期和产品商量训练题目请求位置
+                    Launcher.with(getActivity(), TrainingCountDownActivity.class)
+                            .putExtra(ExtraKeys.TRAINING, mTraining)
+                            .execute();
+                } else {
+                    // TODO: 17/08/2017 登录后要做页面更新
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
         }
     }
 
+    private void requestTrainingContent() {
+        API api = Client.getTrainingContent(mTraining.getId()).setTag(TAG).setIndeterminate(this);
+        switch (mTraining.getPlayType()) {
+            case Training.PLAY_TYPE_REMOVE:
+                break;
+            case Training.PLAY_TYPE_MATCH_STAR:
+                break;
+            case Training.PLAY_TYPE_JUDGEMENT:
+                api.setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Question<KData>> data) {
+                        if (!data.isEmpty()) {
+                            startTraining(data.get(0));
+                        }
+                    }
+                    @Override
+                    protected String onInterceptData(String data) {
+                        return SecurityUtil.AESDecrypt(data);
+                    }
+                }).fire();
+                break;
+            case Training.PLAY_TYPE_SORT:
+                break;
+        }
+    }
+
+    private void startTraining(Question question) {
+        Launcher.with(getActivity(), TrainingCountDownActivity.class)
+                .putExtra(ExtraKeys.TRAINING, mTraining)
+                .putExtra(ExtraKeys.QUESTION, question)
+                .execute();
+    }
 
     private void share() {
         ShareDialog.with(getActivity())

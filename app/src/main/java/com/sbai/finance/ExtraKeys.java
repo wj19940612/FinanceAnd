@@ -12,6 +12,7 @@ public interface ExtraKeys {
     String AUTH_CODE = "auth_code";
 
     String TRAINING = "training";
+    String QUESTION = "question";
 
 
     String FIRST_TEST = "first_test";

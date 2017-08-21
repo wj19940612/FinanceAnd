@@ -441,6 +441,7 @@
             android:theme="@style/DialogTheme.NoTitle"/>
         <activity
             android:name=".activity.training.JudgeTrainingActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="landscape"/>
         <activity android:name=".activity.training.NounExplanationActivity"
                   android:screenOrientation="portrait"/>
