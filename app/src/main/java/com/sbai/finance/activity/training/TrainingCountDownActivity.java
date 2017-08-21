@@ -161,8 +161,7 @@ public class TrainingCountDownActivity extends BaseActivity {
                             }
                         }
                     }).fireFree();
-        } else if (mTraining.getPlayType() != Training.PLAY_TYPE_JUDGEMENT &&
-                mTraining.getPlayType() != Training.PLAY_TYPE_SORT) {
+        } else if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
 
             Client.getTrainingContent(mTraining.getId()).setTag(TAG)
                     .setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
