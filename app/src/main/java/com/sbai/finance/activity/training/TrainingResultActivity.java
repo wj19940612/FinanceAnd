@@ -163,6 +163,8 @@ public class TrainingResultActivity extends BaseActivity {
                                 FinanceUtil.formatToPercentage(trainTargets.get(i).getRate(), 0)));
                         if (mTrainingSubmit.getRate() >= trainTargets.get(i).getRate()) {
                             mAchievementViews[i].setAchieved(true);
+                        } else {
+                            mAchievementViews[i].setAchieved(false);
                         }
                     }
                     showResultsWithAnim(trainTargets.size());
@@ -176,6 +178,8 @@ public class TrainingResultActivity extends BaseActivity {
                         }
                         if (mTrainingSubmit.getTime() >= trainTargets.get(i).getTime()) {
                             mAchievementViews[i].setAchieved(true);
+                        } else {
+                            mAchievementViews[i].setAchieved(false);
                         }
                     }
                     showResultsWithAnim(trainTargets.size());
