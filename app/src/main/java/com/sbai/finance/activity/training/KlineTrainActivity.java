@@ -8,18 +8,14 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.RemoveTraining;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingQuestion;
-import com.sbai.finance.net.Client;
-import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.training.KlineTrainView;
@@ -92,22 +88,22 @@ public class KlineTrainActivity extends BaseActivity {
         });
 
 
-            mCountDownTimer = new CountDownTimer(mTrainTargetTime, 1) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    mTrainingCountTime = mTrainTargetTime - millisUntilFinished;
-                    mTitleBar.setTitle(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
-                    mProgressBar.setTrainChangeTime(mTrainingCountTime);
-                }
+        mCountDownTimer = new CountDownTimer(mTrainTargetTime, 1) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTrainingCountTime = mTrainTargetTime - millisUntilFinished;
+                mTitleBar.setTitle(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
+                mProgressBar.setTrainChangeTime(mTrainingCountTime);
+            }
 
-                @Override
-                public void onFinish() {
-                    mCountDownTimer.cancel();
-                    mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm: ss. SS"));
-                    mIsSuccess = false;
-                    requestEndTrain();
-                }
-            }.start();
+            @Override
+            public void onFinish() {
+                mCountDownTimer.cancel();
+                mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm: ss. SS"));
+                mIsSuccess = false;
+                requestEndTrain();
+            }
+        }.start();
 
         mTrainView.setOnEndCallback(new KlineTrainView.OnEndCallback() {
             @Override
@@ -115,7 +111,7 @@ public class KlineTrainActivity extends BaseActivity {
                 updateTrainData();
             }
         });
-        }
+    }
 
 
     private void initTrainView() {
@@ -157,7 +153,7 @@ public class KlineTrainActivity extends BaseActivity {
     }
 
     private void requestEndTrain() {
-        TrainingResultActivity.show(getActivity(), mTraining, (int) mTrainingCountTime, mIsSuccess);
+        TrainingResultActivity.show(getActivity(), mTraining, (int) mTrainingCountTime / 1000, mIsSuccess);
         finish();
     }
 
