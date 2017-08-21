@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
@@ -9,14 +10,15 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="155dp"
-        android:layout_height="185dp">
+        android:layout_height="185dp"
+        app:cardCornerRadius="8dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/explanation"
@@ -28,15 +30,6 @@
                 android:textSize="16sp"
                 android:visibility="visible"
                 tools:text="股价在上升的趋势中因为涨幅过猛而暂时的回落调整现象"/>
-
-            <ImageView
-                android:id="@+id/starImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_star_1s"
-                android:visibility="invisible"/>
-
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

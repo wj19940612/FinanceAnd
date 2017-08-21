@@ -63,11 +63,11 @@ public class DiamondView extends View {
 
         mEdgePaint = new Paint();
 //        mEdgePaint.setColor(Color.parseColor("#6F56CA"));
-        mEdgePaint.setColor(Color.RED);
+        mEdgePaint.setColor(Color.WHITE);
         mEdgePaint.setStyle(Paint.Style.STROKE);
         mEdgePaint.setDither(true);
         mEdgePaint.setAntiAlias(true);
-        mEdgePaint.setStrokeWidth(2f);
+        mEdgePaint.setStrokeWidth(4f);
     }
 
     @Override
@@ -155,13 +155,13 @@ public class DiamondView extends View {
             mPoints = new ArrayList<>();
         }
         mPoints.clear();
-        mPoints.add(new Point(0, -mHeight / 2));
-        mPoints.add(new Point(-mWidth / 2 + 1, -h));
+        mPoints.add(new Point(0, -mHeight / 2 + 1));
+        mPoints.add(new Point(-mWidth / 2 + 2, -h));
         mPoints.add(new Point(-mWidth / 2 + 1, h));
-        mPoints.add(new Point(0, mHeight / 2));
-        mPoints.add(new Point(mWidth / 2, h));
-        mPoints.add(new Point(mWidth / 2, -h));
-        mPoints.add(new Point(0, -mHeight / 2));
+        mPoints.add(new Point(0, mHeight / 2-1));
+        mPoints.add(new Point(mWidth / 2 - 1, h));
+        mPoints.add(new Point(mWidth / 2 - 1, -h));
+        mPoints.add(new Point(0, -mHeight / 2 + 1));
     }
 
     private void startAnimation(Point startPoint, Point endPoint) {
@@ -196,11 +196,12 @@ public class DiamondView extends View {
 
     public void setBackgroundType(int type) {
         if (TYPE_DARK == type) {
-            mColor = Color.parseColor("#372F54");
+            mPaint.setColor(Color.parseColor("#372F54"));
+            mEdgePaint.setColor(Color.WHITE);
         } else {
-            mColor = Color.WHITE;
+            mPaint.setColor(Color.WHITE);
+            mEdgePaint.setColor(Color.parseColor("#372F54"));
         }
-        mPaint.setColor(mColor);
         mSelected = false;
         invalidate();
     }

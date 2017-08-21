@@ -59,6 +59,17 @@ public class RemoveTraining implements Parcelable {
     }
 
     @Override
+    public String toString() {
+        return "RemoveTraining{" +
+                "content='" + content + '\'' +
+                ", id='" + id + '\'' +
+                ", seq=" + seq +
+                ", type=" + type +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

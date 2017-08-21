@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.BounceInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -76,14 +77,17 @@ public class DiamondGroupView extends RelativeLayout {
     }
 
     public void startErrorAnim() {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(this, "rotation", 0f, -20f, 0f);
-        animator.setInterpolator(new BounceInterpolator());
-        animator.setDuration(1000);
-        animator.start();
+        ObjectAnimator animatorLeft = ObjectAnimator.ofFloat(this, "rotation", 0f, -20f, 0f);
+        ObjectAnimator animatorRight = ObjectAnimator.ofFloat(this, "rotation", 0f, 20f, 0f);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(animatorRight).after(animatorLeft);
+        animSet.setInterpolator(new LinearInterpolator());
+        animSet.setDuration(400);
+        animSet.start();
     }
 
     public void startDisappearAnim() {
-        ObjectAnimator rotation = ObjectAnimator.ofFloat(this, "rotation", 0f, 360f);
+        ObjectAnimator rotation = ObjectAnimator.ofFloat(this, "rotation", 0f, 180f);
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(this, "scaleX", 1f, 0.01f);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(this, "scaleY", 1f, 0.01f);
         ObjectAnimator alpha = ObjectAnimator.ofFloat(this, "alpha", 1f, 0f);
@@ -124,6 +128,7 @@ public class DiamondGroupView extends RelativeLayout {
         setScaleX(100f);
         setScaleY(100f);
         setAlpha(1f);
+        setRotation(0f);
     }
 
     public void setSelected(boolean selected) {

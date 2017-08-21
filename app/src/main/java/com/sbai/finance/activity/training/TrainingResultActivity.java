@@ -152,7 +152,7 @@ public class TrainingResultActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<TrainingDetail>, TrainingDetail>() {
                     @Override
                     protected void onRespSuccessData(TrainingDetail data) {
-                        if (data.getTargets() != null && !data.getTargets().isEmpty() && mTrainingSubmitResult != null) {
+                        if (data.getTargets() != null && !data.getTargets().isEmpty()) {
                             updateTrainResult(data.getTargets());
                         }
                     }
@@ -160,35 +160,33 @@ public class TrainingResultActivity extends BaseActivity {
     }
 
     private void updateTrainResult(List<TrainingTarget> trainTargets) {
-        if (mTrainingSubmitResult.getType() == TrainingTarget.TYPE_TIME
-                || mTrainingSubmitResult.getType() == TrainingTarget.TYPE_FINISH) {
-            int size = trainTargets.size();
-            if (size > 0) {
-                mAchievement1.setContent(getString(R.string.train_finish_less_minutes, trainTargets.get(0).getTime() / 60));
-                if (trainTargets.get(0).getTime() >= mTrainingSubmitResult.getTime()) {
-                    mAchievement1.setAchieved(true);
-                } else {
-                    mAchievement1.setAchieved(false);
-                }
+        if (mTrainingSubmit == null || mTraining == null) return;
+        int size = trainTargets.size();
+        if (size > 0) {
+            mAchievement1.setContent(getString(R.string.train_finish_less_minutes, trainTargets.get(0).getTime() / 60));
+            if (trainTargets.get(0).getTime() >= mTrainingSubmit.getTime() && mTrainingSubmit.isFinish()) {
+                mAchievement1.setAchieved(true);
+            } else {
+                mAchievement1.setAchieved(false);
             }
-            if (size > 1) {
-                mAchievement2.setContent(getString(R.string.train_finish_less_minutes, trainTargets.get(1).getTime() / 60));
-                if (trainTargets.get(1).getTime() >= mTrainingSubmitResult.getTime()) {
-                    mAchievement2.setAchieved(true);
-                } else {
-                    mAchievement2.setAchieved(false);
-                }
-            }
-            if (size > 2) {
-                mAchievement3.setContent(getString(R.string.train_finish_less_minutes, trainTargets.get(2).getTime() / 60));
-                if (trainTargets.get(2).getTime() >= mTrainingSubmitResult.getTime()) {
-                    mAchievement3.setAchieved(true);
-                } else {
-                    mAchievement3.setAchieved(false);
-                }
-            }
-            showResultsWithAnim(size);
         }
+        if (size > 1) {
+            mAchievement2.setContent(getString(R.string.train_finish_less_minutes, trainTargets.get(1).getTime() / 60));
+            if (trainTargets.get(1).getTime() >= mTrainingSubmit.getTime() && mTrainingSubmit.isFinish()) {
+                mAchievement2.setAchieved(true);
+            } else {
+                mAchievement2.setAchieved(false);
+            }
+        }
+        if (size > 2) {
+            mAchievement3.setContent(getString(R.string.train_finish_less_minutes, trainTargets.get(2).getTime() / 60));
+            if (trainTargets.get(2).getTime() >= mTrainingSubmit.getTime() && mTrainingSubmit.isFinish()) {
+                mAchievement3.setAchieved(true);
+            } else {
+                mAchievement3.setAchieved(false);
+            }
+        }
+        showResultsWithAnim(size);
     }
 
     public void showResultsWithAnim(int count) {
@@ -231,7 +229,10 @@ public class TrainingResultActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.recordTrainingExperience:
-                // TODO: 15/08/2017 跳转写心得
+                Launcher.with(getActivity(), WriteExperienceActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, mTraining.getType())
+                        .execute();
+                finish();
                 break;
             case R.id.retry:
                 Launcher.with(getActivity(), TrainingCountDownActivity.class)
