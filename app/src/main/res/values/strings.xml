@@ -592,6 +592,15 @@
     <string name="get_exam_questions_fail">测试题目获取失败</string>
     <string name="accuracy_ranking">正确率%1$s     超过%2$s的同学</string>
 
+    <string-array name="evaluationLevel">
+        <item>未测</item>
+        <item>入门</item>
+        <item>初级</item>
+        <item>中级</item>
+        <item>高级</item>
+        <item>精通</item>
+    </string-array>
+
     <!--姐说-->
     <string name="question">提问</string>
     <string name="question_reward_will_gain_money">每次问题被打赏,可以获得一半的赏金哦~</string>
@@ -790,5 +799,5 @@
     <string name="_minutes_complete">%1$d分钟内完成</string>
     <string name="mission_complete">任务完成</string>
     <string name="accuracy_to_">准确率达到%1$s</string>
-    
+
 </resources>

@@ -8,10 +8,10 @@ import android.os.Parcelable;
  * 测评结果
  */
 
-public class EvaluationResult implements Parcelable{
+public class EvaluationResult implements Parcelable {
 
 
-        //正确率
+    //正确率
     private double allAccuracy;
     //完成时间
     private String createTime;
@@ -36,9 +36,15 @@ public class EvaluationResult implements Parcelable{
     private int topicId;
     private String updateTime;
     private int userId;
+    private int maxLevel; //最高测评等级
 
+    public int getMaxLevel() {
+        return maxLevel;
+    }
 
-
+    public void setMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
+    }
 
     public double getAllAccuracy() {
         return allAccuracy;
@@ -152,6 +158,27 @@ public class EvaluationResult implements Parcelable{
         this.userId = userId;
     }
 
+    @Override
+    public String toString() {
+        return "EvaluationResult{" +
+                "allAccuracy=" + allAccuracy +
+                ", createTime='" + createTime + '\'' +
+                ", finishStatus=" + finishStatus +
+                ", id=" + id +
+                ", level=" + level +
+                ", passPercent=" + passPercent +
+                ", baseAccuracy=" + baseAccuracy +
+                ", profitAccuracy=" + profitAccuracy +
+                ", riskAccuracy=" + riskAccuracy +
+                ", skillAccuracy=" + skillAccuracy +
+                ", theoryAccuracy=" + theoryAccuracy +
+                ", topicId=" + topicId +
+                ", updateTime='" + updateTime + '\'' +
+                ", userId=" + userId +
+                ", maxLevel=" + maxLevel +
+                '}';
+    }
+
     /**
      * allAccuracy : 0.7
      * baseAccuracy : 0
@@ -168,6 +195,7 @@ public class EvaluationResult implements Parcelable{
      * updateTime : 2017-08-05 15:06:40
      * userId : 800329
      */
+
 
 
     @Override
@@ -191,6 +219,7 @@ public class EvaluationResult implements Parcelable{
         dest.writeInt(this.topicId);
         dest.writeString(this.updateTime);
         dest.writeInt(this.userId);
+        dest.writeInt(this.maxLevel);
     }
 
     public EvaluationResult() {
@@ -211,6 +240,7 @@ public class EvaluationResult implements Parcelable{
         this.topicId = in.readInt();
         this.updateTime = in.readString();
         this.userId = in.readInt();
+        this.maxLevel = in.readInt();
     }
 
     public static final Creator<EvaluationResult> CREATOR = new Creator<EvaluationResult>() {
@@ -224,24 +254,4 @@ public class EvaluationResult implements Parcelable{
             return new EvaluationResult[size];
         }
     };
-
-    @Override
-    public String toString() {
-        return "TestResultModel{" +
-                "allAccuracy=" + allAccuracy +
-                ", createTime='" + createTime + '\'' +
-                ", finishStatus=" + finishStatus +
-                ", id=" + id +
-                ", level=" + level +
-                ", passPercent=" + passPercent +
-                ", baseAccuracy=" + baseAccuracy +
-                ", profitAccuracy=" + profitAccuracy +
-                ", riskAccuracy=" + riskAccuracy +
-                ", skillAccuracy=" + skillAccuracy +
-                ", theoryAccuracy=" + theoryAccuracy +
-                ", topicId=" + topicId +
-                ", updateTime='" + updateTime + '\'' +
-                ", userId=" + userId +
-                '}';
-    }
 }
