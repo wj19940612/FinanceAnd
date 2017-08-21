@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.training;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
@@ -16,6 +15,7 @@ import android.support.v7.widget.CardView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -68,8 +68,6 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	ImageView mStarImage;
 	@BindView(R.id.cardView)
 	CardView mCardView;
-
-
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
 	@BindView(R.id.progressBar)
@@ -95,6 +93,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	private long mTrainingCountTime;
 	private int mTrainTargetTime;
 	private boolean mIsSuccess;
+	private int mQuestionCount;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +162,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		} else {
 			mNewNounExplanationList = mNounExplanationList;
 		}
+		mQuestionCount = mNewNounExplanationList.size();
 	}
 
 	private List<Fragment> getFragments() {
@@ -180,7 +180,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		mViewPager.setPageTransformer(true, new CardPageTransformer((int) Display.dp2Px(10, getResources())));
 		mExplanationFragmentAdapter = new ExplanationFragmentAdapter(getSupportFragmentManager(), mFragments);
 		mViewPager.setAdapter(mExplanationFragmentAdapter);
-		mNumber.setText(getString(R.string.explanation_number, (0), mFragments.size()));
+		mNumber.setText(getString(R.string.explanation_number, 0, mQuestionCount));
 		mViewPager.post(new Runnable() {
 			@Override
 			public void run() {
@@ -273,8 +273,11 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mCardView.setVisibility(View.VISIBLE);
 				mStarImage.setVisibility(View.INVISIBLE);
 				mExplanation.setText(mNewNounExplanationList.get(mViewPager.getCurrentItem()).getKey().getContent());
-				Animator animator1 = ObjectAnimator.ofFloat(mCardView, "translationY", 0, 2000).setDuration(500);
-				animator1.start();
+				TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, 2000);
+				translateAnimation.setDuration(500);
+				translateAnimation.setFillAfter(true);
+				mCardView.startAnimation(translateAnimation);
+
 
 				if (mViewPager.getCurrentItem() > 0) {
 					int position = mViewPager.getCurrentItem() - 1;
@@ -289,8 +292,10 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mCardView.setVisibility(View.VISIBLE);
 				mStarImage.setVisibility(View.INVISIBLE);
 				mExplanation.setText(mNewNounExplanationList.get(mViewPager.getCurrentItem()).getKey().getContent());
-				Animator animator2 = ObjectAnimator.ofFloat(mCardView, "translationY", 0, 2000).setDuration(500);
-				animator2.start();
+				TranslateAnimation translateAnimation2 = new TranslateAnimation(0, 0, 0, 1000);
+				translateAnimation2.setDuration(500);
+				translateAnimation2.setFillAfter(true);
+				mCardView.startAnimation(translateAnimation2);
 
 				if (mViewPager.getCurrentItem() < mFragments.size() - 1) {
 					int position = mViewPager.getCurrentItem() + 1;
@@ -337,14 +342,14 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		if ((int) view.getTag() == fragment.getStarTag()) {
 			if (mFragments.size() > 1) {
 				startCardFlyAnimation(view);
+				mNewNounExplanationList.remove(mViewPager.getCurrentItem());
 				mExplanationFragmentAdapter.destroyItem(mViewPager, mViewPager.getCurrentItem()
 						, mFragments.get(mViewPager.getCurrentItem()));
-				mNewNounExplanationList.remove(mViewPager.getCurrentItem());
 				mFragments.remove(mViewPager.getCurrentItem());
 				initViewPager();
 				mStarColor.remove(mViewPager.getCurrentItem());
 				mCompleteCount++;
-				mNumber.setText(getString(R.string.explanation_number, mCompleteCount, mNewNounExplanationList.size()));
+				mNumber.setText(getString(R.string.explanation_number, mCompleteCount, mQuestionCount));
 
 			} else {
 				//只剩一套题目了
@@ -353,14 +358,13 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mViewPager.setVisibility(View.INVISIBLE);
 				mCardView.setVisibility(View.VISIBLE);
 				mStarImage.setVisibility(View.VISIBLE);
-				AnimatorSet animatorSet = new AnimatorSet();
-				animatorSet.playTogether(
-						ObjectAnimator.ofFloat(mCardView, "translationX", 0, 0),
-						ObjectAnimator.ofFloat(mCardView, "translationY", 0, 0));
-				animatorSet.setDuration(5000).setInterpolator(new OvershootInterpolator());
-				animatorSet.start();
+				TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, 0);
+				translateAnimation.setDuration(1000);
+				translateAnimation.setFillAfter(false);
+				mCardView.startAnimation(translateAnimation);
+
 				mCompleteCount++;
-				mNumber.setText(getString(R.string.explanation_number, mCompleteCount, mNewNounExplanationList.size()));
+				mNumber.setText(getString(R.string.explanation_number, mCompleteCount, mQuestionCount));
 				mIsSuccess = true;
 				requestEndTrain();
 			}
@@ -374,12 +378,10 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		view.setVisibility(View.INVISIBLE);
 		mCardView.setVisibility(View.VISIBLE);
 		mStarImage.setVisibility(View.VISIBLE);
-		AnimatorSet animatorSet = new AnimatorSet();
-		animatorSet.playTogether(
-				ObjectAnimator.ofFloat(mCardView, "translationX", 0, -1000),
-				ObjectAnimator.ofFloat(mCardView, "translationY", 0, -1000));
-		animatorSet.setDuration(1000).setInterpolator(new OvershootInterpolator());
-		animatorSet.start();
+		TranslateAnimation translateAnimation = new TranslateAnimation(0, -1000, 0, -1000);
+		translateAnimation.setDuration(500);
+		translateAnimation.setFillAfter(true);
+		mCardView.startAnimation(translateAnimation);
 	}
 
 	private void initCardStar(int currentItem) {
@@ -407,7 +409,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		animatorSet.playTogether(
 				ObjectAnimator.ofFloat(view, "translationX", 0f),
 				ObjectAnimator.ofFloat(view, "translationY", 0f));
-		animatorSet.setDuration(400).setInterpolator(new OvershootInterpolator());
+		animatorSet.setDuration(500).setInterpolator(new OvershootInterpolator());
 		animatorSet.start();
 	}
 
