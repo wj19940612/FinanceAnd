@@ -791,6 +791,7 @@
     <string name="_minutes">%1$d分</string>
     <string name="mission_complete">任务完成</string>
     <string name="accuracy_to_">准确率达到%1$s</string>
-    <string name="train_end_time">%1$s内完成</string>
+    <string name="train_finish_time_with_second">%1$s内完成</string>
+    <string name="train_finish_time">%1$s钟内完成</string>
 
 </resources>

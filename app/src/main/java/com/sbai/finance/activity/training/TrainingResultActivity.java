@@ -169,7 +169,11 @@ public class TrainingResultActivity extends BaseActivity {
                     break;
                 case TrainingTarget.TYPE_TIME:
                     for (int i = 0; i < mAchievementViews.length; i++) {
-                        mAchievementViews[i].setContent(getString(R.string.train_end_time, formatTime(trainTargets.get(i).getTime())));
+                        if (trainTargets.get(i).getTime() % 60 == 0) {
+                            mAchievementViews[i].setContent(getString(R.string.train_finish_time, formatTime(trainTargets.get(i).getTime())));
+                        } else {
+                            mAchievementViews[i].setContent(getString(R.string.train_finish_time_with_second, formatTime(trainTargets.get(i).getTime())));
+                        }
                         if (mTrainingSubmit.getTime() >= trainTargets.get(i).getTime()) {
                             mAchievementViews[i].setAchieved(true);
                         }
