@@ -316,5 +316,6 @@ public class TrainingResultActivity extends BaseActivity {
                 .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
                 .putExtra(ExtraKeys.QUESTION, question)
                 .execute();
+        finish();
     }
 }
