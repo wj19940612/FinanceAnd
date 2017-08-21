@@ -197,7 +197,10 @@ public class TrainingCountDownActivity extends BaseActivity {
 
     private void initData(Intent intent) {
         mTrainingDetail = intent.getParcelableExtra(ExtraKeys.TRAINING_DETAIL);
-        mTraining = mTrainingDetail.getTrain();
+        if (mTrainingDetail != null) {
+            mTraining = mTrainingDetail.getTrain();
+        }
+        
 
         switch (mTraining.getType()) {
             case Training.TYPE_THEORY:

@@ -233,7 +233,7 @@ public class TrainingResultActivity extends BaseActivity {
                 break;
             case R.id.retry:
                 Launcher.with(getActivity(), TrainingCountDownActivity.class)
-                        .putExtra(ExtraKeys.TRAINING, mTraining)
+                        .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
                         .execute();
                 finish();
                 break;
