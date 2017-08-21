@@ -335,6 +335,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
                 animatorSet.start();
                 mCompleteCount ++;
                 mNumber.setText(getString(R.string.explanation_number, mCompleteCount, mNewNounExplanationList.size()));
+                mIsSuccess = true;
                 requestEndTrain();
             }
         } else {
