@@ -803,5 +803,4 @@
 
     <string name="train_finish_time_with_second">%1$s内完成</string>
     <string name="train_finish_time">%1$s钟内完成</string>
-
 </resources>
