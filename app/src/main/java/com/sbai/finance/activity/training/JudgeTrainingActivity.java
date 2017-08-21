@@ -36,6 +36,8 @@ import butterknife.OnClick;
 
 public class JudgeTrainingActivity extends BaseActivity {
 
+    @BindView(R.id.topArea)
+    LinearLayout mTopArea;
     @BindView(R.id.close)
     ImageView mClose;
     @BindView(R.id.timer)
@@ -76,6 +78,9 @@ public class JudgeTrainingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_judge_training);
         ButterKnife.bind(this);
+
+        translucentStatusBar();
+        addStatusBarHeightTopPadding(mTopArea);
 
         initData(getIntent());
 
@@ -164,8 +169,12 @@ public class JudgeTrainingActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        float widthScale = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
+                ? 0.45f : SmartDialog.DEFAULT_SCALE;
+
         SmartDialog.single(getActivity(), getString(R.string.exit_train_will_not_save_train_record))
                 .setTitle(getString(R.string.is_sure_exit_train))
+                .setWidthScale(widthScale)
                 .setNegative(R.string.exit_train, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
