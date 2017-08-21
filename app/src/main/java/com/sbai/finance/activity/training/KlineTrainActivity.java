@@ -50,7 +50,6 @@ public class KlineTrainActivity extends BaseActivity {
     /*用来标记第几组题*/
     private int mIndex;
     private int mSize;
-    private int mPage;
     private boolean mIsSuccess;
 
     private CountDownTimer mCountDownTimer;
@@ -106,9 +105,16 @@ public class KlineTrainActivity extends BaseActivity {
         }
 
         mTrainView.setOnEndCallback(new KlineTrainView.OnEndCallback() {
+
             @Override
-            public void onEnd() {
+            public void onAllEnd() {
                 updateTrainData();
+            }
+
+            @Override
+            public void onMatchEnd() {
+                mIndex++;
+                mIndexView.setText(mIndex + "/" + mSize);
             }
         });
 
@@ -119,10 +125,7 @@ public class KlineTrainActivity extends BaseActivity {
                 && !mTrainingQuestion.getContent().isEmpty()) {
             mTrainings = mTrainingQuestion.getContent();
             mSize = mTrainingQuestion.getContent().size();
-            mPage = mSize / 3;
-            if (mSize % 3 > 0) {
-                mPage++;
-            }
+            mIndexView.setText(mIndex + "/" + mSize);
             updateTrainData();
         } else {
             mTrainView.setVisibility(View.GONE);
@@ -147,13 +150,11 @@ public class KlineTrainActivity extends BaseActivity {
             }
             mTrainView.setTrainData(trainList);
             mTrainView.startAppearAnim();
-            mIndex++;
-            mIndexView.setText(mIndex + "/" + mPage);
         }
     }
 
     private void requestEndTrain() {
-        TrainingResultActivity.show(getActivity(), mTraining, mTrainingCountTime, mIsSuccess);
+        TrainingResultActivity.show(getActivity(), mTraining, (int) mTrainingCountTime, mIsSuccess);
         finish();
     }
 

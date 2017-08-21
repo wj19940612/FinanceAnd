@@ -84,8 +84,8 @@ public class DiamondGroupView extends RelativeLayout {
 
     public void startDisappearAnim() {
         ObjectAnimator rotation = ObjectAnimator.ofFloat(this, "rotation", 0f, 360f);
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(this, "scaleX", 1f, 0.1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(this, "scaleY", 1f, 0.1f);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(this, "scaleX", 1f, 0.01f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(this, "scaleY", 1f, 0.01f);
         ObjectAnimator alpha = ObjectAnimator.ofFloat(this, "alpha", 1f, 0f);
         AnimatorSet animSet = new AnimatorSet();
         animSet.play(rotation).with(scaleX).with(scaleY).with(alpha);
@@ -100,7 +100,7 @@ public class DiamondGroupView extends RelativeLayout {
             }
         });
         animSet.setInterpolator(new AccelerateInterpolator());
-        animSet.setDuration(500);
+        animSet.setDuration(400);
         animSet.start();
     }
 
@@ -121,8 +121,8 @@ public class DiamondGroupView extends RelativeLayout {
     }
 
     public void resetView() {
-        setScaleX(10f);
-        setScaleY(10f);
+        setScaleX(100f);
+        setScaleY(100f);
         setAlpha(1f);
     }
 

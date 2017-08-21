@@ -25,7 +25,9 @@ public class KlineTrainView extends RelativeLayout {
     private OnEndCallback mOnEndCallback;
 
     public interface OnEndCallback {
-        void onEnd();
+        void onAllEnd();
+
+        void onMatchEnd();
     }
 
     public void setOnEndCallback(OnEndCallback onEndCallback) {
@@ -161,6 +163,9 @@ public class KlineTrainView extends RelativeLayout {
                             if (training1.getSeq() == training2.getSeq()) {
                                 views[mPriSelectedIndex].startDisappearAnim();
                                 views[index].startDisappearAnim();
+                                if (mOnEndCallback != null) {
+                                    mOnEndCallback.onMatchEnd();
+                                }
                             } else {
                                 views[mPriSelectedIndex].startErrorAnim();
                                 views[mPriSelectedIndex].setSelected(false);
@@ -184,7 +189,7 @@ public class KlineTrainView extends RelativeLayout {
             }
         }
         if (end && mOnEndCallback != null) {
-            mOnEndCallback.onEnd();
+            mOnEndCallback.onAllEnd();
         }
     }
 
