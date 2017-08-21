@@ -183,6 +183,7 @@ public class TrainingResultActivity extends BaseActivity {
                                     trainTargets.get(i).getTime() / 60, seconds));
                         }
                         if (mTrainingSubmit.getTime() >= trainTargets.get(i).getTime()) {
+                            finalTargetIndex = i;
                             mAchievementViews[i].setAchieved(true);
                         }
                     }
