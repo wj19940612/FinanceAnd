@@ -174,8 +174,14 @@ public class TrainingResultActivity extends BaseActivity {
                 case TrainingTarget.TYPE_TIME:
                     finalTargetIndex = -1;
                     for (int i = 0; i < mAchievementViews.length; i++) {
-                        mAchievementViews[i].setContent(getString(R.string._minutes_complete,
-                                trainTargets.get(i).getTime() / 60));
+                        int seconds = trainTargets.get(i).getTime() % 60;
+                        if (seconds == 0) {
+                            mAchievementViews[i].setContent(getString(R.string._minutes_complete,
+                                    trainTargets.get(i).getTime() / 60));
+                        } else {
+                            mAchievementViews[i].setContent(getString(R.string.train_use_time,
+                                    trainTargets.get(i).getTime() / 60, seconds));
+                        }
                         if (mTrainingSubmit.getTime() >= trainTargets.get(i).getTime()) {
                             mAchievementViews[i].setAchieved(true);
                         }

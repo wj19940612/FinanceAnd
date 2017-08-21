@@ -208,11 +208,14 @@ public class ScoreView extends View {
         mMaxValue = mRadius;
 
         if (mEvaluationResult != null) {
-            double[] dataScore = {mEvaluationResult.getProfitAccuracy() * mMaxValue,
-                    mEvaluationResult.getSkillAccuracy() * mMaxValue,
-                    mEvaluationResult.getBaseAccuracy() * mMaxValue,
-                    mEvaluationResult.getRiskAccuracy() * mMaxValue,
-                    mEvaluationResult.getTheoryAccuracy() * mMaxValue};
+            double profitAccuracy = mEvaluationResult.getProfitAccuracy() > 1 ? 1 : mEvaluationResult.getProfitAccuracy();
+            double skillAccuracy = mEvaluationResult.getSkillAccuracy() > 1 ? 1 : mEvaluationResult.getSkillAccuracy();
+            double baseAccuracy = mEvaluationResult.getBaseAccuracy() > 1 ? 1 : mEvaluationResult.getBaseAccuracy();
+            double riskAccuracy = mEvaluationResult.getRiskAccuracy() > 1 ? 1 : mEvaluationResult.getRiskAccuracy();
+            double theoryAccuracy = mEvaluationResult.getTheoryAccuracy() > 1 ? 1 : mEvaluationResult.getTheoryAccuracy();
+            double[] dataScore = {
+                    profitAccuracy * mMaxValue, skillAccuracy * mMaxValue, baseAccuracy * mMaxValue,
+                    riskAccuracy * mMaxValue, theoryAccuracy * mMaxValue};
 
             mData = dataScore;
         }
