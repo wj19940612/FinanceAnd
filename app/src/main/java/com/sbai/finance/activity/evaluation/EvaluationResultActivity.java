@@ -61,9 +61,9 @@ public class EvaluationResultActivity extends BaseActivity {
         mScoreView.setData(data);
         setScoreView(data.getLevel());
         mAccuracyHint.setText(getString(R.string.accuracy_ranking,
-                NumberFormatUtils.formatPercentString(data.getAllAccuracy()),
-                NumberFormatUtils.formatPercentString(data.getPassPercent())));
-        mAccuracy.setText(NumberFormatUtils.formatPercentString(data.getAllAccuracy()));
+                NumberFormatUtils.formatPercentStringEndReplaceZero(data.getAllAccuracy(),2),
+                NumberFormatUtils.formatPercentStringEndReplaceZero(data.getPassPercent(),2)));
+        mAccuracy.setText(NumberFormatUtils.formatPercentStringEndReplaceZero(data.getAllAccuracy(),2));
     }
 
     public void setScoreView(int result) {

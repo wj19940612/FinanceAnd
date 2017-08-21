@@ -3,8 +3,10 @@ package com.sbai.finance.model.training;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sbai.finance.BuildConfig;
 import com.sbai.finance.model.levelevaluation.EvaluationResult;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.ToastUtil;
 
 import java.util.List;
 
@@ -190,6 +192,9 @@ public class UserEachTrainingScoreModel implements Parcelable {
             if (data.getTotalScore() != 0) {
                 if (data.getScore() > data.getTotalScore()) {
                     scale = 1;
+                    if (BuildConfig.DEBUG) {
+                        ToastUtil.show("数据不对 超出限制了");
+                    }
                 } else {
                     scale = FinanceUtil.divide(data.getScore(), data.getTotalScore()).doubleValue();
                 }
