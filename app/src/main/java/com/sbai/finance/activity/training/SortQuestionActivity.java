@@ -208,7 +208,7 @@ public class SortQuestionActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Launcher.with(getActivity(), HowPlayActivity.class)
-                        .putExtra(ExtraKeys.TRAINING, mTrainingDetail)
+                        .putExtra(ExtraKeys.TRAINING, mTrainingDetail.getTrain())
                         .execute();
             }
         });

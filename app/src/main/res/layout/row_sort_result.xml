@@ -6,7 +6,7 @@
               android:layout_marginLeft="5dp"
               android:layout_marginRight="5dp"
               android:foreground="?android:attr/selectableItemBackground"
-              android:minHeight="114dp"
+              android:minHeight="80dp"
               android:orientation="horizontal">
 
     <TextView
