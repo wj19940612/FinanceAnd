@@ -66,6 +66,7 @@ public class TrainingResultActivity extends BaseActivity {
     private Training mTraining;
     private TrainingDetail mTrainingDetail;
     private TrainingSubmit mTrainingSubmit;
+    private int mCount;
 
     public static void show(Activity activity, Training training, int time, boolean isFinish) {
         Launcher.with(activity, TrainingResultActivity.class)
@@ -136,6 +137,7 @@ public class TrainingResultActivity extends BaseActivity {
                         if (BuildConfig.DEBUG) {
                             ToastUtil.show(resp.getData().toString());
                         }
+                        //mCount = resp.getData().getLevel();
                     }
 
                     @Override
@@ -227,7 +229,8 @@ public class TrainingResultActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.recordTrainingExperience:
                 Launcher.with(getActivity(), WriteExperienceActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mTraining.getType())
+                        .putExtra(ExtraKeys.TRAINING, mTraining)
+                        //.putExtra(ExtraKeys.TRAIN_LEVEL, mCount)
                         .execute();
                 finish();
                 break;

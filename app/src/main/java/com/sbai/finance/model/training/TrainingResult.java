@@ -7,7 +7,7 @@ package com.sbai.finance.model.training;
 public class TrainingResult {
 
     private int id;
-    private double level;
+    private int level;
     private double score;
     private int time;
     private int trainId;
@@ -21,11 +21,11 @@ public class TrainingResult {
         this.id = id;
     }
 
-    public double getLevel() {
+    public int getLevel() {
         return level;
     }
 
-    public void setLevel(double level) {
+    public void setLevel(int level) {
         this.level = level;
     }
 

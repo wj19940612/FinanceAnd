@@ -23,8 +23,10 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.training.ExplanationFragment;
-import com.sbai.finance.model.training.Training;
-import com.sbai.finance.model.training.TrainingQuestion;
+import com.sbai.finance.model.training.Question;
+import com.sbai.finance.model.training.TrainingDetail;
+import com.sbai.finance.model.training.TrainingSubmit;
+import com.sbai.finance.model.training.question.RemoveData;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
@@ -75,10 +77,10 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	@BindView(R.id.explanation)
 	TextView mExplanation;
 
-	private TrainingQuestion mTrainingQuestion;
-	private Training mTraining;
-	private List<TrainingQuestion.ContentBean> mNounExplanationList;
-	private List<TrainingQuestion.ContentBean> mNewNounExplanationList;
+	private TrainingDetail mTrainingDetail;
+	private Question mQuestion;
+	private List<RemoveData> mNounExplanationList;
+	private List<RemoveData> mNewNounExplanationList;
 	private List<Fragment> mFragments;
 	private ExplanationFragmentAdapter mExplanationFragmentAdapter;
 	private float mDownX;
@@ -110,9 +112,9 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	}
 
 	private void initView() {
-		if (mTraining == null) return;
-		mProgressBar.setTotalSecondTime(mTraining.getTime());
-		mTrainTargetTime = mTraining.getTime() * 1000;
+		if (mTrainingDetail == null) return;
+		mProgressBar.setTotalSecondTime(mTrainingDetail.getTrain().getTime());
+		mTrainTargetTime = mTrainingDetail.getTrain().getTime() * 1000;
 		mProgressBar.setOnTimeUpListener(new TrainProgressBar.OnTimeUpListener() {
 			@Override
 			public void onTick(long millisUntilUp) {
@@ -131,21 +133,27 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 			@Override
 			public void onClick(View v) {
 				Launcher.with(getActivity(), HowPlayActivity.class)
-						.putExtra(ExtraKeys.TRAINING, mTraining)
+						.putExtra(ExtraKeys.TRAINING, mTrainingDetail.getTrain())
 						.execute();
 			}
 		});
 	}
 
 	private void requestEndTrain() {
-		TrainingResultActivity.show(getActivity(), mTraining, (int) mTrainingCountTime / 1000, mIsSuccess);
+		TrainingSubmit trainingSubmit = new TrainingSubmit(mTrainingDetail.getTrain().getId());
+		trainingSubmit.setTime((int) (mTrainingCountTime / 1000));
+		trainingSubmit.setFinish(mIsSuccess);
+		Launcher.with(getActivity(), TrainingResultActivity.class)
+				.putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
+				.putExtra(ExtraKeys.TRAINING_SUBMIT, trainingSubmit)
+				.execute();
 		finish();
 	}
 
 	private void initData(Intent intent) {
-		mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
-		mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
-		mNounExplanationList = mTrainingQuestion.getContent();
+		mTrainingDetail = intent.getParcelableExtra(ExtraKeys.TRAINING_DETAIL);
+		mQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
+		mNounExplanationList = mQuestion.getContent();
 		mNewNounExplanationList = new ArrayList<>();
 		mStarColor = new ArrayList<>();
 		if (mNounExplanationList.size() > 5) {
