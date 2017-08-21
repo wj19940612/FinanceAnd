@@ -4,11 +4,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +19,7 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.BuildConfig;
@@ -30,6 +31,7 @@ import com.sbai.finance.model.training.TrainingQuestion;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.RenderScriptGaussianBlur;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.TypefaceUtil;
 import com.sbai.finance.view.SmartDialog;
@@ -65,6 +67,10 @@ public class SortQuestionActivity extends BaseActivity {
     TitleBar mTitleBar;
     @BindView(R.id.progressBar)
     TrainProgressBar mProgressBar;
+    @BindView(R.id.bg)
+    ImageView mBg;
+    @BindView(R.id.content)
+    RelativeLayout mContent;
     //用來记录底部界面选择答案的索引
     private HashSet<Integer> mResultSet;
     private TrainingQuestion mTrainingQuestion;
@@ -84,7 +90,6 @@ public class SortQuestionActivity extends BaseActivity {
     private Training mTraining;
     //服务端返回的数据
     private List<TrainingQuestion.ContentBean> mWebTrainResult;
-    private CountDownTimer mCountDownTimer;
 
     //游戏进行的时间
     private long mTrainingCountTime;
@@ -92,6 +97,8 @@ public class SortQuestionActivity extends BaseActivity {
     private int mTrainTargetTime;
 
     private boolean isConfirmResult;
+
+    private RenderScriptGaussianBlur mRenderScriptGaussianBlur;
 
     public interface OnItemClickListener {
         void onItemClick(TrainingQuestion.ContentBean data, int position);
@@ -106,14 +113,13 @@ public class SortQuestionActivity extends BaseActivity {
         Intent intent = getIntent();
         mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
         mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
-
+        mRenderScriptGaussianBlur = new RenderScriptGaussianBlur(this);
         initHeaderView();
 
         mResultSet = new HashSet<>();
         createResultBgColors();
         createSortQuestionBgDrawables();
         initQuestionData();
-
     }
 
     private void initQuestionData() {
@@ -178,6 +184,21 @@ public class SortQuestionActivity extends BaseActivity {
         if (mTraining == null) return;
         mTrainTargetTime = mTraining.getTime() * 1000;
         mProgressBar.setTotalSecondTime(mTraining.getTime());
+        mProgressBar.setOnTimeUpListener(new TrainProgressBar.OnTimeUpListener() {
+            @Override
+            public void onTick(long millisUntilUp) {
+                mTrainingCountTime = millisUntilUp;
+                mTitleBar.setTitle(DateUtil.format(mTrainingCountTime, "mm:ss.SS"));
+            }
+
+            @Override
+            public void onFinish() {
+                mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
+                if (!isConfirmResult) {
+                    showResultDialog(false);
+                }
+            }
+        });
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,30 +207,12 @@ public class SortQuestionActivity extends BaseActivity {
                         .execute();
             }
         });
+    }
 
-        View customView = mTitleBar.getCustomView();
-        if (customView != null) {
-            final TextView countDownTimeTextView = (TextView) customView.findViewById(R.id.countdownTime);
-            mCountDownTimer = new CountDownTimer(mTrainTargetTime, 1) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    mTrainingCountTime = mTrainTargetTime - millisUntilFinished;
-                    countDownTimeTextView.setText(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
-                    mProgressBar.setTrainChangeTime(mTrainingCountTime);
-                }
-
-                @Override
-                public void onFinish() {
-                    mCountDownTimer.cancel();
-                    countDownTimeTextView.setText(DateUtil.format(mTrainTargetTime, "mm: ss. SS"));
-                    if (!isConfirmResult) {
-                        showResultDialog(false);
-                    }
-                }
-            }.start();
-        }
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mProgressBar.cancelCountDownTimer();
     }
 
     @Override
@@ -235,12 +238,23 @@ public class SortQuestionActivity extends BaseActivity {
         if (isFinishing()) {
             return;
         }
+
+        mBg.setVisibility(View.VISIBLE);
+        mContent.setDrawingCacheEnabled(true);
+        mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+        Bitmap bitmap = mContent.getDrawingCache();
+        mBg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
+        mContent.setVisibility(View.INVISIBLE);
+
         SortTrainResultDialog sortTrainResultDialog = new SortTrainResultDialog(this);
         sortTrainResultDialog.show();
         sortTrainResultDialog.setResult(isRight);
         sortTrainResultDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
+                mBg.setVisibility(View.GONE);
+                mContent.setVisibility(View.VISIBLE);
                 dialog.dismiss();
                 openTrainingResultPage(isRight);
             }
@@ -248,7 +262,6 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
     private void openTrainingResultPage(boolean isRight) {
-        mCountDownTimer.cancel();
         TrainingResultActivity.show(this, mTraining, mTrainTargetTime / 1000, isRight);
         finish();
     }
@@ -359,7 +372,7 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
     private void startResultListScaleAnimation(final boolean isRight) {
-        ScaleAnimation scaleAnimation = new ScaleAnimation(1, 0f, 1, 0f,
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1, 0.6f, 1, 0.6f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         scaleAnimation.setDuration(1000);
         scaleAnimation.setFillAfter(true);
@@ -430,7 +443,7 @@ public class SortQuestionActivity extends BaseActivity {
 
         @Override
         public AnnalsMaterialsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_annals_materials, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_sort_question, parent, false);
             return new AnnalsMaterialsViewHolder(view);
         }
 

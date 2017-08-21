@@ -226,7 +226,10 @@ public class TrainingResultActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.recordTrainingExperience:
-                // TODO: 15/08/2017 跳转写心得
+                Launcher.with(getActivity(), WriteExperienceActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, mTraining.getType())
+                        .execute();
+                finish();
                 break;
             case R.id.retry:
                 Launcher.with(getActivity(), TrainingCountDownActivity.class)

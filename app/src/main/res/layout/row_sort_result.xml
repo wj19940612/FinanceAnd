@@ -35,11 +35,12 @@
             android:background="@drawable/bg_broken_line_oval"
             android:gravity="center"
             android:minHeight="40dp"
+            android:maxLines="1"
             android:minWidth="60dp"
             android:paddingLeft="21dp"
             android:paddingRight="21dp"
             android:textColor="@android:color/white"
-            tools:text="提前预结算"/>
+            tools:text="提前预结算见风使舵黑科技的手机凤凰健康就地方好多数据库党风建设开发环境"/>
 
         <View
             android:layout_width="match_parent"

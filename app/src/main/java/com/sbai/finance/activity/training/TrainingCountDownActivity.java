@@ -93,7 +93,6 @@ public class TrainingCountDownActivity extends BaseActivity {
                                 .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
                                 .putExtra(ExtraKeys.QUESTION, mQuestion)
                                 .execute();
-
                         break;
                 }
                 finish();
@@ -110,7 +109,7 @@ public class TrainingCountDownActivity extends BaseActivity {
 
         setContentView(R.layout.activity_training_count_down);
         ButterKnife.bind(this);
-
+        translucentStatusBar();
         requestTrainingContent();
 
         if (mBackgroundRes != 0) {
@@ -152,6 +151,7 @@ public class TrainingCountDownActivity extends BaseActivity {
                                 mQuestion = data.get(0);
                             }
                         }
+
                         @Override
                         protected String onInterceptData(String data) {
                             return SecurityUtil.AESDecrypt(data);
