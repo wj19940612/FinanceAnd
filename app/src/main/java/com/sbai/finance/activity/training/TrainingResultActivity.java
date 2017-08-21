@@ -229,6 +229,7 @@ public class TrainingResultActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.recordTrainingExperience:
+
                 // TODO: 15/08/2017 跳转写心得
                 break;
             case R.id.retry:
