@@ -449,7 +449,7 @@ public class SortQuestionActivity extends BaseActivity {
         public List<SortData> getQuestionData() {
             return mSortQuestionList;
         }
-        
+
         public void insert(int position, SortData data) {
             mSortQuestionList.add(0, data);
             notifyItemInserted(position);

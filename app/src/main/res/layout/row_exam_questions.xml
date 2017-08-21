@@ -9,6 +9,7 @@
                                     android:layout_marginBottom="20dp"
                                     android:layout_marginLeft="@dimen/common_padding"
                                     android:layout_marginRight="@dimen/common_padding"
+                                    app:cardBackgroundColor="@color/evaluationQuestionBg"
                                     android:foreground="?android:attr/selectableItemBackground"
                                     android:minHeight="80dp"
                                     android:orientation="vertical"

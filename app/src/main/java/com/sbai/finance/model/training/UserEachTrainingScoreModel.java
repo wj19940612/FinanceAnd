@@ -188,7 +188,11 @@ public class UserEachTrainingScoreModel implements Parcelable {
         for (ScoresBean data : getScores()) {
             double scale = 0;
             if (data.getTotalScore() != 0) {
-                scale = FinanceUtil.divide(data.getScore(), data.getTotalScore()).doubleValue();
+                if (data.getScore() > data.getTotalScore()) {
+                    scale = 1;
+                } else {
+                    scale = FinanceUtil.divide(data.getScore(), data.getTotalScore()).doubleValue();
+                }
             }
             switch (data.getClassifyName()) {
                 case "盈利能力":
