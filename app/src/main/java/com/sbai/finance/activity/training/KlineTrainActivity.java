@@ -8,20 +8,14 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.RemoveTraining;
-import com.sbai.finance.model.training.SubmitRemoveTrain;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingQuestion;
-import com.sbai.finance.net.Callback;
-import com.sbai.finance.net.Client;
-import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.training.KlineTrainView;
@@ -159,47 +153,8 @@ public class KlineTrainActivity extends BaseActivity {
     }
 
     private void requestEndTrain() {
-        SubmitRemoveTrain removeTrain = new SubmitRemoveTrain();
-        removeTrain.setDataId(mTraining.getId());
-        if (mIsSuccess) {
-            List<SubmitRemoveTrain.AnswersBean> answerList = new ArrayList<>();
-            SubmitRemoveTrain.AnswersBean answersBean = new SubmitRemoveTrain.AnswersBean();
-            answersBean.setTopicId(mTrainingQuestion.getId());
-
-            List<SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean> answerIdsMapBeanList = new ArrayList<>();
-            for (TrainingQuestion.ContentBean contentBean : mTrainingQuestion.getContent()) {
-                SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean answerIdsMapBean = new SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean();
-                SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean.KBean kBean = new SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean.KBean();
-                SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean.VBean vBean = new SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean.VBean();
-                if (contentBean.getKey() != null) {
-                    kBean.setOptionId(contentBean.getKey().getId());
-                }
-                if (contentBean.getValue() != null) {
-                    vBean.setOptionId(contentBean.getValue().getId());
-                }
-                answerIdsMapBean.setK(kBean);
-                answerIdsMapBean.setV(vBean);
-                answerIdsMapBeanList.add(answerIdsMapBean);
-            }
-            answersBean.setAnswerIdsMap(answerIdsMapBeanList);
-            answerList.add(answersBean);
-            removeTrain.setAnswers(answerList);
-        }
-        Client.submitTrainingResult(new Gson().toJson(removeTrain)).setTag(TAG)
-                .setCallback(new Callback<Resp<Object>>() {
-
-                    @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()) {
-                            ToastUtil.show(resp.getMsg());
-                            // TODO: 2017-08-17 调转到结果也 下面调用错了
-                            TrainingResultActivity.show(getActivity(), mTraining, mTraining.getTime(), true);
-                            finish();
-                        } else {
-                            ToastUtil.show(resp.getMsg());
-                        }
-                    }
-                }).fireFree();
+        TrainingResultActivity.show(getActivity(), mTraining, mTrainingCountTime, mIsSuccess);
+        finish();
     }
 
     @Override
