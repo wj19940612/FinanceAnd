@@ -73,12 +73,12 @@ public class TrainingCountDownActivity extends BaseActivity {
                         }
                         break;
                     case Training.PLAY_TYPE_MATCH_STAR:
-//                        if (mTrainingQuestion != null && mTraining != null) {
-//                            Launcher.with(getActivity(), NounExplanationActivity.class)
-//                                    .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
-//                                    .putExtra(ExtraKeys.TRAINING, mTraining)
-//                                    .execute();
-//                        }
+                        if (mQuestion != null && mTrainingDetail != null) {
+                            Launcher.with(getActivity(), NounExplanationActivity.class)
+                                    .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
+                                    .putExtra(ExtraKeys.QUESTION, mQuestion)
+                                    .execute();
+                        }
                         break;
                     case Training.PLAY_TYPE_SORT:
                         if (mQuestion != null && mTrainingDetail != null) {
@@ -129,7 +129,8 @@ public class TrainingCountDownActivity extends BaseActivity {
     }
 
     private void requestTrainingContent() {
-        if (mTraining.getPlayType() == Training.PLAY_TYPE_REMOVE) {
+        if (mTraining.getPlayType() == Training.PLAY_TYPE_REMOVE
+                || mTraining.getPlayType() == Training.PLAY_TYPE_MATCH_STAR) {
             Client.getTrainingContent(mTraining.getId()).setTag(TAG)
                     .setCallback(new Callback2D<Resp<String>, List<Question<RemoveData>>>() {
 
@@ -197,7 +198,10 @@ public class TrainingCountDownActivity extends BaseActivity {
 
     private void initData(Intent intent) {
         mTrainingDetail = intent.getParcelableExtra(ExtraKeys.TRAINING_DETAIL);
-        mTraining = mTrainingDetail.getTrain();
+        if (mTrainingDetail != null) {
+            mTraining = mTrainingDetail.getTrain();
+        }
+        
 
         switch (mTraining.getType()) {
             case Training.TYPE_THEORY:
