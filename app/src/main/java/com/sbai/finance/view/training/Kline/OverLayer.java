@@ -16,10 +16,10 @@ import java.lang.ref.WeakReference;
 public class OverLayer extends View {
 
     private static final int LINE = 7;
-    private static final int LAYER_PIECES = 1000;
+    private static final int LAYER_PIECES = 600;
     private static final int MARGIN_BOTTOM_DP = 30; // because kline has a 30dp height timeline area
     private static final int BUTTONS_AREA_WIDTH = 80; //dp
-    private SparseArray<Kline.IntersectionPoint> mIntersectionPointArray;
+    private static final int DISAPPEAR_TIME = 60000; // 1min
 
     private static Paint sPaint;
     private static RectF sRectF;
@@ -29,11 +29,13 @@ public class OverLayer extends View {
     private float mButtonsAreaWidth;
     private float mMarginBottom;
     private boolean mStarted;
-    private int mNextStopIndex;
-    private OnFocusIntersectionPointListener mOnFocusIntersectionPointListener;
 
-    public interface OnFocusIntersectionPointListener {
-        void onFocus(Kline.IntersectionPoint point);
+    private int mNextIntersectionPointIndex;
+    private SparseArray<Kline.IntersectionPoint> mIntersectionPointArray;
+    private OnStopAfterIntersectionPointListener mOnStopAfterIntersectionPointListener;
+
+    public interface OnStopAfterIntersectionPointListener {
+        void onStop(Kline.IntersectionPoint point, int pointIndex);
     }
 
     public OverLayer(Context context) {
@@ -45,13 +47,12 @@ public class OverLayer extends View {
         mMarginBottom = dp2Px(MARGIN_BOTTOM_DP);
 
         mHandler = new RedrawHandler(this);
-        mNextStopIndex = 0;
+        mNextIntersectionPointIndex = 0;
     }
 
     private static class RedrawHandler extends Handler {
         private WeakReference<View> mRefs;
         private int mRemovedPieces;
-        private long mRemoveOnePieceTime;
 
         public RedrawHandler(View view) {
             mRefs = new WeakReference<>(view);
@@ -63,16 +64,12 @@ public class OverLayer extends View {
             View view = mRefs.get();
             if (view != null) {
                 mRemovedPieces++;
-                view.postInvalidateDelayed(30);
+                view.postInvalidateDelayed(DISAPPEAR_TIME / LAYER_PIECES);
             }
         }
 
         public int getRemovedPieces() {
             return mRemovedPieces;
-        }
-
-        public void setRemoveOnePieceTime(long removeOnePieceTime) {
-            mRemoveOnePieceTime = removeOnePieceTime;
         }
     }
 
@@ -92,25 +89,19 @@ public class OverLayer extends View {
             drawBackground(startX, canvas);
             drawBaseLines(startX, canvas);
 
-            checkIntersectionPoint(startX);
+            if (mStarted && mNextIntersectionPointIndex < mIntersectionPointArray.size()) {
+                Kline.IntersectionPoint point = mIntersectionPointArray.valueAt(mNextIntersectionPointIndex);
+                if (startX > point.getPoint().x && point.getPoint().x > 0) {
+                    stop();
 
-            if (mStarted) {
-                mHandler.sendEmptyMessage(0); // keep remove piece
-            }
-        } else {
+                    if (mOnStopAfterIntersectionPointListener != null) {
+                        mOnStopAfterIntersectionPointListener.onStop(point, mNextIntersectionPointIndex);
+                    }
 
-        }
-    }
-
-    private void checkIntersectionPoint(float startX) {
-        if (mStarted && mNextStopIndex < mIntersectionPointArray.size()) {
-            Kline.IntersectionPoint point = mIntersectionPointArray.valueAt(mNextStopIndex);
-            if (startX > point.getPoint().x && point.getPoint().x > 0) {
-                mNextStopIndex++;
-
-                stop();
-
-                onFocusIntersectionPoint(point);
+                    mNextIntersectionPointIndex++;
+                } else {
+                    mHandler.sendEmptyMessage(0); // keep remove piece
+                }
             }
         }
     }
@@ -164,21 +155,11 @@ public class OverLayer extends View {
         return mStarted;
     }
 
-    public void setAnimTime(long animTime) {
-        mHandler.setRemoveOnePieceTime(animTime / LAYER_PIECES);
-    }
-
-    private void onFocusIntersectionPoint(Kline.IntersectionPoint point) {
-        if (mOnFocusIntersectionPointListener != null) {
-            mOnFocusIntersectionPointListener.onFocus(point);
-        }
-    }
-
     public void setIntersectionPointArray(SparseArray<Kline.IntersectionPoint> intersectionPointArray) {
         mIntersectionPointArray = intersectionPointArray;
     }
 
-    public void setOnFocusIntersectionPointListener(OnFocusIntersectionPointListener onFocusIntersectionPointListener) {
-        mOnFocusIntersectionPointListener = onFocusIntersectionPointListener;
+    public void setOnStopAfterIntersectionPointListener(OnStopAfterIntersectionPointListener onStopAfterIntersectionPointListener) {
+        mOnStopAfterIntersectionPointListener = onStopAfterIntersectionPointListener;
     }
 }

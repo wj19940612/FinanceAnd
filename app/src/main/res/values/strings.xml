@@ -787,5 +787,8 @@
     <string name="your_company_is_close">您的公司被关停了</string>
     <string name="success_create_report">成功出炉年报</string>
     <string name="train_use_time">%1$d分%2$d秒</string>
-    <string name="train_finish_less_minutes">%1$d分钟内完成</string>
+    <string name="_minutes_complete">%1$d分钟内完成</string>
+    <string name="mission_complete">任务完成</string>
+    <string name="accuracy_to_">准确率达到%1$s</string>
+    
 </resources>

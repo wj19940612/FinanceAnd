@@ -4,7 +4,8 @@ package com.sbai.finance.model.training;
  * 提交训练应答
  */
 
-public class TrainingSubmitResult {
+public class TrainingResult {
+
     private int id;
     private double level;
     private double score;
@@ -58,5 +59,17 @@ public class TrainingSubmitResult {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "TrainingResult{" +
+                "id=" + id +
+                ", level=" + level +
+                ", score=" + score +
+                ", time=" + time +
+                ", trainId=" + trainId +
+                ", type=" + type +
+                '}';
     }
 }

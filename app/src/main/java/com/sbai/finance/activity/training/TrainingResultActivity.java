@@ -14,17 +14,19 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingDetail;
+import com.sbai.finance.model.training.TrainingResult;
 import com.sbai.finance.model.training.TrainingSubmit;
-import com.sbai.finance.model.training.TrainingSubmitResult;
 import com.sbai.finance.model.training.TrainingTarget;
 import com.sbai.finance.net.Callback;
-import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AnimUtils;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.training.TrainingAchievementView;
+import com.sbai.httplib.BuildConfig;
 
 import java.util.List;
 
@@ -56,21 +58,14 @@ public class TrainingResultActivity extends BaseActivity {
     @BindView(R.id.recordTrainingExperience)
     TextView mRecordTrainingExperience;
 
-    @BindView(R.id.achievement1)
-    TrainingAchievementView mAchievement1;
-    @BindView(R.id.achievement2)
-    TrainingAchievementView mAchievement2;
-    @BindView(R.id.achievement3)
-    TrainingAchievementView mAchievement3;
+    TrainingAchievementView[] mAchievementViews;
+
     @BindView(R.id.retry)
     TextView mRetry;
 
     private Training mTraining;
+    private TrainingDetail mTrainingDetail;
     private TrainingSubmit mTrainingSubmit;
-    private TrainingSubmitResult mTrainingSubmitResult;
-
-
-    private int mConfirmCount;
 
     public static void show(Activity activity, Training training, int time, boolean isFinish) {
         Launcher.with(activity, TrainingResultActivity.class)
@@ -96,42 +91,19 @@ public class TrainingResultActivity extends BaseActivity {
         setContentView(R.layout.activity_training_result);
         ButterKnife.bind(this);
 
+        mAchievementViews = new TrainingAchievementView[3];
+        mAchievementViews[0] = (TrainingAchievementView) findViewById(R.id.achievement0);
+        mAchievementViews[1] = (TrainingAchievementView) findViewById(R.id.achievement1);
+        mAchievementViews[2] = (TrainingAchievementView) findViewById(R.id.achievement2);
+
         initData(getIntent());
+
+        initView();
 
         submitTrainingResult();
     }
 
-    private void initData(Intent intent) {
-        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
-        mTrainingSubmit = new TrainingSubmit();
-        mTrainingSubmit.setTrainId(mTraining.getId());
-        mTrainingSubmit.setTime(intent.getIntExtra(TYPE_TIME, -1));
-        mTrainingSubmit.setFinish(intent.getBooleanExtra(TYPE_FINISH, false));
-        mTrainingSubmit.setRate(intent.getDoubleExtra(TYPE_RATE, 0));
-    }
-
-    private void submitTrainingResult() {
-        Client.submitTrainingResult(SecurityUtil.AESEncrypt(new Gson().toJson(mTrainingSubmit))).setTag(TAG)
-                .setCallback(new Callback<Resp<TrainingSubmitResult>>() {
-
-                    @Override
-                    protected void onRespSuccess(Resp<TrainingSubmitResult> resp) {
-                        if (resp.isSuccess()) {
-                            mTrainingSubmitResult = resp.getData();
-                            updateTrainTitle();
-                            requestTrainDetail();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                    }
-                }).fireFree();
-
-    }
-
-    private void updateTrainTitle() {
+    private void initView() {
         if (mTrainingSubmit.isFinish()) {
             mRecordTrainingExperience.setVisibility(View.VISIBLE);
             mRetry.setVisibility(View.GONE);
@@ -145,77 +117,100 @@ public class TrainingResultActivity extends BaseActivity {
             mFailedMessage.setVisibility(View.VISIBLE);
             mFailedMessage.setText(R.string.what_a_pity_you_do_not_finish);
         }
+
+        updateTrainingResultDetail(mTrainingDetail.getTargets());
     }
 
-    private void requestTrainDetail() {
-        Client.getTrainingDetail(mTraining.getId()).setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<TrainingDetail>, TrainingDetail>() {
+    private void initData(Intent intent) {
+        mTrainingDetail = intent.getParcelableExtra(ExtraKeys.TRAINING_DETAIL);
+        mTrainingSubmit = intent.getParcelableExtra(ExtraKeys.TRAINING_SUBMIT);
+        mTraining = mTrainingDetail.getTrain();
+    }
+
+    private void submitTrainingResult() {
+        Client.submitTrainingResult(SecurityUtil.AESEncrypt(new Gson().toJson(mTrainingSubmit))).setTag(TAG)
+                .setCallback(new Callback<Resp<TrainingResult>>() {
+
                     @Override
-                    protected void onRespSuccessData(TrainingDetail data) {
-                        if (data.getTargets() != null && !data.getTargets().isEmpty() && mTrainingSubmitResult != null) {
-                            updateTrainResult(data.getTargets());
+                    protected void onRespSuccess(Resp<TrainingResult> resp) {
+                        if (BuildConfig.DEBUG) {
+                            ToastUtil.show(resp.getData().toString());
                         }
                     }
-                }).fire();
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                    }
+                }).fireFree();
+
     }
 
-    private void updateTrainResult(List<TrainingTarget> trainTargets) {
-        if (mTrainingSubmitResult.getType() == TrainingTarget.TYPE_TIME
-                || mTrainingSubmitResult.getType() == TrainingTarget.TYPE_FINISH) {
-            int size = trainTargets.size();
-            if (size > 0) {
-                mAchievement1.setContent(getString(R.string.train_finish_less_minutes, trainTargets.get(0).getTime() / 60));
-                if (trainTargets.get(0).getTime() >= mTrainingSubmitResult.getTime()) {
-                    mAchievement1.setAchieved(true);
-                } else {
-                    mAchievement1.setAchieved(false);
-                }
+    private void updateTrainingResultDetail(List<TrainingTarget> trainTargets) {
+        if (!trainTargets.isEmpty()) {
+            int targetType = trainTargets.get(0).getType();
+            switch (targetType) {
+                case TrainingTarget.TYPE_FINISH:
+                    mAchievementViews[0].setAchieved(mTrainingSubmit.isFinish());
+                    mAchievementViews[0].setContent(R.string.mission_complete);
+                    showResultsWithAnim(1);
+                    break;
+                case TrainingTarget.TYPE_RATE:
+                    int finalTargetIndex = -1;
+                    for (int i = 0; i < mAchievementViews.length; i++) {
+                        mAchievementViews[i].setContent(getString(R.string.accuracy_to_,
+                                FinanceUtil.formatToPercentage(trainTargets.get(i).getRate(), 0)));
+                        if (mTrainingSubmit.getRate() >= trainTargets.get(i).getRate()) {
+                            mAchievementViews[i].setAchieved(true);
+                            finalTargetIndex = i;
+                        }
+                    }
+                    if (finalTargetIndex >= 0) {
+                        showResultsWithAnim(finalTargetIndex + 1);
+                    }
+                    break;
+                case TrainingTarget.TYPE_TIME:
+                    finalTargetIndex = -1;
+                    for (int i = 0; i < mAchievementViews.length; i++) {
+                        mAchievementViews[i].setContent(getString(R.string._minutes_complete,
+                                trainTargets.get(i).getTime() / 60));
+                        if (mTrainingSubmit.getTime() >= trainTargets.get(i).getTime()) {
+                            mAchievementViews[i].setAchieved(true);
+                        }
+                    }
+                    if (finalTargetIndex >= 0) {
+                        showResultsWithAnim(finalTargetIndex + 1);
+                    }
+                    break;
             }
-            if (size > 1) {
-                mAchievement2.setContent(getString(R.string.train_finish_less_minutes, trainTargets.get(1).getTime() / 60));
-                if (trainTargets.get(1).getTime() >= mTrainingSubmitResult.getTime()) {
-                    mAchievement2.setAchieved(true);
-                } else {
-                    mAchievement2.setAchieved(false);
-                }
-            }
-            if (size > 2) {
-                mAchievement3.setContent(getString(R.string.train_finish_less_minutes, trainTargets.get(2).getTime() / 60));
-                if (trainTargets.get(2).getTime() >= mTrainingSubmitResult.getTime()) {
-                    mAchievement3.setAchieved(true);
-                } else {
-                    mAchievement3.setAchieved(false);
-                }
-            }
-            showResultsWithAnim(size);
         }
     }
 
     public void showResultsWithAnim(int count) {
         if (count > 0) {
-            mAchievement1.startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION,
+            mAchievementViews[0].startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION,
                     new AnimUtils.AnimEndListener() {
                         @Override
                         public void onAnimationEnd(Animation animation) {
-                            mAchievement1.setVisibility(View.VISIBLE);
+                            mAchievementViews[0].setVisibility(View.VISIBLE);
                         }
                     }));
         }
         if (count > 1) {
-            mAchievement2.startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION, ENTER_OFFSET,
+            mAchievementViews[1].startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION, ENTER_OFFSET,
                     new AnimUtils.AnimEndListener() {
                         @Override
                         public void onAnimationEnd(Animation animation) {
-                            mAchievement2.setVisibility(View.VISIBLE);
+                            mAchievementViews[1].setVisibility(View.VISIBLE);
                         }
                     }));
         }
         if (count > 2) {
-            mAchievement3.startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION, ENTER_OFFSET * 2,
+            mAchievementViews[2].startAnimation(AnimUtils.createTransYFromParent(ANIM_DURATION, ENTER_OFFSET * 2,
                     new AnimUtils.AnimEndListener() {
                         @Override
                         public void onAnimationEnd(Animation animation) {
-                            mAchievement3.setVisibility(View.VISIBLE);
+                            mAchievementViews[2].setVisibility(View.VISIBLE);
                         }
                     }));
         }

@@ -90,10 +90,12 @@ public class TrainDetailActivity extends BaseActivity {
 
     private int mPage = 0;
     private int mPageSize = 3;
-    private TrainingDetail mTrainDetail;
+
     private List<String> mCompletePeopleList;
     private List<Experience> mHotExperienceList;
     private HotExperienceListAdapter mHotExperienceListAdapter;
+
+    private TrainingDetail mTrainingDetail;
     private Training mTraining;
 
     @Override
@@ -101,7 +103,6 @@ public class TrainDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_detail);
         ButterKnife.bind(this);
-
 
         initData(getIntent());
         initBackground();
@@ -152,8 +153,8 @@ public class TrainDetailActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<TrainingDetail>, TrainingDetail>() {
                     @Override
                     protected void onRespSuccessData(TrainingDetail data) {
-                        mTrainDetail = data;
-                        updateTrainDetail(mTrainDetail);
+                        mTrainingDetail = data;
+                        updateTrainDetail(mTrainingDetail);
                     }
                 }).fire();
     }
@@ -173,7 +174,6 @@ public class TrainDetailActivity extends BaseActivity {
     }
 
     private void requestHotExperienceList() {
-
         Client.getHotExperienceList(mTraining.getId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
                     @Override
@@ -213,7 +213,6 @@ public class TrainDetailActivity extends BaseActivity {
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
             ViewHolder viewHolder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_train_experience, null);
@@ -353,10 +352,10 @@ public class TrainDetailActivity extends BaseActivity {
                 share();
                 break;
             case R.id.relevantKnowledge:
-                if (mTrainDetail != null && mTrainDetail.getTrain() != null) {
+                if (mTrainingDetail != null && mTrainingDetail.getTrain() != null) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_TITLE, "相关知识点")
-                            .putExtra(WebActivity.EX_URL, mTrainDetail.getTrain().getKnowledgeUrl())
+                            .putExtra(WebActivity.EX_URL, mTrainingDetail.getTrain().getKnowledgeUrl())
                             .execute();
                 }
                 break;
@@ -375,7 +374,7 @@ public class TrainDetailActivity extends BaseActivity {
                     //requestTrainingContent();
                     // TODO: 20/08/2017 后期和产品商量训练题目请求位置
                     Launcher.with(getActivity(), TrainingCountDownActivity.class)
-                            .putExtra(ExtraKeys.TRAINING, mTraining)
+                            .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
                             .execute();
                 } else {
                     // TODO: 17/08/2017 登录后要做页面更新
@@ -421,7 +420,7 @@ public class TrainDetailActivity extends BaseActivity {
     private void share() {
         ShareDialog.with(getActivity())
                 .setTitle(getString(R.string.share_title))
-                .setShareTitle(getString(R.string.train_share_share_title, mTrainDetail.getTrain().getTitle()))
+                .setShareTitle(getString(R.string.train_share_share_title, mTrainingDetail.getTrain().getTitle()))
                 .setShareDescription(getString(R.string.train_share_description))
                 .setShareUrl(String.format(Client.SHARE_URL_TRAIN_EXPERIENCE, mTraining.getId()))
                 .hasFeedback(true)

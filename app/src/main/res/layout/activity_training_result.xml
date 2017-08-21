@@ -63,7 +63,7 @@
         android:orientation="vertical">
 
         <com.sbai.finance.view.training.TrainingAchievementView
-            android:id="@+id/achievement1"
+            android:id="@+id/achievement0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
@@ -73,7 +73,7 @@
             android:visibility="invisible"/>
 
         <com.sbai.finance.view.training.TrainingAchievementView
-            android:id="@+id/achievement2"
+            android:id="@+id/achievement1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
@@ -82,7 +82,7 @@
             android:visibility="invisible"/>
 
         <com.sbai.finance.view.training.TrainingAchievementView
-            android:id="@+id/achievement3"
+            android:id="@+id/achievement2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"

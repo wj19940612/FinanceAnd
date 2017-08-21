@@ -23,6 +23,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
+import com.sbai.finance.model.training.TrainingDetail;
 import com.sbai.finance.model.training.TrainingQuestion;
 import com.sbai.finance.model.training.question.KData;
 import com.sbai.finance.net.Callback2D;
@@ -48,6 +49,7 @@ public class TrainingCountDownActivity extends BaseActivity {
     @BindView(R.id.background)
     RelativeLayout mBackground;
 
+    private TrainingDetail mTrainingDetail;
     private Training mTraining;
     private Question mQuestion;
 
@@ -88,7 +90,7 @@ public class TrainingCountDownActivity extends BaseActivity {
                         break;
                     case Training.PLAY_TYPE_JUDGEMENT:
                         Launcher.with(getActivity(), JudgeTrainingActivity.class)
-                                .putExtra(ExtraKeys.TRAINING, mTraining)
+                                .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
                                 .putExtra(ExtraKeys.QUESTION, mQuestion)
                                 .execute();
 
@@ -147,7 +149,7 @@ public class TrainingCountDownActivity extends BaseActivity {
                         @Override
                         protected void onRespSuccessData(List<Question<KData>> data) {
                             if (!data.isEmpty()) {
-                                mQuestion = data.get(0);;
+                                mQuestion = data.get(0);
                             }
                         }
                         @Override
@@ -174,8 +176,8 @@ public class TrainingCountDownActivity extends BaseActivity {
     }
 
     private void initData(Intent intent) {
-        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
-        mQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
+        mTrainingDetail = intent.getParcelableExtra(ExtraKeys.TRAINING_DETAIL);
+        mTraining = mTrainingDetail.getTrain();
 
         switch (mTraining.getType()) {
             case Training.TYPE_THEORY:
