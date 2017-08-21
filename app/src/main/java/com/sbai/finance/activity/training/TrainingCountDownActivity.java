@@ -109,7 +109,9 @@ public class TrainingCountDownActivity extends BaseActivity {
 
         setContentView(R.layout.activity_training_count_down);
         ButterKnife.bind(this);
+
         translucentStatusBar();
+
         requestTrainingContent();
 
         if (mBackgroundRes != 0) {

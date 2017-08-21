@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class SmartDialog {
 
-    private final static double DEFAULT_SCALE = 0.8f;
+    public final static float DEFAULT_SCALE = 0.8f;
 
     private TextView mTitle;
     private TextView mMessage;
