@@ -138,7 +138,6 @@ public class TrainingResultActivity extends BaseActivity {
                         if (BuildConfig.DEBUG) {
                             ToastUtil.show(resp.getData().toString());
                         }
-                        //mCount = resp.getData().getLevel();
                     }
 
                     @Override
