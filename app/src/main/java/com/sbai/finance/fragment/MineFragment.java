@@ -71,6 +71,8 @@ public class MineFragment extends BaseFragment {
     IconTextRow mSetting;
     @BindView(R.id.aboutUs)
     IconTextRow mAboutUs;
+    @BindView(R.id.financeEvaluation)
+    IconTextRow mFinanceEvaluation;
 
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -81,6 +83,8 @@ public class MineFragment extends BaseFragment {
             }
         }
     };
+
+    private String[] mEvaluationLevel;
 
     @Nullable
     @Override
@@ -101,6 +105,7 @@ public class MineFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.ACTION_LOGIN_SUCCESS));
+        mEvaluationLevel = getResources().getStringArray(R.array.evaluationLevel);
     }
 
     @Override
@@ -178,6 +183,11 @@ public class MineFragment extends BaseFragment {
             requestNoReadNewsNumber();
             requestNoReadFeedbackNumber();
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
+            int maxLevel = LocalUser.getUser().getUserInfo().getMaxLevel();
+            if (maxLevel > 5) {
+                maxLevel = 5;
+            }
+            mFinanceEvaluation.setSubText(mEvaluationLevel[maxLevel]);
         } else {
             mUserName.setText(R.string.login);
             mMessage.setSubTextVisible(View.GONE);

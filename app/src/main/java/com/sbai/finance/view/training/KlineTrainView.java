@@ -36,7 +36,6 @@ public class KlineTrainView extends RelativeLayout {
 
     public void setTrainData(List<RemoveTraining> data) {
         if (data == null) return;
-        Collections.shuffle(data);
         refresh(data);
     }
 
@@ -44,6 +43,7 @@ public class KlineTrainView extends RelativeLayout {
         mPriSelectedIndex = -1;
         for (int i = 0; i < trainData.size(); i++) {
             RemoveTraining training = trainData.get(i);
+            if (training == null) return;
             views[i].setTag(training);
             if (views[i].getVisibility() == INVISIBLE) {
                 views[i].resetView();

@@ -8,16 +8,19 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.utils.Display;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +30,7 @@ import butterknife.OnClick;
  * K线训练 菱形加K线知识组合布局页面
  */
 
-public class DiamondGroupView extends RelativeLayout {
+public class DiamondGroupView extends LinearLayout {
     @BindView(R.id.klineView)
     DiamondView mKlineView;
     @BindView(R.id.klineImg)
@@ -62,7 +65,8 @@ public class DiamondGroupView extends RelativeLayout {
 
     private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_diamond_group, null, false);
-        addView(view);
+        LayoutParams params = new LayoutParams((int) Display.dp2Px(106, getResources()), (int) Display.dp2Px(122, getResources()));
+        addView(view, params);
         ButterKnife.bind(this);
     }
 

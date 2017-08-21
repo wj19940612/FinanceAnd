@@ -2,11 +2,12 @@ package com.sbai.finance.model.training;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * 训练目标
  */
-public class TrainingTarget implements Parcelable {
+public class TrainingTarget implements Parcelable, Comparable<TrainingTarget> {
     // 1 按时间 2 按概率 3完成即可
     public static final int TYPE_TIME = 1;
     public static final int TYPE_RATE = 2;
@@ -139,4 +140,10 @@ public class TrainingTarget implements Parcelable {
             return new TrainingTarget[size];
         }
     };
+
+
+    @Override
+    public int compareTo(@NonNull TrainingTarget o) {
+        return o.getTime() - this.getTime();
+    }
 }
