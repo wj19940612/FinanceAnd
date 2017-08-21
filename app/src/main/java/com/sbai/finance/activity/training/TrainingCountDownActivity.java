@@ -23,8 +23,10 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
-import com.sbai.finance.model.training.TrainingQuestion;
+import com.sbai.finance.model.training.TrainingDetail;
 import com.sbai.finance.model.training.question.KData;
+import com.sbai.finance.model.training.question.RemoveData;
+import com.sbai.finance.model.training.question.SortData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -48,13 +50,13 @@ public class TrainingCountDownActivity extends BaseActivity {
     @BindView(R.id.background)
     RelativeLayout mBackground;
 
+    private TrainingDetail mTrainingDetail;
     private Training mTraining;
     private Question mQuestion;
 
     private int mGifRes;
     private int mBackgroundRes;
 
-    private TrainingQuestion mTrainingQuestion;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -63,35 +65,34 @@ public class TrainingCountDownActivity extends BaseActivity {
             if (msg.what == 0) {
                 switch (mTraining.getPlayType()) {
                     case Training.PLAY_TYPE_REMOVE:
-                        if (mTrainingQuestion != null && mTraining != null) {
+                        if (mQuestion != null && mTrainingDetail != null) {
                             Launcher.with(getActivity(), KlineTrainActivity.class)
-                                    .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
-                                    .putExtra(ExtraKeys.TRAINING, mTraining)
+                                    .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
+                                    .putExtra(ExtraKeys.QUESTION, mQuestion)
                                     .execute();
                         }
                         break;
                     case Training.PLAY_TYPE_MATCH_STAR:
-                        if (mTrainingQuestion != null && mTraining != null) {
-                            Launcher.with(getActivity(), NounExplanationActivity.class)
-                                    .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
-                                    .putExtra(ExtraKeys.TRAINING, mTraining)
-                                    .execute();
-                        }
+//                        if (mTrainingQuestion != null && mTraining != null) {
+//                            Launcher.with(getActivity(), NounExplanationActivity.class)
+//                                    .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
+//                                    .putExtra(ExtraKeys.TRAINING, mTraining)
+//                                    .execute();
+//                        }
                         break;
                     case Training.PLAY_TYPE_SORT:
-                        if (mTrainingQuestion != null && mTraining != null) {
+                        if (mQuestion != null && mTrainingDetail != null) {
                             Launcher.with(getActivity(), SortQuestionActivity.class)
-                                    .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
-                                    .putExtra(ExtraKeys.TRAINING, mTraining)
+                                    .putExtra(ExtraKeys.QUESTION, mQuestion)
+                                    .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
                                     .execute();
                         }
                         break;
                     case Training.PLAY_TYPE_JUDGEMENT:
                         Launcher.with(getActivity(), JudgeTrainingActivity.class)
-                                .putExtra(ExtraKeys.TRAINING, mTraining)
+                                .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
                                 .putExtra(ExtraKeys.QUESTION, mQuestion)
                                 .execute();
-
                         break;
                 }
                 finish();
@@ -108,6 +109,8 @@ public class TrainingCountDownActivity extends BaseActivity {
 
         setContentView(R.layout.activity_training_count_down);
         ButterKnife.bind(this);
+
+        translucentStatusBar();
 
         requestTrainingContent();
 
@@ -126,29 +129,46 @@ public class TrainingCountDownActivity extends BaseActivity {
     }
 
     private void requestTrainingContent() {
-        if (mTraining.getPlayType() != Training.PLAY_TYPE_JUDGEMENT) {
+        if (mTraining.getPlayType() == Training.PLAY_TYPE_REMOVE) {
             Client.getTrainingContent(mTraining.getId()).setTag(TAG)
-                    .setCallback(new Callback2D<Resp<String>, List<TrainingQuestion>>() {
-                        @Override
-                        protected void onRespSuccessData(List<TrainingQuestion> data) {
-                            if (!data.isEmpty()) {
-                                mTrainingQuestion = data.get(0);
-                            }
-                        }
+                    .setCallback(new Callback2D<Resp<String>, List<Question<RemoveData>>>() {
 
                         @Override
                         protected String onInterceptData(String data) {
                             return SecurityUtil.AESDecrypt(data);
                         }
+
+                        @Override
+                        protected void onRespSuccessData(List<Question<RemoveData>> data) {
+                            if (!data.isEmpty()) {
+                                mQuestion = data.get(0);
+                            }
+                        }
                     }).fireFree();
-        } else {
+        }
+        if (mTraining.getPlayType() == Training.PLAY_TYPE_SORT) {
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<Question<SortData>>>() {
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+
+                        @Override
+                        protected void onRespSuccessData(List<Question<SortData>> data) {
+                            if (!data.isEmpty()) {
+                                mQuestion = data.get(0);
+                            }
+                        }
+                    }).fireFree();
+        } else if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
+
             Client.getTrainingContent(mTraining.getId()).setTag(TAG)
                     .setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
                         @Override
                         protected void onRespSuccessData(List<Question<KData>> data) {
                             if (!data.isEmpty()) {
                                 mQuestion = data.get(0);
-                                ;
                             }
                         }
 
@@ -176,8 +196,8 @@ public class TrainingCountDownActivity extends BaseActivity {
     }
 
     private void initData(Intent intent) {
-        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
-        mQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
+        mTrainingDetail = intent.getParcelableExtra(ExtraKeys.TRAINING_DETAIL);
+        mTraining = mTrainingDetail.getTrain();
 
         switch (mTraining.getType()) {
             case Training.TYPE_THEORY:

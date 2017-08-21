@@ -18,10 +18,13 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
+import com.sbai.finance.model.training.TrainingDetail;
+import com.sbai.finance.model.training.TrainingSubmit;
 import com.sbai.finance.model.training.question.KData;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.training.Kline.MvKlineView;
 
@@ -33,6 +36,8 @@ import butterknife.OnClick;
 
 public class JudgeTrainingActivity extends BaseActivity {
 
+    @BindView(R.id.topArea)
+    LinearLayout mTopArea;
     @BindView(R.id.close)
     ImageView mClose;
     @BindView(R.id.timer)
@@ -57,14 +62,15 @@ public class JudgeTrainingActivity extends BaseActivity {
     @BindView(R.id.iSeeBtn)
     TextView mISeeBtn;
 
+    private TrainingDetail mTrainingDetail;
     private Training mTraining;
     private Question<KData> mQuestion;
     private CountDownTimer mCountDownTimer;
+    private TrainingSubmit mTrainingSubmit;
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
     }
 
     @Override
@@ -73,6 +79,9 @@ public class JudgeTrainingActivity extends BaseActivity {
         setContentView(R.layout.activity_judge_training);
         ButterKnife.bind(this);
 
+        translucentStatusBar();
+        addStatusBarHeightTopPadding(mTopArea);
+
         initData(getIntent());
 
         Collections.reverse(mQuestion.getContent()); // first is the last data
@@ -80,6 +89,7 @@ public class JudgeTrainingActivity extends BaseActivity {
             @Override
             public void onRightAnswerSelected(float accuracy) {
                 mAccuracy.setText(FinanceUtil.formatToPercentage(accuracy, 0));
+                mTrainingSubmit.setRate(accuracy);
             }
 
             @Override
@@ -89,7 +99,13 @@ public class JudgeTrainingActivity extends BaseActivity {
                 mKnowledge.setText(analysis);
             }
         });
-        mKlineView.setDurationTime(mTraining.getTime() * 1000 / 3); // seconds to milliseconds
+        mKlineView.setOnFinishListener(new MvKlineView.OnFinishListener() {
+            @Override
+            public void onFinish() {
+                mTrainingSubmit.setFinish(true);
+                startTrainingResultPage();
+            }
+        });
         mKlineView.setDataList(mQuestion.getContent());
 
         Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
@@ -103,20 +119,31 @@ public class JudgeTrainingActivity extends BaseActivity {
             public void onTick(long millisUntilFinished) {
                 long pastTime = mTraining.getTime() * 1000 - millisUntilFinished;
                 mTimer.setText(DateUtil.format(pastTime, "mm:ss.SS"));
+                mTrainingSubmit.setTime((int) (pastTime / 1000));
             }
 
             @Override
             public void onFinish() {
-                // TODO: 20/08/2017 跳转结果页面
+                mTrainingSubmit.setFinish(false);
+                startTrainingResultPage();
             }
         }.start();
     }
 
-    private void initData(Intent intent) {
-        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
-        mQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
+    private void startTrainingResultPage() {
+        Launcher.with(getActivity(), TrainingResultActivity.class)
+                .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
+                .putExtra(ExtraKeys.TRAINING_SUBMIT, mTrainingSubmit)
+                .execute();
+        finish();
     }
 
+    private void initData(Intent intent) {
+        mTrainingDetail = intent.getParcelableExtra(ExtraKeys.TRAINING_DETAIL);
+        mQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
+        mTraining = mTrainingDetail.getTrain();
+        mTrainingSubmit = new TrainingSubmit(mTraining.getId());
+    }
 
     @OnClick({R.id.close, R.id.iSeeBtn})
     public void onViewClicked(View view) {
@@ -142,8 +169,12 @@ public class JudgeTrainingActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        float widthScale = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
+                ? 0.45f : SmartDialog.DEFAULT_SCALE;
+
         SmartDialog.single(getActivity(), getString(R.string.exit_train_will_not_save_train_record))
                 .setTitle(getString(R.string.is_sure_exit_train))
+                .setWidthScale(widthScale)
                 .setNegative(R.string.exit_train, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {

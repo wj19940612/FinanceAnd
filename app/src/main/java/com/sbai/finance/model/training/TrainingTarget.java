@@ -1,9 +1,12 @@
 package com.sbai.finance.model.training;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * 训练目标
  */
-public class TrainingTarget {
+public class TrainingTarget implements Parcelable {
     // 1 按时间 2 按概率 3完成即可
     public static final int TYPE_TIME = 1;
     public static final int TYPE_RATE = 2;
@@ -95,4 +98,45 @@ public class TrainingTarget {
                 ", type=" + type +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeInt(this.level);
+        dest.writeDouble(this.rate);
+        dest.writeInt(this.score);
+        dest.writeInt(this.time);
+        dest.writeInt(this.trainId);
+        dest.writeInt(this.type);
+    }
+
+    public TrainingTarget() {
+    }
+
+    protected TrainingTarget(Parcel in) {
+        this.id = in.readInt();
+        this.level = in.readInt();
+        this.rate = in.readDouble();
+        this.score = in.readInt();
+        this.time = in.readInt();
+        this.trainId = in.readInt();
+        this.type = in.readInt();
+    }
+
+    public static final Parcelable.Creator<TrainingTarget> CREATOR = new Parcelable.Creator<TrainingTarget>() {
+        @Override
+        public TrainingTarget createFromParcel(Parcel source) {
+            return new TrainingTarget(source);
+        }
+
+        @Override
+        public TrainingTarget[] newArray(int size) {
+            return new TrainingTarget[size];
+        }
+    };
 }

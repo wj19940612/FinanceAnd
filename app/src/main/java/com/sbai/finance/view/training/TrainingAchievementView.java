@@ -59,7 +59,7 @@ public class TrainingAchievementView extends LinearLayout {
         params.setMargins(0, 0, margin, 0);
         addView(mAchieveFlag, params);
 
-        setAchieved(true);
+        setAchieved(false);
     }
 
     public void setAchieved(boolean achieved) {
@@ -78,5 +78,9 @@ public class TrainingAchievementView extends LinearLayout {
 
     public void setContent(String content) {
         mContent.setText(content);
+    }
+
+    public void setContent(int contentRes) {
+        mContent.setText(contentRes);
     }
 }

@@ -38,7 +38,9 @@ public class MvKlineView extends RelativeLayout {
     private Button mJudgeDownBtn;
     private Kline.IntersectionPoint mFocusedPoint;
     private OnAnswerSelectedListener mOnAnswerSelectedListener;
+    private OnFinishListener mOnFinishListener;
     private int mRightAnswers;
+    private int mAnswerIndex;
     private ImageView mFocusView;
     private PopupWindow mHintView;
 
@@ -47,6 +49,10 @@ public class MvKlineView extends RelativeLayout {
         void onRightAnswerSelected(float accuracy);
 
         void onWrongAnswerSelected(String analysis);
+    }
+
+    public interface OnFinishListener {
+        void onFinish();
     }
 
     public MvKlineView(Context context) {
@@ -86,12 +92,13 @@ public class MvKlineView extends RelativeLayout {
                 LayoutParams.MATCH_PARENT);
         mOverLayer = new OverLayer(getContext());
         mOverLayer.setIntersectionPointArray(mIntersectionPointArray);
-        mOverLayer.setOnFocusIntersectionPointListener(new OverLayer.OnFocusIntersectionPointListener() {
+        mOverLayer.setOnStopAfterIntersectionPointListener(new OverLayer.OnStopAfterIntersectionPointListener() {
             @Override
-            public void onFocus(Kline.IntersectionPoint point) {
+            public void onStop(Kline.IntersectionPoint point, int pointIndex) {
                 mJudgeUpBtn.setEnabled(true);
                 mJudgeDownBtn.setEnabled(true);
                 mFocusedPoint = point;
+                mAnswerIndex = pointIndex;
 
                 translateFocusView();
                 showHintView();
@@ -115,6 +122,7 @@ public class MvKlineView extends RelativeLayout {
                 if (!mJudgeUpBtn.isSelected()) {
                     mJudgeUpBtn.setSelected(true);
                     mJudgeDownBtn.setEnabled(false);
+
                     if (mFocusedPoint.getType() == KData.TYPE_LONG) {
                         onRightAnswerSelected();
                         showHintView();
@@ -134,6 +142,7 @@ public class MvKlineView extends RelativeLayout {
                 if (!mJudgeDownBtn.isSelected()) {
                     mJudgeDownBtn.setSelected(true);
                     mJudgeUpBtn.setEnabled(false);
+
                     if (mFocusedPoint.getType() == KData.TYPE_SHORT) {
                         onRightAnswerSelected();
                         showHintView();
@@ -226,18 +235,29 @@ public class MvKlineView extends RelativeLayout {
         mOnAnswerSelectedListener = onAnswerSelectedListener;
     }
 
-    public void resume() {
-        post(new ResumeTask());
+    public void setOnFinishListener(OnFinishListener onFinishListener) {
+        mOnFinishListener = onFinishListener;
     }
 
-    public void setDurationTime(long milliseconds) {
-        mOverLayer.setAnimTime(milliseconds);
+    private void onFinish() {
+        if (mOnFinishListener != null) {
+            mOnFinishListener.onFinish();
+        }
+    }
+
+    public void resume() {
+        post(new ResumeTask());
     }
 
     private class ResumeTask implements Runnable {
 
         @Override
         public void run() {
+            if (mAnswerIndex == mIntersectionPointArray.size() - 1) {
+                onFinish();
+                return;
+            }
+
             mJudgeUpBtn.setEnabled(false);
             mJudgeUpBtn.setSelected(false);
             mJudgeDownBtn.setEnabled(false);

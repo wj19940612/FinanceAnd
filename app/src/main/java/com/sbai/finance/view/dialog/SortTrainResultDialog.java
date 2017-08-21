@@ -43,6 +43,7 @@ public class SortTrainResultDialog extends AppCompatDialog {
         void onClick();
     }
 
+
     public void setOnCompleteBtnClickListener(OnCompleteBtnClickListener completeBtnClickListener) {
         mOnCompleteBtnClickListener = completeBtnClickListener;
     }
@@ -54,7 +55,6 @@ public class SortTrainResultDialog extends AppCompatDialog {
     public SortTrainResultDialog(Context context, int theme) {
         super(context, theme);
         this.mContext = context;
-
         View view = getLayoutInflater().inflate(R.layout.dialog_fragment_sort_training_result, null);
         mBind = ButterKnife.bind(this, view);
         setContentView(view);
@@ -68,6 +68,7 @@ public class SortTrainResultDialog extends AppCompatDialog {
                 SortTrainResultDialog.this.dismiss();
             }
         });
+
     }
 
     @Override

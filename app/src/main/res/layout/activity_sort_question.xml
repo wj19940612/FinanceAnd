@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,78 +9,91 @@
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.training.SortQuestionActivity">
 
-    <com.sbai.finance.view.TitleBar
-        android:id="@+id/titleBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:fitsSystemWindows="true"
-        app:backFeature="true"
-        app:backIcon="@drawable/ic_close"
-        app:rightText="@string/how_play"
-        app:rightTextColor="@android:color/white"
-        app:rightVisible="true"
-        app:titleTextColor="@android:color/white"
-        app:titleTextSize="20sp"/>
-
-    <com.sbai.finance.view.training.TrainProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titleBar"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/sortQuestionRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/progressBar"
-        android:layout_marginTop="30dp"
-        android:minHeight="50dp"/>
-
-    <LinearLayout
-        android:id="@+id/sortResultLL"
+    <ImageView
+        android:id="@+id/bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/sortQuestionRecyclerView"
-        android:orientation="vertical">
+        android:scaleType="centerCrop"/>
 
-        <ImageView
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.sbai.finance.view.TitleBar
+            android:id="@+id/titleBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/bg_annals_materials_create_top"/>
+            android:background="@android:color/transparent"
+            android:fitsSystemWindows="true"
+            app:backFeature="true"
+            app:backIcon="@drawable/ic_close"
+            app:rightText="@string/how_play"
+            app:rightTextColor="@android:color/white"
+            app:rightVisible="true"
+            app:titleTextColor="@android:color/white"
+            app:titleTextSize="20sp"/>
 
-        <android.support.v4.widget.NestedScrollView
+        <com.sbai.finance.view.training.TrainProgressBar
+            android:id="@+id/progressBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/titleBar"/>
 
-            android:scrollbars="none">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/sortQuestionRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/progressBar"
+            android:layout_marginTop="30dp"
+            android:minHeight="50dp"/>
 
-            <LinearLayout
+        <LinearLayout
+            android:id="@+id/sortResultLL"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/sortQuestionRecyclerView"
+            android:orientation="vertical">
+
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="-35dp"
-                android:background="@drawable/bg_sort_result">
+                android:layout_height="wrap_content"
+                android:src="@drawable/bg_annals_materials_create_top"/>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/sortResultRecycleView"
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:scrollbars="none">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingBottom="30dp"
-                    android:paddingRight="25dp"/>
+                    android:layout_marginBottom="-35dp"
+                    android:background="@drawable/bg_sort_result">
 
-            </LinearLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/sortResultRecycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingBottom="30dp"
+                        android:paddingRight="25dp"/>
 
-        </android.support.v4.widget.NestedScrollView>
-    </LinearLayout>
+                </LinearLayout>
 
-    <ImageView
-        android:id="@+id/confirmAnnals"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="24dp"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:paddingBottom="15dp"
-        android:src="@drawable/ic_confirm_report"/>
-</RelativeLayout>
+            </android.support.v4.widget.NestedScrollView>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/confirmAnnals"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="24dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:paddingBottom="15dp"
+            android:src="@drawable/ic_confirm_report"/>
+    </RelativeLayout>
+
+</FrameLayout>
