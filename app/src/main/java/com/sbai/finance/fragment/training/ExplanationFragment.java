@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -20,8 +19,6 @@ public class ExplanationFragment extends Fragment {
 	@BindView(R.id.explanation)
 	TextView mExplanation;
 	Unbinder unbinder;
-	@BindView(R.id.starImage)
-	ImageView mStarImage;
 
 	private String mText;
 	private int mTag;

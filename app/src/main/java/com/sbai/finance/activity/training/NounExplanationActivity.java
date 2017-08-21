@@ -2,12 +2,15 @@ package com.sbai.finance.activity.training;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.view.MotionEvent;
@@ -16,15 +19,25 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.training.ExplanationFragment;
+import com.sbai.finance.model.training.SubmitRemoveTrain;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingQuestion;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.training.DragImageView;
+import com.sbai.finance.view.training.NoScrollViewPager;
 import com.sbai.finance.view.training.TrainProgressBar;
 
 import java.util.ArrayList;
@@ -35,7 +48,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class NounExplanationActivity extends BaseActivity implements View.OnTouchListener {
+public class NounExplanationActivity extends BaseActivity implements View.OnTouchListener, ViewPager.OnPageChangeListener {
 
     @BindView(R.id.star1)
     DragImageView mStar1;
@@ -48,7 +61,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     @BindView(R.id.star5)
     DragImageView mStar5;
     @BindView(R.id.viewPager)
-    ViewPager mViewPager;
+    NoScrollViewPager mViewPager;
     @BindView(R.id.previous)
     ImageView mPrevious;
     @BindView(R.id.next)
@@ -79,6 +92,12 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     private float mDy;
     private Rect mCardRect;
     private Rect mStarImageRect;
+    private List<Integer> mStarColor;
+    private int mCompleteCount = 0;
+    private CountDownTimer mCountDownTimer;
+    //游戏进行的时间
+    private long mTrainingCountTime;
+    private boolean mIsSuccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +108,87 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
         translucentStatusBar();
         mStarImageRect = new Rect();
         mCardRect = new Rect();
+        initView();
+        initStar();
         mFragments = getFragments();
         initViewPager();
-        initStar();
+    }
+
+    private void initView() {
+        if (mTraining == null) return;
+        mProgressBar.setTotalSecondTime(mTraining.getTime());
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Launcher.with(getActivity(), HowPlayActivity.class)
+                        .putExtra(ExtraKeys.TRAINING, mTraining)
+                        .execute();
+            }
+        });
+
+        View customView = mTitleBar.getCustomView();
+        if (customView != null) {
+            final TextView countDownTimeTextView = (TextView) customView.findViewById(R.id.countdownTime);
+            mCountDownTimer = new CountDownTimer(mTraining.getTime() * 1000, 1) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    mTrainingCountTime = mTraining.getTime() * 1000 - millisUntilFinished;
+                    countDownTimeTextView.setText(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
+                    mProgressBar.setTrainChangeTime(mTrainingCountTime);
+                }
+
+                @Override
+                public void onFinish() {
+                    mCountDownTimer.cancel();
+                    countDownTimeTextView.setText(DateUtil.format(mTraining.getTime() * 1000, "mm: ss. SS"));
+                    mIsSuccess = false;
+                    requestEndTrain();
+                }
+            }.start();
+        }
+    }
+
+    private void requestEndTrain() {
+        SubmitRemoveTrain removeTrain = new SubmitRemoveTrain();
+        removeTrain.setDataId(mTraining.getId());
+        if (mIsSuccess) {
+            List<SubmitRemoveTrain.AnswersBean> answerList = new ArrayList<>();
+            SubmitRemoveTrain.AnswersBean answersBean = new SubmitRemoveTrain.AnswersBean();
+            answersBean.setTopicId(mTrainingQuestion.getId());
+
+            List<SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean> answerIdsMapBeanList = new ArrayList<>();
+            for (TrainingQuestion.ContentBean contentBean : mTrainingQuestion.getContent()) {
+                SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean answerIdsMapBean = new SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean();
+                SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean.KBean kBean = new SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean.KBean();
+                SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean.VBean vBean = new SubmitRemoveTrain.AnswersBean.AnswerIdsMapBean.VBean();
+                if (contentBean.getKey() != null) {
+                    kBean.setOptionId(contentBean.getKey().getId());
+                }
+                if (contentBean.getValue() != null) {
+                    vBean.setOptionId(contentBean.getValue().getId());
+                }
+                answerIdsMapBean.setK(kBean);
+                answerIdsMapBean.setV(vBean);
+                answerIdsMapBeanList.add(answerIdsMapBean);
+            }
+            answersBean.setAnswerIdsMap(answerIdsMapBeanList);
+            answerList.add(answersBean);
+            removeTrain.setAnswers(answerList);
+        }
+        Client.submitTrainingResult(new Gson().toJson(removeTrain)).setTag(TAG)
+                .setCallback(new Callback<Resp<Object>>() {
+
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()) {
+                            ToastUtil.show(resp.getMsg());
+                            TrainingResultActivity.show(getActivity(), mTraining, mTraining.getTime(), true);
+                            finish();
+                        } else {
+                            ToastUtil.show(resp.getMsg());
+                        }
+                    }
+                }).fireFree();
     }
 
     private void initData(Intent intent) {
@@ -100,6 +197,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
         mCountDownTime = mTraining.getTime();
         mNounExplanationList = mTrainingQuestion.getContent();
         mNewNounExplanationList = new ArrayList<>();
+        mStarColor = new ArrayList<>();
         if (mNounExplanationList.size() > 5) {
             for (int i = 0; i < 5; i++) {
                 mNewNounExplanationList.add(mNounExplanationList.get(i));
@@ -112,6 +210,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     private List<Fragment> getFragments() {
         List<Fragment> mFragments = new ArrayList<>();
         for (int i = 0; i < mNewNounExplanationList.size(); i++) {
+            mStarColor.add(i);
             mFragments.add(ExplanationFragment.newInstance(mNewNounExplanationList.get(i).getKey().getContent(),
                     mNewNounExplanationList.get(i).getKey().getSeq()));
         }
@@ -130,6 +229,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
                 mViewPager.getHitRect(mCardRect);
             }
         });
+        mViewPager.addOnPageChangeListener(this);
     }
 
     private void initStar() {
@@ -214,13 +314,19 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
             case R.id.previous:
                 if (mViewPager.getCurrentItem() > 0) {
                     int position = mViewPager.getCurrentItem() - 1;
-                    mViewPager.setCurrentItem(position);
+                    mViewPager.setCurrentItem(position, true);
+                } else {
+                    int position = mFragments.size() - 1;
+                    mViewPager.setCurrentItem(position, true);
                 }
                 break;
             case R.id.next:
                 if (mViewPager.getCurrentItem() < mFragments.size() - 1) {
                     int position = mViewPager.getCurrentItem() + 1;
-                    mViewPager.setCurrentItem(position);
+                    mViewPager.setCurrentItem(position, true);
+                } else {
+                    int position = 0;
+                    mViewPager.setCurrentItem(position, true);
                 }
                 break;
         }
@@ -252,26 +358,37 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 
     private boolean starIsInside(View view) {
         view.getHitRect(mStarImageRect);
-        return mStarImageRect.contains(mStarImageRect);
+        return mCardRect.contains(mStarImageRect);
     }
 
     private void matchAnswer(View view) {
-        ExplanationFragment fragment = (ExplanationFragment) mExplanationFragmentAdapter.getFragment(mViewPager.getCurrentItem());
+        ExplanationFragment fragment = (ExplanationFragment) mExplanationFragmentAdapter.getItem(mViewPager.getCurrentItem());
         if ((int) view.getTag() == fragment.getStarTag()) {
-            if (mNewNounExplanationList.size() > 1) {
+            if (mFragments.size() > 1) {
                 startCardFlyAnimation(view);
-                //4、移除数据notify
-                mNewNounExplanationList.remove(mViewPager.getCurrentItem());
-                mFragments = getFragments();
+                mExplanationFragmentAdapter.destroyItem(mViewPager, mViewPager.getCurrentItem()
+                        , mFragments.get(mViewPager.getCurrentItem()));
+                mFragments.remove(mViewPager.getCurrentItem());
                 initViewPager();
+                mStarColor.remove(mViewPager.getCurrentItem());
+                mCompleteCount ++;
+                mNumber.setText(getString(R.string.explanation_number, mCompleteCount, mNewNounExplanationList.size()));
+
             } else {
                 //只剩一套题目了
-                mCardView.setVisibility(View.VISIBLE);
+                initCardStar(mStarColor.get(mViewPager.getCurrentItem()));
                 view.setVisibility(View.INVISIBLE);
                 mViewPager.setVisibility(View.INVISIBLE);
-                initCardStar(mViewPager.getCurrentItem());
-
-                // TODO: 2017/8/19 提交训练
+                mCardView.setVisibility(View.VISIBLE);
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.playTogether(
+                        ObjectAnimator.ofFloat(mCardView, "translationX", 0,0),
+                        ObjectAnimator.ofFloat(mCardView, "translationY", 0,0));
+                animatorSet.setDuration(5000).setInterpolator(new OvershootInterpolator());
+                animatorSet.start();
+                mCompleteCount ++;
+                mNumber.setText(getString(R.string.explanation_number, mCompleteCount, mNewNounExplanationList.size()));
+                requestEndTrain();
             }
         } else {
             startBackAnimation(view);
@@ -279,15 +396,14 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     }
 
     private void startCardFlyAnimation(View view) {
-        mCardView.setVisibility(View.VISIBLE);
+        initCardStar(mStarColor.get(mViewPager.getCurrentItem()));
         view.setVisibility(View.INVISIBLE);
-        initCardStar(mViewPager.getCurrentItem());
+        mCardView.setVisibility(View.VISIBLE);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playSequentially();
         animatorSet.playTogether(
                 ObjectAnimator.ofFloat(mCardView, "translationX", 0, -1000),
                 ObjectAnimator.ofFloat(mCardView, "translationY", 0, -1000));
-        animatorSet.setDuration(2000).setInterpolator(new OvershootInterpolator());
+        animatorSet.setDuration(1000).setInterpolator(new OvershootInterpolator());
         animatorSet.start();
     }
 
@@ -320,14 +436,56 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
         animatorSet.start();
     }
 
-    public class ExplanationFragmentAdapter extends FragmentPagerAdapter {
+    @Override
+    public void onBackPressed() {
+        showCloseDialog();
+    }
+
+    private void showCloseDialog() {
+        SmartDialog.single(getActivity(), getString(R.string.exit_train_will_not_save_train_record))
+                .setTitle(getString(R.string.is_sure_exit_train))
+                .setNegative(R.string.exit_train, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                })
+                .setPositive(R.string.continue_train, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                }).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCountDownTimer.cancel();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    public class ExplanationFragmentAdapter extends FragmentStatePagerAdapter {
         private List<Fragment> mFragments;
-        private FragmentManager mFragmentManager;
 
         public ExplanationFragmentAdapter(FragmentManager fm, List<Fragment> fragments) {
             super(fm);
             this.mFragments = fragments;
-            this.mFragmentManager = fm;
         }
 
         @Override
@@ -336,12 +494,13 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
         }
 
         @Override
-        public int getCount() {
-            return mFragments != null ? mFragments.size() : 0;
+        public int getItemPosition(Object object) {
+            return PagerAdapter.POSITION_NONE;
         }
 
-        public Fragment getFragment(int position) {
-            return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
+        @Override
+        public int getCount() {
+            return mFragments != null ? mFragments.size() : 0;
         }
     }
 }

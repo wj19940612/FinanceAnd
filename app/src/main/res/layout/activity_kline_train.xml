@@ -20,7 +20,9 @@
         app:customView="@layout/layout_count_down"
         app:rightText="@string/how_play"
         app:rightTextColor="@android:color/white"
-        app:rightVisible="true"/>
+        app:rightVisible="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
 
     <com.sbai.finance.view.training.TrainProgressBar
         android:id="@+id/progressBar"

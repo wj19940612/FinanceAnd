@@ -219,6 +219,7 @@ public class TrainingQuestion implements Parcelable {
             this.value = value;
         }
 
+
         @Override
         public int describeContents() {
             return 0;
