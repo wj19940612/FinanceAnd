@@ -187,28 +187,25 @@ public class SortQuestionActivity extends BaseActivity {
             }
         });
 
-        View customView = mTitleBar.getCustomView();
-        if (customView != null) {
-            final TextView countDownTimeTextView = (TextView) customView.findViewById(R.id.countdownTime);
+
+
             mCountDownTimer = new CountDownTimer(mTrainTargetTime, 1) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     mTrainingCountTime = mTrainTargetTime - millisUntilFinished;
-                    countDownTimeTextView.setText(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
+                    mTitleBar.setTitle(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
                     mProgressBar.setTrainChangeTime(mTrainingCountTime);
                 }
 
                 @Override
                 public void onFinish() {
                     mCountDownTimer.cancel();
-                    countDownTimeTextView.setText(DateUtil.format(mTrainTargetTime, "mm: ss. SS"));
+                    mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm: ss. SS"));
                     if (!isConfirmResult) {
                         showResultDialog(false);
                     }
                 }
             }.start();
-        }
-
 
     }
 

@@ -56,6 +56,8 @@ public class KlineTrainActivity extends BaseActivity {
     //游戏进行的时间
     private long mTrainingCountTime;
 
+    private int mTrainTargetTime;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +76,7 @@ public class KlineTrainActivity extends BaseActivity {
     private void initView() {
         if (mTraining == null) return;
         mProgressBar.setTotalSecondTime(mTraining.getTime());
+        mTrainTargetTime = mTraining.getTime() * 1000;
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,26 +86,23 @@ public class KlineTrainActivity extends BaseActivity {
             }
         });
 
-        View customView = mTitleBar.getCustomView();
-        if (customView != null) {
-            final TextView countDownTimeTextView = (TextView) customView.findViewById(R.id.countdownTime);
-            mCountDownTimer = new CountDownTimer(mTraining.getTime() * 1000, 1) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    mTrainingCountTime = mTraining.getTime() * 1000 - millisUntilFinished;
-                    countDownTimeTextView.setText(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
-                    mProgressBar.setTrainChangeTime(mTrainingCountTime);
-                }
 
-                @Override
-                public void onFinish() {
-                    mCountDownTimer.cancel();
-                    countDownTimeTextView.setText(DateUtil.format(mTraining.getTime() * 1000, "mm: ss. SS"));
-                    mIsSuccess = false;
-                    requestEndTrain();
-                }
-            }.start();
-        }
+        mCountDownTimer = new CountDownTimer(mTrainTargetTime, 1) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTrainingCountTime = mTrainTargetTime - millisUntilFinished;
+                mTitleBar.setTitle(DateUtil.format(mTrainingCountTime, "mm: ss. SS"));
+                mProgressBar.setTrainChangeTime(mTrainingCountTime);
+            }
+
+            @Override
+            public void onFinish() {
+                mCountDownTimer.cancel();
+                mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm: ss. SS"));
+                mIsSuccess = false;
+                requestEndTrain();
+            }
+        }.start();
 
         mTrainView.setOnEndCallback(new KlineTrainView.OnEndCallback() {
 
@@ -117,8 +117,8 @@ public class KlineTrainActivity extends BaseActivity {
                 mIndexView.setText(mIndex + "/" + mSize);
             }
         });
-
     }
+
 
     private void initTrainView() {
         if (mTrainingQuestion != null && mTrainingQuestion.getContent() != null
@@ -154,7 +154,7 @@ public class KlineTrainActivity extends BaseActivity {
     }
 
     private void requestEndTrain() {
-        TrainingResultActivity.show(getActivity(), mTraining, (int) mTrainingCountTime, mIsSuccess);
+        TrainingResultActivity.show(getActivity(), mTraining, (int) mTrainingCountTime / 1000, mIsSuccess);
         finish();
     }
 
