@@ -64,38 +64,46 @@
                     </LinearLayout>
                 </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/title"
+                <LinearLayout
+                    android:id="@+id/titleInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:lineSpacingExtra="2dp"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:paddingTop="10dp"
-                    android:textColor="@color/blackPrimary"
-                    android:textSize="18sp"
-                    tools:text="乐米专访：葛卫东，从百万到百亿是怎样达成的"/>
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/sourceAndTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:textColor="@color/blackPrimary"
-                    android:textSize="12sp"
-                    tools:text="来源: 若愚"/>
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white"
+                        android:lineSpacingExtra="2dp"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:paddingTop="10dp"
+                        android:textColor="@color/blackPrimary"
+                        android:textSize="18sp"
+                        tools:text="乐米专访：葛卫东，从百万到百亿是怎样达成的"/>
 
-                <View
-                    android:layout_width="60dp"
-                    android:layout_height="6dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@color/colorPrimary"/>
+                    <TextView
+                        android:id="@+id/sourceAndTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:textColor="@color/blackPrimary"
+                        android:textSize="12sp"
+                        tools:text="来源: 若愚"/>
+
+                    <View
+                        android:layout_width="60dp"
+                        android:layout_height="6dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@color/colorPrimary"/>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -113,6 +121,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:background="@android:color/white"
+                    
                     android:scrollbars="none"/>
 
                 <ProgressBar

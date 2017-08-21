@@ -75,6 +75,8 @@ public class DailyReportDetailActivity extends BaseActivity {
     TextView mShare;
     @BindView(R.id.bottom)
     LinearLayout mBottom;
+    @BindView(R.id.titleInfo)
+    LinearLayout mTitleInfo;
 
     private boolean mLoadSuccess;
     protected String mPageUrl;
@@ -123,12 +125,12 @@ public class DailyReportDetailActivity extends BaseActivity {
     }
 
     private void updateDailyReportData(DailyReport data) {
+        Glide.with(getActivity())
+                .load(data.getCoverUrl())
+                .into(mImage);
         if (data.isHtml()) {
-            mTitleArea.setVisibility(View.VISIBLE);
+            mTitleInfo.setVisibility(View.VISIBLE);
             mClick.setText(getString(R.string.read_count, data.getClicks()));
-            Glide.with(getActivity())
-                    .load(data.getCoverUrl())
-                    .into(mImage);
             mTitle.setText(data.getTitle());
             mSourceAndTime.setText(getString(R.string.source_and_time, data.getSource(), DateUtil.getFormatTime(data.getCreateTime())));
             mPureHtml = data.getContent();
@@ -140,7 +142,7 @@ public class DailyReportDetailActivity extends BaseActivity {
                 mFirstContent = content;
             }
         } else {
-            mTitleArea.setVisibility(View.GONE);
+            mTitleInfo.setVisibility(View.GONE);
             mPageUrl = data.getUrl();
             mFirstContent = getString(R.string.latest_finance_hot_from_lemi);
         }
