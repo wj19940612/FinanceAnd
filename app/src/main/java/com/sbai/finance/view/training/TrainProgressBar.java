@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.ProgressBar;
@@ -32,30 +33,24 @@ public class TrainProgressBar extends ProgressBar {
     private float mHintSplitScale;
     private boolean mHasSplitLine;
 
-    private OnProgressCompleteListener mOnProgressCompleteListener;
-    private OnProgressFinishListener mOnProgressFinishListener;
 
     //因为目前的样式差不多，所以设置一个通用的，可以关闭
     private boolean mUseDefaultProgressDrawable;
 
     private long mProgressTotalTime;
+    private CountDownTimer mCountDownTimer;
+    private OnTimeUpListener mOnTimeUpListener;
 
-    public interface OnProgressCompleteListener {
-        void onProgressComplete(int progress);
+    public interface OnTimeUpListener {
+        void onTick(long millisUntilUp);
+
+        void onFinish();
     }
 
-    public interface OnProgressFinishListener {
-        void onProgressFinish();
+    public void setOnTimeUpListener(OnTimeUpListener onTimeUpListener) {
+        this.mOnTimeUpListener = onTimeUpListener;
     }
 
-
-    public void setOnProgressCompleteListener(OnProgressCompleteListener onProgressCompleteListener) {
-        this.mOnProgressCompleteListener = onProgressCompleteListener;
-    }
-
-    public void setOnProgressFinishListener(OnProgressFinishListener onProgressFinishListener) {
-        this.mOnProgressFinishListener = onProgressFinishListener;
-    }
 
     public TrainProgressBar(Context context) {
         this(context, null);
@@ -110,7 +105,40 @@ public class TrainProgressBar extends ProgressBar {
     }
 
     public void setTotalMillisecondTime(long time) {
+        setTotalMillisecondTime(time, 1);
+    }
+
+    public void setTotalMillisecondTime(long time, long countDownInterval) {
         mProgressTotalTime = time;
+        startTimeUp(time, countDownInterval);
+    }
+
+    private void startTimeUp(final long time, final long countDownInterval) {
+        mCountDownTimer = new CountDownTimer(time, countDownInterval) {
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long upTime = mProgressTotalTime - millisUntilFinished;
+                TrainProgressBar.this.setTrainChangeTime(upTime);
+                if (mOnTimeUpListener != null) {
+                    mOnTimeUpListener.onTick(upTime);
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                mCountDownTimer.cancel();
+                if (mOnTimeUpListener != null) {
+                    mOnTimeUpListener.onFinish();
+                }
+            }
+        }.start();
+    }
+
+    public void cancelCountDownTimer() {
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
     }
 
     /**
@@ -149,6 +177,5 @@ public class TrainProgressBar extends ProgressBar {
             canvas.drawRect(rectLeft, 0, rectRight, getHeight(), mHintSplitLinePaint);
         }
     }
-
 
 }
