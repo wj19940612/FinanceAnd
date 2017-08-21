@@ -28,6 +28,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.training.TrainingAchievementView;
 import com.sbai.httplib.BuildConfig;
 
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -149,6 +150,7 @@ public class TrainingResultActivity extends BaseActivity {
     }
 
     private void updateTrainingResultDetail(List<TrainingTarget> trainTargets) {
+        Collections.sort(trainTargets);
         if (!trainTargets.isEmpty()) {
             int targetType = trainTargets.get(0).getType();
             switch (targetType) {
