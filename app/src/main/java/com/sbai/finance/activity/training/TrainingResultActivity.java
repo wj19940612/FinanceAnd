@@ -176,10 +176,10 @@ public class TrainingResultActivity extends BaseActivity {
                         } else {
                             mAchievementViews[i].setContent(getString(R.string.train_finish_time_with_second, formatTime(trainTargets.get(i).getTime())));
                         }
-                        if (mTrainingSubmit.getTime() >= trainTargets.get(i).getTime()) {
-                            mAchievementViews[i].setAchieved(true);
-                        } else {
+                        if (mTrainingSubmit.getTime() > trainTargets.get(i).getTime()) {
                             mAchievementViews[i].setAchieved(false);
+                        } else {
+                            mAchievementViews[i].setAchieved(true);
                         }
                     }
                     showResultsWithAnim(trainTargets.size());
