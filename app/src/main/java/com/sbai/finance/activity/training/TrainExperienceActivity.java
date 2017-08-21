@@ -18,12 +18,14 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.Experience;
 import com.sbai.finance.model.training.TrainPraise;
+import com.sbai.finance.model.training.Training;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -67,7 +69,7 @@ public class TrainExperienceActivity extends BaseActivity {
 	private int mPage = 0;
 	private HashSet<String> mSet;
 	private View mFootView;
-	private int mTrainId;
+	private Training mTraining;
 	private HotExperienceListAdapter mHotExperienceListAdapter;
 	private LatestExperienceListAdapter mLatestExperienceListAdapter;
 
@@ -88,7 +90,7 @@ public class TrainExperienceActivity extends BaseActivity {
 	}
 
 	private void initData(Intent intent) {
-		mTrainId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+		mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
 	}
 
 	private void initTitleBar() {
@@ -100,7 +102,9 @@ public class TrainExperienceActivity extends BaseActivity {
 			mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Launcher.with(getActivity(), WriteExperienceActivity.class).executeForResult(REQ_WRITE_EXPERIENCE);
+					Launcher.with(getActivity(), WriteExperienceActivity.class)
+							.putExtra(ExtraKeys.TRAINING, mTraining)
+							.executeForResult(REQ_WRITE_EXPERIENCE);
 				}
 			});
 		} else {
@@ -133,7 +137,7 @@ public class TrainExperienceActivity extends BaseActivity {
 	}
 
 	private void requestLatestExperienceList() {
-		Client.getLatestExperienceList(mPage, mPageSize, mTrainId).setTag(TAG)
+		Client.getLatestExperienceList(mPage, mPageSize, mTraining.getId()).setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
 					@Override
 					protected void onRespSuccessData(List<Experience> experienceList) {
@@ -161,7 +165,7 @@ public class TrainExperienceActivity extends BaseActivity {
 	}
 
 	private void requestHotExperienceList() {
-		Client.getHotExperienceList(mTrainId).setTag(TAG)
+		Client.getHotExperienceList(mTraining.getId()).setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
 					@Override
 					protected void onRespSuccessData(List<Experience> experienceList) {

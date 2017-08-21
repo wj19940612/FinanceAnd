@@ -66,6 +66,7 @@ public class TrainingResultActivity extends BaseActivity {
     private Training mTraining;
     private TrainingDetail mTrainingDetail;
     private TrainingSubmit mTrainingSubmit;
+    private int mCount;
 
     public static void show(Activity activity, Training training, int time, boolean isFinish) {
         Launcher.with(activity, TrainingResultActivity.class)
@@ -136,6 +137,7 @@ public class TrainingResultActivity extends BaseActivity {
                         if (BuildConfig.DEBUG) {
                             ToastUtil.show(resp.getData().toString());
                         }
+                        //mCount = resp.getData().getLevel();
                     }
 
                     @Override
@@ -172,8 +174,14 @@ public class TrainingResultActivity extends BaseActivity {
                 case TrainingTarget.TYPE_TIME:
                     finalTargetIndex = -1;
                     for (int i = 0; i < mAchievementViews.length; i++) {
-                        mAchievementViews[i].setContent(getString(R.string._minutes_complete,
-                                trainTargets.get(i).getTime() / 60));
+                        int seconds = trainTargets.get(i).getTime() % 60;
+                        if (seconds == 0) {
+                            mAchievementViews[i].setContent(getString(R.string._minutes_complete,
+                                    trainTargets.get(i).getTime() / 60));
+                        } else {
+                            mAchievementViews[i].setContent(getString(R.string.train_use_time,
+                                    trainTargets.get(i).getTime() / 60, seconds));
+                        }
                         if (mTrainingSubmit.getTime() >= trainTargets.get(i).getTime()) {
                             mAchievementViews[i].setAchieved(true);
                         }
@@ -227,7 +235,8 @@ public class TrainingResultActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.recordTrainingExperience:
                 Launcher.with(getActivity(), WriteExperienceActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mTraining.getType())
+                        .putExtra(ExtraKeys.TRAINING, mTraining)
+                        //.putExtra(ExtraKeys.TRAIN_LEVEL, mCount)
                         .execute();
                 finish();
                 break;

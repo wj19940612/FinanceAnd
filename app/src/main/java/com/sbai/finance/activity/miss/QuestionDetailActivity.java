@@ -198,6 +198,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				requestQuestionDetail();
 				requestQuestionReplyList();
 				mScrollView.smoothScrollTo(0, 0);
+
+				//关掉语音和语音动画
+				mMediaPlayerManager.release();
+				mVoiceLevel.clearAnimation();
+				mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+				mPlayingID = -1;
 			}
 		});
 	}

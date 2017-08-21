@@ -48,8 +48,8 @@ public class DragImageView extends android.support.v7.widget.AppCompatImageView 
 		setScaleY(0);
 		AnimatorSet animatorSet = new AnimatorSet();
 		animatorSet.playTogether(
-				ObjectAnimator.ofFloat(this, "scaleX",0f, 1.2f, 1f,1.2f,1f),
-				ObjectAnimator.ofFloat(this, "scaleY",0f, 1.2f, 1f,1.2f,1f)
+				ObjectAnimator.ofFloat(this, "scaleX", 0f, 1.2f, 1f, 1.2f, 1f),
+				ObjectAnimator.ofFloat(this, "scaleY", 0f, 1.2f, 1f, 1.2f, 1f)
 		);
 		animatorSet.setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
 		animatorSet.setStartDelay((long) mDelayTime);
@@ -64,7 +64,7 @@ public class DragImageView extends android.support.v7.widget.AppCompatImageView 
 		canvas.drawText(mText, getWidth() / 2, getHeight() / 2 + getHeight() / 5, mTextPaint);
 	}
 
-	public void setText(String text){
+	public void setText(String text) {
 		mText = text;
 	}
 }

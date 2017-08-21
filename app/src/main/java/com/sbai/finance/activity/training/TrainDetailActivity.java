@@ -361,12 +361,12 @@ public class TrainDetailActivity extends BaseActivity {
                 break;
             case R.id.hotExperience:
                 Launcher.with(getActivity(), TrainExperienceActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD_1, mTraining.getId())
+                        .putExtra(ExtraKeys.TRAINING, mTraining)
                         .execute();
                 break;
             case R.id.writeExperience:
                 Launcher.with(getActivity(), WriteExperienceActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mTraining.getType())
+                        .putExtra(ExtraKeys.TRAINING, mTraining)
                         .execute();
                 break;
             case R.id.startTrain:

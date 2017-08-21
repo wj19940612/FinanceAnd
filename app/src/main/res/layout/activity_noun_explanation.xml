@@ -44,10 +44,16 @@
             android:orientation="vertical"
             android:padding="5dp">
 
-            <View
+            <TextView
+                android:id="@+id/explanation"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/redPrimary"/>
+                android:background="@color/redPrimary"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:visibility="visible"
+                tools:text="股价在上升的趋势中因为涨幅过猛而暂时的回落调整现象"/>
 
             <ImageView
                 android:id="@+id/starImage"
