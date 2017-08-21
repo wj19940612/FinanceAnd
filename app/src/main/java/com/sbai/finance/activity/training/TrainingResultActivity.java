@@ -12,12 +12,17 @@ import com.google.gson.Gson;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingDetail;
 import com.sbai.finance.model.training.TrainingResult;
 import com.sbai.finance.model.training.TrainingSubmit;
 import com.sbai.finance.model.training.TrainingTarget;
+import com.sbai.finance.model.training.question.KData;
+import com.sbai.finance.model.training.question.RemoveData;
+import com.sbai.finance.model.training.question.SortData;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AnimUtils;
@@ -236,10 +241,7 @@ public class TrainingResultActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.retry:
-                Launcher.with(getActivity(), TrainingCountDownActivity.class)
-                        .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
-                        .execute();
-                finish();
+                requestTrainingContent();
                 break;
         }
     }
@@ -254,5 +256,65 @@ public class TrainingResultActivity extends BaseActivity {
             return getString(R.string._minutes, minute);
         }
         return getString(R.string._minutes_complete, minute, seconds);
+    }
+
+    private void requestTrainingContent() {
+        if (mTraining.getPlayType() == Training.PLAY_TYPE_REMOVE
+                || mTraining.getPlayType() == Training.PLAY_TYPE_MATCH_STAR) {
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<Question<RemoveData>>>() {
+
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+
+                        @Override
+                        protected void onRespSuccessData(List<Question<RemoveData>> data) {
+                            if (!data.isEmpty()) {
+                                startTraining(data.get(0));
+                            }
+                        }
+                    }).fireFree();
+        }
+        if (mTraining.getPlayType() == Training.PLAY_TYPE_SORT) {
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<Question<SortData>>>() {
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+
+                        @Override
+                        protected void onRespSuccessData(List<Question<SortData>> data) {
+                            if (!data.isEmpty()) {
+                                startTraining(data.get(0));
+                            }
+                        }
+                    }).fireFree();
+        } else if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
+
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
+                        @Override
+                        protected void onRespSuccessData(List<Question<KData>> data) {
+                            if (!data.isEmpty()) {
+                                startTraining(data.get(0));
+                            }
+                        }
+
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+                    }).fireFree();
+        }
+    }
+
+    private void startTraining(Question question) {
+        Launcher.with(getActivity(), TrainingCountDownActivity.class)
+                .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
+                .putExtra(ExtraKeys.QUESTION, question)
+                .execute();
     }
 }
