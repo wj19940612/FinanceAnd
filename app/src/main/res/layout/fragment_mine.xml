@@ -88,7 +88,7 @@
         app:rowTextSize="15sp"
         app:rowVerticalPadding="0dp"
         app:splitLineColor="@color/split"
-        app:subTextDrawable="@drawable/ic_new_message"
+        app:subTextLeftDrawable="@drawable/ic_new_message"
         app:subTextVisible="gone"/>
 
     <com.sbai.finance.view.IconTextRow
@@ -105,7 +105,7 @@
         app:rowTextSize="15sp"
         app:rowVerticalPadding="0dp"
         app:splitLineColor="@color/split"
-        app:subTextDrawable="@drawable/ic_new_message"
+        app:subTextLeftDrawable="@drawable/ic_new_message"
         app:subTextVisible="gone"/>
 
     <com.sbai.finance.view.IconTextRow

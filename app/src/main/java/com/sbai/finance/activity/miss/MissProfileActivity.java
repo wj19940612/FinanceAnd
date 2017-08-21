@@ -65,7 +65,7 @@ import butterknife.OnClick;
  * 小姐姐详细资料页面
  */
 public class MissProfileActivity extends BaseActivity implements
-		AdapterView.OnItemClickListener, ObservableScrollView.ScrollViewListener {
+		AdapterView.OnItemClickListener, ObservableScrollView.OnScrollChangedListener {
 
 	private static final int REQ_SUBMIT_QUESTION_LOGIN = 1001;
 	private static final int REQ_MISS_REWARD_LOGIN = 1002;
@@ -138,7 +138,7 @@ public class MissProfileActivity extends BaseActivity implements
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mHerAnswerAdapter);
 		mListView.setOnItemClickListener(this);
-		mScrollView.setScrollViewListener(this);
+		mScrollView.setScrollChangedListener(this);
 
 		requestMissDetail();
 		requestHerAnswerList();

@@ -31,7 +31,7 @@ import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.training.MoreTrainFeedbackActivity;
-import com.sbai.finance.activity.training.TrainDetailActivity;
+import com.sbai.finance.activity.training.TrainingDetailActivity;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.MyTrainingRecord;
@@ -212,7 +212,7 @@ public class DiscoveryFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MyTrainingRecord trainProgram = (MyTrainingRecord) parent.getItemAtPosition(position);
                 if (trainProgram != null) {
-                    Launcher.with(getActivity(), TrainDetailActivity.class)
+                    Launcher.with(getActivity(), TrainingDetailActivity.class)
                             .putExtra(ExtraKeys.TRAINING, trainProgram.getTrain())
                             .execute();
                 }

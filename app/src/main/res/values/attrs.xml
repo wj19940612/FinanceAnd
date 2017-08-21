@@ -40,7 +40,9 @@
         <attr name="subTextSize" format="reference|dimension"/>
         <attr name="subTextColor" format="color"/>
         <attr name="subTextBackground" format="reference"/>
-        <attr name="subTextDrawable" format="reference"/>
+        <attr name="subTextLeftDrawable" format="reference"/>
+        <attr name="subTextRightDrawable" format="reference"/>
+        <attr name="subTextRightMargin" format="reference|dimension"/>
         <attr name="subTextVisible">
             <enum name="visible" value="0"/>
             <enum name="invisible" value="4"/>
@@ -57,6 +59,7 @@
         <attr name="rowHorizontalPadding" format="dimension"/>
         <attr name="hasBottomSplitLine"/>
         <attr name="splitLineColor"/>
+        <attr name="splitLineLeftPadding" format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="TitleBar">

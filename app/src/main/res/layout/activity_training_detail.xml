@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/redTheoryTraining"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_white"
+        app:rightImage="@drawable/ic_share"
+        app:rightVisible="true"
+        app:titleTextColor="@android:color/white"/>
+
+    <com.sbai.finance.view.ObservableScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/extraBackground"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:background="@color/redTheoryTraining"
+                android:orientation="vertical"/>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/trainingTitle"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:background="@android:color/white"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="30dp"
+                        android:textColor="@color/primaryText"
+                        android:textSize="20sp"
+                        tools:text="股票基本概念"/>
+
+                    <TextView
+                        android:id="@+id/introduce"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="14dp"
+                        android:textColor="@color/luckyText"
+                        android:textSize="12sp"
+                        tools:text="适合初步接触k线的金融初学者,或想深入研究k线看法的金融爱好者,本训练旨在了解单k的各种形态"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/trainingInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/trainingTitle"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/duration"
+                        android:textColor="@color/unluckyText"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textColor="@color/primaryText"
+                        android:textSize="14sp"
+                        tools:text="@string/train_duration"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/split"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/difficulty"
+                        android:textColor="@color/unluckyText"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/difficulty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textColor="@color/primaryText"
+                        android:textSize="14sp"
+                        tools:text="@string/train_level"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/split"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.sbai.finance.view.ImageListView
+                        android:id="@+id/imageListView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
+                    </com.sbai.finance.view.ImageListView>
+
+                    <TextView
+                        android:id="@+id/completeNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/primaryText"
+                        android:textSize="10sp"
+                        tools:text="@string/complete_number"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/achievementArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/trainingInfo"
+                android:layout_marginBottom="15dp"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:background="@color/split"/>
+
+                <com.sbai.finance.view.training.TrainingAchievementView2
+                    android:id="@+id/achievement0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:visibility="gone"/>
+
+                <com.sbai.finance.view.training.TrainingAchievementView2
+                    android:id="@+id/achievement1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:visibility="gone"/>
+
+                <com.sbai.finance.view.training.TrainingAchievementView2
+                    android:id="@+id/achievement2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/relatedKnowledgeArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/achievementArea"
+                android:background="@color/background">
+
+                <TextView
+                    android:id="@+id/relatedKnowledge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/bg_white_rounded"
+                    android:drawableRight="@drawable/ic_little_right_arrow"
+                    android:gravity="center"
+                    android:minHeight="44dp"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:text="@string/relevant_knowledge"
+                    android:textColor="@color/primaryText"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+            <com.sbai.finance.view.IconTextRow
+                android:id="@+id/trainingExperience"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relatedKnowledgeArea"
+                app:hasBottomSplitLine="true"
+                app:rowText="@string/train_experience"
+                app:rowTextColor="@color/primaryText"
+                app:splitLineColor="@color/split"
+                app:splitLineLeftPadding="0dp"
+                app:subText="更多"
+                app:subTextColor="@color/unluckyText"
+                app:subTextRightDrawable="@drawable/ic_arrow_more"
+                app:subTextRightMargin="0dp"/>
+
+            <LinearLayout
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/trainingExperience"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:drawablePadding="10dp"
+                    android:drawableTop="@drawable/img_no_message"
+                    android:text="@string/share_your_experience"
+                    android:textColor="@color/unluckyText"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/writeExperience"
+                    android:layout_width="100dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="30dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/btn_write_experience"
+                    android:gravity="center"
+                    android:text="@string/write_experience"
+                    android:textColor="@color/colorPrimary"
+                    android:visibility="gone"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </com.sbai.finance.view.ObservableScrollView>
+
+    <TextView
+        android:id="@+id/startTraining"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_train_theory"
+        android:gravity="center"
+        android:text="@string/start_training"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"/>
+</LinearLayout>
