@@ -28,6 +28,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.training.TrainingAchievementView;
 import com.sbai.httplib.BuildConfig;
 
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -110,7 +111,7 @@ public class TrainingResultActivity extends BaseActivity {
             mRetry.setVisibility(View.GONE);
             mMyGrade.setVisibility(View.VISIBLE);
             mFailedMessage.setVisibility(View.GONE);
-            mMyGrade.setText(getString(R.string.train_use_time, mTrainingSubmit.getTime() / 60, mTrainingSubmit.getTime() % 60));
+            mMyGrade.setText(formatTime(mTrainingSubmit.getTime()));
         } else {
             mRecordTrainingExperience.setVisibility(View.GONE);
             mRetry.setVisibility(View.VISIBLE);
@@ -137,7 +138,6 @@ public class TrainingResultActivity extends BaseActivity {
                         if (BuildConfig.DEBUG) {
                             ToastUtil.show(resp.getData().toString());
                         }
-                        //mCount = resp.getData().getLevel();
                     }
 
                     @Override
@@ -149,6 +149,7 @@ public class TrainingResultActivity extends BaseActivity {
     }
 
     private void updateTrainingResultDetail(List<TrainingTarget> trainTargets) {
+        Collections.sort(trainTargets);
         if (!trainTargets.isEmpty()) {
             int targetType = trainTargets.get(0).getType();
             switch (targetType) {
@@ -158,37 +159,31 @@ public class TrainingResultActivity extends BaseActivity {
                     showResultsWithAnim(1);
                     break;
                 case TrainingTarget.TYPE_RATE:
-                    int finalTargetIndex = -1;
                     for (int i = 0; i < mAchievementViews.length; i++) {
                         mAchievementViews[i].setContent(getString(R.string.accuracy_to_,
                                 FinanceUtil.formatToPercentage(trainTargets.get(i).getRate(), 0)));
                         if (mTrainingSubmit.getRate() >= trainTargets.get(i).getRate()) {
                             mAchievementViews[i].setAchieved(true);
-                            finalTargetIndex = i;
+                        } else {
+                            mAchievementViews[i].setAchieved(false);
                         }
                     }
-                    if (finalTargetIndex >= 0) {
-                        showResultsWithAnim(finalTargetIndex + 1);
-                    }
+                    showResultsWithAnim(trainTargets.size());
                     break;
                 case TrainingTarget.TYPE_TIME:
-                    finalTargetIndex = -1;
                     for (int i = 0; i < mAchievementViews.length; i++) {
-                        int seconds = trainTargets.get(i).getTime() % 60;
-                        if (seconds == 0) {
-                            mAchievementViews[i].setContent(getString(R.string._minutes_complete,
-                                    trainTargets.get(i).getTime() / 60));
+                        if (trainTargets.get(i).getTime() % 60 == 0) {
+                            mAchievementViews[i].setContent(getString(R.string.train_finish_time, formatTime(trainTargets.get(i).getTime())));
                         } else {
-                            mAchievementViews[i].setContent(getString(R.string.train_use_time,
-                                    trainTargets.get(i).getTime() / 60, seconds));
+                            mAchievementViews[i].setContent(getString(R.string.train_finish_time_with_second, formatTime(trainTargets.get(i).getTime())));
                         }
-                        if (mTrainingSubmit.getTime() >= trainTargets.get(i).getTime()) {
+                        if (mTrainingSubmit.getTime() > trainTargets.get(i).getTime()) {
+                            mAchievementViews[i].setAchieved(false);
+                        } else {
                             mAchievementViews[i].setAchieved(true);
                         }
                     }
-                    if (finalTargetIndex >= 0) {
-                        showResultsWithAnim(finalTargetIndex + 1);
-                    }
+                    showResultsWithAnim(trainTargets.size());
                     break;
             }
         }
@@ -247,5 +242,17 @@ public class TrainingResultActivity extends BaseActivity {
                 finish();
                 break;
         }
+    }
+
+    private String formatTime(int time) {
+        int minute = time / 60;
+        int seconds = time % 60;
+        if (minute == 0) {
+            return getString(R.string._seconds, seconds);
+        }
+        if (seconds == 0) {
+            return getString(R.string._minutes, minute);
+        }
+        return getString(R.string._minutes_complete, minute, seconds);
     }
 }
