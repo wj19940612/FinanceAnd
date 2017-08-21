@@ -147,9 +147,11 @@ public class TrainingCountDownActivity extends BaseActivity {
                         @Override
                         protected void onRespSuccessData(List<Question<KData>> data) {
                             if (!data.isEmpty()) {
-                                mQuestion = data.get(0);;
+                                mQuestion = data.get(0);
+                                ;
                             }
                         }
+
                         @Override
                         protected String onInterceptData(String data) {
                             return SecurityUtil.AESDecrypt(data);
