@@ -10,9 +10,11 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.RemoveTraining;
-import com.sbai.finance.model.training.Training;
-import com.sbai.finance.model.training.TrainingQuestion;
+import com.sbai.finance.model.training.TrainingDetail;
+import com.sbai.finance.model.training.TrainingSubmit;
+import com.sbai.finance.model.training.question.RemoveData;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
@@ -42,10 +44,9 @@ public class KlineTrainActivity extends BaseActivity {
     TitleBar mTitleBar;
     @BindView(R.id.progressBar)
     TrainProgressBar mProgressBar;
-    private TrainingQuestion mTrainingQuestion;
-    private List<TrainingQuestion.ContentBean> mTrainings;
-    private Training mTraining;
-
+    private List<RemoveData> mTrainings;
+    private TrainingDetail mTrainingDetail;
+    private Question mQuestion;
     /*用来标记第几组题*/
     private int mIndex;
     private int mSize;
@@ -68,14 +69,14 @@ public class KlineTrainActivity extends BaseActivity {
     }
 
     private void initData(Intent intent) {
-        mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.TRAIN_QUESTIONS);
-        mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
+        mTrainingDetail = intent.getParcelableExtra(ExtraKeys.TRAINING_DETAIL);
+        mQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
     }
 
     private void initView() {
-        if (mTraining == null) return;
-        mProgressBar.setTotalSecondTime(mTraining.getTime());
-        mTrainTargetTime = mTraining.getTime() * 1000;
+        if (mTrainingDetail == null) return;
+        mProgressBar.setTotalSecondTime(mTrainingDetail.getTrain().getTime());
+        mTrainTargetTime = mTrainingDetail.getTrain().getTime() * 1000;
         mProgressBar.setOnTimeUpListener(new TrainProgressBar.OnTimeUpListener() {
             @Override
             public void onTick(long millisUntilUp) {
@@ -94,7 +95,7 @@ public class KlineTrainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Launcher.with(getActivity(), HowPlayActivity.class)
-                        .putExtra(ExtraKeys.TRAINING, mTraining)
+                        .putExtra(ExtraKeys.TRAINING, mTrainingDetail.getTrain())
                         .execute();
             }
         });
@@ -116,10 +117,10 @@ public class KlineTrainActivity extends BaseActivity {
 
 
     private void initTrainView() {
-        if (mTrainingQuestion != null && mTrainingQuestion.getContent() != null
-                && !mTrainingQuestion.getContent().isEmpty()) {
-            mTrainings = mTrainingQuestion.getContent();
-            mSize = mTrainingQuestion.getContent().size();
+        if (mQuestion != null && mQuestion.getContent() != null
+                && !mQuestion.getContent().isEmpty()) {
+            mTrainings = mQuestion.getContent();
+            mSize = mQuestion.getContent().size();
             mIndexView.setText(mIndex + "/" + mSize);
             updateTrainData();
         } else {
@@ -149,7 +150,13 @@ public class KlineTrainActivity extends BaseActivity {
     }
 
     private void requestEndTrain() {
-        TrainingResultActivity.show(getActivity(), mTraining, (int) mTrainingCountTime / 1000, mIsSuccess);
+        TrainingSubmit trainingSubmit = new TrainingSubmit(mTrainingDetail.getTrain().getId());
+        trainingSubmit.setTime((int) (mTrainingCountTime / 1000));
+        trainingSubmit.setFinish(mIsSuccess);
+        Launcher.with(getActivity(), TrainingResultActivity.class)
+                .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
+                .putExtra(ExtraKeys.TRAINING_SUBMIT, trainingSubmit)
+                .execute();
         finish();
     }
 

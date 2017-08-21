@@ -24,8 +24,8 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingDetail;
-import com.sbai.finance.model.training.TrainingQuestion;
 import com.sbai.finance.model.training.question.KData;
+import com.sbai.finance.model.training.question.RemoveData;
 import com.sbai.finance.model.training.question.SortData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -65,12 +65,12 @@ public class TrainingCountDownActivity extends BaseActivity {
             if (msg.what == 0) {
                 switch (mTraining.getPlayType()) {
                     case Training.PLAY_TYPE_REMOVE:
-//                        if (mTrainingQuestion != null && mTraining != null) {
-//                            Launcher.with(getActivity(), KlineTrainActivity.class)
-//                                    .putExtra(ExtraKeys.TRAIN_QUESTIONS, mTrainingQuestion)
-//                                    .putExtra(ExtraKeys.TRAINING, mTraining)
-//                                    .execute();
-//                        }
+                        if (mQuestion != null && mTrainingDetail != null) {
+                            Launcher.with(getActivity(), KlineTrainActivity.class)
+                                    .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
+                                    .putExtra(ExtraKeys.QUESTION, mQuestion)
+                                    .execute();
+                        }
                         break;
                     case Training.PLAY_TYPE_MATCH_STAR:
 //                        if (mTrainingQuestion != null && mTraining != null) {
@@ -129,6 +129,23 @@ public class TrainingCountDownActivity extends BaseActivity {
     }
 
     private void requestTrainingContent() {
+        if (mTraining.getPlayType() == Training.PLAY_TYPE_REMOVE) {
+            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<String>, List<Question<RemoveData>>>() {
+
+                        @Override
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
+                        }
+
+                        @Override
+                        protected void onRespSuccessData(List<Question<RemoveData>> data) {
+                            if (!data.isEmpty()) {
+                                mQuestion = data.get(0);
+                            }
+                        }
+                    }).fireFree();
+        }
         if (mTraining.getPlayType() == Training.PLAY_TYPE_SORT) {
             Client.getTrainingContent(mTraining.getId()).setTag(TAG)
                     .setCallback(new Callback2D<Resp<String>, List<Question<SortData>>>() {
@@ -144,23 +161,8 @@ public class TrainingCountDownActivity extends BaseActivity {
                             }
                         }
                     }).fireFree();
-        } else if (mTraining.getPlayType() != Training.PLAY_TYPE_JUDGEMENT &&
-                mTraining.getPlayType() != Training.PLAY_TYPE_SORT) {
-            Client.getTrainingContent(mTraining.getId()).setTag(TAG)
-                    .setCallback(new Callback2D<Resp<String>, List<TrainingQuestion>>() {
-                        @Override
-                        protected void onRespSuccessData(List<TrainingQuestion> data) {
-                            if (!data.isEmpty()) {
-//                                mTrainingQuestion = data.get(0);
-                            }
-                        }
+        } else if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
 
-                        @Override
-                        protected String onInterceptData(String data) {
-                            return SecurityUtil.AESDecrypt(data);
-                        }
-                    }).fireFree();
-        } else {
             Client.getTrainingContent(mTraining.getId()).setTag(TAG)
                     .setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
                         @Override
