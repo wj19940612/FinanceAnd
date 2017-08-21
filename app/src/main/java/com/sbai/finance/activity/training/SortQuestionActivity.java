@@ -372,11 +372,17 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
     private void startResultListScaleAnimation(final boolean isRight) {
-        ScaleAnimation scaleAnimation = new ScaleAnimation(1, 0.6f, 1, 0.6f,
+
+        ScaleAnimation confirmBtnScaleAnimation = new ScaleAnimation(1, 0f, 1, 0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        confirmBtnScaleAnimation.setDuration(1000);
+        confirmBtnScaleAnimation.setFillAfter(true);
+        mConfirmAnnals.startAnimation(confirmBtnScaleAnimation);
+
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1, 0.1f, 1, 0.1f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         scaleAnimation.setDuration(1000);
         scaleAnimation.setFillAfter(true);
-        mConfirmAnnals.startAnimation(scaleAnimation);
         mSortResultLL.startAnimation(scaleAnimation);
         scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override

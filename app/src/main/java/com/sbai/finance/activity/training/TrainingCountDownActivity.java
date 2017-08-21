@@ -137,6 +137,7 @@ public class TrainingCountDownActivity extends BaseActivity {
                             }
                         }
 
+
                         @Override
                         protected String onInterceptData(String data) {
                             return SecurityUtil.AESDecrypt(data);
