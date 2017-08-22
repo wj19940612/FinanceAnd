@@ -44,6 +44,7 @@ public class KlineTrainView extends RelativeLayout {
         mPriSelectedIndex = -1;
         for (int i = 0; i < trainData.size(); i++) {
             RemoveTraining training = trainData.get(i);
+            if (training == null) return;
             views[i].setTag(training);
             if (views[i].getVisibility() == INVISIBLE) {
                 views[i].resetView();

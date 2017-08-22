@@ -420,7 +420,7 @@
             android:name=".activity.training.WriteExperienceActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.training.TrainDetailActivity"
+            android:name=".activity.training.TrainingDetailActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.training.TrainingResultActivity"

@@ -29,7 +29,7 @@ import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.training.ScoreIntroduceActivity;
-import com.sbai.finance.activity.training.TrainDetailActivity;
+import com.sbai.finance.activity.training.TrainingDetailActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.MyTrainingRecord;
 import com.sbai.finance.model.training.Training;
@@ -128,7 +128,7 @@ public class TrainingFragment extends BaseFragment {
             @Override
             public void onTrainClick(MyTrainingRecord myTrainingRecord, int position) {
                 if (myTrainingRecord.getTrain() != null) {
-                    Launcher.with(getActivity(), TrainDetailActivity.class)
+                    Launcher.with(getActivity(), TrainingDetailActivity.class)
                             .putExtra(ExtraKeys.TRAINING, myTrainingRecord.getTrain())
                             .execute();
                 }

@@ -39,7 +39,9 @@ public class IconTextRow extends LinearLayout {
     private CharSequence mSubText;
     private float mSubTextSize;
     private ColorStateList mSubTextColor;
-    private Drawable mSubTextDrawable;
+    private Drawable mSubTextLeftDrawable;
+    private Drawable mSubTextRightDrawable;
+    private int mSubTextRightMargin;
     private int mSubTextVisible;
 
     private int mVerticalPadding;
@@ -47,6 +49,7 @@ public class IconTextRow extends LinearLayout {
     private int mRowTextSpaceExtra;
     private boolean mHasBottomSplitLine;
     private ColorStateList mSplitLineColor;
+    private int mSplitLineLeftPadding;
 
     private TextView mTextView;
     private TextView mRowSubTextView;
@@ -65,7 +68,6 @@ public class IconTextRow extends LinearLayout {
 
     private void processAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.IconTextRow);
-
 
         int defaultFontSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14,
                 getResources().getDisplayMetrics());
@@ -86,7 +88,9 @@ public class IconTextRow extends LinearLayout {
         mSubTextSize = typedArray.getDimension(R.styleable.IconTextRow_subTextSize, defaultFontSize);
         mSubTextColor = typedArray.getColorStateList(R.styleable.IconTextRow_subTextColor);
         mSubTextViewBg = typedArray.getDrawable(R.styleable.IconTextRow_subTextBackground);
-        mSubTextDrawable = typedArray.getDrawable(R.styleable.IconTextRow_subTextDrawable);
+        mSubTextLeftDrawable = typedArray.getDrawable(R.styleable.IconTextRow_subTextLeftDrawable);
+        mSubTextRightDrawable = typedArray.getDrawable(R.styleable.IconTextRow_subTextRightDrawable);
+        mSubTextRightMargin = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_subTextRightMargin, defaultPadding);
         mSubTextVisible = typedArray.getInt(R.styleable.IconTextRow_subTextVisible, 0);
         mVerticalPadding = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_rowVerticalPadding, defaultPadding);
         mHorizontalPadding = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_rowHorizontalPadding, defaultPadding);
@@ -95,6 +99,7 @@ public class IconTextRow extends LinearLayout {
         if (mSplitLineColor == null) {
             mSplitLineColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(), android.R.color.black));
         }
+        mSplitLineLeftPadding = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_splitLineLeftPadding, defaultPadding);
         mSplitLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, HEIGHT_SPLIT_LINE_DP,
                 getResources().getDisplayMetrics());
 
@@ -108,13 +113,15 @@ public class IconTextRow extends LinearLayout {
             mPaint.setColor(mSplitLineColor.getDefaultColor());
             mPaint.setStrokeWidth(mSplitLineHeight);
             mPaint.setStyle(Paint.Style.STROKE);
-            int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, getResources().getDisplayMetrics());
-            canvas.drawLine(padding, getHeight() - mSplitLineHeight, getWidth(), getHeight() - mSplitLineHeight, mPaint);
+            canvas.drawLine(mSplitLineLeftPadding, getHeight() - mSplitLineHeight, getWidth(), getHeight() - mSplitLineHeight, mPaint);
         }
     }
 
     private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        if (mHasBottomSplitLine) {
+            setWillNotDraw(false);
+        }
 
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
@@ -156,7 +163,7 @@ public class IconTextRow extends LinearLayout {
         }
 
         params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, 0, padding, 0);
+        params.setMargins(0, 0, mSubTextRightMargin, 0);
         mSubTextView = new TextView(getContext());
         mSubTextView.setText(mSubText);
         mSubTextView.setGravity(Gravity.CENTER);
@@ -170,9 +177,7 @@ public class IconTextRow extends LinearLayout {
                 mSubTextView.setBackgroundDrawable(mSubTextViewBg);
             }
         }
-        if (mSubTextDrawable != null) {
-            mSubTextView.setCompoundDrawablesWithIntrinsicBounds(mSubTextDrawable, null, null, null);
-        }
+        mSubTextView.setCompoundDrawablesWithIntrinsicBounds(mSubTextLeftDrawable, null, mSubTextRightDrawable, null);
         addView(mSubTextView, params);
 
         if (mRightIcon != null) {

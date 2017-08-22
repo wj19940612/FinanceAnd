@@ -592,6 +592,15 @@
     <string name="get_exam_questions_fail">测试题目获取失败</string>
     <string name="accuracy_ranking">正确率%1$s     超过%2$s的同学</string>
 
+    <string-array name="evaluationLevel">
+        <item>未测</item>
+        <item>入门</item>
+        <item>初级</item>
+        <item>中级</item>
+        <item>高级</item>
+        <item>精通</item>
+    </string-array>
+
     <!--姐说-->
     <string name="question">提问</string>
     <string name="question_reward_will_gain_money">每次问题被打赏,可以获得一半的赏金哦~</string>
@@ -758,6 +767,7 @@
     <string name="my_grade">我的成绩</string>
     <string name="achieveGoal">完成目标</string>
     <string name="what_a_pity_you_do_not_finish">真可惜，没有完成训练哦</string>
+    <string name="achieved">已达成</string>
     <string name="not_achieved">未达成</string>
     <string name="retry">再试一次</string>
     <string name="how_play">怎么玩?</string>
@@ -786,9 +796,15 @@
     <string name="create_fail">生成失败</string>
     <string name="your_company_is_close">您的公司被关停了</string>
     <string name="success_create_report">成功出炉年报</string>
-    <string name="train_use_time">%1$d分%2$d秒</string>
+    <string name="start_training">开始训练</string>
+    <string name="share_your_experience">分享你训练的心得和感想</string>
+    <!--Training Result-->
     <string name="_minutes_complete">%1$d分钟内完成</string>
-    <string name="mission_complete">任务完成</string>
+    <string name="_minutes_x_seconds_complete">%1$d分%2$d秒内完成</string>
+    <string name="_seconds_complete">%1$d秒内完成</string>
+    <string name="_minutes_x_seconds">%1$d分%2$d秒</string>
+    <string name="_seconds">%1$d秒</string>
+    <string name="_minutes">%1$d分钟</string>
+    <string name="mission_complete">成功完成任务</string>
     <string name="accuracy_to_">准确率达到%1$s</string>
-    
 </resources>

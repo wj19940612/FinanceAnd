@@ -23,6 +23,7 @@ import com.sbai.finance.view.training.KlineTrainView;
 import com.sbai.finance.view.training.TrainProgressBar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -120,6 +121,7 @@ public class KlineTrainActivity extends BaseActivity {
         if (mQuestion != null && mQuestion.getContent() != null
                 && !mQuestion.getContent().isEmpty()) {
             mTrainings = mQuestion.getContent();
+            Collections.shuffle(mTrainings);
             mSize = mQuestion.getContent().size();
             mIndexView.setText(mIndex + "/" + mSize);
             updateTrainData();

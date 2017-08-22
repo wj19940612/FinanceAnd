@@ -12,9 +12,11 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.UploadHelpImageDialogFragment;
+import com.sbai.finance.model.training.Training;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -50,7 +52,9 @@ public class WriteExperienceActivity extends BaseActivity {
 
 	private boolean mIsAddPhoto = false;
 	private String mPath;
-	private int mType;
+	private int mType = 2;
+	private Training mTraining;
+	private int mStar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +66,8 @@ public class WriteExperienceActivity extends BaseActivity {
 	}
 
 	private void initData(Intent intent) {
-		mType = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+		mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
+		mStar = intent.getIntExtra(ExtraKeys.TRAIN_LEVEL, 0);
 	}
 
 	private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -125,7 +130,7 @@ public class WriteExperienceActivity extends BaseActivity {
 						@Override
 						protected void onRespSuccessData(List<String> data) {
 							String picture = data.get(0);
-							Client.writeExperience(4, mType, 2, mExperience.getText().toString().trim(), picture)
+							Client.writeExperience(mTraining.getId(), mType, mStar, mExperience.getText().toString().trim(), picture)
 									.setTag(TAG)
 									.setIndeterminate(WriteExperienceActivity.this)
 									.setCallback(new Callback<Resp<Object>>() {
@@ -149,7 +154,7 @@ public class WriteExperienceActivity extends BaseActivity {
 						}
 					}).fire();
 		} else {
-			Client.writeExperience(4, 2, mType, mExperience.getText().toString().trim(), null)
+			Client.writeExperience(mTraining.getId(), mType, mStar, mExperience.getText().toString().trim(), null)
 					.setTag(TAG)
 					.setIndeterminate(WriteExperienceActivity.this)
 					.setCallback(new Callback<Resp<Object>>() {

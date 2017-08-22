@@ -197,6 +197,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
 
                         UserInfo userInfo = LocalUser.getUser().getUserInfo();
                         userInfo.setEvaluate(1);
+                        userInfo.setMaxLevel(data.getMaxLevel());
                         LocalUser.getUser().setUserInfo(userInfo);
                         Launcher.with(getActivity(), EvaluationResultActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, data)
@@ -276,7 +277,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
                 mResult.setText(examQuestionsModel.getContent());
                 mResultTitle.setText(getQuestionsNumber(examQuestionsModel.getSeq()));
                 mResultTitle.setTextColor(Color.parseColor("#222222"));
-                mCard.setBackgroundResource(R.drawable.bg_white_rounded_sixteen_radius);
+                mCard.setBackgroundResource(R.drawable.bg_white_rounded_16_radius);
                 mCard.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

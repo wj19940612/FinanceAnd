@@ -2162,10 +2162,20 @@ public class Client {
      * @return
      */
     public static API requestMineTrainProjectList() {
-        return new API("/train/train/myList.do",
-                new ApiParams()
+        return new API("/train/train/myList.do", new ApiParams()
                         .put("page", 0)
                         .put("pageSize", 50));
+    }
+
+    /**
+     * 获取我的训练记录
+     *
+     * @param trainId
+     * @return
+     */
+    public static API getMyTrainingRecord(int trainId) {
+        return new API("/train/train/userTrain.do", new ApiParams()
+                .put("trainId", trainId));
     }
 
     /**

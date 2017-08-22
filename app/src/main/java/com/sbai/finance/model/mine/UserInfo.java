@@ -59,6 +59,8 @@ public class UserInfo implements Parcelable {
     private int registerRewardIngot; // 新注册的用户奖励的元宝数量
 
     private int evaluate; //是否进行过测试
+    private int maxLevel; //最高测评结果
+
 
     public boolean isNewUser() {
         return isNewUser;
@@ -263,6 +265,21 @@ public class UserInfo implements Parcelable {
         this.userSex = userSex;
     }
 
+    public void setRegisterRewardIngot(int registerRewardIngot) {
+        this.registerRewardIngot = registerRewardIngot;
+    }
+
+    public int getEvaluate() {
+        return evaluate;
+    }
+
+    public int getMaxLevel() {
+        return maxLevel;
+    }
+
+    public void setMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
+    }
 
     @Override
     public String toString() {
@@ -291,11 +308,10 @@ public class UserInfo implements Parcelable {
                 ", isNewUser=" + isNewUser +
                 ", registerRewardIngot=" + registerRewardIngot +
                 ", evaluate=" + evaluate +
+                ", maxLevel=" + maxLevel +
                 '}';
     }
 
-    public UserInfo() {
-    }
 
     @Override
     public int describeContents() {
@@ -304,8 +320,10 @@ public class UserInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
         dest.writeString(this.userName);
         dest.writeValue(this.age);
+        dest.writeInt(this.userSex);
         dest.writeString(this.land);
         dest.writeString(this.userPhone);
         dest.writeByte(this.bIsSetNickName ? (byte) 1 : (byte) 0);
@@ -313,7 +331,6 @@ public class UserInfo implements Parcelable {
         dest.writeInt(this.agencyId);
         dest.writeValue(this.certificationStatus);
         dest.writeLong(this.createTime);
-        dest.writeInt(this.id);
         dest.writeLong(this.lastLoginTime);
         dest.writeInt(this.loginErrorNum);
         dest.writeString(this.loginIp);
@@ -321,14 +338,23 @@ public class UserInfo implements Parcelable {
         dest.writeInt(this.modifyNickNameTimes);
         dest.writeString(this.registrationIp);
         dest.writeInt(this.status);
-        dest.writeInt(this.userSex);
         dest.writeDouble(this.longitude);
         dest.writeDouble(this.latitude);
+        dest.writeByte(this.isSetPass ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isNewUser ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.registerRewardIngot);
+        dest.writeInt(this.evaluate);
+        dest.writeInt(this.maxLevel);
+    }
+
+    public UserInfo() {
     }
 
     protected UserInfo(Parcel in) {
+        this.id = in.readInt();
         this.userName = in.readString();
         this.age = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.userSex = in.readInt();
         this.land = in.readString();
         this.userPhone = in.readString();
         this.bIsSetNickName = in.readByte() != 0;
@@ -336,7 +362,6 @@ public class UserInfo implements Parcelable {
         this.agencyId = in.readInt();
         this.certificationStatus = (Integer) in.readValue(Integer.class.getClassLoader());
         this.createTime = in.readLong();
-        this.id = in.readInt();
         this.lastLoginTime = in.readLong();
         this.loginErrorNum = in.readInt();
         this.loginIp = in.readString();
@@ -344,9 +369,13 @@ public class UserInfo implements Parcelable {
         this.modifyNickNameTimes = in.readInt();
         this.registrationIp = in.readString();
         this.status = in.readInt();
-        this.userSex = in.readInt();
         this.longitude = in.readDouble();
         this.latitude = in.readDouble();
+        this.isSetPass = in.readByte() != 0;
+        this.isNewUser = in.readByte() != 0;
+        this.registerRewardIngot = in.readInt();
+        this.evaluate = in.readInt();
+        this.maxLevel = in.readInt();
     }
 
     public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
@@ -361,3 +390,5 @@ public class UserInfo implements Parcelable {
         }
     };
 }
+
+

@@ -58,7 +58,7 @@ public class HowPlayActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_how_play);
         ButterKnife.bind(this);
-
+        translucentStatusBar();
         initData(getIntent());
 
         initView();
