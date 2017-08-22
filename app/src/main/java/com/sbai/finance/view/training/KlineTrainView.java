@@ -36,6 +36,7 @@ public class KlineTrainView extends RelativeLayout {
 
     public void setTrainData(List<RemoveTraining> data) {
         if (data == null) return;
+        Collections.shuffle(data);
         refresh(data);
     }
 
