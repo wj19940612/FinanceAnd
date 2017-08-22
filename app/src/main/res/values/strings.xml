@@ -774,6 +774,7 @@
     <string name="data">%1$s%2$s</string>
     <string name="exit_train_will_not_save_train_record">现在退出训练，训练记录将不会保存的哟</string>
     <string name="is_sure_exit_train">确定要退出训练吗?</string>
+    <string name="is_sure_delete_photo">要删除这张照片吗?</string>
     <string name="exit_train">退出训练</string>
     <string name="continue_train">继续训练</string>
     <string name="accuracy">准确率</string>

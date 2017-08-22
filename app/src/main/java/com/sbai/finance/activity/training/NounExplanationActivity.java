@@ -68,6 +68,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	ImageView mStarImage;
 	@BindView(R.id.cardView)
 	CardView mCardView;
+
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
 	@BindView(R.id.progressBar)
