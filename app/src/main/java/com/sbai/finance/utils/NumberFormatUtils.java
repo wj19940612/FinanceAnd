@@ -4,26 +4,33 @@ import java.text.NumberFormat;
 
 /**
  * Created by ${wangJie} on 2017/8/6.
+ * 格式化数字
  */
 
 public class NumberFormatUtils {
 
+    //已百分数形式显示数字
     public static String formatPercentString(double number) {
-        return formatPercentString(number, 1);
+        return formatPercentString(number, 0);
     }
 
-    public static String formatPercentString(double number, int minimumFractionDigits) {
+    /**
+     * @param number
+     * @param maximumFractionDigits 小数点后保留几位
+     * @return
+     */
+    public static String formatPercentString(double number, int maximumFractionDigits) {
         NumberFormat percentInstance = NumberFormat.getPercentInstance();
-        percentInstance.setMaximumFractionDigits(1);
-        percentInstance.setMinimumFractionDigits(minimumFractionDigits);
+        percentInstance.setMaximumFractionDigits(maximumFractionDigits);
+        percentInstance.setMinimumFractionDigits(0);
         return percentInstance.format(number);
     }
 
 
-    public static String formatPercentStringEndReplaceZero(double number, int minimumFractionDigits) {
+    public static String formatPercentStringEndReplaceZero(double number, int maximumFractionDigits) {
         NumberFormat percentInstance = NumberFormat.getPercentInstance();
         percentInstance.setMaximumFractionDigits(1);
-        percentInstance.setMinimumFractionDigits(minimumFractionDigits);
+        percentInstance.setMinimumFractionDigits(maximumFractionDigits);
         return replaceZero(percentInstance.format(number));
     }
 

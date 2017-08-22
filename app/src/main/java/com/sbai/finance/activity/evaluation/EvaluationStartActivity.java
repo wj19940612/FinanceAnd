@@ -91,7 +91,7 @@ public class EvaluationStartActivity extends BaseActivity {
                 break;
             case R.id.historyResult:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), HistoryTestResultActivity.class).execute();
+                    Launcher.with(getActivity(), HistoryEvaluationResultActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }

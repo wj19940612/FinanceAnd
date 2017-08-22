@@ -187,6 +187,7 @@ public class UserEachTrainingScoreModel implements Parcelable {
     // 计算每一项的分数所占各个总分的比例
     public EvaluationResult getTestResultModel() {
         EvaluationResult evaluationResult = new EvaluationResult();
+        evaluationResult.setTotalCredit(getUserTotalScore());
         for (ScoresBean data : getScores()) {
             double scale = 0;
             if (data.getTotalScore() != 0) {

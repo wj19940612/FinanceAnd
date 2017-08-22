@@ -131,9 +131,7 @@ public class SortQuestionActivity extends BaseActivity {
 
         mRandRomQuestionResultList = SortData.getRandRomResultList(mTrainingQuestion.getContent());
 
-
         initSortQuestionAdapter(mRandRomQuestionResultList);
-
 
         //底部答案区域创建数据源
         ArrayList<SortData> contentBeenList = new ArrayList<>();

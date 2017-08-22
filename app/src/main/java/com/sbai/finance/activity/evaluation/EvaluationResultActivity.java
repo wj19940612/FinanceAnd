@@ -6,13 +6,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.RewardGetActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.levelevaluation.EvaluationResult;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.leveltest.ScoreView;
@@ -52,7 +52,7 @@ public class EvaluationResultActivity extends BaseActivity {
         setContentView(R.layout.activity_evaluation_result);
         ButterKnife.bind(this);
         translucentStatusBar();
-        EvaluationResult data = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+        EvaluationResult data = getIntent().getParcelableExtra(ExtraKeys.HISTORY_TEST_RESULT);
         updateUserResult(data);
     }
 
@@ -61,9 +61,9 @@ public class EvaluationResultActivity extends BaseActivity {
         mScoreView.setData(data);
         setScoreView(data.getLevel());
         mAccuracyHint.setText(getString(R.string.accuracy_ranking,
-                NumberFormatUtils.formatPercentStringEndReplaceZero(data.getAllAccuracy(),2),
-                NumberFormatUtils.formatPercentStringEndReplaceZero(data.getPassPercent(),2)));
-        mAccuracy.setText(NumberFormatUtils.formatPercentStringEndReplaceZero(data.getAllAccuracy(),2));
+                NumberFormatUtils.formatPercentStringEndReplaceZero(data.getAllAccuracy(), 2),
+                NumberFormatUtils.formatPercentString(data.getPassPercent())));
+        mAccuracy.setText(NumberFormatUtils.formatPercentStringEndReplaceZero(data.getAllAccuracy(), 2));
     }
 
     public void setScoreView(int result) {
