@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -125,6 +126,7 @@ public class JudgeTrainingActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 mTrainingSubmit.setFinish(false);
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(HowPlayActivity.TYPE_FINISH));
                 startTrainingResultPage();
             }
         }.start();
