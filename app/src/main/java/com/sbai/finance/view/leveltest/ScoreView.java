@@ -13,7 +13,6 @@ import android.graphics.Point;
 import android.graphics.Shader;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -90,12 +89,6 @@ public class ScoreView extends View {
     private int mMiddleLoopCircleColor;
     private int mValueColor;
     private int mRadarColor;
-
-
-    private int mStartX;
-    private int mStartY;
-    private int mEndX;
-    private int mEndY;
 
     public ScoreView(Context context) {
         this(context, null);
@@ -267,16 +260,6 @@ public class ScoreView extends View {
         for (int i = 0; i < DataCount; i++) {
             int x = getPoint(i).x;
             int y = getPoint(i).y;
-
-            if (i == 1) {
-                mEndX = x;
-
-                Log.d(TAG, "show: " + x + " " + y);
-            } else if (i == 3) {
-                mStartX = x;
-                mStartY = y;
-                Log.d(TAG, "end: " + x + " " + y);
-            }
             path.reset();
             path.moveTo(mCenterX, mCenterY);
             path.lineTo(x, y);
@@ -325,10 +308,8 @@ public class ScoreView extends View {
     private void drawScore(Canvas canvas) {
         int score = 0;
         //计算总分
-        if (mData != null) {
-            for (int i = 0; i < DataCount; i++) {
-                score += mData[i];
-            }
+        if (mEvaluationResult != null) {
+            score = mEvaluationResult.getTotalCredit();
         }
         canvas.drawText(String.valueOf(score), mCenterX, mCenterY + mScoreTextSize / 3, mScorePaint);
     }

@@ -12,16 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
-
-import com.sbai.finance.model.levelevaluation.QuestionAnswer;
 import com.sbai.finance.model.levelevaluation.EvaluationResult;
-
-import com.sbai.finance.model.training.TrainingQuestion;
-
+import com.sbai.finance.model.levelevaluation.QuestionAnswer;
 import com.sbai.finance.model.mine.UserInfo;
+import com.sbai.finance.model.training.TrainingQuestion;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -193,14 +191,13 @@ public class EvaluationQuestionsActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<EvaluationResult>, EvaluationResult>() {
                     @Override
                     protected void onRespSuccessData(EvaluationResult data) {
-                        Log.d(TAG, "onRespSuccessData: " + data.toString());
 
                         UserInfo userInfo = LocalUser.getUser().getUserInfo();
                         userInfo.setEvaluate(1);
                         userInfo.setMaxLevel(data.getMaxLevel());
                         LocalUser.getUser().setUserInfo(userInfo);
                         Launcher.with(getActivity(), EvaluationResultActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, data)
+                                .putExtra(ExtraKeys.HISTORY_TEST_RESULT, data)
                                 .execute();
                         finish();
 

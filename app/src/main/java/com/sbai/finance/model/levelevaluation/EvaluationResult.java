@@ -38,6 +38,16 @@ public class EvaluationResult implements Parcelable {
     private int userId;
     private int maxLevel; //最高测评等级
 
+    private double totalCredit;
+
+    public int getTotalCredit() {
+        return (int) totalCredit;
+    }
+
+    public void setTotalCredit(double totalCredit) {
+        this.totalCredit = totalCredit;
+    }
+
     public int getMaxLevel() {
         return maxLevel;
     }
@@ -195,7 +205,6 @@ public class EvaluationResult implements Parcelable {
      * updateTime : 2017-08-05 15:06:40
      * userId : 800329
      */
-
 
 
     @Override

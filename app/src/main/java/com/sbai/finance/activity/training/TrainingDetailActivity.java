@@ -278,9 +278,10 @@ public class TrainingDetailActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(List<Experience> experienceList) {
                         List<Experience> newExperienceList = new ArrayList<Experience>();
-                        for (int i = 0; i < 2; i++) {
-                            newExperienceList.add(experienceList.get(i));
-                        }
+                        // TODO: 2017/8/22 先注释掉
+//                        for (int i = 0; i < 2; i++) {
+//                            newExperienceList.add(experienceList.get(i));
+//                        }
                         updateHotExperienceList(newExperienceList);
                     }
                 }).fire();
