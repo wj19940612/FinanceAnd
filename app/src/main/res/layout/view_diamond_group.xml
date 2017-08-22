@@ -11,12 +11,13 @@
         android:layout_height="122dp"
         android:layout_centerInParent="true"
         android:background="@android:color/transparent"
+        android:visibility="visible"
         app:backgroundColor="#372F54"/>
 
-    <ImageView
+    <com.sbai.finance.view.training.DiamondImageView
         android:id="@+id/klineImg"
-        android:layout_width="106dp"
-        android:layout_height="122dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
         tools:src="@drawable/ic_default_avatar"/>
