@@ -755,7 +755,6 @@
     <string name="difficulty">难度</string>
     <string name="complete_number">%1$d人已完成</string>
     <string name="train_level">L%1$d</string>
-    <string name="train_duration">%1$d分钟</string>
     <string name="share_success">分享成功</string>
     <string name="share_title">登录用户分享就得10元宝,每日最多30元宝</string>
     <string name="train_share_share_title">大家都在用乐米进行%1$s训练，你还不快来加入我们?</string>

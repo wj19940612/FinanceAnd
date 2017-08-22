@@ -107,7 +107,6 @@ public class TrainingDetailActivity extends BaseActivity {
 		//mHotListView.setEmptyView(mEmpty);
 		//mHotListView.setFocusable(false);
 		//mHotListView.setAdapter(mHotExperienceListAdapter);
-
 		mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -239,7 +238,7 @@ public class TrainingDetailActivity extends BaseActivity {
 					@Override
 					protected void onRespSuccessData(TrainingDetail data) {
 						mTrainingDetail = data;
-						updateTrainDetail();
+						updateTrainDetail(data);
 						updateAchievementViews();
 					}
 				}).fire();
@@ -293,14 +292,18 @@ public class TrainingDetailActivity extends BaseActivity {
 		mExperience2.setData(experienceList.get(1));
 	}
 
-	private void updateTrainDetail() {
-		Training training = mTrainingDetail.getTrain();
+	private void updateTrainDetail(TrainingDetail trainingDetail) {
+		Training training = trainingDetail.getTrain();
 		if (training != null) {
 			mTitle.setText(training.getTitle());
 			mIntroduce.setText(training.getRemark());
-			mDuration.setText(getString(R.string.train_duration, training.getTime() / 60));
 			mDifficulty.setText(getString(R.string.train_level, training.getLevel()));
 			mCompleteNumber.setText(getString(R.string.complete_number, training.getFinishCount()));
+			if (training.getId() < 60 ) {
+				mDuration.setText(getString(R.string._seconds, training.getTime()));
+			} else {
+				mDuration.setText(getString(R.string._minutes, training.getTime() / 60));
+			}
 		}
 	}
 
