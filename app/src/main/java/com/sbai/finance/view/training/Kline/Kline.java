@@ -241,13 +241,13 @@ public class Kline extends ChartView {
         super.onDraw(canvas);
         updateIntersectionPointList();
 
-        for (int i = 0; i < mIntersectionPointArray.size(); i++) {
-            sPaint.setColor(Color.parseColor("#ffffff"));
-            sPaint.setStyle(Paint.Style.STROKE);
-            sPaint.setStrokeWidth(1);
-            IntersectionPoint point = mIntersectionPointArray.valueAt(i);
-            canvas.drawLine(point.getPoint().x, 0, point.getPoint().x, getHeight(), sPaint);
-        }
+//        for (int i = 0; i < mIntersectionPointArray.size(); i++) {
+//            sPaint.setColor(Color.parseColor("#ffffff"));
+//            sPaint.setStyle(Paint.Style.STROKE);
+//            sPaint.setStrokeWidth(1);
+//            IntersectionPoint point = mIntersectionPointArray.valueAt(i);
+//            canvas.drawLine(point.getPoint().x, 0, point.getPoint().x, getHeight(), sPaint);
+//        }
     }
 
     private void updateIntersectionPointList() {
