@@ -117,9 +117,9 @@ public class SortQuestionActivity extends BaseActivity {
          * @param drawingCache 复制的图层
          * @param originalX    点击的view 的x坐标
          * @param originalY    点击的view 的y坐标
-         * @param view
+         * @param
          */
-        void onItemClick(SortData data, int position, Bitmap drawingCache, float originalX, float originalY, TextView view);
+        void onItemClick(SortData data, int position, Bitmap drawingCache, float originalX, float originalY);
     }
 
     @Override
@@ -306,7 +306,7 @@ public class SortQuestionActivity extends BaseActivity {
         mSortResultAdapter.addData(content);
         mSortResultAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(SortData data, int position, Bitmap drawingCache, float originalX, float originalY, TextView view) {
+            public void onItemClick(SortData data, int position, Bitmap drawingCache, float originalX, float originalY) {
                 if (data.isSelect()) {
                     updateResult(data, position);
 
@@ -352,9 +352,9 @@ public class SortQuestionActivity extends BaseActivity {
 
         mSortQuestionAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(SortData data, int position, Bitmap drawingCache, float originalX, float originalY, TextView view) {
+            public void onItemClick(SortData data, int position, Bitmap drawingCache, float originalX, float originalY) {
                 if (drawingCache != null) {
-                    chooseResult(position, data, view);
+                    chooseResult(position, data);
                 }
             }
         });
@@ -380,15 +380,15 @@ public class SortQuestionActivity extends BaseActivity {
 
     }
 
-    private void chooseResult(int position, SortData data, TextView view) {
+    private void chooseResult(int position, SortData data) {
 
         List<SortData> resultData = mSortResultAdapter.getResultData();
         for (int i = 0; i < resultData.size(); i++) {
             if (mResultSet.add(i)) {
 
-                View view = mSortResultLinearLayoutManager.findViewByPosition(i);
-                mTargetX = view.getX();
-                mTargetY = view.getY();
+//                View view = mSortResultLinearLayoutManager.findViewByPosition(i);
+//                mTargetX = view.getX();
+//                mTargetY = view.getY();
 
 
                 SortData contentBean = resultData.get(i);
@@ -569,7 +569,6 @@ public class SortQuestionActivity extends BaseActivity {
                         mSortQuestionText.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
 
                         Bitmap drawingCache = mSortQuestionText.getDrawingCache();
-
 
                         float x = mSortQuestionText.getX();
                         float y = mSortQuestionText.getY();
