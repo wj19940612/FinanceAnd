@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -200,6 +201,7 @@ public class SortQuestionActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(HowPlayActivity.TYPE_FINISH));
                 if (!isConfirmResult) {
                     showResultDialog(false);
                 }

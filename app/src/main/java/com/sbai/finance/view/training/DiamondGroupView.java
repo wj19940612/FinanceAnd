@@ -34,20 +34,26 @@ public class DiamondGroupView extends LinearLayout {
     @BindView(R.id.klineView)
     DiamondView mKlineView;
     @BindView(R.id.klineImg)
-    ImageView mKlineImg;
+    DiamondImageView mKlineImg;
     @BindView(R.id.describe)
     TextView mDescribe;
     private OnClearCallback mOnClearCallback;
-
-    private float mHeight;
-    private float mWidth;
+    private OnSelectDrawFinishCallback mOnSelectDrawFinishCallback;
 
     public interface OnClearCallback {
         void onClear();
     }
 
+    public interface OnSelectDrawFinishCallback {
+        void onFinishDraw();
+    }
+
     public void setOnClearCallback(OnClearCallback onClearCallback) {
         mOnClearCallback = onClearCallback;
+    }
+
+    public void setOnSelectDrawFinishCallback(OnSelectDrawFinishCallback onSelectDrawFinishCallback) {
+        mOnSelectDrawFinishCallback = onSelectDrawFinishCallback;
     }
 
     public DiamondGroupView(Context context) {
@@ -68,6 +74,14 @@ public class DiamondGroupView extends LinearLayout {
         LayoutParams params = new LayoutParams((int) Display.dp2Px(106, getResources()), (int) Display.dp2Px(122, getResources()));
         addView(view, params);
         ButterKnife.bind(this);
+        mKlineView.setFinishDrawListener(new DiamondView.FinishDrawListener() {
+            @Override
+            public void finish() {
+                if (mOnSelectDrawFinishCallback != null) {
+                    mOnSelectDrawFinishCallback.onFinishDraw();
+                }
+            }
+        });
     }
 
     @OnClick({R.id.klineImg, R.id.describe})
@@ -91,7 +105,7 @@ public class DiamondGroupView extends LinearLayout {
     }
 
     public void startDisappearAnim() {
-        ObjectAnimator rotation = ObjectAnimator.ofFloat(this, "rotation", 0f, 180f);
+        ObjectAnimator rotation = ObjectAnimator.ofFloat(this, "rotation", 0f, -180f);
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(this, "scaleX", 1f, 0.01f);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(this, "scaleY", 1f, 0.01f);
         ObjectAnimator alpha = ObjectAnimator.ofFloat(this, "alpha", 1f, 0f);

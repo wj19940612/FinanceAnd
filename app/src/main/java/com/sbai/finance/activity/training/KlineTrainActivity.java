@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.TextView;
 
@@ -152,6 +153,7 @@ public class KlineTrainActivity extends BaseActivity {
     }
 
     private void requestEndTrain() {
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(HowPlayActivity.TYPE_FINISH));
         TrainingSubmit trainingSubmit = new TrainingSubmit(mTrainingDetail.getTrain().getId());
         trainingSubmit.setTime((int) (mTrainingCountTime / 1000));
         trainingSubmit.setFinish(mIsSuccess);
