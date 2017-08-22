@@ -1,13 +1,16 @@
 package com.sbai.finance.activity.training;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +35,7 @@ import butterknife.OnClick;
  */
 
 public class HowPlayActivity extends BaseActivity {
-
+    public static final String TYPE_FINISH = "finish";
     @BindView(R.id.trainImg)
     ImageView mTrainImg;
     @BindView(R.id.content)
@@ -52,6 +55,14 @@ public class HowPlayActivity extends BaseActivity {
 
     private Training mTraining;
     private boolean mIsHorizontal;
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equalsIgnoreCase(TYPE_FINISH)) {
+                finish();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,10 +71,14 @@ public class HowPlayActivity extends BaseActivity {
         ButterKnife.bind(this);
         translucentStatusBar();
         initData(getIntent());
-
+        initBroadReceiver();
         initView();
+    }
 
-        requestTrainGuide();
+    private void initBroadReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(TYPE_FINISH);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, intentFilter);
     }
 
     private void initData(Intent intent) {
@@ -137,10 +152,6 @@ public class HowPlayActivity extends BaseActivity {
         // TODO: 2017-08-14 load gif
     }
 
-    private void requestTrainGuide() {
-
-    }
-
     @OnClick({R.id.confirm, R.id.confirm1})
     public void onViewClicked(View view) {
         finish();
@@ -149,6 +160,12 @@ public class HowPlayActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
     }
 
     private Drawable createDrawable(int[] colors) {

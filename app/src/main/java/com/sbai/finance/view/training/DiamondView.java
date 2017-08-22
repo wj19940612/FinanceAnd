@@ -39,6 +39,15 @@ public class DiamondView extends View {
 
     private int mCurrentIndex;
     private Point mCurrentPoint;
+    private FinishDrawListener mFinishDrawListener;
+
+    public interface FinishDrawListener {
+        void finish();
+    }
+
+    public void setFinishDrawListener(FinishDrawListener finishDrawListener) {
+        mFinishDrawListener = finishDrawListener;
+    }
 
     public DiamondView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -171,6 +180,9 @@ public class DiamondView extends View {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 if (mCurrentIndex == mPoints.size() - 2) {
+                    if (mFinishDrawListener != null) {
+                        mFinishDrawListener.finish();
+                    }
                     return;
                 }
                 mCurrentIndex++;
@@ -190,7 +202,7 @@ public class DiamondView extends View {
                 }
             }
         });
-        anim.setDuration(50);
+        anim.setDuration(20);
         anim.start();
     }
 

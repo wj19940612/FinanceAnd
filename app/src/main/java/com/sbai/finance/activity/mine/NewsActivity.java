@@ -208,6 +208,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                     }
                     break;
                 case HistoryNewsModel.WORSHIP_REWARD:
+                case HistoryNewsModel.REWARD:
                     if (!historyNewsModel.isLossEfficacy()) {
                         Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class)
                                 .putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_INGOT)
