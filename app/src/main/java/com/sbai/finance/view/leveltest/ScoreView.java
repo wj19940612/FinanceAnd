@@ -325,10 +325,8 @@ public class ScoreView extends View {
     private void drawScore(Canvas canvas) {
         int score = 0;
         //计算总分
-        if (mData != null) {
-            for (int i = 0; i < DataCount; i++) {
-                score += mData[i];
-            }
+        if (mEvaluationResult != null) {
+            score = mEvaluationResult.getTotalScore();
         }
         canvas.drawText(String.valueOf(score), mCenterX, mCenterY + mScoreTextSize / 3, mScorePaint);
     }

@@ -40,13 +40,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/titleBar"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/sortQuestionRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_below="@+id/progressBar"
-            android:layout_marginBottom="35dp"
-            android:layout_marginTop="30dp"/>
 
         <LinearLayout
             android:id="@+id/sortResultLL"
@@ -93,12 +86,28 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:paddingBottom="15dp"
             android:src="@drawable/ic_confirm_report"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/sortQuestionRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/progressBar"
+            android:layout_marginBottom="35dp"
+            android:layout_marginTop="30dp"/>
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/view"
+    <TextView
+        android:id="@+id/copyView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"/>
-
+        android:background="@android:color/holo_red_dark"
+        android:gravity="center"
+        android:minHeight="40dp"
+        android:paddingBottom="11dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="11dp"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:visibility="gone"/>
 </FrameLayout>

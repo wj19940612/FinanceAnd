@@ -38,6 +38,17 @@ public class EvaluationResult implements Parcelable {
     private int userId;
     private int maxLevel; //最高测评等级
 
+    //总分
+    private int totalScore;
+
+    public void setTotalScore(double userTotalScore) {
+        this.totalScore = (int) userTotalScore;
+    }
+
+    public int getTotalScore() {
+        return totalScore;
+    }
+
     public int getMaxLevel() {
         return maxLevel;
     }
@@ -197,7 +208,6 @@ public class EvaluationResult implements Parcelable {
      */
 
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -254,4 +264,5 @@ public class EvaluationResult implements Parcelable {
             return new EvaluationResult[size];
         }
     };
+
 }
