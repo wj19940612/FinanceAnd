@@ -397,7 +397,9 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                     public void onClick(View v) {
                         if (callback != null) {
                             callback.onWarshipClick(item);
-                            mWorship.setEnabled(false);
+                            if (LocalUser.getUser().isLogin()) {
+                                mWorship.setEnabled(false);
+                            }
                         }
                     }
                 });

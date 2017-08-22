@@ -90,6 +90,7 @@ public class KlineTrainActivity extends BaseActivity {
             public void onFinish() {
                 mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
                 mIsSuccess = false;
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(HowPlayActivity.TYPE_FINISH));
                 requestEndTrain();
             }
         });
@@ -153,7 +154,6 @@ public class KlineTrainActivity extends BaseActivity {
     }
 
     private void requestEndTrain() {
-        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(HowPlayActivity.TYPE_FINISH));
         TrainingSubmit trainingSubmit = new TrainingSubmit(mTrainingDetail.getTrain().getId());
         trainingSubmit.setTime((int) (mTrainingCountTime / 1000));
         trainingSubmit.setFinish(mIsSuccess);
