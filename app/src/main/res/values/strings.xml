@@ -773,10 +773,13 @@
     <string name="how_play">怎么玩?</string>
     <string name="data">%1$s%2$s</string>
     <string name="exit_train_will_not_save_train_record">现在退出训练，训练记录将不会保存的哟</string>
+    <string name="exit_will_not_save_content">现在放弃，已输入的内容将不会保存</string>
     <string name="is_sure_exit_train">确定要退出训练吗?</string>
     <string name="is_sure_delete_photo">要删除这张照片吗?</string>
     <string name="exit_train">退出训练</string>
     <string name="continue_train">继续训练</string>
+    <string name="give_up_publish">放弃发表</string>
+    <string name="continue_publish">继续发表</string>
     <string name="accuracy">准确率</string>
     <string name="ma5">MA5</string>
     <string name="ma5_chinese">5日移动平均线</string>
@@ -797,7 +800,7 @@
     <string name="create_fail">生成失败</string>
     <string name="your_company_is_close">您的公司被关停了</string>
     <string name="success_create_report">成功出炉年报</string>
-    <string name="start_training">开始训练</string>
+    <string name="start_training">开始训练!</string>
     <string name="share_your_experience">分享你训练的心得和感想</string>
     <!--Training Result-->
     <string name="_minutes_complete">%1$d分钟内完成</string>

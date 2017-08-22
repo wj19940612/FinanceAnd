@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.training;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -25,6 +26,7 @@ import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.List;
@@ -51,6 +53,7 @@ public class WriteExperienceActivity extends BaseActivity {
 
 
 	private boolean mIsAddPhoto = false;
+	private boolean mIsInputText = false;
 	private String mPath;
 	private int mType = 2;
 	private Training mTraining;
@@ -76,12 +79,15 @@ public class WriteExperienceActivity extends BaseActivity {
 			if (TextUtils.isEmpty(mExperience.getText().toString().trim())) {
 				mPublish.setEnabled(false);
 				mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
+				mIsInputText = false;
 			} else if (mExperience.getText().length() > 140) {
 				mPublish.setEnabled(false);
 				mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.redAssist));
+				mIsInputText = true;
 			} else {
 				mPublish.setEnabled(true);
 				mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
+				mIsInputText = true;
 			}
 			mWordsNumber.setText(getString(R.string.words_number, mExperience.getText().length()));
 		}
@@ -181,5 +187,32 @@ public class WriteExperienceActivity extends BaseActivity {
 					.into(mAddPhoto);
 			mIsAddPhoto = false;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (mIsAddPhoto || mIsInputText) {
+			showCloseDialog();
+		} else {
+			finish();
+		}
+	}
+
+	private void showCloseDialog() {
+		SmartDialog.single(getActivity(), getString(R.string.exit_will_not_save_content))
+				.setTitle(getString(R.string.hint))
+				.setNegative(R.string.give_up_publish, new SmartDialog.OnClickListener() {
+					@Override
+					public void onClick(Dialog dialog) {
+						dialog.dismiss();
+						finish();
+					}
+				})
+				.setPositive(R.string.continue_publish, new SmartDialog.OnClickListener() {
+					@Override
+					public void onClick(Dialog dialog) {
+						dialog.dismiss();
+					}
+				}).show();
 	}
 }
