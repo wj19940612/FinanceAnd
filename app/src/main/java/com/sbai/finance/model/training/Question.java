@@ -61,7 +61,7 @@ public class Question<T extends Parcelable> implements Parcelable {
         return levelRatio;
     }
 
-    public void setLevelRatio(int levelRatio) {
+    public void setLevelRatio(double levelRatio) {
         this.levelRatio = levelRatio;
     }
 

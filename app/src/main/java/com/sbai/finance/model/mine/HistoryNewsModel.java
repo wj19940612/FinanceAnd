@@ -80,7 +80,7 @@ public class HistoryNewsModel implements Parcelable {
     private int userId;
     private int viewpointId;
     /**
-     * 0  未读
+     * 0  2 未读
      * 1 已读
      * 3 失效
      */
@@ -118,7 +118,7 @@ public class HistoryNewsModel implements Parcelable {
     }
 
     public boolean isNotRead() {
-        return getStatus() == 0;
+        return getStatus() == 0 || getStatus() == 2;
     }
 
     //如果失效或者借款取消，超时 不进行跳转

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -84,9 +85,9 @@ public class DiscoveryFragment extends BaseFragment {
     @BindView(R.id.daily1)
     RelativeLayout mDaily1;
     @BindView(R.id.daily2)
-    RelativeLayout mDaily2;
+    FrameLayout mDaily2;
     @BindView(R.id.daily3)
-    RelativeLayout mDaily3;
+    FrameLayout mDaily3;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
 
@@ -308,16 +309,16 @@ public class DiscoveryFragment extends BaseFragment {
                 mGrade.setText(context.getString(R.string.level, item.getTrain().getLevel()));
                 switch (item.getTrain().getType()) {
                     case Training.TYPE_THEORY:
-                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FE4640"), Color.parseColor("#F69C5D")}, context));
+                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FFB269"), Color.parseColor("#FB857A")}, context));
                         break;
                     case Training.TYPE_TECHNOLOGY:
-                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#694FC8"), Color.parseColor("#C86DD7")}, context));
+                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#A485FF"), Color.parseColor("#C05DD8")}, context));
                         break;
                     case Training.TYPE_FUNDAMENTAL:
-                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FF8930"), Color.parseColor("#F7D34C")}, context));
+                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#EEA259"), Color.parseColor("#FDD35E")}, context));
                         break;
                     case Training.TYPE_COMPREHENSIVE:
-                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#4F8CFE"), Color.parseColor("#33BCFE")}, context));
+                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#64A0FE"), Color.parseColor("#995BF4")}, context));
                         break;
                 }
             }

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.training.ScoreIntroduceActivity">
+    tools:context="com.sbai.finance.activity.training.CreditIntroduceActivity">
 
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
@@ -44,20 +44,22 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="wrap_content"
                 android:background="@color/background"
+                android:minHeight="160dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">
 
                 <TextView
                     android:id="@+id/bg_score_explain"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:background="@drawable/bg_score_explain"
-                    android:gravity="center"
+                    android:paddingBottom="18dp"
                     android:paddingLeft="@dimen/common_padding"
                     android:paddingRight="@dimen/common_padding"
+                    android:paddingTop="15dp"
                     android:text="@string/score_explain_content"
                     android:textColor="#E7A05D"/>
 
@@ -83,12 +85,15 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_line_division_center"
                 android:gravity="center"
+                android:minHeight="240dp"
                 android:orientation="vertical"
+                android:paddingBottom="30dp"
                 android:paddingLeft="24dp"
-                android:paddingRight="24dp">
+                android:paddingRight="24dp"
+                android:paddingTop="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -111,40 +116,15 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_line_division_center"
                 android:gravity="center"
+                android:minHeight="240dp"
                 android:orientation="vertical"
+                android:paddingBottom="30dp"
                 android:paddingLeft="24dp"
-                android:paddingRight="24dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="11dp"
-                    android:drawablePadding="15dp"
-                    android:drawableTop="@drawable/bg_score_explain_earning_power"
-                    android:gravity="center"
-                    android:text="@string/earning_power"
-                    android:textColor="@color/blackPrimary"
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:lineSpacingExtra="3dp"
-                    android:text="@string/earning_power_introduce"
-                    android:textColor="@color/luckyText"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:background="@drawable/bg_line_division_center"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp">
+                android:paddingRight="24dp"
+                android:paddingTop="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -160,6 +140,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
                     android:lineSpacingExtra="3dp"
                     android:text="@string/index_analysis_introduce"
                     android:textColor="@color/luckyText"/>
@@ -167,12 +148,15 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_line_division_center"
                 android:gravity="center"
+                android:minHeight="240dp"
                 android:orientation="vertical"
+                android:paddingBottom="30dp"
                 android:paddingLeft="24dp"
-                android:paddingRight="24dp">
+                android:paddingRight="24dp"
+                android:paddingTop="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -188,6 +172,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
                     android:lineSpacingExtra="3dp"
                     android:text="@string/fundamentals_introduce"
                     android:textColor="@color/luckyText"/>
@@ -195,12 +180,15 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_line_division_center"
                 android:gravity="center"
+                android:minHeight="240dp"
                 android:orientation="vertical"
+                android:paddingBottom="30dp"
                 android:paddingLeft="24dp"
-                android:paddingRight="24dp">
+                android:paddingRight="24dp"
+                android:paddingTop="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -216,8 +204,41 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
                     android:lineSpacingExtra="3dp"
                     android:text="@string/risk_control_introduce"
+                    android:textColor="@color/luckyText"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_line_division_center"
+                android:gravity="center"
+                android:minHeight="240dp"
+                android:orientation="vertical"
+                android:paddingBottom="30dp"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:paddingTop="30dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="11dp"
+                    android:drawablePadding="15dp"
+                    android:drawableTop="@drawable/bg_score_explain_earning_power"
+                    android:gravity="center"
+                    android:text="@string/earning_power"
+                    android:textColor="@color/blackPrimary"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:lineSpacingExtra="3dp"
+                    android:text="@string/earning_power_introduce"
                     android:textColor="@color/luckyText"/>
             </LinearLayout>
 
