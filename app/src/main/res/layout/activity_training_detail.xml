@@ -29,8 +29,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:orientation="vertical">
+            android:background="@android:color/white">
 
             <LinearLayout
                 android:id="@+id/extraBackground"
@@ -42,10 +41,11 @@
             <android.support.v7.widget.CardView
                 android:id="@+id/trainingTitle"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
+                android:layout_marginTop="10dp"
                 android:background="@android:color/white"
                 app:cardCornerRadius="8dp">
 
@@ -68,7 +68,9 @@
                         android:id="@+id/introduce"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
                         android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
                         android:layout_marginTop="14dp"
                         android:textColor="@color/luckyText"
                         android:textSize="12sp"
@@ -251,18 +253,18 @@
                 app:subTextRightMargin="0dp"/>
 
 
-            <com.sbai.finance.view.MyListView
+            <!--<com.sbai.finance.view.MyListView
                 android:id="@+id/HotListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/trainingExperience"
-                android:divider="@null"/>
+                android:divider="@null"/>-->
 
             <LinearLayout
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/HotListView"
+                android:layout_below="@+id/trainingExperience"
                 android:orientation="vertical"
                 android:visibility="visible">
 
@@ -290,6 +292,18 @@
                     android:textColor="@color/colorPrimary"
                     android:visibility="gone"/>
             </LinearLayout>
+
+            <com.sbai.finance.view.training.ExperienceView
+                android:id="@+id/experience1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/empty"/>
+
+            <com.sbai.finance.view.training.ExperienceView
+                android:id="@+id/experience2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/experience1"/>
         </RelativeLayout>
     </com.sbai.finance.view.ObservableScrollView>
 

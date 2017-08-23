@@ -598,12 +598,14 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent();
-		intent.putExtra(Launcher.QUESTION_ID, mQuestionDetail.getId());
-		intent.putExtra(Launcher.EX_PAYLOAD, mPrise);
-		intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getReplyCount());
-		intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionDetail.getAwardCount());
-		intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionDetail.getListenCount());
-		setResult(RESULT_OK, intent);
+		if (mQuestionDetail != null) {
+			intent.putExtra(Launcher.QUESTION_ID, mQuestionDetail.getId());
+			intent.putExtra(Launcher.EX_PAYLOAD, mPrise);
+			intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getReplyCount());
+			intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionDetail.getAwardCount());
+			intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionDetail.getListenCount());
+			setResult(RESULT_OK, intent);
+		}
 		super.onBackPressed();
 	}
 }

@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.training;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -9,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 
 import butterknife.BindView;
@@ -62,7 +64,7 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 	private void initTitleBar() {
 		if (mDelete != -1) {
 			mTitleBar.setRightVisible(true);
-			mTitleBar.setRightImage(ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete));
+			mTitleBar.setRightImage(ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete_photo));
 			mTitleBar.setOnRightViewClickListener(this);
 		} else {
 			mTitleBar.setRightVisible(false);
@@ -71,7 +73,25 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 
 	@Override
 	public void onClick(View v) {
-		setResult(RESULT_OK);
-		finish();
+		showDeleteDialog();
+	}
+
+	private void showDeleteDialog() {
+		SmartDialog.single(getActivity())
+				.setTitle(getString(R.string.is_sure_delete_photo))
+				.setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
+					@Override
+					public void onClick(Dialog dialog) {
+						dialog.dismiss();
+					}
+				})
+				.setPositive(R.string.confirm, new SmartDialog.OnClickListener() {
+					@Override
+					public void onClick(Dialog dialog) {
+						setResult(RESULT_OK);
+						dialog.dismiss();
+						finish();
+					}
+				}).show();
 	}
 }
