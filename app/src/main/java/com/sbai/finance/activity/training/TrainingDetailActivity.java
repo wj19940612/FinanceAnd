@@ -101,30 +101,43 @@ public class TrainingDetailActivity extends BaseActivity {
 
 		initData(getIntent());
 		initBackground();
+		initTitleBar();
 
 		//mHotExperienceList = new ArrayList<>();
 		//mHotExperienceListAdapter = new HotExperienceListAdapter(this);
 		//mHotListView.setEmptyView(mEmpty);
 		//mHotListView.setFocusable(false);
 		//mHotListView.setAdapter(mHotExperienceListAdapter);
+
+		mObservableScrollView.setScrollChangedListener(new ObservableScrollView.OnScrollChangedListener() {
+			@Override
+			public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldX, int oldY) {
+				float alpha = 0;
+				if (y < 0) {
+					alpha = 0;
+				} else if (y > 300) {
+					alpha = 1;
+				} else {
+					alpha = y / 300.0f;
+				}
+				mTitleBar.setTitleAlpha(alpha);
+			}
+		});
+
+		initAchievementViews();
+		requestTrainDetail();
+		requestFinishPeopleList();
+		requestHotExperienceList();
+	}
+
+	private void initTitleBar() {
+
 		mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				share();
 			}
 		});
-		mObservableScrollView.setScrollChangedListener(new ObservableScrollView.OnScrollChangedListener() {
-			@Override
-			public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldX, int oldY) {
-
-			}
-		});
-
-		initAchievementViews();
-
-		requestTrainDetail();
-		requestFinishPeopleList();
-		requestHotExperienceList();
 	}
 
 	private void initAchievementViews() {
@@ -269,11 +282,15 @@ public class TrainingDetailActivity extends BaseActivity {
 							mEmpty.setVisibility(View.VISIBLE);
 							mExperience1.setVisibility(View.GONE);
 							mExperience2.setVisibility(View.GONE);
+						} else if (experienceList.size() == 1) {
+							mEmpty.setVisibility(View.GONE);
+							mExperience1.setVisibility(View.VISIBLE);
+							mExperience2.setVisibility(View.GONE);
+							mExperience1.setData(experienceList.get(0));
 						} else {
 							mEmpty.setVisibility(View.GONE);
 							mExperience1.setVisibility(View.VISIBLE);
 							mExperience2.setVisibility(View.VISIBLE);
-
 							List<Experience> newExperienceList = new ArrayList<Experience>();
 							for (int i = 0; i < 2; i++) {
 								newExperienceList.add(experienceList.get(i));
@@ -295,19 +312,19 @@ public class TrainingDetailActivity extends BaseActivity {
 	private void updateTrainDetail(TrainingDetail trainingDetail) {
 		Training training = trainingDetail.getTrain();
 		if (training != null) {
+			mTitleBar.setTitle(training.getTitle());
+			mTitleBar.setTitleAlpha(0.0f);
 			mTitle.setText(training.getTitle());
 			mIntroduce.setText(training.getRemark());
 			mDifficulty.setText(getString(R.string.train_level, training.getLevel()));
 			mCompleteNumber.setText(getString(R.string.complete_number, training.getFinishCount()));
-			if (training.getId() < 60 ) {
+			if (training.getTime() < 60) {
 				mDuration.setText(getString(R.string._seconds, training.getTime()));
 			} else {
 				mDuration.setText(getString(R.string._minutes, training.getTime() / 60));
 			}
 		}
 	}
-
-
 
 	@OnClick({R.id.relatedKnowledge,
 			R.id.trainingExperience, R.id.writeExperience,

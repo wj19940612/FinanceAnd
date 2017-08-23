@@ -66,6 +66,7 @@
         <attr name="titleText" format="reference|string"/>
         <attr name="titleTextSize" format="dimension"/>
         <attr name="titleTextColor" format="color"/>
+        <attr name="titleTextAlpha" format="float"/>
         <attr name="customView" format="reference"/>
         <attr name="rightBackground" format="reference"/>
         <attr name="rightText" format="reference|string"/>
