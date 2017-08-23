@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -41,6 +40,7 @@ import com.sbai.finance.utils.TypefaceUtil;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.SortTrainResultDialog;
+import com.sbai.finance.view.dialog.TrainingRuleDialog;
 import com.sbai.finance.view.training.TrainProgressBar;
 
 import java.util.ArrayList;
@@ -199,7 +199,6 @@ public class SortQuestionActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(HowPlayActivity.TYPE_FINISH));
                 if (!isConfirmResult) {
                     showResultDialog(false);
                 }
@@ -208,9 +207,8 @@ public class SortQuestionActivity extends BaseActivity {
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Launcher.with(getActivity(), HowPlayActivity.class)
-                        .putExtra(ExtraKeys.TRAINING, mTrainingDetail.getTrain())
-                        .execute();
+                TrainingRuleDialog.with(getActivity(), mTrainingDetail.getTrain())
+                        .show();
             }
         });
     }

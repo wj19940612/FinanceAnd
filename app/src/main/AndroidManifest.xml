@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.sbai.finance">
+<manifest package="com.sbai.finance"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -428,8 +428,7 @@
             android:theme="@style/PageBottomEnter"/>
         <activity
             android:name=".activity.training.TrainingCountDownActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".activity.training.KlineTrainActivity"
             android:screenOrientation="portrait"/>
@@ -437,14 +436,12 @@
             android:name=".activity.training.SortQuestionActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.training.HowPlayActivity"
-            android:theme="@style/DialogTheme.NoTitle"/>
-        <activity
             android:name=".activity.training.JudgeTrainingActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="landscape"/>
-        <activity android:name=".activity.training.NounExplanationActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.training.NounExplanationActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

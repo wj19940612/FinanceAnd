@@ -64,6 +64,7 @@ public class SmartDialog {
     private int mPositiveTextColor;
     private int mNegativeVisible;
     private float mWidthScale;
+    private float mHeightScale;
     private int mGravity;
     private int mWindowAnim;
 
@@ -192,15 +193,15 @@ public class SmartDialog {
         mWindowAnim = -1;
     }
 
-    private void scaleDialogWidth(double scale) {
-        if (scale == 0) {
-            scale = DEFAULT_SCALE;
-        }
-
+    private void scaleDialog(double wScale, float hScale) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        mDialog.getWindow().setLayout((int) (displayMetrics.widthPixels * scale),
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        int width = (int) (wScale == 0 ? displayMetrics.widthPixels * DEFAULT_SCALE :
+                        displayMetrics.widthPixels * wScale);
+        int height = hScale == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT :
+                (int) (displayMetrics.heightPixels * hScale);
+
+        mDialog.getWindow().setLayout(width, height);
     }
 
     public SmartDialog setOnDismissListener(OnDismissListener onDismissListener) {
@@ -332,6 +333,11 @@ public class SmartDialog {
         return this;
     }
 
+    public SmartDialog setHeightScale(float heightScale) {
+        mHeightScale = heightScale;
+        return this;
+    }
+
     public void show() {
         if (mDialog != null) { // single dialog
             setupDialog();
@@ -341,7 +347,7 @@ public class SmartDialog {
 
         if (!mActivity.isFinishing()) {
             mDialog.show();
-            scaleDialogWidth(mWidthScale);
+            scaleDialog(mWidthScale, mHeightScale);
         }
     }
 

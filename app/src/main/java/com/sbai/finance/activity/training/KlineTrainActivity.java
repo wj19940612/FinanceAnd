@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,6 +19,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.dialog.TrainingRuleDialog;
 import com.sbai.finance.view.training.KlineTrainView;
 import com.sbai.finance.view.training.TrainProgressBar;
 
@@ -90,16 +90,14 @@ public class KlineTrainActivity extends BaseActivity {
             public void onFinish() {
                 mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
                 mIsSuccess = false;
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(HowPlayActivity.TYPE_FINISH));
                 requestEndTrain();
             }
         });
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Launcher.with(getActivity(), HowPlayActivity.class)
-                        .putExtra(ExtraKeys.TRAINING, mTrainingDetail.getTrain())
-                        .execute();
+                TrainingRuleDialog.with(getActivity(), mTrainingDetail.getTrain())
+                        .show();
             }
         });
 

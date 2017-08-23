@@ -25,6 +25,7 @@ import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingDetail;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.dialog.TrainingRuleDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +48,6 @@ public class TrainingCountDownActivity extends BaseActivity {
 
     private int mGifRes;
     private int mBackgroundRes;
-
 
     private Handler mHandler = new Handler() {
         @Override
@@ -95,6 +95,7 @@ public class TrainingCountDownActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         initData(getIntent());
         updateScreenOrientation();
 
@@ -103,15 +104,19 @@ public class TrainingCountDownActivity extends BaseActivity {
 
         translucentStatusBar();
 
-
         if (mBackgroundRes != 0) {
             mBackground.setBackgroundResource(mBackgroundRes);
         }
 
-        if (Preference.get().isFirstTrain(mTraining.getId())) {
-            Launcher.with(getActivity(), HowPlayActivity.class)
-                    .putExtra(ExtraKeys.TRAINING, mTraining)
-                    .executeForResult(REQ_CODE_SHOW_RULE);
+        //Preference.get().isFirstTrain(mTraining.getId())
+        if (true) {
+            TrainingRuleDialog.with(getActivity(), mTraining)
+                    .setOnDismissListener(new TrainingRuleDialog.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            startGifAnimation();
+                        }
+                    }).show();
             Preference.get().setIsFirstTrainFalse(mTraining.getId(), false);
         } else {
             startGifAnimation();
@@ -122,9 +127,6 @@ public class TrainingCountDownActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CODE_SHOW_RULE) {
-            startGifAnimation();
-        }
     }
 
     private void updateScreenOrientation() {
@@ -139,7 +141,6 @@ public class TrainingCountDownActivity extends BaseActivity {
             mTraining = mTrainingDetail.getTrain();
         }
         mQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
-
 
         switch (mTraining.getType()) {
             case Training.TYPE_THEORY:
