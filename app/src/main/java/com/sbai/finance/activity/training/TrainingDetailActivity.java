@@ -48,7 +48,6 @@ import butterknife.OnClick;
 
 public class TrainingDetailActivity extends BaseActivity {
 
-<<<<<<< HEAD
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
 	@BindView(R.id.extraBackground)
