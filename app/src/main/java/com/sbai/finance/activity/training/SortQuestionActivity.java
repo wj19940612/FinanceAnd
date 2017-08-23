@@ -468,7 +468,6 @@ public class SortQuestionActivity extends BaseActivity {
                 if (view != null) {
                     int[] questionFirstItemCoordinates = new int[2];
                     view.getLocationInWindow(questionFirstItemCoordinates);
-                    mQuestionFirstItemX = questionFirstItemCoordinates[0];
                     mQuestionFirstItemY = questionFirstItemCoordinates[1];
                 }
             }
