@@ -125,10 +125,6 @@ public class DiamondView extends View {
         }
     }
 
-    private void drawLine(Canvas canvas, Point startPoint, Point endPoint) {
-        canvas.drawLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY(), mEdgePaint);
-    }
-
     private void drawEdge(Canvas canvas, Point... points) {
         Path path = new Path();
         path.moveTo(points[0].getX(), points[0].getY());
