@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ScoreIntroduceActivity extends BaseActivity {
+public class CreditIntroduceActivity extends BaseActivity {
 
 
     @BindView(R.id.scoreProgress)
