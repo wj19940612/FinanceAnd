@@ -55,6 +55,7 @@
     <string name="please_input_phone">请输入手机号</string>
     <string name="auth_code_had_sent_">验证码已发送至\n%1$s</string>
     <string name="reset_password_success">重设密码成功，请重新登录</string>
+    <string name="login_success">登录成功</string>
 
     <!--Home-->
     <string name="futures">期货</string>
