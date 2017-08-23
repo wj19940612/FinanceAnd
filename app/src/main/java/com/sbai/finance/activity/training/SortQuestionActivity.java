@@ -131,7 +131,6 @@ public class SortQuestionActivity extends BaseActivity {
     private boolean isCancelResultAnimationRunning;
 
 
-    private int mQuestionFirstItemX;
     private int mQuestionFirstItemY;
 
     public interface OnItemClickListener {
@@ -150,7 +149,12 @@ public class SortQuestionActivity extends BaseActivity {
         ButterKnife.bind(this);
         translucentStatusBar();
         Intent intent = getIntent();
-        mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
+        try {
+            mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
+        } catch (ClassCastException e) {
+            Log.d(TAG, "onCreate: " + e.toString());
+            return;
+        }
         mTrainingDetail = intent.getParcelableExtra(ExtraKeys.TRAINING_DETAIL);
         mRenderScriptGaussianBlur = new RenderScriptGaussianBlur(this);
         initHeaderView();
@@ -187,6 +191,13 @@ public class SortQuestionActivity extends BaseActivity {
 
     private void saveWebResultData(int size) {
         mWebTrainResult = new ArrayList<>();
+        try {
+            SortData data = mTrainingQuestion.getContent().get(0);
+        } catch (ClassCastException e) {
+            Log.d(TAG, "saveWebResultData: " + e.toString());
+            return;
+        }
+
         for (int i = 0; i < size; i++) {
             SortData oldData = mTrainingQuestion.getContent().get(i);
             SortData contentBean = new SortData();
