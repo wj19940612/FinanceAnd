@@ -1,6 +1,8 @@
 package com.sbai.finance.activity.discovery;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,6 +53,7 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
 
     private int mPageSize = 20;
     private int mPageNo = 0;
+    private String mReportId;
     private HashSet<String> mSet;
     private DailyReportAdapter mDailyReportAdapter;
 
@@ -93,14 +96,52 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DailyReport dailyReport = (DailyReport) parent.getItemAtPosition(position);
                 if (dailyReport != null) {
+                    mReportId = dailyReport.getId();
                     Launcher.with(getActivity(), DailyReportDetailActivity.class)
                             .putExtra(DailyReportDetailActivity.EX_FORMAT, dailyReport.getFormat())
                             .putExtra(DailyReportDetailActivity.EX_ID, dailyReport.getId())
                             .putExtra(DailyReportDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-                            .execute();
+                            .executeForResult(DailyReportDetailActivity.READ_CODE);
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == DailyReportDetailActivity.READ_CODE) {
+            requestDailyListForUpdate();
+        }
+    }
+
+    private void requestDailyListForUpdate() {
+        Client.getDailyReportList(mPageNo).setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<DailyReport>>, List<DailyReport>>() {
+                    @Override
+                    protected void onRespSuccessData(List<DailyReport> data) {
+                        updateSingleDailyReport(data);
+                    }
+                }).fireFree();
+    }
+
+    private void updateSingleDailyReport(List<DailyReport> data) {
+        int clicks = -1;
+        for (DailyReport report : data) {
+            if (report.getId().equalsIgnoreCase(mReportId)) {
+                clicks = report.getClicks();
+                break;
+            }
+        }
+        if (clicks == -1) return;
+        for (int i = 0; i < mDailyReportAdapter.getCount(); i++) {
+            DailyReport report = mDailyReportAdapter.getItem(i);
+            if (report != null && report.getId().equalsIgnoreCase(mReportId)) {
+                report.setClicks(clicks);
+                mDailyReportAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
     }
 
     @Override
@@ -111,7 +152,6 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
     @Override
     public void onRefresh() {
         reset();
-        requestDailyList();
     }
 
     private void requestDailyList() {
@@ -155,6 +195,12 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
         mPageNo = 0;
         mSet.clear();
         mSwipeRefreshLayout.setLoadMoreEnable(true);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        requestDailyList();
     }
 
     static class DailyReportAdapter extends ArrayAdapter<DailyReport> {

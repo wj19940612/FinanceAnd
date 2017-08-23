@@ -48,6 +48,7 @@ import butterknife.OnClick;
 
 public class TrainingDetailActivity extends BaseActivity {
 
+<<<<<<< HEAD
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
 	@BindView(R.id.extraBackground)
@@ -413,29 +414,33 @@ public class TrainingDetailActivity extends BaseActivity {
 	}
 
 	private void startTraining(Question question) {
-		Launcher.with(getActivity(), TrainingCountDownActivity.class)
-				.putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
-				.putExtra(ExtraKeys.QUESTION, question)
-				.execute();
+		if (mTrainingDetail != null) {
+			Launcher.with(getActivity(), TrainingCountDownActivity.class)
+					.putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
+					.putExtra(ExtraKeys.QUESTION, question)
+					.execute();
+		}
 	}
 
 	private void share() {
-		ShareDialog.with(getActivity())
-				.setTitle(getString(R.string.share_title))
-				.setShareTitle(getString(R.string.train_share_share_title, mTrainingDetail.getTrain().getTitle()))
-				.setShareDescription(getString(R.string.train_share_description))
-				.setShareUrl(String.format(Client.SHARE_URL_TRAIN_EXPERIENCE, mTraining.getId()))
-				.hasFeedback(true)
-				.setListener(new ShareDialog.OnShareDialogCallback() {
-					@Override
-					public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
-						Client.share().setTag(TAG).fire();
-					}
+		if (mTrainingDetail != null) {
+			ShareDialog.with(getActivity())
+					.setTitle(getString(R.string.share_title))
+					.setShareTitle(getString(R.string.train_share_share_title, mTrainingDetail.getTrain().getTitle()))
+					.setShareDescription(getString(R.string.train_share_description))
+					.setShareUrl(String.format(Client.SHARE_URL_TRAIN_EXPERIENCE, mTraining.getId()))
+					.hasFeedback(true)
+					.setListener(new ShareDialog.OnShareDialogCallback() {
+						@Override
+						public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
+							Client.share().setTag(TAG).fire();
+						}
 
-					@Override
-					public void onFeedbackClick(View view) {
-						Launcher.with(getActivity(), FeedbackActivity.class).execute();
-					}
-				}).show();
+						@Override
+						public void onFeedbackClick(View view) {
+							Launcher.with(getActivity(), FeedbackActivity.class).execute();
+						}
+					}).show();
+		}
 	}
 }

@@ -37,7 +37,7 @@ public class ScoreView extends View {
     //中心Y坐标
     private int mCenterY;
     //各维度标题
-    private String[] mTitles = {"盈利能力", "指标分析", "基本面分析", "风险控制", "理论掌握"};
+    private String[] mTitles;
     //各维度分值
     private double[] mData;
     //数据最大值
@@ -125,6 +125,7 @@ public class ScoreView extends View {
 
 
     private void init() {
+        mTitles = getResources().getStringArray(R.array.evaluation_item);
         mRadarMargin = px2dp(15);
         mTitleSize = px2dp(mTitleSize);
         mRadian = (float) (Math.PI * 2 / DataCount);
@@ -207,8 +208,8 @@ public class ScoreView extends View {
             double riskAccuracy = mEvaluationResult.getRiskAccuracy() > 1 ? 1 : mEvaluationResult.getRiskAccuracy();
             double theoryAccuracy = mEvaluationResult.getTheoryAccuracy() > 1 ? 1 : mEvaluationResult.getTheoryAccuracy();
             double[] dataScore = {
-                    profitAccuracy * mMaxValue, skillAccuracy * mMaxValue, baseAccuracy * mMaxValue,
-                    riskAccuracy * mMaxValue, theoryAccuracy * mMaxValue};
+                    riskAccuracy * mMaxValue, skillAccuracy * mMaxValue, baseAccuracy * mMaxValue,
+                    profitAccuracy * mMaxValue, theoryAccuracy * mMaxValue};
 
             mData = dataScore;
         }

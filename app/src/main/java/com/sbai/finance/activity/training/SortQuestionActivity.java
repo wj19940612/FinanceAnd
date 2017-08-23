@@ -2,12 +2,12 @@ package com.sbai.finance.activity.training;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -253,18 +253,16 @@ public class SortQuestionActivity extends BaseActivity {
         mBg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
         mContent.setVisibility(View.INVISIBLE);
 
-        SortTrainResultDialog sortTrainResultDialog = new SortTrainResultDialog(this);
-        sortTrainResultDialog.show();
-        sortTrainResultDialog.setResult(isRight);
-        sortTrainResultDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                mBg.setVisibility(View.GONE);
-                mContent.setVisibility(View.VISIBLE);
-                dialog.dismiss();
-                openTrainingResultPage(isRight);
-            }
-        });
+
+        SortTrainResultDialog.with(this)
+                .setOnDialogDismissListener(new SortTrainResultDialog.OnDialogDismissListener() {
+
+                    @Override
+                    public void onDismiss() {
+                        openTrainingResultPage(isRight);
+                    }
+                })
+                .setResult(isRight);
     }
 
     private void openTrainingResultPage(boolean isRight) {
@@ -272,7 +270,7 @@ public class SortQuestionActivity extends BaseActivity {
         if (training != null) {
             TrainingSubmit trainingSubmit = new TrainingSubmit(training.getId());
             trainingSubmit.setFinish(isRight);
-            trainingSubmit.setTime(mTrainTargetTime / 1000);
+            trainingSubmit.setTime((int) (mTrainingCountTime / 1000));
 
             Launcher.with(getActivity(), TrainingResultActivity.class)
                     .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
@@ -304,6 +302,11 @@ public class SortQuestionActivity extends BaseActivity {
         data.setSelect(false);
         mResultSet.remove(position);
         mSortResultAdapter.notifyItemChanged(position, data);
+        if (mResultSet.size() >= mWebTrainResult.size()) {
+            mConfirmAnnals.setVisibility(View.VISIBLE);
+        } else {
+            mConfirmAnnals.setVisibility(View.GONE);
+        }
 
         SortData contentBean = new SortData();
         contentBean.setId(data.getId());
@@ -348,6 +351,11 @@ public class SortQuestionActivity extends BaseActivity {
             }
         }
         mSortQuestionAdapter.notifyItemRemovedData(position);
+        if (mResultSet.size() >= mWebTrainResult.size()) {
+            mConfirmAnnals.setVisibility(View.VISIBLE);
+        } else {
+            mConfirmAnnals.setVisibility(View.GONE);
+        }
     }
 
     @OnClick(R.id.confirmAnnals)
@@ -568,7 +576,7 @@ public class SortQuestionActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             if (!mSortResultList.isEmpty()) {
-                holder.bindDataWithView(mSortResultList.get(position), position, mContext, mOnItemClickListener, mItemBgColors);
+                holder.bindDataWithView(mSortResultList.get(position), position, mContext, mOnItemClickListener, mItemBgColors, mSortResultList.size());
             }
         }
 
@@ -589,21 +597,35 @@ public class SortQuestionActivity extends BaseActivity {
             TextView mLineNumber;
             @BindView(R.id.materials)
             TextView mMaterials;
+            @BindView(R.id.line)
+            View mLine;
 
             ViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(final SortData contentBean, final int position, Context context, final OnItemClickListener onItemClickListener, ArrayList<int[]> itemBgColors) {
+            public void bindDataWithView(final SortData contentBean, final int position, Context context,
+                                         final OnItemClickListener onItemClickListener,
+                                         ArrayList<int[]> itemBgColors, int size) {
                 if (contentBean == null) return;
+                if (position == size - 1) {
+                    mLine.setVisibility(View.GONE);
+                } else {
+                    mLine.setVisibility(View.VISIBLE);
+                }
                 TypefaceUtil.setHelveticaLTCompressedFont(mLineNumber);
                 mLineNumber.setText(String.valueOf(position + 1));
                 if (contentBean.isSelect()) {
                     mMaterials.setText(contentBean.getContent());
                     if (itemBgColors != null && !itemBgColors.isEmpty()) {
-                        mMaterials.setBackground(createDrawable(itemBgColors.get(contentBean.getBgPosition()), context));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            mMaterials.setBackground(createDrawable(itemBgColors.get(contentBean.getBgPosition()), context));
+                        } else {
+                            mMaterials.setBackgroundDrawable(createDrawable(itemBgColors.get(contentBean.getBgPosition()), context));
+                        }
                     }
+
                     mMaterials.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

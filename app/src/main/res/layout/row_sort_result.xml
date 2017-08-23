@@ -34,8 +34,8 @@
             android:layout_marginLeft="40dp"
             android:background="@drawable/bg_broken_line_oval"
             android:gravity="center"
-            android:minHeight="40dp"
             android:maxLines="1"
+            android:minHeight="40dp"
             android:minWidth="60dp"
             android:paddingLeft="21dp"
             android:paddingRight="21dp"
@@ -43,6 +43,7 @@
             tools:text="提前预结算见风使舵黑科技的手机凤凰健康就地方好多数据库党风建设开发环境"/>
 
         <View
+            android:id="@+id/line"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_alignParentBottom="true"

@@ -181,4 +181,11 @@
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/btn_reward_money</item>
     </style>
+
+    <style name="TransparentStyleBottom">
+        <item name="android:windowIsTranslucent">true</item><!--半透明            -->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@color/colorPrimary</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">true</item><!--模糊-->
+    </style>
 </resources>

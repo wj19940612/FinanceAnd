@@ -407,7 +407,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|stateUnchanged"/>
         <activity
-            android:name=".activity.training.ScoreIntroduceActivity"
+            android:name=".activity.training.CreditIntroduceActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity

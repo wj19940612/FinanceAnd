@@ -28,7 +28,7 @@ import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
-import com.sbai.finance.activity.training.ScoreIntroduceActivity;
+import com.sbai.finance.activity.training.CreditIntroduceActivity;
 import com.sbai.finance.activity.training.TrainingDetailActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.MyTrainingRecord;
@@ -79,8 +79,6 @@ public class TrainingFragment extends BaseFragment {
     LinearLayout mRankingList;
     @BindView(R.id.reviewLessonRoom)
     LinearLayout mReviewLessonRoom;
-    @BindView(R.id.card)
-    CardView mCard;
     @BindView(R.id.recommendTrainTitle)
     TextView mRecommendTrainTitle;
     @BindView(R.id.recyclerView)
@@ -315,7 +313,7 @@ public class TrainingFragment extends BaseFragment {
             case R.id.lookTrainDetail:
                 if (LocalUser.getUser().isLogin()) {
                     if (mUserEachTrainingScoreModel != null) {
-                        Launcher.with(getActivity(), ScoreIntroduceActivity.class)
+                        Launcher.with(getActivity(), CreditIntroduceActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, mUserEachTrainingScoreModel)
                                 .execute();
                     }

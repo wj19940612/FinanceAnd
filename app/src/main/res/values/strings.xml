@@ -55,6 +55,7 @@
     <string name="please_input_phone">请输入手机号</string>
     <string name="auth_code_had_sent_">验证码已发送至\n%1$s</string>
     <string name="reset_password_success">重设密码成功，请重新登录</string>
+    <string name="login_success">登录成功</string>
 
     <!--Home-->
     <string name="futures">期货</string>
@@ -591,6 +592,13 @@
     <string name="pass">跳过</string>
     <string name="get_exam_questions_fail">测试题目获取失败</string>
     <string name="accuracy_ranking">正确率%1$s     超过%2$s的同学</string>
+    <string-array name="evaluation_item">
+        <item>指标分析</item>
+        <item>基本面分析</item>
+        <item>风险控制</item>
+        <item>盈利能力</item>
+        <item>理论掌握</item>
+    </string-array>
 
     <string-array name="evaluationLevel">
         <item>未测</item>
@@ -725,18 +733,22 @@
 
     <!--了解学分-->
     <string name="score_explain_title">分数解释</string>
-    <string name="score_explain_content">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="score_explain_content">乐米学分基于五个维度值（理论知识、指标分析、基本面分析、风险控制和盈利能力）通过智能算法客观的呈现学习者金融水平等级。
+                                      \n金融水平初步测评。
+                                      \n高阶训练项目通关。
+                                      \n操盘大对战——真实演练。</string>
     <string name="exponent_specification">指数说明</string>
     <string name="master_theoretical">理论掌握</string>
-    <string name="master_theoretical_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="master_theoretical_introduce">理论知识是打开金融认知的敲门砖，系统全面的了解理论知识是能力进阶的基石，内容涵盖金融概念、术语及操盘技巧等。</string>
     <string name="earning_power">盈利能力</string>
-    <string name="earning_power_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="earning_power_introduce">在一定时期内赚取利润的能力即为盈利能力，包括绝对收益、相对收益等，投资者最直接目的即最大限度地赚取利润并维持相对稳定的收入，亦为投资者个人盈利能力的体现。</string>
     <string name="index_analysis">指标分析</string>
-    <string name="index_analysis_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="index_analysis_introduce">研究指标，须明确理论基础，利用均线、MACD、布林带指标等结合研究K线的走势及变动趋向，对多种行情进行系统分析以规避风险，博取更高的收益。</string>
     <string name="fundamentals">基本面</string>
-    <string name="fundamentals_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="fundamentals_introduce">以宏观经济面及内在价值为依据，着重对影响其价格及行情走势的各项因素的分析，适用于周期相对比较长的价格预测、相对成熟的市场及预测精确度要求不高的领域，
+        包括宏观经济面、公司主营业务所处行业、公司业务同行业竞争水平和公司内部管理水平包括对管理层的考察这诸多方面。</string>
     <string name="risk_control">风险控制</string>
-    <string name="risk_control_introduce">通过学习一些基础的练习，对股票的基础知识了解程度。K线基础知识练习等来评定。</string>
+    <string name="risk_control_introduce">从风险接受、风险降低、风险规避、风险转移四个维度将风险控制在可承受的范围之内即为风险控制，良好的风控意识可保证投资者健康投资，减少风险事件造的损失。</string>
     <string name="understand_score">了解学分</string>
     <string name="train_grade">L%1$d</string>
     <string name="trade_level">我的交易水平:%1$s  （超过了%2$s的交易用户）</string>

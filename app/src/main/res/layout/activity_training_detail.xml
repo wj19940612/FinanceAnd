@@ -46,7 +46,7 @@
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
                 android:layout_marginTop="10dp"
-                android:background="@android:color/white"
+                android:background="@color/luckyText"
                 app:cardCornerRadius="8dp">
 
                 <LinearLayout

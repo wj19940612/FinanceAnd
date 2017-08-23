@@ -30,6 +30,7 @@
             app:backIcon="@drawable/ic_close"
             app:rightText="@string/how_play"
             app:rightTextColor="@android:color/white"
+            app:rightTextSize="14sp"
             app:rightVisible="true"
             app:titleTextColor="@android:color/white"
             app:titleTextSize="20sp"/>
@@ -84,6 +85,7 @@
         </LinearLayout>
 
         <ImageView
+            android:visibility="gone"
             android:id="@+id/confirmAnnals"
             android:layout_width="80dp"
             android:layout_height="80dp"
