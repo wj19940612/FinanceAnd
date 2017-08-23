@@ -9,7 +9,10 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +21,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -26,7 +31,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sbai.finance.BuildConfig;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -40,7 +44,6 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.RenderScriptGaussianBlur;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.TypefaceUtil;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -65,6 +68,8 @@ public class SortQuestionActivity extends BaseActivity {
     //动画进行的时常
     private static final int DEFAULT_ANIMATION_RUNNING_TIME = 500;
 
+    private static final int CANCEL_RESULT_HANDLER_WHAT = 275;
+
     @BindView(R.id.sortQuestionRecyclerView)
     RecyclerView mSortQuestionRecyclerView;
     @BindView(R.id.sortResultRecycleView)
@@ -83,6 +88,8 @@ public class SortQuestionActivity extends BaseActivity {
     RelativeLayout mContent;
     @BindView(R.id.copyView)
     TextView mCopyView;
+    @BindView(R.id.scrollView)
+    NestedScrollView mScrollView;
     //用來记录底部界面选择答案的索引
     private HashSet<Integer> mResultSet;
     private Question<SortData> mTrainingQuestion;
@@ -123,6 +130,10 @@ public class SortQuestionActivity extends BaseActivity {
     //取消答案动画进行表示
     private boolean isCancelResultAnimationRunning;
 
+
+    private int mQuestionFirstItemX;
+    private int mQuestionFirstItemY;
+
     public interface OnItemClickListener {
         /**
          * @param data     数据
@@ -156,7 +167,6 @@ public class SortQuestionActivity extends BaseActivity {
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         }
         mChooseResultX = (int) (displayMetrics.widthPixels * 0.33 - 90);
-        Log.d(TAG, "onCreate: " + mChooseResultX);
     }
 
     private void initQuestionData() {
@@ -345,41 +355,68 @@ public class SortQuestionActivity extends BaseActivity {
         }
 
         View view = mSortQuestionLinearLayoutManager.findViewByPosition(0);
+        int targetY = 0;
         if (view != null) {
             int[] questionFirstItemCoordinates = new int[2];
             view.getLocationInWindow(questionFirstItemCoordinates);
-            int targetX = questionFirstItemCoordinates[0];
-            int targetY = questionFirstItemCoordinates[1];
-
-
-            int[] clickItemCoordinates = new int[2];
-            textView.getLocationInWindow(clickItemCoordinates);
-            int clickItemCoordinateX = clickItemCoordinates[0];
-            int clickItemCoordinateY = clickItemCoordinates[1];
-
-            mCopyView.setText(data.getContent());
-            mCopyView.setBackgroundResource(mAnnalsMaterialsBgDrawables[data.getBgPosition()]);
-            mCopyView.setVisibility(View.VISIBLE);
-            mCopyView.setX(clickItemCoordinateX);
-            mCopyView.setY(clickItemCoordinateY);
-
-            TranslateAnimation translateAnimation = new TranslateAnimation(0, -(mChooseResultX + 150), 0, targetY - clickItemCoordinateY - 15);
-            translateAnimation.setFillAfter(false);
-            translateAnimation.setDuration(DEFAULT_ANIMATION_RUNNING_TIME);
-            mCopyView.startAnimation(translateAnimation);
-            isCancelResultAnimationRunning = true;
-            translateAnimation.setAnimationListener(new AnimUtils.AnimEndListener() {
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    mCopyView.setVisibility(View.GONE);
-                    isCancelResultAnimationRunning = false;
-                    updateSortQuestion(data);
-                }
-            });
+            targetY = questionFirstItemCoordinates[1];
         } else {
-            updateSortQuestion(data);
+            targetY = mQuestionFirstItemY;
         }
+        int[] clickItemCoordinates = new int[2];
+        textView.getLocationInWindow(clickItemCoordinates);
+        int clickItemCoordinateX = clickItemCoordinates[0];
+        int clickItemCoordinateY = clickItemCoordinates[1];
+
+        mCopyView.setText(data.getContent());
+        mCopyView.setBackgroundResource(mAnnalsMaterialsBgDrawables[data.getBgPosition()]);
+        mCopyView.setVisibility(View.VISIBLE);
+        mCopyView.setX(clickItemCoordinateX);
+        mCopyView.setY(clickItemCoordinateY);
+
+        TranslateAnimation translateAnimation = new TranslateAnimation(0, -(mChooseResultX), 0, targetY - clickItemCoordinateY + 100);
+        translateAnimation.setFillAfter(false);
+        translateAnimation.setDuration(DEFAULT_ANIMATION_RUNNING_TIME);
+
+        isCancelResultAnimationRunning = true;
+
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0.0f);
+        alphaAnimation.setDuration(DEFAULT_ANIMATION_RUNNING_TIME);
+        alphaAnimation.setFillAfter(false);
+
+        AnimationSet animationSet = new AnimationSet(true);
+        animationSet.addAnimation(translateAnimation);
+        animationSet.addAnimation(alphaAnimation);
+
+        mCopyView.startAnimation(animationSet);
+
+
+        Message message = mHandler.obtainMessage();
+        message.obj = data;
+        message.what = CANCEL_RESULT_HANDLER_WHAT;
+        mHandler.sendMessageAtTime(message, DEFAULT_ANIMATION_RUNNING_TIME + 80);
+
+        translateAnimation.setAnimationListener(new AnimUtils.AnimEndListener() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mCopyView.setVisibility(View.GONE);
+                isCancelResultAnimationRunning = false;
+            }
+        });
+
     }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case CANCEL_RESULT_HANDLER_WHAT:
+                    SortData data = (SortData) msg.obj;
+                    updateSortQuestion(data);
+                    break;
+            }
+        }
+    };
 
     private void updateSortQuestion(SortData data) {
         SortData contentBean = new SortData();
@@ -394,7 +431,7 @@ public class SortQuestionActivity extends BaseActivity {
     }
 
     private void initSortQuestionAdapter(List<SortData> content) {
-        mSortQuestionAdapter = new SortQuestionAdapter(new ArrayList<SortData>(), this);
+        mSortQuestionAdapter = new SortQuestionAdapter(new ArrayList<SortData>());
         mSortQuestionAdapter.setItemBgDrawables(mSortQuestionBgDrawables);
         mSortQuestionLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mSortQuestionRecyclerView.setLayoutManager(mSortQuestionLinearLayoutManager);
@@ -409,6 +446,20 @@ public class SortQuestionActivity extends BaseActivity {
                     return;
                 }
                 chooseResult(position, data, textView);
+            }
+        });
+
+        mSortQuestionRecyclerView.post(new Runnable() {
+
+            @Override
+            public void run() {
+                View view = mSortQuestionLinearLayoutManager.findViewByPosition(0);
+                if (view != null) {
+                    int[] questionFirstItemCoordinates = new int[2];
+                    view.getLocationInWindow(questionFirstItemCoordinates);
+                    mQuestionFirstItemX = questionFirstItemCoordinates[0];
+                    mQuestionFirstItemY = questionFirstItemCoordinates[1];
+                }
             }
         });
     }
@@ -426,6 +477,7 @@ public class SortQuestionActivity extends BaseActivity {
                 contentBean.setId(data.getId());
                 contentBean.setSeq(data.getSeq());
                 View view = mSortResultLinearLayoutManager.findViewByPosition(i);
+
                 if (view != null) {
                     //点击的view的坐标
                     int[] ints = new int[2];
@@ -457,9 +509,14 @@ public class SortQuestionActivity extends BaseActivity {
                         offX = mChooseResultX - clickX;
                     }
 
-//                    Log.d(TAG, "startChooseResultAnimate: " + offX);
+                    int offY = targetY - clickY + 40;
+                    if (offY < 300) {
+                        offY = 300;
+                        mScrollView.scrollTo(0, 0);
+                    }
+
                     mSortQuestionAdapter.notifyItemRemovedData(position);
-                    TranslateAnimation translateAnimation = new TranslateAnimation(0, offX, 0, targetY - clickY + 40);
+                    TranslateAnimation translateAnimation = new TranslateAnimation(0, offX, 0, offY);
                     translateAnimation.setDuration(DEFAULT_ANIMATION_RUNNING_TIME);
                     translateAnimation.setFillAfter(false);
                     mCopyView.startAnimation(translateAnimation);
@@ -499,9 +556,6 @@ public class SortQuestionActivity extends BaseActivity {
         }
 
         if (!isFinish) {
-            if (BuildConfig.DEBUG) {
-                ToastUtil.show("未完成");
-            }
             return;
         }
         boolean isRight = true;
@@ -537,20 +591,10 @@ public class SortQuestionActivity extends BaseActivity {
         scaleAnimation.setDuration(1000);
         scaleAnimation.setFillAfter(true);
         mSortResultLL.startAnimation(scaleAnimation);
-        scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
+        scaleAnimation.setAnimationListener(new AnimUtils.AnimEndListener() {
             @Override
             public void onAnimationEnd(Animation animation) {
                 showResultDialog(isRight);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
             }
         });
     }
@@ -558,13 +602,11 @@ public class SortQuestionActivity extends BaseActivity {
 
     static class SortQuestionAdapter extends RecyclerView.Adapter<SortQuestionAdapter.SortQuestionViewHolder> {
         private List<SortData> mSortQuestionList;
-        private Context mContext;
         private OnItemClickListener mOnItemClickListener;
         private ArrayList<Integer> mItemBgDrawables;
 
-        public SortQuestionAdapter(List<SortData> annalsMaterialsList, Context context) {
+        public SortQuestionAdapter(List<SortData> annalsMaterialsList) {
             this.mSortQuestionList = annalsMaterialsList;
-            this.mContext = context;
         }
 
         public void addData(List<SortData> materialsList) {
@@ -603,7 +645,7 @@ public class SortQuestionActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(SortQuestionViewHolder holder, int position) {
             if (mSortQuestionList != null && !mSortQuestionList.isEmpty()) {
-                holder.bindDataWithView(mSortQuestionList.get(position), mContext, position, mOnItemClickListener, mSortQuestionList.size());
+                holder.bindDataWithView(mSortQuestionList.get(position), position, mOnItemClickListener);
             }
         }
 
@@ -632,9 +674,8 @@ public class SortQuestionActivity extends BaseActivity {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindDataWithView(final SortData contentBean, Context context,
-                                         final int position, final OnItemClickListener onItemClickListener,
-                                         int size) {
+            public void bindDataWithView(final SortData contentBean, final int position,
+                                         final OnItemClickListener onItemClickListener) {
                 if (contentBean == null) return;
                 mSortQuestionText.setText(contentBean.getContent());
                 mSortQuestionText.setBackgroundResource(mItemBgDrawables.get(contentBean.getBgPosition()));
@@ -642,10 +683,6 @@ public class SortQuestionActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
 
-                        mSortQuestionText.setDrawingCacheEnabled(true);
-                        mSortQuestionText.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
-
-                        Bitmap drawingCache = mSortQuestionText.getDrawingCache();
                         if (onItemClickListener != null) {
                             onItemClickListener.onItemClick(contentBean, position, mSortQuestionText);
                         }
