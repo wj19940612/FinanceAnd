@@ -9,9 +9,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
-
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -126,9 +125,9 @@ public class SortQuestionActivity extends BaseActivity {
 
     public interface OnItemClickListener {
         /**
-         * @param data         数据
-         * @param position     索引
-         * @param textView     点击的view
+         * @param data     数据
+         * @param position 索引
+         * @param textView 点击的view
          */
         void onItemClick(SortData data, int position, TextView textView);
     }
@@ -151,7 +150,11 @@ public class SortQuestionActivity extends BaseActivity {
         initQuestionData();
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+        } else {
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        }
         mChooseResultX = (int) (displayMetrics.widthPixels * 0.33 - 90);
         Log.d(TAG, "onCreate: " + mChooseResultX);
     }
@@ -447,7 +450,6 @@ public class SortQuestionActivity extends BaseActivity {
                     mCopyView.setBackgroundResource(mAnnalsMaterialsBgDrawables[data.getBgPosition()]);
                     mCopyView.setVisibility(View.VISIBLE);
 
-
 //                    Log.d(TAG, "目标:x " + targetX + " 目标y " + targetY + "  原始x " + clickX + " y  " + clickY);
 
                     int offX;
@@ -479,7 +481,6 @@ public class SortQuestionActivity extends BaseActivity {
             }
 
         }
-        mSortQuestionAdapter.notifyItemRemovedData(position);
         if (mResultSet.size() >= mWebTrainResult.size()) {
             mConfirmAnnals.setVisibility(View.VISIBLE);
         } else {
@@ -591,7 +592,6 @@ public class SortQuestionActivity extends BaseActivity {
             notifyItemRangeChanged(0, mSortQuestionList.size());
         }
 
-
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
             this.mOnItemClickListener = onItemClickListener;
         }
@@ -634,7 +634,6 @@ public class SortQuestionActivity extends BaseActivity {
                 ButterKnife.bind(this, itemView);
             }
 
-
             public void bindDataWithView(final SortData contentBean, Context context,
                                          final int position, final OnItemClickListener onItemClickListener,
                                          int size) {
@@ -650,13 +649,10 @@ public class SortQuestionActivity extends BaseActivity {
 
                         Bitmap drawingCache = mSortQuestionText.getDrawingCache();
                         if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(contentBean, position,  mSortQuestionText);
+                            onItemClickListener.onItemClick(contentBean, position, mSortQuestionText);
                         }
-
                     }
                 });
-
-
             }
         }
     }
@@ -759,7 +755,6 @@ public class SortQuestionActivity extends BaseActivity {
                             mResultText.setBackgroundDrawable(createDrawable(itemBgColors.get(contentBean.getBgPosition()), context));
                         }
                     }
-
                     mResultText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -773,7 +768,6 @@ public class SortQuestionActivity extends BaseActivity {
                     mResultText.setBackgroundResource(R.drawable.bg_broken_line_oval);
                     mResultText.setText("");
                 }
-
             }
 
             private Drawable createDrawable(int[] colors, Context context) {
@@ -783,6 +777,4 @@ public class SortQuestionActivity extends BaseActivity {
             }
         }
     }
-
-
 }

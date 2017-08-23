@@ -19,8 +19,6 @@ import android.view.View;
 import com.sbai.finance.R;
 import com.sbai.finance.model.levelevaluation.EvaluationResult;
 
-import static com.sbai.finance.Manifest.permission.dev;
-
 
 /**
  * Created by ${wangJie} on 2017/8/2.

@@ -10,7 +10,6 @@ import com.sbai.finance.utils.ToastUtil;
 
 import java.util.List;
 
-import static com.sbai.finance.Manifest.permission.dev;
 
 /**
  * Created by ${wangJie} on 2017/8/8.
