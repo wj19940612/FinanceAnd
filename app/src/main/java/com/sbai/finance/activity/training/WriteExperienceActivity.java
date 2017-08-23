@@ -70,7 +70,7 @@ public class WriteExperienceActivity extends BaseActivity {
 
 	private void initData(Intent intent) {
 		mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
-		mStar = intent.getIntExtra(ExtraKeys.TRAIN_LEVEL, 0);
+		mStar = intent.getIntExtra(ExtraKeys.TRAIN_LEVEL, -1);
 	}
 
 	private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -136,21 +136,24 @@ public class WriteExperienceActivity extends BaseActivity {
 						@Override
 						protected void onRespSuccessData(List<String> data) {
 							String picture = data.get(0);
-							Client.writeExperience(mTraining.getId(), mType, mStar, mExperience.getText().toString().trim(), picture)
-									.setTag(TAG)
-									.setIndeterminate(WriteExperienceActivity.this)
-									.setCallback(new Callback<Resp<Object>>() {
-										@Override
-										protected void onRespSuccess(Resp<Object> resp) {
-											if (resp.isSuccess()) {
-												setResult(RESULT_OK);
-												ToastUtil.show(R.string.publish_success);
-												finish();
-											} else {
-												ToastUtil.show(resp.getMsg());
+							if (mTraining != null) {
+								Client.writeExperience(mTraining.getId(), mType,
+										mStar != -1 ? mStar : null, mExperience.getText().toString().trim(), picture)
+										.setTag(TAG)
+										.setIndeterminate(WriteExperienceActivity.this)
+										.setCallback(new Callback<Resp<Object>>() {
+											@Override
+											protected void onRespSuccess(Resp<Object> resp) {
+												if (resp.isSuccess()) {
+													setResult(RESULT_OK);
+													ToastUtil.show(R.string.publish_success);
+													finish();
+												} else {
+													ToastUtil.show(resp.getMsg());
+												}
 											}
-										}
-									}).fireFree();
+										}).fireFree();
+							}
 						}
 
 						@Override
@@ -160,21 +163,23 @@ public class WriteExperienceActivity extends BaseActivity {
 						}
 					}).fire();
 		} else {
-			Client.writeExperience(mTraining.getId(), mType, mStar, mExperience.getText().toString().trim(), null)
-					.setTag(TAG)
-					.setIndeterminate(WriteExperienceActivity.this)
-					.setCallback(new Callback<Resp<Object>>() {
-						@Override
-						protected void onRespSuccess(Resp<Object> resp) {
-							if (resp.isSuccess()) {
-								setResult(RESULT_OK);
-								ToastUtil.show(R.string.publish_success);
-								finish();
-							} else {
-								ToastUtil.show(resp.getMsg());
+			if (mTraining != null) {
+				Client.writeExperience(mTraining.getId(), mType, mStar, mExperience.getText().toString().trim(), null)
+						.setTag(TAG)
+						.setIndeterminate(WriteExperienceActivity.this)
+						.setCallback(new Callback<Resp<Object>>() {
+							@Override
+							protected void onRespSuccess(Resp<Object> resp) {
+								if (resp.isSuccess()) {
+									setResult(RESULT_OK);
+									ToastUtil.show(R.string.publish_success);
+									finish();
+								} else {
+									ToastUtil.show(resp.getMsg());
+								}
 							}
-						}
-					}).fire();
+						}).fire();
+			}
 		}
 	}
 

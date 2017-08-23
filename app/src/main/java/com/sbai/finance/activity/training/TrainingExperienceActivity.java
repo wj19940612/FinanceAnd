@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,8 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.Experience;
-import com.sbai.finance.model.training.TrainPraise;
+import com.sbai.finance.model.training.IsTrained;
+import com.sbai.finance.model.training.TrainingExperiencePraise;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -42,7 +42,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TrainExperienceActivity extends BaseActivity {
+public class TrainingExperienceActivity extends BaseActivity {
 
 	private static final int REQ_WRITE_EXPERIENCE = 1001;
 
@@ -50,7 +50,7 @@ public class TrainExperienceActivity extends BaseActivity {
 	TitleBar mTitleBar;
 	@BindView(R.id.hotListView)
 	MyListView mHotListView;
-	@BindView(R.id.LatestListView)
+	@BindView(R.id.latestListView)
 	MyListView mLatestListView;
 	@BindView(R.id.empty)
 	TextView mEmpty;
@@ -58,12 +58,10 @@ public class TrainExperienceActivity extends BaseActivity {
 	ScrollView mScrollView;
 	@BindView(R.id.swipeRefreshLayout)
 	SwipeRefreshLayout mSwipeRefreshLayout;
-	@BindView(R.id.spit1)
-	View mSpit1;
+	@BindView(R.id.spit)
+	View mSpit;
 	@BindView(R.id.hotExperience)
 	TextView mHotExperience;
-	@BindView(R.id.spit2)
-	View mSpit2;
 
 	private int mPageSize = 20;
 	private int mPage = 0;
@@ -76,7 +74,7 @@ public class TrainExperienceActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_train_experience);
+		setContentView(R.layout.activity_training_experience);
 		ButterKnife.bind(this);
 		initData(getIntent());
 		mSet = new HashSet<>();
@@ -84,6 +82,7 @@ public class TrainExperienceActivity extends BaseActivity {
 		initTitleBar();
 		initHotExperienceList();
 		initLatestExperienceList();
+		requestHotExperienceList();
 		requestLatestExperienceList();
 		initSwipeRefreshLayout();
 		scrollToTop(mTitleBar, mScrollView);
@@ -95,18 +94,7 @@ public class TrainExperienceActivity extends BaseActivity {
 
 	private void initTitleBar() {
 		if (LocalUser.getUser().isLogin()) {
-			mTitleBar.setRightVisible(true);
-			mTitleBar.setRightText(R.string.write_experience);
-			mTitleBar.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.colorPrimary));
-			mTitleBar.setRightTextSize(15);
-			mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Launcher.with(getActivity(), WriteExperienceActivity.class)
-							.putExtra(ExtraKeys.TRAINING, mTraining)
-							.executeForResult(REQ_WRITE_EXPERIENCE);
-				}
-			});
+			requestIsTrained();
 		} else {
 			mTitleBar.setRightVisible(false);
 		}
@@ -118,6 +106,7 @@ public class TrainExperienceActivity extends BaseActivity {
 			public void onRefresh() {
 				mSet.clear();
 				mPage = 0;
+				requestHotExperienceList();
 				requestLatestExperienceList();
 			}
 		});
@@ -136,53 +125,83 @@ public class TrainExperienceActivity extends BaseActivity {
 		mLatestListView.setAdapter(mLatestExperienceListAdapter);
 	}
 
-	private void requestLatestExperienceList() {
-		Client.getLatestExperienceList(mPage, mPageSize, mTraining.getId()).setTag(TAG)
-				.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
-					@Override
-					protected void onRespSuccessData(List<Experience> experienceList) {
-						updateLatestExperienceList(experienceList);
-						if (experienceList.size() >= 20) {
-							mSpit1.setVisibility(View.VISIBLE);
-							mSpit2.setVisibility(View.VISIBLE);
-							mHotExperience.setVisibility(View.VISIBLE);
-							requestHotExperienceList();
+	private void requestIsTrained() {
+		if (mTraining != null) {
+			Client.isTrained(mTraining.getId()).setTag(TAG).setIndeterminate(this)
+					.setCallback(new Callback2D<Resp<IsTrained>, IsTrained>() {
+						@Override
+						protected void onRespSuccessData(IsTrained data) {
+							if (data.getIsPerception() == 1 ) {
+								//训练过出现写心得按钮
+								mTitleBar.setRightVisible(true);
+								mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										Launcher.with(getActivity(), WriteExperienceActivity.class)
+												.putExtra(ExtraKeys.TRAINING, mTraining)
+												.executeForResult(REQ_WRITE_EXPERIENCE);
+									}
+								});
+							} else {
+								//没训练过隐藏写心得按钮
+								mTitleBar.setRightVisible(false);
+							}
 						}
-					}
+					}).fire();
+		}
+	}
 
-					@Override
-					public void onFailure(VolleyError volleyError) {
-						super.onFailure(volleyError);
-						stopRefreshAnimation();
-					}
-				}).fire();
+	private void requestHotExperienceList() {
+		if (mTraining != null) {
+			Client.getHotExperienceList(mTraining.getId()).setTag(TAG)
+					.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
+						@Override
+						protected void onRespSuccessData(List<Experience> experienceList) {
+							if (experienceList.size() == 0) {
+								mSpit.setVisibility(View.GONE);
+								mHotExperience.setVisibility(View.GONE);
+							}
+							updateHotExperienceList(experienceList);
+						}
+
+						@Override
+						public void onFailure(VolleyError volleyError) {
+							super.onFailure(volleyError);
+							mSpit.setVisibility(View.GONE);
+							mHotExperience.setVisibility(View.GONE);
+							stopRefreshAnimation();
+						}
+					}).fire();
+		}
+	}
+
+	private void updateHotExperienceList(List<Experience> experienceList) {
+		mHotExperienceListAdapter.clear();
+		mHotExperienceListAdapter.addAll(experienceList);
+	}
+
+	private void requestLatestExperienceList() {
+		if (mTraining != null) {
+			Client.getLatestExperienceList(mPage, mPageSize, mTraining.getId()).setTag(TAG)
+					.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
+						@Override
+						protected void onRespSuccessData(List<Experience> experienceList) {
+							updateLatestExperienceList(experienceList);
+						}
+
+						@Override
+						public void onFailure(VolleyError volleyError) {
+							super.onFailure(volleyError);
+							stopRefreshAnimation();
+						}
+					}).fire();
+		}
 	}
 
 	private void stopRefreshAnimation() {
 		if (mSwipeRefreshLayout.isRefreshing()) {
 			mSwipeRefreshLayout.setRefreshing(false);
 		}
-	}
-
-	private void requestHotExperienceList() {
-		Client.getHotExperienceList(mTraining.getId()).setTag(TAG)
-				.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
-					@Override
-					protected void onRespSuccessData(List<Experience> experienceList) {
-						updateHotExperienceList(experienceList);
-					}
-
-					@Override
-					public void onFailure(VolleyError volleyError) {
-						super.onFailure(volleyError);
-						stopRefreshAnimation();
-					}
-				}).fire();
-	}
-
-	private void updateHotExperienceList(List<Experience> experienceList) {
-		mHotExperienceListAdapter.clear();
-		mHotExperienceListAdapter.addAll(experienceList);
 	}
 
 	private void updateLatestExperienceList(List<Experience> experienceList) {
@@ -308,21 +327,21 @@ public class TrainExperienceActivity extends BaseActivity {
 					public void onClick(View v) {
 						if (LocalUser.getUser().isLogin()) {
 							Client.trainExperiencePraise(item.getId(), item.getIsPraise() == 0 ? 1 : 0)
-									.setCallback(new Callback2D<Resp<TrainPraise>, TrainPraise>() {
+									.setCallback(new Callback2D<Resp<TrainingExperiencePraise>, TrainingExperiencePraise>() {
 										@Override
-										protected void onRespSuccessData(TrainPraise data) {
+										protected void onRespSuccessData(TrainingExperiencePraise data) {
 											if (data.getIsPraise() == 1) {
 												mLoveNumber.setSelected(true);
 											} else {
 												mLoveNumber.setSelected(false);
 											}
+
 											item.setIsPraise(data.getIsPraise());
 											mLoveNumber.setText(StrFormatter.getFormatCount(data.getPraise()));
 										}
 									}).fire();
-
 						} else {
-							Launcher.with(context, LoginActivity.class).execute();
+							Launcher.with(context, LoginActivity.class).executeForResult(REQ_LOGIN);
 						}
 					}
 				});
@@ -450,9 +469,9 @@ public class TrainExperienceActivity extends BaseActivity {
 					public void onClick(View v) {
 						if (LocalUser.getUser().isLogin()) {
 							Client.trainExperiencePraise(item.getId(), item.getIsPraise() == 0 ? 1 : 0)
-									.setCallback(new Callback2D<Resp<TrainPraise>, TrainPraise>() {
+									.setCallback(new Callback2D<Resp<TrainingExperiencePraise>, TrainingExperiencePraise>() {
 										@Override
-										protected void onRespSuccessData(TrainPraise data) {
+										protected void onRespSuccessData(TrainingExperiencePraise data) {
 											if (data.getIsPraise() == 1) {
 												mLoveNumber.setSelected(true);
 											} else {
@@ -463,7 +482,7 @@ public class TrainExperienceActivity extends BaseActivity {
 										}
 									}).fire();
 						} else {
-							Launcher.with(context, LoginActivity.class).execute();
+							Launcher.with(context, LoginActivity.class).executeForResult(REQ_LOGIN);
 						}
 					}
 				});
@@ -516,6 +535,10 @@ public class TrainExperienceActivity extends BaseActivity {
 			mSwipeRefreshLayout.setRefreshing(true);
 			requestLatestExperienceList();
 			mScrollView.smoothScrollTo(0, 0);
+		}
+
+		if (requestCode == REQ_LOGIN && resultCode == RESULT_OK) {
+			requestIsTrained();
 		}
 	}
 }

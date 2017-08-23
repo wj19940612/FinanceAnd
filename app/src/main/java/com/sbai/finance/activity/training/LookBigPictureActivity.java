@@ -21,8 +21,8 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class LookBigPictureActivity extends BaseActivity implements View.OnClickListener {
 
-	@BindView(R.id.missAvatar)
-	PhotoView mMissAvatar;
+	@BindView(R.id.imageView)
+	PhotoView mImageView;
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
 
@@ -41,9 +41,9 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 				.thumbnail(0.1f)
 				.error(R.drawable.ic_default_avatar_big)
 				.dontAnimate()
-				.into(mMissAvatar);
+				.into(mImageView);
 
-		mMissAvatar.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+		mImageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
 			@Override
 			public void onPhotoTap(View view, float x, float y) {
 				finish();

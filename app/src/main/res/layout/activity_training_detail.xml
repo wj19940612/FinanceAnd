@@ -243,7 +243,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/relatedKnowledgeArea"
                 app:hasBottomSplitLine="true"
-                app:rowText="@string/train_experience"
+                app:rowText="@string/training_experience"
                 app:rowTextColor="@color/primaryText"
                 app:splitLineColor="@color/split"
                 app:splitLineLeftPadding="0dp"

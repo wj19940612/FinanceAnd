@@ -24,6 +24,7 @@ import com.sbai.finance.model.training.TrainingTarget;
 import com.sbai.finance.model.training.question.KData;
 import com.sbai.finance.model.training.question.RemoveData;
 import com.sbai.finance.model.training.question.SortData;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -335,12 +336,12 @@ public class TrainingDetailActivity extends BaseActivity {
 				if (mTrainingDetail != null && mTrainingDetail.getTrain() != null) {
 					Launcher.with(getActivity(), WebActivity.class)
 							.putExtra(WebActivity.EX_TITLE, "相关知识点")
-							.putExtra(WebActivity.EX_URL, mTrainingDetail.getTrain().getKnowledgeUrl())
+							.putExtra(WebActivity.EX_URL, API.getHost() + mTrainingDetail.getTrain().getKnowledgeUrl())
 							.execute();
 				}
 				break;
 			case R.id.trainingExperience:
-				Launcher.with(getActivity(), TrainExperienceActivity.class)
+				Launcher.with(getActivity(), TrainingExperienceActivity.class)
 						.putExtra(ExtraKeys.TRAINING, mTraining)
 						.execute();
 				break;

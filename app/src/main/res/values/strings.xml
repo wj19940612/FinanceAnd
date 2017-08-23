@@ -747,7 +747,7 @@
     <string name="miss_first_time">快用提问夺走小姐姐的“第一次”吧</string>
 
     <!--trainExperience-->
-    <string name="train_experience">训练心得</string>
+    <string name="training_experience">训练心得</string>
     <string name="hot_experience">热门心得</string>
     <string name="latest_experience">最新心得</string>
     <string name="write_experience">写心得</string>

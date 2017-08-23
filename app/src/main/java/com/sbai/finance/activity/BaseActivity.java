@@ -55,6 +55,7 @@ public class BaseActivity extends AppCompatActivity implements
 
     public static final int REQ_CODE_USERDATA = 801;
     public static final int REQ_QUESTION_DETAIL = 802;
+    public static final int REQ_LOGIN = 803;
 
     protected String TAG;
 

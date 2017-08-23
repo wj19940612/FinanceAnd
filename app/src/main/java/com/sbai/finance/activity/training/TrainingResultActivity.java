@@ -119,6 +119,7 @@ public class TrainingResultActivity extends BaseActivity {
                         if (BuildConfig.DEBUG) {
                             ToastUtil.show(resp.getData().toString());
                         }
+
                     }
 
                     @Override
@@ -221,7 +222,6 @@ public class TrainingResultActivity extends BaseActivity {
             case R.id.recordTrainingExperience:
                 Launcher.with(getActivity(), WriteExperienceActivity.class)
                         .putExtra(ExtraKeys.TRAINING, mTraining)
-                        //.putExtra(ExtraKeys.TRAIN_LEVEL, mCount)
                         .execute();
                 finish();
                 break;

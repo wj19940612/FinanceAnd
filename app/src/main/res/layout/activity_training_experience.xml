@@ -2,7 +2,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -13,12 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:titleText="@string/train_experience"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/split"/>
+        app:hasBottomSplitLine="true"
+        app:rightText="@string/write_experience"
+        app:rightTextColor="@color/colorPrimary"
+        app:rightTextSize="15sp"
+        app:rightVisible="true"
+        app:titleText="@string/training_experience"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
@@ -36,14 +35,8 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <View
-                    android:id="@+id/spit1"
-                    android:layout_width="match_parent"
-                    android:layout_height="14dp"
-                    android:background="@color/background"
-                    android:visibility="gone"/>
-
                 <TextView
+                    android:layout_marginTop="14dp"
                     android:id="@+id/hotExperience"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -52,16 +45,13 @@
                     android:paddingLeft="14dp"
                     android:text="@string/hot_experience"
                     android:textColor="@color/primaryText"
-                    android:textSize="14sp"
-                    android:visibility="gone"/>
+                    android:textSize="14sp"/>
 
                 <View
-                    android:id="@+id/spit2"
+                    android:id="@+id/spit"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="@color/split"
-                    android:visibility="gone"/>
-
+                    android:background="@color/split"/>
 
                 <com.sbai.finance.view.MyListView
                     android:id="@+id/hotListView"
@@ -86,7 +76,7 @@
                     android:background="@color/split"/>
 
                 <com.sbai.finance.view.MyListView
-                    android:id="@+id/LatestListView"
+                    android:id="@+id/latestListView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:divider="@null"/>
