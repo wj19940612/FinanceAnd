@@ -10,6 +10,7 @@ import com.sbai.finance.utils.ToastUtil;
 
 import java.util.List;
 
+
 /**
  * Created by ${wangJie} on 2017/8/8.
  * 用户的 分数 包含各个分数段
