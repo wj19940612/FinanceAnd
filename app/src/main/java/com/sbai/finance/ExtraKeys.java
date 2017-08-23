@@ -21,4 +21,5 @@ public interface ExtraKeys {
 
     String TRAIN_QUESTIONS = "train_questions";
     String TRAIN_LEVEL = "train_level";
+    String TRAIN_RESULT = "train_result";
 }

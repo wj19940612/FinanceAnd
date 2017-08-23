@@ -58,6 +58,7 @@ public class WriteExperienceActivity extends BaseActivity {
 	private int mType = 2;
 	private Training mTraining;
 	private int mStar;
+	private int mIsFromTrainingResult;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,7 @@ public class WriteExperienceActivity extends BaseActivity {
 	private void initData(Intent intent) {
 		mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
 		mStar = intent.getIntExtra(ExtraKeys.TRAIN_LEVEL, -1);
+		mIsFromTrainingResult = intent.getIntExtra(ExtraKeys.TRAIN_RESULT, -1);
 	}
 
 	private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -145,9 +147,16 @@ public class WriteExperienceActivity extends BaseActivity {
 											@Override
 											protected void onRespSuccess(Resp<Object> resp) {
 												if (resp.isSuccess()) {
-													setResult(RESULT_OK);
-													ToastUtil.show(R.string.publish_success);
-													finish();
+													if (mIsFromTrainingResult == -1) {
+														setResult(RESULT_OK);
+														ToastUtil.show(R.string.publish_success);
+														finish();
+													} else {
+														Launcher.with(getActivity(), TrainingExperienceActivity.class)
+																.putExtra(ExtraKeys.TRAINING, mTraining)
+																.execute();
+														finish();
+													}
 												} else {
 													ToastUtil.show(resp.getMsg());
 												}
@@ -164,22 +173,31 @@ public class WriteExperienceActivity extends BaseActivity {
 					}).fire();
 		} else {
 			if (mTraining != null) {
-				Client.writeExperience(mTraining.getId(), mType, mStar, mExperience.getText().toString().trim(), null)
+				Client.writeExperience(mTraining.getId(), mType, mStar != -1 ? mStar : null
+						, mExperience.getText().toString().trim(), null)
 						.setTag(TAG)
 						.setIndeterminate(WriteExperienceActivity.this)
 						.setCallback(new Callback<Resp<Object>>() {
 							@Override
 							protected void onRespSuccess(Resp<Object> resp) {
 								if (resp.isSuccess()) {
-									setResult(RESULT_OK);
-									ToastUtil.show(R.string.publish_success);
-									finish();
+									if (mIsFromTrainingResult == -1) {
+										setResult(RESULT_OK);
+										ToastUtil.show(R.string.publish_success);
+										finish();
+									} else {
+										Launcher.with(getActivity(), TrainingExperienceActivity.class)
+												.putExtra(ExtraKeys.TRAINING, mTraining)
+												.execute();
+										finish();
+									}
 								} else {
 									ToastUtil.show(resp.getMsg());
 								}
 							}
 						}).fire();
 			}
+
 		}
 	}
 

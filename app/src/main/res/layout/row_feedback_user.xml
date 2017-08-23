@@ -32,8 +32,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:gravity="center"
                     android:background="@drawable/ic_feedback_time_bg"
+                    android:gravity="center"
                     android:textColor="@color/secondaryText"
                     android:textSize="12sp"/>
 
@@ -63,40 +63,50 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="14dp"
                     android:layout_marginTop="25dp"
                     android:textColor="@color/secondaryText"
                     android:textSize="12sp"/>
 
-                <RelativeLayout
-                    android:id="@+id/contentWrapper"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/timestamp"
                     android:layout_marginRight="5dp"
-                    android:background="@drawable/ic_opinion_bg_rightcorner"
-                    android:orientation="vertical"
-                    android:padding="8dp">
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/contentWrapper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/bg_chat_blue_round"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:id="@+id/image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"/>
+
+                        <TextView
+                            android:id="@+id/text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingExtra="5dp"
+                            android:textColor="@android:color/white"
+                            android:layout_centerVertical="true"
+                            android:textSize="14sp"/>
+                    </RelativeLayout>
 
                     <ImageView
-                        android:id="@+id/image"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="5dp"/>
-
-                    <TextView
-                        android:id="@+id/text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:textSize="14sp"
-                        android:lineSpacingExtra="5dp"
-                        android:textColor="@android:color/white"/>
-
-
-                </RelativeLayout>
+                        android:layout_marginTop="5dp"
+                        android:src="@drawable/ic_feedback_chat_blue"/>
+                </LinearLayout>
 
             </RelativeLayout>
 
