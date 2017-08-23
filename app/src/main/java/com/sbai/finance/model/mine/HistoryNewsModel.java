@@ -52,7 +52,9 @@ public class HistoryNewsModel implements Parcelable {
     public static final int THE_EARNEST_MONEY_APY_SUCCESS = 30;
 
     // 54 膜拜奖金
-    public static final int WORSHIP_REWARD=54;
+    public static final int WORSHIP_REWARD = 54;
+    // 53 打赏奖金
+    public static final int REWARD = 53;
     /**
      * classify : 2
      * dataId : 252

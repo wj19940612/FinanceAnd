@@ -171,13 +171,13 @@ public class TrainingFragment extends BaseFragment {
     private void showMyTrainingList(List<MyTrainingRecord> data) {
         // 我的训练记录里面如果有记录，那就是我的训练数据；不然为推荐训练数据（记录对象都空）
         boolean hasTrainingRecord = data.get(0).getRecord() != null;
+        updateCreditMessage(hasTrainingRecord);
         if (hasTrainingRecord) {
             mTrainAdapter.setIsMineTrained(true);
             mRecommendTrainTitle.setText(R.string.mine_train);
         } else {
             mTrainAdapter.setIsMineTrained(false);
             mRecommendTrainTitle.setText(R.string.recommend_train);
-            updateCreditMessage(hasTrainingRecord);
         }
         mTrainAdapter.clear();
         mTrainAdapter.addAll(data);

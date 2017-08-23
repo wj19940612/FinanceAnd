@@ -2,14 +2,16 @@ package com.sbai.finance.activity.training;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
+
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -126,10 +128,9 @@ public class SortQuestionActivity extends BaseActivity {
         /**
          * @param data         数据
          * @param position     索引
-         * @param drawingCache 复制的图层
          * @param textView     点击的view
          */
-        void onItemClick(SortData data, int position, Bitmap drawingCache, TextView textView);
+        void onItemClick(SortData data, int position, TextView textView);
     }
 
     @Override
@@ -161,7 +162,6 @@ public class SortQuestionActivity extends BaseActivity {
 
         mRandRomQuestionResultList = SortData.getRandRomResultList(mTrainingQuestion.getContent());
         initSortQuestionAdapter(mRandRomQuestionResultList);
-
 
         //底部答案区域创建数据源
         ArrayList<SortData> contentBeenList = new ArrayList<>();
@@ -229,6 +229,7 @@ public class SortQuestionActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(HowPlayActivity.TYPE_FINISH));
                 if (!isConfirmResult) {
                     showResultDialog(false);
                 }
@@ -282,18 +283,18 @@ public class SortQuestionActivity extends BaseActivity {
         mBg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
         mContent.setVisibility(View.INVISIBLE);
 
-        SortTrainResultDialog sortTrainResultDialog = new SortTrainResultDialog(this);
-        sortTrainResultDialog.show();
-        sortTrainResultDialog.setResult(isRight);
-        sortTrainResultDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                mBg.setVisibility(View.GONE);
-                mContent.setVisibility(View.VISIBLE);
-                dialog.dismiss();
-                openTrainingResultPage(isRight);
-            }
-        });
+
+        SortTrainResultDialog.with(this)
+                .setOnDialogDismissListener(new SortTrainResultDialog.OnDialogDismissListener() {
+
+                    @Override
+                    public void onDismiss() {
+                        mBg.setVisibility(View.GONE);
+                        mContent.setVisibility(View.VISIBLE);
+                        openTrainingResultPage(isRight);
+                    }
+                })
+                .setResult(isRight);
     }
 
     private void openTrainingResultPage(boolean isRight) {
@@ -321,7 +322,7 @@ public class SortQuestionActivity extends BaseActivity {
         mSortResultAdapter.addData(content);
         mSortResultAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(SortData data, int position, Bitmap drawingCache, TextView textView) {
+            public void onItemClick(SortData data, int position, TextView textView) {
                 if (data.isSelect()) {
                     updateResult(data, position, textView);
                 }
@@ -336,6 +337,11 @@ public class SortQuestionActivity extends BaseActivity {
         data.setSelect(false);
         mResultSet.remove(position);
         mSortResultAdapter.notifyItemChanged(position, data);
+        if (mResultSet.size() >= mWebTrainResult.size()) {
+            mConfirmAnnals.setVisibility(View.VISIBLE);
+        } else {
+            mConfirmAnnals.setVisibility(View.GONE);
+        }
 
         View view = mSortQuestionLinearLayoutManager.findViewByPosition(0);
         if (view != null) {
@@ -397,7 +403,7 @@ public class SortQuestionActivity extends BaseActivity {
 
         mSortQuestionAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(SortData data, int position, Bitmap drawingCache, TextView textView) {
+            public void onItemClick(SortData data, int position, TextView textView) {
                 if (isCancelResultAnimationRunning || isChooseResultAnimationRunning) {
                     return;
                 }
@@ -473,7 +479,12 @@ public class SortQuestionActivity extends BaseActivity {
             }
 
         }
-
+        mSortQuestionAdapter.notifyItemRemovedData(position);
+        if (mResultSet.size() >= mWebTrainResult.size()) {
+            mConfirmAnnals.setVisibility(View.VISIBLE);
+        } else {
+            mConfirmAnnals.setVisibility(View.GONE);
+        }
     }
 
 
@@ -639,7 +650,7 @@ public class SortQuestionActivity extends BaseActivity {
 
                         Bitmap drawingCache = mSortQuestionText.getDrawingCache();
                         if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(contentBean, position, drawingCache, mSortQuestionText);
+                            onItemClickListener.onItemClick(contentBean, position,  mSortQuestionText);
                         }
 
                     }
@@ -698,7 +709,7 @@ public class SortQuestionActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             if (!mSortResultList.isEmpty()) {
-                holder.bindDataWithView(mSortResultList.get(position), position, mContext, mOnItemClickListener, mItemBgColors);
+                holder.bindDataWithView(mSortResultList.get(position), position, mContext, mOnItemClickListener, mItemBgColors, mSortResultList.size());
             }
         }
 
@@ -720,31 +731,41 @@ public class SortQuestionActivity extends BaseActivity {
             @BindView(R.id.materials)
             TextView mResultText;
 
+            @BindView(R.id.line)
+            View mLine;
+
             ViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(final SortData contentBean, final int position, Context context, final OnItemClickListener onItemClickListener, ArrayList<int[]> itemBgColors) {
+            public void bindDataWithView(final SortData contentBean, final int position, Context context,
+                                         final OnItemClickListener onItemClickListener,
+                                         ArrayList<int[]> itemBgColors, int size) {
                 if (contentBean == null) return;
+                if (position == size - 1) {
+                    mLine.setVisibility(View.GONE);
+                } else {
+                    mLine.setVisibility(View.VISIBLE);
+                }
                 TypefaceUtil.setHelveticaLTCompressedFont(mLineNumber);
                 mLineNumber.setText(String.valueOf(position + 1));
                 if (contentBean.isSelect()) {
                     mResultText.setText(contentBean.getContent());
                     if (itemBgColors != null && !itemBgColors.isEmpty()) {
-                        mResultText.setBackground(createDrawable(itemBgColors.get(contentBean.getBgPosition()), context));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            mResultText.setBackground(createDrawable(itemBgColors.get(contentBean.getBgPosition()), context));
+                        } else {
+                            mResultText.setBackgroundDrawable(createDrawable(itemBgColors.get(contentBean.getBgPosition()), context));
+                        }
                     }
+
                     mResultText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
-                            mResultText.setDrawingCacheEnabled(true);
-                            mResultText.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
-
-                            Bitmap drawingCache = mResultText.getDrawingCache();
-
                             if (onItemClickListener != null) {
-                                onItemClickListener.onItemClick(contentBean, position, drawingCache, mResultText);
+                                onItemClickListener.onItemClick(contentBean, position, mResultText);
                             }
                         }
                     });

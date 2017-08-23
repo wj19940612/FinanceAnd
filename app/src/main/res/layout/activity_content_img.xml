@@ -24,7 +24,7 @@
             android:layout_margin="@dimen/common_padding"
             android:background="@android:color/transparent"
             android:clickable="true"
-            android:src="@drawable/ic_delete"
+            android:src="@drawable/ic_delete_photo"
             android:visibility="gone"/>
 
         <LinearLayout

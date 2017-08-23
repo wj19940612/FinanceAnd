@@ -10,6 +10,8 @@ import com.sbai.finance.utils.ToastUtil;
 
 import java.util.List;
 
+import static com.sbai.finance.Manifest.permission.dev;
+
 /**
  * Created by ${wangJie} on 2017/8/8.
  * 用户的 分数 包含各个分数段
@@ -187,7 +189,7 @@ public class UserEachTrainingScoreModel implements Parcelable {
     // 计算每一项的分数所占各个总分的比例
     public EvaluationResult getTestResultModel() {
         EvaluationResult evaluationResult = new EvaluationResult();
-        evaluationResult.setTotalScore(getUserTotalScore());
+        evaluationResult.setTotalCredit(getUserTotalScore());
         for (ScoresBean data : getScores()) {
             double scale = 0;
             if (data.getTotalScore() != 0) {

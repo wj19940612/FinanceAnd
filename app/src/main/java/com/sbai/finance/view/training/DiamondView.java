@@ -39,6 +39,15 @@ public class DiamondView extends View {
 
     private int mCurrentIndex;
     private Point mCurrentPoint;
+    private FinishDrawListener mFinishDrawListener;
+
+    public interface FinishDrawListener {
+        void finish();
+    }
+
+    public void setFinishDrawListener(FinishDrawListener finishDrawListener) {
+        mFinishDrawListener = finishDrawListener;
+    }
 
     public DiamondView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -83,52 +92,36 @@ public class DiamondView extends View {
         super.onDraw(canvas);
         canvas.translate(mWidth / 2, mHeight / 2);
         if (mSelected) {
-            drawView(canvas, mHeight - 2, mWidth - 2);
+            drawView(canvas, mHeight - 8, mWidth - 8, mPaint);
             if (mCurrentPoint == null && mCurrentIndex < mPoints.size() - 1) {
                 startAnimation(mPoints.get(mCurrentIndex), mPoints.get(mCurrentIndex + 1));
             }
             if (mCurrentPoint != null && mCurrentIndex < mPoints.size()) {
-                Point startPoint = mPoints.get(mCurrentIndex);
                 switch (mCurrentIndex) {
                     case 0:
-                        drawLine(canvas, startPoint, mCurrentPoint);
+                        drawEdge(canvas, mPoints.get(0), mCurrentPoint);
                         break;
                     case 1:
-                        drawLine(canvas, mPoints.get(0), mPoints.get(1));
-                        drawLine(canvas, startPoint, mCurrentPoint);
+                        drawEdge(canvas, mPoints.get(0), mPoints.get(1), mCurrentPoint);
                         break;
                     case 2:
-                        drawLine(canvas, mPoints.get(0), mPoints.get(1));
-                        drawLine(canvas, mPoints.get(1), mPoints.get(2));
-                        drawLine(canvas, startPoint, mCurrentPoint);
+                        drawEdge(canvas, mPoints.get(0), mPoints.get(1), mPoints.get(2), mCurrentPoint);
                         break;
                     case 3:
-                        drawLine(canvas, mPoints.get(0), mPoints.get(1));
-                        drawLine(canvas, mPoints.get(1), mPoints.get(2));
-                        drawLine(canvas, mPoints.get(2), mPoints.get(3));
-                        drawLine(canvas, startPoint, mCurrentPoint);
+                        drawEdge(canvas, mPoints.get(0), mPoints.get(1), mPoints.get(2), mPoints.get(3), mCurrentPoint);
                         break;
                     case 4:
-                        drawLine(canvas, mPoints.get(0), mPoints.get(1));
-                        drawLine(canvas, mPoints.get(1), mPoints.get(2));
-                        drawLine(canvas, mPoints.get(2), mPoints.get(3));
-                        drawLine(canvas, mPoints.get(3), mPoints.get(4));
-                        drawLine(canvas, startPoint, mCurrentPoint);
+                        drawEdge(canvas, mPoints.get(0), mPoints.get(1), mPoints.get(2), mPoints.get(3), mPoints.get(4), mCurrentPoint);
                         break;
                     case 5:
-                        drawLine(canvas, mPoints.get(0), mPoints.get(1));
-                        drawLine(canvas, mPoints.get(1), mPoints.get(2));
-                        drawLine(canvas, mPoints.get(2), mPoints.get(3));
-                        drawLine(canvas, mPoints.get(3), mPoints.get(4));
-                        drawLine(canvas, mPoints.get(4), mPoints.get(5));
-                        drawLine(canvas, startPoint, mCurrentPoint);
+                        drawEdge(canvas, mPoints.get(0), mPoints.get(1), mPoints.get(2), mPoints.get(3), mPoints.get(4), mPoints.get(5), mCurrentPoint);
                         break;
                 }
             }
         } else {
             mCurrentIndex = 0;
             mCurrentPoint = null;
-            drawView(canvas, mHeight, mWidth);
+            drawView(canvas, mHeight, mWidth, mPaint);
         }
     }
 
@@ -136,7 +129,19 @@ public class DiamondView extends View {
         canvas.drawLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY(), mEdgePaint);
     }
 
-    private void drawView(Canvas canvas, int height, int width) {
+    private void drawEdge(Canvas canvas, Point... points) {
+        Path path = new Path();
+        path.moveTo(points[0].getX(), points[0].getY());
+        for (Point point : points) {
+            path.lineTo(point.getX(), point.getY());
+        }
+        if (points.length == 7 && points[0].equals(points[6])) {
+            path.close();
+        }
+        canvas.drawPath(path, mEdgePaint);
+    }
+
+    private void drawView(Canvas canvas, int height, int width, Paint paint) {
         float h = (float) ((height - width / Math.sqrt(3)) / 2);
         Path path = new Path();
         path.moveTo(0, -height / 2);
@@ -146,7 +151,7 @@ public class DiamondView extends View {
         path.lineTo(-width / 2, h);
         path.lineTo(-width / 2, -h);
         path.close();
-        canvas.drawPath(path, mPaint);
+        canvas.drawPath(path, paint);
     }
 
     private void initPoints() {
@@ -155,13 +160,13 @@ public class DiamondView extends View {
             mPoints = new ArrayList<>();
         }
         mPoints.clear();
-        mPoints.add(new Point(0, -mHeight / 2 + 2));
-        mPoints.add(new Point(-mWidth / 2 + 2, -h));
-        mPoints.add(new Point(-mWidth / 2 + 2, h));
-        mPoints.add(new Point(0, mHeight / 2 - 1));
-        mPoints.add(new Point(mWidth / 2 - 2, h));
-        mPoints.add(new Point(mWidth / 2 - 2, -h));
-        mPoints.add(new Point(0, -mHeight / 2 + 2));
+        mPoints.add(new Point(0, -mHeight / 2 + 4));
+        mPoints.add(new Point(-mWidth / 2 + 4, -h));
+        mPoints.add(new Point(-mWidth / 2 + 4, h));
+        mPoints.add(new Point(0, mHeight / 2 - 2));
+        mPoints.add(new Point(mWidth / 2 - 4, h));
+        mPoints.add(new Point(mWidth / 2 - 4, -h));
+        mPoints.add(new Point(0, -mHeight / 2 + 4));
     }
 
     private void startAnimation(Point startPoint, Point endPoint) {
@@ -171,6 +176,9 @@ public class DiamondView extends View {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 if (mCurrentIndex == mPoints.size() - 2) {
+                    if (mFinishDrawListener != null) {
+                        mFinishDrawListener.finish();
+                    }
                     return;
                 }
                 mCurrentIndex++;
@@ -190,7 +198,7 @@ public class DiamondView extends View {
                 }
             }
         });
-        anim.setDuration(50);
+        anim.setDuration(20);
         anim.start();
     }
 
@@ -246,5 +254,16 @@ public class DiamondView extends View {
             return y;
         }
 
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) return false;
+            if (!(obj instanceof Point)) return false;
+            Point other = (Point) obj;
+            if (other.getX() == this.getX() && other.getY() == this.getY()) {
+                return true;
+            }
+            return false;
+        }
     }
+
 }

@@ -320,7 +320,7 @@ public class MissProfileActivity extends BaseActivity implements
 		mTitleName.setText(miss.getName());
 		mTitleName.setAlpha(0);
 
-		if (miss.getSoundTime() == 0) {
+		if (miss.getSoundTime() == 0 || TextUtils.isEmpty(miss.getBriefingSound())) {
 			mVoiceIntroduce.setVisibility(View.GONE);
 		} else {
 			mVoiceIntroduce.setVisibility(View.VISIBLE);

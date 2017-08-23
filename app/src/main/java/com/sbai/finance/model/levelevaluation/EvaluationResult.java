@@ -39,14 +39,15 @@ public class EvaluationResult implements Parcelable {
     private int maxLevel; //最高测评等级
 
     //总分
-    private int totalScore;
 
-    public void setTotalScore(double userTotalScore) {
-        this.totalScore = (int) userTotalScore;
+    private double totalCredit;
+
+    public int getTotalCredit() {
+        return (int) totalCredit;
     }
 
-    public int getTotalScore() {
-        return totalScore;
+    public void setTotalCredit(double totalCredit) {
+        this.totalCredit = totalCredit;
     }
 
     public int getMaxLevel() {

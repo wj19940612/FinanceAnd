@@ -190,6 +190,7 @@ public class MineFragment extends BaseFragment {
             mFinanceEvaluation.setSubText(mEvaluationLevel[maxLevel]);
         } else {
             mUserName.setText(R.string.login);
+            mFinanceEvaluation.setSubText("");
             mMessage.setSubTextVisible(View.GONE);
             mFeedback.setSubTextVisible(View.GONE);
         }

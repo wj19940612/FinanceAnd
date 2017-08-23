@@ -12,7 +12,9 @@ import com.sbai.finance.model.training.RemoveTraining;
 import com.sbai.finance.utils.Display;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * K线训练页面菱形组合布局
@@ -23,6 +25,7 @@ public class KlineTrainView extends RelativeLayout {
     private DiamondGroupView[] views;
     private int mPriSelectedIndex;
     private OnEndCallback mOnEndCallback;
+    private Map<Integer, DiamondGroupView> mMatchMap;
 
     public interface OnEndCallback {
         void onAllEnd();
@@ -41,6 +44,7 @@ public class KlineTrainView extends RelativeLayout {
     }
 
     private void refresh(List<RemoveTraining> trainData) {
+        mMatchMap.clear();
         mPriSelectedIndex = -1;
         for (int i = 0; i < trainData.size(); i++) {
             RemoveTraining training = trainData.get(i);
@@ -79,6 +83,7 @@ public class KlineTrainView extends RelativeLayout {
     }
 
     private void initView() {
+        mMatchMap = new HashMap<>();
         views = new DiamondGroupView[6];
         views[0] = new DiamondGroupView(getContext());
         views[0].setId(View.generateViewId());
@@ -138,6 +143,21 @@ public class KlineTrainView extends RelativeLayout {
         for (int i = 0; i < views.length; i++) {
             setOnDisappearListener(views[i]);
         }
+        for (int i = 0; i < views.length; i++) {
+            setOnSelectedDrawFinishListener(views[i], i);
+        }
+    }
+
+    private void setOnSelectedDrawFinishListener(final DiamondGroupView view, final int index) {
+        view.setOnSelectDrawFinishCallback(new DiamondGroupView.OnSelectDrawFinishCallback() {
+            @Override
+            public void onFinishDraw() {
+                if (mMatchMap.get(index) != null) {
+                    view.startDisappearAnim();
+                    mMatchMap.get(index).startDisappearAnim();
+                }
+            }
+        });
     }
 
     private void setOnDisappearListener(DiamondGroupView view) {
@@ -162,8 +182,7 @@ public class KlineTrainView extends RelativeLayout {
                         RemoveTraining training2 = (RemoveTraining) views[index].getTag();
                         if (training1 != null && training2 != null) {
                             if (training1.getSeq() == training2.getSeq()) {
-                                views[mPriSelectedIndex].startDisappearAnim();
-                                views[index].startDisappearAnim();
+                                mMatchMap.put(index, views[mPriSelectedIndex]);
                                 if (mOnEndCallback != null) {
                                     mOnEndCallback.onMatchEnd();
                                 }

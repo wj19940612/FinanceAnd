@@ -28,6 +28,7 @@ public class TitleBar extends RelativeLayout {
     private CharSequence mTitle;
     private float mTitleSize;
     private ColorStateList mTitleColor;
+    private float mTitleAlpha;
     private CharSequence mRightText;
     private float mRightTextSize;
     private ColorStateList mRightTextColor;
@@ -79,6 +80,7 @@ public class TitleBar extends RelativeLayout {
         mTitle = typedArray.getText(R.styleable.TitleBar_titleText);
         mTitleSize = typedArray.getDimension(R.styleable.TitleBar_titleTextSize, defaultTitleSize);
         mTitleColor = typedArray.getColorStateList(R.styleable.TitleBar_titleTextColor);
+        mTitleAlpha = typedArray.getFloat(R.styleable.TitleBar_titleTextAlpha, 1);
         mRightText = typedArray.getText(R.styleable.TitleBar_rightText);
         mRightTextSize = typedArray.getDimension(R.styleable.TitleBar_rightTextSize, defaultFontSize);
         mRightTextColor = typedArray.getColorStateList(R.styleable.TitleBar_rightTextColor);
@@ -168,6 +170,7 @@ public class TitleBar extends RelativeLayout {
         setTitle(mTitle);
         setTitleSize(TypedValue.COMPLEX_UNIT_PX, mTitleSize);
         setTitleColor(mTitleColor);
+        setTitleAlpha(mTitleAlpha);
         setRightText(mRightText);
         setRightTextSize(TypedValue.COMPLEX_UNIT_PX, mRightTextSize);
         setRightTextColor(mRightTextColor);
@@ -212,6 +215,12 @@ public class TitleBar extends RelativeLayout {
         if (mTitleView == null) return;
         mTitleView.setTextSize(titleSize);
         mTitleSize = mTitleView.getTextSize();
+    }
+
+    public void setTitleAlpha (float titleAlpha) {
+        if (mTitleView == null) return;
+        mTitleView.setAlpha(titleAlpha);
+        mTitleAlpha = mTitleView.getAlpha();
     }
 
     public void setRightText(int resid) {

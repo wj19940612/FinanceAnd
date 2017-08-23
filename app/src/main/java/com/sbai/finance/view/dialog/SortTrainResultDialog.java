@@ -1,31 +1,29 @@
 package com.sbai.finance.view.dialog;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatDialog;
+import android.os.Build;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.view.SmartDialog;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by ${wangJie} on 2017/8/19.
  */
 
-public class SortTrainResultDialog extends AppCompatDialog {
+public class SortTrainResultDialog {
 
-    private final Unbinder mBind;
-
-    Context mContext;
     @BindView(R.id.titleIcon)
     ImageView mTitleIcon;
     @BindView(R.id.hintTitle)
@@ -37,46 +35,53 @@ public class SortTrainResultDialog extends AppCompatDialog {
 
     private boolean mResult;
 
-    private OnCompleteBtnClickListener mOnCompleteBtnClickListener;
+    private Activity mActivity;
+    private SmartDialog mSmartDialog;
+    private View mView;
 
-    public interface OnCompleteBtnClickListener {
-        void onClick();
+    private OnDialogDismissListener mOnDialogDismissListener;
+
+    public interface OnDialogDismissListener {
+        void onDismiss();
     }
 
 
-    public void setOnCompleteBtnClickListener(OnCompleteBtnClickListener completeBtnClickListener) {
-        mOnCompleteBtnClickListener = completeBtnClickListener;
+    public SortTrainResultDialog setOnDialogDismissListener(OnDialogDismissListener completeBtnClickListener) {
+        mOnDialogDismissListener = completeBtnClickListener;
+        return this;
     }
 
-    public SortTrainResultDialog(Context context) {
-        this(context, R.style.DialogTheme_NoTitle);
+    public static SortTrainResultDialog with(Activity activity) {
+        SortTrainResultDialog sortTrainResultDialog = new SortTrainResultDialog();
+        sortTrainResultDialog.mActivity = activity;
+        sortTrainResultDialog.mSmartDialog = SmartDialog.single(activity);
+        sortTrainResultDialog.mView = LayoutInflater.from(activity).inflate(R.layout.dialog_sort_training_result, null);
+        sortTrainResultDialog.mSmartDialog.setCustomView(sortTrainResultDialog.mView);
+        sortTrainResultDialog.init();
+        return sortTrainResultDialog;
     }
 
-    public SortTrainResultDialog(Context context, int theme) {
-        super(context, theme);
-        this.mContext = context;
-        View view = getLayoutInflater().inflate(R.layout.dialog_fragment_sort_training_result, null);
-        mBind = ButterKnife.bind(this, view);
-        setContentView(view);
-
+    private void init() {
+        mTitleIcon = (ImageView) mView.findViewById(R.id.titleIcon);
+        mHintTitle = (TextView) mView.findViewById(R.id.hintTitle);
+        mHintContent = (TextView) mView.findViewById(R.id.hintContent);
+        mCompleteTraining = (TextView) mView.findViewById(R.id.completeTraining);
         mCompleteTraining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mOnCompleteBtnClickListener != null) {
-                    mOnCompleteBtnClickListener.onClick();
-                }
-                SortTrainResultDialog.this.dismiss();
+                mSmartDialog.dismiss();
+
             }
         });
-
+        mSmartDialog.setOnDismissListener(new SmartDialog.OnDismissListener() {
+            @Override
+            public void onDismiss(Dialog dialog) {
+                if (mOnDialogDismissListener != null) {
+                    mOnDialogDismissListener.onDismiss();
+                }
+            }
+        });
     }
-
-    @Override
-    public void setOnDismissListener(@Nullable OnDismissListener listener) {
-        super.setOnDismissListener(listener);
-        mBind.unbind();
-    }
-
 
     public void setResult(boolean result) {
         this.mResult = result;
@@ -90,7 +95,8 @@ public class SortTrainResultDialog extends AppCompatDialog {
             setHintContent(R.string.your_company_is_close);
         }
         int[] colors = {Color.parseColor("#FF8930"), Color.parseColor("#F7D34C")};
-        setCompleteTrainingBg(createDrawable(colors, mContext));
+        setCompleteTrainingBg(createDrawable(colors, mActivity));
+        mSmartDialog.show();
     }
 
     public void setTitleIcon(Drawable drawable) {
@@ -130,7 +136,11 @@ public class SortTrainResultDialog extends AppCompatDialog {
     }
 
     public void setCompleteTrainingBg(Drawable drawable) {
-        mCompleteTraining.setBackground(drawable);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mCompleteTraining.setBackground(drawable);
+        } else {
+            mCompleteTraining.setBackgroundDrawable(drawable);
+        }
     }
 
 
