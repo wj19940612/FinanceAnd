@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -15,6 +16,7 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +27,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.RenderScriptGaussianBlur;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +55,8 @@ public class HowPlayActivity extends BaseActivity {
     TextView mConfirm1;
     @BindView(R.id.verticalView)
     CardView mVerticalView;
+    @BindView(R.id.main)
+    RelativeLayout mMain;
 
     private Training mTraining;
     private boolean mIsHorizontal;
@@ -86,6 +91,7 @@ public class HowPlayActivity extends BaseActivity {
     }
 
     private void initView() {
+        setTheme(R.style.TransparentStyleBottom);
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         int drawable = 0;
@@ -149,7 +155,11 @@ public class HowPlayActivity extends BaseActivity {
             }
             mConfirm1.setBackground(gradientDrawable);
         }
-        // TODO: 2017-08-14 load gif
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
     }
 
     @OnClick({R.id.confirm, R.id.confirm1})

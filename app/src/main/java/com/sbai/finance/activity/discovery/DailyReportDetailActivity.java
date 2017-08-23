@@ -47,6 +47,7 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
  */
 
 public class DailyReportDetailActivity extends BaseActivity {
+    public static final int READ_CODE = 250;
     public static final String INFO_HTML_META = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\">";
     public static final String EX_ID = "id";
     public static final String EX_RAW_COOKIE = "rawCookie";
@@ -144,6 +145,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         } else {
             mTitleInfo.setVisibility(View.GONE);
             mPageUrl = data.getUrl();
+            mClick.setText(getString(R.string.read_count, data.getClicks()));
             mFirstContent = getString(R.string.latest_finance_hot_from_lemi);
         }
         loadPage();
@@ -167,7 +169,6 @@ public class DailyReportDetailActivity extends BaseActivity {
         super.onPostResume();
         registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
-
     @Override
     protected void onPause() {
         super.onPause();
