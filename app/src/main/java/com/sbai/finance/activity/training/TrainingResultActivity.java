@@ -66,6 +66,7 @@ public class TrainingResultActivity extends BaseActivity {
     private Training mTraining;
     private TrainingDetail mTrainingDetail;
     private TrainingSubmit mTrainingSubmit;
+    private int mStarCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +120,9 @@ public class TrainingResultActivity extends BaseActivity {
                         if (BuildConfig.DEBUG) {
                             ToastUtil.show(resp.getData().toString());
                         }
-
+                        if (resp.getData() != null) {
+                            mStarCount = resp.getData().getLevel();
+                        }
                     }
 
                     @Override
@@ -222,6 +225,8 @@ public class TrainingResultActivity extends BaseActivity {
             case R.id.recordTrainingExperience:
                 Launcher.with(getActivity(), WriteExperienceActivity.class)
                         .putExtra(ExtraKeys.TRAINING, mTraining)
+                        .putExtra(ExtraKeys.TRAIN_LEVEL, mStarCount)
+                        .putExtra(ExtraKeys.TRAIN_RESULT, 0)
                         .execute();
                 finish();
                 break;
