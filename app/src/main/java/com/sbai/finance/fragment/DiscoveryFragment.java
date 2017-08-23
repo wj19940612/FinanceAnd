@@ -108,6 +108,7 @@ public class DiscoveryFragment extends BaseFragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             requestTrainingList();
+            requestDailyReportData();
         }
     }
 

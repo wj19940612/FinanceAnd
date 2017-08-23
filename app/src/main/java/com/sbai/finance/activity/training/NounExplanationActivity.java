@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
@@ -126,6 +127,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 			public void onFinish() {
 				mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
 				mIsSuccess = false;
+				LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(HowPlayActivity.TYPE_FINISH));
 				requestEndTrain();
 			}
 		});
@@ -481,4 +483,5 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 			return mFragments != null ? mFragments.size() : 0;
 		}
 	}
+
 }

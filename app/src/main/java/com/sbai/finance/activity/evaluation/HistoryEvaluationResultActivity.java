@@ -18,7 +18,6 @@ import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.training.ScoreIntroduceActivity;
 import com.sbai.finance.model.levelevaluation.EvaluationResult;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -35,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class HistoryTestResultActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class HistoryEvaluationResultActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
     @BindView(android.R.id.list)
     ListView mListView;
@@ -45,13 +44,12 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
     CustomSwipeRefreshLayout mCustomSwipeRefreshLayout;
     private HistoryTestResultAdapter mHistoryTestResultAdapter;
 
-    private int mPage = 0;
     private HashSet<String> mSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history_test_result);
+        setContentView(R.layout.activity_history_evaluation_result);
         ButterKnife.bind(this);
         mListView.setEmptyView(mEmpty);
         mListView.setDivider(null);
@@ -65,7 +63,6 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
             @Override
             public void onRefresh() {
                 mSet.clear();
-                mPage = 0;
                 mCustomSwipeRefreshLayout.setLoadMoreEnable(true);
                 requestHistoryTestResultList();
             }
@@ -101,7 +98,7 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
         if (data.size() < Client.DEFAULT_PAGE_SIZE) {
             mCustomSwipeRefreshLayout.setLoadMoreEnable(false);
         } else {
-            mPage++;
+
         }
 
         if (mCustomSwipeRefreshLayout.isRefreshing()) {
@@ -129,7 +126,7 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         EvaluationResult evaluationResult = (EvaluationResult) parent.getAdapter().getItem(position);
         if (evaluationResult != null) {
-            Launcher.with(getActivity(), ScoreIntroduceActivity.class)
+            Launcher.with(getActivity(), EvaluationResultActivity.class)
                     .putExtra(ExtraKeys.HISTORY_TEST_RESULT, evaluationResult)
                     .execute();
         }
@@ -175,8 +172,8 @@ public class HistoryTestResultActivity extends BaseActivity implements AdapterVi
                 mTime.setText(DateUtil.format(item.getCreateTime(), DateUtil.DEFAULT_FORMAT, "yyyy-MM-dd"));
                 mGrade.setText(getTestGrade(item.getLevel()));
                 mAccuracy.setText(context.getString(R.string.accuracy_ranking,
-                        NumberFormatUtils.formatPercentStringEndReplaceZero(item.getAllAccuracy(),2),
-                        NumberFormatUtils.formatPercentStringEndReplaceZero(item.getPassPercent(),2)));
+                        NumberFormatUtils.formatPercentStringEndReplaceZero(item.getAllAccuracy(), 2),
+                        NumberFormatUtils.formatPercentString(item.getPassPercent())));
             }
 
 

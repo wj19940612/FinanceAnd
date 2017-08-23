@@ -133,7 +133,9 @@ public class BattleFloatView extends RelativeLayout {
                     if (LocalUser.getUser().isLogin()) {
 
                     } else {
-                        Launcher.with(getContext(), LoginActivity.class).execute();
+                        if (!mBattle.isBattleOver()) {
+                            Launcher.with(getContext(), LoginActivity.class).execute();
+                        }
                     }
                 }
             });
@@ -147,7 +149,9 @@ public class BattleFloatView extends RelativeLayout {
 
                         }
                     } else {
-                        Launcher.with(getContext(), LoginActivity.class).execute();
+                        if (!mBattle.isBattleOver()) {
+                            Launcher.with(getContext(), LoginActivity.class).execute();
+                        }
                     }
                 }
             });

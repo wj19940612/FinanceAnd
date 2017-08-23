@@ -1,10 +1,8 @@
 package com.sbai.finance.activity.training;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
-import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.levelevaluation.EvaluationResult;
@@ -43,36 +41,15 @@ public class ScoreIntroduceActivity extends BaseActivity {
 
 
         mUserEachTrainingScoreModel = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
-        //测评结果页数据
-        EvaluationResult historyEvaluationResult = getIntent().getParcelableExtra(ExtraKeys.HISTORY_TEST_RESULT);
-        if (historyEvaluationResult != null) {
-            updateScoreViewData(historyEvaluationResult);
-        }
 
-        requestUserScore();
 
         //训练首页数据
         if (mUserEachTrainingScoreModel != null) {
-            Log.d(TAG, "onCreate: " + mUserEachTrainingScoreModel.toString());
             EvaluationResult evaluationResult = mUserEachTrainingScoreModel.getTestResultModel();
-            Log.d(TAG, "onCreate   testResultModel: " + evaluationResult.toString());
             updateScoreViewData(evaluationResult);
         }
 
         requestScoreStageAndRemark();
-    }
-
-
-    private void requestUserScore() {
-        Client.requestUserScore()
-                .setTag(TAG)
-                .setCallback(new Callback2D<Resp<UserEachTrainingScoreModel>, UserEachTrainingScoreModel>() {
-                    @Override
-                    protected void onRespSuccessData(UserEachTrainingScoreModel data) {
-                        mUserEachTrainingScoreModel = data;
-                        requestScoreStageAndRemark();
-                    }
-                }).fire();
     }
 
     private void updateScoreViewData(EvaluationResult evaluationResult) {

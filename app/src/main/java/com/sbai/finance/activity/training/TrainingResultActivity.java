@@ -142,7 +142,7 @@ public class TrainingResultActivity extends BaseActivity {
                     for (int i = 0; i < mAchievementViews.length; i++) {
                         mAchievementViews[i].setContent(getString(R.string.accuracy_to_,
                                 FinanceUtil.formatToPercentage(trainTargets.get(i).getRate(), 0)));
-                        if (mTrainingSubmit.getRate() >= trainTargets.get(i).getRate()) {
+                        if (mTrainingSubmit.getRate() >= trainTargets.get(i).getRate() && mTrainingSubmit.isFinish()) {
                             mAchievementViews[i].setAchieved(true);
                         } else {
                             mAchievementViews[i].setAchieved(false);
@@ -158,7 +158,7 @@ public class TrainingResultActivity extends BaseActivity {
                                         R.string._minutes_complete,
                                         R.string._minutes_x_seconds_complete));
 
-                        if (mTrainingSubmit.getTime() > trainTargets.get(i).getTime()) {
+                        if (mTrainingSubmit.getTime() > trainTargets.get(i).getTime() || !mTrainingSubmit.isFinish()) {
                             mAchievementViews[i].setAchieved(false);
                         } else {
                             mAchievementViews[i].setAchieved(true);
