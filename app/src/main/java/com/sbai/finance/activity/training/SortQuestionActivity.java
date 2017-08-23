@@ -259,8 +259,6 @@ public class SortQuestionActivity extends BaseActivity {
 
                     @Override
                     public void onDismiss() {
-                        mBg.setVisibility(View.GONE);
-                        mContent.setVisibility(View.VISIBLE);
                         openTrainingResultPage(isRight);
                     }
                 })

@@ -3,7 +3,6 @@ package com.sbai.finance.model.training;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +24,7 @@ public class Question<T extends Parcelable> implements Parcelable {
     private String digest;
 
     private String id;
-    private int levelRatio;
+    private double levelRatio;
     private long modifyTime;
     private String createTime;
     private boolean option;
@@ -58,11 +57,11 @@ public class Question<T extends Parcelable> implements Parcelable {
         this.id = id;
     }
 
-    public int getLevelRatio() {
+    public double getLevelRatio() {
         return levelRatio;
     }
 
-    public void setLevelRatio(int levelRatio) {
+    public void setLevelRatio(double levelRatio) {
         this.levelRatio = levelRatio;
     }
 
@@ -134,7 +133,7 @@ public class Question<T extends Parcelable> implements Parcelable {
         dest.writeString(this.analysis);
         dest.writeString(this.digest);
         dest.writeString(this.id);
-        dest.writeInt(this.levelRatio);
+        dest.writeDouble(this.levelRatio);
         dest.writeLong(this.modifyTime);
         dest.writeString(this.createTime);
         dest.writeByte(this.option ? (byte) 1 : (byte) 0);
@@ -156,7 +155,7 @@ public class Question<T extends Parcelable> implements Parcelable {
         this.analysis = in.readString();
         this.digest = in.readString();
         this.id = in.readString();
-        this.levelRatio = in.readInt();
+        this.levelRatio = in.readDouble();
         this.modifyTime = in.readLong();
         this.createTime = in.readString();
         this.option = in.readByte() != 0;

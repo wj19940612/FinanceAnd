@@ -107,7 +107,8 @@
                             android:id="@+id/daily1"
                             android:layout_width="match_parent"
                             android:layout_height="140dp"
-                            android:layout_marginBottom="2dp">
+                            android:layout_marginBottom="2dp"
+                            android:background="@drawable/ic_common_mask_black">
 
                             <ImageView
                                 android:id="@+id/image1"
@@ -147,10 +148,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentBottom="true"
-                                android:background="@drawable/ic_common_mask_black"
+                                android:layout_marginBottom="@dimen/common_padding"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:paddingBottom="@dimen/common_padding"
                                 android:paddingLeft="@dimen/common_padding"
                                 android:textColor="@android:color/white"
                                 android:textSize="15sp"
@@ -163,7 +163,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <RelativeLayout
+                            <FrameLayout
                                 android:id="@+id/daily2"
                                 android:layout_width="0dp"
                                 android:layout_height="100dp"
@@ -175,6 +175,7 @@
                                     android:id="@+id/image2"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
+                                    android:adjustViewBounds="true"
                                     android:scaleType="fitXY"
                                     tools:src="@drawable/ic_feedback_time_bg"/>
 
@@ -182,18 +183,16 @@
                                     android:id="@+id/title2"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_centerInParent="true"
-                                    android:background="@drawable/ic_common_mask_black"
                                     android:ellipsize="end"
                                     android:gravity="center_vertical"
                                     android:maxLines="2"
                                     android:padding="@dimen/common_padding"
                                     android:textColor="@android:color/white"
-                                    android:textSize="15sp"
+                                    android:textSize="14sp"
                                     tools:text="乐米专访：葛卫东，从百万到百亿乐米专访"/>
-                            </RelativeLayout>
+                            </FrameLayout>
 
-                            <RelativeLayout
+                            <FrameLayout
                                 android:id="@+id/daily3"
                                 android:layout_width="0dp"
                                 android:layout_height="100dp"
@@ -210,16 +209,15 @@
                                     android:id="@+id/title3"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_centerInParent="true"
-                                    android:background="@drawable/ic_common_mask_black"
+                                    android:background="#6A6A9CEF"
                                     android:ellipsize="end"
-                                    android:gravity="center_vertical"
+                                    android:gravity="center"
                                     android:maxLines="2"
                                     android:padding="@dimen/common_padding"
                                     android:textColor="@android:color/white"
-                                    android:textSize="15sp"
+                                    android:textSize="14sp"
                                     tools:text="乐米专访：葛卫东，从百万到百亿乐米专访"/>
-                            </RelativeLayout>
+                            </FrameLayout>
                         </LinearLayout>
 
                     </LinearLayout>
