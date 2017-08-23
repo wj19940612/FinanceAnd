@@ -30,6 +30,7 @@ import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.training.Kline.MvKlineView;
 
 import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,7 +86,6 @@ public class JudgeTrainingActivity extends BaseActivity {
 
         initData(getIntent());
 
-        Collections.reverse(mQuestion.getContent()); // first is the last data
         mKlineView.setOnAnswerSelectedListener(new MvKlineView.OnAnswerSelectedListener() {
             @Override
             public void onRightAnswerSelected(float accuracy) {
@@ -107,7 +107,9 @@ public class JudgeTrainingActivity extends BaseActivity {
                 startTrainingResultPage();
             }
         });
-        mKlineView.setDataList(mQuestion.getContent());
+        List<KData> dataList = mQuestion.getContent();
+        Collections.reverse(dataList); // first is the last data
+        mKlineView.setDataList(dataList);
 
         Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
                 .bitmapTransform(new GlideCircleTransform(getActivity()))

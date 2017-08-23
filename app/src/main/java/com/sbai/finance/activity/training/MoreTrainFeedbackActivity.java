@@ -124,7 +124,7 @@ public class MoreTrainFeedbackActivity extends BaseActivity {
     }
 
     private void setCommitEnable(String comment) {
-        if (comment.trim().isEmpty() || comment.length() > mComment.getWordLimitCount() || mIds.isEmpty()) {
+        if ((mIds.isEmpty() && comment.trim().isEmpty()) || comment.length() > mComment.getWordLimitCount()) {
             mCommit.setEnabled(false);
         } else {
             mCommit.setEnabled(true);

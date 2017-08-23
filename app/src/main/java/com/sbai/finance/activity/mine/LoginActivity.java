@@ -27,6 +27,7 @@ import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.PasswordEditText;
 
@@ -372,13 +373,8 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         protected void onRespSuccess(Resp<UserInfo> resp) {
                             LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
+                            ToastUtil.show(R.string.login_success);
                             postLogin();
-                        }
-
-                        @Override
-                        protected void onRespFailure(Resp failedResp) {
-                            super.onRespFailure(failedResp);
-                            mLoading.clearAnimation();
                         }
                     }).fire();
         } else {
@@ -393,13 +389,8 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         protected void onRespSuccess(Resp<UserInfo> resp) {
                             LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
+                            ToastUtil.show(R.string.login_success);
                             postLogin();
-                        }
-
-                        @Override
-                        protected void onRespFailure(Resp failedResp) {
-                            super.onRespFailure(failedResp);
-                            mLoading.clearAnimation();
                         }
                     }).fire();
         }

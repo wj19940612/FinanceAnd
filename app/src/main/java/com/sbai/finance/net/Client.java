@@ -2341,7 +2341,7 @@ public class Client {
      * @param picture
      * @return
      */
-    public static API writeExperience(int invitationUserId, int type, int star, String content, String picture) {
+    public static API writeExperience(int invitationUserId, int type, Integer star, String content, String picture) {
         return new API(POST, "/user/comment/insertComment.do?",
                 new ApiParams()
                         .put("invitationUserId", invitationUserId)
@@ -2434,7 +2434,21 @@ public class Client {
                 .put("isPraise", isPraise));
     }
 
+    /**
+     * 分享
+     * @return
+     */
     public static API share() {
         return new API("/explain/question/share.do");
+    }
+
+    /**
+     *
+     * @param trainId
+     * @return
+     */
+    public static API isTrained (int trainId) {
+        return new API("/train/perception/userIsPerception.do",
+                new ApiParams().put("trainId", trainId));
     }
 }

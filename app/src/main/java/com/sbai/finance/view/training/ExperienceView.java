@@ -16,7 +16,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.Experience;
-import com.sbai.finance.model.training.TrainPraise;
+import com.sbai.finance.model.training.TrainingExperiencePraise;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -104,9 +104,9 @@ public class ExperienceView extends LinearLayout {
 				public void onClick(View v) {
 					if (LocalUser.getUser().isLogin()) {
 						Client.trainExperiencePraise(data.getId(), data.getIsPraise() == 0 ? 1 : 0)
-								.setCallback(new Callback2D<Resp<TrainPraise>, TrainPraise>() {
+								.setCallback(new Callback2D<Resp<TrainingExperiencePraise>, TrainingExperiencePraise>() {
 									@Override
-									protected void onRespSuccessData(TrainPraise data) {
+									protected void onRespSuccessData(TrainingExperiencePraise data) {
 										if (data.getIsPraise() == 1) {
 											mLoveNumber.setSelected(true);
 										} else {

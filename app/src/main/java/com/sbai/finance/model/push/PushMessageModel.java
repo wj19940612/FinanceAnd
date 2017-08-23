@@ -56,7 +56,7 @@ public class PushMessageModel {
     }
 
     public boolean isMissAnswer() {
-        return getClassify() == 1 && getType() == 1;
+        return getClassify() == 4 && getType() == 1;
     }
 
     public int getClassify() {
