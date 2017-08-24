@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.sbai.finance.activity.MainActivity">
 
-    <android.support.v4.view.ViewPager
+    <com.sbai.finance.view.ScrollableViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
