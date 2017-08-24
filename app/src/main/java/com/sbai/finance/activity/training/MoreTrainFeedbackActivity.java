@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,7 +36,7 @@ import butterknife.OnClick;
  * 更多训练反馈页
  */
 
-public class MoreTrainFeedbackActivity extends BaseActivity {
+public class MoreTrainFeedbackActivity extends BaseActivity implements View.OnTouchListener {
     @BindView(R.id.listView)
     MyListView mListView;
     @BindView(R.id.comment)
@@ -93,7 +95,6 @@ public class MoreTrainFeedbackActivity extends BaseActivity {
     }
 
     private void requestCommitFeedback() {
-        if (mIds.isEmpty()) return;
         StringBuilder sb = new StringBuilder();
         for (TrainFeedback feedback : mIds) {
             sb.append(feedback.getId()).append(",");
@@ -141,6 +142,40 @@ public class MoreTrainFeedbackActivity extends BaseActivity {
                 requestCommitFeedback();
                 break;
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if ((v.getId() == R.id.content && canVerticalScroll(mComment.getEditText()))) {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                v.getParent().requestDisallowInterceptTouchEvent(false);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * EditText竖直方向是否可以滚动
+     *
+     * @param editText 需要判断的EditText
+     * @return true：可以滚动   false：不可以滚动
+     */
+    private boolean canVerticalScroll(EditText editText) {
+        //滚动的距离
+        int scrollY = editText.getScrollY();
+        //控件内容的总高度
+        int scrollRange = editText.getLayout().getHeight();
+        //控件实际显示的高度
+        int scrollExtent = editText.getHeight() - editText.getCompoundPaddingTop() - editText.getCompoundPaddingBottom();
+        //控件内容总高度与实际显示高度的差值
+        int scrollDifference = scrollRange - scrollExtent;
+
+        if (scrollDifference == 0) {
+            return false;
+        }
+
+        return (scrollY > 0) || (scrollY < scrollDifference - 1);
     }
 
     static class TrainAdapter extends ArrayAdapter<TrainFeedback> {

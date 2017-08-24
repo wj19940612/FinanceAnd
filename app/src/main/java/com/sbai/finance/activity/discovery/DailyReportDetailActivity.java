@@ -90,6 +90,7 @@ public class DailyReportDetailActivity extends BaseActivity {
     private BroadcastReceiver mNetworkChangeReceiver;
     private WebViewClient mWebViewClient;
     private String mFirstContent;
+    private String mTitleContent;
 
 
     public String getRawCookie() {
@@ -129,6 +130,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         Glide.with(getActivity())
                 .load(data.getCoverUrl())
                 .into(mImage);
+        mTitleContent = data.getTitle();
         if (data.isHtml()) {
             mTitleInfo.setVisibility(View.VISIBLE);
             mClick.setText(getString(R.string.read_count, data.getClicks()));
@@ -169,6 +171,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         super.onPostResume();
         registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -188,7 +191,7 @@ public class DailyReportDetailActivity extends BaseActivity {
                 ShareDialog.with(getActivity())
                         .hasFeedback(false)
                         .setTitle(R.string.share_to)
-                        .setShareTitle(mTitle.getText().toString())
+                        .setShareTitle(mTitleContent)
                         .setShareDescription(mFirstContent)
                         .setShareUrl(String.format(Client.SHARE_URL_REPORT, mId))
                         .show();
