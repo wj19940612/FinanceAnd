@@ -5,53 +5,66 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#6F56CA"
-                android:clipChildren="false"
-                android:clipToPadding="false"
                 android:orientation="vertical">
 
-    <com.sbai.finance.view.TitleBar
-        android:id="@+id/titleBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:fitsSystemWindows="true"
-        app:backFeature="true"
-        app:backIcon="@drawable/ic_close"
-        app:rightText="@string/how_play"
-        app:rightTextColor="@android:color/white"
-        app:rightVisible="true"
-        app:titleTextColor="@android:color/white"
-        app:titleTextSize="20sp"/>
-
-    <com.sbai.finance.view.training.TrainProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titleBar"/>
-
-    <com.sbai.finance.view.training.KlineTrainView
-        android:id="@+id/trainView"
-        android:layout_width="wrap_content"
-        android:layout_height="320dp"
-        android:layout_centerInParent="true"
-        android:clipChildren="false"
-        android:clipToPadding="false"/>
-
-    <TextView
-        android:id="@+id/indexView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        tools:text="6/6"/>
-
     <ImageView
+        android:id="@+id/bgImg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_train_remove"/>
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <com.sbai.finance.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:fitsSystemWindows="true"
+            app:backFeature="true"
+            app:backIcon="@drawable/ic_close"
+            app:rightText="@string/how_play"
+            app:rightTextColor="@android:color/white"
+            app:rightVisible="true"
+            app:titleTextColor="@android:color/white"
+            app:titleTextSize="20sp"/>
+
+        <com.sbai.finance.view.training.TrainProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleBar"/>
+
+        <com.sbai.finance.view.training.KlineTrainView
+            android:id="@+id/trainView"
+            android:layout_width="wrap_content"
+            android:layout_height="320dp"
+            android:layout_centerInParent="true"
+            android:clipChildren="false"
+            android:clipToPadding="false"/>
+
+        <TextView
+            android:id="@+id/indexView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            tools:text="6/6"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_train_remove"/>
+    </RelativeLayout>
 </RelativeLayout>
