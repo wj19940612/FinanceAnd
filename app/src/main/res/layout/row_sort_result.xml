@@ -4,12 +4,13 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginLeft="5dp"
-              android:layout_marginRight="5dp"
               android:foreground="?android:attr/selectableItemBackground"
               android:minHeight="80dp"
+              android:layerType="software"
               android:orientation="horizontal">
 
     <TextView
+        android:layerType="software"
         android:id="@+id/lineNumber"
         android:layout_width="48dp"
         android:layout_height="wrap_content"
@@ -21,11 +22,13 @@
 
 
     <RelativeLayout
+        android:layerType="software"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1">
 
         <TextView
+            android:layerType="software"
             android:id="@+id/materials"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="8dp"
             android:background="@drawable/line_broken"
             android:layerType="software"/>
     </RelativeLayout>

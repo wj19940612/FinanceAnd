@@ -247,7 +247,7 @@ public class SortQuestionActivity extends BaseActivity {
             @Override
             public void onTick(long millisUntilUp) {
                 mTrainingCountTime = millisUntilUp;
-                mTitleBar.setTitle(DateUtil.format(mTrainingCountTime, "mm:ss.SS"));
+                mTitleBar.setTitle(DateUtil.format(mTrainingCountTime, "mm:ss.zz"));
             }
 
             @Override
