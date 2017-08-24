@@ -105,7 +105,7 @@ public class ShareDialog {
             UMWeb mWeb = new UMWeb(mShareUrl);
             mWeb.setTitle(mShareTitle);
             mWeb.setDescription(mShareDescription);
-            UMImage thumb = new UMImage(mActivity, R.drawable.ic_share_logo);
+            UMImage thumb = new UMImage(mActivity,R.mipmap.ic_launcher);
             mWeb.setThumb(thumb);
             if (mActivity != null && !mActivity.isFinishing()) {
                 new ShareAction(mActivity)
@@ -116,8 +116,8 @@ public class ShareDialog {
             }
         } else {
             String text = mShareTitle + mShareUrl;
-            UMImage image = new UMImage(mActivity, R.drawable.ic_share_logo);
-            image.setThumb(new UMImage(mActivity, R.drawable.ic_share_logo));
+            UMImage image = new UMImage(mActivity, R.mipmap.ic_launcher);
+            image.setThumb(new UMImage(mActivity,R.mipmap.ic_launcher));
             if (mActivity != null && !mActivity.isFinishing()) {
                 new ShareAction(mActivity)
                         .withText(text)
