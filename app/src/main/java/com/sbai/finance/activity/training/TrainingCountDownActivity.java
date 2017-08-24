@@ -108,8 +108,7 @@ public class TrainingCountDownActivity extends BaseActivity {
             mBackground.setBackgroundResource(mBackgroundRes);
         }
 
-        //Preference.get().isFirstTrain(mTraining.getId())
-        if (true) {
+        if (Preference.get().isFirstTrain(mTraining.getId())) {
             TrainingRuleDialog.with(getActivity(), mTraining)
                     .setOnDismissListener(new TrainingRuleDialog.OnDismissListener() {
                         @Override
