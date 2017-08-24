@@ -19,6 +19,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import static android.graphics.BitmapFactory.decodeFile;
+
 /**
  * Created by ${wangJie} on 2017/4/25.
  */
@@ -165,7 +167,7 @@ public class ImageUtils {
 
     public static String imageToBase64(String urlPath) {
 
-        return bitmapToBase64(BitmapFactory.decodeFile(urlPath));
+        return bitmapToBase64(decodeFile(urlPath));
     }
 
 
@@ -239,7 +241,7 @@ public class ImageUtils {
         BitmapFactory.Options newOpts = new BitmapFactory.Options();
         // 开始读入图片，此时把options.inJustDecodeBounds 设回true了
         newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(srcPath, newOpts);// 此时返回bm为空
+        Bitmap bitmap = decodeFile(srcPath, newOpts);// 此时返回bm为空
 
         newOpts.inJustDecodeBounds = false;
         int w = newOpts.outWidth;
@@ -258,7 +260,8 @@ public class ImageUtils {
             be = 1;
         newOpts.inSampleSize = be;// 设置缩放比例
         // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
-        return BitmapFactory.decodeFile(srcPath, newOpts);
+        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+        return reviewPicRotate(bitmap, srcPath);
 //        return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩
     }
 
@@ -267,7 +270,7 @@ public class ImageUtils {
         BitmapFactory.Options newOpts = new BitmapFactory.Options();
         // 开始读入图片，此时把options.inJustDecodeBounds 设回true了
         newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(srcPath, newOpts);// 此时返回bm为空
+        Bitmap bitmap = decodeFile(srcPath, newOpts);// 此时返回bm为空
 
         newOpts.inJustDecodeBounds = false;
         int w = newOpts.outWidth;
@@ -286,7 +289,7 @@ public class ImageUtils {
             be = 1;
         newOpts.inSampleSize = be;// 设置缩放比例
         // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
-        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+        bitmap = decodeFile(srcPath, newOpts);
         return reviewPicRotate(bitmap, srcPath);// 压缩好比例大小后再进行质量压缩
     }
 
@@ -295,7 +298,7 @@ public class ImageUtils {
         BitmapFactory.Options newOpts = new BitmapFactory.Options();
         // 开始读入图片，此时把options.inJustDecodeBounds 设回true了
         newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(srcPath, newOpts);// 此时返回bm为空
+        Bitmap bitmap = decodeFile(srcPath, newOpts);// 此时返回bm为空
 
         newOpts.inJustDecodeBounds = false;
         int w = newOpts.outWidth;
@@ -314,7 +317,7 @@ public class ImageUtils {
             be = 1;
         newOpts.inSampleSize = be;// 设置缩放比例
         // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
-        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+        bitmap = decodeFile(srcPath, newOpts);
         return reviewPicRotate(bitmap, srcPath);// 压缩好比例大小后再进行质量压缩
     }
 
@@ -419,14 +422,14 @@ public class ImageUtils {
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(urlPath, options);
+        decodeFile(urlPath, options);
 
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, ratio * 0.8f, ratio);
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        return compressImage(BitmapFactory.decodeFile(urlPath, options));
+        return compressImage(decodeFile(urlPath, options));
     }
 
     public static int calculateInSampleSize(

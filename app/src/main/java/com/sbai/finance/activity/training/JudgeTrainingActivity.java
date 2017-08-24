@@ -26,6 +26,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.dialog.TrainingRuleDialog;
 import com.sbai.finance.view.training.Kline.MvKlineView;
 
 import java.util.Collections;
@@ -147,7 +148,7 @@ public class JudgeTrainingActivity extends BaseActivity {
         mTrainingSubmit = new TrainingSubmit(mTraining.getId());
     }
 
-    @OnClick({R.id.close, R.id.iSeeBtn})
+    @OnClick({R.id.close, R.id.iSeeBtn, R.id.howToPlay})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.close:
@@ -157,6 +158,9 @@ public class JudgeTrainingActivity extends BaseActivity {
                 mAccuracyArea.setVisibility(View.VISIBLE);
                 mKnowledgeArea.setVisibility(View.GONE);
                 mKlineView.resume();
+                break;
+            case R.id.howToPlay:
+                TrainingRuleDialog.with(getActivity(), mTraining).show();
                 break;
         }
     }

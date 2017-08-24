@@ -1,10 +1,10 @@
 package com.sbai.finance.model.training;
 
 /**
- * Created by lixiaokuan0819 on 2017/8/10.
+ * 训练心得点赞javabean
  */
 
-public class TrainPraise {
+public class TrainingExperiencePraise {
 	private int isPraise;
 	private int praise;
 
@@ -26,7 +26,7 @@ public class TrainPraise {
 
 	@Override
 	public String toString() {
-		return "TrainPraise{" +
+		return "TrainingExperiencePraise{" +
 				"isPraise=" + isPraise +
 				", praise=" + praise +
 				'}';

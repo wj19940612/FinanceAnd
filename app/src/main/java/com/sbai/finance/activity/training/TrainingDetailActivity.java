@@ -24,6 +24,7 @@ import com.sbai.finance.model.training.TrainingTarget;
 import com.sbai.finance.model.training.question.KData;
 import com.sbai.finance.model.training.question.RemoveData;
 import com.sbai.finance.model.training.question.SortData;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -335,12 +336,12 @@ public class TrainingDetailActivity extends BaseActivity {
 				if (mTrainingDetail != null && mTrainingDetail.getTrain() != null) {
 					Launcher.with(getActivity(), WebActivity.class)
 							.putExtra(WebActivity.EX_TITLE, "相关知识点")
-							.putExtra(WebActivity.EX_URL, mTrainingDetail.getTrain().getKnowledgeUrl())
+							.putExtra(WebActivity.EX_URL, API.getHost() + mTrainingDetail.getTrain().getKnowledgeUrl())
 							.execute();
 				}
 				break;
 			case R.id.trainingExperience:
-				Launcher.with(getActivity(), TrainExperienceActivity.class)
+				Launcher.with(getActivity(), TrainingExperienceActivity.class)
 						.putExtra(ExtraKeys.TRAINING, mTraining)
 						.execute();
 				break;
@@ -412,29 +413,33 @@ public class TrainingDetailActivity extends BaseActivity {
 	}
 
 	private void startTraining(Question question) {
-		Launcher.with(getActivity(), TrainingCountDownActivity.class)
-				.putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
-				.putExtra(ExtraKeys.QUESTION, question)
-				.execute();
+		if (mTrainingDetail != null) {
+			Launcher.with(getActivity(), TrainingCountDownActivity.class)
+					.putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
+					.putExtra(ExtraKeys.QUESTION, question)
+					.execute();
+		}
 	}
 
 	private void share() {
-		ShareDialog.with(getActivity())
-				.setTitle(getString(R.string.share_title))
-				.setShareTitle(getString(R.string.train_share_share_title, mTrainingDetail.getTrain().getTitle()))
-				.setShareDescription(getString(R.string.train_share_description))
-				.setShareUrl(String.format(Client.SHARE_URL_TRAIN_EXPERIENCE, mTraining.getId()))
-				.hasFeedback(true)
-				.setListener(new ShareDialog.OnShareDialogCallback() {
-					@Override
-					public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
-						Client.share().setTag(TAG).fire();
-					}
+		if (mTrainingDetail != null) {
+			ShareDialog.with(getActivity())
+					.setTitle(getString(R.string.share_title))
+					.setShareTitle(getString(R.string.train_share_share_title, mTrainingDetail.getTrain().getTitle()))
+					.setShareDescription(getString(R.string.train_share_description))
+					.setShareUrl(String.format(Client.SHARE_URL_TRAIN_EXPERIENCE, mTraining.getId()))
+					.hasFeedback(true)
+					.setListener(new ShareDialog.OnShareDialogCallback() {
+						@Override
+						public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
+							Client.share().setTag(TAG).fire();
+						}
 
-					@Override
-					public void onFeedbackClick(View view) {
-						Launcher.with(getActivity(), FeedbackActivity.class).execute();
-					}
-				}).show();
+						@Override
+						public void onFeedbackClick(View view) {
+							Launcher.with(getActivity(), FeedbackActivity.class).execute();
+						}
+					}).show();
+		}
 	}
 }

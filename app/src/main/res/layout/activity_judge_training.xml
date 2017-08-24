@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
         android:gravity="center_vertical"
         android:minHeight="48dp"
         android:orientation="horizontal">
@@ -25,12 +26,20 @@
 
         <TextView
             android:id="@+id/timer"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="41dp"
+            android:layout_weight="1"
             android:text="00:00:00"
             android:textColor="@color/unluckyText"
             android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/howToPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/how_play"
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 
     <LinearLayout

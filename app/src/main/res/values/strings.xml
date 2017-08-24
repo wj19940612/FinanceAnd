@@ -759,7 +759,7 @@
     <string name="miss_first_time">快用提问夺走小姐姐的“第一次”吧</string>
 
     <!--trainExperience-->
-    <string name="train_experience">训练心得</string>
+    <string name="training_experience">训练心得</string>
     <string name="hot_experience">热门心得</string>
     <string name="latest_experience">最新心得</string>
     <string name="write_experience">写心得</string>
@@ -811,7 +811,7 @@
     <string name="create_fail">生成失败</string>
     <string name="your_company_is_close">您的公司被关停了</string>
     <string name="success_create_report">成功出炉年报</string>
-    <string name="start_training">开始训练!</string>
+    <string name="start_training">开始训练 !</string>
     <string name="share_your_experience">分享你训练的心得和感想</string>
     <!--Training Result-->
     <string name="_minutes_complete">%1$d分钟内完成</string>

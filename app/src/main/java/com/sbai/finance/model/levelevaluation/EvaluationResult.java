@@ -38,6 +38,8 @@ public class EvaluationResult implements Parcelable {
     private int userId;
     private int maxLevel; //最高测评等级
 
+    //总分
+
     private double totalCredit;
 
     public int getTotalCredit() {
@@ -263,4 +265,5 @@ public class EvaluationResult implements Parcelable {
             return new EvaluationResult[size];
         }
     };
+
 }
