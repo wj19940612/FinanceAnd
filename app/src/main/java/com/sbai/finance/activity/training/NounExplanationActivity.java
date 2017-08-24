@@ -428,6 +428,14 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     }
 
     private void showCloseDialog() {
+	    mBgImg.setVisibility(View.VISIBLE);
+	    mContent.setDrawingCacheEnabled(true);
+	    mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+	    Bitmap bitmap = mContent.getDrawingCache();
+	    mBgImg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
+	    mContent.setVisibility(View.INVISIBLE);
+
         SmartDialog.single(getActivity(), getString(R.string.exit_train_will_not_save_train_record))
                 .setTitle(getString(R.string.is_sure_exit_train))
                 .setNegative(R.string.exit_train, new SmartDialog.OnClickListener() {
@@ -437,12 +445,15 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
                         finish();
                     }
                 })
-                .setPositive(R.string.continue_train, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                    }
-                }).show();
+		        .setOnDismissListener(new SmartDialog.OnDismissListener() {
+			        @Override
+			        public void onDismiss(Dialog dialog) {
+				        mBgImg.setVisibility(View.GONE);
+				        mContent.setVisibility(View.VISIBLE);
+				        dialog.dismiss();
+			        }
+		        })
+                .setPositive(R.string.continue_train).show();
     }
 
     private void showHowPlayDialog() {
