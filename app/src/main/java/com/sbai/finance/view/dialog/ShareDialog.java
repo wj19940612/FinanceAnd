@@ -176,6 +176,7 @@ public class ShareDialog {
                 if (mListener != null) {
                     mListener.onFeedbackClick(v);
                 }
+                mSmartDialog.dismiss();
             }
         });
         mView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {

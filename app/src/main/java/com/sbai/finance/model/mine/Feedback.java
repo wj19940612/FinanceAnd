@@ -1,5 +1,7 @@
 package com.sbai.finance.model.mine;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by linrongfang on 2017/5/8.
  */
@@ -27,12 +29,30 @@ public class Feedback {
     private String content;
     private int contentType;
     private long createDate;
+    private String createTime;
     private int id;
     private int status;
     private int type;
     private String userName;
     private String userPhone;
     private String userPortrait;
+    private String portrait;
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getPortrait() {
+        return portrait;
+    }
+
+    public void setPortrait(String portrait) {
+        this.portrait = portrait;
+    }
 
     public String getReplyName() {
         return replyName;
