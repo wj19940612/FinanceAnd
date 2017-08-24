@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.model.training.TrainAppraiseAndRemark;
 import com.sbai.finance.model.training.UserEachTrainingScoreModel;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.NumberFormatUtils;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class ScoreProgressView extends LinearLayout {
     //等级区分数量  默认为5
     private int mGradeSize = 5;
     // 等级评价   "较差", "中等", "良好", "优秀", "极强"
-    private String[] mGradeExPlain = new String[]{"较差", "中等", "良好", "优秀", "极强"};
+    private String[] mGradeExPlain;
     //分数区间
     private int[] mScoreData = new int[]{0, 200, 400, 600, 800, 1000};
 
@@ -42,7 +43,6 @@ public class ScoreProgressView extends LinearLayout {
     //建议
     private TextView mAdviseTextView;
 
-    private int[] bg;
 
     public ScoreProgressView(Context context) {
         this(context, null);
@@ -61,22 +61,15 @@ public class ScoreProgressView extends LinearLayout {
     private void init() {
         removeAllViews();
         setOrientation(VERTICAL);
+        mGradeExPlain = getResources().getStringArray(R.array.credit_grade);
 
-        bg = new int[]{R.drawable.bg_score_poor, R.drawable.bg_score_middle, R.drawable.bg_score_good, R.drawable.bg_score_excellent, R.drawable.bg_score_very_strong};
         //上面分数等级
-        LinearLayout linearLayout = new LinearLayout(getContext());
-        linearLayout.setPadding(0, 0, px2dp(10), 0);
+        LinearLayout creditGradeLinearLayout = new LinearLayout(getContext());
+        creditGradeLinearLayout.setPadding(0, 0, px2dp(10), 0);
         LayoutParams layoutParams = new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.weight = 1;
         layoutParams.gravity = Gravity.CENTER;
         layoutParams.setMargins(0, 0, px2dp(6), 0);
-
-        LayoutParams layoutParams1 = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams1.setMargins(0, 0, px2dp(10), 0);
-        LinearLayout progressLinearLayout = new LinearLayout(getContext());
-        LayoutParams progressLayoutParams = new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, px2dp(6));
-        progressLayoutParams.weight = 1;
-        progressLayoutParams.setMargins(0, px2dp(6), px2dp(1), 0);
 
 
         LinearLayout scoreLinearLayout = new LinearLayout(getContext());
@@ -86,10 +79,8 @@ public class ScoreProgressView extends LinearLayout {
 
         for (int i = 0; i < mGradeSize; i++) {
             TextView scoreGradeTextView = createScoreGradeTextView(mGradeExPlain[i]);
-            linearLayout.addView(scoreGradeTextView, layoutParams);
+            creditGradeLinearLayout.addView(scoreGradeTextView, layoutParams);
 
-            View progressView = createProgressView(i);
-            progressLinearLayout.addView(progressView, progressLayoutParams);
 
             if (i == 0) {
                 TextView scoreTextView = createScoreTextView(String.valueOf(mScoreData[0]));
@@ -102,13 +93,31 @@ public class ScoreProgressView extends LinearLayout {
             }
         }
 
-        addView(linearLayout);
-        addView(progressLinearLayout, layoutParams1);
+        addView(creditGradeLinearLayout);
+        createCreditAreaView();
         addView(scoreLinearLayout);
         createTradeGradeTextView();
         createAdviseTextView();
-        changeScoreArea(linearLayout, progressLinearLayout);
+        changeScoreArea(creditGradeLinearLayout);
 
+    }
+
+    private void createCreditAreaView() {
+        LayoutParams progressLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, px2dp(6));
+        progressLayoutParams.setMargins(0, px2dp(6), px2dp(10), 0);
+        CreditAreaView creditAreaView = new CreditAreaView(getContext());
+        if (mUserEachTrainingScoreModel != null &&
+                mAppraiseAndRemarkList != null &&
+                !mAppraiseAndRemarkList.isEmpty()) {
+
+            TrainAppraiseAndRemark trainAppraiseAndRemark = mAppraiseAndRemarkList.get(mAppraiseAndRemarkList.size() - 1);
+            int scoreEnd = trainAppraiseAndRemark.getSocreEnd();
+            if (scoreEnd != 0) {
+                float value = FinanceUtil.divide(mUserEachTrainingScoreModel.getUserTotalScore(), scoreEnd).floatValue();
+                creditAreaView.setPercent(value);
+            }
+        }
+        this.addView(creditAreaView, progressLayoutParams);
     }
 
     private void createAdviseTextView() {
@@ -131,7 +140,7 @@ public class ScoreProgressView extends LinearLayout {
         addView(mTradeGradeTextView, layoutParams);
     }
 
-    private void changeScoreArea(LinearLayout linearLayout, LinearLayout progressLinearLayout) {
+    private void changeScoreArea(LinearLayout linearLayout) {
         if (mUserEachTrainingScoreModel != null) {
             int userTotalScore = (int) mUserEachTrainingScoreModel.getUserTotalScore();
             for (int i = 0; i < mAppraiseAndRemarkList.size(); i++) {
@@ -139,7 +148,6 @@ public class ScoreProgressView extends LinearLayout {
                 if (result.getSocreStart() <= userTotalScore &&
                         userTotalScore <= result.getSocreEnd()) {
                     updateGrade(i, linearLayout);
-                    updateScoreProgress(i, progressLinearLayout);
                     updateTradeGrade(result);
                     updateAdvise(result);
                     break;
@@ -159,17 +167,6 @@ public class ScoreProgressView extends LinearLayout {
                 NumberFormatUtils.formatPercentString(mUserEachTrainingScoreModel.getRank())));
     }
 
-    private void updateScoreProgress(int i, LinearLayout progressLinearLayout) {
-        for (int j = 0; j < progressLinearLayout.getChildCount(); j++) {
-            if (i < j) {
-                break;
-            }
-            if (i >= j) {
-                View childAt = progressLinearLayout.getChildAt(j);
-                childAt.setSelected(true);
-            }
-        }
-    }
 
     private void updateGrade(int i, LinearLayout linearLayout) {
         for (int j = 0; j < linearLayout.getChildCount(); j++) {
@@ -186,12 +183,6 @@ public class ScoreProgressView extends LinearLayout {
 
     private int px2dp(int value) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, getResources().getDisplayMetrics());
-    }
-
-    private TextView createProgressView(int i) {
-        TextView view = new TextView(getContext());
-        view.setBackgroundResource(bg[i]);
-        return view;
     }
 
     //创建较差 中等 良好

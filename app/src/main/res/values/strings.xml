@@ -757,6 +757,13 @@
     <string name="no_miss">小姐姐不存在</string>
     <string name="ask_miss">点击右上角+号,对小姐姐提问吧</string>
     <string name="miss_first_time">快用提问夺走小姐姐的“第一次”吧</string>
+    <string-array name="credit_grade">
+        <item>较差</item>
+        <item>中等</item>
+        <item>良好</item>
+        <item>优秀</item>
+        <item>极强</item>
+    </string-array>
 
     <!--trainExperience-->
     <string name="training_experience">训练心得</string>

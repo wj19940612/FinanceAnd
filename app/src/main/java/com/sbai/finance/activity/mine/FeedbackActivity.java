@@ -360,10 +360,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             //判断两个时间在不在一天内  不是就要显示标题
             long preTime = pre.getCreateDate();
             long nextTime = next.getCreateDate();
-            if (DateUtil.isToday(nextTime, preTime)) {
-                return false;
-            }
-            return true;
+            return !DateUtil.isToday(nextTime, preTime);
         }
 
         @Override

@@ -252,10 +252,7 @@ public class BattleTradeView extends LinearLayout {
         }
 
         private boolean checkIfChange(List<TradeRecord> list) {
-            if (list.size() != mRecordList.size()) {
-                return true;
-            }
-            return false;
+            return list.size() != mRecordList.size();
         }
 
 

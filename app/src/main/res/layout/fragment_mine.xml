@@ -150,5 +150,5 @@
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"
         app:rowVerticalPadding="0dp"/>
-
+    
 </LinearLayout>

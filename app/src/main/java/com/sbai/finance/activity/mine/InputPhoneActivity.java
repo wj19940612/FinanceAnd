@@ -115,18 +115,12 @@ public class InputPhoneActivity extends BaseActivity {
 
     private boolean checkNextButtonEnable() {
         String phone = getPhoneNumber();
-        if (TextUtils.isEmpty(phone) || phone.length() < 11) {
-            return false;
-        }
-        return true;
+        return !(TextUtils.isEmpty(phone) || phone.length() < 11);
     }
 
     private boolean checkClearBtnVisible() {
         String phone = mPhoneNumber.getText().toString();
-        if (!TextUtils.isEmpty(phone)) {
-            return true;
-        }
-        return false;
+        return !TextUtils.isEmpty(phone);
     }
 
     private void formatPhoneNumber() {

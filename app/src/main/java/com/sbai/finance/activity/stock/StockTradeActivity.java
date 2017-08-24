@@ -22,16 +22,10 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.trade.PublishOpinionActivity;
-import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
 import com.sbai.finance.fragment.dialog.ShareDialogFragment;
-import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.economiccircle.OpinionDetails;
-import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
-import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
@@ -69,7 +63,6 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     protected abstract PagerAdapter createSubPageAdapter();
 
-    protected abstract ViewpointFragment getViewpointFragment();
 
     private static final int REQ_CODE_PUBLISH_VIEWPOINT = 172;
 
@@ -111,7 +104,6 @@ public abstract class StockTradeActivity extends BaseActivity {
     private StockRTData mStockRTData;
     private Prediction mPrediction;
 
-    private PredictionDialogFragment mPredictionFragment;
     protected Variety mVariety;
 
     @Override
@@ -297,41 +289,6 @@ public abstract class StockTradeActivity extends BaseActivity {
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case REQ_CODE_PUBLISH_VIEWPOINT:
-                case ViewpointFragment.REQ_CODE_USERDATA:
-                case ViewpointFragment.REQ_CODE_ATTENTION:
-                    updateViewPointPage(data);
-                    break;
-            }
-        }
-    }
-
-    private void updateViewPointPage(Intent data) {
-        OpinionDetails details = (OpinionDetails) data.getSerializableExtra(Launcher.EX_PAYLOAD);
-
-        WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
-                (WhetherAttentionShieldOrNot) data.getSerializableExtra(Launcher.EX_PAYLOAD_1);
-
-        AttentionAndFansNumberModel attentionAndFansNumberModel =
-                (AttentionAndFansNumberModel) data.getSerializableExtra(Launcher.EX_PAYLOAD_2);
-        ViewpointFragment viewpointFragment = getViewpointFragment();
-        if (viewpointFragment != null) {
-            if (details != null) {
-                viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
-            } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
-                viewpointFragment.shieldUserByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isShield());
-                viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
-            } else {
-                viewpointFragment.refreshPointList();
-            }
-        }
-    }
 
     @Override
     public void onTimeUp(int count) {
@@ -504,42 +461,10 @@ public abstract class StockTradeActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(Prediction data) {
                         mPrediction = data;
-                        if (mPrediction.isCalculate()) {
-                            openPublishPointPage();
-                        } else {
-                            showPredictDialog();
-                        }
                     }
                 }).fire();
     }
 
-    private void showPredictDialog() {
-        if (mPredictionFragment == null) {
-            mPredictionFragment = PredictionDialogFragment.newInstance()
-                    .setOnPredictButtonListener(new PredictionDialogFragment.OnPredictButtonListener() {
-                        @Override
-                        public void onBullishButtonClick(int directionLong) {
-                            mPrediction.setDirection(directionLong);
-                            openPublishPointPage();
-                        }
-
-                        @Override
-                        public void onBearishButtonClick(int directionShort) {
-                            mPrediction.setDirection(directionShort);
-                            openPublishPointPage();
-                        }
-                    });
-        }
-        mPredictionFragment.show(getSupportFragmentManager());
-    }
-
-    private void openPublishPointPage() {
-        Launcher.with(getActivity(), PublishOpinionActivity.class)
-                .putExtra(Launcher.EX_PAYLOAD, mVariety)
-                .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
-                .executeForResult(REQ_CODE_PUBLISH_VIEWPOINT);
-
-    }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
