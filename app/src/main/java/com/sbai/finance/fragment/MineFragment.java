@@ -35,6 +35,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.IconTextRow;
+import com.sbai.finance.view.training.CreditAreaView;
 
 import java.util.ArrayList;
 
@@ -73,6 +74,8 @@ public class MineFragment extends BaseFragment {
     IconTextRow mAboutUs;
     @BindView(R.id.financeEvaluation)
     IconTextRow mFinanceEvaluation;
+    @BindView(R.id.progressBar)
+    CreditAreaView mProgressBar;
 
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -106,6 +109,7 @@ public class MineFragment extends BaseFragment {
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.ACTION_LOGIN_SUCCESS));
         mEvaluationLevel = getResources().getStringArray(R.array.evaluationLevel);
+//        mProgressBar.setPercent(1f);
     }
 
     @Override

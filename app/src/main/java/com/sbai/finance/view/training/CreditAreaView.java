@@ -8,6 +8,8 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.support.annotation.FloatRange;
+import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -15,7 +17,6 @@ import android.util.TypedValue;
 import android.view.View;
 
 import com.sbai.finance.R;
-import com.sbai.finance.utils.FinanceUtil;
 
 
 /**
@@ -27,27 +28,15 @@ public class CreditAreaView extends View {
     private static final String TAG = "CreditAreaView";
 
 
-    //未达到部分区域画笔
-    private Paint mNotReachedCreditPaint;
-    //未达到分数区域宽度
-    private float mNotReachedCreditAreaWidth;
     //未达到分数区域颜色
     private int mNotReachedCreditViewColor;
-    //未达到分数区域矩形
-    private RectF mNotReachedCreditAreaRectF;
 
     Paint mSplitLinePaint;
-
     private int mMeasuredWidth;
-    private int mMeasuredHeight;
 
 
     // 分数所占区域画笔
     Paint mCreditAreaPaint;
-    //分数  主体
-    private RectF mCreditAreaRectF;
-    //分数所占区域宽度
-    private float mCreditAreaWidth;
 
     private int mStartColor;
     private int mEndColor;
@@ -81,7 +70,7 @@ public class CreditAreaView extends View {
 
     private void progressAttributeSet(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.CreditAreaView);
-        mCredPercent = typedArray.getFloat(R.styleable.CreditAreaView_credPercent, 1);
+        mCredPercent = typedArray.getFloat(R.styleable.CreditAreaView_credPercent, 0.0f);
         mStartColor = typedArray.getColor(R.styleable.CreditAreaView_startColor, ContextCompat.getColor(getContext(), R.color.backgroundGradientStart));
         mEndColor = typedArray.getColor(R.styleable.CreditAreaView_endColor, ContextCompat.getColor(getContext(), R.color.creditEndColor));
         mSplitColor = typedArray.getColor(R.styleable.CreditAreaView_splitColor, Color.WHITE);
@@ -89,7 +78,8 @@ public class CreditAreaView extends View {
         mSplitHeight = typedArray.getDimensionPixelSize(R.styleable.CreditAreaView_splitHeight, 0);
         mRadius = typedArray.getDimensionPixelSize(R.styleable.CreditAreaView_viewRadius, dp2px(8));
         mHasSplit = typedArray.getBoolean(R.styleable.CreditAreaView_hasSplit, true);
-        mNotReachedCreditViewColor = typedArray.getColor(R.styleable.CreditAreaView_notReachedCreditViewColor, Color.RED);
+        mNotReachedCreditViewColor = typedArray.getColor(R.styleable.CreditAreaView_notReachedCreditViewColor,
+                ContextCompat.getColor(getContext(), R.color.split));
         if (mSplitWidth < 2) {
             mSplitWidth = 2;
         }
@@ -112,48 +102,23 @@ public class CreditAreaView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         mMeasuredWidth = getWidth();
-        mMeasuredHeight = getHeight();
         if (mSplitHeight == 0) {
-            mSplitHeight = mMeasuredHeight;
+            mSplitHeight = getHeight();
         }
         parameterIsNotLegal();
 
-        //如果有分数在合理区间内
-        getCreditAreaPercent();
+        RectF creditAreaRectF = new RectF(0, 0, mMeasuredWidth, getHeight());
 
-        if (mCreditAreaWidth != 0) {
-            mCreditAreaRectF = new RectF(0, 0, mCreditAreaWidth, mMeasuredHeight);
+        if (mCredPercent != 0) {
             LinearGradient linearGradient = new LinearGradient(0, 0,
-                    mCreditAreaWidth, mMeasuredHeight, mStartColor, mEndColor, Shader.TileMode.MIRROR);
+                    mMeasuredWidth, 0, new int[]{mStartColor, mEndColor, mNotReachedCreditViewColor}, new float[]{0f, mCredPercent, 0f},
+                    Shader.TileMode.CLAMP);
             mCreditAreaPaint.setShader(linearGradient);
         }
-        if (0 < mCredPercent) {
-            mNotReachedCreditAreaRectF = new RectF(mCreditAreaWidth, 0, mMeasuredWidth, mMeasuredHeight);
-        }
 
-        //画分数区域
-        if (mCreditAreaRectF != null) {
-            canvas.drawRoundRect(mCreditAreaRectF, mRadius, mRadius, mCreditAreaPaint);
-        }
-        //画未达到分数区域
-        if (mNotReachedCreditAreaRectF != null) {
-            canvas.drawRoundRect(mNotReachedCreditAreaRectF, mRadius, mRadius, mNotReachedCreditPaint);
-        }
+        canvas.drawRoundRect(creditAreaRectF, mRadius, mRadius, mCreditAreaPaint);
         drawSplit(canvas);
 
-    }
-
-    private void getCreditAreaPercent() {
-        if (0 < mCredPercent && mCredPercent < 1) {
-            mEndColor = getColor(mCredPercent);
-            mCreditAreaWidth = FinanceUtil.multiply(mMeasuredWidth, mCredPercent).floatValue();
-            //如果达到最高分
-        } else if (mCredPercent == 1) {
-            mCreditAreaWidth = mMeasuredWidth;
-            //没有分数
-        } else if (mCredPercent == 0) {
-            mCreditAreaWidth = 0;
-        }
     }
 
 
@@ -169,14 +134,8 @@ public class CreditAreaView extends View {
     private void init() {
         mCreditAreaPaint = new Paint();
         mCreditAreaPaint.setAntiAlias(true);
-        mCreditAreaPaint.setColor(Color.RED);
-        mCreditAreaPaint.setShadowLayer(8, 0, 0, mStartColor);
+        mCreditAreaPaint.setColor(mNotReachedCreditViewColor);
 
-
-        mNotReachedCreditPaint = new Paint();
-        mNotReachedCreditPaint.setAntiAlias(true);
-        mNotReachedCreditPaint.setColor(mNotReachedCreditViewColor);
-        mNotReachedCreditPaint.setStyle(Paint.Style.FILL);
 
         mSplitLinePaint = new Paint();
         mSplitLinePaint.setAntiAlias(true);
@@ -190,7 +149,7 @@ public class CreditAreaView extends View {
      *
      * @param percent
      */
-    public void setPercent(float percent) {
+    public void setPercent(@FloatRange(from = 0, to = 1) float percent) {
         setPercentAndGradeCount(percent, mGradeCount);
     }
 
@@ -199,10 +158,11 @@ public class CreditAreaView extends View {
      * @param percent    设置得分区域占总区域百分比
      * @param gradeCount 设置如果有分割线 ，将view分为几段
      */
-    public void setPercentAndGradeCount(float percent, int gradeCount) {
+    public void setPercentAndGradeCount(float percent, @IntRange(from = 1, to = Integer.MAX_VALUE) int gradeCount) {
         parameterIsNotLegal();
         this.mCredPercent = percent;
         this.mGradeCount = gradeCount;
+        mEndColor = getColor(mCredPercent);
         postInvalidate();
     }
 
