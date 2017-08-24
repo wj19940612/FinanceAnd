@@ -108,11 +108,8 @@ public class AuthCodeActivity extends BaseActivity {
             return false;
         }
 
-        if (TextUtils.isEmpty(password) || password.length() < 6) {
-            return false;
-        }
+        return !(TextUtils.isEmpty(password) || password.length() < 6);
 
-        return true;
     }
 
     private void initData(Intent intent) {

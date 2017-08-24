@@ -233,10 +233,7 @@ public class LoginActivity extends BaseActivity {
 
     private boolean checkClearBtnVisible() {
         String phone = mPhoneNumber.getText().toString();
-        if (!TextUtils.isEmpty(phone)) {
-            return true;
-        }
-        return false;
+        return !TextUtils.isEmpty(phone);
     }
 
     private void formatPhoneNumber() {
@@ -267,11 +264,8 @@ public class LoginActivity extends BaseActivity {
             return false;
         }
 
-        if (!isAuthCodeLogin() && (TextUtils.isEmpty(password) || password.length() < 6)) {
-            return false;
-        }
+        return !(!isAuthCodeLogin() && (TextUtils.isEmpty(password) || password.length() < 6));
 
-        return true;
     }
 
     private String getPhoneNumber() {
@@ -343,10 +337,7 @@ public class LoginActivity extends BaseActivity {
     private boolean isAuthCodeLogin() {
         String pageTitle = mPageTitle.getText().toString();
         String authCodeLoginTitle = getString(R.string.auth_code_login);
-        if (!TextUtils.isEmpty(pageTitle) && pageTitle.equals(authCodeLoginTitle)) {
-            return true;
-        }
-        return false;
+        return !TextUtils.isEmpty(pageTitle) && pageTitle.equals(authCodeLoginTitle);
     }
 
     private void login() {

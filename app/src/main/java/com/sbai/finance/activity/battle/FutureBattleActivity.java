@@ -615,11 +615,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     private boolean checkUserIsObserver() {
         if (LocalUser.getUser().isLogin()) {
             int userId = LocalUser.getUser().getUserInfo().getId();
-            if (mBattle.getLaunchUser() != userId
-                    && mBattle.getAgainstUser() != userId) {
-                return true;
-            }
-            return false;
+            return mBattle.getLaunchUser() != userId
+                    && mBattle.getAgainstUser() != userId;
         }
         return true;
     }
@@ -1373,22 +1370,14 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         //我是房主
         if (mBattle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
             //result ==1为房主赢
-            if (mBattle.getWinResult() == 1) {
-                //我赢了
-                win = true;
-            } else {
-                //我输了
-                win = false;
-            }
+            //我赢了
+//我输了
+            win = mBattle.getWinResult() == 1;
         } else {
             //我不是房主
-            if (mBattle.getWinResult() == 2) {
-                //我赢了
-                win = true;
-            } else {
-                //我输了
-                win = false;
-            }
+            //我赢了
+//我输了
+            win = mBattle.getWinResult() == 2;
         }
         return win;
     }

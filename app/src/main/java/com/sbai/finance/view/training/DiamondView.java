@@ -255,10 +255,7 @@ public class DiamondView extends View {
             if (obj == null) return false;
             if (!(obj instanceof Point)) return false;
             Point other = (Point) obj;
-            if (other.getX() == this.getX() && other.getY() == this.getY()) {
-                return true;
-            }
-            return false;
+            return other.getX() == this.getX() && other.getY() == this.getY();
         }
     }
 

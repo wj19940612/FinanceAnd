@@ -162,11 +162,7 @@ public class SafetyPasswordEditText extends AppCompatEditText {
     @Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
-        if (text.toString().length() - this.textLength >= 0) {
-            addText = true;
-        } else {
-            addText = false;
-        }
+        addText = text.toString().length() - this.textLength >= 0;
 
         this.textLength = text.toString().length();
         if (textLength <= getMaxLength()) {
