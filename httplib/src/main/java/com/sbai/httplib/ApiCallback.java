@@ -98,10 +98,9 @@ public abstract class ApiCallback<T> implements Response.Listener<T>, Response.E
 
     @Override
     public void onResponse(T t) {
-        Log.d(RequestManager.TAG, getUrl() + " onResponse: " + t.toString());
-
         onFinish();
         if (t != null) {
+            Log.d(RequestManager.TAG, getUrl() + " onResponse: " + t.toString());
             onSuccess(t);
         } else {
             onFailure(new NullResponseError("Server return null"));

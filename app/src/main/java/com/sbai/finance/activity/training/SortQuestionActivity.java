@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,6 +47,7 @@ import com.sbai.finance.utils.TypefaceUtil;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.SortTrainResultDialog;
+import com.sbai.finance.view.dialog.TrainingRuleDialog;
 import com.sbai.finance.view.training.TrainProgressBar;
 
 import java.util.ArrayList;
@@ -131,7 +131,6 @@ public class SortQuestionActivity extends BaseActivity {
     private boolean isCancelResultAnimationRunning;
 
 
-    private int mQuestionFirstItemX;
     private int mQuestionFirstItemY;
 
     public interface OnItemClickListener {
@@ -150,7 +149,12 @@ public class SortQuestionActivity extends BaseActivity {
         ButterKnife.bind(this);
         translucentStatusBar();
         Intent intent = getIntent();
-        mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
+        try {
+            mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
+        } catch (ClassCastException e) {
+            Log.d(TAG, "onCreate: " + e.toString());
+            return;
+        }
         mTrainingDetail = intent.getParcelableExtra(ExtraKeys.TRAINING_DETAIL);
         mRenderScriptGaussianBlur = new RenderScriptGaussianBlur(this);
         initHeaderView();
@@ -187,6 +191,13 @@ public class SortQuestionActivity extends BaseActivity {
 
     private void saveWebResultData(int size) {
         mWebTrainResult = new ArrayList<>();
+        try {
+            SortData data = mTrainingQuestion.getContent().get(0);
+        } catch (ClassCastException e) {
+            Log.d(TAG, "saveWebResultData: " + e.toString());
+            return;
+        }
+
         for (int i = 0; i < size; i++) {
             SortData oldData = mTrainingQuestion.getContent().get(i);
             SortData contentBean = new SortData();
@@ -242,7 +253,6 @@ public class SortQuestionActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(HowPlayActivity.TYPE_FINISH));
                 if (!isConfirmResult) {
                     showResultDialog(false);
                 }
@@ -251,9 +261,8 @@ public class SortQuestionActivity extends BaseActivity {
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Launcher.with(getActivity(), HowPlayActivity.class)
-                        .putExtra(ExtraKeys.TRAINING, mTrainingDetail.getTrain())
-                        .execute();
+                TrainingRuleDialog.with(getActivity(), mTrainingDetail.getTrain())
+                        .show();
             }
         });
     }
@@ -457,7 +466,6 @@ public class SortQuestionActivity extends BaseActivity {
                 if (view != null) {
                     int[] questionFirstItemCoordinates = new int[2];
                     view.getLocationInWindow(questionFirstItemCoordinates);
-                    mQuestionFirstItemX = questionFirstItemCoordinates[0];
                     mQuestionFirstItemY = questionFirstItemCoordinates[1];
                 }
             }

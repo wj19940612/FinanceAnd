@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
@@ -33,6 +32,7 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.dialog.TrainingRuleDialog;
 import com.sbai.finance.view.training.DragImageView;
 import com.sbai.finance.view.training.NoScrollViewPager;
 import com.sbai.finance.view.training.TrainProgressBar;
@@ -127,16 +127,14 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 			public void onFinish() {
 				mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
 				mIsSuccess = false;
-				LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(HowPlayActivity.TYPE_FINISH));
 				requestEndTrain();
 			}
 		});
 		mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Launcher.with(getActivity(), HowPlayActivity.class)
-						.putExtra(ExtraKeys.TRAINING, mTrainingDetail.getTrain())
-						.execute();
+				TrainingRuleDialog.with(getActivity(), mTrainingDetail.getTrain())
+						.show();
 			}
 		});
 	}
