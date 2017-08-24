@@ -2120,13 +2120,14 @@ public class Client {
      * @param pageSize
      * @return
      */
-    public static API getQuestionReplyList(int type, int dataId, int page, int pageSize) {
+    public static API getQuestionReplyList(int type, int dataId, int page, int pageSize, String replyMsgId) {
         return new API("/user/comment/replyList.do",
                 new ApiParams()
                         .put("type", type)
                         .put("dataId", dataId)
                         .put("page", page)
                         .put("pageSize", pageSize)
+                        .put("replyMsgId", replyMsgId)
         );
     }
 
