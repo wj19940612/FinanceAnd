@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,6 +120,7 @@ public class MessagesActivity extends BaseActivity implements
                     //   requestMessageDetail(missMessage.getDataId());
                     Launcher.with(getActivity(), QuestionDetailActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, missMessage.getDataId())
+                            .putExtra(Launcher.EX_PAYLOAD_1, missMessage.getMongoId())
                             .execute();
                 }
             }
