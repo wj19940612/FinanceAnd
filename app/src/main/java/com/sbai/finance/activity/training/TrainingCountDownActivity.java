@@ -131,6 +131,8 @@ public class TrainingCountDownActivity extends BaseActivity {
     private void updateScreenOrientation() {
         if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
     }
 
