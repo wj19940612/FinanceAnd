@@ -2,9 +2,12 @@ package com.sbai.finance.activity.training;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
@@ -17,6 +20,7 @@ import com.sbai.finance.model.training.TrainingSubmit;
 import com.sbai.finance.model.training.question.RemoveData;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.RenderScriptGaussianBlur;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
@@ -46,6 +50,10 @@ public class KlineTrainActivity extends BaseActivity {
     TitleBar mTitleBar;
     @BindView(R.id.progressBar)
     TrainProgressBar mProgressBar;
+    @BindView(R.id.bgImg)
+    ImageView mBgImg;
+    @BindView(R.id.content)
+    RelativeLayout mContent;
     private List<RemoveData> mTrainings;
     private TrainingDetail mTrainingDetail;
     private Question mQuestion;
@@ -58,6 +66,8 @@ public class KlineTrainActivity extends BaseActivity {
     private long mTrainingCountTime;
 
     private int mTrainTargetTime;
+
+    private RenderScriptGaussianBlur mRenderScriptGaussianBlur;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +87,7 @@ public class KlineTrainActivity extends BaseActivity {
 
     private void initView() {
         if (mTrainingDetail == null) return;
+        mRenderScriptGaussianBlur = new RenderScriptGaussianBlur(this);
         mProgressBar.setTotalSecondTime(mTrainingDetail.getTrain().getTime());
         mTrainTargetTime = mTrainingDetail.getTrain().getTime() * 1000;
         mProgressBar.setOnTimeUpListener(new TrainProgressBar.OnTimeUpListener() {
@@ -96,8 +107,8 @@ public class KlineTrainActivity extends BaseActivity {
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TrainingRuleDialog.with(getActivity(), mTrainingDetail.getTrain())
-                        .show();
+                showHowPlayDialog();
+
             }
         });
 
@@ -162,8 +173,34 @@ public class KlineTrainActivity extends BaseActivity {
         finish();
     }
 
-    @Override
-    public void onBackPressed() {
+    private void showHowPlayDialog() {
+        mBgImg.setVisibility(View.VISIBLE);
+        mContent.setDrawingCacheEnabled(true);
+        mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+        Bitmap bitmap = mContent.getDrawingCache();
+        mBgImg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
+        mContent.setVisibility(View.INVISIBLE);
+        TrainingRuleDialog.with(getActivity(), mTrainingDetail.getTrain())
+                .setOnDismissListener(new TrainingRuleDialog.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        mBgImg.setVisibility(View.GONE);
+                        mContent.setVisibility(View.VISIBLE);
+                    }
+                })
+                .show();
+    }
+
+    private void showCloseDialog() {
+        mBgImg.setVisibility(View.VISIBLE);
+        mContent.setDrawingCacheEnabled(true);
+        mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+        Bitmap bitmap = mContent.getDrawingCache();
+        mBgImg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
+        mContent.setVisibility(View.INVISIBLE);
+
         SmartDialog.single(getActivity(), getString(R.string.exit_train_will_not_save_train_record))
                 .setTitle(getString(R.string.is_sure_exit_train))
                 .setNegative(R.string.exit_train, new SmartDialog.OnClickListener() {
@@ -173,12 +210,21 @@ public class KlineTrainActivity extends BaseActivity {
                         finish();
                     }
                 })
-                .setPositive(R.string.continue_train, new SmartDialog.OnClickListener() {
+                .setOnDismissListener(new SmartDialog.OnDismissListener() {
                     @Override
-                    public void onClick(Dialog dialog) {
+                    public void onDismiss(Dialog dialog) {
                         dialog.dismiss();
+                        mBgImg.setVisibility(View.GONE);
+                        mContent.setVisibility(View.VISIBLE);
                     }
-                }).show();
+                })
+                .setPositive(R.string.continue_train)
+                .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        showCloseDialog();
     }
 
     @OnClick(R.id.trainView)

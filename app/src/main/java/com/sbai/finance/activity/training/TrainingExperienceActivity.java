@@ -541,4 +541,10 @@ public class TrainingExperienceActivity extends BaseActivity {
 			requestIsTrained();
 		}
 	}
+
+	@Override
+	public void onBackPressed() {
+		setResult(RESULT_OK);
+		super.onBackPressed();
+	}
 }

@@ -28,10 +28,6 @@ import com.sbai.finance.utils.StrFormatter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by lixiaokuan0819 on 2017/8/22.
- */
-
 public class ExperienceView extends LinearLayout {
 	@BindView(R.id.avatar)
 	ImageView mAvatar;
@@ -106,14 +102,14 @@ public class ExperienceView extends LinearLayout {
 						Client.trainExperiencePraise(data.getId(), data.getIsPraise() == 0 ? 1 : 0)
 								.setCallback(new Callback2D<Resp<TrainingExperiencePraise>, TrainingExperiencePraise>() {
 									@Override
-									protected void onRespSuccessData(TrainingExperiencePraise data) {
-										if (data.getIsPraise() == 1) {
+									protected void onRespSuccessData(TrainingExperiencePraise praise) {
+										if (praise.getIsPraise() == 1) {
 											mLoveNumber.setSelected(true);
 										} else {
 											mLoveNumber.setSelected(false);
 										}
-										data.setIsPraise(data.getIsPraise());
-										mLoveNumber.setText(StrFormatter.getFormatCount(data.getPraise()));
+										data.setIsPraise(praise.getIsPraise());
+										mLoveNumber.setText(StrFormatter.getFormatCount(praise.getPraise()));
 									}
 								}).fire();
 

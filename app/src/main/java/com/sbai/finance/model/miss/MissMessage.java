@@ -34,6 +34,15 @@ public class MissMessage {
     private int status;
     private Data data;
     private int dataId;
+    private String mongoId;
+
+    public String getMongoId() {
+        return mongoId;
+    }
+
+    public void setMongoId(String mongoId) {
+        this.mongoId = mongoId;
+    }
 
     public int getDataId() {
         return dataId;
@@ -198,6 +207,18 @@ public class MissMessage {
         public void setUserPhone(String userPhone) {
             this.userPhone = userPhone;
         }
+
+        @Override
+        public String toString() {
+            return "SourceUserBean{" +
+                    "id=" + id +
+                    ", userName='" + userName + '\'' +
+                    ", userPhone='" + userPhone + '\'' +
+                    ", name='" + name + '\'' +
+                    ", userPortrait='" + userPortrait + '\'' +
+                    ", portrait='" + portrait + '\'' +
+                    '}';
+        }
     }
 
     public static class Data{
@@ -210,5 +231,31 @@ public class MissMessage {
         public void setContent(String content) {
             this.content = content;
         }
+
+        @Override
+        public String toString() {
+            return "Data{" +
+                    "content='" + content + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "MissMessage{" +
+                "msg='" + msg + '\'' +
+                ", classify=" + classify +
+                ", createTime=" + createTime +
+                ", sourceUser=" + sourceUser +
+                ", id=" + id +
+                ", sourceUserId=" + sourceUserId +
+                ", title='" + title + '\'' +
+                ", type=" + type +
+                ", userId=" + userId +
+                ", status=" + status +
+                ", data=" + data +
+                ", dataId=" + dataId +
+                ", mongoId='" + mongoId + '\'' +
+                '}';
     }
 }

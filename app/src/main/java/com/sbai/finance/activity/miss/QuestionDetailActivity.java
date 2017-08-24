@@ -130,6 +130,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private MediaPlayerManager mMediaPlayerManager;
 	private int mPlayingID;
 	private Prise mPrise;
+	private String mMongoId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +196,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			public void onRefresh() {
 				mSet.clear();
 				mPage = 0;
+				if (mMongoId != null) {
+					mMongoId = null;
+				}
 				requestQuestionDetail();
 				requestQuestionReplyList();
 				mScrollView.smoothScrollTo(0, 0);
@@ -225,6 +229,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 	private void initData(Intent intent) {
 		mQuestionId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+		mMongoId = intent.getStringExtra(Launcher.EX_PAYLOAD_1);
 	}
 
 	private void updateQuestionDetail(final Question question) {
@@ -323,7 +328,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	}
 
 	private void requestQuestionReplyList() {
-		Client.getQuestionReplyList(mType, mQuestionId, mPage, mPageSize)
+		Client.getQuestionReplyList(mType, mQuestionId, mPage, mPageSize, mMongoId != null ? mMongoId : null)
 				.setTag(TAG)
 				.setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
 					@Override
