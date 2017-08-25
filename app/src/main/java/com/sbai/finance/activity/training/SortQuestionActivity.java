@@ -150,12 +150,7 @@ public class SortQuestionActivity extends BaseActivity {
         ButterKnife.bind(this);
         translucentStatusBar();
         Intent intent = getIntent();
-        try {
-            mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
-        } catch (ClassCastException e) {
-            Log.d(TAG, "onCreate: " + e.toString());
-            return;
-        }
+        mTrainingQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
         mTrainingDetail = intent.getParcelableExtra(ExtraKeys.TRAINING_DETAIL);
         mRenderScriptGaussianBlur = new RenderScriptGaussianBlur(this);
         initHeaderView();
@@ -194,13 +189,6 @@ public class SortQuestionActivity extends BaseActivity {
 
     private void saveWebResultData(int size) {
         mWebTrainResult = new ArrayList<>();
-        try {
-            SortData data = mTrainingQuestion.getContent().get(0);
-        } catch (ClassCastException e) {
-            Log.d(TAG, "saveWebResultData: " + e.toString());
-            return;
-        }
-
         for (int i = 0; i < size; i++) {
             SortData oldData = mTrainingQuestion.getContent().get(i);
             SortData contentBean = new SortData();

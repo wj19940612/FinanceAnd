@@ -2,8 +2,11 @@ package com.sbai.finance;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.sbai.finance.model.payment.UsablePlatform;
+import com.sbai.finance.model.system.ServiceConnectWay;
 
 public class Preference {
     private static final String SHARED_PREFERENCES_NAME = BuildConfig.FLAVOR + "_prefs";
@@ -25,6 +28,7 @@ public class Preference {
         String IS_FIRST_TRAIN = "IS_FIRST_TRAIN";
         String STUDY_OPTION = "study_option";
         String MY_STUDY = "my_study";
+        String SERVICE_CONNECT_WAY = "service_connect_way";
     }
 
     private static Preference sInstance;
@@ -192,5 +196,14 @@ public class Preference {
 
     public void setIsFirstTrainFalse(int trainId, boolean isFirst) {
         apply(Key.IS_FIRST_TRAIN + trainId, isFirst);
+    }
+
+    public void setServiceConnectWay(ServiceConnectWay serviceConnectWay) {
+        apply(Key.SERVICE_CONNECT_WAY, new Gson().toJson(serviceConnectWay));
+    }
+
+    public ServiceConnectWay getServiceConnectWay() {
+        String string = mPrefs.getString(Key.SERVICE_CONNECT_WAY, "");
+        return !TextUtils.isEmpty(string) ? new Gson().fromJson(string, ServiceConnectWay.class) : null;
     }
 }
