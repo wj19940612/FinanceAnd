@@ -247,14 +247,25 @@ public class SortQuestionActivity extends BaseActivity {
             @Override
             public void onTick(long millisUntilUp) {
                 mTrainingCountTime = millisUntilUp;
-                mTitleBar.setTitle(DateUtil.format(mTrainingCountTime, "mm:ss.zz"));
+                formatTime(mTrainingCountTime);
             }
 
             @Override
             public void onFinish() {
-                mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
+                formatTime(mTrainTargetTime);
                 if (!isConfirmResult) {
                     showResultDialog(false);
+                }
+            }
+
+            private void formatTime(long time) {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+                    String format = DateUtil.format(time, "mm:ss.SS");
+                    mTitleBar.setTitle(format);
+                } else {
+                    String format = DateUtil.format(time, "mm:ss.SSS");
+                    String substring = format.substring(0, format.length() - 1);
+                    mTitleBar.setTitle(substring);
                 }
             }
         });
