@@ -54,6 +54,7 @@ public class ShareDialog {
     private String mShareTitle;
     private String mShareDescription;
     private String mShareUrl;
+    private String mShareThumbUrl;
     private boolean mHasFeedback;
 
     private OnShareDialogCallback mListener;
@@ -105,7 +106,12 @@ public class ShareDialog {
             UMWeb mWeb = new UMWeb(mShareUrl);
             mWeb.setTitle(mShareTitle);
             mWeb.setDescription(mShareDescription);
-            UMImage thumb = new UMImage(mActivity,R.mipmap.ic_launcher);
+            UMImage thumb;
+            if (TextUtils.isEmpty(mShareThumbUrl)) {
+                thumb = new UMImage(mActivity, R.mipmap.ic_launcher);
+            } else {
+                thumb = new UMImage(mActivity, mShareThumbUrl);
+            }
             mWeb.setThumb(thumb);
             if (mActivity != null && !mActivity.isFinishing()) {
                 new ShareAction(mActivity)
@@ -117,7 +123,12 @@ public class ShareDialog {
         } else {
             String text = mShareTitle + mShareUrl;
             UMImage image = new UMImage(mActivity, R.mipmap.ic_launcher);
-            image.setThumb(new UMImage(mActivity,R.mipmap.ic_launcher));
+            if (TextUtils.isEmpty(mShareThumbUrl)) {
+                image.setThumb(new UMImage(mActivity, R.mipmap.ic_launcher));
+            } else {
+                image.setThumb(new UMImage(mActivity, mShareThumbUrl));
+            }
+            image.setThumb(new UMImage(mActivity, mShareThumbUrl));
             if (mActivity != null && !mActivity.isFinishing()) {
                 new ShareAction(mActivity)
                         .withText(text)
@@ -219,6 +230,11 @@ public class ShareDialog {
 
     public ShareDialog setShareDescription(String shareDescription) {
         mShareDescription = shareDescription;
+        return this;
+    }
+
+    public ShareDialog setShareThumbUrl(String shareThumbUrl) {
+        mShareThumbUrl = shareThumbUrl;
         return this;
     }
 
