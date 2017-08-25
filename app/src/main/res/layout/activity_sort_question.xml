@@ -7,18 +7,15 @@
     android:layout_height="match_parent"
     android:background="@color/yellowAssist"
     android:orientation="vertical"
-    android:layerType="software"
     tools:context="com.sbai.finance.activity.training.SortQuestionActivity">
 
     <ImageView
-        android:layerType="software"
         android:id="@+id/bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
     <RelativeLayout
-        android:layerType="software"
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -46,7 +43,6 @@
 
 
         <LinearLayout
-            android:layerType="software"
             android:id="@+id/sortResultLL"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -54,33 +50,27 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layerType="software"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/bg_annals_materials_create_top"/>
 
             <android.support.v4.widget.NestedScrollView
-                android:layerType="software"
                 android:id="@+id/scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="none">
-                <!--android:background="@drawable/bg_sort_result"-->
                 <LinearLayout
-                    android:layerType="software"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="-35dp"
                     android:background="@drawable/bg_sort_result">
 
                     <android.support.v7.widget.RecyclerView
-                        android:layerType="software"
                         android:id="@+id/sortResultRecycleView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:paddingBottom="30dp"
                         android:paddingRight="25dp"/>
-
                 </LinearLayout>
 
             </android.support.v4.widget.NestedScrollView>
@@ -88,7 +78,6 @@
 
         <ImageView
             android:id="@+id/confirmAnnals"
-            android:layerType="software"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_alignParentBottom="true"
@@ -100,7 +89,6 @@
             android:visibility="gone"/>
 
         <android.support.v7.widget.RecyclerView
-            android:layerType="software"
             android:id="@+id/sortQuestionRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -110,7 +98,6 @@
     </RelativeLayout>
 
     <TextView
-        android:layerType="software"
         android:id="@+id/copyView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

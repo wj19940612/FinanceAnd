@@ -3,6 +3,8 @@ package com.sbai.finance.activity.training;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.RenderScriptGaussianBlur;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
 import com.sbai.finance.view.training.Kline.MvKlineView;
@@ -63,12 +66,17 @@ public class JudgeTrainingActivity extends BaseActivity {
     TextView mKnowledge;
     @BindView(R.id.iSeeBtn)
     TextView mISeeBtn;
+    @BindView(R.id.bgImg)
+    ImageView mBgImg;
+    @BindView(R.id.content)
+    RelativeLayout mContent;
 
     private TrainingDetail mTrainingDetail;
     private Training mTraining;
     private Question<KData> mQuestion;
     private CountDownTimer mCountDownTimer;
     private TrainingSubmit mTrainingSubmit;
+    private RenderScriptGaussianBlur mRenderScriptGaussianBlur;
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -85,7 +93,7 @@ public class JudgeTrainingActivity extends BaseActivity {
         addStatusBarHeightTopPadding(mTopArea);
 
         initData(getIntent());
-
+        mRenderScriptGaussianBlur = new RenderScriptGaussianBlur(this);
         mKlineView.setOnAnswerSelectedListener(new MvKlineView.OnAnswerSelectedListener() {
             @Override
             public void onRightAnswerSelected(float accuracy) {
@@ -121,7 +129,7 @@ public class JudgeTrainingActivity extends BaseActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 long pastTime = mTraining.getTime() * 1000 - millisUntilFinished;
-                mTimer.setText(DateUtil.format(pastTime, "mm:ss.SS"));
+                formatTime(pastTime);
                 mTrainingSubmit.setTime((int) (pastTime / 1000));
             }
 
@@ -131,6 +139,17 @@ public class JudgeTrainingActivity extends BaseActivity {
                 startTrainingResultPage();
             }
         }.start();
+    }
+
+    private void formatTime(long pastTime) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            String format = DateUtil.format(pastTime, "mm:ss.SS");
+            mTimer.setText(format);
+        } else {
+            String format = DateUtil.format(pastTime, "mm:ss.SSS");
+            String substring = format.substring(0, format.length() - 1);
+            mTimer.setText(substring);
+        }
     }
 
     private void startTrainingResultPage() {
@@ -160,9 +179,28 @@ public class JudgeTrainingActivity extends BaseActivity {
                 mKlineView.resume();
                 break;
             case R.id.howToPlay:
-                TrainingRuleDialog.with(getActivity(), mTraining).show();
+                showHowPlayDialog();
                 break;
         }
+    }
+
+    private void showHowPlayDialog() {
+        mBgImg.setVisibility(View.VISIBLE);
+        mContent.setDrawingCacheEnabled(true);
+        mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+        Bitmap bitmap = mContent.getDrawingCache();
+        mBgImg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
+        mContent.setVisibility(View.INVISIBLE);
+        TrainingRuleDialog.with(getActivity(), mTraining)
+                .setOnDismissListener(new TrainingRuleDialog.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        mBgImg.setVisibility(View.GONE);
+                        mContent.setVisibility(View.VISIBLE);
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -175,6 +213,18 @@ public class JudgeTrainingActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        showCloseDialog();
+    }
+
+    private void showCloseDialog() {
+        mBgImg.setVisibility(View.VISIBLE);
+        mContent.setDrawingCacheEnabled(true);
+        mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+        Bitmap bitmap = mContent.getDrawingCache();
+        mBgImg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
+        mContent.setVisibility(View.INVISIBLE);
+
         float widthScale = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
                 ? 0.45f : SmartDialog.DEFAULT_SCALE;
 
@@ -188,11 +238,15 @@ public class JudgeTrainingActivity extends BaseActivity {
                         finish();
                     }
                 })
-                .setPositive(R.string.continue_train, new SmartDialog.OnClickListener() {
+                .setOnDismissListener(new SmartDialog.OnDismissListener() {
                     @Override
-                    public void onClick(Dialog dialog) {
+                    public void onDismiss(Dialog dialog) {
                         dialog.dismiss();
+                        mBgImg.setVisibility(View.GONE);
+                        mContent.setVisibility(View.VISIBLE);
                     }
-                }).show();
+                })
+                .setPositive(R.string.continue_train)
+                .show();
     }
 }

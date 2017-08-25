@@ -111,7 +111,6 @@ public class ProfitBoardListFragment extends BaseFragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initInfoView();
-        initMyBoardView();
         initView();
         initLoginReceiver();
         requestProfitBoardData();
@@ -163,15 +162,6 @@ public class ProfitBoardListFragment extends BaseFragment implements
         mListView.addFooterView(view);
     }
 
-    private void initMyBoardView() {
-
-        if (!LocalUser.getUser().isLogin()) {
-            mMyBoardInfo.setVisibility(View.GONE);
-            mTipInfo.setVisibility(View.VISIBLE);
-            mTipInfo.setText(getString(R.string.click_see_your_rank));
-        }
-    }
-
     public void scrollToTop() {
         mListView.smoothScrollToPosition(0);
     }
@@ -215,17 +205,9 @@ public class ProfitBoardListFragment extends BaseFragment implements
     }
 
     private void updateMyLeaderData(LeaderBoardRank data) {
-        if (data.getCurr() == null || data.getCurr().getNo() == 0) {
-            mMyBoardInfo.setVisibility(View.GONE);
-            mTipInfo.setVisibility(View.VISIBLE);
-            if (LocalUser.getUser().isLogin()) {
-                mTipInfo.setText(getString(R.string.you_no_enter_leader_board));
-            }
-            return;
-        }
-        mMyBoardInfo.setVisibility(View.VISIBLE);
-        mTipInfo.setVisibility(View.GONE);
         if (LocalUser.getUser().isLogin()) {
+            mMyBoardInfo.setVisibility(View.VISIBLE);
+            mTipInfo.setVisibility(View.GONE);
             Glide.with(getActivity())
                     .load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .placeholder(R.drawable.ic_default_avatar)
@@ -234,13 +216,35 @@ public class ProfitBoardListFragment extends BaseFragment implements
             mUserName.setText(getString(R.string.me));
             if (data.getType().equalsIgnoreCase(LeaderBoardRank.INGOT)
                     || data.getType().equalsIgnoreCase(LeaderBoardRank.PROFIT)) {
-                mIngot.setText(getString(R.string.ingot_number_no_blank, (int) data.getCurr().getScore()));
+                if (data.getCurr() == null) {
+                    mIngot.setText(getString(R.string.ingot_number_no_blank, 0));
+                    mRank.setText(getString(R.string.you_no_enter_leader_board));
+                } else {
+                    if (data.getCurr().getNo() < 0) {
+                        mRank.setText(getString(R.string.you_no_enter_leader_board));
+                    } else {
+                        if (data.getCurr().getNo() > 3) {
+                            mRank.setText(getString(R.string.rank, data.getCurr().getNo()));
+                        }
+                    }
+                    mIngot.setText(getString(R.string.ingot_number_no_blank, (int) data.getCurr().getScore()));
+                }
             } else if (data.getType().equalsIgnoreCase(LeaderBoardRank.SAVANT)) {
-                mIngot.setText(getString(R.string.integrate_number_no_blank, String.valueOf((int) data.getCurr().getScore())));
+                if (data.getCurr() == null) {
+                    mIngot.setText(getString(R.string.integrate_number_no_blank, "0"));
+                    mRank.setText(getString(R.string.you_no_enter_leader_board));
+                } else {
+                    if (data.getCurr().getNo() < 0) {
+                        mRank.setText(getString(R.string.you_no_enter_leader_board));
+                    } else {
+                        if (data.getCurr().getNo() > 3) {
+                            mRank.setText(getString(R.string.rank, data.getCurr().getNo()));
+                        }
+                    }
+                    mIngot.setText(getString(R.string.integrate_number_no_blank, String.valueOf((int) data.getCurr().getScore())));
+                }
             }
-            if (data.getCurr().getNo() > 3) {
-                mRank.setText(getString(R.string.rank, data.getCurr().getNo()));
-            } else {
+            if (data.getCurr() != null && (data.getCurr().getNo() > 0 && data.getCurr().getNo() < 4)) {
                 LeaderBoardRank.DataBean dataBean = null;
                 int rank = 0;
                 for (int i = 0; i < data.getData().size(); i++) {
@@ -259,11 +263,11 @@ public class ProfitBoardListFragment extends BaseFragment implements
                     if (data.getType().equalsIgnoreCase(LeaderBoardRank.INGOT)
                             || data.getType().equalsIgnoreCase(LeaderBoardRank.PROFIT)) {
                         if (dataBean.getWorshipCount() > 0) {
-                            mIngot.setText(StrUtil.mergeTextWithColor(getString(R.string.ingot_number_no_blank, (int) data.getCurr().getScore()),
+                            mIngot.setText(StrUtil.mergeTextWithColor(getString(R.string.ingot_number_no_blank, (int) (data.getCurr().getScore())),
                                     " +" + getString(R.string.ingot_number_no_blank, dataBean.getWorshipCount())
                                     , ContextCompat.getColor(getActivity(), R.color.unluckyText)));
                         } else {
-                            mIngot.setText(getString(R.string.ingot_number_no_blank, (int) data.getCurr().getScore()));
+                            mIngot.setText(getString(R.string.ingot_number_no_blank, (int) (data.getCurr().getScore())));
                         }
                     } else if (data.getType().equalsIgnoreCase(LeaderBoardRank.SAVANT)) {
                         if (dataBean.getWorshipCount() > 0) {
@@ -271,10 +275,9 @@ public class ProfitBoardListFragment extends BaseFragment implements
                                     " +" + getString(R.string.ingot_number_no_blank, dataBean.getWorshipCount())
                                     , ContextCompat.getColor(getActivity(), R.color.unluckyText)));
                         } else {
-                            mIngot.setText(getString(R.string.integrate_number_no_blank, String.valueOf((int) data.getCurr().getScore())));
+                            mIngot.setText(getString(R.string.integrate_number_no_blank, String.valueOf((int) (data.getCurr().getScore()))));
                         }
                     }
-
                 }
                 mRank.setText("");
                 switch (rank) {
@@ -289,6 +292,9 @@ public class ProfitBoardListFragment extends BaseFragment implements
                         break;
                 }
             }
+        } else {
+            mMyBoardInfo.setVisibility(View.GONE);
+            mTipInfo.setVisibility(View.VISIBLE);
         }
     }
 

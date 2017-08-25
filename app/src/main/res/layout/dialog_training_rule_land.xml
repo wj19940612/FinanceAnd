@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/bg_train_technology_rounded"
+                android:background="@drawable/bg_train_technology"
                 android:gravity="center"
                 android:text="@string/ok"
                 android:textColor="@android:color/white"
