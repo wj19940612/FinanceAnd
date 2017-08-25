@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,9 +15,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
@@ -30,14 +33,15 @@ import com.sbai.finance.model.training.question.RemoveData;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.RenderScriptGaussianBlur;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
-import com.sbai.finance.view.training.DragImageView;
 import com.sbai.finance.view.training.NoScrollViewPager;
 import com.sbai.finance.view.training.TrainProgressBar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -48,15 +52,15 @@ import butterknife.OnClick;
 public class NounExplanationActivity extends BaseActivity implements View.OnTouchListener, ViewPager.OnPageChangeListener {
 
 	@BindView(R.id.star1)
-	DragImageView mStar1;
+	TextView mStar1;
 	@BindView(R.id.star2)
-	DragImageView mStar2;
+	TextView mStar2;
 	@BindView(R.id.star3)
-	DragImageView mStar3;
+	TextView mStar3;
 	@BindView(R.id.star4)
-	DragImageView mStar4;
+	TextView mStar4;
 	@BindView(R.id.star5)
-	DragImageView mStar5;
+	TextView mStar5;
 	@BindView(R.id.viewPager)
 	NoScrollViewPager mViewPager;
 	@BindView(R.id.previous)
@@ -76,6 +80,10 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	TrainProgressBar mProgressBar;
 	@BindView(R.id.explanation)
 	TextView mExplanation;
+	@BindView(R.id.bgImg)
+	ImageView mBgImg;
+	@BindView(R.id.content)
+	RelativeLayout mContent;
 
 	private TrainingDetail mTrainingDetail;
 	private Question mQuestion;
@@ -83,6 +91,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	private List<RemoveData> mNewNounExplanationList;
 	private List<Fragment> mFragments;
 	private ExplanationFragmentAdapter mExplanationFragmentAdapter;
+	private RenderScriptGaussianBlur mRenderScriptGaussianBlur;
 	private float mDownX;
 	private float mDownY;
 	private float mDx;
@@ -114,6 +123,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 
 	private void initView() {
 		if (mTrainingDetail == null) return;
+		mRenderScriptGaussianBlur = new RenderScriptGaussianBlur(this);
 		mProgressBar.setTotalSecondTime(mTrainingDetail.getTrain().getTime());
 		mTrainTargetTime = mTrainingDetail.getTrain().getTime() * 1000;
 		mProgressBar.setOnTimeUpListener(new TrainProgressBar.OnTimeUpListener() {
@@ -133,8 +143,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				TrainingRuleDialog.with(getActivity(), mTrainingDetail.getTrain())
-						.show();
+				showHowPlayDialog();
 			}
 		});
 	}
@@ -168,6 +177,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 
 	private List<Fragment> getFragments() {
 		List<Fragment> mFragments = new ArrayList<>();
+		Collections.shuffle(mNewNounExplanationList);
 		for (int i = 0; i < mNewNounExplanationList.size(); i++) {
 			mStarColor.add(i);
 			mFragments.add(ExplanationFragment.newInstance(mNewNounExplanationList.get(i).getKey().getContent(),
@@ -177,6 +187,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	}
 
 	private void initViewPager() {
+		mPrevious.setVisibility(View.INVISIBLE);
 		mViewPager.setOffscreenPageLimit(2);
 		mViewPager.setPageTransformer(true, new CardPageTransformer((int) Display.dp2Px(10, getResources())));
 		mExplanationFragmentAdapter = new ExplanationFragmentAdapter(getSupportFragmentManager(), mFragments);
@@ -192,6 +203,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	}
 
 	private void initStar() {
+		Collections.shuffle(mNewNounExplanationList);
 		switch (mNewNounExplanationList.size()) {
 			case 1:
 				mStar1.setVisibility(View.VISIBLE);
@@ -200,7 +212,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mStar4.setVisibility(View.GONE);
 				mStar5.setVisibility(View.GONE);
 				setStarTextAndEvent(mStar1, mNewNounExplanationList.get(0).getValue().getContent(),
-						mNewNounExplanationList.get(0).getValue().getSeq());
+						mNewNounExplanationList.get(0).getValue().getSeq(), 0);
 				break;
 			case 2:
 				mStar1.setVisibility(View.VISIBLE);
@@ -209,9 +221,9 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mStar4.setVisibility(View.GONE);
 				mStar5.setVisibility(View.GONE);
 				setStarTextAndEvent(mStar1, mNewNounExplanationList.get(0).getValue().getContent(),
-						mNewNounExplanationList.get(0).getValue().getSeq());
+						mNewNounExplanationList.get(0).getValue().getSeq(), 0);
 				setStarTextAndEvent(mStar2, mNewNounExplanationList.get(1).getValue().getContent(),
-						mNewNounExplanationList.get(1).getValue().getSeq());
+						mNewNounExplanationList.get(1).getValue().getSeq(), 300);
 				break;
 			case 3:
 				mStar1.setVisibility(View.VISIBLE);
@@ -220,11 +232,11 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mStar4.setVisibility(View.GONE);
 				mStar5.setVisibility(View.GONE);
 				setStarTextAndEvent(mStar1, mNewNounExplanationList.get(0).getValue().getContent(),
-						mNewNounExplanationList.get(0).getValue().getSeq());
+						mNewNounExplanationList.get(0).getValue().getSeq(), 0);
 				setStarTextAndEvent(mStar2, mNewNounExplanationList.get(1).getValue().getContent(),
-						mNewNounExplanationList.get(1).getValue().getSeq());
+						mNewNounExplanationList.get(1).getValue().getSeq(), 300);
 				setStarTextAndEvent(mStar3, mNewNounExplanationList.get(2).getValue().getContent(),
-						mNewNounExplanationList.get(2).getValue().getSeq());
+						mNewNounExplanationList.get(2).getValue().getSeq(), 600);
 				break;
 			case 4:
 				mStar1.setVisibility(View.VISIBLE);
@@ -233,13 +245,13 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mStar4.setVisibility(View.VISIBLE);
 				mStar5.setVisibility(View.GONE);
 				setStarTextAndEvent(mStar1, mNewNounExplanationList.get(0).getValue().getContent(),
-						mNewNounExplanationList.get(0).getValue().getSeq());
+						mNewNounExplanationList.get(0).getValue().getSeq(), 0);
 				setStarTextAndEvent(mStar2, mNewNounExplanationList.get(1).getValue().getContent(),
-						mNewNounExplanationList.get(1).getValue().getSeq());
+						mNewNounExplanationList.get(1).getValue().getSeq(), 300);
 				setStarTextAndEvent(mStar3, mNewNounExplanationList.get(2).getValue().getContent(),
-						mNewNounExplanationList.get(2).getValue().getSeq());
+						mNewNounExplanationList.get(2).getValue().getSeq(), 600);
 				setStarTextAndEvent(mStar4, mNewNounExplanationList.get(3).getValue().getContent(),
-						mNewNounExplanationList.get(3).getValue().getSeq());
+						mNewNounExplanationList.get(3).getValue().getSeq(), 900);
 				break;
 			case 5:
 				mStar1.setVisibility(View.VISIBLE);
@@ -248,23 +260,37 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mStar4.setVisibility(View.VISIBLE);
 				mStar5.setVisibility(View.VISIBLE);
 				setStarTextAndEvent(mStar1, mNewNounExplanationList.get(0).getValue().getContent(),
-						mNewNounExplanationList.get(0).getValue().getSeq());
+						mNewNounExplanationList.get(0).getValue().getSeq(), 0);
 				setStarTextAndEvent(mStar2, mNewNounExplanationList.get(1).getValue().getContent(),
-						mNewNounExplanationList.get(1).getValue().getSeq());
+						mNewNounExplanationList.get(1).getValue().getSeq(), 300);
 				setStarTextAndEvent(mStar3, mNewNounExplanationList.get(2).getValue().getContent(),
-						mNewNounExplanationList.get(2).getValue().getSeq());
+						mNewNounExplanationList.get(2).getValue().getSeq(), 600);
 				setStarTextAndEvent(mStar4, mNewNounExplanationList.get(3).getValue().getContent(),
-						mNewNounExplanationList.get(3).getValue().getSeq());
+						mNewNounExplanationList.get(3).getValue().getSeq(), 900);
 				setStarTextAndEvent(mStar5, mNewNounExplanationList.get(4).getValue().getContent(),
-						mNewNounExplanationList.get(4).getValue().getSeq());
+						mNewNounExplanationList.get(4).getValue().getSeq(), 1200);
 				break;
 		}
 	}
 
-	public void setStarTextAndEvent(DragImageView view, String text, int tag) {
+	public void setStarTextAndEvent(TextView view, String text, int tag, long delayTime) {
 		view.setText(text);
 		view.setOnTouchListener(this);
 		view.setTag(tag);
+		startAnimation(view, delayTime);
+	}
+
+	private void startAnimation(View view, long delayTime) {
+		view.setScaleX(0);
+		view.setScaleY(0);
+		AnimatorSet animatorSet = new AnimatorSet();
+		animatorSet.playTogether(
+				ObjectAnimator.ofFloat(view, "scaleX", 0f, 1.2f, 1f, 1.2f, 1f),
+				ObjectAnimator.ofFloat(view, "scaleY", 0f, 1.2f, 1f, 1.2f, 1f)
+		);
+		animatorSet.setDuration(400).setInterpolator(new AccelerateDecelerateInterpolator());
+		animatorSet.setStartDelay(delayTime);
+		animatorSet.start();
 	}
 
 	@OnClick({R.id.previous, R.id.next})
@@ -279,13 +305,12 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				translateAnimation.setFillAfter(true);
 				mCardView.startAnimation(translateAnimation);
 
-
 				if (mViewPager.getCurrentItem() > 0) {
 					int position = mViewPager.getCurrentItem() - 1;
-					mViewPager.setCurrentItem(position, true);
+					mViewPager.setCurrentItem(position);
 				} else {
 					int position = mFragments.size() - 1;
-					mViewPager.setCurrentItem(position, true);
+					mViewPager.setCurrentItem(position);
 				}
 				break;
 
@@ -293,17 +318,17 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mCardView.setVisibility(View.VISIBLE);
 				mStarImage.setVisibility(View.INVISIBLE);
 				mExplanation.setText(mNewNounExplanationList.get(mViewPager.getCurrentItem()).getKey().getContent());
-				TranslateAnimation translateAnimation2 = new TranslateAnimation(0, 0, 0, 1000);
+				TranslateAnimation translateAnimation2 = new TranslateAnimation(0, 0, 0, 2000);
 				translateAnimation2.setDuration(500);
 				translateAnimation2.setFillAfter(true);
 				mCardView.startAnimation(translateAnimation2);
 
 				if (mViewPager.getCurrentItem() < mFragments.size() - 1) {
 					int position = mViewPager.getCurrentItem() + 1;
-					mViewPager.setCurrentItem(position, true);
+					mViewPager.setCurrentItem(position);
 				} else {
 					int position = 0;
-					mViewPager.setCurrentItem(position, true);
+					mViewPager.setCurrentItem(position);
 				}
 				break;
 		}
@@ -351,7 +376,6 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mStarColor.remove(mViewPager.getCurrentItem());
 				mCompleteCount++;
 				mNumber.setText(getString(R.string.explanation_number, mCompleteCount, mQuestionCount));
-
 			} else {
 				//只剩一套题目了
 				initCardStar(mStarColor.get(mViewPager.getCurrentItem()));
@@ -359,6 +383,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mViewPager.setVisibility(View.INVISIBLE);
 				mCardView.setVisibility(View.VISIBLE);
 				mStarImage.setVisibility(View.VISIBLE);
+				mExplanation.setText("");
 				TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, 0);
 				translateAnimation.setDuration(1000);
 				translateAnimation.setFillAfter(false);
@@ -379,8 +404,9 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		view.setVisibility(View.INVISIBLE);
 		mCardView.setVisibility(View.VISIBLE);
 		mStarImage.setVisibility(View.VISIBLE);
-		TranslateAnimation translateAnimation = new TranslateAnimation(0, -1000, 0, -1000);
-		translateAnimation.setDuration(500);
+		mExplanation.setText("");
+		TranslateAnimation translateAnimation = new TranslateAnimation(0, -2000, 0, -2000);
+		translateAnimation.setDuration(800);
 		translateAnimation.setFillAfter(true);
 		mCardView.startAnimation(translateAnimation);
 	}
@@ -420,6 +446,14 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	}
 
 	private void showCloseDialog() {
+		mBgImg.setVisibility(View.VISIBLE);
+		mContent.setDrawingCacheEnabled(true);
+		mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+		Bitmap bitmap = mContent.getDrawingCache();
+		mBgImg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
+		mContent.setVisibility(View.INVISIBLE);
+
 		SmartDialog.single(getActivity(), getString(R.string.exit_train_will_not_save_train_record))
 				.setTitle(getString(R.string.is_sure_exit_train))
 				.setNegative(R.string.exit_train, new SmartDialog.OnClickListener() {
@@ -429,12 +463,34 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 						finish();
 					}
 				})
-				.setPositive(R.string.continue_train, new SmartDialog.OnClickListener() {
+				.setOnDismissListener(new SmartDialog.OnDismissListener() {
 					@Override
-					public void onClick(Dialog dialog) {
+					public void onDismiss(Dialog dialog) {
+						mBgImg.setVisibility(View.GONE);
+						mContent.setVisibility(View.VISIBLE);
 						dialog.dismiss();
 					}
-				}).show();
+				})
+				.setPositive(R.string.continue_train).show();
+	}
+
+	private void showHowPlayDialog() {
+		mBgImg.setVisibility(View.VISIBLE);
+		mContent.setDrawingCacheEnabled(true);
+		mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+		Bitmap bitmap = mContent.getDrawingCache();
+		mBgImg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
+		mContent.setVisibility(View.INVISIBLE);
+		TrainingRuleDialog.with(getActivity(), mTrainingDetail.getTrain())
+				.setOnDismissListener(new TrainingRuleDialog.OnDismissListener() {
+					@Override
+					public void onDismiss() {
+						mBgImg.setVisibility(View.GONE);
+						mContent.setVisibility(View.VISIBLE);
+					}
+				})
+				.show();
 	}
 
 	@Override
@@ -450,7 +506,11 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 
 	@Override
 	public void onPageSelected(int position) {
-
+		if (position == 0) {
+			mPrevious.setVisibility(View.INVISIBLE);
+		} else {
+			mPrevious.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override

@@ -131,7 +131,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 					.setCallback(new Callback2D<Resp<IsTrained>, IsTrained>() {
 						@Override
 						protected void onRespSuccessData(IsTrained data) {
-							if (data.getIsPerception() == 1 ) {
+							if (data.getIsPerception() == 1) {
 								//训练过出现写心得按钮
 								mTitleBar.setRightVisible(true);
 								mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
@@ -160,6 +160,9 @@ public class TrainingExperienceActivity extends BaseActivity {
 							if (experienceList.size() == 0) {
 								mSpit.setVisibility(View.GONE);
 								mHotExperience.setVisibility(View.GONE);
+							} else {
+								mSpit.setVisibility(View.VISIBLE);
+								mHotExperience.setVisibility(View.VISIBLE);
 							}
 							updateHotExperienceList(experienceList);
 						}
@@ -506,6 +509,11 @@ public class TrainingExperienceActivity extends BaseActivity {
 				}
 
 				switch (item.getStar()) {
+					case 0:
+						mStar1.setVisibility(View.GONE);
+						mStar2.setVisibility(View.GONE);
+						mStar3.setVisibility(View.GONE);
+						break;
 					case 1:
 						mStar1.setVisibility(View.VISIBLE);
 						mStar2.setVisibility(View.GONE);
@@ -540,5 +548,11 @@ public class TrainingExperienceActivity extends BaseActivity {
 		if (requestCode == REQ_LOGIN && resultCode == RESULT_OK) {
 			requestIsTrained();
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		setResult(RESULT_OK);
+		super.onBackPressed();
 	}
 }

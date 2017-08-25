@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -150,7 +151,18 @@ public class DiamondGroupView extends LinearLayout {
     }
 
     public void setSelected(boolean selected) {
-        mKlineView.setSelected(selected);
+        if (selected) {
+            if (mKlineImg.getVisibility() == VISIBLE) {
+                mKlineView.bringToFront();
+                mKlineView.setSelected(selected, DiamondView.TYPE_STROKE);
+            } else if (mDescribe.getVisibility() == VISIBLE) {
+                mKlineView.setSelected(selected, DiamondView.TYPE_FILL);
+            }
+        } else {
+            mDescribe.bringToFront();
+            mKlineImg.bringToFront();
+            mKlineView.setSelected(selected, DiamondView.TYPE_FILL);
+        }
     }
 
     public boolean getSelected() {

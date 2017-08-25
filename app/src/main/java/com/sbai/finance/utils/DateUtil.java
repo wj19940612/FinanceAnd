@@ -385,10 +385,7 @@ public class DateUtil {
     public static boolean isDayTime() {
         long systemTime = System.currentTimeMillis();
         int time = Integer.valueOf(DateUtil.format(systemTime, "HHmm"));
-        if (time >= 600 && time <= 1800) {
-            return true;
-        }
-        return false;
+        return time >= 600 && time <= 1800;
     }
 
     /**

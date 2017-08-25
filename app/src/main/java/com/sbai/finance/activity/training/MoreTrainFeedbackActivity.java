@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -43,6 +45,8 @@ public class MoreTrainFeedbackActivity extends BaseActivity {
     TextView mCommit;
     @BindView(R.id.changeTrain)
     TextView mChangeTrain;
+    @BindView(R.id.scrollView)
+    ScrollView mScrollView;
     private TrainAdapter mTrainAdapter;
     private List<TrainFeedback> mIds;
 
@@ -79,6 +83,17 @@ public class MoreTrainFeedbackActivity extends BaseActivity {
                 setCommitEnable(text);
             }
         });
+        mComment.getEditText().setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    mScrollView.requestDisallowInterceptTouchEvent(false);
+                } else {
+                    mScrollView.requestDisallowInterceptTouchEvent(true);
+                }
+                return false;
+            }
+        });
     }
 
     private void requestTrainData() {
@@ -93,12 +108,13 @@ public class MoreTrainFeedbackActivity extends BaseActivity {
     }
 
     private void requestCommitFeedback() {
-        if (mIds.isEmpty()) return;
         StringBuilder sb = new StringBuilder();
         for (TrainFeedback feedback : mIds) {
             sb.append(feedback.getId()).append(",");
         }
-        sb.deleteCharAt(sb.length() - 1);
+        if (!sb.toString().isEmpty()) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
         Client.commitFeedBackTrain(sb.toString(), mComment.getInputComment().trim()).setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {

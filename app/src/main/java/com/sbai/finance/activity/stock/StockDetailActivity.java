@@ -12,7 +12,6 @@ import android.view.View;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.stock.FinanceFragment;
 import com.sbai.finance.fragment.stock.StockNewsFragment;
-import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.view.TitleBar;
 
 public class StockDetailActivity extends StockTradeActivity {
@@ -63,22 +62,13 @@ public class StockDetailActivity extends StockTradeActivity {
                     ((StockNewsFragment) fragment).scrollToTop();
                 } else if (fragment instanceof FinanceFragment) {
                     ((FinanceFragment) fragment).scrollToTop();
-                } else if (fragment instanceof ViewpointFragment) {
-                    ((ViewpointFragment) fragment).scrollToTop();
                 }
             }
         });
         super.setUpTitleBar(titleBar);
     }
 
-    @Override
-    protected ViewpointFragment getViewpointFragment() {
-        Fragment fragment = mSubPageAdapter.getFragment(0);
-        if (fragment != null && fragment instanceof ViewpointFragment) {
-            return (ViewpointFragment) fragment;
-        }
-        return null;
-    }
+
 
     private StockNewsFragment getStockNewsFragment() {
         Fragment fragment = mSubPageAdapter.getFragment(1);

@@ -82,4 +82,5 @@ public class DiamondImageView extends ImageView {
         path.close();
         canvas.drawPath(path, mPaint);
     }
+
 }

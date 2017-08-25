@@ -57,7 +57,7 @@ public class TradeOptionDialogFragment extends DialogFragment {
             window.setGravity(Gravity.BOTTOM);
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            window.setLayout((int) (dm.widthPixels), WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setLayout(dm.widthPixels, WindowManager.LayoutParams.WRAP_CONTENT);
         }
     }
 

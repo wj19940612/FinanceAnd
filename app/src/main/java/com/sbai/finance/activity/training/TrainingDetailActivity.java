@@ -25,6 +25,7 @@ import com.sbai.finance.model.training.question.KData;
 import com.sbai.finance.model.training.question.RemoveData;
 import com.sbai.finance.model.training.question.SortData;
 import com.sbai.finance.net.API;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -48,18 +49,18 @@ import butterknife.OnClick;
 
 public class TrainingDetailActivity extends BaseActivity {
 
+	private static final int REQ_TRAIN_EXPERIENCE = 1001;
+
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
 	@BindView(R.id.extraBackground)
 	LinearLayout mExtraBackground;
-
 	@BindView(R.id.title)
 	TextView mTitle;
 	@BindView(R.id.introduce)
 	TextView mIntroduce;
 	@BindView(R.id.scrollView)
 	ObservableScrollView mObservableScrollView;
-
 	@BindView(R.id.duration)
 	TextView mDuration;
 	@BindView(R.id.difficulty)
@@ -68,16 +69,12 @@ public class TrainingDetailActivity extends BaseActivity {
 	ImageListView mImageListView;
 	@BindView(R.id.completeNumber)
 	TextView mCompleteNumber;
-
 	@BindView(R.id.relatedKnowledge)
 	TextView mRelatedKnowledge;
-
 	@BindView(R.id.writeExperience)
 	TextView mWriteExperience;
-
 	@BindView(R.id.empty)
 	LinearLayout mEmpty;
-
 	@BindView(R.id.startTraining)
 	TextView mStartTraining;
 	@BindView(R.id.experience1)
@@ -88,11 +85,7 @@ public class TrainingDetailActivity extends BaseActivity {
 	private TrainingDetail mTrainingDetail;
 	private Training mTraining;
 	private TrainingRecord mMyTrainingRecord;
-
 	private TrainingAchievementView2[] mAchievementView2s;
-
-	//private List<Experience> mHotExperienceList;
-	//private HotExperienceListAdapter mHotExperienceListAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -103,12 +96,6 @@ public class TrainingDetailActivity extends BaseActivity {
 		initData(getIntent());
 		initBackground();
 		initTitleBar();
-
-		//mHotExperienceList = new ArrayList<>();
-		//mHotExperienceListAdapter = new HotExperienceListAdapter(this);
-		//mHotListView.setEmptyView(mEmpty);
-		//mHotListView.setFocusable(false);
-		//mHotListView.setAdapter(mHotExperienceListAdapter);
 
 		mObservableScrollView.setScrollChangedListener(new ObservableScrollView.OnScrollChangedListener() {
 			@Override
@@ -132,7 +119,6 @@ public class TrainingDetailActivity extends BaseActivity {
 	}
 
 	private void initTitleBar() {
-
 		mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -262,14 +248,18 @@ public class TrainingDetailActivity extends BaseActivity {
 	private void requestFinishPeopleList() {
 		Client.getTrainedUserRecords(0, 3, mTraining.getId()).setTag(TAG)
 				.setIndeterminate(this)
-				.setCallback(new Callback2D<Resp<List<TrainedUserRecord>>, List<TrainedUserRecord>>() {
+				.setCallback(new Callback<Resp<List<TrainedUserRecord>>>() {
 					@Override
-					protected void onRespSuccessData(List<TrainedUserRecord> data) {
-						List<String> userPortraitList = new ArrayList<String>();
-						for (TrainedUserRecord userRecord : data) {
-							userPortraitList.add(userRecord.getUser().getUserPortrait());
+					protected void onRespSuccess(Resp<List<TrainedUserRecord>> resp) {
+						if (resp.getData() != null) {
+							List<TrainedUserRecord> data = resp.getData();
+							List<String> userPortraitList = new ArrayList<String>();
+							for (TrainedUserRecord userRecord : data) {
+								userPortraitList.add(userRecord.getUser().getUserPortrait());
+							}
+							mImageListView.setImages(userPortraitList, R.drawable.ic_board_head_more_grey);
+							mCompleteNumber.setText(getString(R.string.complete_number, resp.getResultCount()));
 						}
-						mImageListView.setImages(userPortraitList, R.drawable.ic_board_head_more_grey);
 					}
 				}).fire();
 	}
@@ -279,35 +269,57 @@ public class TrainingDetailActivity extends BaseActivity {
 				.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
 					@Override
 					protected void onRespSuccessData(List<Experience> experienceList) {
-						if (experienceList == null || experienceList.size() == 0) {
-							mEmpty.setVisibility(View.VISIBLE);
-							mExperience1.setVisibility(View.GONE);
-							mExperience2.setVisibility(View.GONE);
-						} else if (experienceList.size() == 1) {
-							mEmpty.setVisibility(View.GONE);
-							mExperience1.setVisibility(View.VISIBLE);
-							mExperience2.setVisibility(View.GONE);
-							mExperience1.setData(experienceList.get(0));
-						} else {
-							mEmpty.setVisibility(View.GONE);
-							mExperience1.setVisibility(View.VISIBLE);
-							mExperience2.setVisibility(View.VISIBLE);
-							List<Experience> newExperienceList = new ArrayList<Experience>();
-							for (int i = 0; i < 2; i++) {
-								newExperienceList.add(experienceList.get(i));
-							}
-							updateHotExperienceList(newExperienceList);
-						}
+						updateHotExperienceList(experienceList);
 					}
 				}).fire();
 	}
 
 	private void updateHotExperienceList(List<Experience> experienceList) {
-		// TODO: 21/08/2017 更新两个 row
-		//mHotExperienceListAdapter.clear();
-		//mHotExperienceListAdapter.addAll(experienceList);
-		mExperience1.setData(experienceList.get(0));
-		mExperience2.setData(experienceList.get(1));
+		if (experienceList.size() == 0) {
+			requestLatestExperienceList();
+		} else if (experienceList.size() == 1) {
+			mEmpty.setVisibility(View.GONE);
+			mExperience1.setVisibility(View.VISIBLE);
+			mExperience2.setVisibility(View.GONE);
+			mExperience1.setData(experienceList.get(0));
+		} else {
+			mEmpty.setVisibility(View.GONE);
+			mExperience1.setVisibility(View.VISIBLE);
+			mExperience2.setVisibility(View.VISIBLE);
+			mExperience1.setData(experienceList.get(0));
+			mExperience2.setData(experienceList.get(1));
+		}
+	}
+
+	private void requestLatestExperienceList() {
+		if (mTraining != null) {
+			Client.getLatestExperienceList(0, 2, mTraining.getId()).setTag(TAG)
+					.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
+						@Override
+						protected void onRespSuccessData(List<Experience> experienceList) {
+							updateLatestExperienceList(experienceList);
+						}
+					}).fire();
+		}
+	}
+
+	private void updateLatestExperienceList(List<Experience> experienceList) {
+		if (experienceList.size() == 0) {
+			mEmpty.setVisibility(View.VISIBLE);
+			mExperience1.setVisibility(View.GONE);
+			mExperience2.setVisibility(View.GONE);
+		} else if (experienceList.size() == 1) {
+			mEmpty.setVisibility(View.GONE);
+			mExperience1.setVisibility(View.VISIBLE);
+			mExperience2.setVisibility(View.GONE);
+			mExperience1.setData(experienceList.get(0));
+		} else {
+			mEmpty.setVisibility(View.GONE);
+			mExperience1.setVisibility(View.VISIBLE);
+			mExperience2.setVisibility(View.VISIBLE);
+			mExperience1.setData(experienceList.get(0));
+			mExperience2.setData(experienceList.get(1));
+		}
 	}
 
 	private void updateTrainDetail(TrainingDetail trainingDetail) {
@@ -318,12 +330,10 @@ public class TrainingDetailActivity extends BaseActivity {
 			mTitle.setText(training.getTitle());
 			mIntroduce.setText(training.getRemark());
 			mDifficulty.setText(getString(R.string.train_level, training.getLevel()));
-			mCompleteNumber.setText(getString(R.string.complete_number, training.getFinishCount()));
-			if (training.getTime() < 60) {
-				mDuration.setText(getString(R.string._seconds, training.getTime()));
-			} else {
-				mDuration.setText(getString(R.string._minutes, training.getTime() / 60));
-			}
+			mDuration.setText(formatTime(training.getTime(),
+					R.string._seconds,
+					R.string._minutes,
+					R.string._minutes_x_seconds));
 		}
 	}
 
@@ -343,7 +353,7 @@ public class TrainingDetailActivity extends BaseActivity {
 			case R.id.trainingExperience:
 				Launcher.with(getActivity(), TrainingExperienceActivity.class)
 						.putExtra(ExtraKeys.TRAINING, mTraining)
-						.execute();
+						.executeForResult(REQ_TRAIN_EXPERIENCE);
 				break;
 			case R.id.writeExperience:
 				Launcher.with(getActivity(), WriteExperienceActivity.class)
@@ -354,7 +364,6 @@ public class TrainingDetailActivity extends BaseActivity {
 				if (LocalUser.getUser().isLogin()) {
 					requestTrainingContent();
 				} else {
-					// TODO: 17/08/2017 登录后要做页面更新
 					Launcher.with(getActivity(), LoginActivity.class).execute();
 				}
 				break;
@@ -437,9 +446,19 @@ public class TrainingDetailActivity extends BaseActivity {
 
 						@Override
 						public void onFeedbackClick(View view) {
-							Launcher.with(getActivity(), FeedbackActivity.class).execute();
+							Launcher.with(getActivity(), FeedbackActivity.class)
+									.putExtra(ExtraKeys.TRAINING, mTraining.getId())
+									.execute();
 						}
 					}).show();
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQ_TRAIN_EXPERIENCE && resultCode == RESULT_OK) {
+			requestHotExperienceList();
 		}
 	}
 }

@@ -149,9 +149,7 @@ public class ExchangeDetailFragment extends BaseFragment {
 
     protected boolean isSlideToBottom(RecyclerView recyclerView) {
         if (recyclerView == null) return false;
-        if (recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange())
-            return true;
-        return false;
+        return recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange();
     }
 
     public void scrollToTop() {
@@ -265,10 +263,7 @@ public class ExchangeDetailFragment extends BaseFragment {
             //判断两个时间在不在一个月内  不是就要显示标题
             long preTime = pre.getCreateTime();
             long nextTime = next.getCreateTime();
-            if (DateUtil.isInThisMonth(nextTime, preTime)) {
-                return false;
-            }
-            return true;
+            return !DateUtil.isInThisMonth(nextTime, preTime);
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {

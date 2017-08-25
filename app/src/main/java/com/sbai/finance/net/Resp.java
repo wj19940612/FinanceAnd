@@ -40,6 +40,14 @@ public class Resp<T> {
         return msg;
     }
 
+    public int getResultCount() {
+        return resultCount;
+    }
+
+    public void setResultCount(int resultCount) {
+        this.resultCount = resultCount;
+    }
+
     public void setMsg() {
         msg = "";
     }

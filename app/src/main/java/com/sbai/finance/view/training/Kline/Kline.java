@@ -316,10 +316,7 @@ public class Kline extends ChartView {
             if (mult(line2.start, line1.end, line1.start) * mult(line1.end, line2.end, line1.start) < 0) {
                 return false;
             }
-            if (mult(line1.start, line2.end, line2.start) * mult(line2.end, line1.end, line2.start) < 0) {
-                return false;
-            }
-            return true;
+            return mult(line1.start, line2.end, line2.start) * mult(line2.end, line1.end, line2.start) >= 0;
         }
 
         /**

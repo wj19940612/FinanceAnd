@@ -44,9 +44,6 @@ public class TrendViewData {
     }
 
     public boolean isSameData(TrendViewData data) {
-        if (closePrice == data.getLastPrice() && time.equals(data.getTime())) {
-            return true;
-        }
-        return false;
+        return closePrice == data.getLastPrice() && time.equals(data.getTime());
     }
 }

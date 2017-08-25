@@ -430,20 +430,20 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                     case LeaderBoardRank.INGOT:
                     case LeaderBoardRank.PROFIT:
                         if (item.getWorshipCount() > 0) {
-                            mIngot.setText(StrUtil.mergeTextWithColor(context.getString(R.string.ingot_number_no_blank, Math.round(item.getScore())),
+                            mIngot.setText(StrUtil.mergeTextWithColor(context.getString(R.string.ingot_number_no_blank, (int) item.getScore()),
                                     " +" + context.getString(R.string.ingot_number_no_blank, item.getWorshipCount())
                                     , ContextCompat.getColor(context, R.color.unluckyText)));
                         } else {
-                            mIngot.setText(context.getString(R.string.ingot_number_no_blank, Math.round(item.getScore())));
+                            mIngot.setText(context.getString(R.string.ingot_number_no_blank, (int) item.getScore()));
                         }
                         break;
                     case LeaderBoardRank.SAVANT:
                         if (item.getWorshipCount() > 0) {
-                            mIngot.setText(StrUtil.mergeTextWithColor(context.getString(R.string.integrate_number_no_blank, String.valueOf(Math.round(item.getScore()))),
-                                    " +" + context.getString(R.string.ingot_number_no_blank, Math.round(item.getWorshipCount()))
+                            mIngot.setText(StrUtil.mergeTextWithColor(context.getString(R.string.integrate_number_no_blank, String.valueOf((int) item.getScore())),
+                                    " +" + context.getString(R.string.ingot_number_no_blank, (int) item.getWorshipCount())
                                     , ContextCompat.getColor(context, R.color.unluckyText)));
                         } else {
-                            mIngot.setText(context.getString(R.string.integrate_number_no_blank, String.valueOf(Math.round(item.getScore()))));
+                            mIngot.setText(context.getString(R.string.integrate_number_no_blank, String.valueOf((int) item.getScore())));
                         }
                         break;
                 }
@@ -475,10 +475,10 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                 switch (type) {
                     case LeaderBoardRank.INGOT:
                     case LeaderBoardRank.PROFIT:
-                        mIngot.setText(context.getString(R.string.ingot_number_no_blank, Math.round(item.getScore())));
+                        mIngot.setText(context.getString(R.string.ingot_number_no_blank, (int) item.getScore()));
                         break;
                     case LeaderBoardRank.SAVANT:
-                        mIngot.setText(context.getString(R.string.integrate_number_no_blank, String.valueOf(Math.round(item.getScore()))));
+                        mIngot.setText(context.getString(R.string.integrate_number_no_blank, String.valueOf((int) item.getScore())));
                         break;
                 }
                 mRank.setText(String.valueOf(position + 1));

@@ -90,7 +90,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     }
 
     private void findListView(ViewGroup childView)  {
-            int childCount= ((ViewGroup) childView).getChildCount();
+            int childCount= childView.getChildCount();
             if (childCount > 0) {
                 for (int i = 0; i < childCount; i++) {
                     View child = childView.getChildAt(i);
