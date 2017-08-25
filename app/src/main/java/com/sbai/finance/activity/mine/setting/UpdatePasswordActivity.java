@@ -75,7 +75,7 @@ public class UpdatePasswordActivity extends BaseActivity {
                 @Override
                 public void run() {
                     mOldPassword.requestFocus();
-                    KeyBoardUtils.openKeyBoard(mOldPassword);
+                    KeyBoardUtils.openKeyBoard(mOldPassword.getEditText());
                 }
             }, 200);
 
@@ -91,7 +91,7 @@ public class UpdatePasswordActivity extends BaseActivity {
                 @Override
                 public void run() {
                     mPassword.requestFocus();
-                    KeyBoardUtils.openKeyBoard(mPassword);
+                    KeyBoardUtils.openKeyBoard(mPassword.getEditText());
                 }
             }, 200);
         }

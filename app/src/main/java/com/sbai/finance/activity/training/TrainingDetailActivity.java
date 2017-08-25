@@ -25,6 +25,7 @@ import com.sbai.finance.model.training.question.KData;
 import com.sbai.finance.model.training.question.RemoveData;
 import com.sbai.finance.model.training.question.SortData;
 import com.sbai.finance.net.API;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -247,14 +248,18 @@ public class TrainingDetailActivity extends BaseActivity {
 	private void requestFinishPeopleList() {
 		Client.getTrainedUserRecords(0, 3, mTraining.getId()).setTag(TAG)
 				.setIndeterminate(this)
-				.setCallback(new Callback2D<Resp<List<TrainedUserRecord>>, List<TrainedUserRecord>>() {
+				.setCallback(new Callback<Resp<List<TrainedUserRecord>>>() {
 					@Override
-					protected void onRespSuccessData(List<TrainedUserRecord> data) {
-						List<String> userPortraitList = new ArrayList<String>();
-						for (TrainedUserRecord userRecord : data) {
-							userPortraitList.add(userRecord.getUser().getUserPortrait());
+					protected void onRespSuccess(Resp<List<TrainedUserRecord>> resp) {
+						if (resp.getData() != null) {
+							List<TrainedUserRecord> data = resp.getData();
+							List<String> userPortraitList = new ArrayList<String>();
+							for (TrainedUserRecord userRecord : data) {
+								userPortraitList.add(userRecord.getUser().getUserPortrait());
+							}
+							mImageListView.setImages(userPortraitList, R.drawable.ic_board_head_more_grey);
+							mCompleteNumber.setText(getString(R.string.complete_number, resp.getResultCount()));
 						}
-						mImageListView.setImages(userPortraitList, R.drawable.ic_board_head_more_grey);
 					}
 				}).fire();
 	}
@@ -325,12 +330,10 @@ public class TrainingDetailActivity extends BaseActivity {
 			mTitle.setText(training.getTitle());
 			mIntroduce.setText(training.getRemark());
 			mDifficulty.setText(getString(R.string.train_level, training.getLevel()));
-			mCompleteNumber.setText(getString(R.string.complete_number, training.getFinishCount()));
-			if (training.getTime() < 60) {
-				mDuration.setText(getString(R.string._seconds, training.getTime()));
-			} else {
-				mDuration.setText(getString(R.string._minutes, training.getTime() / 60));
-			}
+			mDuration.setText(formatTime(training.getTime(),
+					R.string._seconds,
+					R.string._minutes,
+					R.string._minutes_x_seconds));
 		}
 	}
 
@@ -443,7 +446,9 @@ public class TrainingDetailActivity extends BaseActivity {
 
 						@Override
 						public void onFeedbackClick(View view) {
-							Launcher.with(getActivity(), FeedbackActivity.class).execute();
+							Launcher.with(getActivity(), FeedbackActivity.class)
+									.putExtra(ExtraKeys.TRAINING, mTraining.getId())
+									.execute();
 						}
 					}).show();
 		}

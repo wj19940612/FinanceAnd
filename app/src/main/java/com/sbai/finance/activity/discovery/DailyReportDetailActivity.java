@@ -13,15 +13,18 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.DownloadListener;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -32,7 +35,9 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Network;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.dialog.ShareDialog;
 
 import butterknife.BindView;
@@ -78,6 +83,8 @@ public class DailyReportDetailActivity extends BaseActivity {
     LinearLayout mBottom;
     @BindView(R.id.titleInfo)
     LinearLayout mTitleInfo;
+    @BindView(R.id.scrollView)
+    ScrollView mScrollView;
 
     private boolean mLoadSuccess;
     protected String mPageUrl;
@@ -216,7 +223,11 @@ public class DailyReportDetailActivity extends BaseActivity {
         //mWebView.getSettings().setAppCacheEnabled(true);l
         //webSettings.setAppCachePath(getExternalCacheDir().getPath());
         webSettings.setAllowFileAccess(true);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
+        } else {
+            webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+        }
         // performance improve
         webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
         webSettings.setEnableSmoothTransition(true);
@@ -229,17 +240,26 @@ public class DailyReportDetailActivity extends BaseActivity {
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mWebView.setBackgroundColor(0);
         //硬件加速 有些API19手机不支持
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-            mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        } else {
-            mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
+//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+//            mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+//        } else {
+//            mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//        }
+        mWebView.setLayerType(View.LAYER_TYPE_NONE, null);
+        // mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //5.0 以下 默认同时加载http和https
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
         mWebViewClient = new WebViewClient();
         mWebView.setWebViewClient(mWebViewClient);
+//        mWebView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                ((WebView) v).requestDisallowInterceptTouchEvent(true);
+//                return false;
+//            }
+//        });
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -326,7 +346,6 @@ public class DailyReportDetailActivity extends BaseActivity {
     }
 
     protected class WebViewClient extends android.webkit.WebViewClient {
-
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);

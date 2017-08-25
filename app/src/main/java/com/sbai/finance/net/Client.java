@@ -26,7 +26,7 @@ public class Client {
     //l乐米日报分享地址
     public static final String SHARE_URL_REPORT = API.getHost() + "/admin/lm/arcelor.html?id=%s";
     //乐米训练心得分享地址
-    public static final String SHARE_URL_TRAIN_EXPERIENCE = API.getHost() + "admin/lm/train.html?trainId=%d";
+    public static final String SHARE_URL_TRAIN_EXPERIENCE = API.getHost() + "/admin/lm/train.html?trainId=%d";
 
     /**
      * 获取期货品种
@@ -2164,8 +2164,8 @@ public class Client {
      */
     public static API requestMineTrainProjectList() {
         return new API("/train/train/myList.do", new ApiParams()
-                        .put("page", 0)
-                        .put("pageSize", 50));
+                .put("page", 0)
+                .put("pageSize", 50));
     }
 
     /**
@@ -2437,6 +2437,7 @@ public class Client {
 
     /**
      * 分享
+     *
      * @return
      */
     public static API share() {
@@ -2444,12 +2445,33 @@ public class Client {
     }
 
     /**
-     *
      * @param trainId
      * @return
      */
-    public static API isTrained (int trainId) {
+    public static API isTrained(int trainId) {
         return new API("/train/perception/userIsPerception.do",
                 new ApiParams().put("trainId", trainId));
+    }
+
+    /**
+     * 训练意见反馈接口
+     */
+    public static API trainFeedback(int trainId, String content, int contentType) {
+        return new API(POST, "/train/trainfeedback/trainAdviceFeedback.do?",
+                new ApiParams()
+                        .put("trainId", trainId)
+                        .put("content", content)
+                        .put("contentType", contentType));
+    }
+
+    /**
+     * 训练意见反馈列表接口
+     */
+    public static API getTrainFeedbackList(int trainId, int page, int pageSize) {
+        return new API("/train/trainfeedback/queryUserFeedBackHistory.do",
+                new ApiParams()
+                        .put("trainId", trainId)
+                        .put("page", page)
+                        .put("pageSize", pageSize));
     }
 }
