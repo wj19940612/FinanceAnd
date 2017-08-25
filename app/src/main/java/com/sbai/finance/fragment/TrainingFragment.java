@@ -183,10 +183,7 @@ public class TrainingFragment extends BaseFragment {
 
     private void updateCreditMessage(boolean hasTrainingRecord) {
         if (LocalUser.getUser().isLogin()) {
-            if (hasTrainingRecord) {
-                double rank = mUserEachTrainingScoreModel != null ? mUserEachTrainingScoreModel.getRank() : 0;
-                mScoreProgress.setText(getString(R.string.more_than_number, NumberFormatUtils.formatPercentString(rank)));
-            } else {
+            if (!hasTrainingRecord) {
                 mScoreProgress.setText(R.string.you_are_not_complete_train);
             }
         } else {
@@ -224,6 +221,8 @@ public class TrainingFragment extends BaseFragment {
             }
 
             startScoreAnimation(mNewScore);
+            double rank = data != null ? data.getRank() : 0;
+            mScoreProgress.setText(getString(R.string.more_than_number, NumberFormatUtils.formatPercentString(rank)));
         } else {
             mTestHint.setVisibility(View.VISIBLE);
             mScore.setVisibility(View.GONE);
