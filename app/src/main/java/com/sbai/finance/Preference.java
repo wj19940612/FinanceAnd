@@ -23,6 +23,8 @@ public class Preference {
         String MISS_TALK_ANSWERS = "miss_talk_answers";
         String USER_LOOK_DETAIL = "user_look_detail";
         String IS_FIRST_TRAIN = "IS_FIRST_TRAIN";
+        String STUDY_OPTION = "study_option";
+        String MY_STUDY = "my_study";
     }
 
     private static Preference sInstance;
@@ -168,12 +170,20 @@ public class Preference {
         return mPrefs.getBoolean(key + Key.USER_LOOK_DETAIL, false);
     }
 
-    public String getStudyData(String id) {
-        return mPrefs.getString(id, null);
+    public String getStudyOptionData(int id) {
+        return mPrefs.getString(id + Key.STUDY_OPTION, null);
     }
 
-    public void setStudyData(String id, String data) {
-        apply(id, data);
+    public void setStudyOptionData(int id, String data) {
+        apply(id + Key.STUDY_OPTION, data);
+    }
+
+    public String getMyStudyData(int id) {
+        return mPrefs.getString(id + Key.MY_STUDY, null);
+    }
+
+    public void setMyStudyData(int id, String data) {
+        apply(id + Key.MY_STUDY, data);
     }
 
     public boolean isFirstTrain(int trainId) {

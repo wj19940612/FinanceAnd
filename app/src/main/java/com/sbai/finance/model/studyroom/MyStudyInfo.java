@@ -1,12 +1,13 @@
 package com.sbai.finance.model.studyroom;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 我的学一学
  */
 
-public class MyStudyInfo {
+public class MyStudyInfo implements Serializable {
 
 
     /**
@@ -97,7 +98,7 @@ public class MyStudyInfo {
         this.answer = answer;
     }
 
-    public static class AnswerBean {
+    public static class AnswerBean implements Serializable{
         /**
          * answerIds : [{"optionId":892553962484412400}]
          * answerIdsMap : []
@@ -132,7 +133,7 @@ public class MyStudyInfo {
             this.answerIdsMap = answerIdsMap;
         }
 
-        public static class AnswerIdsBean {
+        public static class AnswerIdsBean implements Serializable {
             /**
              * optionId : 892553962484412400
              */

@@ -87,14 +87,14 @@
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:gravity="center">
 
                     <TextView
+                        android:id="@+id/durationText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/duration"
@@ -102,14 +102,15 @@
                         android:textSize="12sp"/>
 
                     <TextView
+                        android:layout_below="@+id/durationText"
                         android:id="@+id/duration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
                         android:textColor="@color/primaryText"
                         android:textSize="14sp"
-                        tools:text="@string/train_duration"/>
-                </LinearLayout>
+                        tools:text="@string/_seconds"/>
+                </RelativeLayout>
 
                 <View
                     android:layout_width="0.5dp"
@@ -118,7 +119,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/split"/>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -126,6 +127,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/difficultyText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/difficulty"
@@ -133,14 +135,15 @@
                         android:textSize="12sp"/>
 
                     <TextView
+                        android:layout_below="@+id/difficultyText"
                         android:id="@+id/difficulty"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
                         android:textColor="@color/primaryText"
                         android:textSize="14sp"
                         tools:text="@string/train_level"/>
-                </LinearLayout>
+                </RelativeLayout>
 
                 <View
                     android:layout_width="0.5dp"
