@@ -75,7 +75,7 @@ public class CameraTopRectView extends View {
                 - UnitUtils.getInstance(activity).dip2px(
                         LEFT_PADDING + RIGHT_PADDING);*/
 
-        rectWidth = mScreenWidth - (int) dp2px(context, LEFT_PADDING + RIGHT_PADDING);
+        rectWidth = mScreenWidth - dp2px(context, LEFT_PADDING + RIGHT_PADDING);
 
         rectHeight = (int) (rectWidth * 54 / 85.6);
         // 相对于此view

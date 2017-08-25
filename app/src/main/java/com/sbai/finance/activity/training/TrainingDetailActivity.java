@@ -446,7 +446,9 @@ public class TrainingDetailActivity extends BaseActivity {
 
 						@Override
 						public void onFeedbackClick(View view) {
-							Launcher.with(getActivity(), FeedbackActivity.class).execute();
+							Launcher.with(getActivity(), FeedbackActivity.class)
+									.putExtra(ExtraKeys.TRAINING, mTraining.getId())
+									.execute();
 						}
 					}).show();
 		}

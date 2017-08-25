@@ -126,6 +126,10 @@ public class EditWithWordLimitView extends LinearLayout {
         return mEditText.getText().toString();
     }
 
+    public EditText getEditText() {
+        return mEditText;
+    }
+
     public void clearFocus() {
         mEditText.clearFocus();
     }

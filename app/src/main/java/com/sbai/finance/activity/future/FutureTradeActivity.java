@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
@@ -28,20 +27,14 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.trade.PublishOpinionActivity;
-import com.sbai.finance.fragment.dialog.PredictionDialogFragment;
 import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.fragment.dialog.TradeOptionDialogFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
-import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.economiccircle.OpinionDetails;
-import com.sbai.finance.model.economiccircle.WhetherAttentionShieldOrNot;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.future.FutureTradeStatus;
-import com.sbai.finance.model.mine.AttentionAndFansNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -69,12 +62,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sbai.finance.R.id.klineView;
-import static com.sbai.finance.fragment.trade.ViewpointFragment.REQ_CODE_ATTENTION;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 import static com.sbai.finance.websocket.market.MarketSubscribe.REQ_QUOTA;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
-public class FutureTradeActivity extends BaseActivity implements PredictionDialogFragment.OnPredictButtonListener {
+public class FutureTradeActivity extends BaseActivity {
 
     //打开观点详情页
     public static final int REQ_CODE_PUBLISH = 5439;
@@ -113,7 +105,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
     @BindView(R.id.lastPrice)
     TextView mLastPrice;
 
-    private PredictionDialogFragment mPredictionFragment;
     private SubPageAdapter mSubPageAdapter;
     private Variety mVariety;
     private Prediction mPrediction;
@@ -312,32 +303,9 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         });
     }
 
-    @Override
-    public void onBullishButtonClick(int directionLong) {
-        mPrediction.setDirection(directionLong);
-        startPublishPointPage();
-    }
 
-    @Override
-    public void onBearishButtonClick(int directionShort) {
-        mPrediction.setDirection(directionShort);
-        startPublishPointPage();
-    }
 
-    private void startPublishPointPage() {
-        Launcher.with(getActivity(), PublishOpinionActivity.class)
-                .putExtra(Launcher.EX_PAYLOAD, mVariety)
-                .putExtra(Launcher.EX_PAYLOAD_1, mPrediction)
-                .putExtra(Launcher.EX_PAYLOAD_2, mFutureData)
-                .executeForResult(REQ_CODE_PUBLISH);
-    }
 
-    private void showPredictDialog() {
-        if (mPredictionFragment == null) {
-            mPredictionFragment = PredictionDialogFragment.newInstance().setOnPredictButtonListener(this);
-        }
-        mPredictionFragment.show(getSupportFragmentManager());
-    }
 
     private void checkOptionalStatus() {
         if (mTradeFloatButtons.isHasAddInOptional()) {
@@ -355,9 +323,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
                     protected void onRespSuccessData(Prediction data) {
                         mPrediction = data;
                         if (mPrediction.isCalculate()) {
-                            startPublishPointPage();
-                        } else {
-                            showPredictDialog();
                         }
                     }
                 }).fire();
@@ -448,13 +413,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);
     }
 
-    private ViewpointFragment getViewpointFragment() {
-        Fragment fragment = mSubPageAdapter.getFragment(0);
-        if (fragment instanceof ViewpointFragment) {
-            return (ViewpointFragment) (fragment);
-        }
-        return null;
-    }
 
     private IntroduceFragment getIntroduceFragment() {
         Fragment fragment = mSubPageAdapter.getFragment(1);
@@ -478,8 +436,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-//                case 0:
-//                    return mContext.getString(R.string.point);
                 case 0:
                     return mContext.getString(R.string.introduce);
             }
@@ -489,8 +445,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-//                case 0:
-//                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 0:
                     return IntroduceFragment.newInstance(mVariety);
             }
@@ -516,11 +470,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
         @Override
         public void onPageSelected(int position) {
             mPagePosition = position;
-            if (position == 0) {
-                if (getViewpointFragment() != null) {
-                    getViewpointFragment().refreshPointList();
-                }
-            }
+
         }
 
         @Override
@@ -679,9 +629,7 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
             public void onClick(View v) {
                 Fragment fragment = mSubPageAdapter.getFragment(mPagePosition);
                 if (fragment != null) {
-                    if (fragment instanceof ViewpointFragment) {
-                        ((ViewpointFragment) fragment).scrollToTop();
-                    } else if (fragment instanceof IntroduceFragment) {
+                    if (fragment instanceof IntroduceFragment) {
                         ((IntroduceFragment) fragment).scrollToTop();
                     }
                 }
@@ -703,39 +651,6 @@ public class FutureTradeActivity extends BaseActivity implements PredictionDialo
             productTypeStr += "-" + exchangeStatus;
         }
         productType.setText(productTypeStr);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
-        if (resultCode == FragmentActivity.RESULT_OK) {
-            if (requestCode == REQ_CODE_USERDATA || requestCode == REQ_CODE_ATTENTION || requestCode == REQ_CODE_PUBLISH) {
-                updateViewPoint(data);
-            }
-        }
-    }
-
-    private void updateViewPoint(Intent intent) {
-        OpinionDetails details = (OpinionDetails) intent.getSerializableExtra(Launcher.EX_PAYLOAD);
-
-        WhetherAttentionShieldOrNot whetherAttentionShieldOrNot =
-                (WhetherAttentionShieldOrNot) intent.getSerializableExtra(Launcher.EX_PAYLOAD_1);
-
-        AttentionAndFansNumberModel attentionAndFansNumberModel =
-                (AttentionAndFansNumberModel) intent.getSerializableExtra(Launcher.EX_PAYLOAD_2);
-        ViewpointFragment viewpointFragment = getViewpointFragment();
-        if (viewpointFragment != null) {
-            if (details != null) {
-                viewpointFragment.updateItemById(details.getId(), details.getReplyCount(), details.getPraiseCount());
-            } else if (whetherAttentionShieldOrNot != null && attentionAndFansNumberModel != null) {
-                viewpointFragment.shieldUserByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isShield());
-                viewpointFragment.updateItemByUserId(attentionAndFansNumberModel.getUserId(), whetherAttentionShieldOrNot.isFollow());
-            } else {
-                viewpointFragment.refreshPointList();
-            }
-
-        }
     }
 
 }

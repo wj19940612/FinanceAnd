@@ -10,7 +10,6 @@ import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.stock.PriceLimitRankingFragment;
-import com.sbai.finance.fragment.trade.ViewpointFragment;
 import com.sbai.finance.view.TitleBar;
 
 public class StockIndexActivity extends StockTradeActivity {
@@ -50,14 +49,6 @@ public class StockIndexActivity extends StockTradeActivity {
         return mSubPageAdapter;
     }
 
-    @Override
-    protected ViewpointFragment getViewpointFragment() {
-        Fragment fragment = mSubPageAdapter.getFragment(0);
-        if (fragment != null && fragment instanceof ViewpointFragment) {
-            return (ViewpointFragment) fragment;
-        }
-        return null;
-    }
 
     @Override
     public void setUpTitleBar(TitleBar titleBar) {
@@ -66,9 +57,7 @@ public class StockIndexActivity extends StockTradeActivity {
             public void onClick(View v) {
                 Fragment fragment = mSubPageAdapter.getFragment(pagePosition);
                 if (fragment != null) {
-                    if (fragment instanceof ViewpointFragment) {
-                        ((ViewpointFragment) fragment).scrollToTop();
-                    } else if (fragment instanceof PriceLimitRankingFragment) {
+                    if (fragment instanceof PriceLimitRankingFragment) {
                         ((PriceLimitRankingFragment) fragment).scrollToTop();
                     }
                 }

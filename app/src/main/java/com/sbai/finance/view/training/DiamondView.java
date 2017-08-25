@@ -29,6 +29,8 @@ public class DiamondView extends View {
     public static final String TAG = "DiamondView";
     public static final int TYPE_WHITE = 0;
     public static final int TYPE_DARK = 1;
+    public static final int TYPE_STROKE = 0;
+    public static final int TYPE_FILL = 1;
     private Paint mPaint;
     private Paint mEdgePaint;
     private int mWidth;
@@ -38,6 +40,7 @@ public class DiamondView extends View {
     private List<Point> mPoints;
 
     private int mCurrentIndex;
+    private int mType = TYPE_FILL;
     private Point mCurrentPoint;
     private FinishDrawListener mFinishDrawListener;
 
@@ -92,7 +95,9 @@ public class DiamondView extends View {
         super.onDraw(canvas);
         canvas.translate(mWidth / 2, mHeight / 2);
         if (mSelected) {
-            drawView(canvas, mHeight - 8, mWidth - 8, mPaint);
+            if (mType == TYPE_FILL) {
+                drawView(canvas, mHeight - 8, mWidth - 8, mPaint);
+            }
             if (mCurrentPoint == null && mCurrentIndex < mPoints.size() - 1) {
                 startAnimation(mPoints.get(mCurrentIndex), mPoints.get(mCurrentIndex + 1));
             }
@@ -210,7 +215,8 @@ public class DiamondView extends View {
         invalidate();
     }
 
-    public void setSelected(boolean selected) {
+    public void setSelected(boolean selected, int type) {
+        mType = type;
         mSelected = selected;
         invalidate();
     }
@@ -255,10 +261,7 @@ public class DiamondView extends View {
             if (obj == null) return false;
             if (!(obj instanceof Point)) return false;
             Point other = (Point) obj;
-            if (other.getX() == this.getX() && other.getY() == this.getY()) {
-                return true;
-            }
-            return false;
+            return other.getX() == this.getX() && other.getY() == this.getY();
         }
     }
 

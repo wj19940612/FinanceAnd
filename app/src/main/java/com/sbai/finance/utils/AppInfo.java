@@ -61,11 +61,7 @@ public class AppInfo {
         if (Build.VERSION.SDK_INT >= 23) {
             try {
                 int rest = context.checkSelfPermission(permission);
-                if (rest == PackageManager.PERMISSION_GRANTED) {
-                    result = true;
-                } else {
-                    result = false;
-                }
+                result = rest == PackageManager.PERMISSION_GRANTED;
             } catch (Exception e) {
                 result = false;
             }

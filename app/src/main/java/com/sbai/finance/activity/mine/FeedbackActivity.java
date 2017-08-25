@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.mine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.JsonObject;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.UploadFeedbackImageDialogFragment;
@@ -84,15 +86,20 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     private List<Feedback> mFeedbackList;
     private FeedbackAdapter mFeedbackAdapter;
-
+    private int mTrainId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
         ButterKnife.bind(this);
+        initData(getIntent());
         initViews();
         requestFeedbackList(true);
+    }
+
+    private void initData(Intent intent) {
+        mTrainId = intent.getIntExtra(ExtraKeys.TRAINING, -1);
     }
 
     private void initViews() {
@@ -109,22 +116,41 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     //只有在登录的情况下 才请求记录
     private void requestFeedbackList(final boolean needScrollToLast) {
-        Client.getFeedback(mPage, mPageSize)
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
-                    @Override
-                    protected void onRespSuccessData(List<Feedback> data) {
-                        updateFeedbackList(data, needScrollToLast);
-                    }
+        if (mTrainId == -1) {
+            Client.getFeedback(mPage, mPageSize)
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
+                        @Override
+                        protected void onRespSuccessData(List<Feedback> data) {
+                            updateFeedbackList(data, needScrollToLast);
+                        }
 
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        stopRefreshAnimation();
-                    }
-                })
-                .fire();
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            super.onFailure(volleyError);
+                            stopRefreshAnimation();
+                        }
+                    })
+                    .fire();
+        } else {
+            Client.getTrainFeedbackList(mTrainId, mPage, mPageSize)
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
+                        @Override
+                        protected void onRespSuccessData(List<Feedback> data) {
+                            updateFeedbackList(data, needScrollToLast);
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            super.onFailure(volleyError);
+                            stopRefreshAnimation();
+                        }
+                    })
+                    .fire();
+        }
     }
 
     private void updateFeedbackList(List<Feedback> data, boolean needScrollToLast) {
@@ -205,7 +231,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void sendFeedbackText() {
-        if (LocalUser.getUser().isLogin()) {
+        if (LocalUser.getUser().isLogin() || mTrainId != -1) {
             String content = mCommentContent.getText().toString().trim();
             requestSendFeedback(content, CONTENT_TYPE_TEXT);
         } else {
@@ -231,7 +257,43 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void requestSendFeedback(final String content, final int contentType) {
-        Client.sendFeedback(content, contentType)
+        if (mTrainId == -1) {
+            Client.sendFeedback(content, contentType)
+                    .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+                    .setTag(TAG)
+                    .setIndeterminate(FeedbackActivity.this)
+                    .setCallback(new Callback<Resp<JsonObject>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<JsonObject> resp) {
+                            refreshChatList(content, contentType);
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            super.onFailure(volleyError);
+                        }
+                    })
+                    .fireFree();
+        } else {
+            if (contentType == CONTENT_TYPE_PICTURE) {
+                Client.uploadPicture(content).setTag(TAG).setIndeterminate(this)
+                        .setCallback(new Callback2D<Resp<List<String>>, List<String>>() {
+                            @Override
+                            protected void onRespSuccessData(List<String> data) {
+                                if (!data.isEmpty()) {
+                                    requestSendTrainFeedback(data.get(0), contentType);
+                                }
+                            }
+                        }).fireFree();
+            } else {
+                requestSendTrainFeedback(content, contentType);
+            }
+
+        }
+    }
+
+    private void requestSendTrainFeedback(final String content, final int contentType) {
+        Client.trainFeedback(mTrainId, content, contentType)
                 .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                 .setTag(TAG)
                 .setIndeterminate(FeedbackActivity.this)
@@ -252,22 +314,41 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     //刷新列表
     private void refreshChatList(final String content, final int contentType) {
         //请求最新的服务器数据  并取第一条
-        Client.getFeedback(0, mPageSize)
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
-                    @Override
-                    protected void onRespSuccessData(List<Feedback> data) {
-                        updateTheLastMessage(data, content, contentType);
-                    }
+        if (mTrainId == -1) {
+            Client.getFeedback(0, mPageSize)
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
+                        @Override
+                        protected void onRespSuccessData(List<Feedback> data) {
+                            updateTheLastMessage(data, content, contentType);
+                        }
 
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        stopRefreshAnimation();
-                    }
-                })
-                .fire();
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            super.onFailure(volleyError);
+                            stopRefreshAnimation();
+                        }
+                    })
+                    .fire();
+        } else {
+            Client.getTrainFeedbackList(mTrainId, 0, mPageSize)
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<List<Feedback>>, List<Feedback>>() {
+                        @Override
+                        protected void onRespSuccessData(List<Feedback> data) {
+                            updateTheLastMessage(data, content, contentType);
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            super.onFailure(volleyError);
+                            stopRefreshAnimation();
+                        }
+                    })
+                    .fire();
+        }
     }
 
     private void updateTheLastMessage(List<Feedback> data, String content, int contentType) {
@@ -360,10 +441,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             //判断两个时间在不在一天内  不是就要显示标题
             long preTime = pre.getCreateDate();
             long nextTime = next.getCreateDate();
-            if (DateUtil.isToday(nextTime, preTime)) {
-                return false;
-            }
-            return true;
+            return !DateUtil.isToday(nextTime, preTime);
         }
 
         @Override
@@ -418,11 +496,19 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             private void bindingData(final Feedback feedback, boolean needTitle, final Context context) {
                 if (needTitle) {
                     mTimeLayout.setVisibility(View.VISIBLE);
-                    mEndLineTime.setText(DateUtil.getFeedbackFormatTime(feedback.getCreateDate()));
+                    if (feedback.getCreateDate() > 0) {
+                        mEndLineTime.setText(DateUtil.getFeedbackFormatTime(feedback.getCreateDate()));
+                    } else {
+                        mEndLineTime.setText(DateUtil.getFeedbackFormatTime(DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT)));
+                    }
                 } else {
                     mTimeLayout.setVisibility(View.GONE);
                 }
-                mTimestamp.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_HOUR_MINUTE));
+                if (feedback.getCreateDate() > 0) {
+                    mTimestamp.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_HOUR_MINUTE));
+                } else {
+                    mTimestamp.setText(DateUtil.format(DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT), FORMAT_HOUR_MINUTE));
+                }
 
                 mWrapper.removeAllViews();
                 TextView textview = null;
@@ -442,10 +528,17 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(imageview);
                 }
-                Glide.with(context).load(feedback.getUserPortrait())
-                        .bitmapTransform(new GlideCircleTransform(context))
-                        .placeholder(R.drawable.ic_avatar_feedback)
-                        .into(mHeadImage);
+                if (!TextUtils.isEmpty(feedback.getUserPortrait())) {
+                    Glide.with(context).load(feedback.getUserPortrait())
+                            .bitmapTransform(new GlideCircleTransform(context))
+                            .placeholder(R.drawable.ic_avatar_feedback)
+                            .into(mHeadImage);
+                } else {
+                    Glide.with(context).load(feedback.getPortrait())
+                            .bitmapTransform(new GlideCircleTransform(context))
+                            .placeholder(R.drawable.ic_avatar_feedback)
+                            .into(mHeadImage);
+                }
                 if (imageview != null) {
                     imageview.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -512,11 +605,19 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             private void bindingData(Feedback feedback, boolean needTitle, Context context) {
                 if (needTitle) {
                     mTimeLayout.setVisibility(View.VISIBLE);
-                    mEndLineTime.setText(DateUtil.getFeedbackFormatTime(feedback.getCreateDate()));
+                    if (feedback.getCreateDate() > 0) {
+                        mEndLineTime.setText(DateUtil.getFeedbackFormatTime(feedback.getCreateDate()));
+                    } else {
+                        mEndLineTime.setText(DateUtil.getFeedbackFormatTime(DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT)));
+                    }
                 } else {
                     mTimeLayout.setVisibility(View.GONE);
                 }
-                mTimestamp.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_HOUR_MINUTE));
+                if (feedback.getCreateDate() > 0) {
+                    mTimestamp.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_HOUR_MINUTE));
+                } else {
+                    mTimestamp.setText(DateUtil.format(DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT), FORMAT_HOUR_MINUTE));
+                }
                 mText.setText(feedback.getContent());
                 Glide.with(context).load(R.drawable.ic_feedback_service)
                         .bitmapTransform(new GlideCircleTransform(context))

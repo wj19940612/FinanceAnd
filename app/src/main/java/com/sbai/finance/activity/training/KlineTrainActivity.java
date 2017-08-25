@@ -192,8 +192,15 @@ public class KlineTrainActivity extends BaseActivity {
                 .show();
     }
 
-    @Override
-    public void onBackPressed() {
+    private void showCloseDialog() {
+        mBgImg.setVisibility(View.VISIBLE);
+        mContent.setDrawingCacheEnabled(true);
+        mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+        Bitmap bitmap = mContent.getDrawingCache();
+        mBgImg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
+        mContent.setVisibility(View.INVISIBLE);
+
         SmartDialog.single(getActivity(), getString(R.string.exit_train_will_not_save_train_record))
                 .setTitle(getString(R.string.is_sure_exit_train))
                 .setNegative(R.string.exit_train, new SmartDialog.OnClickListener() {
@@ -203,12 +210,21 @@ public class KlineTrainActivity extends BaseActivity {
                         finish();
                     }
                 })
-                .setPositive(R.string.continue_train, new SmartDialog.OnClickListener() {
+                .setOnDismissListener(new SmartDialog.OnDismissListener() {
                     @Override
-                    public void onClick(Dialog dialog) {
+                    public void onDismiss(Dialog dialog) {
                         dialog.dismiss();
+                        mBgImg.setVisibility(View.GONE);
+                        mContent.setVisibility(View.VISIBLE);
                     }
-                }).show();
+                })
+                .setPositive(R.string.continue_train)
+                .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        showCloseDialog();
     }
 
     @OnClick(R.id.trainView)
