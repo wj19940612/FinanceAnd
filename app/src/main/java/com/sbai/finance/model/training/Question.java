@@ -9,6 +9,13 @@ import java.util.List;
 
 public class Question<T extends Parcelable> implements Parcelable {
 
+    public static final int TYPE_SORT = 1;
+    public static final int TYPE_SINGLE_CHOICE = 2;
+    public static final int TYPE_MULTI_CHOICE = 3;
+    public static final int TYPE_MATCH = 4;
+    public static final int TYPE_READ_ONLY = 5;
+    public static final int TYPE_TRUE_OR_FALSE = 6;
+
     /**
      * content : [{"key":{"content":"11111","id":"897705151689707522","seq":1,"type":0},"value":{"content":"11111","id":"897705151689707523","seq":1,"type":0}},{"key":{"content":"ceshi","id":"897705151689707524","seq":2,"type":0},"value":{"content":"rrrrrrrrrrrrrrrrrrrrrr","id":"897705151689707525","seq":2,"type":0}},{"key":{"content":"ggggggggggggg","id":"897705151689707526","seq":3,"type":0},"value":{"content":"rrrrrrrrrrrrrr","id":"897705151689707527","seq":3,"type":0}}]
      * id : 5981874668fa2534449545bf
@@ -30,7 +37,7 @@ public class Question<T extends Parcelable> implements Parcelable {
     private boolean option;
     private int status;
     private String title;
-    private int type;
+    private int type; // 1到6 分别为 排序，单选，多选，连线看，只读的题目（比如看漫画), 判断题（比如均线判断涨跌）
     private T[] content;
 
     public String getAnalysis() {
