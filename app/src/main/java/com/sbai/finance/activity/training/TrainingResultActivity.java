@@ -30,9 +30,7 @@ import com.sbai.finance.utils.AnimUtils;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.training.TrainingAchievementView;
-import com.sbai.httplib.BuildConfig;
 
 import java.util.List;
 
@@ -90,13 +88,19 @@ public class TrainingResultActivity extends BaseActivity {
     }
 
     private void initView() {
+        List<TrainingTarget> targets = mTrainingDetail.getTargets();
         if (mTrainingSubmit.isFinish()) {
             mRecordTrainingExperience.setVisibility(View.VISIBLE);
             mRetry.setVisibility(View.GONE);
             mMyGrade.setVisibility(View.VISIBLE);
             mFailedMessage.setVisibility(View.GONE);
-            mMyGrade.setText(formatTime(mTrainingSubmit.getTime(),
-                    R.string._seconds, R.string._minutes, R.string._minutes_x_seconds));
+            if (targets != null && !targets.isEmpty()
+                    && targets.get(0).getType() == TrainingTarget.TYPE_RATE) {
+                mMyGrade.setText(FinanceUtil.formatToPercentage(mTrainingSubmit.getRate(), 0));
+            } else {
+                mMyGrade.setText(formatTime(mTrainingSubmit.getTime(),
+                        R.string._seconds, R.string._minutes, R.string._minutes_x_seconds));
+            }
         } else {
             mRecordTrainingExperience.setVisibility(View.GONE);
             mRetry.setVisibility(View.VISIBLE);
@@ -105,7 +109,7 @@ public class TrainingResultActivity extends BaseActivity {
             mFailedMessage.setText(R.string.what_a_pity_you_do_not_finish);
         }
 
-        updateTrainingResultDetail(mTrainingDetail.getTargets());
+        updateTrainingResultDetail(targets);
     }
 
     private void initData(Intent intent) {
@@ -121,9 +125,7 @@ public class TrainingResultActivity extends BaseActivity {
 
                     @Override
                     protected void onRespSuccess(Resp<TrainingResult> resp) {
-                        if (BuildConfig.DEBUG) {
-                            ToastUtil.show(resp.getData().toString());
-                        }
+                        //ToastUtil.show(resp.getData().toString());
                     }
 
                     @Override
