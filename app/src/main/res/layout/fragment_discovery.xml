@@ -209,7 +209,7 @@
                                     android:id="@+id/title3"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:background="#6A6A9CEF"
+                                    android:background="#CA6A9CEF"
                                     android:ellipsize="end"
                                     android:gravity="center"
                                     android:maxLines="2"

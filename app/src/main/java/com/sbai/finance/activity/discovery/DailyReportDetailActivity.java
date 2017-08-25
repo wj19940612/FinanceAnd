@@ -142,7 +142,7 @@ public class DailyReportDetailActivity extends BaseActivity {
             mTitleInfo.setVisibility(View.VISIBLE);
             mClick.setText(getString(R.string.read_count, data.getClicks()));
             mTitle.setText(data.getTitle());
-            mSourceAndTime.setText(getString(R.string.source_and_time, data.getSource(), DateUtil.getFormatTime(data.getCreateTime())));
+            mSourceAndTime.setText(getString(R.string.source_and_time, data.getSource(), DateUtil.getMissFormatTime(data.getCreateTime())));
             mPureHtml = data.getContent();
             //获取第一段内容
             String content = Html.fromHtml(data.getContent()).toString().trim();
@@ -162,6 +162,7 @@ public class DailyReportDetailActivity extends BaseActivity {
     }
 
     private void initView() {
+        mBottom.bringToFront();
         if (mFormat == DailyReport.HTML) {
             mTitleArea.setVisibility(View.GONE);
         }
