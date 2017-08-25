@@ -58,6 +58,11 @@ public class ImageListView extends RelativeLayout {
                 loadImage(createImageView(1), images.get(0));
                 break;
             case 3:
+                loadImage(createImageView(0), images.get(2));
+                loadImage(createImageView(1), images.get(1));
+                loadImage(createImageView(2), images.get(0));
+                break;
+            case 4:
                 createImageView(0).setImageResource(mDrawble);
                 loadImage(createImageView(1), images.get(2));
                 loadImage(createImageView(2), images.get(1));
@@ -69,21 +74,22 @@ public class ImageListView extends RelativeLayout {
     private ImageView createImageView(int index) {
         ImageView image = new ImageView(getContext());
         image.setScaleType(ImageView.ScaleType.FIT_XY);
-        LayoutParams params = new LayoutParams((int) Display.dp2Px(34, getResources()), (int) Display.dp2Px(34, getResources()));
-        int padding = (int) Display.dp2Px(1,getResources());
-        image.setPadding(padding,padding,padding,padding);
+        LayoutParams params = new LayoutParams((int) Display.dp2Px(32, getResources()), (int) Display.dp2Px(32, getResources()));
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         switch (index) {
+            case 0:
+                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar_stroke));
+                break;
             case 1:
-                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar));
+                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar_stroke));
                 params.setMargins(0, 0, mMarginRights[0], 0);
                 break;
             case 2:
-                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar));
+                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar_stroke));
                 params.setMargins(0, 0, mMarginRights[1], 0);
                 break;
             case 3:
-                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar));
+                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar_stroke));
                 params.setMargins(0, 0, mMarginRights[2], 0);
                 break;
         }

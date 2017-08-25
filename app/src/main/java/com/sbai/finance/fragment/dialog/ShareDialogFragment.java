@@ -166,7 +166,7 @@ public class ShareDialogFragment extends DialogFragment {
                 image.setThumb(new UMImage(mActivity, R.drawable.ic_future_battle_game));
             } else {
                 image = new UMImage(mActivity, R.mipmap.ic_launcher);
-                image.setThumb(new UMImage(mActivity,R.mipmap.ic_launcher));
+                image.setThumb(new UMImage(mActivity, R.mipmap.ic_launcher));
             }
             if (getActivity() != null && !getActivity().isFinishing()) {
                 new ShareAction(getActivity())
