@@ -38,6 +38,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.SerializeObjectUtil;
 import com.sbai.finance.utils.ToastUtil;
@@ -50,6 +51,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
+import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 /**
  * 自习室
@@ -93,10 +97,19 @@ public class StudyRoomActivity extends BaseActivity {
     private int mSelectedIndex = -1;
     private String mTrainId;
     private StudyOption mStudyOption;
+    private boolean mCanRegain;
     private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             requestMyStudyDataForHandPaper();
+        }
+    };
+    private BroadcastReceiver mNetWorkReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType != Network.NET_NONE && mCanRegain) {
+                requestTrainData();
+            }
         }
     };
 
@@ -117,20 +130,6 @@ public class StudyRoomActivity extends BaseActivity {
         }
     }
 
-
-    //     else if (mStudyOption == null) {
-//        //取缓存的数据
-//        StudyOption studyOption = (StudyOption) SerializeObjectUtil.String2Object(Preference.get().getStudyData(data.getAnswer().get(0).getTopicId()));
-//        if (studyOption != null) {
-//            updateTrainEndView(studyOption, data);
-//        }
-//    }
-    private void saveStudyDataToFile() {
-        if (mStudyOption != null) {
-            Preference.get().setStudyData(mStudyOption.getId(), SerializeObjectUtil.Object2String(mStudyOption));
-        }
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,7 +138,39 @@ public class StudyRoomActivity extends BaseActivity {
         initStudyView();
         initListView();
         initLoginReceiver();
-        requestTrainData();
+        if (Network.isNetworkAvailable()) {
+            requestTrainData();
+        } else {
+            mCanRegain = true;
+            loadFromCache();
+        }
+    }
+
+    private void loadFromCache() {
+        if (LocalUser.getUser().isLogin()) {
+            StudyOption studyOption = SerializeObjectUtil.String2Object(Preference.get().getStudyOptionData(LocalUser.getUser().getUserInfo().getId()));
+            MyStudyInfo myStudyInfo = SerializeObjectUtil.String2Object(Preference.get().getMyStudyData(LocalUser.getUser().getUserInfo().getId()));
+            if (studyOption != null) {
+                updateTrainData(studyOption);
+                mStudyOption = studyOption;
+            }
+            if (myStudyInfo != null) {
+                mIsUpdateTrain = true;
+                updateMyStudyData(myStudyInfo);
+            }
+        }
+    }
+
+    private void saveStudyOptionDataToFile() {
+        if (mStudyOption != null && LocalUser.getUser().isLogin()) {
+            Preference.get().setStudyOptionData(LocalUser.getUser().getUserInfo().getId(), SerializeObjectUtil.Object2String(mStudyOption));
+        }
+    }
+
+    private void saveMyStudyDataToFile(MyStudyInfo myStudyInfo) {
+        if (myStudyInfo != null && LocalUser.getUser().isLogin()) {
+            Preference.get().setMyStudyData(LocalUser.getUser().getUserInfo().getId(), SerializeObjectUtil.Object2String(myStudyInfo));
+        }
     }
 
     private void initLoginReceiver() {
@@ -200,10 +231,22 @@ public class StudyRoomActivity extends BaseActivity {
         if (item == null) return;
         if (item.isRight()) {
             mTestResult.setText(getString(R.string.answer_right_know_more));
-            updateResultListView(true);
+            mTestResult.post(new Runnable() {
+                @Override
+                public void run() {
+                    updateResultListView(true);
+                }
+            });
+
         } else {
             mTestResult.setText(getString(R.string.answer_wrong_study_together));
-            updateResultListView(false);
+            mTestResult.post(new Runnable() {
+                @Override
+                public void run() {
+                    updateResultListView(false);
+                }
+            });
+
         }
         mCommit.setVisibility(View.GONE);
         mTestResult.setVisibility(View.VISIBLE);
@@ -256,10 +299,10 @@ public class StudyRoomActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<String>, StudyOption>() {
                     @Override
                     protected void onRespSuccessData(StudyOption data) {
-                        StudyOption studyOption = data;
-                        updateTrainData(studyOption);
-                        mStudyOption = studyOption;
+                        updateTrainData(data);
+                        mStudyOption = data;
                         requestMyStudyData();
+                        saveStudyOptionDataToFile();
                     }
 
                     @Override
@@ -294,6 +337,7 @@ public class StudyRoomActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(MyStudyInfo data) {
                         updateMyStudyData(data);
+                        saveMyStudyDataToFile(data);
                     }
                 }).fireFree();
     }
@@ -355,7 +399,6 @@ public class StudyRoomActivity extends BaseActivity {
                             mIsUpdateTrain = false;
                             requestMyStudyData();
                             showRewardView(resp.getData().getGold());
-                            saveStudyDataToFile();
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
@@ -377,6 +420,18 @@ public class StudyRoomActivity extends BaseActivity {
         } else {
             Launcher.with(getActivity(), LoginActivity.class).execute();
         }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        registerNetworkChangeReceiver(this, mNetWorkReceiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterNetworkChangeReceiver(this, mNetWorkReceiver);
     }
 
     @Override
