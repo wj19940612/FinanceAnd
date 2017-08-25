@@ -27,6 +27,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
@@ -118,6 +119,12 @@ public class BindBankCardActivity extends BaseActivity {
             mPhoneNumber.setText(mUserBankCardInfoModel.getCardPhone());
             mCanUseBankListModel = new CanUseBankListModel();
             mCanUseBankListModel.setName(mUserBankCardInfoModel.getIssuingBankName());
+            mName.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    KeyBoardUtils.openKeyBoard(mName);
+                }
+            }, 200);
         }
     }
 

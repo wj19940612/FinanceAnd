@@ -18,6 +18,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.utils.ValidityDecideUtil;
@@ -54,6 +55,13 @@ public class ModifyUserNameActivity extends BaseActivity {
             }
         }, new InputFilter.LengthFilter(8)});
         mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
+
+        mUserName.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                KeyBoardUtils.openKeyBoard(mUserName);
+            }
+        }, 200);
 
     }
 

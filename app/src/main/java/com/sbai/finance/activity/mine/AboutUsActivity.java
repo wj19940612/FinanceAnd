@@ -3,6 +3,8 @@ package com.sbai.finance.activity.mine;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
@@ -94,8 +96,20 @@ public class AboutUsActivity extends BaseActivity {
                 copyConnectWay(mServiceConnectWay.getWeixin());
                 break;
             case R.id.qq:
-                copyConnectWay(mServiceConnectWay.getQq());
+                openQQ();
                 break;
+        }
+    }
+
+    private void openQQ() {
+        if (mServiceConnectWay != null) {
+            String serviceQQUrl = Client.getServiceQQ(mServiceConnectWay.getQq());
+            Intent intentQQ = new Intent(Intent.ACTION_VIEW, Uri.parse(serviceQQUrl));
+            if (intentQQ.resolveActivity(getPackageManager()) != null) {
+                startActivity(intentQQ);
+            } else {
+                ToastUtil.show(R.string.install_qq_first);
+            }
         }
     }
 
