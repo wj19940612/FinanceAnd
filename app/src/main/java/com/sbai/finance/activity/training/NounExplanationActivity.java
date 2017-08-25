@@ -38,7 +38,6 @@ import com.sbai.finance.utils.RenderScriptGaussianBlur;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
-import com.sbai.finance.view.training.DragImageView;
 import com.sbai.finance.view.training.NoScrollViewPager;
 import com.sbai.finance.view.training.TrainProgressBar;
 
