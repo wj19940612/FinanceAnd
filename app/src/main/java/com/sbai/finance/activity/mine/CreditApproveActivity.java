@@ -28,6 +28,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -104,31 +105,29 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                             mUserIdentityCardInfo = data;
                         }
 
-                        @Override
-                        protected boolean onErrorToast() {
-                            return false;
-                        }
                     })
                     .fireFree();
         } else {
             Client.getUserCreditApproveStatus()
                     .setTag(TAG)
                     .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>() {
+                    .setCallback(new Callback<Resp<UserIdentityCardInfo>>() {
                         @Override
-                        protected void onRespSuccessData(UserIdentityCardInfo data) {
-                            UserInfo userInfo = LocalUser.getUser().getUserInfo();
-                            userInfo.setStatus(data.getStatus());
-                            LocalUser.getUser().setUserInfo(userInfo);
-                            mImagePath.append(0, data.getCertPositive());
-                            mImagePath.append(1, data.getCertBack());
-                            updateUserCreditStatus(data);
-                            mUserIdentityCardInfo = data;
-                        }
-
-                        @Override
-                        protected boolean onErrorToast() {
-                            return false;
+                        protected void onRespSuccess(Resp<UserIdentityCardInfo> resp) {
+                            if (resp.isSuccess()) {
+                                if (resp.hasData()) {
+                                    UserIdentityCardInfo data = resp.getData();
+                                    UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                                    userInfo.setStatus(data.getStatus());
+                                    LocalUser.getUser().setUserInfo(userInfo);
+                                    mImagePath.append(0, data.getCertPositive());
+                                    mImagePath.append(1, data.getCertBack());
+                                    updateUserCreditStatus(data);
+                                    mUserIdentityCardInfo = data;
+                                } else {
+                                    openKeyBoard();
+                                }
+                            }
                         }
                     })
                     .fireFree();
@@ -143,6 +142,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                     mEnable = true;
                     mSubmit.setText(R.string.submit_has_empty);
                     updateUserInfo(data);
+                    openKeyBoard();
                     break;
                 case UserInfo.CREDIT_IS_APPROVE_ING:
                     mRealNameInput.removeTextChangedListener(mValidationWatcher);
@@ -166,6 +166,15 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                     break;
             }
         }
+    }
+
+    private void openKeyBoard() {
+        mRealNameInput.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                KeyBoardUtils.openKeyBoard(mRealNameInput);
+            }
+        }, 300);
     }
 
 
