@@ -3,6 +3,7 @@ package com.sbai.finance.activity.training;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -121,7 +122,7 @@ public class JudgeTrainingActivity extends BaseActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 long pastTime = mTraining.getTime() * 1000 - millisUntilFinished;
-                mTimer.setText(DateUtil.format(pastTime, "mm:ss.SS"));
+                formatTime(pastTime);
                 mTrainingSubmit.setTime((int) (pastTime / 1000));
             }
 
@@ -131,6 +132,17 @@ public class JudgeTrainingActivity extends BaseActivity {
                 startTrainingResultPage();
             }
         }.start();
+    }
+
+    private void formatTime(long pastTime) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            String format = DateUtil.format(pastTime, "mm:ss.SS");
+            mTimer.setText(format);
+        } else {
+            String format = DateUtil.format(pastTime, "mm:ss.SSS");
+            String substring = format.substring(0, format.length() - 1);
+            mTimer.setText(substring);
+        }
     }
 
     private void startTrainingResultPage() {

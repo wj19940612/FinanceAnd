@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -129,16 +130,29 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
             @Override
             public void onTick(long millisUntilUp) {
                 mTrainingCountTime = millisUntilUp;
-                mTitleBar.setTitle(DateUtil.format(mTrainingCountTime, "mm:ss.SS"));
+                formatTime(mTrainingCountTime);
             }
 
             @Override
             public void onFinish() {
-                mTitleBar.setTitle(DateUtil.format(mTrainTargetTime, "mm:ss.SS"));
+                formatTime(mTrainTargetTime);
                 mIsSuccess = false;
                 requestEndTrain();
             }
+
+            private void formatTime(long time) {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+                    String format = DateUtil.format(time, "mm:ss.SS");
+                    mTitleBar.setTitle(format);
+                } else {
+                    String format = DateUtil.format(time, "mm:ss.SSS");
+                    String substring = format.substring(0, format.length() - 1);
+                    mTitleBar.setTitle(substring);
+                }
+            }
+
         });
+
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
