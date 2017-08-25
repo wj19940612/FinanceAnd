@@ -2,8 +2,16 @@ package com.sbai.finance;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.model.payment.UsablePlatform;
+import com.sbai.finance.model.training.TrainingSubmit;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Preference {
     private static final String SHARED_PREFERENCES_NAME = BuildConfig.FLAVOR + "_prefs";
@@ -25,6 +33,7 @@ public class Preference {
         String IS_FIRST_TRAIN = "IS_FIRST_TRAIN";
         String STUDY_OPTION = "study_option";
         String MY_STUDY = "my_study";
+        String TRAINING_SUBMITS = "training_submits";
     }
 
     private static Preference sInstance;
@@ -192,5 +201,32 @@ public class Preference {
 
     public void setIsFirstTrainFalse(int trainId, boolean isFirst) {
         apply(Key.IS_FIRST_TRAIN + trainId, isFirst);
+    }
+
+    public void setTrainingSubmits(String phone, List<TrainingSubmit> submits) {
+        apply(phone + Key.TRAINING_SUBMITS, new Gson().toJson(submits));
+    }
+
+    public List<TrainingSubmit> getTrainingSubmits(String phone) {
+        String json = mPrefs.getString(phone + Key.TRAINING_SUBMITS, null);
+        if (TextUtils.isEmpty(json)) {
+            return new ArrayList<>();
+        } else {
+            return getTrainingSubmitsFromJson(json);
+        }
+    }
+
+    @Nullable
+    private List<TrainingSubmit> getTrainingSubmitsFromJson(String json) {
+        List<TrainingSubmit> submits = null;
+        try {
+            submits = new Gson().fromJson(json,
+                    new TypeToken<List<TrainingSubmit>>() {}.getType());
+        } catch (Exception e) {
+            e.printStackTrace();
+            submits = new ArrayList<>();
+        } finally {
+            return submits;
+        }
     }
 }

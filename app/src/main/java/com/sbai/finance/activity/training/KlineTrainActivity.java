@@ -181,6 +181,7 @@ public class KlineTrainActivity extends BaseActivity {
         TrainingSubmit trainingSubmit = new TrainingSubmit(mTrainingDetail.getTrain().getId());
         trainingSubmit.setTime((int) (mTrainingCountTime / 1000));
         trainingSubmit.setFinish(mIsSuccess);
+        trainingSubmit.addQuestionId(mQuestion.getId());
         Launcher.with(getActivity(), TrainingResultActivity.class)
                 .putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
                 .putExtra(ExtraKeys.TRAINING_SUBMIT, trainingSubmit)

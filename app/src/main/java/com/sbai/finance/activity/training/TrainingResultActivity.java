@@ -9,8 +9,10 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.sbai.finance.ExtraKeys;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingDetail;
@@ -67,6 +69,7 @@ public class TrainingResultActivity extends BaseActivity {
     private TrainingDetail mTrainingDetail;
     private TrainingSubmit mTrainingSubmit;
     private int mStarCount;
+    private int mSubmitCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +115,7 @@ public class TrainingResultActivity extends BaseActivity {
     }
 
     private void submitTrainingResult() {
+        mSubmitCount++;
         Client.submitTrainingResult(SecurityUtil.AESEncrypt(new Gson().toJson(mTrainingSubmit))).setTag(TAG)
                 .setCallback(new Callback<Resp<TrainingResult>>() {
 
@@ -120,17 +124,26 @@ public class TrainingResultActivity extends BaseActivity {
                         if (BuildConfig.DEBUG) {
                             ToastUtil.show(resp.getData().toString());
                         }
-                        if (resp.getData() != null) {
-                            mStarCount = resp.getData().getLevel();
-                        }
                     }
 
                     @Override
                     public void onFailure(VolleyError volleyError) {
+                        if (mSubmitCount < 3) {
+                            submitTrainingResult();
+                        } else {
+                            saveTrainingSubmit();
+                        }
                         super.onFailure(volleyError);
                     }
                 }).fireFree();
 
+    }
+
+    private void saveTrainingSubmit() {
+        String phone = LocalUser.getUser().getPhone();
+        List<TrainingSubmit> submits = Preference.get().getTrainingSubmits(phone);
+        submits.add(mTrainingSubmit);
+        Preference.get().setTrainingSubmits(phone, submits);
     }
 
     private void updateTrainingResultDetail(List<TrainingTarget> trainTargets) {
@@ -140,6 +153,9 @@ public class TrainingResultActivity extends BaseActivity {
                 case TrainingTarget.TYPE_FINISH:
                     mAchievementViews[0].setAchieved(mTrainingSubmit.isFinish());
                     mAchievementViews[0].setContent(R.string.mission_complete);
+                    if (mTrainingSubmit.isFinish()) {
+                        mStarCount = trainTargets.get(0).getLevel();
+                    }
                     showResultsWithAnim(trainTargets.size());
                     break;
                 case TrainingTarget.TYPE_RATE:
@@ -148,6 +164,7 @@ public class TrainingResultActivity extends BaseActivity {
                                 FinanceUtil.formatToPercentage(trainTargets.get(i).getRate(), 0)));
                         if (mTrainingSubmit.getRate() >= trainTargets.get(i).getRate() && mTrainingSubmit.isFinish()) {
                             mAchievementViews[i].setAchieved(true);
+                            mStarCount = trainTargets.get(i).getLevel();
                         } else {
                             mAchievementViews[i].setAchieved(false);
                         }
@@ -162,10 +179,11 @@ public class TrainingResultActivity extends BaseActivity {
                                         R.string._minutes_complete,
                                         R.string._minutes_x_seconds_complete));
 
-                        if (mTrainingSubmit.getTime() > trainTargets.get(i).getTime() || !mTrainingSubmit.isFinish()) {
-                            mAchievementViews[i].setAchieved(false);
-                        } else {
+                        if (mTrainingSubmit.getTime() <= trainTargets.get(i).getTime() && mTrainingSubmit.isFinish()) {
                             mAchievementViews[i].setAchieved(true);
+                            mStarCount = trainTargets.get(i).getLevel();
+                        } else {
+                            mAchievementViews[i].setAchieved(false);
                         }
                     }
                     showResultsWithAnim(trainTargets.size());
@@ -251,7 +269,6 @@ public class TrainingResultActivity extends BaseActivity {
                 || mTraining.getPlayType() == Training.PLAY_TYPE_MATCH_STAR) {
             Client.getTrainingContent(mTraining.getId()).setTag(TAG)
                     .setCallback(new Callback2D<Resp<String>, List<Question<RemoveData>>>() {
-
                         @Override
                         protected String onInterceptData(String data) {
                             return SecurityUtil.AESDecrypt(data);
@@ -260,12 +277,15 @@ public class TrainingResultActivity extends BaseActivity {
                         @Override
                         protected void onRespSuccessData(List<Question<RemoveData>> data) {
                             if (!data.isEmpty()) {
-                                startTraining(data.get(0));
+                                Question question = data.get(0);
+                                if (question.getType() == Question.TYPE_MATCH) {
+                                    startTraining(question);
+                                }
                             }
                         }
                     }).fireFree();
-        }
-        if (mTraining.getPlayType() == Training.PLAY_TYPE_SORT) {
+
+        } else if (mTraining.getPlayType() == Training.PLAY_TYPE_SORT) {
             Client.getTrainingContent(mTraining.getId()).setTag(TAG)
                     .setCallback(new Callback2D<Resp<String>, List<Question<SortData>>>() {
                         @Override
@@ -276,24 +296,30 @@ public class TrainingResultActivity extends BaseActivity {
                         @Override
                         protected void onRespSuccessData(List<Question<SortData>> data) {
                             if (!data.isEmpty()) {
-                                startTraining(data.get(0));
+                                Question question = data.get(0);
+                                if (question.getType() == Question.TYPE_SORT) {
+                                    startTraining(question);
+                                }
                             }
                         }
                     }).fireFree();
-        } else if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
 
+        } else if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
             Client.getTrainingContent(mTraining.getId()).setTag(TAG)
                     .setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
                         @Override
-                        protected void onRespSuccessData(List<Question<KData>> data) {
-                            if (!data.isEmpty()) {
-                                startTraining(data.get(0));
-                            }
+                        protected String onInterceptData(String data) {
+                            return SecurityUtil.AESDecrypt(data);
                         }
 
                         @Override
-                        protected String onInterceptData(String data) {
-                            return SecurityUtil.AESDecrypt(data);
+                        protected void onRespSuccessData(List<Question<KData>> data) {
+                            if (!data.isEmpty()) {
+                                Question question = data.get(0);
+                                if (question.getType() == Question.TYPE_TRUE_OR_FALSE) {
+                                    startTraining(question);
+                                }
+                            }
                         }
                     }).fireFree();
         }

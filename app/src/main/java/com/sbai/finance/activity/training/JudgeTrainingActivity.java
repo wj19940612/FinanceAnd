@@ -102,7 +102,9 @@ public class JudgeTrainingActivity extends BaseActivity {
             }
 
             @Override
-            public void onWrongAnswerSelected(String analysis) {
+            public void onWrongAnswerSelected(float accuracy, String analysis) {
+                mAccuracy.setText(FinanceUtil.formatToPercentage(accuracy, 0));
+                mTrainingSubmit.setRate(accuracy);
                 mAccuracyArea.setVisibility(View.INVISIBLE);
                 mKnowledgeArea.setVisibility(View.VISIBLE);
                 mKnowledge.setText(analysis);
@@ -165,6 +167,7 @@ public class JudgeTrainingActivity extends BaseActivity {
         mQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
         mTraining = mTrainingDetail.getTrain();
         mTrainingSubmit = new TrainingSubmit(mTraining.getId());
+        mTrainingSubmit.addQuestionId(mQuestion.getId());
     }
 
     @OnClick({R.id.close, R.id.iSeeBtn, R.id.howToPlay})
