@@ -113,9 +113,9 @@
                 android:layout_below="@+id/myBoardInfo"
                 android:background="#F0222222"
                 android:gravity="center"
+                android:text="@string/click_see_your_rank"
                 android:textColor="@android:color/white"
-                android:visibility="gone"
-                tools:text="@string/you_no_enter_leader_board"/>
+                android:visibility="gone"/>
 
 
         </RelativeLayout>

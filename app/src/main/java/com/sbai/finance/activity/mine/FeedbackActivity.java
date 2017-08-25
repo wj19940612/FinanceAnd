@@ -352,7 +352,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void updateTheLastMessage(List<Feedback> data, String content, int contentType) {
-        if (data == null) {
+        if (data == null || data.isEmpty()) {
             return;
         }
         Feedback feedback = data.get(0);
