@@ -337,6 +337,7 @@ public class SortQuestionActivity extends BaseActivity {
         Training training = mTrainingDetail.getTrain();
         if (training != null) {
             TrainingSubmit trainingSubmit = new TrainingSubmit(training.getId());
+            trainingSubmit.addQuestionId(mTrainingQuestion.getId());
             trainingSubmit.setFinish(isRight);
             trainingSubmit.setTime((int) (mTrainingCountTime / 1000));
 
