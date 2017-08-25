@@ -160,7 +160,9 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
 
     @Override
     public void onBackPressed() {
-        submitUserInfo();
+        if (LocalUser.getUser().isLogin()) {
+            submitUserInfo();
+        }
         super.onBackPressed();
     }
 

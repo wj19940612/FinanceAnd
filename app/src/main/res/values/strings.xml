@@ -732,7 +732,7 @@
     <string name="source_and_time">来源: %1$s    %2$s</string>
 
     <!--了解学分-->
-    <string name="score_explain_title">分数解释</string>
+    <string name="score_explain_title">乐米学分</string>
     <string name="score_explain_content">乐米学分基于五个维度值（理论知识、指标分析、基本面分析、风险控制和盈利能力）通过智能算法客观的呈现学习者金融水平等级。
                                       \n金融水平初步测评。
                                       \n高阶训练项目通关。
@@ -744,7 +744,7 @@
     <string name="earning_power_introduce">在一定时期内赚取利润的能力即为盈利能力，包括绝对收益、相对收益等，投资者最直接目的即最大限度地赚取利润并维持相对稳定的收入，亦为投资者个人盈利能力的体现。</string>
     <string name="index_analysis">指标分析</string>
     <string name="index_analysis_introduce">研究指标，须明确理论基础，利用均线、MACD、布林带指标等结合研究K线的走势及变动趋向，对多种行情进行系统分析以规避风险，博取更高的收益。</string>
-    <string name="fundamentals">基本面</string>
+    <string name="fundamentals">基本面分析</string>
     <string name="fundamentals_introduce">以宏观经济面及内在价值为依据，着重对影响其价格及行情走势的各项因素的分析，适用于周期相对比较长的价格预测、相对成熟的市场及预测精确度要求不高的领域，
         包括宏观经济面、公司主营业务所处行业、公司业务同行业竞争水平和公司内部管理水平包括对管理层的考察这诸多方面。</string>
     <string name="risk_control">风险控制</string>

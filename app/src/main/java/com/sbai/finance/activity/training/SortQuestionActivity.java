@@ -306,6 +306,7 @@ public class SortQuestionActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mProgressBar.cancelCountDownTimer();
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
