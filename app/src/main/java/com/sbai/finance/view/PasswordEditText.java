@@ -109,6 +109,10 @@ public class PasswordEditText extends LinearLayout {
         mPassword.removeTextChangedListener(textWatcher);
     }
 
+    public EditText getEditText() {
+        return mPassword;
+    }
+
     public String getPassword() {
         return mPassword.getText().toString();
     }
