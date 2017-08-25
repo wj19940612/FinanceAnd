@@ -74,7 +74,9 @@ public class ImageListView extends RelativeLayout {
     private ImageView createImageView(int index) {
         ImageView image = new ImageView(getContext());
         image.setScaleType(ImageView.ScaleType.FIT_XY);
-        LayoutParams params = new LayoutParams((int) Display.dp2Px(32, getResources()), (int) Display.dp2Px(32, getResources()));
+        LayoutParams params = new LayoutParams((int) Display.dp2Px(34, getResources()), (int) Display.dp2Px(34, getResources()));
+        int padding = (int) Display.dp2Px(1,getResources());
+        image.setPadding(padding,padding,padding,padding);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         switch (index) {
             case 0:

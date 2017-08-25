@@ -1,8 +1,6 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -44,7 +42,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ListViewUtil;
+import com.sbai.finance.utils.ViewGroupUtil;
 import com.sbai.finance.view.FeaturesNavigation;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.TitleBar;
@@ -186,7 +184,7 @@ public class DiscoveryFragment extends BaseFragment {
             }
         }
         mTrainAdapter.notifyDataSetChanged();
-        ListViewUtil.setListViewHeightBasedOnChildren(mListView);
+        ViewGroupUtil.setListViewHeightBasedOnChildren(mListView);
     }
 
     private void requestDailyReportData() {

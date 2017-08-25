@@ -8,10 +8,12 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.model.payment.UsablePlatform;
+import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.model.training.TrainingSubmit;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Preference {
     private static final String SHARED_PREFERENCES_NAME = BuildConfig.FLAVOR + "_prefs";
@@ -34,6 +36,7 @@ public class Preference {
         String STUDY_OPTION = "study_option";
         String MY_STUDY = "my_study";
         String TRAINING_SUBMITS = "training_submits";
+        String SERVICE_CONNECT_WAY = "service_connect_way";
     }
 
     private static Preference sInstance;
@@ -221,12 +224,22 @@ public class Preference {
         List<TrainingSubmit> submits = null;
         try {
             submits = new Gson().fromJson(json,
-                    new TypeToken<List<TrainingSubmit>>() {}.getType());
+                    new TypeToken<List<TrainingSubmit>>() {
+                    }.getType());
         } catch (Exception e) {
             e.printStackTrace();
             submits = new ArrayList<>();
         } finally {
             return submits;
         }
+    }
+
+    public void setServiceConnectWay(ServiceConnectWay serviceConnectWay) {
+        apply(Key.SERVICE_CONNECT_WAY, new Gson().toJson(serviceConnectWay));
+    }
+
+    public ServiceConnectWay getServiceConnectWay() {
+        String string = mPrefs.getString(Key.SERVICE_CONNECT_WAY, "");
+        return !TextUtils.isEmpty(string) ? new Gson().fromJson(string, ServiceConnectWay.class) : null;
     }
 }

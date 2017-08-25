@@ -2474,4 +2474,9 @@ public class Client {
                         .put("page", page)
                         .put("pageSize", pageSize));
     }
+
+    //获取客服联系方式
+    public static API requestServiceConnectWay() {
+        return new API("/user/dictionary/findDictionaryForJson.do?type=aboutus");
+    }
 }

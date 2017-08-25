@@ -19,12 +19,10 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.utils.GpsUtils;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.IconTextRow;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,38 +37,23 @@ import cn.qqtheme.framework.widget.WheelView;
 public class LocationActivity extends BaseActivity {
     public static final int GPS_REQUEST_CODE = 250;
 
-    private static final int REQ_CODE_GPS = 426;
 
     @BindView(R.id.location)
     TextView mLocation;
     @BindView(R.id.choiceLocation)
     IconTextRow mChoiceLocation;
+
     private Address mAddress;
 
-    //从修改用户信息界面来
-    private boolean mIsFromModifyUserInfoPage;
-    //是否使用gps定位地址作为picker 历史选择地址
-    private boolean isSelectGpsLocation;
-    //
     private boolean isClosePage = false;
 
-    private String mPublishLocation;
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        requestLocation();
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
         ButterKnife.bind(this);
-        mIsFromModifyUserInfoPage = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
-        isSelectGpsLocation = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD_1, false);
-        mPublishLocation = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
+        requestLocation();
     }
 
     @OnClick({R.id.choiceLocation, R.id.location})
@@ -94,19 +77,16 @@ public class LocationActivity extends BaseActivity {
             String land = mAddress.getAdminArea() + "-" + mAddress.getLocality() + "-" + mAddress.getSubLocality();
             mLocation.setText(land);
             if (isClosePage) {
-                if (mIsFromModifyUserInfoPage) {
-                    //更新地址和经纬度
-                    UserInfo userInfo = LocalUser.getUser().getUserInfo();
-                    userInfo.setLand(land);
-                    if (gpsUtils.getlongitude() != 0) {
-                        userInfo.setLongitude(gpsUtils.getlongitude());
-                    }
-                    if (gpsUtils.getLatitude() != 0) {
-                        userInfo.setLatitude(gpsUtils.getLatitude());
-                    }
-                    LocalUser.getUser().setUserInfo(userInfo);
+                //更新地址和经纬度
+                UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                userInfo.setLand(land);
+                if (gpsUtils.getlongitude() != 0) {
+                    userInfo.setLongitude(gpsUtils.getlongitude());
                 }
-                returnAddress();
+                if (gpsUtils.getLatitude() != 0) {
+                    userInfo.setLatitude(gpsUtils.getLatitude());
+                }
+                LocalUser.getUser().setUserInfo(userInfo);
             }
         } else {
             mLocation.setText(getString(R.string.re_location));
@@ -116,62 +96,25 @@ public class LocationActivity extends BaseActivity {
 
     private void showLocationPicker() {
         AddressInitTask addressInitTask = new AddressInitTask(getActivity());
-        addressInitTask.setIsNeedUpdateLocation(mIsFromModifyUserInfoPage);
         String province = "";
         String city = "";
         String country = "";
         String[] split;
-        if (isSelectGpsLocation) {
-            String location;
-            if (!TextUtils.isEmpty(mPublishLocation)) {
-                location = mPublishLocation;
-            } else {
-                location = mLocation.getText().toString();
-            }
-            split = location.split("-");
+        String land = "";
+        if (!TextUtils.isEmpty(LocalUser.getUser().getUserInfo().getLand())) {
+            land = LocalUser.getUser().getUserInfo().getLand();
+        } else {
+            land = mLocation.getText().toString();
+        }
+        if (!TextUtils.isEmpty(land)) {
+            split = land.split("-");
             if (split.length == 3) {
                 province = split[0];
                 city = split[1];
                 country = split[2];
-            } else {
-                split = location.split(" ");
-                if (split.length == 3) {
-                    province = split[0];
-                    city = split[1];
-                    country = split[2];
-                }
             }
-        } else {
-            String land = "";
-            if (!TextUtils.isEmpty(LocalUser.getUser().getUserInfo().getLand())) {
-                land = LocalUser.getUser().getUserInfo().getLand();
-            } else {
-                land = mLocation.getText().toString();
-            }
-            if (!TextUtils.isEmpty(land)) {
-                split = land.split("-");
-                if (split.length == 3) {
-                    province = split[0];
-                    city = split[1];
-                    country = split[2];
-                }
-            }
-
         }
         addressInitTask.execute(province, city, country);
-    }
-
-    private void returnAddress() {
-        Intent intent = new Intent();
-        intent.putExtra(Launcher.EX_PAYLOAD_1, mAddress);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        returnAddress();
-        super.onBackPressed();
     }
 
 
@@ -192,7 +135,6 @@ public class LocationActivity extends BaseActivity {
                 mSelectedCity = "",
                 mSelectedCounty = "";
         private boolean mHideCounty;
-        private boolean mIsNeedUpdateLand;
 
         public AddressInitTask(Activity activity) {
             this.mActivity = activity;
@@ -206,10 +148,6 @@ public class LocationActivity extends BaseActivity {
             this.mHideCounty = hideCounty;
         }
 
-
-        public void setIsNeedUpdateLocation(boolean isNeedUpdateLocation) {
-            this.mIsNeedUpdateLand = isNeedUpdateLocation;
-        }
 
         @Override
         protected ArrayList<Province> doInBackground(String... params) {
@@ -269,19 +207,7 @@ public class LocationActivity extends BaseActivity {
                 picker.setOnAddressPickListener(new AddressPicker.OnAddressPickListener() {
                     @Override
                     public void onAddressPicked(Province province, City city, County county) {
-                        if (mIsNeedUpdateLand) {
-                            LocalUser.getUser().getUserInfo().setLand(province.getAreaName() + "-" + city.getAreaName() + "-" + county.getAreaName());
-                        }
-
-                        if (mAddress == null) {
-                            mAddress = new Address(new Locale(Locale.CHINA.getLanguage()));
-                            mAddress.setLatitude(0.00);
-                            mAddress.setLongitude(0.00);
-                        }
-                        mAddress.setAdminArea(province.getAreaName());
-                        mAddress.setLocality(city.getAreaName());
-                        mAddress.setSubLocality(county.getAreaName());
-                        returnAddress();
+                        LocalUser.getUser().getUserInfo().setLand(province.getAreaName() + "-" + city.getAreaName() + "-" + county.getAreaName());
                     }
                 });
                 picker.show();
