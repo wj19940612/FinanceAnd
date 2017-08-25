@@ -69,23 +69,21 @@ public class ScoreProgressView extends LinearLayout {
         LayoutParams layoutParams = new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.weight = 1;
         layoutParams.gravity = Gravity.CENTER;
-        layoutParams.setMargins(0, 0, px2dp(6), 0);
+        layoutParams.setMargins(0, 0, px2dp(6), px2dp(6));
 
 
         LinearLayout scoreLinearLayout = new LinearLayout(getContext());
         LayoutParams scoreLayoutParams = new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        scoreLayoutParams.setMargins(0, px2dp(6), 0, px2dp(6));
         scoreLayoutParams.weight = 1;
 
         for (int i = 0; i < mGradeSize; i++) {
             TextView scoreGradeTextView = createScoreGradeTextView(mGradeExPlain[i]);
             creditGradeLinearLayout.addView(scoreGradeTextView, layoutParams);
 
-
             if (i == 0) {
                 TextView scoreTextView = createScoreTextView(String.valueOf(mScoreData[0]));
-                TextView scoreTextView1 = createScoreTextView(String.valueOf(mScoreData[1]));
                 scoreLinearLayout.addView(scoreTextView);
+                TextView scoreTextView1 = createScoreTextView(String.valueOf(mScoreData[1]));
                 scoreLinearLayout.addView(scoreTextView1, scoreLayoutParams);
             } else {
                 TextView scoreTextView = createScoreTextView(String.valueOf(mScoreData[i + 1]));
@@ -104,7 +102,8 @@ public class ScoreProgressView extends LinearLayout {
 
     private void createCreditAreaView() {
         LayoutParams progressLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, px2dp(6));
-        progressLayoutParams.setMargins(0, px2dp(6), px2dp(10), 0);
+        progressLayoutParams.setMargins(0, 0,
+                px2dp(10), px2dp(6));
         CreditAreaView creditAreaView = new CreditAreaView(getContext());
         if (mUserEachTrainingScoreModel != null &&
                 mAppraiseAndRemarkList != null &&
