@@ -72,11 +72,12 @@ public class AuthCodeActivity extends BaseActivity {
 
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPassword.addTextChangedListener(mValidationWatcher);
+        mGetAuthCode.performClick();
 
         mAuthCode.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mGetAuthCode.performClick();
+                mGetAuthCode.clearFocus();
                 mAuthCode.requestFocus();
                 KeyBoardUtils.openKeyBoard(mAuthCode);
             }

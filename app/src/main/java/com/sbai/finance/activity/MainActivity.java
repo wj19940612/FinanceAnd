@@ -18,6 +18,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.view.BottomTabs;
+import com.sbai.finance.view.ScrollableViewPager;
 import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.market.MarketSubscriber;
 
@@ -27,7 +28,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     @BindView(R.id.viewPager)
-    ViewPager mViewPager;
+    ScrollableViewPager mViewPager;
     @BindView(R.id.bottomTabs)
     BottomTabs mBottomTabs;
 
@@ -39,9 +40,10 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
-//        translucentStatusBar();
 
-//        checkVersion();
+//      translucentStatusBar();
+
+//      checkVersion();
     }
 
     private void checkVersion() {
@@ -73,6 +75,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
         mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setScrollable(false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
