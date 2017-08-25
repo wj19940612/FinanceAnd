@@ -58,6 +58,11 @@ public class ImageListView extends RelativeLayout {
                 loadImage(createImageView(1), images.get(0));
                 break;
             case 3:
+                loadImage(createImageView(0), images.get(2));
+                loadImage(createImageView(1), images.get(1));
+                loadImage(createImageView(2), images.get(0));
+                break;
+            case 4:
                 createImageView(0).setImageResource(mDrawble);
                 loadImage(createImageView(1), images.get(2));
                 loadImage(createImageView(2), images.get(1));
@@ -70,8 +75,8 @@ public class ImageListView extends RelativeLayout {
         ImageView image = new ImageView(getContext());
         image.setScaleType(ImageView.ScaleType.FIT_XY);
         LayoutParams params = new LayoutParams((int) Display.dp2Px(34, getResources()), (int) Display.dp2Px(34, getResources()));
-        int padding = (int) Display.dp2Px(1,getResources());
-        image.setPadding(padding,padding,padding,padding);
+        int padding = (int) Display.dp2Px(1, getResources());
+        image.setPadding(padding, padding, padding, padding);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         switch (index) {
             case 1:
