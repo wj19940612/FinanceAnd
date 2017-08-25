@@ -47,6 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/sortQuestionRecyclerView"
+            android:visibility="visible"
             android:orientation="vertical">
 
             <ImageView
@@ -97,18 +98,18 @@
             android:layout_marginTop="30dp"/>
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/copyView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_dark"
-        android:gravity="center"
-        android:minHeight="40dp"
-        android:paddingBottom="11dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="11dp"
-        android:textColor="@android:color/white"
-        android:textSize="15sp"
-        android:visibility="gone"/>
+        <TextView
+            android:id="@+id/copyView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_red_dark"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:paddingBottom="11dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="11dp"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:visibility="gone"/>
 </FrameLayout>

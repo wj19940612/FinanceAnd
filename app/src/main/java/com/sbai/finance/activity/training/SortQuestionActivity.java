@@ -83,7 +83,7 @@ public class SortQuestionActivity extends BaseActivity {
     @BindView(R.id.progressBar)
     TrainProgressBar mProgressBar;
     @BindView(R.id.bg)
-    ImageView mBg;
+    ImageView mDimBg;
     @BindView(R.id.content)
     RelativeLayout mContent;
     @BindView(R.id.copyView)
@@ -132,6 +132,7 @@ public class SortQuestionActivity extends BaseActivity {
 
 
     private int mQuestionFirstItemY;
+    private int mWidthPixels;
 
     public interface OnItemClickListener {
         /**
@@ -170,7 +171,9 @@ public class SortQuestionActivity extends BaseActivity {
         } else {
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         }
-        mChooseResultX = (int) (displayMetrics.widthPixels * 0.33 - 90);
+        Log.d(TAG, "onCreate: " + displayMetrics.widthPixels + " " + displayMetrics.heightPixels);
+        mWidthPixels = displayMetrics.widthPixels;
+        mChooseResultX = (int) (displayMetrics.widthPixels * 0.25);
     }
 
     private void initQuestionData() {
@@ -272,10 +275,31 @@ public class SortQuestionActivity extends BaseActivity {
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                showDimBg();
                 TrainingRuleDialog.with(getActivity(), mTrainingDetail.getTrain())
+                        .setOnDismissListener(new TrainingRuleDialog.OnDismissListener() {
+                            @Override
+                            public void onDismiss() {
+                                mDimBg.setVisibility(View.GONE);
+                                mContent.setVisibility(View.VISIBLE);
+                            }
+                        })
                         .show();
+
+
             }
         });
+    }
+
+    private void showDimBg() {
+        mDimBg.setVisibility(View.VISIBLE);
+        mContent.setDrawingCacheEnabled(true);
+        mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+        Bitmap bitmap = mContent.getDrawingCache();
+        mDimBg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
+        mContent.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -308,15 +332,7 @@ public class SortQuestionActivity extends BaseActivity {
             return;
         }
 
-        mBg.setVisibility(View.VISIBLE);
-        mContent.setDrawingCacheEnabled(true);
-        mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
-
-        Bitmap bitmap = mContent.getDrawingCache();
-        mBg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
-        mContent.setVisibility(View.INVISIBLE);
-
-
+        showDimBg();
         SortTrainResultDialog.with(this)
                 .setOnDialogDismissListener(new SortTrainResultDialog.OnDialogDismissListener() {
 
@@ -355,14 +371,14 @@ public class SortQuestionActivity extends BaseActivity {
             @Override
             public void onItemClick(SortData data, int position, TextView textView) {
                 if (data.isSelect()) {
-                    updateResult(data, position, textView);
+                    cancelResult(data, position, textView);
                 }
             }
         });
 
     }
 
-    private void updateResult(final SortData data, int position, TextView textView) {
+    private void cancelResult(final SortData data, int position, TextView textView) {
 
         if (isCancelResultAnimationRunning || isChooseResultAnimationRunning) return;
         data.setSelect(false);
@@ -391,10 +407,8 @@ public class SortQuestionActivity extends BaseActivity {
         mCopyView.setText(data.getContent());
         mCopyView.setBackgroundResource(mAnnalsMaterialsBgDrawables[data.getBgPosition()]);
         mCopyView.setVisibility(View.VISIBLE);
-        mCopyView.setX(clickItemCoordinateX);
-        mCopyView.setY(clickItemCoordinateY);
 
-        TranslateAnimation translateAnimation = new TranslateAnimation(0, -(mChooseResultX), 0, targetY - clickItemCoordinateY + 100);
+        TranslateAnimation translateAnimation = new TranslateAnimation(clickItemCoordinateX, (float) -(mWidthPixels * 0.07), clickItemCoordinateY, targetY);
         translateAnimation.setFillAfter(false);
         translateAnimation.setDuration(DEFAULT_ANIMATION_RUNNING_TIME);
 
@@ -512,9 +526,6 @@ public class SortQuestionActivity extends BaseActivity {
                     int targetX = targetCoordinate[0];
 
 
-                    mCopyView.setX(clickX);
-                    mCopyView.setY(clickY);
-
                     mCopyView.setText(data.getContent());
                     mCopyView.setBackgroundResource(mAnnalsMaterialsBgDrawables[data.getBgPosition()]);
                     mCopyView.setVisibility(View.VISIBLE);
@@ -535,7 +546,7 @@ public class SortQuestionActivity extends BaseActivity {
                     }
 
                     mSortQuestionAdapter.notifyItemRemovedData(position);
-                    TranslateAnimation translateAnimation = new TranslateAnimation(0, offX, 0, offY);
+                    TranslateAnimation translateAnimation = new TranslateAnimation(clickX, clickX + offX, clickY, clickY + offY);
                     translateAnimation.setDuration(DEFAULT_ANIMATION_RUNNING_TIME);
                     translateAnimation.setFillAfter(false);
                     mCopyView.startAnimation(translateAnimation);
@@ -547,7 +558,6 @@ public class SortQuestionActivity extends BaseActivity {
                             mCopyView.setVisibility(View.GONE);
                             mSortResultAdapter.changeItemData(finalI, contentBean);
                             isChooseResultAnimationRunning = false;
-
                         }
                     });
                 }
@@ -593,7 +603,6 @@ public class SortQuestionActivity extends BaseActivity {
             }
         }
         isConfirmResult = true;
-        Log.d(TAG, "onViewClicked: " + isRight);
         startResultListScaleAnimation(isRight);
     }
 
