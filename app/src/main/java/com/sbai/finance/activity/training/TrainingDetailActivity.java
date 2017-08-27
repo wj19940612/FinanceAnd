@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -32,6 +33,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
+import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.ImageListView;
 import com.sbai.finance.view.ObservableScrollView;
 import com.sbai.finance.view.TitleBar;
@@ -81,6 +83,8 @@ public class TrainingDetailActivity extends BaseActivity {
 	ExperienceView mExperience1;
 	@BindView(R.id.experience2)
 	ExperienceView mExperience2;
+	@BindView(R.id.trainingExperience)
+	IconTextRow mTrainingExperience;
 
 	private TrainingDetail mTrainingDetail;
 	private Training mTraining;
@@ -271,6 +275,16 @@ public class TrainingDetailActivity extends BaseActivity {
 					protected void onRespSuccessData(List<Experience> experienceList) {
 						updateHotExperienceList(experienceList);
 					}
+
+					@Override
+					public void onFailure(VolleyError volleyError) {
+						super.onFailure(volleyError);
+						mTrainingExperience.setSubTextVisible(View.INVISIBLE);
+						mTrainingExperience.setClickable(false);
+						mEmpty.setVisibility(View.VISIBLE);
+						mExperience1.setVisibility(View.GONE);
+						mExperience2.setVisibility(View.GONE);
+					}
 				}).fire();
 	}
 
@@ -299,6 +313,16 @@ public class TrainingDetailActivity extends BaseActivity {
 						protected void onRespSuccessData(List<Experience> experienceList) {
 							updateLatestExperienceList(experienceList);
 						}
+
+						@Override
+						public void onFailure(VolleyError volleyError) {
+							super.onFailure(volleyError);
+							mTrainingExperience.setSubTextVisible(View.INVISIBLE);
+							mTrainingExperience.setClickable(false);
+							mEmpty.setVisibility(View.VISIBLE);
+							mExperience1.setVisibility(View.GONE);
+							mExperience2.setVisibility(View.GONE);
+						}
 					}).fire();
 		}
 	}
@@ -308,6 +332,8 @@ public class TrainingDetailActivity extends BaseActivity {
 			mEmpty.setVisibility(View.VISIBLE);
 			mExperience1.setVisibility(View.GONE);
 			mExperience2.setVisibility(View.GONE);
+			mTrainingExperience.setSubTextVisible(View.INVISIBLE);
+			mTrainingExperience.setClickable(false);
 		} else if (experienceList.size() == 1) {
 			mEmpty.setVisibility(View.GONE);
 			mExperience1.setVisibility(View.VISIBLE);

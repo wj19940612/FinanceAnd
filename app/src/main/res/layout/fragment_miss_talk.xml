@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="45dp"
+            android:layout_marginRight="30dp"
             android:layout_toLeftOf="@+id/more">
 
             <ImageView
@@ -60,7 +60,7 @@
         android:layout_height="0.5dp"
         android:background="@color/split"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.sbai.finance.view.VerticalSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -151,5 +151,5 @@
 
             </LinearLayout>
         </ScrollView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.sbai.finance.view.VerticalSwipeRefreshLayout>
 </LinearLayout>

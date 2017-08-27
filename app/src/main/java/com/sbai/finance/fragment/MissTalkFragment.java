@@ -41,10 +41,10 @@ import com.sbai.finance.activity.miss.RewardMissActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.NewMessage;
-import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.Prise;
 import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -53,11 +53,12 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.MyListView;
+import com.sbai.finance.view.VerticalSwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -94,7 +95,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	@BindView(recyclerView)
 	EmptyRecyclerView mRecyclerView;
 	@BindView(R.id.swipeRefreshLayout)
-	SwipeRefreshLayout mSwipeRefreshLayout;
+	VerticalSwipeRefreshLayout mSwipeRefreshLayout;
 	@BindView(R.id.scrollView)
 	ScrollView mScrollView;
 	@BindView(R.id.hotQuestion)
@@ -404,6 +405,11 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 		} else {
 			mRedPoint.setVisibility(View.GONE);
 		}
+
+		mSwipeRefreshLayout.setRefreshing(true);
+		requestMissList();
+		requestHotQuestionList();
+		requestLatestQuestionList();
 	}
 
 	@Override

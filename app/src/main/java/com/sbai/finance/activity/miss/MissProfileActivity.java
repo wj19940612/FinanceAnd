@@ -816,8 +816,8 @@ public class MissProfileActivity extends BaseActivity implements
 
 			if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
 				if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
-					int rewardCount = mMiss.getTotalAward() + 1;
 					if (mMiss != null) {
+						int rewardCount = mMiss.getTotalAward() + 1;
 						mMiss.setTotalAward(rewardCount);
 						mRewardNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(rewardCount)));
 					}

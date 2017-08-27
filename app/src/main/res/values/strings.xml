@@ -820,6 +820,7 @@
     <string name="success_create_report">成功出炉年报</string>
     <string name="start_training">开始训练 !</string>
     <string name="share_your_experience">分享你训练的心得和感想</string>
+    <item name="tag_number" type="id">0</item>
     <!--Training Result-->
     <string name="_minutes_complete">%1$d分钟内完成</string>
     <string name="_minutes_x_seconds_complete">%1$d分%2$d秒内完成</string>

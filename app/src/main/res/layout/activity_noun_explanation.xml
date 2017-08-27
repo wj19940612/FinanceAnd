@@ -43,6 +43,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/titleBar"/>
 
+        <com.sbai.finance.view.training.NoScrollViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="170dp"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="80dp"
+            android:foregroundGravity="center"/>
+
         <android.support.v7.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="155dp"
@@ -80,15 +89,6 @@
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>
-
-        <com.sbai.finance.view.training.NoScrollViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="170dp"
-            android:layout_height="200dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="80dp"
-            android:foregroundGravity="center"/>
 
         <ImageView
             android:id="@+id/previous"

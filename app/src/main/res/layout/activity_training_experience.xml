@@ -19,79 +19,38 @@
         app:rightVisible="true"
         app:titleText="@string/training_experience"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
-            android:id="@+id/scrollView"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <ListView
+                android:id="@+id/latestListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:divider="@null"/>
+
+            <LinearLayout
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background"
+                android:gravity="center"
+                android:visibility="gone">
 
                 <TextView
-                    android:layout_marginTop="14dp"
-                    android:id="@+id/hotExperience"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@android:color/white"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="14dp"
-                    android:text="@string/hot_experience"
-                    android:textColor="@color/primaryText"
-                    android:textSize="14sp"/>
-
-                <View
-                    android:id="@+id/spit"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/split"/>
-
-                <com.sbai.finance.view.MyListView
-                    android:id="@+id/hotListView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:divider="@null"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="14dp"
-                    android:background="@android:color/white"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="14dp"
-                    android:text="@string/latest_experience"
-                    android:textColor="@color/primaryText"
-                    android:textSize="14sp"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/split"/>
-
-                <com.sbai.finance.view.MyListView
-                    android:id="@+id/latestListView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:divider="@null"/>
-
-                <TextView
-                    android:id="@+id/empty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="100dp"
                     android:drawablePadding="10dp"
                     android:drawableTop="@drawable/img_no_message"
                     android:text="@string/share_your_experience"/>
 
             </LinearLayout>
-        </ScrollView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+        </RelativeLayout>
+    </com.sbai.finance.view.CustomSwipeRefreshLayout>
 </LinearLayout>

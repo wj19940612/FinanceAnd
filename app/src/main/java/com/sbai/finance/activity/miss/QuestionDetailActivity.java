@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -333,8 +334,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				.setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
 					@Override
 					protected void onRespSuccessData(QuestionReply questionReply) {
-						questionReply.getResultCount();
-						updateQuestionReplyList(questionReply.getData(), questionReply.getResultCount());
+
+						if (questionReply.getData() != null) {
+							updateQuestionReplyList(questionReply.getData(), questionReply.getResultCount());
+						}
+
 					}
 
 					@Override
@@ -356,6 +360,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		if (resultCount > 0) {
 			mNoComment.setVisibility(View.GONE);
 			mCommentArea.setBackgroundColor(ContextCompat.getColor(this, R.color.background));
+		} else {
+			mNoComment.setVisibility(View.VISIBLE);
+			mCommentArea.setBackgroundColor(Color.WHITE);
 		}
 
 		if (questionReplyList == null) {
@@ -390,8 +397,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		}
 
 		for (QuestionReply.DataBean questionReply : questionReplyList) {
-			if (mSet.add(questionReply.getId())) {
-				mQuestionReplyListAdapter.add(questionReply);
+			if (questionReply != null) {
+				if (mSet.add(questionReply.getId())) {
+					mQuestionReplyListAdapter.add(questionReply);
+				}
 			}
 		}
 	}
@@ -593,9 +602,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			}
 
 			if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-				int rewardCount = mQuestionDetail.getAwardCount() + 1;
-				mQuestionDetail.setAwardCount(rewardCount);
-				mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(rewardCount)));
+				if (mQuestionDetail != null) {
+					int rewardCount = mQuestionDetail.getAwardCount() + 1;
+					mQuestionDetail.setAwardCount(rewardCount);
+					mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(rewardCount)));
+				}
 			}
 		}
 	}

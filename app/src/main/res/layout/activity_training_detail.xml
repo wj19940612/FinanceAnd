@@ -255,14 +255,6 @@
                 app:subTextRightDrawable="@drawable/ic_arrow_more"
                 app:subTextRightMargin="0dp"/>
 
-
-            <!--<com.sbai.finance.view.MyListView
-                android:id="@+id/HotListView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/trainingExperience"
-                android:divider="@null"/>-->
-
             <LinearLayout
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
@@ -277,6 +269,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="30dp"
                     android:drawablePadding="10dp"
+                    android:layout_marginBottom="20dp"
                     android:drawableTop="@drawable/img_no_message"
                     android:text="@string/share_your_experience"
                     android:textColor="@color/unluckyText"
@@ -288,7 +281,6 @@
                     android:layout_height="36dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="30dp"
-                    android:layout_marginTop="20dp"
                     android:background="@drawable/btn_write_experience"
                     android:gravity="center"
                     android:text="@string/write_experience"

@@ -118,10 +118,17 @@ public class MessagesActivity extends BaseActivity implements
                         requestReadMessage(missMessage.getId());
                     }
                     //   requestMessageDetail(missMessage.getDataId());
-                    Launcher.with(getActivity(), QuestionDetailActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, missMessage.getDataId())
-                            .putExtra(Launcher.EX_PAYLOAD_1, missMessage.getMongoId())
-                            .execute();
+                    if ("null".equalsIgnoreCase(missMessage.getMongoId())) {
+                        Launcher.with(getActivity(), QuestionDetailActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, missMessage.getDataId())
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), QuestionDetailActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, missMessage.getDataId())
+                                .putExtra(Launcher.EX_PAYLOAD_1, missMessage.getMongoId())
+                                .execute();
+                    }
+
                 }
             }
         });
