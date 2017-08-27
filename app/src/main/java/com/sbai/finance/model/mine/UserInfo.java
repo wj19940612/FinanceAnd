@@ -281,6 +281,7 @@ public class UserInfo implements Parcelable {
         this.maxLevel = maxLevel;
     }
 
+
     @Override
     public String toString() {
         return "UserInfo{" +
@@ -311,7 +312,6 @@ public class UserInfo implements Parcelable {
                 ", maxLevel=" + maxLevel +
                 '}';
     }
-
 
     @Override
     public int describeContents() {

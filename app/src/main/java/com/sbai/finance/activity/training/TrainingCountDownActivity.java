@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.gifdecoder.GifDecoder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -17,15 +18,29 @@ import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.Question;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingDetail;
+import com.sbai.finance.model.training.TrainingResult;
+import com.sbai.finance.model.training.TrainingSubmit;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.SecurityUtil;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
+import com.sbai.httplib.BuildConfig;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +61,8 @@ public class TrainingCountDownActivity extends BaseActivity {
 
     private int mGifRes;
     private int mBackgroundRes;
+
+    private List<TrainingSubmit> mTrainingSubmitList;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -102,6 +119,8 @@ public class TrainingCountDownActivity extends BaseActivity {
 
         translucentStatusBar();
 
+        resubmitTrainingSubmits();
+
         if (mBackgroundRes != 0) {
             mBackground.setBackgroundResource(mBackgroundRes);
         }
@@ -120,6 +139,38 @@ public class TrainingCountDownActivity extends BaseActivity {
         }
     }
 
+    private void resubmitTrainingSubmits() {
+        mTrainingSubmitList = new ArrayList<>();
+        String phone = LocalUser.getUser().getPhone();
+        List<TrainingSubmit> submits = Preference.get().getTrainingSubmits(phone);
+        Iterator<TrainingSubmit> iterator = submits.iterator();
+        while (iterator.hasNext()) {
+            TrainingSubmit submit = iterator.next();
+            iterator.remove();
+            resubmit(submit);
+        }
+    }
+
+    private void resubmit(final TrainingSubmit submit) {
+        String json = new Gson().toJson(submit);
+        Client.submitTrainingResult(SecurityUtil.AESEncrypt(json)).setTag(TAG)
+                .setCallback(new Callback<Resp<TrainingResult>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<TrainingResult> resp) {
+                        if (BuildConfig.DEBUG) {
+                            ToastUtil.show(resp.getData().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        mTrainingSubmitList.add(submit);
+                        super.onFailure(volleyError);
+                    }
+                }).fireFree();
+        String phone = LocalUser.getUser().getPhone();
+        Preference.get().setTrainingSubmits(phone, mTrainingSubmitList);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

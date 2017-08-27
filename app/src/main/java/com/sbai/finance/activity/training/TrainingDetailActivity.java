@@ -401,19 +401,21 @@ public class TrainingDetailActivity extends BaseActivity {
 				|| mTraining.getPlayType() == Training.PLAY_TYPE_MATCH_STAR) {
 			Client.getTrainingContent(mTraining.getId()).setTag(TAG)
 					.setCallback(new Callback2D<Resp<String>, List<Question<RemoveData>>>() {
-
 						@Override
 						protected String onInterceptData(String data) {
 							return SecurityUtil.AESDecrypt(data);
 						}
-
 						@Override
 						protected void onRespSuccessData(List<Question<RemoveData>> data) {
 							if (!data.isEmpty()) {
-								startTraining(data.get(0));
+								Question question = data.get(0);
+								if (question.getType() == Question.TYPE_MATCH) {
+									startTraining(question);
+								}
 							}
 						}
 					}).fireFree();
+
 		} else if (mTraining.getPlayType() == Training.PLAY_TYPE_SORT) {
 			Client.getTrainingContent(mTraining.getId()).setTag(TAG)
 					.setCallback(new Callback2D<Resp<String>, List<Question<SortData>>>() {
@@ -421,27 +423,32 @@ public class TrainingDetailActivity extends BaseActivity {
 						protected String onInterceptData(String data) {
 							return SecurityUtil.AESDecrypt(data);
 						}
-
 						@Override
 						protected void onRespSuccessData(List<Question<SortData>> data) {
 							if (!data.isEmpty()) {
-								startTraining(data.get(0));
+								Question question = data.get(0);
+								if (question.getType() == Question.TYPE_SORT) {
+									startTraining(question);
+								}
 							}
 						}
 					}).fireFree();
+
 		} else if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
 			Client.getTrainingContent(mTraining.getId()).setTag(TAG)
 					.setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
 						@Override
-						protected void onRespSuccessData(List<Question<KData>> data) {
-							if (!data.isEmpty()) {
-								startTraining(data.get(0));
-							}
-						}
-
-						@Override
 						protected String onInterceptData(String data) {
 							return SecurityUtil.AESDecrypt(data);
+						}
+						@Override
+						protected void onRespSuccessData(List<Question<KData>> data) {
+							if (!data.isEmpty()) {
+								Question question = data.get(0);
+								if (question.getType() == Question.TYPE_TRUE_OR_FALSE) {
+									startTraining(question);
+								}
+							}
 						}
 					}).fireFree();
 		}

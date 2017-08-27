@@ -2,8 +2,18 @@ package com.sbai.finance;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.model.payment.UsablePlatform;
+import com.sbai.finance.model.system.ServiceConnectWay;
+import com.sbai.finance.model.training.TrainingSubmit;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Preference {
     private static final String SHARED_PREFERENCES_NAME = BuildConfig.FLAVOR + "_prefs";
@@ -23,6 +33,10 @@ public class Preference {
         String MISS_TALK_ANSWERS = "miss_talk_answers";
         String USER_LOOK_DETAIL = "user_look_detail";
         String IS_FIRST_TRAIN = "IS_FIRST_TRAIN";
+        String STUDY_OPTION = "study_option";
+        String MY_STUDY = "my_study";
+        String TRAINING_SUBMITS = "training_submits";
+        String SERVICE_CONNECT_WAY = "service_connect_way";
     }
 
     private static Preference sInstance;
@@ -168,12 +182,20 @@ public class Preference {
         return mPrefs.getBoolean(key + Key.USER_LOOK_DETAIL, false);
     }
 
-    public String getStudyData(String id) {
-        return mPrefs.getString(id, null);
+    public String getStudyOptionData(int id) {
+        return mPrefs.getString(id + Key.STUDY_OPTION, null);
     }
 
-    public void setStudyData(String id, String data) {
-        apply(id, data);
+    public void setStudyOptionData(int id, String data) {
+        apply(id + Key.STUDY_OPTION, data);
+    }
+
+    public String getMyStudyData(int id) {
+        return mPrefs.getString(id + Key.MY_STUDY, null);
+    }
+
+    public void setMyStudyData(int id, String data) {
+        apply(id + Key.MY_STUDY, data);
     }
 
     public boolean isFirstTrain(int trainId) {
@@ -182,5 +204,42 @@ public class Preference {
 
     public void setIsFirstTrainFalse(int trainId, boolean isFirst) {
         apply(Key.IS_FIRST_TRAIN + trainId, isFirst);
+    }
+
+    public void setTrainingSubmits(String phone, List<TrainingSubmit> submits) {
+        apply(phone + Key.TRAINING_SUBMITS, new Gson().toJson(submits));
+    }
+
+    public List<TrainingSubmit> getTrainingSubmits(String phone) {
+        String json = mPrefs.getString(phone + Key.TRAINING_SUBMITS, null);
+        if (TextUtils.isEmpty(json)) {
+            return new ArrayList<>();
+        } else {
+            return getTrainingSubmitsFromJson(json);
+        }
+    }
+
+    @Nullable
+    private List<TrainingSubmit> getTrainingSubmitsFromJson(String json) {
+        List<TrainingSubmit> submits = null;
+        try {
+            submits = new Gson().fromJson(json,
+                    new TypeToken<List<TrainingSubmit>>() {
+                    }.getType());
+        } catch (Exception e) {
+            e.printStackTrace();
+            submits = new ArrayList<>();
+        } finally {
+            return submits;
+        }
+    }
+
+    public void setServiceConnectWay(ServiceConnectWay serviceConnectWay) {
+        apply(Key.SERVICE_CONNECT_WAY, new Gson().toJson(serviceConnectWay));
+    }
+
+    public ServiceConnectWay getServiceConnectWay() {
+        String string = mPrefs.getString(Key.SERVICE_CONNECT_WAY, "");
+        return !TextUtils.isEmpty(string) ? new Gson().fromJson(string, ServiceConnectWay.class) : null;
     }
 }

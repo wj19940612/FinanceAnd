@@ -48,7 +48,7 @@ public class MvKlineView extends RelativeLayout {
 
         void onRightAnswerSelected(float accuracy);
 
-        void onWrongAnswerSelected(String analysis);
+        void onWrongAnswerSelected(float accuracy, String analysis);
     }
 
     public interface OnFinishListener {
@@ -218,14 +218,17 @@ public class MvKlineView extends RelativeLayout {
     }
 
     private void onWrongAnswerSelected() {
+        int alreadyAnswered = mAnswerIndex + 1;
+        float accuracy = mRightAnswers * 1.0f / alreadyAnswered;
         if (mOnAnswerSelectedListener != null) {
-            mOnAnswerSelectedListener.onWrongAnswerSelected(mFocusedPoint.getAnalysis());
+            mOnAnswerSelectedListener.onWrongAnswerSelected(accuracy, mFocusedPoint.getAnalysis());
         }
     }
 
     private void onRightAnswerSelected() {
         mRightAnswers++;
-        float accuracy = mRightAnswers * 1.0f / mIntersectionPointArray.size();
+        int alreadyAnswered = mAnswerIndex + 1;
+        float accuracy = mRightAnswers * 1.0f / alreadyAnswered;
         if (mOnAnswerSelectedListener != null) {
             mOnAnswerSelectedListener.onRightAnswerSelected(accuracy);
         }

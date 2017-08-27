@@ -28,6 +28,14 @@ public class Client {
     //乐米训练心得分享地址
     public static final String SHARE_URL_TRAIN_EXPERIENCE = API.getHost() + "/admin/lm/train.html?trainId=%d";
 
+
+    public static String getServiceQQ(String serviceQQ) {
+//        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
+//            return "mqqwpa://im/chat?chat_type=wpa&uin=" + serviceQQ + "&version=1";
+//        }
+        return "mqqwpa://im/chat?chat_type=crm&uin=" + serviceQQ + "&version=1";
+    }
+
     /**
      * 获取期货品种
      *
@@ -2473,5 +2481,10 @@ public class Client {
                         .put("trainId", trainId)
                         .put("page", page)
                         .put("pageSize", pageSize));
+    }
+
+    //获取客服联系方式
+    public static API requestServiceConnectWay() {
+        return new API("/user/dictionary/findDictionaryForJson.do?type=aboutus");
     }
 }

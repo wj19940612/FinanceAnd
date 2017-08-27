@@ -92,7 +92,7 @@ public class DailyReportDetailActivity extends BaseActivity {
     protected String mPureHtml;
     private String mId;
     private int mFormat;
-    private String mShareTitle;
+    private String mShareImgUrl;
 
     private BroadcastReceiver mNetworkChangeReceiver;
     private WebViewClient mWebViewClient;
@@ -138,11 +138,12 @@ public class DailyReportDetailActivity extends BaseActivity {
                 .load(data.getCoverUrl())
                 .into(mImage);
         mTitleContent = data.getTitle();
+        mShareImgUrl = data.getCoverUrl();
         if (data.isHtml()) {
             mTitleInfo.setVisibility(View.VISIBLE);
             mClick.setText(getString(R.string.read_count, data.getClicks()));
             mTitle.setText(data.getTitle());
-            mSourceAndTime.setText(getString(R.string.source_and_time, data.getSource(), DateUtil.getFormatTime(data.getCreateTime())));
+            mSourceAndTime.setText(getString(R.string.source_and_time, data.getSource(), DateUtil.getMissFormatTime(data.getCreateTime())));
             mPureHtml = data.getContent();
             //获取第一段内容
             String content = Html.fromHtml(data.getContent()).toString().trim();
@@ -162,6 +163,7 @@ public class DailyReportDetailActivity extends BaseActivity {
     }
 
     private void initView() {
+        mBottom.bringToFront();
         if (mFormat == DailyReport.HTML) {
             mTitleArea.setVisibility(View.GONE);
         }
@@ -197,6 +199,7 @@ public class DailyReportDetailActivity extends BaseActivity {
                 //ShareReportDialogFragment
                 ShareDialog.with(getActivity())
                         .hasFeedback(false)
+                        .setShareThumbUrl(mShareImgUrl)
                         .setTitle(R.string.share_to)
                         .setShareTitle(mTitleContent)
                         .setShareDescription(mFirstContent)

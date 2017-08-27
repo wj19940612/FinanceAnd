@@ -164,6 +164,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 
 	private void requestEndTrain() {
 		TrainingSubmit trainingSubmit = new TrainingSubmit(mTrainingDetail.getTrain().getId());
+		trainingSubmit.addQuestionId(mQuestion.getId());
 		trainingSubmit.setTime((int) (mTrainingCountTime / 1000));
 		trainingSubmit.setFinish(mIsSuccess);
 		Launcher.with(getActivity(), TrainingResultActivity.class)

@@ -422,6 +422,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.training.SortQuestionActivity"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.training.JudgeTrainingActivity"

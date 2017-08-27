@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
@@ -13,6 +14,7 @@ import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.TrainingFragment;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
 import com.sbai.finance.model.AppVersion;
+import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -44,6 +46,20 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 //      translucentStatusBar();
 
 //      checkVersion();
+
+        requestServiceConnectWay();
+    }
+
+    private void requestServiceConnectWay() {
+        Client.requestServiceConnectWay()
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<ServiceConnectWay>, ServiceConnectWay>() {
+                    @Override
+                    protected void onRespSuccessData(ServiceConnectWay data) {
+                        Preference.get().setServiceConnectWay(data);
+                    }
+                })
+                .fireFree();
     }
 
     private void checkVersion() {
@@ -61,6 +77,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 })
                 .fireFree();
     }
+
 
     @Override
     protected void onDestroy() {

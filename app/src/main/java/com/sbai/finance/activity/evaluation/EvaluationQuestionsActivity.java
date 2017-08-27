@@ -3,12 +3,12 @@ package com.sbai.finance.activity.evaluation;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
@@ -235,7 +235,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
 
         @Override
         public ExamQuestionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_exam_questions, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_evaluation_questions, parent, false);
             return new ExamQuestionsViewHolder(view);
         }
 
@@ -255,7 +255,7 @@ public class EvaluationQuestionsActivity extends BaseActivity {
             @BindView(R.id.result)
             TextView mResult;
             @BindView(R.id.card)
-            CardView mCard;
+            LinearLayout mBg;
             @BindView(R.id.resultTitle)
             TextView mResultTitle;
 
@@ -272,11 +272,11 @@ public class EvaluationQuestionsActivity extends BaseActivity {
                 mResult.setText(examQuestionsModel.getContent());
                 mResultTitle.setText(getQuestionsNumber(examQuestionsModel.getSeq()));
                 mResultTitle.setTextColor(Color.parseColor("#222222"));
-                mCard.setBackgroundResource(R.drawable.bg_white_rounded_16_radius);
-                mCard.setOnClickListener(new View.OnClickListener() {
+                mBg.setBackgroundResource(R.drawable.bg_white_shadow);
+                mBg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mCard.setBackgroundResource(R.drawable.bg_color_primary_rounded);
+                        mBg.setBackgroundResource(R.drawable.bg_color_primary_rounded);
                         mResult.setSelected(true);
                         mResultTitle.setTextColor(Color.WHITE);
                         if (onExamResultSelectListener != null) {
