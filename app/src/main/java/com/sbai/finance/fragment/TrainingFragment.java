@@ -3,6 +3,7 @@ package com.sbai.finance.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -451,9 +452,14 @@ public class TrainingFragment extends BaseFragment {
                             .placeholder(R.drawable.bg_common_replace_image)
                             .into(mTrainIcon);
                     if (isMineTrained) {
-                        spannableString = StrUtil.mergeTextWithRatio(train.getTitle()
-                                , "\n" + context.getString(R.string.train_count, finishCount),
-                                0.7f);
+                        if (finishCount > 0) {
+                            spannableString = StrUtil.mergeTextWithRatio(train.getTitle()
+                                    , "\n" + context.getString(R.string.train_count, finishCount),
+                                    0.7f);
+                        } else {
+                            spannableString = StrUtil.mergeTextWithRatioColor(train.getTitle(),
+                                    "\n" + context.getString(R.string.not_join_train), 0.7f, ContextCompat.getColor(context, R.color.colorPrimary));
+                        }
                         mTrainTitle.setText(spannableString);
                     } else {
                         mTrainTitle.setText(train.getTitle());
@@ -467,7 +473,7 @@ public class TrainingFragment extends BaseFragment {
                 if (isMineTrained) {
                     mTrainStatus.setVisibility(View.GONE);
                     mTrainTime.setVisibility(View.VISIBLE);
-                    mTrainTime.setText(DateUtil.getMinutes(needTime));
+                    mTrainTime.setText(DateUtil.formatTime(needTime));
                 } else {
                     mTrainStatus.setVisibility(View.VISIBLE);
                     mTrainTime.setVisibility(View.GONE);
