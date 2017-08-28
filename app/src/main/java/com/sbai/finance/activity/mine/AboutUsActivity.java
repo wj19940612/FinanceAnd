@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -71,9 +72,24 @@ public class AboutUsActivity extends BaseActivity {
 
         mServiceConnectWay = Preference.get().getServiceConnectWay();
         if (mServiceConnectWay != null) {
-            mServiceConnect.setVisibility(View.VISIBLE);
-            mQq.setText(getString(R.string.qq, mServiceConnectWay.getQq()));
-            mWeChat.setText(getString(R.string.we_chat, mServiceConnectWay.getWeixin()));
+            if (!TextUtils.isEmpty(mServiceConnectWay.getWeixin())
+                    || !TextUtils.isEmpty(mServiceConnectWay.getQq())) {
+                mServiceConnect.setVisibility(View.VISIBLE);
+            } else {
+                mServiceConnect.setVisibility(View.GONE);
+            }
+
+            if (!TextUtils.isEmpty(mServiceConnectWay.getQq())) {
+                mQq.setText(getString(R.string.qq, mServiceConnectWay.getQq()));
+            } else {
+                mQq.setVisibility(View.GONE);
+            }
+
+            if (!TextUtils.isEmpty(mServiceConnectWay.getWeixin())) {
+                mWeChat.setText(getString(R.string.we_chat, mServiceConnectWay.getWeixin()));
+            } else {
+                mWeChat.setVisibility(View.GONE);
+            }
         }
     }
 
