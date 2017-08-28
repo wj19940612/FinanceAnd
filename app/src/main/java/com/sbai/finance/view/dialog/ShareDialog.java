@@ -108,7 +108,7 @@ public class ShareDialog {
             mWeb.setDescription(mShareDescription);
             UMImage thumb;
             if (TextUtils.isEmpty(mShareThumbUrl)) {
-                thumb = new UMImage(mActivity, R.mipmap.ic_launcher);
+                thumb = new UMImage(mActivity, R.drawable.ic_launcher_share);
             } else {
                 thumb = new UMImage(mActivity, mShareThumbUrl);
             }
@@ -122,9 +122,9 @@ public class ShareDialog {
             }
         } else {
             String text = mShareTitle + mShareUrl;
-            UMImage image = new UMImage(mActivity, R.mipmap.ic_launcher);
+            UMImage image = new UMImage(mActivity, R.drawable.ic_launcher_share);
             if (TextUtils.isEmpty(mShareThumbUrl)) {
-                image.setThumb(new UMImage(mActivity, R.mipmap.ic_launcher));
+                image.setThumb(new UMImage(mActivity, R.drawable.ic_launcher_share));
             } else {
                 image.setThumb(new UMImage(mActivity, mShareThumbUrl));
             }

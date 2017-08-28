@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_training_detail"
     android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
@@ -12,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/redTheoryTraining"
+        android:fitsSystemWindows="true"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_white"
         app:rightImage="@drawable/ic_share"
@@ -24,7 +26,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:fillViewport="true"
-        android:overScrollMode="never">
+        android:overScrollMode="ifContentScrolls">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -102,10 +104,10 @@
                         android:textSize="12sp"/>
 
                     <TextView
-                        android:layout_below="@+id/durationText"
                         android:id="@+id/duration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/durationText"
                         android:layout_marginTop="8dp"
                         android:textColor="@color/primaryText"
                         android:textSize="14sp"
@@ -135,10 +137,10 @@
                         android:textSize="12sp"/>
 
                     <TextView
-                        android:layout_below="@+id/difficultyText"
                         android:id="@+id/difficulty"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/difficultyText"
                         android:layout_marginTop="8dp"
                         android:textColor="@color/primaryText"
                         android:textSize="14sp"
@@ -255,14 +257,6 @@
                 app:subTextRightDrawable="@drawable/ic_arrow_more"
                 app:subTextRightMargin="0dp"/>
 
-
-            <!--<com.sbai.finance.view.MyListView
-                android:id="@+id/HotListView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/trainingExperience"
-                android:divider="@null"/>-->
-
             <LinearLayout
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
@@ -275,6 +269,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="20dp"
                     android:layout_marginTop="30dp"
                     android:drawablePadding="10dp"
                     android:drawableTop="@drawable/img_no_message"
@@ -288,7 +283,6 @@
                     android:layout_height="36dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="30dp"
-                    android:layout_marginTop="20dp"
                     android:background="@drawable/btn_write_experience"
                     android:gravity="center"
                     android:text="@string/write_experience"

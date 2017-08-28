@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
 //      translucentStatusBar();
 
-//      checkVersion();
+      checkVersion();
 
         requestServiceConnectWay();
     }

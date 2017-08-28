@@ -302,8 +302,8 @@
 
     <string name="end">已结束</string>
 
-    <string name="open_gps">请在设置中开启[乐米金融] 定位服务，以便发布借款</string>
     <string name="open_gps_permission">请在设置中开启[乐米金融] 定位服务权限</string>
+    <string name="open_gps">请打开gps</string>
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>
@@ -717,6 +717,7 @@
     <string name="count">(%1$s)</string>
     <string name="reply_someBody">回复%1$s :</string>
     <string name="no_miss_reply">还没有小姐姐回答哦~</string>
+    <string name="no_miss_now">现在还没有小姐姐哦</string>
     <string name="no_miss_introduce">小姐姐还没有写简介</string>
     <string name="no_question">你还没提问过哦</string>
     <string name="ask_question_to_miss">向小姐姐提问</string>
@@ -741,7 +742,7 @@
                                       \n金融水平初步测评。
                                       \n高阶训练项目通关。
                                       \n操盘大对战——真实演练。</string>
-    <string name="exponent_specification">指数说明</string>
+    <string name="exponent_specification">指标说明</string>
     <string name="master_theoretical">理论掌握</string>
     <string name="master_theoretical_introduce">理论知识是打开金融认知的敲门砖，系统全面的了解理论知识是能力进阶的基石，内容涵盖金融概念、术语及操盘技巧等。</string>
     <string name="earning_power">盈利能力</string>
@@ -824,6 +825,7 @@
     <string name="success_create_report">成功出炉年报</string>
     <string name="start_training">开始训练 !</string>
     <string name="share_your_experience">分享你训练的心得和感想</string>
+    <item name="tag_number" type="id">0</item>
     <!--Training Result-->
     <string name="_minutes_complete">%1$d分钟内完成</string>
     <string name="_minutes_x_seconds_complete">%1$d分%2$d秒内完成</string>

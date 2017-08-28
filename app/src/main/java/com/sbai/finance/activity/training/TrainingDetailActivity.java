@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -32,6 +33,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
+import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.ImageListView;
 import com.sbai.finance.view.ObservableScrollView;
 import com.sbai.finance.view.TitleBar;
@@ -81,6 +83,8 @@ public class TrainingDetailActivity extends BaseActivity {
 	ExperienceView mExperience1;
 	@BindView(R.id.experience2)
 	ExperienceView mExperience2;
+	@BindView(R.id.trainingExperience)
+	IconTextRow mTrainingExperience;
 
 	private TrainingDetail mTrainingDetail;
 	private Training mTraining;
@@ -92,7 +96,7 @@ public class TrainingDetailActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_training_detail);
 		ButterKnife.bind(this);
-
+		translucentStatusBar();
 		initData(getIntent());
 		initBackground();
 		initTitleBar();
@@ -246,7 +250,7 @@ public class TrainingDetailActivity extends BaseActivity {
 
 
 	private void requestFinishPeopleList() {
-		Client.getTrainedUserRecords(0, 3, mTraining.getId()).setTag(TAG)
+		Client.getTrainedUserRecords(0, 4, mTraining.getId()).setTag(TAG)
 				.setIndeterminate(this)
 				.setCallback(new Callback<Resp<List<TrainedUserRecord>>>() {
 					@Override
@@ -270,6 +274,16 @@ public class TrainingDetailActivity extends BaseActivity {
 					@Override
 					protected void onRespSuccessData(List<Experience> experienceList) {
 						updateHotExperienceList(experienceList);
+					}
+
+					@Override
+					public void onFailure(VolleyError volleyError) {
+						super.onFailure(volleyError);
+						mTrainingExperience.setSubTextVisible(View.INVISIBLE);
+						mTrainingExperience.setClickable(false);
+						mEmpty.setVisibility(View.VISIBLE);
+						mExperience1.setVisibility(View.GONE);
+						mExperience2.setVisibility(View.GONE);
 					}
 				}).fire();
 	}
@@ -299,6 +313,16 @@ public class TrainingDetailActivity extends BaseActivity {
 						protected void onRespSuccessData(List<Experience> experienceList) {
 							updateLatestExperienceList(experienceList);
 						}
+
+						@Override
+						public void onFailure(VolleyError volleyError) {
+							super.onFailure(volleyError);
+							mTrainingExperience.setSubTextVisible(View.INVISIBLE);
+							mTrainingExperience.setClickable(false);
+							mEmpty.setVisibility(View.VISIBLE);
+							mExperience1.setVisibility(View.GONE);
+							mExperience2.setVisibility(View.GONE);
+						}
 					}).fire();
 		}
 	}
@@ -308,6 +332,8 @@ public class TrainingDetailActivity extends BaseActivity {
 			mEmpty.setVisibility(View.VISIBLE);
 			mExperience1.setVisibility(View.GONE);
 			mExperience2.setVisibility(View.GONE);
+			mTrainingExperience.setSubTextVisible(View.INVISIBLE);
+			mTrainingExperience.setClickable(false);
 		} else if (experienceList.size() == 1) {
 			mEmpty.setVisibility(View.GONE);
 			mExperience1.setVisibility(View.VISIBLE);
@@ -373,7 +399,7 @@ public class TrainingDetailActivity extends BaseActivity {
 	private void requestTrainingContent() {
 		if (mTraining.getPlayType() == Training.PLAY_TYPE_REMOVE
 				|| mTraining.getPlayType() == Training.PLAY_TYPE_MATCH_STAR) {
-			Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+			Client.getTrainingContent(mTraining.getId()).setTag(TAG).setIndeterminate(this)
 					.setCallback(new Callback2D<Resp<String>, List<Question<RemoveData>>>() {
 						@Override
 						protected String onInterceptData(String data) {
@@ -388,10 +414,10 @@ public class TrainingDetailActivity extends BaseActivity {
 								}
 							}
 						}
-					}).fireFree();
+					}).fire();
 
 		} else if (mTraining.getPlayType() == Training.PLAY_TYPE_SORT) {
-			Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+			Client.getTrainingContent(mTraining.getId()).setTag(TAG).setIndeterminate(this)
 					.setCallback(new Callback2D<Resp<String>, List<Question<SortData>>>() {
 						@Override
 						protected String onInterceptData(String data) {
@@ -406,10 +432,10 @@ public class TrainingDetailActivity extends BaseActivity {
 								}
 							}
 						}
-					}).fireFree();
+					}).fire();
 
 		} else if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
-			Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+			Client.getTrainingContent(mTraining.getId()).setTag(TAG).setIndeterminate(this)
 					.setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
 						@Override
 						protected String onInterceptData(String data) {
@@ -424,7 +450,7 @@ public class TrainingDetailActivity extends BaseActivity {
 								}
 							}
 						}
-					}).fireFree();
+					}).fire();
 		}
 	}
 

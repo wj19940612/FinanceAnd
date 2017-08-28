@@ -672,6 +672,23 @@ public class DateUtil {
     }
 
     /**
+     * 1分钟内：显示xx秒
+     * 60s等整数：显示1分钟
+     * 超过60后：显示xx分xx秒
+     */
+
+    public static String formatTime(long second) {
+        if (second < 60) {
+            return second + "秒";
+        } else if (second % 60 == 0) {
+            return second / 60 + "分钟";
+        } else {
+            return second / 60 + "分" + second % 60 + "秒";
+        }
+    }
+
+
+    /**
      * 获取两段时间相差的秒
      *
      * @param time1

@@ -19,13 +19,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -41,10 +42,10 @@ import com.sbai.finance.activity.miss.RewardMissActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.economiccircle.NewMessage;
-import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.Prise;
 import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -53,11 +54,12 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.MyListView;
+import com.sbai.finance.view.VerticalSwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -70,11 +72,11 @@ import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
 import static com.sbai.finance.R.id.missAvatar;
-import static com.sbai.finance.R.id.recyclerView;
+import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
-public class MissTalkFragment extends BaseFragment implements View.OnClickListener {
+public class MissTalkFragment extends BaseFragment implements View.OnClickListener, AbsListView.OnScrollListener {
 
 	private static final int SUBMIT_QUESTION = 1001;
 	private static final int MY_QUESTION = 1002;
@@ -87,22 +89,10 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	@BindView(R.id.redPoint)
 	ImageView mRedPoint;
 	Unbinder unbinder;
-	@BindView(R.id.hotListView)
-	MyListView mHotListView;
 	@BindView(R.id.LatestListView)
-	MyListView mLatestListView;
-	@BindView(recyclerView)
-	EmptyRecyclerView mRecyclerView;
+	ListView mLatestListView;
 	@BindView(R.id.swipeRefreshLayout)
-	SwipeRefreshLayout mSwipeRefreshLayout;
-	@BindView(R.id.scrollView)
-	ScrollView mScrollView;
-	@BindView(R.id.hotQuestion)
-	TextView mHotQuestion;
-	@BindView(R.id.empty)
-	TextView mEmpty;
-	@BindView(R.id.missEmpty)
-	TextView mMissEmpty;
+	VerticalSwipeRefreshLayout mSwipeRefreshLayout;
 	@BindView(R.id.titleBar)
 	RelativeLayout mTitleBar;
 
@@ -120,6 +110,10 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	private RefreshReceiver mRefreshReceiver;
 	private MediaPlayerManager mMediaPlayerManager;
 	private int mPlayingID = -1;
+	private TextView mHotQuestion;
+	private MyListView mHotListView;
+	private LinearLayout mEmpty;
+	private TextView mMissEmpty;
 
 	@Nullable
 	@Override
@@ -132,17 +126,32 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		initPopupWindow();
 		mSet = new HashSet<>();
 		mMediaPlayerManager = new MediaPlayerManager(getActivity());
-		initMissList();
-		initHotQuestionList();
+
+		initPopupWindow();
+		initHeaderView1();
+		initHeaderView2();
 		initLatestQuestionList();
 
 		requestMissList();
+		requestHotQuestionList();
 		requestLatestQuestionList();
+
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
+		mLatestListView.setOnScrollListener(this);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (LocalUser.getUser().isLogin()) {
+			requestNewMessageCount();
+			startScheduleJob(10 * 1000);
+		} else {
+			mRedPoint.setVisibility(View.GONE);
+		}
 	}
 
 	private void initPopupWindow() {
@@ -161,14 +170,17 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 		tv2.setOnClickListener(this);
 	}
 
-	private void initMissList() {
+	private void initHeaderView1() {
+		LinearLayout header = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.view_header_miss_talk_1, null);
+		EmptyRecyclerView recyclerView = (EmptyRecyclerView) header.findViewById(R.id.recyclerView);
+		mMissEmpty = (TextView) header.findViewById(R.id.missEmpty);
 		mMissList = new ArrayList<>();
 		mMissListAdapter = new MissListAdapter(getActivity(), mMissList);
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
 		gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-		mRecyclerView.setLayoutManager(gridLayoutManager);
-		mRecyclerView.setEmptyView(mMissEmpty);
-		mRecyclerView.setAdapter(mMissListAdapter);
+		recyclerView.setLayoutManager(gridLayoutManager);
+		recyclerView.setEmptyView(mMissEmpty);
+		recyclerView.setAdapter(mMissListAdapter);
 		mMissListAdapter.setOnItemClickListener(new MissListAdapter.OnItemClickListener() {
 			@Override
 			public void onItemClick(Miss item) {
@@ -178,11 +190,17 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				}
 			}
 		});
+
+		mLatestListView.addHeaderView(header);
 	}
 
-	private void initHotQuestionList() {
+	private void initHeaderView2() {
+		LinearLayout header = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.view_header_miss_talk_2, null);
+		mHotQuestion = (TextView) header.findViewById(R.id.hotQuestion);
+		mHotListView = (MyListView) header.findViewById(R.id.hotListView);
+		mEmpty = (LinearLayout) header.findViewById(R.id.empty);
+
 		mHotQuestionListAdapter = new HotQuestionListAdapter(getActivity());
-		mHotListView.setFocusable(false);
 		mHotListView.setAdapter(mHotQuestionListAdapter);
 		mHotListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -277,12 +295,12 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				}
 			}
 		});
+
+		mLatestListView.addHeaderView(header);
 	}
 
 	private void initLatestQuestionList() {
 		mLatestQuestionListAdapter = new LatestQuestionListAdapter(getActivity());
-		mLatestListView.setFocusable(false);
-		mLatestListView.setEmptyView(mEmpty);
 		mLatestListView.setAdapter(mLatestQuestionListAdapter);
 		mLatestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -386,6 +404,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				mSet.clear();
 				mCreateTime = null;
 				requestMissList();
+				requestHotQuestionList();
 				requestLatestQuestionList();
 
 				//下拉刷新时关闭语音播放
@@ -393,17 +412,6 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				mPlayingID = -1;
 			}
 		});
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (LocalUser.getUser().isLogin()) {
-			requestNewMessageCount();
-			startScheduleJob(10 * 1000);
-		} else {
-			mRedPoint.setVisibility(View.GONE);
-		}
 	}
 
 	@Override
@@ -527,7 +535,10 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 					protected void onRespSuccessData(List<Question> questionList) {
 						if (questionList.size() == 0) {
 							mHotQuestion.setVisibility(View.GONE);
+						} else {
+							mHotQuestion.setVisibility(View.VISIBLE);
 						}
+
 						mHotQuestionList = questionList;
 						updateHotQuestionList(questionList);
 					}
@@ -546,12 +557,12 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				.setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
 					@Override
 					protected void onRespSuccessData(List<Question> questionList) {
-						mLatestQuestionList = questionList;
-						updateLatestQuestionList(questionList);
-
-						if (questionList.size() >= 20) {
-							mHotQuestion.setVisibility(View.VISIBLE);
-							requestHotQuestionList();
+						if (questionList.size() == 0) {
+							mEmpty.setVisibility(View.VISIBLE);
+						} else {
+							mEmpty.setVisibility(View.GONE);
+							mLatestQuestionList = questionList;
+							updateLatestQuestionList(questionList);
 						}
 					}
 
@@ -559,6 +570,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 					public void onFailure(VolleyError volleyError) {
 						super.onFailure(volleyError);
 						stopRefreshAnimation();
+						mEmpty.setVisibility(View.VISIBLE);
 					}
 				}).fire();
 	}
@@ -623,6 +635,18 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	public void onDestroyView() {
 		super.onDestroyView();
 		unbinder.unbind();
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		int topRowVerticalPosition =
+				(mLatestListView == null || mLatestListView.getChildCount() == 0) ? 0 : mLatestListView.getChildAt(0).getTop();
+		mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
 	}
 
 	public static class MissListAdapter extends RecyclerView.Adapter<MissListAdapter.ViewHolder> {
@@ -1061,7 +1085,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				mRedPoint.setVisibility(View.INVISIBLE);
 				break;
 			case R.id.titleBar:
-				mScrollView.smoothScrollTo(0, 0);
+				mLatestListView.smoothScrollToPosition(0);
 				break;
 		}
 	}
@@ -1123,9 +1147,9 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 		}
 
 		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
-			if (data!= null) {
+			if (data != null) {
 				Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-				int replyCount  = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+				int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 				int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
 				int listenCount = data.getIntExtra(Launcher.EX_PAYLOAD_3, -1);
 				if (prise != null) {
@@ -1225,6 +1249,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 		mRefreshReceiver = new RefreshReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_REWARD_SUCCESS);
+		filter.addAction(ACTION_LOGIN_SUCCESS);
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshReceiver, filter);
 	}
 
@@ -1250,6 +1275,14 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 						}
 					}
 				}
+			}
+
+			if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+				mSet.clear();
+				mCreateTime = null;
+				requestMissList();
+				requestHotQuestionList();
+				requestLatestQuestionList();
 			}
 		}
 	}

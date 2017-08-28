@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -35,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="45dp"
+            android:layout_marginRight="30dp"
             android:layout_toLeftOf="@+id/more">
 
             <ImageView
@@ -60,96 +58,16 @@
         android:layout_height="0.5dp"
         android:background="@color/split"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.sbai.finance.view.VerticalSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
-            android:id="@+id/scrollView"
+        <ListView
+            android:id="@+id/LatestListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:divider="@null"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:orientation="vertical">
-
-                    <com.sbai.finance.view.EmptyRecyclerView
-                        android:id="@+id/recyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:overScrollMode="never"/>
-
-                    <TextView
-                        android:id="@+id/missEmpty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="40dp"
-                        android:layout_marginTop="40dp"
-                        android:text="现在还没有小姐姐哦"
-                        android:visibility="gone"/>
-                </LinearLayout>
-
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/split"/>
-
-                <TextView
-                    android:id="@+id/hotQuestion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/background"
-                    android:paddingLeft="14dp"
-                    android:paddingTop="14dp"
-                    android:text="@string/hot_question"
-                    android:textColor="@color/luckyText"
-                    android:textSize="12sp"
-                    android:visibility="gone"/>
-
-                <com.sbai.finance.view.MyListView
-                    android:id="@+id/hotListView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:divider="@null"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/background"
-                    android:paddingLeft="14dp"
-                    android:paddingTop="14dp"
-                    android:text="@string/latest_question"
-                    android:textColor="@color/luckyText"
-                    android:textSize="12sp"/>
-
-                <com.sbai.finance.view.MyListView
-                    android:id="@+id/LatestListView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:divider="@null"/>
-
-                <TextView
-                    android:id="@+id/empty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="100dp"
-                    android:drawablePadding="10dp"
-                    android:drawableTop="@drawable/img_no_message"
-                    android:text="@string/ask_miss"/>
-
-            </LinearLayout>
-        </ScrollView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.sbai.finance.view.VerticalSwipeRefreshLayout>
 </LinearLayout>

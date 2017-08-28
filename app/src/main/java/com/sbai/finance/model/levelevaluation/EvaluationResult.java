@@ -29,7 +29,7 @@ public class EvaluationResult implements Parcelable {
     private double profitAccuracy;
     //风险控制 正确率
     private double riskAccuracy;
-    //技术分析 正确率
+    //指标分析 正确率
     private double skillAccuracy;
     //理论掌握 正确率
     private double theoryAccuracy;

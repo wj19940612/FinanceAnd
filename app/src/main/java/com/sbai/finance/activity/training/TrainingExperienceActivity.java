@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -24,8 +24,8 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.Experience;
 import com.sbai.finance.model.training.IsTrained;
-import com.sbai.finance.model.training.TrainingExperiencePraise;
 import com.sbai.finance.model.training.Training;
+import com.sbai.finance.model.training.TrainingExperiencePraise;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -33,6 +33,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.TitleBar;
 
@@ -48,28 +49,22 @@ public class TrainingExperienceActivity extends BaseActivity {
 
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
-	@BindView(R.id.hotListView)
-	MyListView mHotListView;
 	@BindView(R.id.latestListView)
-	MyListView mLatestListView;
+	ListView mLatestListView;
 	@BindView(R.id.empty)
-	TextView mEmpty;
-	@BindView(R.id.scrollView)
-	ScrollView mScrollView;
+	LinearLayout mEmpty;
 	@BindView(R.id.swipeRefreshLayout)
-	SwipeRefreshLayout mSwipeRefreshLayout;
-	@BindView(R.id.spit)
-	View mSpit;
-	@BindView(R.id.hotExperience)
-	TextView mHotExperience;
+	CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
 	private int mPageSize = 20;
 	private int mPage = 0;
 	private HashSet<String> mSet;
-	private View mFootView;
 	private Training mTraining;
 	private HotExperienceListAdapter mHotExperienceListAdapter;
 	private LatestExperienceListAdapter mLatestExperienceListAdapter;
+	private TextView mHotExperience;
+	private View mSpit;
+	private MyListView mHotListView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +75,12 @@ public class TrainingExperienceActivity extends BaseActivity {
 		mSet = new HashSet<>();
 
 		initTitleBar();
-		initHotExperienceList();
+		initHeadView();
 		initLatestExperienceList();
 		requestHotExperienceList();
 		requestLatestExperienceList();
 		initSwipeRefreshLayout();
-		scrollToTop(mTitleBar, mScrollView);
+		scrollToTop(mTitleBar, mLatestListView);
 	}
 
 	private void initData(Intent intent) {
@@ -100,28 +95,40 @@ public class TrainingExperienceActivity extends BaseActivity {
 		}
 	}
 
+	private void initHeadView() {
+		LinearLayout header = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.view_header_training_experience, null);
+		mHotExperience = (TextView) header.findViewById(R.id.hotExperience);
+		mSpit = header.findViewById(R.id.spit);
+		mHotListView = (MyListView) header.findViewById(R.id.hotListView);
+
+		mHotExperienceListAdapter = new HotExperienceListAdapter(this);
+		mHotListView.setAdapter(mHotExperienceListAdapter);
+
+		mLatestListView.addHeaderView(header);
+	}
+
 	private void initSwipeRefreshLayout() {
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				mSet.clear();
 				mPage = 0;
+				mSwipeRefreshLayout.setLoadMoreEnable(true);
 				requestHotExperienceList();
+				requestLatestExperienceList();
+			}
+		});
+
+		mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
+			@Override
+			public void onLoadMore() {
 				requestLatestExperienceList();
 			}
 		});
 	}
 
-	private void initHotExperienceList() {
-		mHotExperienceListAdapter = new HotExperienceListAdapter(this);
-		mHotListView.setFocusable(false);
-		mHotListView.setAdapter(mHotExperienceListAdapter);
-	}
-
 	private void initLatestExperienceList() {
 		mLatestExperienceListAdapter = new LatestExperienceListAdapter(this);
-		mLatestListView.setEmptyView(mEmpty);
-		mLatestListView.setFocusable(false);
 		mLatestListView.setAdapter(mLatestExperienceListAdapter);
 	}
 
@@ -189,13 +196,20 @@ public class TrainingExperienceActivity extends BaseActivity {
 					.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
 						@Override
 						protected void onRespSuccessData(List<Experience> experienceList) {
-							updateLatestExperienceList(experienceList);
+							if (experienceList.size() == 0) {
+								mEmpty.setVisibility(View.VISIBLE);
+								stopRefreshAnimation();
+							} else {
+								mEmpty.setVisibility(View.GONE);
+								updateLatestExperienceList(experienceList);
+							}
 						}
 
 						@Override
 						public void onFailure(VolleyError volleyError) {
 							super.onFailure(volleyError);
 							stopRefreshAnimation();
+							mEmpty.setVisibility(View.VISIBLE);
 						}
 					}).fire();
 		}
@@ -205,6 +219,10 @@ public class TrainingExperienceActivity extends BaseActivity {
 		if (mSwipeRefreshLayout.isRefreshing()) {
 			mSwipeRefreshLayout.setRefreshing(false);
 		}
+
+		if (mSwipeRefreshLayout.isLoading()) {
+			mSwipeRefreshLayout.setLoading(false);
+		}
 	}
 
 	private void updateLatestExperienceList(List<Experience> experienceList) {
@@ -213,31 +231,18 @@ public class TrainingExperienceActivity extends BaseActivity {
 			return;
 		}
 
-		if (mFootView == null) {
-			mFootView = View.inflate(getActivity(), R.layout.view_footer_load_more, null);
-			mFootView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (mSwipeRefreshLayout.isRefreshing()) return;
-					mPage++;
-					requestLatestExperienceList();
-				}
-			});
-			mLatestListView.addFooterView(mFootView, null, true);
-		}
-
 		if (experienceList.size() < mPageSize) {
-			mLatestListView.removeFooterView(mFootView);
-			mFootView = null;
+			mSwipeRefreshLayout.setLoadMoreEnable(false);
+		} else {
+			mPage++;
 		}
 
 		if (mSwipeRefreshLayout.isRefreshing()) {
 			if (mLatestExperienceListAdapter != null) {
 				mLatestExperienceListAdapter.clear();
-				mLatestExperienceListAdapter.notifyDataSetChanged();
 			}
-			stopRefreshAnimation();
 		}
+		stopRefreshAnimation();
 
 		for (Experience experience : experienceList) {
 			if (mSet.add(experience.getId())) {
@@ -542,7 +547,6 @@ public class TrainingExperienceActivity extends BaseActivity {
 			mPage = 0;
 			mSwipeRefreshLayout.setRefreshing(true);
 			requestLatestExperienceList();
-			mScrollView.smoothScrollTo(0, 0);
 		}
 
 		if (requestCode == REQ_LOGIN && resultCode == RESULT_OK) {

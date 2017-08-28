@@ -99,7 +99,6 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	private float mDy;
 	private Rect mCardRect;
 	private Rect mStarImageRect;
-	private List<Integer> mStarColor;
 	private int mCompleteCount = 0;
 	//游戏进行的时间
 	private long mTrainingCountTime;
@@ -179,7 +178,6 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		mQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
 		mNounExplanationList = mQuestion.getContent();
 		mNewNounExplanationList = new ArrayList<>();
-		mStarColor = new ArrayList<>();
 		if (mNounExplanationList.size() > 5) {
 			for (int i = 0; i < 5; i++) {
 				mNewNounExplanationList.add(mNounExplanationList.get(i));
@@ -194,7 +192,6 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		List<Fragment> mFragments = new ArrayList<>();
 		Collections.shuffle(mNewNounExplanationList);
 		for (int i = 0; i < mNewNounExplanationList.size(); i++) {
-			mStarColor.add(i);
 			mFragments.add(ExplanationFragment.newInstance(mNewNounExplanationList.get(i).getKey().getContent(),
 					mNewNounExplanationList.get(i).getKey().getSeq()));
 		}
@@ -227,7 +224,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mStar4.setVisibility(View.GONE);
 				mStar5.setVisibility(View.GONE);
 				setStarTextAndEvent(mStar1, mNewNounExplanationList.get(0).getValue().getContent(),
-						mNewNounExplanationList.get(0).getValue().getSeq(), 0);
+						mNewNounExplanationList.get(0).getValue().getSeq(), 0, 0);
 				break;
 			case 2:
 				mStar1.setVisibility(View.VISIBLE);
@@ -236,9 +233,9 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mStar4.setVisibility(View.GONE);
 				mStar5.setVisibility(View.GONE);
 				setStarTextAndEvent(mStar1, mNewNounExplanationList.get(0).getValue().getContent(),
-						mNewNounExplanationList.get(0).getValue().getSeq(), 0);
+						mNewNounExplanationList.get(0).getValue().getSeq(), 0, 0);
 				setStarTextAndEvent(mStar2, mNewNounExplanationList.get(1).getValue().getContent(),
-						mNewNounExplanationList.get(1).getValue().getSeq(), 300);
+						mNewNounExplanationList.get(1).getValue().getSeq(), 300, 1);
 				break;
 			case 3:
 				mStar1.setVisibility(View.VISIBLE);
@@ -247,11 +244,11 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mStar4.setVisibility(View.GONE);
 				mStar5.setVisibility(View.GONE);
 				setStarTextAndEvent(mStar1, mNewNounExplanationList.get(0).getValue().getContent(),
-						mNewNounExplanationList.get(0).getValue().getSeq(), 0);
+						mNewNounExplanationList.get(0).getValue().getSeq(), 0, 0);
 				setStarTextAndEvent(mStar2, mNewNounExplanationList.get(1).getValue().getContent(),
-						mNewNounExplanationList.get(1).getValue().getSeq(), 300);
+						mNewNounExplanationList.get(1).getValue().getSeq(), 300, 1);
 				setStarTextAndEvent(mStar3, mNewNounExplanationList.get(2).getValue().getContent(),
-						mNewNounExplanationList.get(2).getValue().getSeq(), 600);
+						mNewNounExplanationList.get(2).getValue().getSeq(), 600, 2);
 				break;
 			case 4:
 				mStar1.setVisibility(View.VISIBLE);
@@ -260,13 +257,13 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mStar4.setVisibility(View.VISIBLE);
 				mStar5.setVisibility(View.GONE);
 				setStarTextAndEvent(mStar1, mNewNounExplanationList.get(0).getValue().getContent(),
-						mNewNounExplanationList.get(0).getValue().getSeq(), 0);
+						mNewNounExplanationList.get(0).getValue().getSeq(), 0, 0);
 				setStarTextAndEvent(mStar2, mNewNounExplanationList.get(1).getValue().getContent(),
-						mNewNounExplanationList.get(1).getValue().getSeq(), 300);
+						mNewNounExplanationList.get(1).getValue().getSeq(), 300, 1);
 				setStarTextAndEvent(mStar3, mNewNounExplanationList.get(2).getValue().getContent(),
-						mNewNounExplanationList.get(2).getValue().getSeq(), 600);
+						mNewNounExplanationList.get(2).getValue().getSeq(), 600, 2);
 				setStarTextAndEvent(mStar4, mNewNounExplanationList.get(3).getValue().getContent(),
-						mNewNounExplanationList.get(3).getValue().getSeq(), 900);
+						mNewNounExplanationList.get(3).getValue().getSeq(), 900, 3);
 				break;
 			case 5:
 				mStar1.setVisibility(View.VISIBLE);
@@ -275,24 +272,25 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 				mStar4.setVisibility(View.VISIBLE);
 				mStar5.setVisibility(View.VISIBLE);
 				setStarTextAndEvent(mStar1, mNewNounExplanationList.get(0).getValue().getContent(),
-						mNewNounExplanationList.get(0).getValue().getSeq(), 0);
+						mNewNounExplanationList.get(0).getValue().getSeq(), 0, 0);
 				setStarTextAndEvent(mStar2, mNewNounExplanationList.get(1).getValue().getContent(),
-						mNewNounExplanationList.get(1).getValue().getSeq(), 300);
+						mNewNounExplanationList.get(1).getValue().getSeq(), 300, 1);
 				setStarTextAndEvent(mStar3, mNewNounExplanationList.get(2).getValue().getContent(),
-						mNewNounExplanationList.get(2).getValue().getSeq(), 600);
+						mNewNounExplanationList.get(2).getValue().getSeq(), 600, 2);
 				setStarTextAndEvent(mStar4, mNewNounExplanationList.get(3).getValue().getContent(),
-						mNewNounExplanationList.get(3).getValue().getSeq(), 900);
+						mNewNounExplanationList.get(3).getValue().getSeq(), 900, 3);
 				setStarTextAndEvent(mStar5, mNewNounExplanationList.get(4).getValue().getContent(),
-						mNewNounExplanationList.get(4).getValue().getSeq(), 1200);
+						mNewNounExplanationList.get(4).getValue().getSeq(), 1200, 4);
 				break;
 		}
 	}
 
-	public void setStarTextAndEvent(TextView view, String text, int tag, long delayTime) {
+	public void setStarTextAndEvent(TextView view, String text, int tag, long delayTime, int number) {
 		view.setText(text);
 		view.setOnTouchListener(this);
 		view.setTag(tag);
 		startAnimation(view, delayTime);
+		view.setTag(R.id.tag_number, number);
 	}
 
 	private void startAnimation(View view, long delayTime) {
@@ -388,12 +386,11 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 						, mFragments.get(mViewPager.getCurrentItem()));
 				mFragments.remove(mViewPager.getCurrentItem());
 				initViewPager();
-				mStarColor.remove(mViewPager.getCurrentItem());
 				mCompleteCount++;
 				mNumber.setText(getString(R.string.explanation_number, mCompleteCount, mQuestionCount));
 			} else {
 				//只剩一套题目了
-				initCardStar(mStarColor.get(mViewPager.getCurrentItem()));
+				initCardStar((int) view.getTag(R.id.tag_number));
 				view.setVisibility(View.INVISIBLE);
 				mViewPager.setVisibility(View.INVISIBLE);
 				mCardView.setVisibility(View.VISIBLE);
@@ -415,7 +412,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	}
 
 	private void startCardFlyAnimation(View view) {
-		initCardStar(mStarColor.get(mViewPager.getCurrentItem()));
+		initCardStar((int) view.getTag(R.id.tag_number));
 		view.setVisibility(View.INVISIBLE);
 		mCardView.setVisibility(View.VISIBLE);
 		mStarImage.setVisibility(View.VISIBLE);
@@ -426,8 +423,8 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		mCardView.startAnimation(translateAnimation);
 	}
 
-	private void initCardStar(int currentItem) {
-		switch (currentItem) {
+	private void initCardStar(int number) {
+		switch (number) {
 			case 0:
 				mStarImage.setImageResource(R.drawable.ic_star_1s);
 				break;
