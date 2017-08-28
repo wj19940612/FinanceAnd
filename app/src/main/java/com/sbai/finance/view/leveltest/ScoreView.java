@@ -208,7 +208,7 @@ public class ScoreView extends View {
             double riskAccuracy = mEvaluationResult.getRiskAccuracy() > 1 ? 1 : mEvaluationResult.getRiskAccuracy();
             double theoryAccuracy = mEvaluationResult.getTheoryAccuracy() > 1 ? 1 : mEvaluationResult.getTheoryAccuracy();
             double[] dataScore = {
-                    riskAccuracy * mMaxValue, skillAccuracy * mMaxValue, baseAccuracy * mMaxValue,
+                    skillAccuracy * mMaxValue, baseAccuracy * mMaxValue, riskAccuracy * mMaxValue,
                     profitAccuracy * mMaxValue, theoryAccuracy * mMaxValue};
 
             mData = dataScore;

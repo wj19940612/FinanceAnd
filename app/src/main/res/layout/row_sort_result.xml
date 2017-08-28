@@ -5,30 +5,31 @@
               android:layout_height="wrap_content"
               android:layout_marginLeft="5dp"
               android:foreground="?android:attr/selectableItemBackground"
-              android:minHeight="80dp"
               android:layerType="software"
+              android:minHeight="80dp"
               android:orientation="horizontal">
 
     <TextView
-        android:layerType="software"
         android:id="@+id/lineNumber"
-        android:layout_width="48dp"
+        android:minWidth="46dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="6dp"
         android:gravity="center"
+        android:layerType="software"
         android:textColor="@color/unluckyText"
         android:textSize="30sp"
         tools:text="1"/>
 
 
     <RelativeLayout
-        android:layerType="software"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layerType="software">
 
         <TextView
-            android:layerType="software"
             android:id="@+id/materials"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,6 +38,7 @@
             android:layout_marginLeft="40dp"
             android:background="@drawable/bg_broken_line_oval"
             android:gravity="center"
+            android:layerType="software"
             android:maxLines="1"
             android:minHeight="40dp"
             android:minWidth="60dp"
