@@ -59,7 +59,6 @@ public class TrainingExperienceActivity extends BaseActivity {
 	private int mPageSize = 20;
 	private int mPage = 0;
 	private HashSet<String> mSet;
-	private View mFootView;
 	private Training mTraining;
 	private HotExperienceListAdapter mHotExperienceListAdapter;
 	private LatestExperienceListAdapter mLatestExperienceListAdapter;

@@ -96,7 +96,7 @@ public class TrainingDetailActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_training_detail);
 		ButterKnife.bind(this);
-
+		translucentStatusBar();
 		initData(getIntent());
 		initBackground();
 		initTitleBar();
