@@ -272,7 +272,8 @@ public class EvaluationQuestionsActivity extends BaseActivity {
                 mResult.setText(examQuestionsModel.getContent());
                 mResultTitle.setText(getQuestionsNumber(examQuestionsModel.getSeq()));
                 mResultTitle.setTextColor(Color.parseColor("#222222"));
-                mBg.setBackgroundResource(R.drawable.bg_white_shadow);
+                mBg.setBackgroundResource(R.drawable.bg_white_rounded);
+//                mBg.setBackgroundResource(R.drawable.bg_white_shadow);
                 mBg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

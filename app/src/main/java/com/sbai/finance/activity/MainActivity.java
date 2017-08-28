@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
@@ -46,7 +45,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
 //      translucentStatusBar();
 
-//      checkVersion();
+      checkVersion();
 
         requestServiceConnectWay();
     }
@@ -57,7 +56,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 .setCallback(new Callback2D<Resp<ServiceConnectWay>, ServiceConnectWay>() {
                     @Override
                     protected void onRespSuccessData(ServiceConnectWay data) {
-                        Log.d(TAG, "onRespSuccessData: "+data.toString());
                         Preference.get().setServiceConnectWay(data);
                     }
                 })

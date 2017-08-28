@@ -43,6 +43,7 @@
         tools:text="若采取____财政、货币政策通常会造成股价下跌地方的数据对方立刻克鲁塞德荆防颗粒圣诞节 "/>
 
     <android.support.v7.widget.RecyclerView
+        android:background="#F7FBFF"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
