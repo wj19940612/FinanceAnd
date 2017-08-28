@@ -7,31 +7,32 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_marginBottom="20dp"
+    android:background="@drawable/bg_evaluation_question"
     android:foreground="?android:attr/selectableItemBackground"
     android:gravity="center"
     android:minHeight="80dp">
 
     <TextView
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         android:id="@+id/resultTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_marginLeft="40dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
         android:textColor="@color/blackPrimary"
         android:textSize="17sp"
         tools:text="A"/>
 
     <TextView
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         android:id="@+id/result"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginBottom="16dp"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="34dp"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:textColor="@color/love_text"
         android:textSize="17sp"
