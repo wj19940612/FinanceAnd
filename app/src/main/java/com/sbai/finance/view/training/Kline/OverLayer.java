@@ -100,6 +100,9 @@ public class OverLayer extends View {
 
                     mNextIntersectionPointIndex++;
                 } else {
+                    if (point.getPoint().x == 0 && point.getPoint().y == 0) { // invalid data, skip
+                        mNextIntersectionPointIndex++;
+                    }
                     mHandler.sendEmptyMessage(0); // keep remove piece
                 }
             }
