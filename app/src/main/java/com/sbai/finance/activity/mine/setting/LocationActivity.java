@@ -118,14 +118,7 @@ public class LocationActivity extends BaseActivity {
         addressInitTask.execute(province, city, country);
     }
 
-
-    @Override
-    public void onBackPressed() {
-        setResult(RESULT_OK);
-        super.onBackPressed();
-
-    }
-
+    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -217,6 +210,7 @@ public class LocationActivity extends BaseActivity {
                     public void onAddressPicked(Province province, City city, County county) {
                         LocalUser.getUser().getUserInfo().setLand(province.getAreaName() + "-" + city.getAreaName() + "-" + county.getAreaName());
                         mChoiceLocation.setSubText(LocalUser.getUser().getUserInfo().getLand());
+                        setResult(RESULT_OK);
                         finish();
                     }
                 });
