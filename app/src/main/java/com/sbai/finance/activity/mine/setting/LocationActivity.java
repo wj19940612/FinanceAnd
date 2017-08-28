@@ -118,7 +118,7 @@ public class LocationActivity extends BaseActivity {
         addressInitTask.execute(province, city, country);
     }
 
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

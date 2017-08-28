@@ -20,6 +20,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        translucentStatusBar();
         // init getui push
         PushManager.getInstance().initialize(this.getApplicationContext(), PushService.class);
         // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
