@@ -717,6 +717,7 @@
     <string name="count">(%1$s)</string>
     <string name="reply_someBody">回复%1$s :</string>
     <string name="no_miss_reply">还没有小姐姐回答哦~</string>
+    <string name="no_miss_now">现在还没有小姐姐哦</string>
     <string name="no_miss_introduce">小姐姐还没有写简介</string>
     <string name="no_question">你还没提问过哦</string>
     <string name="ask_question_to_miss">向小姐姐提问</string>

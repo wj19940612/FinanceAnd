@@ -148,7 +148,7 @@ public class ShareDialogFragment extends DialogFragment {
             if (isFutureGame) {
                 thumb = new UMImage(mActivity, R.drawable.ic_future_battle_game);
             } else {
-                thumb = new UMImage(mActivity, R.mipmap.ic_launcher);
+                thumb = new UMImage(mActivity, R.drawable.ic_launcher_share);
             }
             mWeb.setThumb(thumb);
             if (getActivity() != null && !getActivity().isFinishing()) {
@@ -165,8 +165,8 @@ public class ShareDialogFragment extends DialogFragment {
                 image = new UMImage(mActivity, R.drawable.ic_future_battle_game);
                 image.setThumb(new UMImage(mActivity, R.drawable.ic_future_battle_game));
             } else {
-                image = new UMImage(mActivity, R.mipmap.ic_launcher);
-                image.setThumb(new UMImage(mActivity, R.mipmap.ic_launcher));
+                image = new UMImage(mActivity, R.drawable.ic_launcher_share);
+                image.setThumb(new UMImage(mActivity, R.drawable.ic_launcher_share));
             }
             if (getActivity() != null && !getActivity().isFinishing()) {
                 new ShareAction(getActivity())
