@@ -99,7 +99,6 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	private float mDy;
 	private Rect mCardRect;
 	private Rect mStarImageRect;
-	private List<Integer> mStarColor;
 	private int mCompleteCount = 0;
 	//游戏进行的时间
 	private long mTrainingCountTime;
@@ -179,7 +178,6 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		mQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
 		mNounExplanationList = mQuestion.getContent();
 		mNewNounExplanationList = new ArrayList<>();
-		mStarColor = new ArrayList<>();
 		if (mNounExplanationList.size() > 5) {
 			for (int i = 0; i < 5; i++) {
 				mNewNounExplanationList.add(mNounExplanationList.get(i));
@@ -194,7 +192,6 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		List<Fragment> mFragments = new ArrayList<>();
 		Collections.shuffle(mNewNounExplanationList);
 		for (int i = 0; i < mNewNounExplanationList.size(); i++) {
-			mStarColor.add(i);
 			mFragments.add(ExplanationFragment.newInstance(mNewNounExplanationList.get(i).getKey().getContent(),
 					mNewNounExplanationList.get(i).getKey().getSeq()));
 		}
@@ -389,7 +386,6 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 						, mFragments.get(mViewPager.getCurrentItem()));
 				mFragments.remove(mViewPager.getCurrentItem());
 				initViewPager();
-				mStarColor.remove(mViewPager.getCurrentItem());
 				mCompleteCount++;
 				mNumber.setText(getString(R.string.explanation_number, mCompleteCount, mQuestionCount));
 			} else {

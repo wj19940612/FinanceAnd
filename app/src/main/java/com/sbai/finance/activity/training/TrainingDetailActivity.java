@@ -96,7 +96,7 @@ public class TrainingDetailActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_training_detail);
 		ButterKnife.bind(this);
-
+		translucentStatusBar();
 		initData(getIntent());
 		initBackground();
 		initTitleBar();
@@ -250,7 +250,7 @@ public class TrainingDetailActivity extends BaseActivity {
 
 
 	private void requestFinishPeopleList() {
-		Client.getTrainedUserRecords(0, 3, mTraining.getId()).setTag(TAG)
+		Client.getTrainedUserRecords(0, 4, mTraining.getId()).setTag(TAG)
 				.setIndeterminate(this)
 				.setCallback(new Callback<Resp<List<TrainedUserRecord>>>() {
 					@Override
@@ -399,7 +399,7 @@ public class TrainingDetailActivity extends BaseActivity {
 	private void requestTrainingContent() {
 		if (mTraining.getPlayType() == Training.PLAY_TYPE_REMOVE
 				|| mTraining.getPlayType() == Training.PLAY_TYPE_MATCH_STAR) {
-			Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+			Client.getTrainingContent(mTraining.getId()).setTag(TAG).setIndeterminate(this)
 					.setCallback(new Callback2D<Resp<String>, List<Question<RemoveData>>>() {
 						@Override
 						protected String onInterceptData(String data) {
@@ -414,10 +414,10 @@ public class TrainingDetailActivity extends BaseActivity {
 								}
 							}
 						}
-					}).fireFree();
+					}).fire();
 
 		} else if (mTraining.getPlayType() == Training.PLAY_TYPE_SORT) {
-			Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+			Client.getTrainingContent(mTraining.getId()).setTag(TAG).setIndeterminate(this)
 					.setCallback(new Callback2D<Resp<String>, List<Question<SortData>>>() {
 						@Override
 						protected String onInterceptData(String data) {
@@ -432,10 +432,10 @@ public class TrainingDetailActivity extends BaseActivity {
 								}
 							}
 						}
-					}).fireFree();
+					}).fire();
 
 		} else if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
-			Client.getTrainingContent(mTraining.getId()).setTag(TAG)
+			Client.getTrainingContent(mTraining.getId()).setTag(TAG).setIndeterminate(this)
 					.setCallback(new Callback2D<Resp<String>, List<Question<KData>>>() {
 						@Override
 						protected String onInterceptData(String data) {
@@ -450,7 +450,7 @@ public class TrainingDetailActivity extends BaseActivity {
 								}
 							}
 						}
-					}).fireFree();
+					}).fire();
 		}
 	}
 
