@@ -3,12 +3,9 @@ package com.sbai.finance.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +40,6 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
-import com.sbai.finance.utils.StrUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -407,8 +403,6 @@ public class TrainingFragment extends BaseFragment {
         static class ViewHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.trainIcon)
             ImageView mTrainIcon;
-            @BindView(R.id.card)
-            CardView mCard;
             @BindView(R.id.trainTitle)
             TextView mTrainTitle;
             @BindView(R.id.trainStatus)
@@ -418,7 +412,9 @@ public class TrainingFragment extends BaseFragment {
             @BindView(R.id.trainGrade)
             TextView mTrainGrade;
             @BindView(R.id.cardLayout)
-            CardView mCardLayout;
+            RelativeLayout mCardLayout;
+            @BindView(R.id.trainCompleteCount)
+            TextView mTrainCompleteCount;
 
             ViewHolder(View view) {
                 super(view);
@@ -447,25 +443,22 @@ public class TrainingFragment extends BaseFragment {
                 if (record != null) {
                     finishCount = record.getFinish();
                 }
-                SpannableString spannableString = null;
 
                 if (train != null) {
                     Glide.with(context)
                             .load(train.getImageUrl())
                             .placeholder(R.drawable.bg_common_replace_image)
                             .into(mTrainIcon);
+                    mTrainTitle.setText(train.getTitle());
                     if (isMineTrained) {
+                        mTrainCompleteCount.setVisibility(View.VISIBLE);
                         if (finishCount > 0) {
-                            spannableString = StrUtil.mergeTextWithRatio(train.getTitle()
-                                    , "\n" + context.getString(R.string.train_count, finishCount),
-                                    0.7f);
+                            mTrainCompleteCount.setSelected(true);
+                            mTrainCompleteCount.setText(context.getString(R.string.train_count, finishCount));
                         } else {
-                            spannableString = StrUtil.mergeTextWithRatioColor(train.getTitle(),
-                                    "\n" + context.getString(R.string.not_join_train), 0.7f, ContextCompat.getColor(context, R.color.colorPrimary));
+                            mTrainCompleteCount.setSelected(false);
+                            mTrainCompleteCount.setText(R.string.not_join_train);
                         }
-                        mTrainTitle.setText(spannableString);
-                    } else {
-                        mTrainTitle.setText(train.getTitle());
                     }
                     mTrainGrade.setText(context.getString(R.string.train_grade, train.getLevel()));
                     needTime = train.getTime();
@@ -478,6 +471,7 @@ public class TrainingFragment extends BaseFragment {
                     mTrainTime.setVisibility(View.VISIBLE);
                     mTrainTime.setText(DateUtil.formatTime(needTime));
                 } else {
+                    mTrainCompleteCount.setVisibility(View.GONE);
                     mTrainStatus.setVisibility(View.VISIBLE);
                     mTrainTime.setVisibility(View.GONE);
                     mTrainStatus.setText(context.getString(R.string.not_join_train));

@@ -180,7 +180,8 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/recommendTrainTitle"/>
+                android:layout_below="@+id/recommendTrainTitle"
+                android:layout_marginBottom="40dp"/>
 
 
             <android.support.v7.widget.AppCompatTextView
