@@ -635,6 +635,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	public void onDestroyView() {
 		super.onDestroyView();
 		unbinder.unbind();
+		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshReceiver);
 	}
 
 	@Override
@@ -1280,6 +1281,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 			if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
 				mSet.clear();
 				mCreateTime = null;
+				mSwipeRefreshLayout.setRefreshing(true);
 				requestMissList();
 				requestHotQuestionList();
 				requestLatestQuestionList();

@@ -50,8 +50,7 @@ import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.view.ObservableScrollView;
-import com.sbai.finance.view.autofit.AutofitTextView;
+import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -65,53 +64,19 @@ import butterknife.OnClick;
  * 小姐姐详细资料页面
  */
 public class MissProfileActivity extends BaseActivity implements
-		AdapterView.OnItemClickListener, ObservableScrollView.OnScrollChangedListener {
+		AdapterView.OnItemClickListener, View.OnClickListener, AbsListView.OnScrollListener {
 
 	private static final int REQ_SUBMIT_QUESTION_LOGIN = 1001;
 	private static final int REQ_MISS_REWARD_LOGIN = 1002;
 
 	@BindView(R.id.listView)
 	ListView mListView;
-	@BindView(R.id.empty)
-	TextView mEmpty;
 	@BindView(R.id.swipeRefreshLayout)
 	SwipeRefreshLayout mSwipeRefreshLayout;
 	@BindView(R.id.askHerQuestion)
 	LinearLayout mAskHerQuestion;
-	@BindView(R.id.back)
-	ImageView mBack;
-	@BindView(R.id.titleName)
-	TextView mTitleName;
 	@BindView(R.id.titleBar)
-	RelativeLayout mTitleBar;
-	@BindView(R.id.avatar)
-	ImageView mAvatar;
-	@BindView(R.id.name)
-	AutofitTextView mName;
-	@BindView(R.id.voice)
-	TextView mVoice;
-	@BindView(R.id.lovePeopleNumber)
-	TextView mLovePeopleNumber;
-	@BindView(R.id.introduce)
-	TextView mIntroduce;
-	@BindView(R.id.attentionImage)
-	ImageView mAttentionImage;
-	@BindView(R.id.attentionText)
-	TextView mAttentionText;
-	@BindView(R.id.attentionNumber)
-	TextView mAttentionNumber;
-	@BindView(R.id.attention)
-	LinearLayout mAttention;
-	@BindView(R.id.rewardNumber)
-	TextView mRewardNumber;
-	@BindView(R.id.reward)
-	LinearLayout mReward;
-	@BindView(R.id.scrollView)
-	ObservableScrollView mScrollView;
-	@BindView(R.id.voiceLevel)
-	View mVoiceLevel;
-	@BindView(R.id.VoiceIntroduce)
-	LinearLayout mVoiceIntroduce;
+	TitleBar mTitleBar;
 
 	private HerAnswerAdapter mHerAnswerAdapter;
 	private float duration = 300.0f;
@@ -128,22 +93,38 @@ public class MissProfileActivity extends BaseActivity implements
 	private int mMissIntroducePlayingID = -1;
 	private MediaPlayerManager mMediaPlayerManager;
 
+	private ImageView mAvatar;
+	private TextView mName;
+	private TextView mVoice;
+	private TextView mLovePeopleNumber;
+	private TextView mIntroduce;
+	private LinearLayout mAttention;
+	private ImageView mAttentionImage;
+	private TextView mAttentionNumber;
+	private TextView mRewardNumber;
+	private LinearLayout mVoiceIntroduce;
+	private View mVoiceLevel;
+	private TextView mAttentionText;
+	private LinearLayout mReward;
+	private LinearLayout mEmpty;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_miss_profile);
 		ButterKnife.bind(this);
+
 		initData(getIntent());
+		initHeaderView();
 		initFooterView();
+
 		mMediaPlayerManager = new MediaPlayerManager(this);
 		mSet = new HashSet<>();
 		mHerAnswerList = new ArrayList<>();
 		mHerAnswerAdapter = new HerAnswerAdapter(this);
-		mListView.setFocusable(false);
-		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mHerAnswerAdapter);
 		mListView.setOnItemClickListener(this);
-		mScrollView.setScrollChangedListener(this);
+		mListView.setOnScrollListener(this);
 
 		requestMissDetail();
 		requestHerAnswerList();
@@ -260,11 +241,88 @@ public class MissProfileActivity extends BaseActivity implements
 		mCustomId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
 	}
 
+	private void initHeaderView() {
+		LinearLayout header = (LinearLayout) getLayoutInflater().inflate(R.layout.view_header_miss_profile, null);
+		mAvatar = (ImageView) header.findViewById(R.id.avatar);
+		mName = (TextView) header.findViewById(R.id.name);
+		mVoiceIntroduce = (LinearLayout) header.findViewById(R.id.voiceIntroduce);
+		mVoice = (TextView) header.findViewById(R.id.voice);
+		mVoiceLevel = header.findViewById(R.id.voiceLevel);
+		mLovePeopleNumber = (TextView) header.findViewById(R.id.lovePeopleNumber);
+		mIntroduce = (TextView) header.findViewById(R.id.introduce);
+		mAttention = (LinearLayout) header.findViewById(R.id.attention);
+		mAttentionImage = (ImageView) header.findViewById(R.id.attentionImage);
+		mAttentionText = (TextView) header.findViewById(R.id.attentionText);
+		mAttentionNumber = (TextView) header.findViewById(R.id.attentionNumber);
+		mReward = (LinearLayout) header.findViewById(R.id.reward);
+		mRewardNumber = (TextView) header.findViewById(R.id.rewardNumber);
+		mEmpty = (LinearLayout) header.findViewById(R.id.empty);
+
+		mAvatar.setOnClickListener(this);
+		mAttention.setOnClickListener(this);
+		mReward.setOnClickListener(this);
+		mListView.addHeaderView(header);
+	}
+
 	private void initFooterView() {
 		View view = new View(getActivity());
 		AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(60, getResources()));
 		view.setLayoutParams(params);
 		mListView.addFooterView(view);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.avatar:
+				if (mMiss != null) {
+					Launcher.with(this, MissAvatarActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
+							.execute();
+				} else {
+					Launcher.with(this, MissAvatarActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, "")
+							.execute();
+				}
+				break;
+			case R.id.attention:
+				if (mMiss != null) {
+					if (LocalUser.getUser().isLogin()) {
+						Client.attention(mMiss.getId()).setCallback(new Callback2D<Resp<Attention>, Attention>() {
+
+							@Override
+							protected void onRespSuccessData(Attention attention) {
+								if (attention.getIsAttention() == 0) {
+									mAttentionImage.setImageResource(R.drawable.ic_not_attention);
+									mAttentionText.setText(R.string.attention);
+								} else {
+									mAttentionImage.setImageResource(R.drawable.ic_attention);
+									mAttentionText.setText(R.string.is_attention);
+								}
+								mAttentionNumber.setText(getString(R.string.count,
+										StrFormatter.getFormatCount(attention.getAttentionCount())));
+							}
+						}).fire();
+					} else {
+						Launcher.with(getActivity(), LoginActivity.class).execute();
+					}
+				} else {
+					ToastUtil.show(getString(R.string.no_miss));
+				}
+				break;
+			case R.id.reward:
+				if (mMiss != null) {
+					if (LocalUser.getUser().isLogin()) {
+						RewardMissActivity.show(getActivity(), mCustomId, RewardInfo.TYPE_MISS);
+					} else {
+						Intent intent = new Intent(getActivity(), LoginActivity.class);
+						startActivityForResult(intent, REQ_MISS_REWARD_LOGIN);
+					}
+				} else {
+					ToastUtil.show(getString(R.string.no_miss));
+				}
+				break;
+		}
 	}
 
 	@Override
@@ -317,8 +375,7 @@ public class MissProfileActivity extends BaseActivity implements
 				.into(mAvatar);
 
 		mName.setText(miss.getName());
-		mTitleName.setText(miss.getName());
-		mTitleName.setAlpha(0);
+		mTitleBar.setTitle(miss.getName());
 
 		if (miss.getSoundTime() == 0 || TextUtils.isEmpty(miss.getBriefingSound())) {
 			mVoiceIntroduce.setVisibility(View.GONE);
@@ -416,14 +473,20 @@ public class MissProfileActivity extends BaseActivity implements
 				.setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
 					@Override
 					protected void onRespSuccessData(List<Question> questionList) {
-						mHerAnswerList = questionList;
-						updateHerAnswerList(questionList);
+						if (questionList.size() == 0) {
+							mEmpty.setVisibility(View.VISIBLE);
+						} else {
+							mEmpty.setVisibility(View.GONE);
+							mHerAnswerList = questionList;
+							updateHerAnswerList(questionList);
+						}
 					}
 
 					@Override
 					public void onFailure(VolleyError volleyError) {
 						super.onFailure(volleyError);
 						stopRefreshAnimation();
+						mEmpty.setVisibility(View.VISIBLE);
 						mVoiceIntroduce.setVisibility(View.GONE);
 						mAttentionNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(0)));
 						mRewardNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(0)));
@@ -477,57 +540,9 @@ public class MissProfileActivity extends BaseActivity implements
 		}
 	}
 
-	@OnClick({R.id.avatar, R.id.attention, R.id.reward, R.id.askHerQuestion, R.id.back})
+	@OnClick({R.id.askHerQuestion})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
-			case R.id.avatar:
-				if (mMiss != null) {
-					Launcher.with(this, MissAvatarActivity.class)
-							.putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
-							.execute();
-				} else {
-					Launcher.with(this, MissAvatarActivity.class)
-							.putExtra(Launcher.EX_PAYLOAD, "")
-							.execute();
-				}
-				break;
-			case R.id.attention:
-				if (mMiss != null) {
-					if (LocalUser.getUser().isLogin()) {
-						Client.attention(mMiss.getId()).setCallback(new Callback2D<Resp<Attention>, Attention>() {
-
-							@Override
-							protected void onRespSuccessData(Attention attention) {
-								if (attention.getIsAttention() == 0) {
-									mAttentionImage.setImageResource(R.drawable.ic_not_attention);
-									mAttentionText.setText(R.string.attention);
-								} else {
-									mAttentionImage.setImageResource(R.drawable.ic_attention);
-									mAttentionText.setText(R.string.is_attention);
-								}
-								mAttentionNumber.setText(getString(R.string.count,
-										StrFormatter.getFormatCount(attention.getAttentionCount())));
-							}
-						}).fire();
-					} else {
-						Launcher.with(getActivity(), LoginActivity.class).execute();
-					}
-				} else {
-					ToastUtil.show(getString(R.string.no_miss));
-				}
-				break;
-			case R.id.reward:
-				if (mMiss != null) {
-					if (LocalUser.getUser().isLogin()) {
-						RewardMissActivity.show(getActivity(), mCustomId, RewardInfo.TYPE_MISS);
-					} else {
-						Intent intent = new Intent(getActivity(), LoginActivity.class);
-						startActivityForResult(intent, REQ_MISS_REWARD_LOGIN);
-					}
-				} else {
-					ToastUtil.show(getString(R.string.no_miss));
-				}
-				break;
 			case R.id.askHerQuestion:
 				if (LocalUser.getUser().isLogin()) {
 					Launcher.with(getActivity(), SubmitQuestionActivity.class)
@@ -538,29 +553,52 @@ public class MissProfileActivity extends BaseActivity implements
 					startActivityForResult(intent, REQ_SUBMIT_QUESTION_LOGIN);
 				}
 				break;
-			case R.id.back:
-				finish();
-				break;
 		}
 	}
 
 	@Override
-	public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldX, int oldY) {
+	protected void onDestroy() {
+		super.onDestroy();
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		int topRowVerticalPosition =
+				(mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+		mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
 
 		int bgColor = 0X0affffff;
 		float alpha = 0;
-		if (y < 0) {
+		if (getScrollY() < 0) {
 			bgColor = 0X0aFFFFFF;
 			alpha = 0;
-		} else if (y > 300) {
+		} else if (getScrollY() > 300) {
 			bgColor = 0XFF55ADFF;
 			alpha = 1;
 		} else {
-			bgColor = (int) evaluator.evaluate(y / duration, 0X03aFFFFF, 0XFF55ADFF);
-			alpha = y / duration;
+			bgColor = (int) evaluator.evaluate(getScrollY() / duration, 0X03aFFFFF, 0XFF55ADFF);
+			alpha = getScrollY() / duration;
 		}
 		mTitleBar.setBackgroundColor(bgColor);
-		mTitleName.setAlpha(alpha);
+		mTitleBar.setTitleAlpha(alpha);
+	}
+
+	private int getScrollY() {
+		View view = mListView.getChildAt(0);
+
+		if (view == null) {
+			return 0;
+		}
+
+		int firstVisiblePosition = mListView.getFirstVisiblePosition();
+		int top = view.getTop();
+		return -top + firstVisiblePosition * view.getHeight();
 	}
 
 	static class HerAnswerAdapter extends ArrayAdapter<Question> {

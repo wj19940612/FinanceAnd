@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_training_detail"
+    android:background="@drawable/bg_training_detail_theory"
     android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
@@ -18,6 +19,7 @@
         app:backIcon="@drawable/ic_tb_back_white"
         app:rightImage="@drawable/ic_share"
         app:rightVisible="true"
+        app:titleTextAlpha="0"
         app:titleTextColor="@android:color/white"/>
 
     <com.sbai.finance.view.ObservableScrollView
