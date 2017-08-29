@@ -404,6 +404,8 @@ public class SortQuestionActivity extends BaseActivity {
 
         isCancelResultAnimationRunning = true;
 
+
+
         AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0.0f);
         alphaAnimation.setDuration(DEFAULT_ANIMATION_RUNNING_TIME);
         alphaAnimation.setFillAfter(false);

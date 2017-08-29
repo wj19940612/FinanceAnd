@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -407,8 +406,6 @@ public class TrainingFragment extends BaseFragment {
         static class ViewHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.trainIcon)
             ImageView mTrainIcon;
-            @BindView(R.id.card)
-            CardView mCard;
             @BindView(R.id.trainTitle)
             TextView mTrainTitle;
             @BindView(R.id.trainStatus)
@@ -418,7 +415,7 @@ public class TrainingFragment extends BaseFragment {
             @BindView(R.id.trainGrade)
             TextView mTrainGrade;
             @BindView(R.id.cardLayout)
-            CardView mCardLayout;
+            RelativeLayout mCardLayout;
 
             ViewHolder(View view) {
                 super(view);
