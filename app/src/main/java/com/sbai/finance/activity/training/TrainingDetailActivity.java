@@ -358,7 +358,6 @@ public class TrainingDetailActivity extends BaseActivity {
 		Training training = trainingDetail.getTrain();
 		if (training != null) {
 			mTitleBar.setTitle(training.getTitle());
-			mTitleBar.setTitleAlpha(0.0f);
 			mTitle.setText(training.getTitle());
 			mIntroduce.setText(training.getRemark());
 			mDifficulty.setText(getString(R.string.train_level, training.getLevel()));
@@ -377,7 +376,6 @@ public class TrainingDetailActivity extends BaseActivity {
 			case R.id.relatedKnowledge:
 				if (mTrainingDetail != null && mTrainingDetail.getTrain() != null) {
 					Launcher.with(getActivity(), WebActivity.class)
-							.putExtra(WebActivity.EX_TITLE, "相关知识点")
 							.putExtra(WebActivity.EX_URL, API.getHost() + mTrainingDetail.getTrain().getKnowledgeUrl())
 							.execute();
 				}

@@ -19,6 +19,7 @@
         app:backIcon="@drawable/ic_tb_back_white"
         app:rightImage="@drawable/ic_share"
         app:rightVisible="true"
+        app:titleTextAlpha="0"
         app:titleTextColor="@android:color/white"/>
 
     <com.sbai.finance.view.ObservableScrollView
