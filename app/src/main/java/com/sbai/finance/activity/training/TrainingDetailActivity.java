@@ -85,6 +85,8 @@ public class TrainingDetailActivity extends BaseActivity {
 	ExperienceView mExperience2;
 	@BindView(R.id.trainingExperience)
 	IconTextRow mTrainingExperience;
+	@BindView(R.id.background)
+	LinearLayout mBackground;
 
 	private TrainingDetail mTrainingDetail;
 	private Training mTraining;
@@ -215,21 +217,25 @@ public class TrainingDetailActivity extends BaseActivity {
 		switch (mTraining.getType()) {
 			case Training.TYPE_THEORY:
 				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
+				mBackground.setBackgroundResource( R.drawable.bg_training_detail_theory);
 				mExtraBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
 				mStartTraining.setBackgroundResource(R.drawable.bg_train_theory);
 				break;
 			case Training.TYPE_TECHNOLOGY:
 				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.violetTechnologyTraining));
+				mBackground.setBackgroundResource( R.drawable.bg_training_detail_technology);
 				mExtraBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.violetTechnologyTraining));
 				mStartTraining.setBackgroundResource(R.drawable.bg_train_technology);
 				break;
 			case Training.TYPE_FUNDAMENTAL:
 				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.yellowFundamentalTraining));
+				mBackground.setBackgroundResource( R.drawable.bg_training_detail_fundamental);
 				mExtraBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.yellowFundamentalTraining));
 				mStartTraining.setBackgroundResource(R.drawable.bg_train_fundamentals);
 				break;
 			case Training.TYPE_COMPREHENSIVE:
 				mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blueComprehensiveTraining));
+				mBackground.setBackgroundResource( R.drawable.bg_training_detail_comprehensive);
 				mExtraBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blueComprehensiveTraining));
 				mStartTraining.setBackgroundResource(R.drawable.bg_train_comprehensive);
 				break;
@@ -405,6 +411,7 @@ public class TrainingDetailActivity extends BaseActivity {
 						protected String onInterceptData(String data) {
 							return SecurityUtil.AESDecrypt(data);
 						}
+
 						@Override
 						protected void onRespSuccessData(List<Question<RemoveData>> data) {
 							if (!data.isEmpty()) {
@@ -423,6 +430,7 @@ public class TrainingDetailActivity extends BaseActivity {
 						protected String onInterceptData(String data) {
 							return SecurityUtil.AESDecrypt(data);
 						}
+
 						@Override
 						protected void onRespSuccessData(List<Question<SortData>> data) {
 							if (!data.isEmpty()) {
@@ -441,6 +449,7 @@ public class TrainingDetailActivity extends BaseActivity {
 						protected String onInterceptData(String data) {
 							return SecurityUtil.AESDecrypt(data);
 						}
+
 						@Override
 						protected void onRespSuccessData(List<Question<KData>> data) {
 							if (!data.isEmpty()) {
