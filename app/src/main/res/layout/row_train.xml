@@ -38,17 +38,27 @@
         android:layout_below="@+id/card"
         android:layout_marginLeft="2dp"
         android:layout_marginTop="8dp"
-        android:layout_weight="1"
         android:lineSpacingExtra="3dp"
-        android:maxLines="3"
+        android:maxLines="2"
         android:textColor="#FF222222"
-        tools:text="k线基础\n完成次"/>
+        tools:text="k线基础科技大厦附近开大会但是看见发货的刷卡机回家肯定十分健康的话"/>
+
+    <TextView
+        android:id="@+id/trainCompleteCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/trainTitle"
+        android:layout_marginLeft="2dp"
+        android:ellipsize="end"
+        android:textColor="@color/train_complete_count"
+        android:textSize="10sp"
+        tools:text="空间的上了飞机"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/trainTitle">
+        android:layout_below="@+id/trainCompleteCount">
 
         <TextView
             android:id="@+id/trainStatus"
