@@ -21,7 +21,7 @@ public class Kline extends ChartView {
 
     private static final int CANDLES_WIDTH_DP = 6; //dp
     private static final int BUTTONS_AREA_WIDTH = 80; //dp
-    private static final int MV_WIDTH = 3; //dp
+    private static final float MV_WIDTH = 3f; //dp
 
     // color
     private static final String COLOR_RED = "#802624";
@@ -144,8 +144,7 @@ public class Kline extends ChartView {
     private void drawMovingAverageLines(Canvas canvas) {
         for (int movingAverage : mSettings.getMovingAverages()) {
             setMovingAveragesPaint(sPaint, movingAverage);
-            float startX = -1;
-            float startY = -1;
+            Path path = getPath();
             for (int i = mSettings.start; i < mSettings.end; i++) {
                 int start = i - movingAverage + 1;
                 if (start < 0) continue;
@@ -153,15 +152,13 @@ public class Kline extends ChartView {
                 float chartX = getChartX(i);
                 float movingAverageValue = kData.getK().getMovingAverage(movingAverage);
                 float chartY = getChartY(movingAverageValue);
-                if (startX == -1 && startY == -1) { // start
-                    startX = chartX;
-                    startY = chartY;
+                if (path.isEmpty()) { // start
+                    path.moveTo(chartX, chartY);
                 } else {
-                    canvas.drawLine(startX, startY, chartX, chartY, sPaint);
-                    startX = chartX;
-                    startY = chartY;
+                    path.lineTo(chartX, chartY);
                 }
             }
+            canvas.drawPath(path, sPaint);
         }
     }
 
