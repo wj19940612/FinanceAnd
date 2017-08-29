@@ -562,6 +562,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		if (requestCode == REQ_COMMENT && resultCode == RESULT_OK) {
 			mSet.clear();
 			mPage = 0;
+			mMongoId = null;
 			mSwipeRefreshLayout.setRefreshing(true);
 			requestQuestionDetail();
 			requestQuestionReplyList();
@@ -593,6 +594,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			if (ACTION_REPLY_SUCCESS.equalsIgnoreCase(intent.getAction())) {
 				mSet.clear();
 				mPage = 0;
+				mMongoId = null;
 				mSwipeRefreshLayout.setRefreshing(true);
 				requestQuestionDetail();
 				requestQuestionReplyList();

@@ -114,6 +114,7 @@ public class MissProfileActivity extends BaseActivity implements
 		setContentView(R.layout.activity_miss_profile);
 		ButterKnife.bind(this);
 
+		translucentStatusBar();
 		initData(getIntent());
 		initHeaderView();
 		initFooterView();
@@ -125,6 +126,7 @@ public class MissProfileActivity extends BaseActivity implements
 		mListView.setAdapter(mHerAnswerAdapter);
 		mListView.setOnItemClickListener(this);
 		mListView.setOnScrollListener(this);
+		mSwipeRefreshLayout.setProgressViewEndTarget(false, (int) Display.dp2Px(100, getResources()));
 
 		requestMissDetail();
 		requestHerAnswerList();
