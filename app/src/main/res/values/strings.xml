@@ -302,8 +302,8 @@
 
     <string name="end">已结束</string>
 
-    <string name="open_gps">请在设置中开启[乐米金融] 定位服务，以便发布借款</string>
     <string name="open_gps_permission">请在设置中开启[乐米金融] 定位服务权限</string>
+    <string name="open_gps">请打开gps</string>
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
     <string name="refresh">刷新</string>
     <string name="android_web_agent">ANDROID_AGENT</string>

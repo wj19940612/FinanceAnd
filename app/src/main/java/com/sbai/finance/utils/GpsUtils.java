@@ -100,6 +100,7 @@ public class GpsUtils {
             }
 
         } else {
+            if (mContext == null || mContext.isFinishing()) return;
             SmartDialog.with(mContext, mContext.getString(R.string.open_gps))
                     .setPositive(R.string.setting, new SmartDialog.OnClickListener() {
                         @Override

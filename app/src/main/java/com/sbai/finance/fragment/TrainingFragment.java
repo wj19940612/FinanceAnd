@@ -133,9 +133,6 @@ public class TrainingFragment extends BaseFragment {
                 }
             }
         });
-        requestUserScore();
-        updateUserScore(null);
-        requestMyTrainingList();
     }
 
     @Override
@@ -170,7 +167,9 @@ public class TrainingFragment extends BaseFragment {
     private void showMyTrainingList(List<MyTrainingRecord> data) {
         // 我的训练记录里面如果有记录，那就是我的训练数据；不然为推荐训练数据（记录对象都空）
         boolean hasTrainingRecord = data.get(0).getRecord() != null;
-        updateCreditMessage(hasTrainingRecord);
+        if (mUserEachTrainingScoreModel == null) {
+            updateCreditMessage(hasTrainingRecord);
+        }
         if (hasTrainingRecord) {
             mTrainAdapter.setIsMineTrained(true);
             mRecommendTrainTitle.setText(R.string.mine_train);
@@ -223,7 +222,11 @@ public class TrainingFragment extends BaseFragment {
 
             startScoreAnimation(mNewScore);
             double rank = data != null ? data.getRank() : 0;
-            mScoreProgress.setText(getString(R.string.more_than_number, NumberFormatUtils.formatPercentString(rank)));
+            if (mNewScore > 0) {
+                mScoreProgress.setText(getString(R.string.more_than_number, NumberFormatUtils.formatPercentString(rank)));
+            } else {
+                mScoreProgress.setText(R.string.you_are_not_complete_train);
+            }
         } else {
             mTestHint.setVisibility(View.VISIBLE);
             mScore.setVisibility(View.GONE);

@@ -86,7 +86,8 @@ public class LocationActivity extends BaseActivity {
                 if (gpsUtils.getLatitude() != 0) {
                     userInfo.setLatitude(gpsUtils.getLatitude());
                 }
-                LocalUser.getUser().setUserInfo(userInfo);
+                setResult(RESULT_OK);
+                finish();
             }
         } else {
             mLocation.setText(getString(R.string.re_location));
@@ -208,6 +209,9 @@ public class LocationActivity extends BaseActivity {
                     @Override
                     public void onAddressPicked(Province province, City city, County county) {
                         LocalUser.getUser().getUserInfo().setLand(province.getAreaName() + "-" + city.getAreaName() + "-" + county.getAreaName());
+                        mChoiceLocation.setSubText(LocalUser.getUser().getUserInfo().getLand());
+                        setResult(RESULT_OK);
+                        finish();
                     }
                 });
                 picker.show();

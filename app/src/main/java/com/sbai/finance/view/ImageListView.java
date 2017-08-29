@@ -51,47 +51,49 @@ public class ImageListView extends RelativeLayout {
             case 0:
                 return;
             case 1:
-                loadImage(createImageView(0), images.get(0));
+                loadImage(createImageView(0, true), images.get(0));
                 break;
             case 2:
-                loadImage(createImageView(0), images.get(1));
-                loadImage(createImageView(1), images.get(0));
+                loadImage(createImageView(0, true), images.get(1));
+                loadImage(createImageView(1, true), images.get(0));
                 break;
             case 3:
-                loadImage(createImageView(0), images.get(2));
-                loadImage(createImageView(1), images.get(1));
-                loadImage(createImageView(2), images.get(0));
+                loadImage(createImageView(0, true), images.get(2));
+                loadImage(createImageView(1, true), images.get(1));
+                loadImage(createImageView(2, true), images.get(0));
                 break;
             case 4:
-                createImageView(0).setImageResource(mDrawble);
-                loadImage(createImageView(1), images.get(2));
-                loadImage(createImageView(2), images.get(1));
-                loadImage(createImageView(3), images.get(0));
+                createImageView(0, false).setImageResource(mDrawble);
+                loadImage(createImageView(1, true), images.get(2));
+                loadImage(createImageView(2, true), images.get(1));
+                loadImage(createImageView(3, true), images.get(0));
                 break;
         }
     }
 
-    private ImageView createImageView(int index) {
+    private ImageView createImageView(int index, boolean hasBackground) {
         ImageView image = new ImageView(getContext());
         image.setScaleType(ImageView.ScaleType.FIT_XY);
         LayoutParams params = new LayoutParams((int) Display.dp2Px(34, getResources()), (int) Display.dp2Px(34, getResources()));
-        int padding = (int) Display.dp2Px(1,getResources());
-        image.setPadding(padding,padding,padding,padding);
+        int padding = (int) Display.dp2Px(1, getResources());
+        image.setPadding(padding, padding, padding, padding);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         switch (index) {
             case 0:
-                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar_stroke));
+                if (hasBackground) {
+                    image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar));
+                }
                 break;
             case 1:
-                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar_stroke));
+                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar));
                 params.setMargins(0, 0, mMarginRights[0], 0);
                 break;
             case 2:
-                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar_stroke));
+                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar));
                 params.setMargins(0, 0, mMarginRights[1], 0);
                 break;
             case 3:
-                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar_stroke));
+                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar));
                 params.setMargins(0, 0, mMarginRights[2], 0);
                 break;
         }

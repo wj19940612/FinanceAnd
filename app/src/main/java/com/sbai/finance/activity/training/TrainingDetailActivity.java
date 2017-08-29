@@ -486,9 +486,13 @@ public class TrainingDetailActivity extends BaseActivity {
 
 						@Override
 						public void onFeedbackClick(View view) {
-							Launcher.with(getActivity(), FeedbackActivity.class)
-									.putExtra(ExtraKeys.TRAINING, mTraining.getId())
-									.execute();
+							if (LocalUser.getUser().isLogin()) {
+								Launcher.with(getActivity(), FeedbackActivity.class)
+										.putExtra(ExtraKeys.TRAINING, mTraining.getId())
+										.execute();
+							} else {
+								Launcher.with(getActivity(), LoginActivity.class).execute();
+							}
 						}
 					}).show();
 		}
