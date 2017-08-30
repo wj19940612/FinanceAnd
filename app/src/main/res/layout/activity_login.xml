@@ -72,11 +72,11 @@
             <ImageView
                 android:id="@+id/phoneNumberClear"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:paddingLeft="10dp"
                 android:src="@drawable/ic_data_clear"
-                android:visibility="gone"/>
+                android:visibility="invisible"/>
         </LinearLayout>
 
         <View
