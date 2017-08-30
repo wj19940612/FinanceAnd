@@ -177,6 +177,8 @@ public class SmartDialog {
         mMessageTextSize = 14;
         mMessageTextColor = Color.parseColor("#666666");
         mMessageTextMaxLines = 3;
+        mWidthScale = 0;
+        mHeightScale = 0;
 
         mPositiveId = R.string.ok;
         mNegativeId = R.string.cancel;

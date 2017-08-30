@@ -87,9 +87,9 @@ android {
         }
 
         alpha {
-            applicationId "com.sbai.finance"
-            versionCode 86
-            versionName "1.2.0830"
+            applicationId "com.sbai.finance.alpha"
+            versionCode 88
+            versionName "1.2.08302"
             buildConfigField('String', 'HOST', '\"fanli.esongbai.xyz\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 

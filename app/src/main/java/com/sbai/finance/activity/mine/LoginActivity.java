@@ -109,6 +109,8 @@ public class LoginActivity extends BaseActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!TextUtils.isEmpty(mPhoneNumber.getText().toString()) && hasFocus) {
                     mPhoneNumberClear.setVisibility(View.VISIBLE);
+                } else {
+                    mPhoneNumberClear.setVisibility(View.INVISIBLE);
                 }
             }
         });
