@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -59,7 +60,6 @@ import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.callback.WSCallback;
-import com.sbai.finance.websocket.cmd.CancelBattle;
 import com.sbai.finance.websocket.cmd.CurrentBattle;
 import com.sbai.finance.websocket.cmd.QuickMatchLauncher;
 import com.sbai.finance.websocket.cmd.SubscribeBattle;
@@ -194,6 +194,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     private void initData() {
         mBattleId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+        Log.d(TAG, "initData: " + mBattleId);
         mBatchCode = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
     }
 
@@ -1309,7 +1310,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                             }
                             //游戏结束后
                             if (mBattle.getGameStatus() == GAME_STATUS_END
-                                    && !mIsObserver) {
+                                    && !mIsObserver && mBattleId == mBattle.getBattleId()) {
                                 dismissCalculatingView();
                                 updateBattleInfo();
                                 showGameOverDialog();
