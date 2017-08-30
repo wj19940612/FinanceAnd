@@ -122,7 +122,12 @@ public class TrainingExperienceActivity extends BaseActivity {
 		mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
 			@Override
 			public void onLoadMore() {
-				requestLatestExperienceList();
+				mLatestListView.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						requestLatestExperienceList();
+					}
+				}, 1000);
 			}
 		});
 	}

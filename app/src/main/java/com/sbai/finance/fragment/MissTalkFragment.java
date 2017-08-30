@@ -403,6 +403,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 			public void onRefresh() {
 				mSet.clear();
 				mCreateTime = null;
+				mSwipeRefreshLayout.setLoadMoreEnable(true);
 				requestMissList();
 				requestHotQuestionList();
 				requestLatestQuestionList();
@@ -410,6 +411,18 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				//下拉刷新时关闭语音播放
 				mMediaPlayerManager.release();
 				mPlayingID = -1;
+			}
+		});
+
+		mSwipeRefreshLayout.setOnLoadMoreListener(new VerticalSwipeRefreshLayout.OnLoadMoreListener() {
+			@Override
+			public void onLoadMore() {
+				mLatestListView.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						requestLatestQuestionList();
+					}
+				}, 1000);
 			}
 		});
 	}
@@ -559,6 +572,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 					protected void onRespSuccessData(List<Question> questionList) {
 						if (questionList.size() == 0) {
 							mEmpty.setVisibility(View.VISIBLE);
+							stopRefreshAnimation();
 						} else {
 							mEmpty.setVisibility(View.GONE);
 							mLatestQuestionList = questionList;
@@ -579,6 +593,10 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 		if (mSwipeRefreshLayout.isRefreshing()) {
 			mSwipeRefreshLayout.setRefreshing(false);
 		}
+
+		if (mSwipeRefreshLayout.isLoading()) {
+			mSwipeRefreshLayout.setLoading(false);
+		}
 	}
 
 	private void updateMissList(List<Miss> missList) {
@@ -592,37 +610,23 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	}
 
 	private void updateLatestQuestionList(List<Question> questionList) {
-
 		if (questionList == null) {
 			stopRefreshAnimation();
 			return;
 		}
 
-		if (mFootView == null) {
-			mFootView = View.inflate(getActivity(), R.layout.view_footer_load_more, null);
-			mFootView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (mSwipeRefreshLayout.isRefreshing()) return;
-					mCreateTime = mLatestQuestionList.get(mLatestQuestionList.size() - 1).getCreateTime();
-					requestLatestQuestionList();
-				}
-			});
-			mLatestListView.addFooterView(mFootView, null, true);
-		}
-
 		if (questionList.size() < mPageSize) {
-			mLatestListView.removeFooterView(mFootView);
-			mFootView = null;
+			mSwipeRefreshLayout.setLoadMoreEnable(false);
+		} else {
+			mCreateTime = mLatestQuestionList.get(mLatestQuestionList.size() - 1).getCreateTime();
 		}
 
 		if (mSwipeRefreshLayout.isRefreshing()) {
 			if (mLatestQuestionListAdapter != null) {
 				mLatestQuestionListAdapter.clear();
-				mLatestQuestionListAdapter.notifyDataSetChanged();
 			}
-			stopRefreshAnimation();
 		}
+		stopRefreshAnimation();
 
 		for (Question question : questionList) {
 			if (mSet.add(question.getId())) {
@@ -1086,8 +1090,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				mRedPoint.setVisibility(View.INVISIBLE);
 				break;
 			case R.id.titleBar:
-				mLatestListView.smoothScrollToPosition(0);
-				break;
+				mLatestListView.smoothScrollToPosition(0, 0);
 		}
 	}
 

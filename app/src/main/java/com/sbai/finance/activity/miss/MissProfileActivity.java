@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.miss;
 
-import android.animation.ArgbEvaluator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +49,7 @@ import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.MissProfileSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ import butterknife.OnClick;
  * 小姐姐详细资料页面
  */
 public class MissProfileActivity extends BaseActivity implements
-		AdapterView.OnItemClickListener, View.OnClickListener, AbsListView.OnScrollListener {
+		AdapterView.OnItemClickListener, View.OnClickListener {
 
 	private static final int REQ_SUBMIT_QUESTION_LOGIN = 1001;
 	private static final int REQ_MISS_REWARD_LOGIN = 1002;
@@ -72,15 +72,13 @@ public class MissProfileActivity extends BaseActivity implements
 	@BindView(R.id.listView)
 	ListView mListView;
 	@BindView(R.id.swipeRefreshLayout)
-	SwipeRefreshLayout mSwipeRefreshLayout;
+	MissProfileSwipeRefreshLayout mSwipeRefreshLayout;
 	@BindView(R.id.askHerQuestion)
 	LinearLayout mAskHerQuestion;
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
 
 	private HerAnswerAdapter mHerAnswerAdapter;
-	private float duration = 300.0f;
-	private ArgbEvaluator evaluator = new ArgbEvaluator();
 	private Long mCreateTime;
 	private int mPageSize = 20;
 	private HashSet<Integer> mSet;
@@ -125,7 +123,7 @@ public class MissProfileActivity extends BaseActivity implements
 		mHerAnswerAdapter = new HerAnswerAdapter(this);
 		mListView.setAdapter(mHerAnswerAdapter);
 		mListView.setOnItemClickListener(this);
-		mListView.setOnScrollListener(this);
+		mSwipeRefreshLayout.setTitleBar(mTitleBar);
 		mSwipeRefreshLayout.setProgressViewEndTarget(false, (int) Display.dp2Px(100, getResources()));
 
 		requestMissDetail();
@@ -468,6 +466,18 @@ public class MissProfileActivity extends BaseActivity implements
 				mMissIntroducePlayingID = -1;
 			}
 		});
+
+		mSwipeRefreshLayout.setOnLoadMoreListener(new MissProfileSwipeRefreshLayout.OnLoadMoreListener() {
+			@Override
+			public void onLoadMore() {
+				mListView.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						requestHerAnswerList();
+					}
+				}, 1000);
+			}
+		});
 	}
 
 	private void requestHerAnswerList() {
@@ -477,6 +487,7 @@ public class MissProfileActivity extends BaseActivity implements
 					protected void onRespSuccessData(List<Question> questionList) {
 						if (questionList.size() == 0) {
 							mEmpty.setVisibility(View.VISIBLE);
+							stopRefreshAnimation();
 						} else {
 							mEmpty.setVisibility(View.GONE);
 							mHerAnswerList = questionList;
@@ -501,6 +512,10 @@ public class MissProfileActivity extends BaseActivity implements
 		if (mSwipeRefreshLayout.isRefreshing()) {
 			mSwipeRefreshLayout.setRefreshing(false);
 		}
+
+		if (mSwipeRefreshLayout.isLoading()) {
+			mSwipeRefreshLayout.setLoading(false);
+		}
 	}
 
 	private void updateHerAnswerList(final List<Question> questionList) {
@@ -509,31 +524,18 @@ public class MissProfileActivity extends BaseActivity implements
 			return;
 		}
 
-		if (mFootView == null) {
-			mFootView = View.inflate(getActivity(), R.layout.view_footer_load_more, null);
-			mFootView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (mSwipeRefreshLayout.isRefreshing()) return;
-					mCreateTime = mHerAnswerList.get(mHerAnswerList.size() - 1).getCreateTime();
-					requestHerAnswerList();
-				}
-			});
-			mListView.addFooterView(mFootView, null, true);
-		}
-
 		if (questionList.size() < mPageSize) {
-			mListView.removeFooterView(mFootView);
-			mFootView = null;
+			mSwipeRefreshLayout.setLoadMoreEnable(false);
+		} else {
+			mCreateTime = mHerAnswerList.get(mHerAnswerList.size() - 1).getCreateTime();
 		}
 
 		if (mSwipeRefreshLayout.isRefreshing()) {
 			if (mHerAnswerAdapter != null) {
 				mHerAnswerAdapter.clear();
-				mHerAnswerAdapter.notifyDataSetChanged();
 			}
-			stopRefreshAnimation();
 		}
+		stopRefreshAnimation();
 
 		for (Question question : questionList) {
 			if (mSet.add(question.getId())) {
@@ -562,45 +564,6 @@ public class MissProfileActivity extends BaseActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
-	}
-
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-	}
-
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		int topRowVerticalPosition =
-				(mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-		mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
-
-		int bgColor = 0X0affffff;
-		float alpha = 0;
-		if (getScrollY() < 0) {
-			bgColor = 0X0aFFFFFF;
-			alpha = 0;
-		} else if (getScrollY() > 300) {
-			bgColor = 0XFF55ADFF;
-			alpha = 1;
-		} else {
-			bgColor = (int) evaluator.evaluate(getScrollY() / duration, 0X03aFFFFF, 0XFF55ADFF);
-			alpha = getScrollY() / duration;
-		}
-		mTitleBar.setBackgroundColor(bgColor);
-		mTitleBar.setTitleAlpha(alpha);
-	}
-
-	private int getScrollY() {
-		View view = mListView.getChildAt(0);
-
-		if (view == null) {
-			return 0;
-		}
-
-		int firstVisiblePosition = mListView.getFirstVisiblePosition();
-		int top = view.getTop();
-		return -top + firstVisiblePosition * view.getHeight();
 	}
 
 	static class HerAnswerAdapter extends ArrayAdapter<Question> {

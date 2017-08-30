@@ -177,6 +177,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 		mTrainingDetail = intent.getParcelableExtra(ExtraKeys.TRAINING_DETAIL);
 		mQuestion = intent.getParcelableExtra(ExtraKeys.QUESTION);
 		mNounExplanationList = mQuestion.getContent();
+		Collections.shuffle(mNounExplanationList);
 		mNewNounExplanationList = new ArrayList<>();
 		if (mNounExplanationList.size() > 5) {
 			for (int i = 0; i < 5; i++) {
