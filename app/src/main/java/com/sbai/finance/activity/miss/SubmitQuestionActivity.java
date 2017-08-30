@@ -25,6 +25,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.HorizontalGridView;
 import com.sbai.finance.view.MissInfoView;
@@ -103,6 +104,7 @@ public class SubmitQuestionActivity extends BaseActivity {
     }
 
     private void requestCommitQuestion() {
+        umengEventCount(UmengCountEventIdUtils.MISS_TALK_ASK_QUESTION);
         Integer missId = null;
         if (mSelectedIndex != -1) {
             missId = mGirdViewAdapter.getItem(mSelectedIndex).getId();

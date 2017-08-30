@@ -128,7 +128,6 @@ public class ShareDialog {
             } else {
                 image.setThumb(new UMImage(mActivity, mShareThumbUrl));
             }
-            image.setThumb(new UMImage(mActivity, mShareThumbUrl));
             if (mActivity != null && !mActivity.isFinishing()) {
                 new ShareAction(mActivity)
                         .withText(text)

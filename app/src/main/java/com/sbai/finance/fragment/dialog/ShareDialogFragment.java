@@ -57,6 +57,22 @@ public class ShareDialogFragment extends DialogFragment {
 
     private boolean isFutureGame = false;//默认分享不是游戏
 
+    public interface OnShareDialogCallback {
+        void onSharePlatformClick(SHARE_PLATFORM platform);
+    }
+    public enum SHARE_PLATFORM {
+        WECHAT_FRIEND,
+        WECHAT_CIRCLE,
+        SINA_WEIBO
+    }
+
+    private OnShareDialogCallback mListener;
+
+    public ShareDialogFragment setListener(OnShareDialogCallback listener) {
+        mListener = listener;
+        return this;
+    }
+
     public static ShareDialogFragment newInstance() {
         ShareDialogFragment fragment = new ShareDialogFragment();
         return fragment;
@@ -108,6 +124,7 @@ public class ShareDialogFragment extends DialogFragment {
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN)) {
                     if (isFutureGame) mShareUrl += "&userFrom=" + "friend";
                     shareToPlatform(SHARE_MEDIA.WEIXIN);
+                    onSharePlatformClicked(SHARE_PLATFORM.WECHAT_FRIEND);
                 } else {
                     ToastUtil.show(R.string.you_not_install_weixin);
                 }
@@ -117,6 +134,7 @@ public class ShareDialogFragment extends DialogFragment {
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN_CIRCLE)) {
                     if (isFutureGame) mShareUrl += "&userFrom=" + "friend";
                     shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
+                    onSharePlatformClicked(SHARE_PLATFORM.WECHAT_CIRCLE);
                 } else {
                     ToastUtil.show(R.string.you_not_install_weixin);
                 }
@@ -126,6 +144,7 @@ public class ShareDialogFragment extends DialogFragment {
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.SINA)) {
                     if (isFutureGame) mShareUrl += "&userFrom=" + "weibo";
                     shareToPlatform(SHARE_MEDIA.SINA);
+                    onSharePlatformClicked(SHARE_PLATFORM.SINA_WEIBO);
                 } else {
                     ToastUtil.show(R.string.you_not_install_weibo);
                 }
@@ -135,6 +154,12 @@ public class ShareDialogFragment extends DialogFragment {
                 dismiss();
                 break;
 
+        }
+    }
+
+    private void onSharePlatformClicked(SHARE_PLATFORM platform) {
+        if (mListener != null) {
+            mListener.onSharePlatformClick(platform);
         }
     }
 

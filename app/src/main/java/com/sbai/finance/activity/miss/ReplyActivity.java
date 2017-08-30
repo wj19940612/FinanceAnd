@@ -17,6 +17,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SmartDialog;
 
@@ -117,6 +118,7 @@ public class ReplyActivity extends BaseActivity {
     }
 
     private void requestReplyComment() {
+        umengEventCount(UmengCountEventIdUtils.MISS_TALK_REPLY_COMMENT);
         Client.addComment(mInvitationUserId, mReplyParentId, mQuestionComment.getText().toString().trim(), mDataId)
                 .setTag(TAG)
                 .setIndeterminate(this)

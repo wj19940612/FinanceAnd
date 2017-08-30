@@ -28,6 +28,7 @@ import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.PasswordEditText;
 
@@ -288,6 +289,7 @@ public class LoginActivity extends BaseActivity {
                 mAuthCode.requestFocus();
                 break;
             case R.id.login:
+                umengEventCount(UmengCountEventIdUtils.ME_LOGIN);
                 login();
                 break;
             case R.id.rootView:

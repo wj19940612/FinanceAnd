@@ -38,6 +38,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.dialog.ShareDialog;
 
 import butterknife.BindView;
@@ -119,6 +120,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         initView();
         initWebView();
         requestDailyReportDetail();
+        umengEventCount(UmengCountEventIdUtils.REPORT_VIEW_DETAIL);
     }
 
     private void requestDailyReportDetail() {
@@ -197,6 +199,7 @@ public class DailyReportDetailActivity extends BaseActivity {
             case R.id.share:
                 // TODO: 10/08/2017 添加乐米日报分享弹框
                 //ShareReportDialogFragment
+                umengEventCount(UmengCountEventIdUtils.REPORT_SHARE);
                 ShareDialog.with(getActivity())
                         .hasFeedback(false)
                         .setShareThumbUrl(mShareImgUrl)
@@ -204,6 +207,27 @@ public class DailyReportDetailActivity extends BaseActivity {
                         .setShareTitle(mTitleContent)
                         .setShareDescription(mFirstContent)
                         .setShareUrl(String.format(Client.SHARE_URL_REPORT, mId))
+                        .setListener(new ShareDialog.OnShareDialogCallback() {
+                            @Override
+                            public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
+                                switch (platform) {
+                                    case SINA_WEIBO:
+                                        umengEventCount(UmengCountEventIdUtils.REPORT_SHARE_SINA_WEIBO);
+                                        break;
+                                    case WECHAT_FRIEND:
+                                        umengEventCount(UmengCountEventIdUtils.REPORT_SHARE_FRIEND);
+                                        break;
+                                    case WECHAT_CIRCLE:
+                                        umengEventCount(UmengCountEventIdUtils.REPORT_SHARE_CIRCLE);
+                                        break;
+                                }
+                            }
+
+                            @Override
+                            public void onFeedbackClick(View view) {
+
+                            }
+                        })
                         .show();
                 break;
             case R.id.refreshButton:
