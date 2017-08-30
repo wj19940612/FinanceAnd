@@ -323,6 +323,12 @@ public class BattleListActivity extends BaseActivity implements
                     protected void onRespSuccessData(FutureVersus data) {
                         updateVersusData(data);
                     }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
+                    }
                 }).fireFree();
     }
 
@@ -333,6 +339,12 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     protected void onRespSuccessData(UserFundInfoModel data) {
                         updateUserFund(data);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
                     }
                 })
                 .fireFree();
@@ -352,6 +364,13 @@ public class BattleListActivity extends BaseActivity implements
                             mCreateAndMatchArea.setVisibility(View.GONE);
                             mCurrentBattleBtn.setVisibility(View.VISIBLE);
                         }
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
                     }
                 }).fire();
     }
