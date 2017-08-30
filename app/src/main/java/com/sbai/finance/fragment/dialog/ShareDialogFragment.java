@@ -37,7 +37,7 @@ import butterknife.Unbinder;
  */
 public class ShareDialogFragment extends DialogFragment {
 
-    private static final String SHARE_URL = API.getHost() + "/mobi/authCodeLogin/share?code=";
+    private static final String SHARE_URL = API.getHost() + "/mobi/login/share?code=";
 
     @BindView(R.id.weChatFriend)
     TextView mWeChatFriend;
