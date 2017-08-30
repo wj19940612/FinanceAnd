@@ -1,6 +1,7 @@
 package com.sbai.finance.net;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.$Gson$Types;
 import com.sbai.httplib.BuildConfig;
 import com.sbai.httplib.NullResponseError;
@@ -28,8 +29,12 @@ public abstract class Callback2D<T, D> extends Callback<T> {
             if (data != null) {
                 if (data instanceof String) {
                     data = onInterceptData((String) data);
-                    Object o = new Gson().fromJson((String) data, getDataType());
-                    onRespSuccessData((D) o);
+                    try {
+                        Object o = new Gson().fromJson((String) data, getDataType());
+                        onRespSuccessData((D) o);
+                    } catch (JsonSyntaxException e) {
+                        onRespSuccessData((D) data);
+                    }
                 } else {
                     onRespSuccessData((D) data);
                 }

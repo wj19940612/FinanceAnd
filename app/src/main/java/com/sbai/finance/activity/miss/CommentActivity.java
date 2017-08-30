@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.RetryPolicy;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.Callback;
@@ -21,6 +23,9 @@ import com.sbai.finance.view.SmartDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
+import static com.android.volley.DefaultRetryPolicy.DEFAULT_TIMEOUT_MS;
 
 /**
  * 对小姐姐的提问的评论页面
@@ -114,6 +119,7 @@ public class CommentActivity extends BaseActivity {
     private void requestPublishComment() {
         mPublish.setEnabled(false);
         Client.addComment(mInvitationUserId, null, mQuestionComment.getText().toString().trim(), mDataId)
+                .setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIMEOUT_MS, 0, DEFAULT_BACKOFF_MULT))
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
