@@ -188,13 +188,8 @@ public class JudgeTrainingActivity extends BaseActivity {
     }
 
     private void showHowPlayDialog() {
-        mBgImg.setVisibility(View.VISIBLE);
-        mContent.setDrawingCacheEnabled(true);
-        mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+        showDimBackground();
 
-        Bitmap bitmap = mContent.getDrawingCache();
-        mBgImg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
-        mContent.setVisibility(View.INVISIBLE);
         TrainingRuleDialog.with(getActivity(), mTraining)
                 .setOnDismissListener(new TrainingRuleDialog.OnDismissListener() {
                     @Override
@@ -204,6 +199,16 @@ public class JudgeTrainingActivity extends BaseActivity {
                     }
                 })
                 .show();
+    }
+
+    private void showDimBackground() {
+        mBgImg.setVisibility(View.VISIBLE);
+        mContent.setDrawingCacheEnabled(true);
+        mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+        Bitmap bitmap = mContent.getDrawingCache();
+        mBgImg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
+        mContent.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -220,13 +225,7 @@ public class JudgeTrainingActivity extends BaseActivity {
     }
 
     private void showCloseDialog() {
-        mBgImg.setVisibility(View.VISIBLE);
-        mContent.setDrawingCacheEnabled(true);
-        mContent.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
-
-        Bitmap bitmap = mContent.getDrawingCache();
-        mBgImg.setImageBitmap(mRenderScriptGaussianBlur.gaussianBlur(25, bitmap));
-        mContent.setVisibility(View.INVISIBLE);
+        showDimBackground();
 
         float widthScale = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
                 ? 0.45f : SmartDialog.DEFAULT_SCALE;

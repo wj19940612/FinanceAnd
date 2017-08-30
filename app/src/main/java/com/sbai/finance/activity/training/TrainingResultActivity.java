@@ -96,7 +96,8 @@ public class TrainingResultActivity extends BaseActivity {
             mFailedMessage.setVisibility(View.GONE);
             if (targets != null && !targets.isEmpty()
                     && targets.get(0).getType() == TrainingTarget.TYPE_RATE) {
-                mMyGrade.setText(FinanceUtil.formatToPercentage(mTrainingSubmit.getRate(), 0));
+                mMyGrade.setText(getString(R.string.accuracy_,
+                        FinanceUtil.formatToPercentage(mTrainingSubmit.getRate())));
             } else {
                 mMyGrade.setText(formatTime(mTrainingSubmit.getTime(),
                         R.string._seconds, R.string._minutes, R.string._minutes_x_seconds));

@@ -814,10 +814,10 @@
     <string name="judge_right">Nice~正确</string>
     <string name="judge_wrong">ohoh～错了</string>
     <string name="explanation_number">%1$d/%2$d</string>
-    <string name="remove_train_rule">将相对应的K线牌与名词牌顺序翻过就能成功消除，所有卡牌全部消除，完成训练。5分钟内未完成，则训练失败。\n速度决定成绩，而稳固的知识将是速度的保障！加油！</string>
-    <string name="match_star_train_rule">将相对应的解释牌与名词牌顺序翻过就能成功消除，所有卡牌全部消除，完成训练。5分钟内未完成，则训练失败。\n速度决定成绩，而稳固的知识将是速度的保障！加油！</string>
-    <string name="sort_train_rule">按照年报生成顺序，将材料投入生成炉内，成功生成年报，则完成训练。\n年报需要在五分钟内生成。</string>
-    <string name="judgement_train_rule">均线会自动移动，移动到某些交叉点，均线会停止，此时用户需要选择这个交叉点后的行情是涨还是跌。\n15分钟内未完成训练，则训练失败</string>
+    <string name="remove_train_rule">将相对应的K线牌与名词牌顺序翻过就能成功消除，所有卡牌全部消除，完成训练。规定时间内未完成，则训练失败。\n速度决定成绩，而稳固的知识将是速度的保障！加油！</string>
+    <string name="match_star_train_rule">将相对应的解释牌与名词牌顺序翻过就能成功消除，所有卡牌全部消除，完成训练。规定时间内未完成，则训练失败。\n速度决定成绩，而稳固的知识将是速度的保障！加油！</string>
+    <string name="sort_train_rule">按照年报生成顺序，将材料投入生成炉内，成功生成年报，则完成训练。\n年报需要在规定时间内生成。</string>
+    <string name="judgement_train_rule">均线会自动移动，移动到某些交叉点，均线会停止，此时用户需要选择这个交叉点后的行情是涨还是跌。\n规定时间内未完成训练，则训练失败</string>
     <string name="complete_training">完成训练</string>
     <string name="congratulation">恭喜</string>
     <string name="create_fail">生成失败</string>
@@ -835,4 +835,5 @@
     <string name="_minutes">%1$d分钟</string>
     <string name="mission_complete">成功完成任务</string>
     <string name="accuracy_to_">准确率达到%1$s</string>
+    <string name="accuracy_">准确率：%1$s</string>
 </resources>
