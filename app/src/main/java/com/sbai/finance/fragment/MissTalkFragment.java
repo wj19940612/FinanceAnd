@@ -8,6 +8,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -1090,7 +1091,20 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 				mRedPoint.setVisibility(View.INVISIBLE);
 				break;
 			case R.id.titleBar:
-				mLatestListView.smoothScrollToPosition(0, 0);
+				mLatestListView.smoothScrollToPosition(0);
+				final Handler handler = new Handler();
+				handler.postDelayed(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						if (mLatestListView.getFirstVisiblePosition() > 0)
+						{
+							mLatestListView.smoothScrollToPosition(0);
+							handler.postDelayed(this, 100);
+						}
+					}
+				}, 100);
 		}
 	}
 
