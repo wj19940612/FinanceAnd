@@ -82,25 +82,26 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
                     mListView = (ListView) child;
                     mListView.setOnScrollListener(this);
                 }
-                if (child instanceof ViewGroup){
+                if (child instanceof ViewGroup) {
                     findListView((ViewGroup) child);
                 }
             }
         }
     }
 
-    private void findListView(ViewGroup childView)  {
-            int childCount= childView.getChildCount();
-            if (childCount > 0) {
-                for (int i = 0; i < childCount; i++) {
-                    View child = childView.getChildAt(i);
-                    if (child instanceof ListView) {
-                        mListView = (ListView) child;
-                        mListView.setOnScrollListener(this);
-                    }
+    private void findListView(ViewGroup childView) {
+        int childCount = childView.getChildCount();
+        if (childCount > 0) {
+            for (int i = 0; i < childCount; i++) {
+                View child = childView.getChildAt(i);
+                if (child instanceof ListView) {
+                    mListView = (ListView) child;
+                    mListView.setOnScrollListener(this);
                 }
             }
+        }
     }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         int action = ev.getAction();
@@ -198,7 +199,6 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
         int topRowVerticalPosition =
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
         setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
-
         mVisibleItemCount = visibleItemCount;
         mTotalItemCount = totalItemCount;
         if (visibleItemCount < totalItemCount && canLoad()) {

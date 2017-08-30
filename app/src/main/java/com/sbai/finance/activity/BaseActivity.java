@@ -141,7 +141,7 @@ public class BaseActivity extends StatusBarActivity implements
         public void onPushReceive(WSPush<Battle> battleWSPush) {
             switch (battleWSPush.getContent().getType()) {
                 case PushCode.BATTLE_JOINED:
-                    if (!(getActivity() instanceof FutureBattleActivity)) {
+                    if (isShowQuickJoinBattleDialog()) {
                         if (battleWSPush.getContent() != null) {
                             Battle data = (Battle) battleWSPush.getContent().getData();
                             showQuickJoinBattleDialog(data);
@@ -183,7 +183,8 @@ public class BaseActivity extends StatusBarActivity implements
                 || getActivity() instanceof KlineTrainActivity
                 || getActivity() instanceof NounExplanationActivity
                 || getActivity() instanceof JudgeTrainingActivity
-                || getActivity() instanceof TrainingCountDownActivity) {
+                || getActivity() instanceof TrainingCountDownActivity
+                || getActivity() instanceof FutureBattleActivity) {
             return false;
         }
         return LocalUser.getUser().isLogin();
