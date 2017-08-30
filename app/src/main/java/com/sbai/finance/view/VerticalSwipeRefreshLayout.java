@@ -17,42 +17,27 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 
 /**
- * @author Jack Tony
- * @brief 只在竖直方向才能下拉刷新的控件
- * @date 2015/4/5
+ * 只在竖直方向才能下拉刷新的控件
  */
-public class VerticalSwipeRefreshLayout extends SwipeRefreshLayout implements AbsListView.OnScrollListener {
 
+public class VerticalSwipeRefreshLayout extends SwipeRefreshLayout implements AbsListView.OnScrollListener {
 	private int mTouchSlop;
 	// 上一次触摸时的X坐标
 	private float mPrevX;
-
 	private View mListViewFooter;
-
 	private ListView mListView;
-
 	//暂不支持RecyclerView
 	private RecyclerView mRecyclerView;
-
 	private int mYdown;
-
 	private int mYlast;
-
 	private boolean isLoading = false;
-
 	//滑动到底部的时候手动设置不允许loadMore
 	private boolean loadMoreEnable = true;
-
 	private boolean isFlingOrTouch = true;
-
 	private OnLoadMoreListener mOnLoadMoreListener;
-
 	private OnScrollStateListener mOnScrollStateListener;
-
 	private TextView mLoadMoreTv;
-
 	private int mVisibleItemCount;
-
 	private int mTotalItemCount;
 
 	public VerticalSwipeRefreshLayout(Context context) {
@@ -104,29 +89,6 @@ public class VerticalSwipeRefreshLayout extends SwipeRefreshLayout implements Ab
 				}
 			}
 		}
-	}
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		int action = ev.getAction();
-		switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				mYdown = (int) ev.getY();
-				break;
-
-			case MotionEvent.ACTION_MOVE:
-				mYlast = (int) ev.getY();
-				break;
-
-			case MotionEvent.ACTION_UP:
-//                if (canLoad()) {
-//                    loadData();
-//                }
-				break;
-
-			default:
-				break;
-		}
-		return super.dispatchTouchEvent(ev);
 	}
 
 	public void setAdapter(ListView listView, ListAdapter adapter) {
@@ -233,6 +195,30 @@ public class VerticalSwipeRefreshLayout extends SwipeRefreshLayout implements Ab
 
 	public interface OnScrollStateListener {
 		int scrollStateChange(int scrollState);
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		int action = ev.getAction();
+		switch (action) {
+			case MotionEvent.ACTION_DOWN:
+				mYdown = (int) ev.getY();
+				break;
+
+			case MotionEvent.ACTION_MOVE:
+				mYlast = (int) ev.getY();
+				break;
+
+			case MotionEvent.ACTION_UP:
+//                if (canLoad()) {
+//                    loadData();
+//                }
+				break;
+
+			default:
+				break;
+		}
+		return super.dispatchTouchEvent(ev);
 	}
 
 	@Override

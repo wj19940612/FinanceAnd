@@ -455,6 +455,7 @@ public class MissProfileActivity extends BaseActivity implements
 			public void onRefresh() {
 				mSet.clear();
 				mCreateTime = null;
+				mSwipeRefreshLayout.setLoadMoreEnable(true);
 				requestMissDetail();
 				requestHerAnswerList();
 
