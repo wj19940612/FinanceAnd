@@ -38,7 +38,6 @@ public class HistoryNewsModel implements Parcelable {
     public static final int BORROW_MONEY_CANCEL = 16;
 
     // 20.成为观点大神 21.实名认证已通过 22.实名认证未通过 * 25.涨跌预测成功 26.涨跌预测失败
-    public static final int BECOME_VIEWPOINT_MANITO = 20;
     public static final int REAL_NAME_APPROVE_PASSED = 21;
     public static final int REAL_NAME_APPROVE_FAILED = 22;
     public static final int FORCAEST_highs_and_lows_fail = 25;
