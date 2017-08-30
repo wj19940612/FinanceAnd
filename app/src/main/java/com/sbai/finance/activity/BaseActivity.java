@@ -18,6 +18,11 @@ import android.widget.ScrollView;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.FutureBattleActivity;
+import com.sbai.finance.activity.training.JudgeTrainingActivity;
+import com.sbai.finance.activity.training.KlineTrainActivity;
+import com.sbai.finance.activity.training.NounExplanationActivity;
+import com.sbai.finance.activity.training.SortQuestionActivity;
+import com.sbai.finance.activity.training.TrainingCountDownActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.local.SysTime;
@@ -152,8 +157,8 @@ public class BaseActivity extends StatusBarActivity implements
     }
 
     protected void showQuickJoinBattleDialog(final Battle battle) {
-        //只有在自己是房主的情况下才显示
-        if (LocalUser.getUser().isLogin()) {
+        //只有在自己是房主的情况下才显示  并且训练页面也不出现弹窗
+        if (isShowQuickJoinBattleDialog()) {
             boolean isRoomCreator = battle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId();
             if (isRoomCreator) {
                 SmartDialog.single(getActivity(), getString(R.string.quick_join_battle))
@@ -171,6 +176,17 @@ public class BaseActivity extends StatusBarActivity implements
                         .show();
             }
         }
+    }
+
+    private boolean isShowQuickJoinBattleDialog() {
+        if (getActivity() instanceof SortQuestionActivity
+                || getActivity() instanceof KlineTrainActivity
+                || getActivity() instanceof NounExplanationActivity
+                || getActivity() instanceof JudgeTrainingActivity
+                || getActivity() instanceof TrainingCountDownActivity) {
+            return false;
+        }
+        return LocalUser.getUser().isLogin();
     }
 
     private void scrollToTop(View view) {
