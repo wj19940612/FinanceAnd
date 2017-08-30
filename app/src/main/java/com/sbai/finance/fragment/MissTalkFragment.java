@@ -80,7 +80,7 @@ import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
 public class MissTalkFragment extends BaseFragment implements View.OnClickListener, AbsListView.OnScrollListener {
-    
+
     private static final int SUBMIT_QUESTION = 1001;
     private static final int MY_QUESTION = 1002;
     private static final int MESSAGE = 1003;
