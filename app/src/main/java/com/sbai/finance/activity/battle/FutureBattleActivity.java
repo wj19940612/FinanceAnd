@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -194,7 +193,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     private void initData() {
         mBattleId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-        Log.d(TAG, "initData: " + mBattleId);
         mBatchCode = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
     }
 
@@ -1310,7 +1308,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                             }
                             //游戏结束后
                             if (mBattle.getGameStatus() == GAME_STATUS_END
-                                    && !mIsObserver && mBattleId == mBattle.getBattleId()) {
+                                    && !mIsObserver && mBattleId == mBattle.getId()) {
                                 dismissCalculatingView();
                                 updateBattleInfo();
                                 showGameOverDialog();
