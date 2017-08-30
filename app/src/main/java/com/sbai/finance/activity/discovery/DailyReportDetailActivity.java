@@ -190,13 +190,15 @@ public class DailyReportDetailActivity extends BaseActivity {
         mWebView.onPause();
     }
 
-    @OnClick({R.id.back, R.id.share, R.id.refreshButton})
+    @OnClick({R.id.back, R.id.share, R.id.refreshButton, R.id.shareArea, R.id.backArea})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
+            case R.id.backArea:
                 finish();
                 break;
             case R.id.share:
+            case R.id.shareArea:
                 // TODO: 10/08/2017 添加乐米日报分享弹框
                 //ShareReportDialogFragment
                 umengEventCount(UmengCountEventIdUtils.REPORT_SHARE);
