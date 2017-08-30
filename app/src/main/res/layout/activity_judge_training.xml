@@ -24,8 +24,7 @@
             android:id="@+id/topArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
+            android:fitsSystemWindows="true"
             android:gravity="center_vertical"
             android:minHeight="48dp"
             android:orientation="horizontal">
@@ -33,14 +32,16 @@
             <ImageView
                 android:id="@+id/close"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
                 android:src="@drawable/ic_close"/>
 
             <TextView
                 android:id="@+id/timer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="41dp"
+                android:layout_marginLeft="27dp"
                 android:layout_weight="1"
                 android:text="00:00:00"
                 android:textColor="@color/unluckyText"
@@ -49,7 +50,10 @@
             <TextView
                 android:id="@+id/howToPlay"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
                 android:text="@string/how_play"
                 android:textColor="@android:color/white"/>
         </LinearLayout>

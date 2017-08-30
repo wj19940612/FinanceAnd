@@ -34,6 +34,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.TitleBar;
 
@@ -104,6 +105,7 @@ public class SearchOptionalActivity extends BaseActivity {
             @Override
             public void onClick(Variety variety) {
                 if (LocalUser.getUser().isLogin()) {
+                    umengEventCount(UmengCountEventIdUtils.DISCOVERY_ADD_SELF_OPTIONAL);
                     Client.addOption(variety.getVarietyId())
                             .setTag(TAG)
                             .setCallback(new Callback<Resp<JsonObject>>() {

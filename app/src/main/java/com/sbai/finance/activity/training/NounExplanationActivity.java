@@ -287,6 +287,9 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
 	}
 
 	public void setStarTextAndEvent(TextView view, String text, int tag, long delayTime, int number) {
+		if (text.length() > 5) {
+			text = text.substring(0,5) + "\n" + text.substring(5, text.length());
+		}
 		view.setText(text);
 		view.setOnTouchListener(this);
 		view.setTag(tag);

@@ -17,6 +17,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SmartDialog;
 
@@ -112,6 +113,7 @@ public class CommentActivity extends BaseActivity {
 
     @OnClick(R.id.publish)
     public void onViewClicked() {
+        umengEventCount(UmengCountEventIdUtils.MISS_TALK_COMMENT);
         requestPublishComment();
 
     }

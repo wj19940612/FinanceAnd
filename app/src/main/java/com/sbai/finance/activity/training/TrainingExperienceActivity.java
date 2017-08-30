@@ -3,6 +3,7 @@ package com.sbai.finance.activity.training;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -43,7 +44,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TrainingExperienceActivity extends BaseActivity {
+public class TrainingExperienceActivity extends BaseActivity implements View.OnClickListener {
 
 	private static final int REQ_WRITE_EXPERIENCE = 1001;
 
@@ -80,7 +81,8 @@ public class TrainingExperienceActivity extends BaseActivity {
 		requestHotExperienceList();
 		requestLatestExperienceList();
 		initSwipeRefreshLayout();
-		scrollToTop(mTitleBar, mLatestListView);
+
+		mTitleBar.setOnClickListener(this);
 	}
 
 	private void initData(Intent intent) {
@@ -254,6 +256,24 @@ public class TrainingExperienceActivity extends BaseActivity {
 				mLatestExperienceListAdapter.add(experience);
 			}
 		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		mLatestListView.smoothScrollToPosition(0);
+		final Handler handler = new Handler();
+		handler.postDelayed(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if (mLatestListView.getFirstVisiblePosition() > 0)
+				{
+					mLatestListView.smoothScrollToPosition(0);
+					handler.postDelayed(this, 100);
+				}
+			}
+		}, 100);
 	}
 
 	static class HotExperienceListAdapter extends ArrayAdapter<Experience> {

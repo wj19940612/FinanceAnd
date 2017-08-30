@@ -24,6 +24,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.RewardSelectMoneyView;
 import com.sbai.finance.view.SmartDialog;
 
@@ -134,6 +135,7 @@ public class RewardMissActivity extends BaseActivity {
     }
 
     private void requestUserFindInfo() {
+        umengEventCount(UmengCountEventIdUtils.MISS_TALK_REWARD);
         Client.requestUserFundInfo()
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
