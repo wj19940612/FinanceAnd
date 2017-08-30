@@ -19,6 +19,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.OnNoReadNewsListener;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.view.ScrollableViewPager;
 import com.sbai.finance.websocket.WsClient;
@@ -45,7 +46,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
 //      translucentStatusBar();
 
-      checkVersion();
+        checkVersion();
 
         requestServiceConnectWay();
     }
@@ -114,6 +115,9 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
             public void onTabClick(int position) {
                 mBottomTabs.selectTab(position);
                 mViewPager.setCurrentItem(position, false);
+                if (position == 1) {
+                    umengEventCount(UmengCountEventIdUtils.MISS_TALK_NAVIGATION);
+                }
             }
         });
     }

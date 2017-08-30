@@ -40,6 +40,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -210,6 +211,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void requestAddOptional() {
+        umengEventCount(UmengCountEventIdUtils.DISCOVERY_ADD_SELF_OPTIONAL);
         Client.addOption(mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -382,9 +384,26 @@ public abstract class StockTradeActivity extends BaseActivity {
         titleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                umengEventCount(UmengCountEventIdUtils.DISCOVERY_SHARE_STOCK);
                 ShareDialogFragment
                         .newInstance()
                         .setShareContent(shareTitle, shareDescribe, shareUrl)
+                        .setListener(new ShareDialogFragment.OnShareDialogCallback() {
+                            @Override
+                            public void onSharePlatformClick(ShareDialogFragment.SHARE_PLATFORM platform) {
+                                switch (platform) {
+                                    case SINA_WEIBO:
+                                        umengEventCount(UmengCountEventIdUtils.DISCOVERY_SHARE_STOCK_WEIBO);
+                                        break;
+                                    case WECHAT_FRIEND:
+                                        umengEventCount(UmengCountEventIdUtils.DISCOVERY_SHARE_STOCK_FRIEND);
+                                        break;
+                                    case WECHAT_CIRCLE:
+                                        umengEventCount(UmengCountEventIdUtils.DISCOVERY_SHARE_STOCK_CIRCLE);
+                                        break;
+                                }
+                            }
+                        })
                         .show(getSupportFragmentManager());
             }
         });

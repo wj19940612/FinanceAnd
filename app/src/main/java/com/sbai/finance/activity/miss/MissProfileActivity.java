@@ -49,6 +49,7 @@ import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.MissProfileSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 
@@ -135,6 +136,7 @@ public class MissProfileActivity extends BaseActivity implements
 			@Override
 			public void loveOnClick(final Question item) {
 				if (LocalUser.getUser().isLogin()) {
+					umengEventCount(UmengCountEventIdUtils.MISS_TALK_PRAISE);
 					Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
 
 						@Override
@@ -276,6 +278,7 @@ public class MissProfileActivity extends BaseActivity implements
 		switch (v.getId()) {
 			case R.id.avatar:
 				if (mMiss != null) {
+					umengEventCount(UmengCountEventIdUtils.MISS_TALK_AVATAR);
 					Launcher.with(this, MissAvatarActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
 							.execute();
@@ -288,6 +291,8 @@ public class MissProfileActivity extends BaseActivity implements
 			case R.id.attention:
 				if (mMiss != null) {
 					if (LocalUser.getUser().isLogin()) {
+						umengEventCount(UmengCountEventIdUtils.MISS_TALK_ATTENTION);
+
 						Client.attention(mMiss.getId()).setCallback(new Callback2D<Resp<Attention>, Attention>() {
 
 							@Override
@@ -404,6 +409,7 @@ public class MissProfileActivity extends BaseActivity implements
 		mVoiceIntroduce.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				umengEventCount(UmengCountEventIdUtils.MISS_TALK_VOICE);
 				//播放下一个之前把上一个播放位置的动画停了
 				if (mPlayingID != -1) {
 					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {

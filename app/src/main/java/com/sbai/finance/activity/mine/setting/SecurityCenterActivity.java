@@ -10,6 +10,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.TitleBar;
 
@@ -82,19 +83,32 @@ public class SecurityCenterActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.forgetSecurityPassword:
+                umengEventCount(UmengCountEventIdUtils.ME_FORGIVE_SAFETY_PASSWORD);
                 Launcher.with(getActivity(), ForgetSecurityPassActivity.class)
                         .executeForResult(REQ_CODE_UPDATE_SECURITY_PSD);
                 break;
 
             case R.id.modifySecurityPassword:
+                umengEventCount(UmengCountEventIdUtils.ME_MODIFY_SAFETY_PASSWORD);
+                Launcher.with(getActivity(), UpdateSecurityPassActivity.class)
+                        .putExtra(ExtraKeys.HAS_SECURITY_PSD, mHasSecurityPassword)
+                        .executeForResult(REQ_CODE_UPDATE_SECURITY_PSD);
+                break;
             case R.id.setSecurityPassword:
+                umengEventCount(UmengCountEventIdUtils.ME_SET_SAFETY_PASSWORD);
                 Launcher.with(getActivity(), UpdateSecurityPassActivity.class)
                         .putExtra(ExtraKeys.HAS_SECURITY_PSD, mHasSecurityPassword)
                         .executeForResult(REQ_CODE_UPDATE_SECURITY_PSD);
                 break;
 
             case R.id.setLoginPassword:
+                umengEventCount(UmengCountEventIdUtils.ME_SET_LOGIN_PASSWORD);
+                Launcher.with(getActivity(), UpdatePasswordActivity.class)
+                        .putExtra(ExtraKeys.HAS_LOGIN_PSD, mHasLoginPassword)
+                        .executeForResult(REQ_CODE_UPDATE_LOGIN_PSD);
+                break;
             case R.id.modifyLoginPassword:
+                umengEventCount(UmengCountEventIdUtils.ME_MODIFY_LOGIN_PASSWORD);
                 Launcher.with(getActivity(), UpdatePasswordActivity.class)
                         .putExtra(ExtraKeys.HAS_LOGIN_PSD, mHasLoginPassword)
                         .executeForResult(REQ_CODE_UPDATE_LOGIN_PSD);
