@@ -12,6 +12,7 @@ import android.view.View;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.stock.FinanceFragment;
 import com.sbai.finance.fragment.stock.StockNewsFragment;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.TitleBar;
 
 public class StockDetailActivity extends StockTradeActivity {
@@ -30,14 +31,16 @@ public class StockDetailActivity extends StockTradeActivity {
             @Override
             public void onPageSelected(int position) {
                 pagePosition = position;
-                if (position == 1) {
+                if (position == 0) {
+                    umengEventCount(UmengCountEventIdUtils.DISCOVERY_NEWS);
                     StockNewsFragment stockNewsFragment = getStockNewsFragment();
                     if (stockNewsFragment != null) {
                         stockNewsFragment.requestStockNewsList(0);
                     }
                 }
 
-                if (position == 2) {
+                if (position == 1) {
+                    umengEventCount(UmengCountEventIdUtils.DISCOVERY_FINANCE);
                     FinanceFragment financeFragment = getFinanceFragment();
                     if (financeFragment != null) {
                         financeFragment.requestCompanyAnnualReport(0);
@@ -71,7 +74,7 @@ public class StockDetailActivity extends StockTradeActivity {
 
 
     private StockNewsFragment getStockNewsFragment() {
-        Fragment fragment = mSubPageAdapter.getFragment(1);
+        Fragment fragment = mSubPageAdapter.getFragment(0);
         if (fragment != null && fragment instanceof StockNewsFragment) {
             return (StockNewsFragment) fragment;
         }
@@ -79,7 +82,7 @@ public class StockDetailActivity extends StockTradeActivity {
     }
 
     private FinanceFragment getFinanceFragment() {
-        Fragment fragment = mSubPageAdapter.getFragment(2);
+        Fragment fragment = mSubPageAdapter.getFragment(1);
         if (fragment != null && fragment instanceof FinanceFragment) {
             return (FinanceFragment) fragment;
         }
@@ -111,8 +114,6 @@ public class StockDetailActivity extends StockTradeActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-//                case 0:
-//                    return mContext.getString(R.string.point);
                 case 0:
                     return mContext.getString(R.string.stock_news);
                 case 1:
@@ -124,8 +125,6 @@ public class StockDetailActivity extends StockTradeActivity {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-//                case 0:
-//                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 0:
                     return StockNewsFragment.newInstance(mVariety.getVarietyType());
                 case 1:

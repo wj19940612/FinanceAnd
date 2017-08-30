@@ -122,13 +122,12 @@ public class ShareDialog {
             }
         } else {
             String text = mShareTitle + mShareUrl;
-            UMImage image = new UMImage(mActivity, R.drawable.ic_launcher_share);
+            UMImage image;
             if (TextUtils.isEmpty(mShareThumbUrl)) {
-                image.setThumb(new UMImage(mActivity, R.drawable.ic_launcher_share));
+                image = new UMImage(mActivity, R.drawable.ic_launcher_share);
             } else {
-                image.setThumb(new UMImage(mActivity, mShareThumbUrl));
+                image = new UMImage(mActivity, mShareThumbUrl);
             }
-
             if (mActivity != null && !mActivity.isFinishing()) {
                 new ShareAction(mActivity)
                         .withText(text)
