@@ -21,7 +21,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.cornucopia.EarningsAndExpendDetailsActivity;
 import com.sbai.finance.activity.mine.wallet.WithDrawActivity;
-import com.sbai.finance.activity.opinion.OpinionActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.UserInfo;
@@ -158,12 +157,6 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
             switch (type) {
                 //关注
                 case HistoryNewsModel.ACTION_TYPE_ATTENTION:
-                    break;
-                //// 20.成为观点大神
-                case HistoryNewsModel.BECOME_VIEWPOINT_MANITO:
-                    if (!historyNewsModel.isLossEfficacy()) {
-                        Launcher.with(getActivity(), OpinionActivity.class).execute();
-                    }
                     break;
                 //21.实名认证已通过
                 case HistoryNewsModel.REAL_NAME_APPROVE_PASSED:
