@@ -314,6 +314,6 @@
         android:background="@drawable/bg_train_theory"
         android:gravity="center"
         android:text="@string/start_training"
-        android:textColor="@color/start_training_text"
+        android:textColor="@color/gradient_text"
         android:textSize="15sp"/>
 </LinearLayout>
