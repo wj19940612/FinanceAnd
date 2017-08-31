@@ -3,10 +3,12 @@ package com.sbai.finance.view.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,7 +51,7 @@ public class TrainingRuleDialog {
     }
 
     private void init() {
-        TextView confirm = (TextView) mView.findViewById(R.id.confirm);
+        Button confirm = (Button) mView.findViewById(R.id.confirm);
         ImageView image = (ImageView) mView.findViewById(R.id.trainGif);
         TextView content = (TextView) mView.findViewById(R.id.content);
 
@@ -101,7 +103,11 @@ public class TrainingRuleDialog {
         }
 
         if (gradientDrawable != null) {
-            confirm.setBackground(gradientDrawable);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                confirm.setBackground(gradientDrawable);
+            } else {
+                confirm.setBackgroundDrawable(gradientDrawable);
+            }
         }
 
         mSmartDialog.setOnDismissListener(new SmartDialog.OnDismissListener() {

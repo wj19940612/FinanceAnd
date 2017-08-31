@@ -125,18 +125,23 @@ public class TrainingCountDownActivity extends BaseActivity {
             mBackground.setBackgroundResource(mBackgroundRes);
         }
 
-        if (Preference.get().isFirstTrain(mTraining.getId())) {
-            TrainingRuleDialog.with(getActivity(), mTraining)
-                    .setOnDismissListener(new TrainingRuleDialog.OnDismissListener() {
-                        @Override
-                        public void onDismiss() {
-                            startGifAnimation();
-                        }
-                    }).show();
-            Preference.get().setIsFirstTrainFalse(mTraining.getId(), false);
-        } else {
-            startGifAnimation();
-        }
+        mBackground.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (Preference.get().isFirstTrain(mTraining.getId())) {
+                    TrainingRuleDialog.with(getActivity(), mTraining)
+                            .setOnDismissListener(new TrainingRuleDialog.OnDismissListener() {
+                                @Override
+                                public void onDismiss() {
+                                    startGifAnimation();
+                                }
+                            }).show();
+                    Preference.get().setIsFirstTrainFalse(mTraining.getId(), false);
+                } else {
+                    startGifAnimation();
+                }
+            }
+        }, 100);
     }
 
     private void resubmitTrainingSubmits() {

@@ -62,6 +62,7 @@ public class KlineTrainActivity extends BaseActivity {
     private int mIndex;
     private int mSize;
     private boolean mIsSuccess;
+    private boolean mIsLauncher;
 
     //游戏进行的时间
     private long mTrainingCountTime;
@@ -102,7 +103,9 @@ public class KlineTrainActivity extends BaseActivity {
             public void onFinish() {
                 formatTime(mTrainTargetTime);
                 mIsSuccess = false;
-                requestEndTrain();
+                if (!mIsLauncher) {
+                    requestEndTrain();
+                }
             }
 
 
@@ -160,7 +163,9 @@ public class KlineTrainActivity extends BaseActivity {
     private void updateTrainData() {
         if (mTrainings == null || mTrainings.isEmpty()) {
             mIsSuccess = true;
-            requestEndTrain();
+            if (!mIsLauncher) {
+                requestEndTrain();
+            }
         } else {
             List<RemoveTraining> trainList = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
@@ -178,6 +183,7 @@ public class KlineTrainActivity extends BaseActivity {
     }
 
     private void requestEndTrain() {
+        mIsLauncher = true;
         TrainingSubmit trainingSubmit = new TrainingSubmit(mTrainingDetail.getTrain().getId());
         trainingSubmit.setTime((int) (mTrainingCountTime / 1000));
         trainingSubmit.setFinish(mIsSuccess);
