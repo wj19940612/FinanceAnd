@@ -5,6 +5,7 @@
             <solid android:color="@android:color/transparent"/>
         </shape>
     </item>
+
     <!-- 进度条 -->
     <item android:id="@android:id/progress">
         <clip>
