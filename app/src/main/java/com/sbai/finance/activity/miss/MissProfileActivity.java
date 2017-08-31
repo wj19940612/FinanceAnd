@@ -807,6 +807,7 @@ public class MissProfileActivity extends BaseActivity implements
 		mRefreshReceiver = new RefreshReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_REWARD_SUCCESS);
+		filter.addAction(ACTION_LOGIN_SUCCESS);
 		LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
 	}
 
@@ -843,6 +844,14 @@ public class MissProfileActivity extends BaseActivity implements
 						}
 					}
 				}
+			}
+
+			if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+				mSet.clear();
+				mCreateTime = null;
+				mSwipeRefreshLayout.setRefreshing(true);
+				requestMissDetail();
+				requestHerAnswerList();
 			}
 		}
 	}

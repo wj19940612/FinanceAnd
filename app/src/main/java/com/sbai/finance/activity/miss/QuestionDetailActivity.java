@@ -598,6 +598,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_REPLY_SUCCESS);
         filter.addAction(ACTION_REWARD_SUCCESS);
+        filter.addAction(ACTION_LOGIN_SUCCESS);
         LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
     }
 
@@ -621,6 +622,15 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     mQuestionDetail.setAwardCount(rewardCount);
                     mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(rewardCount)));
                 }
+            }
+
+            if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+                mSet.clear();
+                mPage = 0;
+                mMongoId = null;
+                mSwipeRefreshLayout.setRefreshing(true);
+                requestQuestionDetail();
+                requestQuestionReplyList();
             }
         }
     }

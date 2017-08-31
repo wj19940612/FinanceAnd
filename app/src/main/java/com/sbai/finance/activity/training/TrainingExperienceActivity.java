@@ -1,11 +1,14 @@
 package com.sbai.finance.activity.training;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,6 +69,7 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 	private TextView mHotExperience;
 	private View mSpit;
 	private MyListView mHotListView;
+	private RefreshReceiver mRefreshReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,7 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 		requestHotExperienceList();
 		requestLatestExperienceList();
 		initSwipeRefreshLayout();
+		registerRefreshReceiver();
 
 		mTitleBar.setOnClickListener(this);
 	}
@@ -274,6 +279,12 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 				}
 			}
 		}, 100);
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
 	}
 
 	static class HotExperienceListAdapter extends ArrayAdapter<Experience> {
@@ -576,6 +587,28 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 
 		if (requestCode == REQ_LOGIN && resultCode == RESULT_OK) {
 			requestIsTrained();
+		}
+	}
+
+	private void registerRefreshReceiver() {
+		mRefreshReceiver = new RefreshReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(ACTION_LOGIN_SUCCESS);
+		LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
+	}
+
+	private class RefreshReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+			if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+				mSet.clear();
+				mPage = 0;
+				mSwipeRefreshLayout.setRefreshing(true);
+				requestHotExperienceList();
+				requestLatestExperienceList();
+			}
 		}
 	}
 
