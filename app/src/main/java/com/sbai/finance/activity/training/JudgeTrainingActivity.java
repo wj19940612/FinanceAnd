@@ -90,7 +90,6 @@ public class JudgeTrainingActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         translucentStatusBar();
-        addStatusBarHeightTopPadding(mTopArea);
 
         initData(getIntent());
         mRenderScriptGaussianBlur = new RenderScriptGaussianBlur(this);

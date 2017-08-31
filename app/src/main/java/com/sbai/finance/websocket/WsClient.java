@@ -141,12 +141,12 @@ public class WsClient implements AbsWsClient {
         AsyncHttpClient.getDefaultInstance().websocket(createURI(), null, new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
+                mConnecting = false;
+
                 mWebSocket = webSocket;
 
                 if (isConnected()) {
                     mNormalClosed = false;
-
-                    mConnecting = false;
 
                     initWebSocket();
 

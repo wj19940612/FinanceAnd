@@ -3,6 +3,7 @@ package com.sbai.finance.view.training.Kline;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -32,6 +33,7 @@ public class Kline extends ChartView {
     private List<KData> mDataList;
     private SparseArray<IntersectionPoint> mIntersectionPointArray;
     private MvKlineView.Settings mSettings;
+    private CornerPathEffect mCornerPathEffect;
 
     private float mCandleWidth;
     private float mBaseLineWidth;
@@ -43,12 +45,14 @@ public class Kline extends ChartView {
         paint.setColor(Color.parseColor("#2a2a2a"));
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(mBaseLineWidth);
+        paint.setPathEffect(null);
     }
 
     private void setMovingAveragesPaint(Paint paint, int movingAverage) {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(mMvWidth);
-        paint.setPathEffect(null);
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setPathEffect(mCornerPathEffect);
         if (movingAverage == mSettings.getMovingAverages()[0]) {
             paint.setColor(Color.parseColor(COLOR_VIOLET));
         } else if (movingAverage == mSettings.getMovingAverages()[1]) {
@@ -88,6 +92,7 @@ public class Kline extends ChartView {
         for (int i = 0; i < mLines.length; i++) {
             mLines[i] = new Line();
         }
+        mCornerPathEffect = new CornerPathEffect(10);
     }
 
     @Override

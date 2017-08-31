@@ -59,7 +59,6 @@ import com.sbai.finance.websocket.WSMessage;
 import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.callback.WSCallback;
-import com.sbai.finance.websocket.cmd.CancelBattle;
 import com.sbai.finance.websocket.cmd.CurrentBattle;
 import com.sbai.finance.websocket.cmd.QuickMatchLauncher;
 import com.sbai.finance.websocket.cmd.SubscribeBattle;
@@ -1309,7 +1308,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                             }
                             //游戏结束后
                             if (mBattle.getGameStatus() == GAME_STATUS_END
-                                    && !mIsObserver) {
+                                    && !mIsObserver && mBattleId == mBattle.getId()) {
                                 dismissCalculatingView();
                                 updateBattleInfo();
                                 showGameOverDialog();

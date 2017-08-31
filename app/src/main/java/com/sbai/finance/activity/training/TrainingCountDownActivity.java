@@ -112,12 +112,12 @@ public class TrainingCountDownActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         initData(getIntent());
-        updateScreenOrientation();
-
         setContentView(R.layout.activity_training_count_down);
         ButterKnife.bind(this);
 
         translucentStatusBar();
+
+        updateScreenOrientation();
 
         resubmitTrainingSubmits();
 
@@ -172,17 +172,17 @@ public class TrainingCountDownActivity extends BaseActivity {
         Preference.get().setTrainingSubmits(phone, mTrainingSubmitList);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     private void updateScreenOrientation() {
-        if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        mBackground.postDelayed(new Runnable() { // delay action for SAMSUNG phone
+            @Override
+            public void run() {
+                if (mTraining.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                } else {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
+            }
+        }, 100);
     }
 
     private void initData(Intent intent) {

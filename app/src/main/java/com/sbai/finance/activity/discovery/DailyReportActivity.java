@@ -152,6 +152,7 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
     @Override
     public void onRefresh() {
         reset();
+        requestDailyList();
     }
 
     private void requestDailyList() {
