@@ -101,8 +101,9 @@ public class KlineTrainActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 formatTime(mTrainTargetTime);
-                mIsSuccess = false;
-                requestEndTrain();
+                if (!mIsSuccess) {
+                    requestEndTrain();
+                }
             }
 
 
