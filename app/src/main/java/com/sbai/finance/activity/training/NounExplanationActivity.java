@@ -105,6 +105,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     private int mTrainTargetTime;
     private boolean mIsSuccess;
     private int mQuestionCount;
+    private boolean mIsLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +137,8 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
             @Override
             public void onFinish() {
                 formatTime(mTrainTargetTime);
-                if (!mIsSuccess) {
+                mIsSuccess = false;
+                if (!mIsLauncher) {
                     requestEndTrain();
                 }
             }
@@ -163,6 +165,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
     }
 
     private void requestEndTrain() {
+        mIsLauncher = true;
         TrainingSubmit trainingSubmit = new TrainingSubmit(mTrainingDetail.getTrain().getId());
         trainingSubmit.addQuestionId(mQuestion.getId());
         trainingSubmit.setTime((int) (mTrainingCountTime / 1000));
@@ -409,7 +412,9 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
                 mCompleteCount++;
                 mNumber.setText(getString(R.string.explanation_number, mCompleteCount, mQuestionCount));
                 mIsSuccess = true;
-                requestEndTrain();
+                if (!mIsLauncher) {
+                    requestEndTrain();
+                }
             }
         } else {
             startBackAnimation(view);
