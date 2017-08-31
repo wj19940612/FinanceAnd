@@ -9,18 +9,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.utils.GlideCircleTransform;
 
 /**
  * Created by linrongfang on 2017/7/10.
  */
 
-public class StartGameDialog extends BaseDialog{
+public class StartGameDialog extends BaseDialog {
 
     public StartGameDialog(Activity activity) {
         super(activity);
     }
 
-    public static void get(Activity activity,String url){
+    public static void get(Activity activity, String url) {
 
         setCurrentDialog(DIALOG_START_GAME);
 
@@ -37,6 +38,7 @@ public class StartGameDialog extends BaseDialog{
         Glide.with(activity)
                 .load(url)
                 .placeholder(R.drawable.ic_default_avatar_big)
+                .transform(new GlideCircleTransform(activity))
                 .into(matchHead);
         TextView cancel = (TextView) customView.findViewById(R.id.cancel);
         cancel.setText("");
@@ -50,7 +52,7 @@ public class StartGameDialog extends BaseDialog{
                 .setCustomView(customView)
                 .show();
 
-        startCountDown(message,activity);
+        startCountDown(message, activity);
     }
 
     private static void startCountDown(final TextView message, final Activity activity) {
