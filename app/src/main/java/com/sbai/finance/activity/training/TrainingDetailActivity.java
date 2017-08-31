@@ -468,7 +468,22 @@ public class TrainingDetailActivity extends BaseActivity {
 					.putExtra(ExtraKeys.TRAINING_DETAIL, mTrainingDetail)
 					.putExtra(ExtraKeys.QUESTION, question)
 					.execute();
+		} else {
+			requestTrainDetailAndStartTraining(question);
 		}
+	}
+
+	private void requestTrainDetailAndStartTraining(final Question question) {
+		Client.getTrainingDetail(mTraining.getId()).setTag(TAG)
+				.setCallback(new Callback2D<Resp<TrainingDetail>, TrainingDetail>() {
+					@Override
+					protected void onRespSuccessData(TrainingDetail data) {
+						mTrainingDetail = data;
+						updateTrainDetail(data);
+						updateAchievementViews();
+						startTraining(question);
+					}
+				}).fire();
 	}
 
 	private void share() {
