@@ -51,6 +51,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/bg_annals_materials_create_top"/>
