@@ -18,7 +18,7 @@ import com.sbai.finance.utils.Display;
  * Created by ${wangJie} on 2017/8/14.
  */
 
-public class TrainProgressBar extends ProgressBar {
+public class TrainingProgressBar extends ProgressBar {
 
 
     private static final String TAG = "TrainProgressBar";
@@ -39,6 +39,8 @@ public class TrainProgressBar extends ProgressBar {
     private long mProgressTotalTime;
     private CountDownTimer mCountDownTimer;
     private OnTimeUpListener mOnTimeUpListener;
+
+
     private static final int MAX_PROGRESS = 10000;
 
 
@@ -53,29 +55,29 @@ public class TrainProgressBar extends ProgressBar {
     }
 
 
-    public TrainProgressBar(Context context) {
+    public TrainingProgressBar(Context context) {
         this(context, null);
     }
 
-    public TrainProgressBar(Context context, AttributeSet attrs) {
+    public TrainingProgressBar(Context context, AttributeSet attrs) {
         this(context, attrs, android.R.attr.progressBarStyleHorizontal);
     }
 
-    public TrainProgressBar(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TrainingProgressBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         processAttrs(attrs);
         init();
     }
 
     private void processAttrs(AttributeSet attrs) {
-        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.TrainProgressBar);
-        mBoundaryColor = typedArray.getColor(R.styleable.TrainProgressBar_boundaryColor, Color.WHITE);
-        mBoundaryHeight = typedArray.getDimensionPixelSize(R.styleable.TrainProgressBar_boundaryHeight, 1);
-        mHintSplitLineColor = typedArray.getColor(R.styleable.TrainProgressBar_hintSplitLineColor, Color.WHITE);
-        mHintSplitLineWidth = typedArray.getDimension(R.styleable.TrainProgressBar_hintSplitLineWidth, 4);
-        mHintSplitScale = typedArray.getFloat(R.styleable.TrainProgressBar_hintSplitScale, 0.8f);
-        mHasSplitLine = typedArray.getBoolean(R.styleable.TrainProgressBar_hasSplitLine, true);
-        mUseDefaultProgressDrawable = typedArray.getBoolean(R.styleable.TrainProgressBar_isUseDefaultProgressDrawable, true);
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.TrainingProgressBar);
+        mBoundaryColor = typedArray.getColor(R.styleable.TrainingProgressBar_boundaryColor, Color.WHITE);
+        mBoundaryHeight = typedArray.getDimensionPixelSize(R.styleable.TrainingProgressBar_boundaryHeight, 1);
+        mHintSplitLineColor = typedArray.getColor(R.styleable.TrainingProgressBar_hintSplitLineColor, Color.WHITE);
+        mHintSplitLineWidth = typedArray.getDimension(R.styleable.TrainingProgressBar_hintSplitLineWidth, 4);
+        mHintSplitScale = typedArray.getFloat(R.styleable.TrainingProgressBar_hintSplitScale, 0.8f);
+        mHasSplitLine = typedArray.getBoolean(R.styleable.TrainingProgressBar_hasSplitLine, true);
+        mUseDefaultProgressDrawable = typedArray.getBoolean(R.styleable.TrainingProgressBar_isUseDefaultProgressDrawable, true);
         typedArray.recycle();
     }
 
@@ -121,7 +123,7 @@ public class TrainProgressBar extends ProgressBar {
             @Override
             public void onTick(long millisUntilFinished) {
                 long upTime = mProgressTotalTime - millisUntilFinished;
-                TrainProgressBar.this.setTrainChangeTime(upTime);
+                TrainingProgressBar.this.setTrainChangeTime(upTime);
                 if (mOnTimeUpListener != null) {
                     mOnTimeUpListener.onTick(upTime);
                 }
