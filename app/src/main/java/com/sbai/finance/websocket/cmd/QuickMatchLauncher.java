@@ -3,9 +3,10 @@ package com.sbai.finance.websocket.cmd;
 import com.sbai.finance.websocket.WSCmd;
 
 /**
- * Created by linrongfang on 2017/6/26.
+ *
+ *  房主快速匹配
+ *
  */
-
 public class QuickMatchLauncher extends WSCmd {
 
     public static final int TYPE_QUICK_MATCH = 1;

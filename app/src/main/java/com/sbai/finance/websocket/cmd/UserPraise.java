@@ -3,9 +3,8 @@ package com.sbai.finance.websocket.cmd;
 import com.sbai.finance.websocket.WSCmd;
 
 /**
- * Created by linrongfang on 2017/6/30.
+ * 对战-游戏点赞
  */
-
 public class UserPraise extends WSCmd {
 
     public UserPraise(int battleId, int praiseId) {
