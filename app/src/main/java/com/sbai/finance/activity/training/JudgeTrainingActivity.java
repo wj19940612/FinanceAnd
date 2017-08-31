@@ -224,8 +224,6 @@ public class JudgeTrainingActivity extends BaseActivity {
     }
 
     private void showCloseDialog() {
-        showDimBackground();
-
         float widthScale = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
                 ? 0.45f : SmartDialog.DEFAULT_SCALE;
 
