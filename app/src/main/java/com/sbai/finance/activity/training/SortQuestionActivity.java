@@ -48,7 +48,7 @@ import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.SortTrainResultDialog;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
-import com.sbai.finance.view.training.TrainProgressBar;
+import com.sbai.finance.view.training.TrainingProgressBar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -81,7 +81,7 @@ public class SortQuestionActivity extends BaseActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.progressBar)
-    TrainProgressBar mProgressBar;
+    TrainingProgressBar mProgressBar;
     @BindView(R.id.bg)
     ImageView mDimBg;
     @BindView(R.id.content)
@@ -234,7 +234,7 @@ public class SortQuestionActivity extends BaseActivity {
         if (training == null) return;
         mTrainTargetTime = training.getTime() * 1000;
         mProgressBar.setTotalSecondTime(training.getTime());
-        mProgressBar.setOnTimeUpListener(new TrainProgressBar.OnTimeUpListener() {
+        mProgressBar.setOnTimeUpListener(new TrainingProgressBar.OnTimeUpListener() {
             @Override
             public void onTick(long millisUntilUp) {
                 mTrainingCountTime = millisUntilUp;

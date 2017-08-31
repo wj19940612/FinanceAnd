@@ -26,7 +26,7 @@ import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
 import com.sbai.finance.view.training.KlineTrainView;
-import com.sbai.finance.view.training.TrainProgressBar;
+import com.sbai.finance.view.training.TrainingProgressBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,7 +50,7 @@ public class KlineTrainActivity extends BaseActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.progressBar)
-    TrainProgressBar mProgressBar;
+    TrainingProgressBar mProgressBar;
     @BindView(R.id.bgImg)
     ImageView mBgImg;
     @BindView(R.id.content)
@@ -91,7 +91,7 @@ public class KlineTrainActivity extends BaseActivity {
         mRenderScriptGaussianBlur = new RenderScriptGaussianBlur(this);
         mProgressBar.setTotalSecondTime(mTrainingDetail.getTrain().getTime());
         mTrainTargetTime = mTrainingDetail.getTrain().getTime() * 1000;
-        mProgressBar.setOnTimeUpListener(new TrainProgressBar.OnTimeUpListener() {
+        mProgressBar.setOnTimeUpListener(new TrainingProgressBar.OnTimeUpListener() {
             @Override
             public void onTick(long millisUntilUp) {
                 mTrainingCountTime = millisUntilUp;
