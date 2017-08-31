@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class WsClient implements AbsWsClient {
 
@@ -58,7 +59,7 @@ public class WsClient implements AbsWsClient {
         mHandler = new Handler(Looper.getMainLooper());
 
         mPendingList = new LinkedList<>();
-        mExecutedList = new LinkedList<>();
+        mExecutedList = new ConcurrentLinkedQueue<>();
     }
 
     private void register() {

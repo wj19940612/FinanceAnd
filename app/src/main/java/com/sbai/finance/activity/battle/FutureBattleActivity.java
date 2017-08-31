@@ -284,7 +284,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
-
         }
 
         @Override
@@ -374,8 +373,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void requestOrderHistory() {
-        Client.getOrderHistory(mBattle.getId())
-                .setTag(TAG)
+        Client.getOrderHistory(mBattle.getId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<TradeRecord>>, List<TradeRecord>>() {
                     @Override
                     protected void onRespSuccessData(List<TradeRecord> data) {
@@ -1069,22 +1067,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void requestCancelBattle() {
-        //socket 有时会取消不了对战 先改用http
-//        WsClient.get().send(new CancelBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
-//            @Override
-//            public void onResponse(WSMessage<Resp> respWSMessage) {
-//                Intent intent = new Intent();
-//                intent.putExtra(Launcher.EX_PAYLOAD, GAME_STATUS_CANCELED);
-//                intent.putExtra(Launcher.EX_PAYLOAD_1, mBattle.getId());
-//                setResult(RESULT_OK, intent);
-//                finish();
-//            }
-//
-//            @Override
-//            public void onError(int code) {
-//                ToastUtil.show(getString(R.string.cancel_failed_game_start));
-//            }
-//        });
         Client.cancelBattle(mBattle.getId()).setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -1142,8 +1124,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void requestClosePosition(int orderId) {
-        Client.closePosition(mBattle.getId(), orderId)
-                .setTag(TAG)
+        Client.closePosition(mBattle.getId(), orderId).setTag(TAG)
                 .setCallback(new Callback<Resp<TradeOrderClosePosition>>() {
                     @Override
                     protected void onRespSuccess(Resp<TradeOrderClosePosition> resp) {
