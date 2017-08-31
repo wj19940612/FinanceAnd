@@ -306,7 +306,7 @@
         </RelativeLayout>
     </com.sbai.finance.view.ObservableScrollView>
 
-    <TextView
+    <Button
         android:id="@+id/startTraining"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -314,6 +314,6 @@
         android:background="@drawable/bg_train_theory"
         android:gravity="center"
         android:text="@string/start_training"
-        android:textColor="@android:color/white"
+        android:textColor="@color/start_training_text"
         android:textSize="15sp"/>
 </LinearLayout>
