@@ -50,7 +50,7 @@
         android:layout_below="@+id/trainTitle"
         android:layout_marginLeft="2dp"
         android:ellipsize="end"
-        android:textColor="@color/train_complete_count"
+        android:textColor="#FF222222"
         android:textSize="10sp"
         tools:text="空间的上了飞机"/>
 
