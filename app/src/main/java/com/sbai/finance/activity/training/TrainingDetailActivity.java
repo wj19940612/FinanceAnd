@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -78,7 +79,7 @@ public class TrainingDetailActivity extends BaseActivity {
 	@BindView(R.id.empty)
 	LinearLayout mEmpty;
 	@BindView(R.id.startTraining)
-	TextView mStartTraining;
+	Button mStartTraining;
 	@BindView(R.id.experience1)
 	ExperienceView mExperience1;
 	@BindView(R.id.experience2)
