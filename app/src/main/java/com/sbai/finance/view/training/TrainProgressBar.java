@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 
 import com.sbai.finance.R;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.FinanceUtil;
 
 /**
  * Created by ${wangJie} on 2017/8/14.
@@ -40,6 +39,8 @@ public class TrainProgressBar extends ProgressBar {
     private long mProgressTotalTime;
     private CountDownTimer mCountDownTimer;
     private OnTimeUpListener mOnTimeUpListener;
+    private static final int MAX_PROGRESS = 10000;
+
 
     public interface OnTimeUpListener {
         void onTick(long millisUntilUp);
@@ -79,6 +80,7 @@ public class TrainProgressBar extends ProgressBar {
     }
 
     private void init() {
+        setMax(MAX_PROGRESS);
         if (mUseDefaultProgressDrawable) {
             setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.bg_train_progress));
         }
@@ -152,8 +154,8 @@ public class TrainProgressBar extends ProgressBar {
 
     public void setTrainChangeTime(long changeTime) {
         if (mProgressTotalTime > 0) {
-            double v = FinanceUtil.divide(changeTime, mProgressTotalTime).doubleValue();
-            int progress = FinanceUtil.multiply(v, 100).intValue();
+            double v1 = changeTime * 1.0 / mProgressTotalTime;
+            int progress = (int) (v1 * MAX_PROGRESS);
             this.setViewProgress(progress, false);
         }
     }
@@ -164,6 +166,7 @@ public class TrainProgressBar extends ProgressBar {
         } else {
             this.setProgress(progress);
         }
+
     }
 
     @Override
