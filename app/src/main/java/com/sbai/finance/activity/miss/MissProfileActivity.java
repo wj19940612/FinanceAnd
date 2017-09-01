@@ -22,7 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -618,8 +617,6 @@ public class MissProfileActivity extends BaseActivity implements
 			TextView mName;
 			@BindView(R.id.askTime)
 			TextView mAskTime;
-			@BindView(R.id.hotArea)
-			RelativeLayout mHotArea;
 			@BindView(R.id.question)
 			TextView mQuestion;
 			@BindView(R.id.missAvatar)
@@ -634,8 +631,6 @@ public class MissProfileActivity extends BaseActivity implements
 			TextView mCommentNumber;
 			@BindView(R.id.ingotNumber)
 			TextView mIngotNumber;
-			@BindView(R.id.split)
-			View mSplit;
 			@BindView(R.id.voiceLevel)
 			View mVoiceLevel;
 			@BindView(R.id.voiceArea)
