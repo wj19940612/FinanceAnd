@@ -445,6 +445,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	@Override
 	public void onPause() {
 		super.onPause();
+		stopScheduleJob();
 		//锁屏或者在后台运行或者跳转页面时停止播放和动画
 		mMediaPlayerManager.release();
 		stopPreviousAnimation();
