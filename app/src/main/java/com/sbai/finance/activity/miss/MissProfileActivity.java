@@ -84,7 +84,6 @@ public class MissProfileActivity extends BaseActivity implements
 	private int mPageSize = 20;
 	private HashSet<Integer> mSet;
 	private int mCustomId;
-	private View mFootView;
 	private List<Question> mHerAnswerList;
 	private Miss mMiss;
 	private RefreshReceiver mRefreshReceiver;

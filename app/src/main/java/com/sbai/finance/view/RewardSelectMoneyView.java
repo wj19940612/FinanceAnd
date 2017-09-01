@@ -78,32 +78,32 @@ public class RewardSelectMoneyView extends LinearLayout {
         }
         switch (view.getId()) {
             case R.id.index0:
+                mSelectedIndex = 0;
                 mIndex0.setSelected(true);
                 if (mOnSelectedCallback != null) {
                     mOnSelectedCallback.selected(Long.valueOf(mIndex0.getText().toString()));
                 }
-                mSelectedIndex = 0;
                 break;
             case R.id.index1:
+                mSelectedIndex = 1;
                 mIndex1.setSelected(true);
                 if (mOnSelectedCallback != null) {
                     mOnSelectedCallback.selected(Long.valueOf(mIndex1.getText().toString()));
                 }
-                mSelectedIndex = 1;
                 break;
             case R.id.index2:
+                mSelectedIndex = 2;
                 mIndex2.setSelected(true);
                 if (mOnSelectedCallback != null) {
                     mOnSelectedCallback.selected(Long.valueOf(mIndex2.getText().toString()));
                 }
-                mSelectedIndex = 2;
                 break;
             case R.id.index3:
+                mSelectedIndex = 3;
                 mIndex3.setSelected(true);
                 if (mOnSelectedCallback != null) {
                     mOnSelectedCallback.selectedOther();
                 }
-                mSelectedIndex = 3;
                 break;
         }
     }
@@ -170,5 +170,9 @@ public class RewardSelectMoneyView extends LinearLayout {
 
     public long getOtherMoney() {
         return mOtherMoney;
+    }
+
+    public void clearSelected() {
+        mIndex3.setSelected(false);
     }
 }
