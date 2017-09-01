@@ -10,6 +10,8 @@ import java.lang.reflect.Type;
 
 public abstract class WSCallback<T> {
 
+    private String tag;
+
     public abstract void onResponse(T t);
 
     public void onError(int code) {
@@ -20,6 +22,14 @@ public abstract class WSCallback<T> {
 
     public void onTimeout() {
         ToastUtil.show(R.string.http_lib_error_timeout);
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public String getTag() {
+        return tag;
     }
 
     public Type getGenericType() {
