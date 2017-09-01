@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.sbai.finance">
+<manifest package="com.sbai.finance"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -417,7 +417,8 @@
             android:theme="@style/PageBottomEnter"/>
         <activity
             android:name=".activity.training.TrainingCountDownActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/PageFadeIn"/>
         <activity
             android:name=".activity.training.KlineTrainActivity"
             android:screenOrientation="portrait"/>

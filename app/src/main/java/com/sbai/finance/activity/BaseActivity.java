@@ -246,8 +246,11 @@ public class BaseActivity extends StatusBarActivity implements
     protected void onDestroy() {
         super.onDestroy();
         API.cancel(TAG);
+        WsClient.get().cancel(TAG);
+
         SmartDialog.dismiss(this);
         mRequestProgress.dismissAll();
+
         stopScheduleJob();
     }
 

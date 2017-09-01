@@ -74,7 +74,8 @@ public class WsClient implements AbsWsClient {
         send(new WSMessage(SocketCode.CODE_CMD, WSCmd, null));
     }
 
-    public void send(WSCmd WSCmd, WSCallback callback) {
+    public void send(WSCmd WSCmd, WSCallback callback, String tag) {
+        callback.setTag(tag);
         send(new WSMessage(SocketCode.CODE_CMD, WSCmd, callback));
     }
 
@@ -360,6 +361,17 @@ public class WsClient implements AbsWsClient {
             }
         }
         return msg;
+    }
+
+    public void cancel(String tag) {
+        Iterator iterator = mExecutedList.iterator();
+        while (iterator.hasNext()) {
+            WSMessage msg = (WSMessage) iterator.next();
+            WSCallback callback = msg.getCallback();
+            if (callback != null && callback.getTag().equals(tag)) {
+                iterator.remove();
+            }
+        }
     }
 
     public String createURI() {

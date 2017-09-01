@@ -23,6 +23,15 @@
         <item name="android:windowAnimationStyle">@style/EnterFromBottom</item>
     </style>
 
+    <style name="PageFadeIn" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/FadeIn</item>
+    </style>
+
+    <style name="FadeIn" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/hold</item>
+    </style>
+
     <style name="EnterFromBottom" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_from_bottom</item>
         <item name="android:activityOpenExitAnimation">@anim/hold</item>

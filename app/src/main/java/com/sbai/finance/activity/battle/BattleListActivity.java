@@ -429,7 +429,7 @@ public class BattleListActivity extends BaseActivity implements
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 showMatchDialog();
             }
-        });
+        }, TAG);
     }
 
 
@@ -441,7 +441,7 @@ public class BattleListActivity extends BaseActivity implements
                     ToastUtil.show("Cancel success");
                 }
             }
-        });
+        }, TAG);
     }
 
     private void requestVisibleBattleData() {
@@ -768,7 +768,7 @@ public class BattleListActivity extends BaseActivity implements
             public void onResponse(WSMessage<Resp> respWSMessage) {
                 showMatchDialog();
             }
-        });
+        }, TAG);
     }
 
     @Override
