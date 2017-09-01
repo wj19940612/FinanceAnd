@@ -66,6 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
+        android:visibility="gone"
         app:hasBottomSplitLine="true"
         app:leftIcon="@drawable/ic_mine_wallet_withdrawal"
         app:rightIcon="@drawable/ic_arrow_right_tint"
