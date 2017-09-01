@@ -135,7 +135,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 
         requestMissList();
         requestHotQuestionList();
-        requestLatestQuestionList(false);
+        requestLatestQuestionList(true);
 
         initSwipeRefreshLayout();
         registerRefreshReceiver();
@@ -1040,19 +1040,26 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
         public void onReceive(Context context, Intent intent) {
             if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
                 if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
-                    for (Question question : mHotQuestionList) {
-                        if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
-                            int questionRewardCount = question.getAwardCount() + 1;
-                            question.setAwardCount(questionRewardCount);
-                            mHotQuestionListAdapter.notifyDataSetChanged();
+
+                    for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
+                        Question question = mHotQuestionListAdapter.getItem(i);
+                        if (question != null) {
+                            if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
+                                int questionRewardCount = question.getAwardCount() + 1;
+                                question.setAwardCount(questionRewardCount);
+                                mHotQuestionListAdapter.notifyDataSetChanged();
+                            }
                         }
                     }
 
-                    for (Question question : mLatestQuestionList) {
-                        if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
-                            int questionRewardCount = question.getAwardCount() + 1;
-                            question.setAwardCount(questionRewardCount);
-                            mLatestQuestionListAdapter.notifyDataSetChanged();
+                    for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
+                        Question question = mHotQuestionListAdapter.getItem(i);
+                        if (question != null) {
+                            if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
+                                int questionRewardCount = question.getAwardCount() + 1;
+                                question.setAwardCount(questionRewardCount);
+                                mLatestQuestionListAdapter.notifyDataSetChanged();
+                            }
                         }
                     }
                 }
@@ -1061,10 +1068,9 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
                 mSet.clear();
                 mCreateTime = null;
-                mSwipeRefreshLayout.setRefreshing(true);
                 requestMissList();
                 requestHotQuestionList();
-                requestLatestQuestionList(false);
+                requestLatestQuestionList(true);
             }
         }
     }

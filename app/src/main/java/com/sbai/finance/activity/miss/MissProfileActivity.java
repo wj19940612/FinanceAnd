@@ -126,7 +126,7 @@ public class MissProfileActivity extends BaseActivity implements
 		mSwipeRefreshLayout.setProgressViewEndTarget(false, (int) Display.dp2Px(100, getResources()));
 
 		requestMissDetail();
-		requestHerAnswerList();
+		requestHerAnswerList(true);
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
 
@@ -461,7 +461,7 @@ public class MissProfileActivity extends BaseActivity implements
 				mCreateTime = null;
 				mSwipeRefreshLayout.setLoadMoreEnable(true);
 				requestMissDetail();
-				requestHerAnswerList();
+				requestHerAnswerList(true);
 
 				//下拉刷新时关闭语音播放
 				mMediaPlayerManager.release();
@@ -478,14 +478,14 @@ public class MissProfileActivity extends BaseActivity implements
 				mListView.postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						requestHerAnswerList();
+						requestHerAnswerList(false);
 					}
 				}, 1000);
 			}
 		});
 	}
 
-	private void requestHerAnswerList() {
+	private void requestHerAnswerList(final boolean isRefresh) {
 		Client.getHerAnswerList(mCustomId, mCreateTime, mPageSize).setTag(TAG)
 				.setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
 					@Override
@@ -496,7 +496,7 @@ public class MissProfileActivity extends BaseActivity implements
 						} else {
 							mEmpty.setVisibility(View.GONE);
 							mHerAnswerList = questionList;
-							updateHerAnswerList(questionList);
+							updateHerAnswerList(questionList, isRefresh);
 						}
 					}
 
@@ -523,7 +523,7 @@ public class MissProfileActivity extends BaseActivity implements
 		}
 	}
 
-	private void updateHerAnswerList(final List<Question> questionList) {
+	private void updateHerAnswerList(final List<Question> questionList, boolean isRefresh) {
 		if (questionList == null) {
 			stopRefreshAnimation();
 			return;
@@ -535,7 +535,7 @@ public class MissProfileActivity extends BaseActivity implements
 			mCreateTime = mHerAnswerList.get(mHerAnswerList.size() - 1).getCreateTime();
 		}
 
-		if (mSwipeRefreshLayout.isRefreshing()) {
+		if (isRefresh) {
 			if (mHerAnswerAdapter != null) {
 				mHerAnswerAdapter.clear();
 			}
@@ -843,9 +843,8 @@ public class MissProfileActivity extends BaseActivity implements
 			if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
 				mSet.clear();
 				mCreateTime = null;
-				mSwipeRefreshLayout.setRefreshing(true);
 				requestMissDetail();
-				requestHerAnswerList();
+				requestHerAnswerList(true);
 			}
 		}
 	}

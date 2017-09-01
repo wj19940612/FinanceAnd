@@ -83,7 +83,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 		initHeadView();
 		initLatestExperienceList();
 		requestHotExperienceList();
-		requestLatestExperienceList();
+		requestLatestExperienceList(true);
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
 
@@ -123,7 +123,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 				mIsFromTrainingResult = -1;
 				mSwipeRefreshLayout.setLoadMoreEnable(true);
 				requestHotExperienceList();
-				requestLatestExperienceList();
+				requestLatestExperienceList(true);
 			}
 		});
 
@@ -134,7 +134,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 					@Override
 					public void run() {
 						mIsFromTrainingResult = -1;
-						requestLatestExperienceList();
+						requestLatestExperienceList(false);
 					}
 				}, 1000);
 			}
@@ -207,7 +207,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 		}
 	}
 
-	private void requestLatestExperienceList() {
+	private void requestLatestExperienceList(final boolean isRefresh) {
 		if (mTraining != null) {
 			Client.getLatestExperienceList(mPage, mPageSize, mTraining.getId()).setTag(TAG)
 					.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
@@ -218,7 +218,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 								stopRefreshAnimation();
 							} else {
 								mEmpty.setVisibility(View.GONE);
-								updateLatestExperienceList(experienceList);
+								updateLatestExperienceList(experienceList, isRefresh);
 							}
 						}
 
@@ -242,7 +242,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 		}
 	}
 
-	private void updateLatestExperienceList(List<Experience> experienceList) {
+	private void updateLatestExperienceList(List<Experience> experienceList, boolean isRefresh) {
 		if (experienceList == null) {
 			stopRefreshAnimation();
 			return;
@@ -254,7 +254,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 			mPage++;
 		}
 
-		if (mSwipeRefreshLayout.isRefreshing()) {
+		if (isRefresh) {
 			if (mLatestExperienceListAdapter != null) {
 				mLatestExperienceListAdapter.clear();
 			}
@@ -426,8 +426,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 		if (requestCode == REQ_WRITE_EXPERIENCE && resultCode == RESULT_OK) {
 			mSet.clear();
 			mPage = 0;
-			mSwipeRefreshLayout.setRefreshing(true);
-			requestLatestExperienceList();
+			requestLatestExperienceList(true);
 			mLatestListView.setSelection(1);
 		}
 
@@ -451,9 +450,8 @@ public class TrainingExperienceActivity extends BaseActivity {
 			if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
 				mSet.clear();
 				mPage = 0;
-				mSwipeRefreshLayout.setRefreshing(true);
 				requestHotExperienceList();
-				requestLatestExperienceList();
+				requestLatestExperienceList(true);
 			}
 		}
 	}

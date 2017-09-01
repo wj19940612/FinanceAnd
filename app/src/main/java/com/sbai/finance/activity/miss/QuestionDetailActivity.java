@@ -128,7 +128,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		mListView.setFocusable(false);
 
 		requestQuestionDetail();
-		requestQuestionReplyList();
+		requestQuestionReplyList(true);
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
 
@@ -192,7 +192,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 					mMongoId = null;
 				}
 				requestQuestionDetail();
-				requestQuestionReplyList();
+				requestQuestionReplyList(true);
 
 				//关掉语音和语音动画
 				mMediaPlayerManager.release();
@@ -208,7 +208,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				mListView.postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						requestQuestionReplyList();
+						requestQuestionReplyList(false);
 					}
 				}, 1000);
 			}
@@ -348,14 +348,14 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		});
 	}
 
-	private void requestQuestionReplyList() {
+	private void requestQuestionReplyList(final boolean isRefresh) {
 		Client.getQuestionReplyList(mType, mQuestionId, mPage, mPageSize, mMongoId != null ? mMongoId : null)
 				.setTag(TAG)
 				.setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
 					@Override
 					protected void onRespSuccessData(QuestionReply questionReply) {
 						if (questionReply.getData() != null) {
-							updateQuestionReplyList(questionReply.getData(), questionReply.getResultCount());
+							updateQuestionReplyList(questionReply.getData(), questionReply.getResultCount(), isRefresh);
 						}
 					}
 
@@ -377,7 +377,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		}
 	}
 
-	private void updateQuestionReplyList(List<QuestionReply.DataBean> questionReplyList, int resultCount) {
+	private void updateQuestionReplyList(List<QuestionReply.DataBean> questionReplyList, int resultCount, boolean isRefresh) {
 		mCommentNumber.setText(getString(R.string.comment_number_string, StrFormatter.getFormatCount(resultCount)));
 		if (resultCount > 0) {
 			mNoComment.setVisibility(View.GONE);
@@ -398,7 +398,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			mPage++;
 		}
 
-		if (mSwipeRefreshLayout.isRefreshing()) {
+		if (isRefresh) {
 			if (mQuestionReplyListAdapter != null) {
 				mQuestionReplyListAdapter.clear();
 			}
@@ -576,9 +576,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			mSet.clear();
 			mPage = 0;
 			mMongoId = null;
-			mSwipeRefreshLayout.setRefreshing(true);
 			requestQuestionDetail();
-			requestQuestionReplyList();
+			requestQuestionReplyList(true);
 			mListView.setSelection(0);
 		}
 
@@ -609,9 +608,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				mSet.clear();
 				mPage = 0;
 				mMongoId = null;
-				mSwipeRefreshLayout.setRefreshing(true);
 				requestQuestionDetail();
-				requestQuestionReplyList();
+				requestQuestionReplyList(true);
 				mListView.setSelection(0);
 			}
 
@@ -627,9 +625,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				mSet.clear();
 				mPage = 0;
 				mMongoId = null;
-				mSwipeRefreshLayout.setRefreshing(true);
 				requestQuestionDetail();
-				requestQuestionReplyList();
+				requestQuestionReplyList(true);
 			}
 		}
 	}
