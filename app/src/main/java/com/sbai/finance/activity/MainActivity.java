@@ -1,5 +1,6 @@
 package com.sbai.finance.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,7 @@ import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.BottomTabs;
@@ -49,6 +51,16 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         checkVersion();
 
         requestServiceConnectWay();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        //从测评结果页打开主页，要特殊处理
+        boolean booleanExtra = intent.getBooleanExtra(Launcher.EX_PAYLOAD, false);
+        if (booleanExtra) {
+            mViewPager.setCurrentItem(0, false);
+        }
     }
 
     private void requestServiceConnectWay() {

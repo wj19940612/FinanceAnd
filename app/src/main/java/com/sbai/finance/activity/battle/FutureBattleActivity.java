@@ -625,7 +625,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     protected void onBattlePushReceived(WSPush<Battle> push) {
         super.onBattlePushReceived(push);
         // 对战详情只能收到有人加入推送
-        if (mBattle.isBattleOver()) { // OVER_PLAYERS + OVER_OBSERVER
+        if (mBattle != null && mBattle.isBattleOver()) { // OVER_PLAYERS + OVER_OBSERVER
             if (push.getContent().getType() == PushCode.BATTLE_JOINED) {
                 if (push.getContent() != null) {
                     Battle battle = (Battle) push.getContent().getData();
