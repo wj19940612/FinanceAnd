@@ -17,7 +17,6 @@
     <dimen name="btn_size">16sp</dimen>
     <dimen name="common_four_radius">2dp</dimen>
     <dimen name="common_eight_radius">4dp</dimen>
-    <dimen name="user_head_image">32dp</dimen>
     <dimen name="common_default_size">15sp</dimen>
     <dimen name="hundred_radius">100dp</dimen>
 

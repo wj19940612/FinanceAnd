@@ -374,7 +374,7 @@ public class WsClient implements AbsWsClient {
         }
     }
 
-    public String createURI() {
+    private String createURI() {
         return "ws://" + API.getDomain() + "/game/ws.do";
     }
 }

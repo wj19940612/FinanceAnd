@@ -15,22 +15,14 @@
     <string name="mine">我的</string>
 
     <!-- EconomicCircle -->
-    <string name="big_variety_name">%1$s:  </string>
-
-    <string name="details">详情</string>
     <string name="comment_number">评论(%1$d)</string>
     <string name="comment_number_string">评论(%1$s)</string>
     <string name="no_comment">暂无评论~快来发表您的评论吧</string>
     <string name="share">分享</string>
-    <string name="publish_comment">发表评论&#8230;</string>
-    <string name="no_location_information">暂无位置信息</string>
     <string name="re_location">点击重新获取位置</string>
     <item name="tag_opinion" type="id">0</item>
     <item name="tag_borrow_money" type="id">1</item>
     <item name="tag_futures_battle" type="id">2</item>
-    <string name="amount">借%1$s元</string>
-    <string name="limit">期限%1$s天</string>
-    <string name="interest">利息%1$s元</string>
 
     <!--Login & Register-->
     <string name="phone_number">手机号</string>
@@ -146,11 +138,6 @@
 
     <!-- 我的界面 -->
     <string name="attention">关注</string>
-    <string name="plus_attention">+ 关注</string>
-    <string name="fans">粉丝</string>
-    <string name="my_publish">我的发表</string>
-    <string name="economic_circle_news_list">经济圈消息列表</string>
-    <string name="his_publish">TA的发表</string>
     <string name="setting">设置</string>
     <string name="news">消息</string>
     <string name="about_us">关于我们</string>
@@ -205,10 +192,7 @@
     <string name="RMB">%1$S元</string>
 
     <!--   消息 -->
-    <string name="load_more">点击加载更多</string>
-    <string name="check_out_earlier_news">查看更早期的消息&#8230;</string>
     <string name="up_load_more">加载更多</string>
-    <string name="load_all">已加载全部</string>
 
     <!--设置-->
     <string name="new_news_notification">新消息通知</string>
@@ -229,40 +213,22 @@
     <string name="new_password_is_same_as_old_pass">新密码与旧密码相同</string>
     <string name="twice_password_is_different">两次新安全密码输入不一致</string>
 
-
-    <string name="relieve">解除</string>
     <string name="shield">屏蔽</string>
-    <string name="relieve_shield_dialog_title">是否对“%1$s”解除屏蔽?</string>
-    <string name="relieve_shield_dialog_content">解除屏蔽之后%1$s发表的观点将再次出现在你的经济圈。</string>
-
-    <string name="shield_dialog_title">是否对“%1$s”屏蔽?</string>
-    <string name="shield_dialog_content">屏蔽之后%1$s所有观点都将不再展示在你的经济圈。</string>
-
-    <string name="cancel_attention_dialog_title">是否不再关注“%1$s”?</string>
-
-    <string name="if_attention">是否关注“%1$s”?</string>
 
     <string name="new_notification">新消息通知</string>
     <string name="submit_success">提交成功</string>
 
     <!-- USER DATA-->
-    <string name="user_data">用户资料</string>
     <string name="is_attention">已关注</string>
-    <string name="is_already_attention_other">已互相关注</string>
     <string name="real_name_authentication">实名认证</string>
     <string name="if_submit_credit_approve">是否确认提交实名认证?</string>
     <string name="authenticated">已认证</string>
     <string name="authenticated_info">已认证信息</string>
     <string name="unauthorized">未认证</string>
     <string name="is_auditing">审核中</string>
-    <string name="attention_number">%1$d</string>
-    <string name="fans_number">%1$d</string>
     <string name="hint">提示</string>
 
-    <string name="shield_him">屏蔽TA</string>
-    <string name="is_shield">已屏蔽</string>
     <string name="number999">999+</string>
-    <string name="comment_number999">(999+)</string>
 
     <!--introduce-->
     <string name="trade_category">交易品种</string>
@@ -286,19 +252,12 @@
     <string name="the_last_trading_day_after_5_consecutive_working_days">最后交易日后连续5个工作日</string>
     <string name="daily_price_maximum_volatility_limit">每日价格\n最大波动限制</string>
     <string name="not_more_than_the_last_trading_day_settlement_price_plus_minus_percent_three">不超过上已交易日结算价±3%</string>
-    <string name="bullish">看涨</string>
-    <string name="bearish">看跌</string>
     <string name="prediction_rule">预测规则</string>
-    <string name="about_prediction_rule">预测规则></string>
-    <string name="big_god_to_predict_the_market_next_day">大神,来预测下一个交易日的涨跌</string>
     <string name="prediction_rule1">1.当前交易日开市后到下一个交易日开市前，预测下一个交易日的价格涨跌</string>
     <string name="prediction_rule2">2.价格涨跌以开盘价与收盘价对比，开盘价高于收盘价则价格跌，开盘价低于收盘价，则价格涨</string>
     <string name="prediction_rule3">3.每个预测时间段内预测一次后，将不能进行重复预测</string>
     <string name="prediction_rule4">4.预测成功率高的用户，将会登上我们的观点大神排行榜</string>
-    <string name="publish_opinion">发表观点</string>
-    <string name="opinion_length">%1$d/300</string>
     <string name="submit_has_empty">提  交</string>
-    <string name="describe_your_opinion">描述一下你的观点吧</string>
 
     <string name="end">已结束</string>
 
@@ -548,7 +507,6 @@
     <string name="wait_to_overtime">等待时间过长，房间已超时</string>
     <string name="recreate_room">重新创建</string>
     <string name="invite_invalid">对战邀请已失效</string>
-    <string name="cancel_failed_game_start">取消失败，对战已开始</string>
     <string name="remaining_time">剩余%1$s</string>
     <string name="support">%1$s赞</string>
     <string name="game_result_win">神操作！真是羡煞旁人</string>
@@ -593,7 +551,6 @@
     <string name="master">精通</string>
     <string name="going_train">马上去训练提升</string>
     <string name="test_result">测评结果</string>
-    <string name="pass">跳过</string>
     <string name="get_exam_questions_fail">测试题目获取失败</string>
     <string name="accuracy_ranking">正确率%1$s     超过%2$s的同学</string>
     <string-array name="evaluation_item">
@@ -640,7 +597,6 @@
     <string name="other_money_ingot">其他金额(元宝)</string>
     <string name="at_least_ten_ingot">最少10元宝哦～</string>
     <string name="most_reward_ten_million_ingot">最高打赏金额1000万元宝</string>
-    <string name="at_least_reward_ten_ingot">最低打赏金额10元宝</string>
     <string name="all_read">全部已读</string>
     <string name="success_reward">成功打赏</string>
     <string name="question_commit_and_please_wait_miss_answer">问题提交成功,请耐心等候小姐姐回复</string>
@@ -689,7 +645,6 @@
     <string name="ingot_number_no_blank">%1$d元宝</string>
     <string name="thank_you_feedback">感谢反馈,我们会尽快为您准备</string>
     <string name="hand_in_paper">交卷</string>
-    <string name="today_already_study">今日已学</string>
     <string name="answer_wrong">答错了哦</string>
     <string name="answer_right">非常正确</string>
     <string name="your_rank">您的排名 %1$d</string>
@@ -758,7 +713,6 @@
     <string name="train_grade">L%1$d</string>
     <string name="trade_level">我的交易水平:%1$s  （超过了%2$s的交易用户）</string>
     <string name="advise">建议:%1$s</string>
-    <string name="click_refresh">点击刷新</string>
     <string name="no_miss">小姐姐不存在</string>
     <string name="ask_miss">点击右上角+号,对小姐姐提问吧</string>
     <string name="miss_first_time">快用提问夺走小姐姐的“第一次”吧</string>
@@ -794,7 +748,6 @@
     <string name="not_achieved">未达成</string>
     <string name="retry">再试一次</string>
     <string name="how_play">怎么玩?</string>
-    <string name="data">%1$s%2$s</string>
     <string name="exit_train_will_not_save_train_record">现在退出训练，训练记录将不会保存的哟</string>
     <string name="exit_will_not_save_content">现在放弃，已输入的内容将不会保存</string>
     <string name="is_sure_exit_train">确定要退出训练吗?</string>
