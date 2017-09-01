@@ -79,11 +79,6 @@ public class JudgeTrainingActivity extends BaseActivity {
     private RenderScriptGaussianBlur mRenderScriptGaussianBlur;
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_judge_training);
@@ -113,6 +108,7 @@ public class JudgeTrainingActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 mTrainingSubmit.setFinish(true);
+                mCountDownTimer.cancel();
                 startTrainingResultPage();
             }
         });
@@ -224,8 +220,6 @@ public class JudgeTrainingActivity extends BaseActivity {
     }
 
     private void showCloseDialog() {
-        showDimBackground();
-
         float widthScale = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
                 ? 0.45f : SmartDialog.DEFAULT_SCALE;
 

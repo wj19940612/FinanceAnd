@@ -86,6 +86,9 @@ public class RewardMissActivity extends BaseActivity {
                             @Override
                             public void onDismiss() {
                                 mRewardArea.setVisibility(View.VISIBLE);
+                                if (mRewardMoneyContent.getOtherMoney() == 0) {
+                                    mRewardMoneyContent.clearSelected();
+                                }
                                 if (mSelectedIndex != -1) {
                                     mRewardMoneyContent.setSelectedIndex(mSelectedIndex);
                                     mRewardMoney.setText(String.valueOf(mRewardMoneyContent.getSelectedMoney()));

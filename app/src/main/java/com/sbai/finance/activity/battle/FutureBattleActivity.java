@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
@@ -66,7 +65,6 @@ import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
 import com.sbai.finance.websocket.cmd.UserPraise;
 import com.sbai.finance.websocket.market.DataReceiveListener;
 import com.sbai.finance.websocket.market.MarketSubscriber;
-import com.sbai.httplib.ApiCallback;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -121,7 +119,9 @@ import static com.sbai.finance.websocket.market.MarketSubscribe.REQ_QUOTA;
  * 3 -> GAME_STATUS_END
  * 4 -> GAME_STATUS_END && mIsObserver
  */
-public class FutureBattleActivity extends BaseActivity implements BattleButtons.OnViewClickListener, BattleTradeView.OnViewClickListener {
+public class FutureBattleActivity extends BaseActivity implements
+        BattleButtons.OnViewClickListener,
+        BattleTradeView.OnViewClickListener {
 
     @BindView(R.id.rootView)
     LinearLayout mContent;
@@ -284,7 +284,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
-
         }
 
         @Override
@@ -338,12 +337,8 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
 
     private void requestAddBattlePraise(final int userId) {
         umengEventCount(UmengCountEventIdUtils.WITNESS_BATTLE_PRAISE);
-        WsClient.get().send(new UserPraise(mBattle.getId(), userId), new WSCallback<WSMessage<Resp<Integer>>>() {
-            @Override
-            public void onResponse(WSMessage<Resp<Integer>> respWSMessage) {
-                //等待推送过来数据,防止出现数据错误
-            }
-        });
+
+        WsClient.get().send(new UserPraise(mBattle.getId(), userId)); // praise push received
     }
 
     private void updatePraiseView(int count, int userId) {
@@ -374,8 +369,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void requestOrderHistory() {
-        Client.getOrderHistory(mBattle.getId())
-                .setTag(TAG)
+        Client.getOrderHistory(mBattle.getId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<TradeRecord>>, List<TradeRecord>>() {
                     @Override
                     protected void onRespSuccessData(List<TradeRecord> data) {
@@ -393,8 +387,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void requestCurrentOrder() {
-        Client.requestCurrentOrder(mBattle.getId())
-                .setTag(TAG)
+        Client.requestCurrentOrder(mBattle.getId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<TradeOrder>>, List<TradeOrder>>() {
                     @Override
                     protected void onRespSuccessData(List<TradeOrder> data) {
@@ -700,12 +693,12 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                 break;
 
         }
-
     }
 
     //根据推送更新订单状态
     private void updateOrderStatus(WSPush<Battle> push, int type) {
         requestBattleScore();
+
         if (push.getContent() != null) {
             Battle battle = (Battle) push.getContent().getData();
             int optCount = mBattleTradeView.getListView().getAdapter().getCount();
@@ -842,35 +835,35 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         if (mCurrentOrder != null && mBattleTradeView.isShown() && mBattleTradeView.getTradeState() == STATE_CLOSE_POSITION) {
 
             if (mCurrentOrder.getDirection() == 1) {
-                myProfit = FinanceUtil.subtraction(futureData.getLastPrice()
-                        , mCurrentOrder.getOrderPrice()).doubleValue();
+                myProfit = FinanceUtil.subtraction(futureData.getLastPrice(),
+                        mCurrentOrder.getOrderPrice()).doubleValue();
             } else {
-                myProfit = FinanceUtil.subtraction(mCurrentOrder.getOrderPrice()
-                        , futureData.getLastPrice()).doubleValue();
+                myProfit = FinanceUtil.subtraction(mCurrentOrder.getOrderPrice(),
+                        futureData.getLastPrice()).doubleValue();
             }
             myProfit = myProfit * mVariety.getEachPointMoney();
-            mBattleTradeView.setTradeData(mCurrentOrder.getDirection()
-                    , FinanceUtil.formatWithScale(mCurrentOrder.getOrderPrice(), mVariety.getPriceScale()), myProfit);
+            mBattleTradeView.setTradeData(mCurrentOrder.getDirection(),
+                    FinanceUtil.formatWithScale(mCurrentOrder.getOrderPrice(), mVariety.getPriceScale()), myProfit);
         }
         //房主的累计收益
         if (mCreatorOrder != null) {
             if (mCreatorOrder.getDirection() == 1) {
-                creatorProfit = FinanceUtil.subtraction(futureData.getLastPrice()
-                        , mCreatorOrder.getOrderPrice()).doubleValue();
+                creatorProfit = FinanceUtil.subtraction(futureData.getLastPrice(),
+                        mCreatorOrder.getOrderPrice()).doubleValue();
             } else {
-                creatorProfit = FinanceUtil.subtraction(mCreatorOrder.getOrderPrice()
-                        , futureData.getLastPrice()).doubleValue();
+                creatorProfit = FinanceUtil.subtraction(mCreatorOrder.getOrderPrice(),
+                        futureData.getLastPrice()).doubleValue();
             }
             creatorProfit = creatorProfit * mVariety.getEachPointMoney();
         }
         //对抗者的累计收益
         if (mAgainstOrder != null) {
             if (mAgainstOrder.getDirection() == 1) {
-                againstProfit = FinanceUtil.subtraction(futureData.getLastPrice()
-                        , mAgainstOrder.getOrderPrice()).doubleValue();
+                againstProfit = FinanceUtil.subtraction(futureData.getLastPrice(),
+                        mAgainstOrder.getOrderPrice()).doubleValue();
             } else {
-                againstProfit = FinanceUtil.subtraction(mAgainstOrder.getOrderPrice()
-                        , futureData.getLastPrice()).doubleValue();
+                againstProfit = FinanceUtil.subtraction(mAgainstOrder.getOrderPrice(),
+                        futureData.getLastPrice()).doubleValue();
             }
             againstProfit = againstProfit * mVariety.getEachPointMoney();
         }
@@ -951,6 +944,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     @Override
     public void onInviteButtonClick() {
         umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_INVITE_FRIENDS);
+
         showInviteDialog();
     }
 
@@ -970,6 +964,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     @Override
     public void onMatchButtonClick() {
         umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_FAST_MATCH);
+
         showMatchConfirmDialog();
     }
 
@@ -1008,7 +1003,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             @Override
             public void onError(int code) {
             }
-
         });
     }
 
@@ -1045,6 +1039,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     @Override
     public void onCancelButtonClick() {
         umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_CANCEL_BATTLE);
+
         showCancelBattleDialog();
     }
 
@@ -1058,8 +1053,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                         dialog.dismiss();
                         requestCancelBattle();
                     }
-                })
-                .setNegative(R.string.continue_to_battle, new SmartDialog.OnClickListener() {
+                }).setNegative(R.string.continue_to_battle, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
@@ -1069,67 +1063,49 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void requestCancelBattle() {
-        //socket 有时会取消不了对战 先改用http
-//        WsClient.get().send(new CancelBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
-//            @Override
-//            public void onResponse(WSMessage<Resp> respWSMessage) {
-//                Intent intent = new Intent();
-//                intent.putExtra(Launcher.EX_PAYLOAD, GAME_STATUS_CANCELED);
-//                intent.putExtra(Launcher.EX_PAYLOAD_1, mBattle.getId());
-//                setResult(RESULT_OK, intent);
-//                finish();
-//            }
-//
-//            @Override
-//            public void onError(int code) {
-//                ToastUtil.show(getString(R.string.cancel_failed_game_start));
-//            }
-//        });
         Client.cancelBattle(mBattle.getId()).setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()) {
-                            Intent intent = new Intent();
-                            intent.putExtra(Launcher.EX_PAYLOAD, GAME_STATUS_CANCELED);
-                            intent.putExtra(Launcher.EX_PAYLOAD_1, mBattle.getId());
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        } else {
-                            ToastUtil.show(getString(R.string.cancel_failed_game_start));
-                        }
+                        Intent intent = new Intent();
+                        intent.putExtra(Launcher.EX_PAYLOAD, GAME_STATUS_CANCELED);
+                        intent.putExtra(Launcher.EX_PAYLOAD_1, mBattle.getId());
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
-                })
-                .fireFree();
+                }).fire();
     }
 
     @Override
     public void onLongPurchaseButtonClick() {
         umengEventCount(UmengCountEventIdUtils.BATTLE_BULLISH);
+
         requestCreateOrder(DIRECTION_LONG_PURCHASE);
     }
 
     @Override
     public void onShortPurchaseButtonClick() {
         umengEventCount(UmengCountEventIdUtils.BATTLE_BEARISH);
+
         requestCreateOrder(DIRECTION_SHORT_PURCHASE);
     }
 
     @Override
     public void onClosePositionButtonClick() {
         umengEventCount(UmengCountEventIdUtils.BATTLE_CLOSE_POSITION);
+
         if (mCurrentOrder != null) {
             requestClosePosition(mCurrentOrder.getId());
         }
     }
 
     private void requestCreateOrder(int direction) {
-        Client.createOrder(mBattle.getId(), direction)
-                .setTag(TAG)
+        Client.createOrder(mBattle.getId(), direction).setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<TradeOrder>>() {
                     @Override
                     protected void onRespSuccess(Resp<TradeOrder> resp) {
+
                     }
 
                     @Override
@@ -1142,8 +1118,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     private void requestClosePosition(int orderId) {
-        Client.closePosition(mBattle.getId(), orderId)
-                .setTag(TAG)
+        Client.closePosition(mBattle.getId(), orderId).setTag(TAG)
                 .setCallback(new Callback<Resp<TradeOrderClosePosition>>() {
                     @Override
                     protected void onRespSuccess(Resp<TradeOrderClosePosition> resp) {
@@ -1155,8 +1130,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                             refreshTradeView();
                         }
                     }
-                })
-                .fire();
+                }).fire();
     }
 
     private void subscribeFutureData() {
@@ -1170,7 +1144,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
         }
     }
 
-    private void UnSubscribeFutureData() {
+    private void unSubscribeFutureData() {
         if (mVariety != null) {
             stopScheduleJob();
             MarketSubscriber.get().unSubscribe(mVariety.getContractsCode());
@@ -1258,7 +1232,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     //快速匹配结果查询
     private void requestFastMatchResult() {
         Client.getQuickMatchResult(Battle.CREATE_FAST_MATCH, mBattle.getId()).setTag(TAG)
-                .setCallback(new ApiCallback<Resp<Battle>>() {
+                .setCallback(new Callback<Resp<Battle>>() {
                     @Override
                     public void onSuccess(Resp<Battle> battleResp) {
                         if (battleResp.getCode() == Battle.CODE_CREATE_FAST_MATCH_TIMEOUT) {
@@ -1267,8 +1241,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-
+                    protected void onRespSuccess(Resp<Battle> resp) {
                     }
                 }).fireFree();
     }
@@ -1285,7 +1258,7 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                             updatePraiseView(mBattle.getLaunchPraise(), mBattle.getLaunchUser());
                             updatePraiseView(mBattle.getAgainstPraise(), mBattle.getAgainstUser());
 
-                            //2017/7/4 从匹配或者创建房间过渡到游戏开始 如果直接过渡到结束 另外处理 最后一种过渡到房间取消
+                            //从匹配或者创建房间过渡到游戏开始 如果直接过渡到结束 另外处理 最后一种过渡到房间取消
                             if (gameStatus == ROOM_STATE_CREATE) {
                                 if (mBattle.getGameStatus() == GAME_STATUS_STARTED) {
                                     //切换状态
@@ -1302,10 +1275,12 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
                                 }
 
                             }
+
                             //正在对战中
                             if (gameStatus == ROOM_STATE_START) {
                                 refreshTradeView();
                             }
+
                             //游戏结束后
                             if (mBattle.getGameStatus() == GAME_STATUS_END
                                     && !mIsObserver && mBattleId == mBattle.getId()) {
@@ -1399,13 +1374,6 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        UnSubscribeFutureData();
-        unSubscribeBattle();
-    }
-
-    @Override
     protected void onPostResume() {
         super.onPostResume();
         subscribeFutureData();
@@ -1415,19 +1383,48 @@ public class FutureBattleActivity extends BaseActivity implements BattleButtons.
             if (!mBattle.isBattleOver()) {
                 requestBattleInfo();
             }
+
             //正在快速匹配的要检测快速匹配结果
             if (StartMatchDialog.getCurrentDialog() == DIALOG_START_MATCH) {
                 requestFastMatchResult();
             }
         }
+
+        registerNetworkStatus();
+    }
+
+    @Override
+    protected void onNetworkAvailable(boolean available) {
+        if (available) {
+            subscribeFutureData();
+            subscribeBattle();
+
+            if (mBattle != null) {
+                if (!mBattle.isBattleOver()) {
+                    requestBattleInfo();
+                }
+
+                //正在快速匹配的要检测快速匹配结果
+                if (StartMatchDialog.getCurrentDialog() == DIALOG_START_MATCH) {
+                    requestFastMatchResult();
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unSubscribeFutureData();
+        unSubscribeBattle();
+
+        unregisterNetworkStatus();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         BaseDialog.dismiss(this);
-        if (mTabLayout != null) {
-            mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
-        }
+        mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
     }
 }

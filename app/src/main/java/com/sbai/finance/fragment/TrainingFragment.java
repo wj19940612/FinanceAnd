@@ -459,10 +459,8 @@ public class TrainingFragment extends BaseFragment {
                     if (isMineTrained) {
                         mTrainCompleteCount.setVisibility(View.VISIBLE);
                         if (finishCount > 0) {
-                            mTrainCompleteCount.setSelected(true);
                             mTrainCompleteCount.setText(context.getString(R.string.train_count, finishCount));
                         } else {
-                            mTrainCompleteCount.setSelected(false);
                             mTrainCompleteCount.setText(R.string.not_join_train);
                         }
                     }

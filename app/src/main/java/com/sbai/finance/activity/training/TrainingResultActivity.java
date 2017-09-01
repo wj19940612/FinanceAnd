@@ -96,8 +96,13 @@ public class TrainingResultActivity extends BaseActivity {
             mFailedMessage.setVisibility(View.GONE);
             if (targets != null && !targets.isEmpty()
                     && targets.get(0).getType() == TrainingTarget.TYPE_RATE) {
+                double accuracy = mTrainingSubmit.getRate();
+                int decimalScale = 2;
+                if (accuracy == Math.floor(accuracy) && !Double.isInfinite(accuracy)) {
+                    decimalScale = 0;
+                }
                 mMyGrade.setText(getString(R.string.accuracy_,
-                        FinanceUtil.formatToPercentage(mTrainingSubmit.getRate())));
+                        FinanceUtil.formatToPercentage(accuracy, decimalScale)));
             } else {
                 mMyGrade.setText(formatTime(mTrainingSubmit.getTime(),
                         R.string._seconds, R.string._minutes, R.string._minutes_x_seconds));

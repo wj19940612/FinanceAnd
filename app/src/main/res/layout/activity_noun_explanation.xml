@@ -37,7 +37,7 @@
             app:titleTextColor="@android:color/white"
             app:titleTextSize="20sp"/>
 
-        <com.sbai.finance.view.training.TrainProgressBar
+        <com.sbai.finance.view.training.TrainingProgressBar
             android:id="@+id/progressBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

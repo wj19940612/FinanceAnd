@@ -135,10 +135,15 @@ public class MoreTrainFeedbackActivity extends BaseActivity {
 
     private void updateTrainData(List<TrainFeedback> data) {
         mIds.clear();
-        mCommit.setEnabled(false);
         mTrainAdapter.clear();
         mTrainAdapter.addAll(data);
         mTrainAdapter.notifyDataSetChanged();
+        String content = mComment.getInputComment().trim();
+        if (content.isEmpty()||content.length()>mComment.getWordLimitCount()){
+            mCommit.setEnabled(false);
+        }else {
+            mComment.setEnabled(true);
+        }
     }
 
     private void setCommitEnable(String comment) {

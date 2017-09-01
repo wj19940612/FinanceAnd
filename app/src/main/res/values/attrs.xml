@@ -199,7 +199,7 @@
     </declare-styleable>
 
     <!--训练的时间进度条-->
-    <declare-styleable name="TrainProgressBar">
+    <declare-styleable name="TrainingProgressBar">
         <attr name="boundaryColor" format="color|reference"/>
         <attr name="boundaryHeight" format="dimension|reference"/>
         <attr name="hintSplitLineColor" format="color|reference"/>

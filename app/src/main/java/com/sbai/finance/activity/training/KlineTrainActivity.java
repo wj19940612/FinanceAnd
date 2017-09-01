@@ -26,7 +26,7 @@ import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
 import com.sbai.finance.view.training.KlineTrainView;
-import com.sbai.finance.view.training.TrainProgressBar;
+import com.sbai.finance.view.training.TrainingProgressBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,7 +50,7 @@ public class KlineTrainActivity extends BaseActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.progressBar)
-    TrainProgressBar mProgressBar;
+    TrainingProgressBar mProgressBar;
     @BindView(R.id.bgImg)
     ImageView mBgImg;
     @BindView(R.id.content)
@@ -62,6 +62,7 @@ public class KlineTrainActivity extends BaseActivity {
     private int mIndex;
     private int mSize;
     private boolean mIsSuccess;
+    private boolean mIsLauncher;
 
     //游戏进行的时间
     private long mTrainingCountTime;
@@ -91,7 +92,7 @@ public class KlineTrainActivity extends BaseActivity {
         mRenderScriptGaussianBlur = new RenderScriptGaussianBlur(this);
         mProgressBar.setTotalSecondTime(mTrainingDetail.getTrain().getTime());
         mTrainTargetTime = mTrainingDetail.getTrain().getTime() * 1000;
-        mProgressBar.setOnTimeUpListener(new TrainProgressBar.OnTimeUpListener() {
+        mProgressBar.setOnTimeUpListener(new TrainingProgressBar.OnTimeUpListener() {
             @Override
             public void onTick(long millisUntilUp) {
                 mTrainingCountTime = millisUntilUp;
@@ -102,7 +103,9 @@ public class KlineTrainActivity extends BaseActivity {
             public void onFinish() {
                 formatTime(mTrainTargetTime);
                 mIsSuccess = false;
-                requestEndTrain();
+                if (!mIsLauncher) {
+                    requestEndTrain();
+                }
             }
 
 
@@ -160,7 +163,9 @@ public class KlineTrainActivity extends BaseActivity {
     private void updateTrainData() {
         if (mTrainings == null || mTrainings.isEmpty()) {
             mIsSuccess = true;
-            requestEndTrain();
+            if (!mIsLauncher) {
+                requestEndTrain();
+            }
         } else {
             List<RemoveTraining> trainList = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
@@ -178,6 +183,7 @@ public class KlineTrainActivity extends BaseActivity {
     }
 
     private void requestEndTrain() {
+        mIsLauncher = true;
         TrainingSubmit trainingSubmit = new TrainingSubmit(mTrainingDetail.getTrain().getId());
         trainingSubmit.setTime((int) (mTrainingCountTime / 1000));
         trainingSubmit.setFinish(mIsSuccess);
