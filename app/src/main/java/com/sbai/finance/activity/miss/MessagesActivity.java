@@ -154,11 +154,16 @@ public class MessagesActivity extends BaseActivity implements
                     protected void onRespSuccessData(List<MissMessage> data) {
                         updateMessage(data);
                     }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
+                    }
                 }).fireFree();
     }
 
     private void updateMessage(List<MissMessage> data) {
-        stopRefreshAnimation();
         mNoReadCount = 0;
         mMessageAdapter.clear();
         for (MissMessage missMessage : data) {
