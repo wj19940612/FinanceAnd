@@ -70,6 +70,7 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 	private View mSpit;
 	private MyListView mHotListView;
 	private RefreshReceiver mRefreshReceiver;
+	private int mIsFromTrainingResult;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,7 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 
 	private void initData(Intent intent) {
 		mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
+		mIsFromTrainingResult = intent.getIntExtra(ExtraKeys.TRAIN_RESULT, -1);
 	}
 
 	private void initTitleBar() {
@@ -583,6 +585,7 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 			mPage = 0;
 			mSwipeRefreshLayout.setRefreshing(true);
 			requestLatestExperienceList();
+			mLatestListView.setSelection(1);
 		}
 
 		if (requestCode == REQ_LOGIN && resultCode == RESULT_OK) {
