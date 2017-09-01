@@ -89,6 +89,10 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                 requestSystemNewsList();
             }
         });
+        HistoryNewsModel historyNewsModel = new HistoryNewsModel();
+        historyNewsModel.setStatus(1);
+        historyNewsModel.setTitle("dsd ");
+
     }
 
     private void requestSystemNewsList() {
