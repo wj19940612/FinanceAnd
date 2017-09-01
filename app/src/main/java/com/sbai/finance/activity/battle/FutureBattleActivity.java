@@ -725,7 +725,7 @@ public class FutureBattleActivity extends BaseActivity implements
                             mBattle = resp.getContent().getData();
                         }
                     }
-                });
+                }, TAG);
     }
 
     private void dismissAllDialog() {
@@ -998,14 +998,14 @@ public class FutureBattleActivity extends BaseActivity implements
                 }
 
                 if (type == TYPE_CANCEL) {
-                    SmartDialog.dismiss(FutureBattleActivity.this);
+                    SmartDialog.dismiss(getActivity());
                 }
             }
 
             @Override
             public void onError(int code) {
             }
-        });
+        }, TAG);
     }
 
     //开始匹配弹窗
@@ -1013,7 +1013,7 @@ public class FutureBattleActivity extends BaseActivity implements
         StartMatchDialog.get(this, new StartMatchDialog.OnCancelListener() {
             @Override
             public void onCancel() {
-                StartMatchDialog.dismiss(FutureBattleActivity.this);
+                StartMatchDialog.dismiss(getActivity());
                 showCancelMatchDialog();
             }
         });
@@ -1213,21 +1213,13 @@ public class FutureBattleActivity extends BaseActivity implements
 
     private void subscribeBattle() {
         if (mBattle != null && !mBattle.isBattleOver()) {
-            WsClient.get().send(new SubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
-                @Override
-                public void onResponse(WSMessage<Resp> respWSMessage) {
-                }
-            });
+            WsClient.get().send(new SubscribeBattle(mBattle.getId()));
         }
     }
 
     private void unSubscribeBattle() {
         if (mBattle != null && !mBattle.isBattleOver()) {
-            WsClient.get().send(new UnSubscribeBattle(mBattle.getId()), new WSCallback<WSMessage<Resp>>() {
-                @Override
-                public void onResponse(WSMessage<Resp> respWSMessage) {
-                }
-            });
+            WsClient.get().send(new UnSubscribeBattle(mBattle.getId()));
         }
     }
 
@@ -1299,7 +1291,7 @@ public class FutureBattleActivity extends BaseActivity implements
                             }
                         }
                     }
-                });
+                }, TAG);
     }
 
     private void updateRoomState() {
