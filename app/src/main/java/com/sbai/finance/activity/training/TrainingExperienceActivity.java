@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
@@ -47,7 +46,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TrainingExperienceActivity extends BaseActivity implements View.OnClickListener {
+public class TrainingExperienceActivity extends BaseActivity {
 
 	private static final int REQ_WRITE_EXPERIENCE = 1001;
 
@@ -64,8 +63,8 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 	private int mPage = 0;
 	private HashSet<String> mSet;
 	private Training mTraining;
-	private HotExperienceListAdapter mHotExperienceListAdapter;
-	private LatestExperienceListAdapter mLatestExperienceListAdapter;
+	private ExperienceListAdapter mHotExperienceListAdapter;
+	private ExperienceListAdapter mLatestExperienceListAdapter;
 	private TextView mHotExperience;
 	private View mSpit;
 	private MyListView mHotListView;
@@ -88,7 +87,6 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
 
-		mTitleBar.setOnClickListener(this);
 	}
 
 	private void initData(Intent intent) {
@@ -110,7 +108,7 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 		mSpit = header.findViewById(R.id.spit);
 		mHotListView = (MyListView) header.findViewById(R.id.hotListView);
 
-		mHotExperienceListAdapter = new HotExperienceListAdapter(this);
+		mHotExperienceListAdapter = new ExperienceListAdapter(this);
 		mHotListView.setAdapter(mHotExperienceListAdapter);
 
 		mLatestListView.addHeaderView(header);
@@ -144,7 +142,7 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 	}
 
 	private void initLatestExperienceList() {
-		mLatestExperienceListAdapter = new LatestExperienceListAdapter(this);
+		mLatestExperienceListAdapter = new ExperienceListAdapter(this);
 		mLatestListView.setAdapter(mLatestExperienceListAdapter);
 	}
 
@@ -273,23 +271,6 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 		}
 	}
 
-	@Override
-	public void onClick(View v) {
-		mLatestListView.smoothScrollToPosition(0);
-		final Handler handler = new Handler();
-		handler.postDelayed(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				if (mLatestListView.getFirstVisiblePosition() > 0)
-				{
-					mLatestListView.smoothScrollToPosition(0);
-					handler.postDelayed(this, 100);
-				}
-			}
-		}, 100);
-	}
 
 	@Override
 	public void onDestroy() {
@@ -297,11 +278,11 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
 	}
 
-	static class HotExperienceListAdapter extends ArrayAdapter<Experience> {
+	static class ExperienceListAdapter extends ArrayAdapter<Experience> {
 
 		private Context mContext;
 
-		public HotExperienceListAdapter(@NonNull Context context) {
+		public ExperienceListAdapter(@NonNull Context context) {
 			super(context, 0);
 			this.mContext = context;
 		}
@@ -419,152 +400,6 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 				}
 
 				switch (item.getStar()) {
-					case 1:
-						mStar1.setVisibility(View.VISIBLE);
-						mStar2.setVisibility(View.GONE);
-						mStar3.setVisibility(View.GONE);
-						break;
-					case 2:
-						mStar1.setVisibility(View.VISIBLE);
-						mStar2.setVisibility(View.VISIBLE);
-						mStar3.setVisibility(View.GONE);
-						break;
-					case 3:
-						mStar1.setVisibility(View.VISIBLE);
-						mStar2.setVisibility(View.VISIBLE);
-						mStar3.setVisibility(View.VISIBLE);
-						break;
-				}
-			}
-		}
-	}
-
-	static class LatestExperienceListAdapter extends ArrayAdapter<Experience> {
-
-		private Context mContext;
-
-		public LatestExperienceListAdapter(@NonNull Context context) {
-			super(context, 0);
-			this.mContext = context;
-		}
-
-		@NonNull
-		@Override
-		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-			ViewHolder viewHolder;
-			if (convertView == null) {
-				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_train_experience, null);
-				viewHolder = new ViewHolder(convertView);
-				convertView.setTag(viewHolder);
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
-			viewHolder.bindingData(mContext, getItem(position));
-			return convertView;
-		}
-
-		static class ViewHolder {
-			@BindView(R.id.avatar)
-			ImageView mAvatar;
-			@BindView(R.id.userName)
-			TextView mUserName;
-			@BindView(R.id.hotArea)
-			LinearLayout mHotArea;
-			@BindView(R.id.experience)
-			TextView mExperience;
-			@BindView(R.id.publishTime)
-			TextView mPublishTime;
-			@BindView(R.id.loveNumber)
-			TextView mLoveNumber;
-			@BindView(R.id.imageView)
-			ImageView mImageView;
-			@BindView(R.id.star1)
-			ImageView mStar1;
-			@BindView(R.id.star2)
-			ImageView mStar2;
-			@BindView(R.id.star3)
-			ImageView mStar3;
-
-			ViewHolder(View view) {
-				ButterKnife.bind(this, view);
-			}
-
-			public void bindingData(final Context context, final Experience item) {
-				if (item == null) return;
-
-				if (item.getUserModel() != null) {
-					Glide.with(context).load(item.getUserModel().getUserPortrait())
-							.placeholder(R.drawable.ic_default_avatar)
-							.transform(new GlideCircleTransform(context))
-							.into(mAvatar);
-
-					mUserName.setText(item.getUserModel().getUserName());
-					mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
-				} else {
-					Glide.with(context).load(R.drawable.ic_default_avatar)
-							.transform(new GlideCircleTransform(context))
-							.into(mAvatar);
-					mUserName.setText("");
-					mPublishTime.setText("");
-				}
-
-				mExperience.setText(item.getContent());
-				mLoveNumber.setText(StrFormatter.getFormatCount(item.getPraise()));
-
-				if (item.getIsPraise() == 1) {
-					mLoveNumber.setSelected(true);
-				} else {
-					mLoveNumber.setSelected(false);
-				}
-
-				mLoveNumber.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (LocalUser.getUser().isLogin()) {
-							Client.trainExperiencePraise(item.getId(), item.getIsPraise() == 0 ? 1 : 0)
-									.setCallback(new Callback2D<Resp<TrainingExperiencePraise>, TrainingExperiencePraise>() {
-										@Override
-										protected void onRespSuccessData(TrainingExperiencePraise data) {
-											if (data.getIsPraise() == 1) {
-												mLoveNumber.setSelected(true);
-											} else {
-												mLoveNumber.setSelected(false);
-											}
-											item.setIsPraise(data.getIsPraise());
-											mLoveNumber.setText(StrFormatter.getFormatCount(data.getPraise()));
-										}
-									}).fire();
-						} else {
-							Launcher.with(context, LoginActivity.class).executeForResult(REQ_LOGIN);
-						}
-					}
-				});
-
-				if (item.getPicture() == null || "".equalsIgnoreCase(item.getPicture())) {
-					mImageView.setVisibility(View.GONE);
-				} else {
-					mImageView.setVisibility(View.VISIBLE);
-					Glide.with(context).load(item.getPicture())
-							.placeholder(R.drawable.ic_default_image)
-							.into(mImageView);
-
-					mImageView.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							Launcher.with(context, LookBigPictureActivity.class)
-									.putExtra(Launcher.EX_PAYLOAD, item.getPicture())
-									.execute();
-						}
-					});
-				}
-
-				switch (item.getStar()) {
-					case 0:
-						mStar1.setVisibility(View.GONE);
-						mStar2.setVisibility(View.GONE);
-						mStar3.setVisibility(View.GONE);
-						break;
 					case 1:
 						mStar1.setVisibility(View.VISIBLE);
 						mStar2.setVisibility(View.GONE);

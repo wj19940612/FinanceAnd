@@ -73,7 +73,6 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	private Long mCreateTime;
 	private int mPageSize = 20;
 	private HashSet<Integer> mSet;
-	private View mFootView;
 	private List<Question> mMyQuestionList;
 	private RefreshReceiver mRefreshReceiver;
 	private MediaPlayerManager mMediaPlayerManager;
@@ -95,6 +94,19 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		registerRefreshReceiver();
 
 		mMyQuestionAdapter.setOnClickCallback(new MyQuestionAdapter.OnClickCallback() {
+			@Override
+			public void onLoveClick(final Question item) {
+				Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
+
+					@Override
+					protected void onRespSuccessData(Prise prise) {
+						item.setIsPrise(prise.getIsPrise());
+						item.setPriseCount(prise.getPriseCount());
+						mMyQuestionAdapter.notifyDataSetChanged();
+						}
+				}).fire();
+			}
+
 			@Override
 			public void onRewardClick(Question item) {
 				RewardMissActivity.show(getActivity(), item.getId(), RewardInfo.TYPE_QUESTION);
@@ -295,6 +307,8 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		}
 
 		interface OnClickCallback {
+			void onLoveClick(Question item);
+
 			void onRewardClick(Question item);
 
 			void onVoiceClick(Question item);
@@ -329,8 +343,6 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 			TextView mName;
 			@BindView(R.id.askTime)
 			TextView mAskTime;
-			@BindView(R.id.hotArea)
-			RelativeLayout mHotArea;
 			@BindView(R.id.question)
 			TextView mQuestion;
 			@BindView(R.id.missAvatar)
@@ -345,8 +357,6 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 			TextView mCommentNumber;
 			@BindView(R.id.ingotNumber)
 			TextView mIngotNumber;
-			@BindView(R.id.split)
-			View mSplit;
 			@BindView(R.id.label)
 			LinearLayout mLabel;
 			@BindView(R.id.noMissReply)
@@ -431,18 +441,9 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				mLoveNumber.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
-
-							@Override
-							protected void onRespSuccessData(Prise prise) {
-								if (prise.getIsPrise() == 0) {
-									mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
-								} else {
-									mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
-								}
-								mLoveNumber.setText(StrFormatter.getFormatCount(prise.getPriseCount()));
-							}
-						}).fire();
+						if (onClickCallback != null) {
+							onClickCallback.onLoveClick(item);
+						}
 					}
 				});
 
