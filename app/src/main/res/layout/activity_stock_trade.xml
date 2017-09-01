@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.future.FutureTradeActivity">
 
+    <!--app:rightVisible="true"-->
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
@@ -16,8 +17,7 @@
         app:backIcon="@drawable/ic_tb_back_white"
         android:background="@color/colorPrimaryDark"
         app:customView="@layout/tb_stock_name"
-        app:rightImage="@drawable/ic_share"
-        app:rightVisible="true"/>
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
