@@ -15,7 +15,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -42,6 +41,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ import butterknife.OnClick;
 /**
  * 我的提问页面
  */
-public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnItemClickListener, AbsListView.OnScrollListener {
+public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
@@ -65,7 +65,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 	@BindView(R.id.empty)
 	RelativeLayout mEmpty;
 	@BindView(R.id.swipeRefreshLayout)
-	SwipeRefreshLayout mSwipeRefreshLayout;
+	CustomSwipeRefreshLayout mSwipeRefreshLayout;
 	@BindView(R.id.askQuestion)
 	TextView mAskQuestion;
 
@@ -91,7 +91,6 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		mListView.setEmptyView(mEmpty);
 		mListView.setAdapter(mMyQuestionAdapter);
 		mListView.setOnItemClickListener(this);
-		mListView.setOnScrollListener(this);
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
 
@@ -205,6 +204,18 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 				mPlayingID = -1;
 			}
 		});
+
+		mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
+			@Override
+			public void onLoadMore() {
+				mListView.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						requestMyQuestionList();
+					}
+				}, 1000);
+			}
+		});
 	}
 
 	private void requestMyQuestionList() {
@@ -230,31 +241,18 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 			return;
 		}
 
-		if (mFootView == null) {
-			mFootView = View.inflate(getActivity(), R.layout.view_footer_load_more, null);
-			mFootView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (mSwipeRefreshLayout.isRefreshing()) return;
-					mCreateTime = mMyQuestionList.get(mMyQuestionList.size() - 1).getCreateTime();
-					requestMyQuestionList();
-				}
-			});
-			mListView.addFooterView(mFootView, null, true);
-		}
-
 		if (questionList.size() < mPageSize) {
-			mListView.removeFooterView(mFootView);
-			mFootView = null;
+			mSwipeRefreshLayout.setLoadMoreEnable(false);
+		} else {
+			mCreateTime = mMyQuestionList.get(mMyQuestionList.size() - 1).getCreateTime();
 		}
 
 		if (mSwipeRefreshLayout.isRefreshing()) {
 			if (mMyQuestionAdapter != null) {
 				mMyQuestionAdapter.clear();
-				mMyQuestionAdapter.notifyDataSetChanged();
 			}
-			stopRefreshAnimation();
 		}
+		stopRefreshAnimation();
 
 		for (Question question : questionList) {
 			if (mSet.add(question.getId())) {
@@ -267,6 +265,10 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 		if (mSwipeRefreshLayout.isRefreshing()) {
 			mSwipeRefreshLayout.setRefreshing(false);
 		}
+
+		if (mSwipeRefreshLayout.isLoading()) {
+			mSwipeRefreshLayout.setLoading(false);
+		}
 	}
 
 	@Override
@@ -276,18 +278,6 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 			Launcher.with(getActivity(), QuestionDetailActivity.class)
 					.putExtra(Launcher.EX_PAYLOAD, item.getId()).executeForResult(REQ_QUESTION_DETAIL);
 		}
-	}
-
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-	}
-
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		int topRowVerticalPosition =
-				(mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-		mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
 	}
 
 	@OnClick(R.id.askQuestion)

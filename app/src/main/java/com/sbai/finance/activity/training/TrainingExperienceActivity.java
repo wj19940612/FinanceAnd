@@ -70,6 +70,7 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 	private View mSpit;
 	private MyListView mHotListView;
 	private RefreshReceiver mRefreshReceiver;
+	private int mIsFromTrainingResult;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,7 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 
 	private void initData(Intent intent) {
 		mTraining = intent.getParcelableExtra(ExtraKeys.TRAINING);
+		mIsFromTrainingResult = intent.getIntExtra(ExtraKeys.TRAIN_RESULT, -1);
 	}
 
 	private void initTitleBar() {
@@ -120,6 +122,7 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 			public void onRefresh() {
 				mSet.clear();
 				mPage = 0;
+				mIsFromTrainingResult = -1;
 				mSwipeRefreshLayout.setLoadMoreEnable(true);
 				requestHotExperienceList();
 				requestLatestExperienceList();
@@ -132,6 +135,7 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 				mLatestListView.postDelayed(new Runnable() {
 					@Override
 					public void run() {
+						mIsFromTrainingResult = -1;
 						requestLatestExperienceList();
 					}
 				}, 1000);
@@ -200,6 +204,9 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 	private void updateHotExperienceList(List<Experience> experienceList) {
 		mHotExperienceListAdapter.clear();
 		mHotExperienceListAdapter.addAll(experienceList);
+		if (mIsFromTrainingResult == 0) {
+			mLatestListView.setSelection(1);
+		}
 	}
 
 	private void requestLatestExperienceList() {
@@ -260,6 +267,9 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 			if (mSet.add(experience.getId())) {
 				mLatestExperienceListAdapter.add(experience);
 			}
+		}
+		if (mIsFromTrainingResult == 0) {
+			mLatestListView.setSelection(1);
 		}
 	}
 
@@ -583,6 +593,7 @@ public class TrainingExperienceActivity extends BaseActivity implements View.OnC
 			mPage = 0;
 			mSwipeRefreshLayout.setRefreshing(true);
 			requestLatestExperienceList();
+			mLatestListView.setSelection(1);
 		}
 
 		if (requestCode == REQ_LOGIN && resultCode == RESULT_OK) {

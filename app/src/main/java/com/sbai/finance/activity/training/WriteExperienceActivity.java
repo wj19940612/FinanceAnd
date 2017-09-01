@@ -188,6 +188,7 @@ public class WriteExperienceActivity extends BaseActivity {
 									} else {
 										Launcher.with(getActivity(), TrainingExperienceActivity.class)
 												.putExtra(ExtraKeys.TRAINING, mTraining)
+												.putExtra(ExtraKeys.TRAIN_RESULT, 0)
 												.execute();
 										finish();
 									}

@@ -13,6 +13,7 @@ import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.RewardGetActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.levelevaluation.EvaluationResult;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.leveltest.ScoreView;
@@ -102,6 +103,7 @@ public class EvaluationResultActivity extends BaseActivity {
 
         Intent intent = new Intent();
         intent.setClass(this, MainActivity.class);
+        intent.putExtra(Launcher.EX_PAYLOAD, true);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();

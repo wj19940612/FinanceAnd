@@ -178,9 +178,9 @@ public class Kline extends ChartView {
             topPrice = data.getOpenPrice();
             bottomPrice = data.getClosePrice();
         }
-        if (kData.isOption()) {
-            color = "#ffffff"; // TODO: 18/08/2017 remove
-        }
+//        if (kData.isOption()) {
+//            color = "#ffffff"; // TODO: 18/08/2017 remove
+//        }
         drawTopCandleLine(data.getMaxPrice(), topPrice, color, chartX, canvas);
         drawCandleBody(topPrice, bottomPrice, color, chartX, canvas);
         drawBottomCandleLine(data.getMinPrice(), bottomPrice, color, chartX, canvas);

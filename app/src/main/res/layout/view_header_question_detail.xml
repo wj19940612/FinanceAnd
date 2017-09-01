@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:background="@color/background"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="14dp">
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/ic_default_avatar"/>
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/avatar"
+                android:textColor="@color/primaryText"
+                android:textSize="14sp"
+                tools:text="反方向的钟"/>
+
+            <TextView
+                android:id="@+id/askTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/name"
+                android:layout_marginTop="3dp"
+                android:layout_toRightOf="@+id/avatar"
+                android:textColor="@color/unluckyText"
+                android:textSize="10sp"
+                tools:text="2017/07/07"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_question"
+            android:paddingBottom="5dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:textColor="@color/primaryText"
+                android:textSize="16sp"
+                tools:text="有没有什么好的选股方法?"/>
+
+            <ImageView
+                android:id="@+id/missAvatar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/question"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/ic_default_avatar"/>
+
+            <LinearLayout
+                android:id="@+id/voiceArea"
+                android:layout_width="98dp"
+                android:layout_height="32dp"
+                android:layout_alignTop="@+id/missAvatar"
+                android:layout_toLeftOf="@+id/missAvatar"
+                android:background="@drawable/bg_voice_answer"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/voiceLevel"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/ic_voice_4"/>
+
+                <TextView
+                    android:id="@+id/voice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    tools:text="@string/voice_time"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/listenerNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/voiceArea"
+                android:layout_below="@+id/missAvatar"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="10sp"
+                tools:text="@string/listener_number"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="54dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/loveNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/unluckyText"
+                android:textSize="10sp"
+                tools:text="@string/love_miss"/>
+
+            <TextView
+                android:id="@+id/rewardNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/unluckyText"
+                android:textSize="10sp"
+                tools:text="@string/reward_miss"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/split"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="20dp">
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="14dp"
+            android:background="@color/colorPrimary"/>
+
+        <TextView
+            android:id="@+id/commentNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"
+            tools:text="@string/comment_number"/>
+
+        <TextView
+            android:id="@+id/noComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="14dp"
+            android:text="@string/no_comment"
+            android:textColor="@color/unluckyText"
+            android:textSize="10sp"
+            android:visibility="visible"/>
+    </LinearLayout>
+
+</LinearLayout>
