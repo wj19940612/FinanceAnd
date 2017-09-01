@@ -144,7 +144,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	@Override
 	public void onResume() {
 		super.onResume();
-		if ( !LocalUser.getUser().isLogin()) {
+		if (!LocalUser.getUser().isLogin()) {
 			mRedPoint.setVisibility(View.GONE);
 		}
 	}
