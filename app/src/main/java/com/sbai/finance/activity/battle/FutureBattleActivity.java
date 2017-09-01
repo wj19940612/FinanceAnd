@@ -14,11 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.chart.domain.TrendViewData;
+import com.sbai.finance.App;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
@@ -1054,11 +1056,11 @@ public class FutureBattleActivity extends BaseActivity implements
                         requestCancelBattle();
                     }
                 }).setNegative(R.string.continue_to_battle, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                    }
-                }).show();
+            @Override
+            public void onClick(Dialog dialog) {
+                dialog.dismiss();
+            }
+        }).show();
 
     }
 
@@ -1426,5 +1428,6 @@ public class FutureBattleActivity extends BaseActivity implements
         super.onDestroy();
         BaseDialog.dismiss(this);
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
+        Glide.with(App.getAppContext()).pauseRequests();
     }
 }
