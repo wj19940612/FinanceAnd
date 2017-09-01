@@ -14,7 +14,7 @@
         app:titleText="@string/my_question"
         app:titleTextColor="@color/blackPrimary"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -70,5 +70,5 @@
             </RelativeLayout>
 
         </LinearLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.sbai.finance.view.CustomSwipeRefreshLayout>
 </LinearLayout>
