@@ -2,6 +2,11 @@ package com.sbai.finance.websocket.cmd;
 
 import com.sbai.finance.websocket.WSCmd;
 
+/**
+ *
+ * 快速匹配，继续快速匹配并传送拒绝的房间 ids
+ *
+ */
 public class QuickMatch extends WSCmd {
 
     public static final int TYPE_QUICK_MATCH = 1;

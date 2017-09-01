@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class WsClient implements AbsWsClient {
 
@@ -38,7 +39,7 @@ public class WsClient implements AbsWsClient {
 
     private List<OnPushReceiveListener> mOnPushReceiveListeners;
     private Handler mHandler;
-    private boolean mNormalClosed;
+    private volatile boolean mNormalClosed;
 
     enum Status {
         UNREGISTERED,
@@ -58,7 +59,7 @@ public class WsClient implements AbsWsClient {
         mHandler = new Handler(Looper.getMainLooper());
 
         mPendingList = new LinkedList<>();
-        mExecutedList = new LinkedList<>();
+        mExecutedList = new ConcurrentLinkedQueue<>();
     }
 
     private void register() {
@@ -67,6 +68,10 @@ public class WsClient implements AbsWsClient {
         WSMessage message = new WSMessage(SocketCode.CODE_REGISTER, new WSRegisterInfo(tokens));
         mWebSocket.send(message.toJson()); // do not add executed list
         mStatus = Status.REGISTERING;
+    }
+
+    public void send(WSCmd WSCmd) {
+        send(new WSMessage(SocketCode.CODE_CMD, WSCmd, null));
     }
 
     public void send(WSCmd WSCmd, WSCallback callback) {
@@ -215,16 +220,16 @@ public class WsClient implements AbsWsClient {
 
     @Override
     public void onOpen() {
-        Log.d(TAG, "onOpen: ");
-        //mCloseAuto = true;
+        Log.d(TAG, "onOpen: " + mWebSocket.toString());
         register();
     }
 
     @Override
     public void onClose() {
-        Log.d(TAG, "onClose: ");
+        Log.d(TAG, "onClose: " + mWebSocket.toString());
         mStatus = Status.UNREGISTERED;
-        if (!mNormalClosed) { // if close automatically, reconnect
+        if (!mNormalClosed) { // if close automatically or by accident, reconnect
+            Log.d(TAG, "onClose: reconnect");
             connect();
         }
     }
@@ -238,8 +243,8 @@ public class WsClient implements AbsWsClient {
     @Override
     public void close() {
         if (isConnected()) {
-            mWebSocket.close();
             mNormalClosed = true;
+            mWebSocket.close();
         }
     }
 

@@ -2,6 +2,11 @@ package com.sbai.finance.websocket.cmd;
 
 import com.sbai.finance.websocket.WSCmd;
 
+/**
+ *
+ * 订阅房间
+ *
+ */
 public class SubscribeBattle extends WSCmd {
 
     public SubscribeBattle(int battleId) {

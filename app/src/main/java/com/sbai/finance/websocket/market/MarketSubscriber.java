@@ -49,24 +49,17 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
         }
     }
 
-    enum ConnectStatus {
-        DISCONNECT,
-        CONNECTED,
-        CONNECTING,
-        DISCONNECTING
-    }
-
     private Queue<Command> mPendingList;
     private WebSocket mWebSocket;
-    private ConnectStatus mStatus;
+    private boolean mConnecting;
     private List<DataReceiveListener> mDataReceiveListeners;
     private Gson mGson;
     private Handler mHandler;
-    private boolean mNormalClosed;
+    private volatile boolean mNormalClosed;
 
     public MarketSubscriber() {
         mPendingList = new LinkedList<>();
-        mStatus = ConnectStatus.DISCONNECT;
+        mConnecting = false;
         mDataReceiveListeners = new ArrayList<>();
         mGson = new Gson();
         mHandler = new Handler(Looper.getMainLooper());
@@ -79,7 +72,7 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
         } else {
             mPendingList.offer(command);
 
-            if (isConnecting() || isDisconnecting()) return;
+            if (isConnecting()) return;
 
             connect();
         }
@@ -138,11 +131,12 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
 
     @Override
     public void connect() {
-        mStatus = ConnectStatus.CONNECTING;
+        mConnecting = true;
         AsyncHttpClient.getDefaultInstance().websocket(URI, null, new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
-                mStatus = ConnectStatus.CONNECTED;
+                mConnecting = false;
+
                 mWebSocket = webSocket;
 
                 if (isConnected()) {
@@ -178,8 +172,6 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
         mWebSocket.setClosedCallback(new CompletedCallback() {
             @Override
             public void onCompleted(Exception ex) {
-                mStatus = ConnectStatus.DISCONNECT;
-
                 if (ex != null) {
                     onError(ex.getMessage());
                 }
@@ -193,8 +185,6 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
         mWebSocket.setEndCallback(new CompletedCallback() {
             @Override
             public void onCompleted(Exception ex) {
-                mStatus = ConnectStatus.DISCONNECT;
-
                 if (ex != null) {
                     onError(ex.getMessage());
                 }
@@ -221,12 +211,12 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
 
     @Override
     public boolean isConnecting() {
-        return mStatus == ConnectStatus.CONNECTING;
+        return mConnecting;
     }
 
     @Override
     public boolean isConnected() {
-        return mStatus == ConnectStatus.CONNECTED && mWebSocket != null && mWebSocket.isOpen();
+        return mWebSocket != null && mWebSocket.isOpen();
     }
 
     @Override
@@ -239,7 +229,7 @@ public class MarketSubscriber implements MarketSubscribe, Connector {
 
     @Override
     public boolean isDisconnecting() {
-        return mStatus == ConnectStatus.DISCONNECTING;
+        return false;
     }
 
     @Override
