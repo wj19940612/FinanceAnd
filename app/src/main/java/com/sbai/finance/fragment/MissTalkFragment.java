@@ -144,10 +144,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (LocalUser.getUser().isLogin()) {
-			requestNewMessageCount();
-			startScheduleJob(10 * 1000);
-		} else {
+		if ( !LocalUser.getUser().isLogin()) {
 			mRedPoint.setVisibility(View.GONE);
 		}
 	}
@@ -448,7 +445,6 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	@Override
 	public void onPause() {
 		super.onPause();
-		stopScheduleJob();
 		//锁屏或者在后台运行或者跳转页面时停止播放和动画
 		mMediaPlayerManager.release();
 		stopPreviousAnimation();
@@ -467,6 +463,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		if (!isVisibleToUser) {
+			stopScheduleJob();
 			//不可见时停止播放和动画
 			if (mMediaPlayerManager != null) {
 				mMediaPlayerManager.release();
@@ -474,6 +471,10 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 
 			stopPreviousAnimation();
 			mPlayingID = -1;
+		} else {
+			if (LocalUser.getUser().isLogin()) {
+				startScheduleJob(10 * 1000);
+			}
 		}
 	}
 
