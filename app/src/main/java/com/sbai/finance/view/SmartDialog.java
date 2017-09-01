@@ -199,7 +199,7 @@ public class SmartDialog {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = (int) (wScale == 0 ? displayMetrics.widthPixels * DEFAULT_SCALE :
-                        displayMetrics.widthPixels * wScale);
+                displayMetrics.widthPixels * wScale);
         int height = hScale == 0 ? ViewGroup.LayoutParams.WRAP_CONTENT :
                 (int) (displayMetrics.heightPixels * hScale);
 
@@ -414,7 +414,7 @@ public class SmartDialog {
             mMessage.setTextColor(mMessageTextColor);
             mMessage.setTextSize(mMessageTextSize);
 
-            if (TextUtils.isEmpty(mIconUrl)) {
+            if (!TextUtils.isEmpty(mIconUrl)) {
                 mIcon.setVisibility(View.VISIBLE);
                 Glide.with(mActivity).load(mIconUrl)
                         .bitmapTransform(new GlideCircleTransform(mActivity))
