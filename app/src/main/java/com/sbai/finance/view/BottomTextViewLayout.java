@@ -66,7 +66,7 @@ public class BottomTextViewLayout extends LinearLayoutCompat {
         mHeadLineTextView.setMinHeight(50);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(0, 0, 0, (int) Display.dp2Px(25f, getResources()));
-        mHeadLineTextView.setPadding(pxTodp(padding), 0, pxTodp(mHeadLinePaddingRight), 0);
+        mHeadLineTextView.setPadding(pxTodp(padding), 0, pxTodp(mHeadLinePaddingRight), (int) Display.dp2Px(25f, getResources()));
         mHeadLineTextView.setText(mHeadLineText);
         mHeadLineTextView.setTextSize(mHeadLineTextSize);
         mHeadLineTextView.setTextColor(mHeadLineTextColor);
@@ -78,7 +78,6 @@ public class BottomTextViewLayout extends LinearLayoutCompat {
         mInfoTextView.setPadding(pxTodp(padding), 0, pxTodp(padding), (int) Display.dp2Px(25f, getResources()));
         LinearLayout.LayoutParams infoLayouts = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         infoLayouts.setMargins(0, 0, 0, (int) Display.dp2Px(25f, getResources()));
-        layoutParams.setMargins(0, 0, 0, 0);
         mInfoTextView.setLayoutParams(infoLayouts);
         mInfoTextView.setTextColor(mInfoTextColor);
         mInfoTextView.setTextSize(mInfoTextSize);
@@ -111,7 +110,7 @@ public class BottomTextViewLayout extends LinearLayoutCompat {
         if (TextUtils.isEmpty(infoText)) {
             mInfoTextView.setText("—");
         } else {
-            infoText = infoText.toString().trim().replaceAll(" ","");
+            infoText = infoText.toString().trim().replaceAll(" ", "");
             if (TextUtils.isEmpty(infoText)) {
                 mInfoTextView.setText("—");
             } else {
