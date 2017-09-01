@@ -20,7 +20,6 @@ import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.cornucopia.EarningsAndExpendDetailsActivity;
-import com.sbai.finance.activity.mine.wallet.WithDrawActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.UserInfo;
@@ -197,8 +196,8 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                     break;
                 case HistoryNewsModel.WITH_DRAW_FAIL:
                     if (!historyNewsModel.isLossEfficacy()) {
-                        // TODO: 2017/9/1 先隐藏提现界面  
-                        Launcher.with(getActivity(), WithDrawActivity.class).execute();
+                        // TODO: 2017/9/1 先隐藏提现界面
+//                        Launcher.with(getActivity(), WithDrawActivity.class).execute();
                     }
                     break;
                 case HistoryNewsModel.WORSHIP_REWARD:
