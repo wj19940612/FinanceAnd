@@ -193,6 +193,7 @@ public class Training implements Parcelable {
                 '}';
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -238,7 +239,7 @@ public class Training implements Parcelable {
         this.playType = in.readInt();
     }
 
-    public static final Parcelable.Creator<Training> CREATOR = new Parcelable.Creator<Training>() {
+    public static final Creator<Training> CREATOR = new Creator<Training>() {
         @Override
         public Training createFromParcel(Parcel source) {
             return new Training(source);

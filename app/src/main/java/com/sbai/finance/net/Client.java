@@ -34,7 +34,8 @@ public class Client {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
 //            return "mqqwpa://im/chat?chat_type=wpa&uin=" + serviceQQ + "&version=1";
 //        }
-        return "mqqwpa://im/chat?chat_type=crm&uin=" + serviceQQ + "&version=1";
+        //return "mqqwpa://im/chat?chat_type=crm&uin=" + serviceQQ + "&version=1";
+        return "mqqwpa://im/chat?chat_type=wpa&uin=" + serviceQQ + "&version=1";
     }
 
     /**
