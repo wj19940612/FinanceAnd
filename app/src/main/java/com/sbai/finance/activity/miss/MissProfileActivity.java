@@ -30,6 +30,7 @@ import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Attention;
 import com.sbai.finance.model.miss.Miss;
@@ -277,12 +278,14 @@ public class MissProfileActivity extends BaseActivity implements
 			case R.id.avatar:
 				if (mMiss != null) {
 					umengEventCount(UmengCountEventIdUtils.MISS_TALK_AVATAR);
-					Launcher.with(this, MissAvatarActivity.class)
+					Launcher.with(this, LookBigPictureActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
+							.putExtra(Launcher.EX_PAYLOAD_2, 0)
 							.execute();
 				} else {
-					Launcher.with(this, MissAvatarActivity.class)
+					Launcher.with(this, LookBigPictureActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, "")
+							.putExtra(Launcher.EX_PAYLOAD_2, 0)
 							.execute();
 				}
 				break;

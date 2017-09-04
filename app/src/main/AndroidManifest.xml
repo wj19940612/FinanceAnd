@@ -353,9 +353,6 @@
             android:name=".activity.miss.MessagesActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.miss.MissAvatarActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.evaluation.EvaluationStartActivity"
             android:screenOrientation="portrait"/>
         <activity
