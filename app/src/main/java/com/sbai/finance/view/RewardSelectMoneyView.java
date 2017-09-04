@@ -81,21 +81,21 @@ public class RewardSelectMoneyView extends LinearLayout {
                 mSelectedIndex = 0;
                 mIndex0.setSelected(true);
                 if (mOnSelectedCallback != null) {
-                    mOnSelectedCallback.selected(Long.valueOf(mIndex0.getText().toString()));
+                    mOnSelectedCallback.selected(10);
                 }
                 break;
             case R.id.index1:
                 mSelectedIndex = 1;
                 mIndex1.setSelected(true);
                 if (mOnSelectedCallback != null) {
-                    mOnSelectedCallback.selected(Long.valueOf(mIndex1.getText().toString()));
+                    mOnSelectedCallback.selected(100);
                 }
                 break;
             case R.id.index2:
                 mSelectedIndex = 2;
                 mIndex2.setSelected(true);
                 if (mOnSelectedCallback != null) {
-                    mOnSelectedCallback.selected(Long.valueOf(mIndex2.getText().toString()));
+                    mOnSelectedCallback.selected(1000);
                 }
                 break;
             case R.id.index3:
@@ -155,11 +155,11 @@ public class RewardSelectMoneyView extends LinearLayout {
     public long getSelectedMoney() {
         switch (mSelectedIndex) {
             case 0:
-                return Long.valueOf(mIndex0.getText().toString());
+                return 10;
             case 1:
-                return Long.valueOf(mIndex1.getText().toString());
+                return 100;
             case 2:
-                return Long.valueOf(mIndex2.getText().toString());
+                return 1000;
             case 3:
                 return mOtherMoney;
             default:
