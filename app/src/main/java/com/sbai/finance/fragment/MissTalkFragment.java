@@ -1053,7 +1053,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                     }
 
                     for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
-                        Question question = mHotQuestionListAdapter.getItem(i);
+                        Question question = mLatestQuestionListAdapter.getItem(i);
                         if (question != null) {
                             if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
                                 int questionRewardCount = question.getAwardCount() + 1;
