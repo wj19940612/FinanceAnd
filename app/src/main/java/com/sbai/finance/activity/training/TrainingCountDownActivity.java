@@ -141,7 +141,7 @@ public class TrainingCountDownActivity extends BaseActivity {
                     startGifAnimation();
                 }
             }
-        }, 100);
+        }, 120);
     }
 
     private void resubmitTrainingSubmits() {
