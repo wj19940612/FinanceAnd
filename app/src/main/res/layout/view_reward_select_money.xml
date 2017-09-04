@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_marginRight="1dp"
         android:layout_weight="1"
-        android:text="10"/>
+        android:text="10元宝"/>
 
     <TextView
         android:id="@+id/index1"
@@ -21,7 +21,7 @@
         android:layout_height="match_parent"
         android:layout_marginRight="1dp"
         android:layout_weight="1"
-        android:text="100"/>
+        android:text="100元宝"/>
 
     <TextView
         android:id="@+id/index2"
@@ -30,7 +30,7 @@
         android:layout_height="match_parent"
         android:layout_marginRight="1dp"
         android:layout_weight="1"
-        android:text="1000"/>
+        android:text="1000元宝"/>
 
     <TextView
         android:id="@+id/index3"

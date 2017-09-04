@@ -35,7 +35,7 @@ public class Miss implements Serializable{
 	private String name;
 	private int online;
 	private int id;
-	private String brifeingText;
+	private String briefingText;
 	private int status;
 	private int soundTime;
 	private int isAttention;
@@ -144,12 +144,12 @@ public class Miss implements Serializable{
 		this.id = id;
 	}
 
-	public String getBrifeingText() {
-		return brifeingText;
+	public String getBriefingText() {
+		return briefingText;
 	}
 
-	public void setBrifeingText(String brifeingText) {
-		this.brifeingText = brifeingText;
+	public void setBriefingText(String briefingText) {
+		this.briefingText = briefingText;
 	}
 
 	public int getStatus() {
@@ -174,7 +174,7 @@ public class Miss implements Serializable{
 				", name='" + name + '\'' +
 				", online=" + online +
 				", id=" + id +
-				", brifeingText='" + brifeingText + '\'' +
+				", brifeingText='" + briefingText + '\'' +
 				", status=" + status +
 				", soundTime=" + soundTime +
 				", isAttention=" + isAttention +

@@ -552,7 +552,7 @@
     <string name="going_train">马上去训练提升</string>
     <string name="test_result">测评结果</string>
     <string name="get_exam_questions_fail">测试题目获取失败</string>
-    <string name="accuracy_ranking">正确率%1$s     超过%2$s的同学</string>
+    <string name="accuracy_ranking">正确率%1$s            超过%2$s的同学</string>
     <string-array name="evaluation_item">
         <item>指标分析</item>
         <item>基本面分析</item>

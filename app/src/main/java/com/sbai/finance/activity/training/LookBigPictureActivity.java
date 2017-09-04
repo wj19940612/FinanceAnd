@@ -28,6 +28,7 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 
 	private String mPortrait;
 	private int mDelete;
+	private int mMissAvatar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +37,19 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 		ButterKnife.bind(this);
 		initData(getIntent());
 		initTitleBar();
-
-		Glide.with(this).load(mPortrait)
-				.thumbnail(0.1f)
-				.error(R.drawable.ic_default_avatar_big)
-				.dontAnimate()
-				.into(mImageView);
+		if (mMissAvatar != -1) {
+			Glide.with(this).load(mPortrait)
+					.thumbnail(0.1f)
+					.error(R.drawable.ic_default_avatar_big)
+					.dontAnimate()
+					.into(mImageView);
+		} else {
+			Glide.with(this).load(mPortrait)
+					.thumbnail(0.1f)
+					.error(R.drawable.ic_default_image)
+					.dontAnimate()
+					.into(mImageView);
+		}
 
 		mImageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
 			@Override
@@ -59,15 +67,21 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 	private void initData(Intent intent) {
 		mPortrait = intent.getStringExtra(Launcher.EX_PAYLOAD);
 		mDelete = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+		mMissAvatar = intent.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
 	}
 
 	private void initTitleBar() {
-		if (mDelete != -1) {
-			mTitleBar.setRightVisible(true);
-			mTitleBar.setRightImage(ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete_photo));
-			mTitleBar.setOnRightViewClickListener(this);
+		if (mMissAvatar != -1) {
+			mTitleBar.setVisibility(View.GONE);
 		} else {
-			mTitleBar.setRightVisible(false);
+			mTitleBar.setVisibility(View.VISIBLE);
+			if (mDelete != -1) {
+				mTitleBar.setRightVisible(true);
+				mTitleBar.setRightImage(ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete_photo));
+				mTitleBar.setOnRightViewClickListener(this);
+			} else {
+				mTitleBar.setRightVisible(false);
+			}
 		}
 	}
 
