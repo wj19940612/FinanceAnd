@@ -17,16 +17,17 @@ public class Client {
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
     //h5的用户协议界面网址
     public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/authCodeLogin/user_protocol?nohead=1";
-    //期货分享地址
+
+    // 期货分享地址
     public static final String SHARE_URL_FUTURE = API.getHost() + "/mobi/future/future_quota?varietyId=%d";
-    //股票分享地址
+    // 股票分享地址
     public static final String SHARE_URL_STOCK = API.getHost() + "/mobi/stock/stock_quota?varietyType=%s&varietyId=%d";
     // 提问分享地址
-    public static final String SHARE_URL_QUESTION = API.getHost() + "/admin/lm/commentary.html?questionId=%d";
-    //l乐米日报分享地址
-    public static final String SHARE_URL_REPORT = API.getHost() + "/admin/lm/arcelor.html?id=%s";
-    //乐米训练心得分享地址
-    public static final String SHARE_URL_TRAIN_EXPERIENCE = API.getHost() + "/admin/lm/train.html?trainId=%d";
+    public static final String SHARE_URL_QUESTION = API.getHost() + "/lm/commentary.html?questionId=%d";
+    // 乐米日报分享地址
+    public static final String SHARE_URL_REPORT = API.getHost() + "/lm/arcelor.html?id=%s";
+    // 乐米训练心得分享地址
+    public static final String SHARE_URL_TRAIN_EXPERIENCE = API.getHost() + "/lm/train.html?trainId=%d";
 
 
     public static String getServiceQQ(String serviceQQ) {
