@@ -95,17 +95,17 @@ public class EvaluationResultActivity extends BaseActivity {
     @OnClick(R.id.going_train)
     public void onViewClicked() {
 
+        Intent intent = new Intent();
+        intent.setClass(this, MainActivity.class);
+        intent.putExtra(Launcher.EX_PAYLOAD, true);
+        startActivity(intent);
+
         if (LocalUser.getUser().getUserInfo().isNewUser()) {
             int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
             RewardGetActivity.show(getActivity(), reward);
             LocalUser.getUser().setNewUser(false);
         }
 
-        Intent intent = new Intent();
-        intent.setClass(this, MainActivity.class);
-        intent.putExtra(Launcher.EX_PAYLOAD, true);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
         finish();
     }
 }
