@@ -87,6 +87,7 @@ public class UpdateSecurityPassActivity extends BaseActivity {
                 mPageType = PAGE_TYPE_MODIFY;
             } else {
                 mPageType = PAGE_TYPE_FORGET_MODIFY;
+                mPasswordInputCount = 1;
             }
         } else {
             mPageType = PAGE_TYPE_SET;
