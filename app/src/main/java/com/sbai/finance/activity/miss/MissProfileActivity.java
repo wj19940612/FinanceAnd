@@ -391,8 +391,8 @@ public class MissProfileActivity extends BaseActivity implements
 		}
 
 		mLovePeopleNumber.setText(getString(R.string.love_people_number, StrFormatter.getFormatCount(miss.getTotalPrise())));
-		if (!TextUtils.isEmpty(miss.getBrifeingText())) {
-			mIntroduce.setText(miss.getBrifeingText());
+		if (!TextUtils.isEmpty(miss.getBriefingText())) {
+			mIntroduce.setText(miss.getBriefingText());
 		} else {
 			mIntroduce.setText(R.string.no_miss_introduce);
 		}
