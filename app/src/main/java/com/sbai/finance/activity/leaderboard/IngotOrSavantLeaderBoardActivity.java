@@ -261,7 +261,8 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                         }
                     } else if (mType.equalsIgnoreCase(LeaderBoardRank.SAVANT)) {
                         if (dataBean.getWorshipCount() > 0) {
-                            mIngot.setText(StrUtil.mergeTextWithColor(getString(R.string.integrate_number_no_blank, String.valueOf((int) data.getCurr().getScore())),
+                            mIngot.setText(StrUtil.mergeTextWithColor(getString(R.string.integrate_number_no_blank, String.valueOf((i
+                                    nt) data.getCurr().getScore())),
                                     " +" + getString(R.string.ingot_number_no_blank, dataBean.getWorshipCount())
                                     , ContextCompat.getColor(getActivity(), R.color.unluckyText)));
                         } else {

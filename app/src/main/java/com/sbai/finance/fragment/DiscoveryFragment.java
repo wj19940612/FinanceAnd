@@ -314,7 +314,7 @@ public class DiscoveryFragment extends BaseFragment {
                 if (!LocalUser.getUser().isLogin()) {
                     mTrainCount.setText(context.getString(R.string.train_count, 0));
                 } else {
-                    if (item.getRecord() == null) {
+                    if (item.getRecord() == null || item.getRecord().getFinish() == 0) {
                         mTrainCount.setText(context.getString(R.string.have_no_train));
                     } else {
                         mTrainCount.setText(context.getString(R.string.train_count, item.getRecord().getFinish()));
