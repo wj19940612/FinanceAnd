@@ -190,7 +190,7 @@ public class DailyReportDetailActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
-        mWebView.onPause();
+        //   mWebView.onPause();
     }
 
     @OnClick({R.id.back, R.id.share, R.id.refreshButton, R.id.shareArea, R.id.backArea})
@@ -285,6 +285,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         mWebViewClient = new WebViewClient();
         mWebView.setWebViewClient(mWebViewClient);
         mWebView.setDrawingCacheEnabled(true);
+        mWebView.setBackgroundColor(0);
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
