@@ -3,6 +3,8 @@ package com.sbai.finance.activity.discovery;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Picture;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,6 +46,7 @@ import com.sbai.finance.view.dialog.ShareDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.qqtheme.framework.util.ScreenUtils;
 
 import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
@@ -200,7 +203,6 @@ public class DailyReportDetailActivity extends BaseActivity {
             case R.id.share:
             case R.id.shareArea:
                 // TODO: 10/08/2017 添加乐米日报分享弹框
-                //ShareReportDialogFragment
                 umengEventCount(UmengCountEventIdUtils.REPORT_SHARE);
                 ShareDialog.with(getActivity())
                         .hasFeedback(false)
@@ -267,7 +269,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         mWebView.clearCache(true);
         mWebView.clearFormData();
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        mWebView.setBackgroundColor(0);
+        //   mWebView.setBackgroundColor(0);
         //硬件加速 有些API19手机不支持
 //        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
 //            mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -282,13 +284,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         }
         mWebViewClient = new WebViewClient();
         mWebView.setWebViewClient(mWebViewClient);
-//        mWebView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                ((WebView) v).requestDisallowInterceptTouchEvent(true);
-//                return false;
-//            }
-//        });
+        mWebView.setDrawingCacheEnabled(true);
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
