@@ -37,6 +37,7 @@ public class Preference {
         String MY_STUDY = "my_study";
         String TRAINING_SUBMITS = "training_submits";
         String SERVICE_CONNECT_WAY = "service_connect_way";
+        String ACCOUNT_CREDIT = "account_credit";
     }
 
     private static Preference sInstance;
@@ -72,6 +73,10 @@ public class Preference {
 
     private void apply(String key, int value) {
         getEditor().putInt(key, value).apply();
+    }
+
+    private void apply(String key, float value) {
+        getEditor().putFloat(key, value).apply();
     }
 
     public void setForeground(boolean foreground) {

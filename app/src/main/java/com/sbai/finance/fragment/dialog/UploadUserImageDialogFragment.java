@@ -284,6 +284,7 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                         cursor.close();
                     }
                 }
+                return photosUri.getPath();
             }
         }
         return null;

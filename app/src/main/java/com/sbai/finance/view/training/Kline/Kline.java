@@ -14,6 +14,7 @@ import android.util.SparseArray;
 import com.sbai.chart.ChartSettings;
 import com.sbai.chart.ChartView;
 import com.sbai.chart.domain.KlineViewData;
+import com.sbai.finance.BuildConfig;
 import com.sbai.finance.model.training.question.KData;
 
 import java.util.List;
@@ -178,9 +179,9 @@ public class Kline extends ChartView {
             topPrice = data.getOpenPrice();
             bottomPrice = data.getClosePrice();
         }
-//        if (kData.isOption()) {
-//            color = "#ffffff"; // TODO: 18/08/2017 remove
-//        }
+        if (kData.isOption() && !BuildConfig.IS_PROD) {
+            color = "#ffffff"; // TODO: 18/08/2017 remove
+        }
         drawTopCandleLine(data.getMaxPrice(), topPrice, color, chartX, canvas);
         drawCandleBody(topPrice, bottomPrice, color, chartX, canvas);
         drawBottomCandleLine(data.getMinPrice(), bottomPrice, color, chartX, canvas);

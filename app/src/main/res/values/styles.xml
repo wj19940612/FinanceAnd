@@ -33,7 +33,7 @@
     </style>
 
     <style name="FadeIn" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:activityOpenEnterAnimation">@anim/fade_in_quickly</item>
         <item name="android:activityOpenExitAnimation">@anim/hold</item>
     </style>
 

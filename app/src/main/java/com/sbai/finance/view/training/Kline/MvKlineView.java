@@ -40,7 +40,7 @@ public class MvKlineView extends RelativeLayout {
     private OnAnswerSelectedListener mOnAnswerSelectedListener;
     private OnFinishListener mOnFinishListener;
     private int mRightAnswers;
-    private int mAnswerIndex;
+    private int mTotalAnswers;
     private ImageView mFocusView;
     private PopupWindow mHintView;
 
@@ -98,7 +98,7 @@ public class MvKlineView extends RelativeLayout {
                 mJudgeUpBtn.setEnabled(true);
                 mJudgeDownBtn.setEnabled(true);
                 mFocusedPoint = point;
-                mAnswerIndex = pointIndex;
+                mTotalAnswers++;
 
                 translateFocusView();
                 showHintView();
@@ -218,8 +218,7 @@ public class MvKlineView extends RelativeLayout {
     }
 
     private void onWrongAnswerSelected() {
-        int alreadyAnswered = mAnswerIndex + 1;
-        float accuracy = mRightAnswers * 1.0f / alreadyAnswered;
+        float accuracy = mRightAnswers * 1.0f / mTotalAnswers;
         if (mOnAnswerSelectedListener != null) {
             mOnAnswerSelectedListener.onWrongAnswerSelected(accuracy, mFocusedPoint.getAnalysis());
         }
@@ -227,8 +226,7 @@ public class MvKlineView extends RelativeLayout {
 
     private void onRightAnswerSelected() {
         mRightAnswers++;
-        int alreadyAnswered = mAnswerIndex + 1;
-        float accuracy = mRightAnswers * 1.0f / alreadyAnswered;
+        float accuracy = mRightAnswers * 1.0f / mTotalAnswers;
         if (mOnAnswerSelectedListener != null) {
             mOnAnswerSelectedListener.onRightAnswerSelected(accuracy);
         }
@@ -256,7 +254,7 @@ public class MvKlineView extends RelativeLayout {
 
         @Override
         public void run() {
-            if (mAnswerIndex == mIntersectionPointArray.size() - 1) {
+            if (mTotalAnswers == mIntersectionPointArray.size() - 1) {
                 onFinish();
                 return;
             }
