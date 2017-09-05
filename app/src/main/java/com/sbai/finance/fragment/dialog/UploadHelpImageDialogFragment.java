@@ -55,18 +55,21 @@ public class UploadHelpImageDialogFragment extends DialogFragment {
     private Unbinder mBind;
     private File mFile;
     private OnDismissListener mOnDismissListener;
-    public interface OnDismissListener{
-         void onGetImagePath(String path);
+
+    public interface OnDismissListener {
+        void onGetImagePath(String path);
     }
-    public UploadHelpImageDialogFragment setOnDismissListener(OnDismissListener onDismissListener){
+
+    public UploadHelpImageDialogFragment setOnDismissListener(OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
         return this;
     }
+
     public UploadHelpImageDialogFragment() {
 
     }
 
-    public static UploadHelpImageDialogFragment newInstance()  {
+    public static UploadHelpImageDialogFragment newInstance() {
         Bundle args = new Bundle();
         UploadHelpImageDialogFragment fragment = new UploadHelpImageDialogFragment();
         fragment.setArguments(args);
@@ -188,6 +191,7 @@ public class UploadHelpImageDialogFragment extends DialogFragment {
                     cursor.close();
                 }
             }
+            return photosUri.getPath();
         }
         return null;
     }
