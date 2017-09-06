@@ -2494,7 +2494,7 @@ public class Client {
      * 活动兑换记录
      */
     public static API getSkinList(int activityId, int page) {
-        return new API("/user/skin/queryActivityProducts.do",
+        return new API("/user/skin/queryExchangeLogByUser.do",
                 new ApiParams()
                         .put("activityId", activityId)
                         .put("page", page)
