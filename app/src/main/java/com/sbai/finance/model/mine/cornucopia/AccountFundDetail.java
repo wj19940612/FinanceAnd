@@ -2,18 +2,17 @@ package com.sbai.finance.model.mine.cornucopia;
 
 /**
  * Created by ${wangJie} on 2017/6/21.
+ * 用户现金 元宝 积分model
  */
 
-public class ExchangeDetailModel {
-
+public class AccountFundDetail {
+    //现金
+    public static final int TYPE_CRASH = 0;
     //元宝
     public static final int TYPE_INGOT = 1;
     //积分
-    public static final int TYPE_INTEGRATE = 2;
+    public static final int TYPE_SCORE = 2;
 
-    //收入 1 支出2
-    public static final int DIRECTION_EARNINGS = 1;
-    public static final int DIRECTION_EXTEND = 2;
 
     /**
      * currencyType : 2
@@ -42,7 +41,11 @@ public class ExchangeDetailModel {
     //流水类型
     private int flowType;
 
-    public boolean isVcoin() {
+    //现金的
+    private String platformName;
+    private int type;
+
+    public boolean isIngot() {
         return getCurrencyType() == TYPE_INGOT;
     }
 
@@ -118,9 +121,25 @@ public class ExchangeDetailModel {
         this.flowType = flowType;
     }
 
+    public String getPlatformName() {
+        return platformName;
+    }
+
+    public void setPlatformName(String platformName) {
+        this.platformName = platformName;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
-        return "ExchangeDetailModel{" +
+        return "AccountFundDetail{" +
                 "currencyType=" + currencyType +
                 ", money=" + money +
                 ", createTime=" + createTime +
@@ -130,6 +149,8 @@ public class ExchangeDetailModel {
                 ", userId=" + userId +
                 ", moneyLeft=" + moneyLeft +
                 ", flowType=" + flowType +
+                ", platformName='" + platformName + '\'' +
+                ", type=" + type +
                 '}';
     }
 }

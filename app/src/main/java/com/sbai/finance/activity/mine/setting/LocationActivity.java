@@ -198,7 +198,7 @@ public class LocationActivity extends BaseActivity {
                 picker.setCancelTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
                 picker.setSubmitTextColor(ContextCompat.getColor(getActivity(), R.color.warningText));
                 picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background));
-                picker.setPressedTextColor(ContextCompat.getColor(getActivity(), R.color.picker_press));
+                picker.setPressedTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
                 picker.setAnimationStyle(R.style.BottomDialogAnimation);
                 picker.setSelectedItem(mSelectedProvince, mSelectedCity, mSelectedCounty);
                 picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));

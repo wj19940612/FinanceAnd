@@ -19,11 +19,11 @@ package com.sbai.finance.view.slidingTab;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -57,6 +57,7 @@ import com.sbai.finance.view.RedPointTipTextView;
 public class SlidingTabLayout extends HorizontalScrollView {
 
     private static final String TAG = "SlidingTabLayout";
+    private int mTabTextViewColoor;
 
     /**
      * Allows complete control over the colors drawn in the tab layout. Set with
@@ -103,6 +104,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     public SlidingTabLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        mTabTextViewColoor = ContextCompat.getColor(getContext(), R.color.sliding_tab_text);
 
         // Disable the Scroll Bar
         setHorizontalScrollBarEnabled(false);
@@ -197,12 +200,27 @@ public class SlidingTabLayout extends HorizontalScrollView {
     }
 
     /**
+     * 设置tab中文字的颜色
+     * create by wj
+     *
+     * @param textColor
+     */
+
+    public void setTabViewTextColor(@ColorInt int textColor) {
+        mTabTextViewColoor = textColor;
+    }
+
+    public void setHasBottomBorder(boolean hasBottomBorder) {
+        mTabStrip.setHasBottomBorder(hasBottomBorder);
+    }
+
+    /**
      * Create a default view to be used for tabs. This is called if a custom tab view is not set via
      * {@link #setCustomTabView(int, int)}.
      */
     protected TextView createDefaultTabView(Context context) {
         TextView textView = new TextView(context);
-        textView.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.sliding_tab_text));
+        textView.setTextColor(mTabTextViewColoor);
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
         textView.setTypeface(Typeface.DEFAULT);
@@ -365,9 +383,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     }
 
     public void setRedPointVisibility(int position, int visibility) {
-        Log.d(TAG, "setRedPointVisibility: " + mTabStrip.getChildCount());
         for (int i = 0; i < mTabStrip.getChildCount(); i++) {
-            Log.d(TAG, "setRedPointVisibility: " + mTabStrip.getChildAt(i).toString());
             if (i == position) {
                 View childAt = mTabStrip.getChildAt(i);
                 if (childAt instanceof RelativeLayout) {

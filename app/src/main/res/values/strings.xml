@@ -337,7 +337,6 @@
     <string name="please_open_camera_permission">请打开相机权限</string>
 
     <!--钱包-->
-    <string name="balance">账户余额</string>
     <string name="recharge">充值</string>
     <string name="withdraw">提现</string>
     <string name="bank_card">银行卡</string>
@@ -347,6 +346,9 @@
     <string name="recharge_service">遇到任何问题，请联系客服></string>
     <string name="next">下一步</string>
     <string name="money_from">%1$s(%2$s)</string>
+    <string name="mine_crash">我的现金(元)</string>
+    <string name="mine_score">我的积分</string>
+    <string name="mine_ingot">我的元宝</string>
 
     <!--银行卡绑定-->
     <string name="bind_bank_card_warn">持卡人必须与账号信息一致,信息不做其他用途</string>
@@ -368,6 +370,7 @@
     <string name="integral">积分</string>
     <string name="ingot">元宝</string>
     <string name="cash">现金</string>
+    <string name="score">积分</string>
     <string name="bounty">赏金</string>
     <string name="versusing">对战中</string>
     <string name="versus_end">已结束</string>
@@ -419,8 +422,10 @@
     <string name="you_not_bind_bank_card">您还未绑定任何银行卡</string>
     <string name="go_to_bind_card">去绑卡</string>
     <string name="with_draw_limit">最低提现金额5元</string>
-    <string name="earnings_yuan">+%1$s元</string>
-    <string name="minus_yuan">-%1$s元</string>
+    <string name="plus_string">+%1$s</string>
+    <string name="minus_string">-%1$s</string>
+    <string name="plus_int">+%1$d</string>
+    <string name="minus_int">-%1$d</string>
     <!--  聚宝盆  -->
     <string name="cornucopia">聚宝盆</string>
     <string name="exchange_rule">兑换规则</string>
@@ -429,11 +434,7 @@
     <string name="integrate_detail">积分明细</string>
     <string name="exchange_integrate">兑换积分</string>
     <string name="ingot_number">%1$s  元宝</string>
-    <string name="add_ingot">+%1$s  元宝</string>
-    <string name="minus_ingot">-%1$s  元宝</string>
     <string name="integrate_number">%1$s  积分</string>
-    <string name="add_integrate_number">+%1$s  积分</string>
-    <string name="minus_integrate_number">-%1$s  积分</string>
     <string name="check_details">查看明细></string>
     <string name="old_price">原价: ￥%1$s</string>
     <string name="old_price_exchange_integrate">原价: %1$s元宝</string>

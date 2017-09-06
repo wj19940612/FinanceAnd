@@ -11,8 +11,8 @@ import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.mine.ExchangeDetailFragment;
-import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
+import com.sbai.finance.fragment.mine.AccountFundDetailFragment;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
@@ -44,7 +44,7 @@ public class EarningsAndExpendDetailsActivity extends BaseActivity {
     }
 
     private void initView() {
-        if (mType == ExchangeDetailModel.TYPE_INGOT) {
+        if (mType == AccountFundDetail.TYPE_INGOT) {
             mTitleBar.setTitle(R.string.ingot_detail);
         } else {
             mTitleBar.setTitle(R.string.integrate_detail);
@@ -78,7 +78,7 @@ public class EarningsAndExpendDetailsActivity extends BaseActivity {
             public void onClick(View v) {
                 Fragment fragment = exchangeDetailAdapter.getFragment(mSelectPosition);
                 if (fragment != null) {
-                    ((ExchangeDetailFragment) (fragment)).scrollToTop();
+                    ((AccountFundDetailFragment) (fragment)).scrollToTop();
                 }
             }
         });
@@ -98,10 +98,10 @@ public class EarningsAndExpendDetailsActivity extends BaseActivity {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0:
-                    return ExchangeDetailFragment.newInstance(mType, ExchangeDetailModel.DIRECTION_EARNINGS);
-                case 1:
-                    return ExchangeDetailFragment.newInstance(mType, ExchangeDetailModel.DIRECTION_EXTEND);
+//                case 0:
+//                    return AccountIngotOrScoreDetailFragment.newInstance(mType, ExchangeDetailModel.DIRECTION_EARNINGS);
+//                case 1:
+//                    return AccountIngotOrScoreDetailFragment.newInstance(mType, ExchangeDetailModel.DIRECTION_EXTEND);
             }
             return null;
         }

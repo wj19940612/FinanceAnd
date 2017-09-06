@@ -16,7 +16,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.fragment.mine.ExChangeProductFragment;
 import com.sbai.finance.model.mine.cornucopia.CornucopiaProductModel;
-import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback2D;
@@ -135,11 +135,11 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
         switch (view.getId()) {
             case R.id.ingot:
                 umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_INGOT_DETAILS);
-                Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_INGOT).execute();
+                Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, AccountFundDetail.TYPE_INGOT).execute();
                 break;
             case R.id.integrate:
                 umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_INTEGRAL_DETAILS);
-                Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_INTEGRATE).execute();
+                Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class).putExtra(Launcher.EX_PAY_END, AccountFundDetail.TYPE_SCORE).execute();
                 break;
             case R.id.exchange_rule:
                 umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_EXCHANGE_RULES);

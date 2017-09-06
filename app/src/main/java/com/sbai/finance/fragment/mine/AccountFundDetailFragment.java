@@ -12,32 +12,33 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.view.autofit.AutofitTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
  * Created by ${wangJie} on 2017/6/21.
+ * 积分 现金 元宝流水明细页面
  */
 
-public class ExchangeDetailFragment extends BaseFragment {
+public class AccountFundDetailFragment extends BaseFragment {
 
     private static final String KEY_TYPE = "TYPE";
-    private static final String KEY_DIRECTION = "direction";
+
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.adsorb_text)
@@ -48,25 +49,27 @@ public class ExchangeDetailFragment extends BaseFragment {
     TextView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.recharge)
+    TextView mRecharge;
+    @BindView(R.id.fundName)
+    TextView mFundName;
+    @BindView(R.id.fundNumber)
+    AutofitTextView mFundNumber;
 
     private Unbinder mBind;
 
     //元宝 或积分
-    private int mType;
-    //收入 支出
-    private int mDirection;
-
+    private int mFundType;
     private int mPage = 0;
-    private ArrayList<ExchangeDetailModel> mExchangeDetailModelList;
-    private ExchangeDetailAdapter mExchangeDetailAdapter;
+    private ArrayList<AccountFundDetail> mAccountFundDetailList;
+    private UserFundDetailAdapter mUserFundDetailAdapter;
     private boolean mLoadMore = true;
 
 
-    public static ExchangeDetailFragment newInstance(int type, int direction) {
+    public static AccountFundDetailFragment newInstance(int type) {
         Bundle args = new Bundle();
-        ExchangeDetailFragment fragment = new ExchangeDetailFragment();
+        AccountFundDetailFragment fragment = new AccountFundDetailFragment();
         args.putInt(KEY_TYPE, type);
-        args.putInt(KEY_DIRECTION, direction);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,15 +78,14 @@ public class ExchangeDetailFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mType = getArguments().getInt(KEY_TYPE);
-            mDirection = getArguments().getInt(KEY_DIRECTION);
+            mFundType = getArguments().getInt(KEY_TYPE);
         }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_exchange_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_account_fund_detail, container, false);
         mBind = ButterKnife.bind(this, view);
         return view;
     }
@@ -91,9 +93,41 @@ public class ExchangeDetailFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mExchangeDetailModelList = new ArrayList<>();
-        mExchangeDetailAdapter = new ExchangeDetailAdapter(mExchangeDetailModelList, getActivity());
-        mRecyclerView.setAdapter(mExchangeDetailAdapter);
+        mAccountFundDetailList = new ArrayList<>();
+        initRecycleView();
+        requestDetailList(true);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPage = 0;
+                requestDetailList(true);
+            }
+        });
+        updateUserFund(0.0);
+    }
+
+    public void updateUserFund(double fund) {
+        switch (mFundType) {
+            case AccountFundDetail.TYPE_CRASH:
+                mFundName.setText(R.string.mine_crash);
+                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparatorAndScale(fund, 0));
+                break;
+            case AccountFundDetail.TYPE_INGOT:
+                mFundName.setText(R.string.mine_ingot);
+                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparator(fund));
+                break;
+            case AccountFundDetail.TYPE_SCORE:
+                mFundName.setText(R.string.mine_score);
+                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparator(fund));
+                break;
+        }
+
+    }
+
+    private void initRecycleView() {
+        mUserFundDetailAdapter = new UserFundDetailAdapter(mAccountFundDetailList, getActivity());
+        mUserFundDetailAdapter.setDetailType(mFundType);
+        mRecyclerView.setAdapter(mUserFundDetailAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -107,20 +141,12 @@ public class ExchangeDetailFragment extends BaseFragment {
                 handleRecycleScroll(recyclerView);
             }
         });
-        requestDetailList();
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPage = 0;
-                requestDetailList();
-            }
-        });
     }
 
     //RecycleView 滑动的时候 根据tag 显示对应的吸顶文字
     private void handleRecycleScroll(RecyclerView recyclerView) {
         if (isSlideToBottom(mRecyclerView) && mLoadMore) {
-            requestDetailList();
+            requestDetailList(true);
         }
         View stickyInfoView = recyclerView.findChildViewUnder(
                 mAdsorbText.getMeasuredWidth() / 2, 5);
@@ -135,13 +161,13 @@ public class ExchangeDetailFragment extends BaseFragment {
             int transViewStatus = (int) transInfoView.getTag();
             int dealtY = transInfoView.getTop() - mAdsorbText.getMeasuredHeight();
 
-            if (transViewStatus == ExchangeDetailAdapter.HAS_STICKY_VIEW) {
+            if (transViewStatus == UserFundDetailAdapter.HAS_STICKY_VIEW) {
                 if (transInfoView.getTop() > 0) {
                     mAdsorbText.setTranslationY(dealtY);
                 } else {
                     mAdsorbText.setTranslationY(0);
                 }
-            } else if (transViewStatus == ExchangeDetailAdapter.NONE_STICKY_VIEW) {
+            } else if (transViewStatus == UserFundDetailAdapter.NONE_STICKY_VIEW) {
                 mAdsorbText.setTranslationY(0);
             }
         }
@@ -156,45 +182,75 @@ public class ExchangeDetailFragment extends BaseFragment {
         mRecyclerView.smoothScrollToPosition(0);
     }
 
-    private void requestDetailList() {
-        Client.getExchangeDetailList(mDirection, mType, mPage)
+    private void requestDetailList(final boolean isRefresh) {
+        switch (mFundType) {
+            case AccountFundDetail.TYPE_CRASH:
+                requestUserCrashDetail(isRefresh);
+                break;
+            default:
+                requestUserIngotOrScoreDetail(isRefresh);
+                break;
+        }
+
+    }
+
+    private void requestUserCrashDetail(final boolean isRefresh) {
+        Client.getCrashDetail(mPage, Client.DEFAULT_PAGE_SIZE)
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<ExchangeDetailModel>>, List<ExchangeDetailModel>>() {
+                .setCallback(new Callback2D<Resp<List<AccountFundDetail>>, List<AccountFundDetail>>() {
                     @Override
-                    protected void onRespSuccessData(List<ExchangeDetailModel> data) {
-                        updateExchangeDetailList(data);
+                    protected void onRespSuccessData(List<AccountFundDetail> data) {
+                        updateDetailList(data, isRefresh);
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFinish() {
+                        super.onFinish();
                         stopRefreshAnimation();
                     }
                 })
                 .fire();
     }
 
-    private void updateExchangeDetailList(List<ExchangeDetailModel> exchangeDetailList) {
-        if (exchangeDetailList == null || exchangeDetailList.isEmpty() && mExchangeDetailModelList.isEmpty()) {
+    private void requestUserIngotOrScoreDetail(final boolean isRefresh) {
+        Client.getExchangeDetailList(mFundType, mPage)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<AccountFundDetail>>, List<AccountFundDetail>>() {
+                    @Override
+                    protected void onRespSuccessData(List<AccountFundDetail> data) {
+                        updateDetailList(data, isRefresh);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
+                    }
+                })
+                .fire();
+    }
+
+    private void updateDetailList(List<AccountFundDetail> exchangeDetailList, boolean isRefresh) {
+        if (exchangeDetailList == null || exchangeDetailList.isEmpty() && mAccountFundDetailList.isEmpty()) {
             mDataLayout.setVisibility(View.GONE);
             mEmpty.setVisibility(View.VISIBLE);
             stopRefreshAnimation();
         } else {
             mDataLayout.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
-            if (mSwipeRefreshLayout.isRefreshing()) {
-                mExchangeDetailAdapter.clear();
-                mSwipeRefreshLayout.setRefreshing(false);
+            if (isRefresh) {
+                mUserFundDetailAdapter.clear();
             }
-            mExchangeDetailModelList.addAll(exchangeDetailList);
+
             if (exchangeDetailList.size() < Client.DEFAULT_PAGE_SIZE) {
                 mLoadMore = false;
             } else {
                 mLoadMore = true;
                 mPage++;
             }
-            mExchangeDetailAdapter.notifyDataSetChanged();
+            mUserFundDetailAdapter.addAll(exchangeDetailList);
         }
     }
 
@@ -210,21 +266,26 @@ public class ExchangeDetailFragment extends BaseFragment {
         mBind.unbind();
     }
 
-    class ExchangeDetailAdapter extends RecyclerView.Adapter<ExchangeDetailAdapter.ViewHolder> {
+    @OnClick(R.id.recharge)
+    public void onViewClicked() {
+    }
+
+    class UserFundDetailAdapter extends RecyclerView.Adapter<UserFundDetailAdapter.ViewHolder> {
 
         public static final int HAS_STICKY_VIEW = 2;
         public static final int NONE_STICKY_VIEW = 3;
-        private ArrayList<ExchangeDetailModel> mExchangeDetailArrayList;
+        private ArrayList<AccountFundDetail> mExchangeDetailArrayList;
         private Context mContext;
+        private int mFundType;
 
-        public ExchangeDetailAdapter(ArrayList<ExchangeDetailModel> detailArrayList, Context context) {
+        public UserFundDetailAdapter(ArrayList<AccountFundDetail> detailArrayList, Context context) {
             this.mExchangeDetailArrayList = detailArrayList;
             this.mContext = context;
         }
 
-        public void addAll(ArrayList<ExchangeDetailModel> detailArrayList) {
-            this.addAll(detailArrayList);
-            notifyItemRangeInserted(mExchangeDetailArrayList.size() - detailArrayList.size(), mExchangeDetailArrayList.size());
+        public void addAll(List<AccountFundDetail> detailArrayList) {
+            mExchangeDetailArrayList.addAll(detailArrayList);
+            this.notifyItemRangeChanged(0, mExchangeDetailArrayList.size());
         }
 
         public void clear() {
@@ -232,21 +293,25 @@ public class ExchangeDetailFragment extends BaseFragment {
             notifyItemRangeRemoved(0, mExchangeDetailArrayList.size());
         }
 
+        public void setDetailType(int fundType) {
+            mFundType = fundType;
+        }
+
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_detail, null);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_user_fund_detail, null);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mExchangeDetailArrayList.get(position), position, isTheDifferentMonth((position)), mContext);
+            holder.bindDataWithView(mExchangeDetailArrayList.get(position), position, isTheDifferentMonth((position)), mContext, mFundType);
             if (isTheDifferentMonth(position)) {
                 holder.itemView.setTag(HAS_STICKY_VIEW);
             } else {
                 holder.itemView.setTag(NONE_STICKY_VIEW);
             }
-            holder.itemView.setContentDescription(DateUtil.getFormatMonth(mExchangeDetailArrayList.get(position).getCreateTime()));
+            holder.itemView.setContentDescription(DateUtil.formatMonth(mExchangeDetailArrayList.get(position).getCreateTime()));
         }
 
         @Override
@@ -258,8 +323,8 @@ public class ExchangeDetailFragment extends BaseFragment {
             if (position == 0) {
                 return true;
             }
-            ExchangeDetailModel pre = mExchangeDetailArrayList.get(position - 1);
-            ExchangeDetailModel next = mExchangeDetailArrayList.get(position);
+            AccountFundDetail pre = mExchangeDetailArrayList.get(position - 1);
+            AccountFundDetail next = mExchangeDetailArrayList.get(position);
             //判断两个时间在不在一个月内  不是就要显示标题
             long preTime = pre.getCreateTime();
             long nextTime = next.getCreateTime();
@@ -281,26 +346,31 @@ public class ExchangeDetailFragment extends BaseFragment {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindDataWithView(ExchangeDetailModel detail, int position, boolean theDifferentMonth, Context context) {
+            public void bindDataWithView(AccountFundDetail detail, int position,
+                                         boolean theDifferentMonth, Context context, int fundType) {
                 if (theDifferentMonth) {
                     mAdsorbText.setVisibility(View.VISIBLE);
-                    mAdsorbText.setText(DateUtil.getFormatMonth(detail.getCreateTime()));
+                    mAdsorbText.setText(DateUtil.formatMonth(detail.getCreateTime()));
                 } else {
                     mAdsorbText.setVisibility(View.GONE);
                 }
-                mTime.setText(StrUtil.mergeTextWithRatio(DateUtil.getDetailFormatTime(detail.getCreateTime()), "\n" + DateUtil.format(detail.getCreateTime(), DateUtil.FORMAT_HOUR_MINUTE), 0.9f));
+                mTime.setText(DateUtil.formatUserFundDetailTime(detail.getCreateTime()));
                 mPayWay.setText(detail.getRemark());
-                if (detail.isVcoin()) {
+                if (detail.isIngot()) {
                     if (detail.getFlowType() < 0) {
-                        mMoney.setText(context.getString(R.string.minus_ingot, StrFormatter.getFormIngot(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.plus_int, (int) detail.getMoney()));
+                        mMoney.setSelected(false);
                     } else {
-                        mMoney.setText(context.getString(R.string.add_ingot, StrFormatter.getFormIngot(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.minus_int, (int) detail.getMoney()));
+                        mMoney.setSelected(true);
                     }
                 } else {
                     if (detail.getFlowType() < 0) {
-                        mMoney.setText(context.getString(R.string.minus_integrate_number,StrFormatter.getFormIntegrate(detail.getMoney())));
+                        mMoney.setSelected(false);
+                        mMoney.setText(context.getString(R.string.plus_string, FinanceUtil.formatWithScale(detail.getMoney())));
                     } else {
-                        mMoney.setText(context.getString(R.string.add_integrate_number, StrFormatter.getFormIntegrate(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.minus_string, FinanceUtil.formatWithScale(detail.getMoney())));
+                        mMoney.setSelected(true);
                     }
                 }
             }

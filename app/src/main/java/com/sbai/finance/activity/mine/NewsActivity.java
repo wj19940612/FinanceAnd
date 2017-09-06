@@ -23,7 +23,7 @@ import com.sbai.finance.activity.mine.cornucopia.EarningsAndExpendDetailsActivit
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.UserInfo;
-import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -208,7 +208,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                 case HistoryNewsModel.REWARD:
                     if (!historyNewsModel.isLossEfficacy()) {
                         Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class)
-                                .putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_INGOT)
+                                .putExtra(Launcher.EX_PAY_END, AccountFundDetail.TYPE_INGOT)
                                 .execute();
                     }
                     break;

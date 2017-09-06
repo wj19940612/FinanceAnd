@@ -1127,12 +1127,29 @@ public class Client {
      * @param pageSize
      * @return
      */
-    public static API getDetail(int page, int pageSize) {
+    public static API getCrashDetail(int page, int pageSize) {
         return new API("/user/userFlow/queryUserFlow.do",
                 new ApiParams()
                         .put("page", page)
                         .put("pageSize", pageSize));
     }
+
+    /**
+     * /user/userAccount/userCurrencyFlow.do
+     * GET
+     * 元宝积分明细（wms）
+     *
+     * @param currencyType
+     * @param page
+     * @return
+     */
+    public static API getExchangeDetailList(int currencyType, int page) {
+        return new API("/user/userAccount/userCurrencyFlow.do", new ApiParams()
+                .put("currencyType", currencyType)
+                .put("page", page)
+                .put("pageSize", Client.DEFAULT_PAGE_SIZE));
+    }
+
 
 
     /**
@@ -1649,24 +1666,6 @@ public class Client {
                 .put("password", password)
                 .put("fromRealMoney", fromRealMoney)
                 .put("toMoney", toMoney));
-    }
-
-    /**
-     * /user/userAccount/userCurrencyFlow.do
-     * GET
-     * 元宝积分明细（wms）
-     *
-     * @param inOrOut
-     * @param currencyType
-     * @param page
-     * @return
-     */
-    public static API getExchangeDetailList(int inOrOut, int currencyType, int page) {
-        return new API("/user/userAccount/userCurrencyFlow.do", new ApiParams()
-                .put("inOrOut", inOrOut)
-                .put("currencyType", currencyType)
-                .put("page", page)
-                .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
 
     /**
