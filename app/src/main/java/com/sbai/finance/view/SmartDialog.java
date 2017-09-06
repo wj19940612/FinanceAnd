@@ -36,7 +36,6 @@ public class SmartDialog {
     private TextView mNegative;
     private TextView mPosition;
     private AppCompatImageView mIcon;
-
     private AppCompatDialog mDialog;
     private Activity mActivity;
 
