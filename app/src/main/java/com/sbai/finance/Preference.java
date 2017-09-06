@@ -34,6 +34,7 @@ public class Preference {
         String USER_LOOK_DETAIL = "user_look_detail";
         String IS_FIRST_TRAIN = "IS_FIRST_TRAIN";
         String IS_FIRST_OPEN_APP = "IS_FIRST_OPEN_APP";
+        String IS_GUIDE_UPDATE = "IS_GUIDE_UPDATE";
         String STUDY_OPTION = "study_option";
         String MY_STUDY = "my_study";
         String TRAINING_SUBMITS = "training_submits";
@@ -216,8 +217,13 @@ public class Preference {
         return mPrefs.getBoolean(Key.IS_FIRST_OPEN_APP, true);
     }
 
-    public void setIsFirstOpenAppFalse() {
+    public boolean isGuideUpdate(String versionName) {
+        return mPrefs.getBoolean(Key.IS_GUIDE_UPDATE + versionName, false);
+    }
+
+    public void setIsFirstOpenAppFalse(String versionName) {
         apply(Key.IS_FIRST_OPEN_APP, false);
+        apply(Key.IS_GUIDE_UPDATE + versionName, false);
     }
 
     public void setTrainingSubmits(String phone, List<TrainingSubmit> submits) {

@@ -11,7 +11,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.service.PushIntentService;
 import com.sbai.finance.service.PushService;
 import com.sbai.finance.utils.AppInfo;
-import com.sbai.finance.utils.Launcher;
 
 public class SplashActivity extends BaseActivity {
 
@@ -51,7 +50,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void gotoMain() {
-        if (Preference.get().isFirstOpenApp()) {
+        if (Preference.get().isFirstOpenApp() || Preference.get().isGuideUpdate(AppInfo.getVersionName(this))) {
             startActivity(new Intent(this, GuideActivity.class));
         } else {
             startActivity(new Intent(this, MainActivity.class));

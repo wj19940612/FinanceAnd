@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.utils.AppInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,7 @@ public class GuideActivity extends BaseActivity {
     @OnClick(R.id.enter)
     public void onViewClicked() {
         if (mPage == 2) {
-            Preference.get().setIsFirstOpenAppFalse();
+            Preference.get().setIsFirstOpenAppFalse(AppInfo.getVersionName(this));
             startActivity(new Intent(this, MainActivity.class));
             supportFinishAfterTransition();
         }
@@ -106,7 +107,7 @@ public class GuideActivity extends BaseActivity {
         public Object instantiateItem(ViewGroup container, int position) {
             final int pos = position;
             ImageView imageView = new ImageView(mContext);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
             container.addView(imageView);
             Glide.with(mContext).load(mRes.get(pos)).into(imageView);
