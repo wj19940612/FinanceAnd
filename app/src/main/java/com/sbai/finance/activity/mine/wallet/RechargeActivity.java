@@ -26,7 +26,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.recharge.BankCardPayActivity;
-import com.sbai.finance.activity.recharge.WeChatPayActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.payment.AliPayOrderInfo;
 import com.sbai.finance.model.payment.BankLimit;
@@ -316,13 +315,6 @@ public class RechargeActivity extends BaseActivity {
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {
                         @Override
                         protected void onRespSuccessData(PaymentPath data) {
-                            if (mUsablePlatform.getType() == UsablePlatform.TYPE_WECHAT_PAY) {
-                                Launcher.with(getActivity(), WeChatPayActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD, data.getCodeUrl())
-                                        .putExtra(Launcher.EX_PAYLOAD_2, data.getThridOrderId())
-                                        .putExtra(Launcher.EX_PAYLOAD_3, true)
-                                        .execute();
-                            }
                             finish();
                         }
                     })

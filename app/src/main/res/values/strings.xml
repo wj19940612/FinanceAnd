@@ -276,11 +276,8 @@
     <string name="pay_intention">支付意向金</string>
     <string name="confirm_payment">确认支付</string>
     <string name="pay_intention_hint1">意向金为平台服务费</string>
-    <string name="pay_intention_hint2">无论用户是否成功借款都不予退还,请谅解</string>
     <string name="we_chat_pay">微信支付</string>
     <string name="intention_amount">￥0.01</string>
-    <string name="we_chat_pay_hint_1">1.长按二维码保存至相册或者直接使用微信扫描二维码。</string>
-    <string name="we_chat_pay_hint_2">2.如果你已完成,请点击“已完成支付”。</string>
     <string name="complete_payment">已完成支付</string>
     <string name="save_picture">保存图片</string>
     <string name="save_picture_failed">保存失败</string>

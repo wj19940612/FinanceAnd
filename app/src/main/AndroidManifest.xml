@@ -222,9 +222,6 @@
             android:name=".activity.web.TopicDetailActivity"
             android:screenOrientation="portrait"/>
         <!-- 观点大神 -->
-        <activity
-            android:name=".activity.opinion.OpinionActivity"
-            android:screenOrientation="portrait"/>
 
         <!-- 交易 H5 -->
         <activity
@@ -246,16 +243,10 @@
             android:name=".activity.web.StockNewsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.recharge.PayIntentionActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.stock.CompanyIntroActivity"
             android:screenOrientation="portrait"/>
 
         <!-- 第三方 -->
-        <activity
-            android:name=".activity.recharge.WeChatPayActivity"
-            android:screenOrientation="portrait"/>
         <activity
             android:name=".WBShareActivity"
             android:configChanges="keyboardHidden|orientation"

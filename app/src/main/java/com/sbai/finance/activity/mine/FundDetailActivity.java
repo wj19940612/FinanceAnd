@@ -130,7 +130,7 @@ public class FundDetailActivity extends BaseActivity {
 
 
     private void requestDetailList() {
-        Client.requestUserFundCrashDetail(mPageNo, mPageSize)
+        Client.requestUserFundCrashDetail(mPageNo)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<FundDetail>>, List<FundDetail>>() {
