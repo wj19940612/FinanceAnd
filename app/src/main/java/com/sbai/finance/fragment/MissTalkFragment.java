@@ -545,10 +545,9 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
                     @Override
                     protected void onRespSuccessData(List<Question> questionList) {
-                        stopRefreshAnimation();
                         if (questionList.size() == 0) {
                             mEmpty.setVisibility(View.VISIBLE);
-
+                            stopRefreshAnimation();
                         } else {
                             mEmpty.setVisibility(View.GONE);
                             mLatestQuestionList = questionList;
@@ -602,6 +601,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 mLatestQuestionListAdapter.clear();
             }
         }
+        stopRefreshAnimation();
 
         for (Question question : questionList) {
             if (mSet.add(question.getId())) {
