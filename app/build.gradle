@@ -103,8 +103,8 @@ android {
         }
 
         prod {
-            versionCode 37
-            versionName "1.51"
+            versionCode 38
+            versionName "1.52"
             buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
             buildConfigField('boolean', 'IS_PROD', 'true')
 
