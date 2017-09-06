@@ -19,81 +19,15 @@
         app:titleText="@string/wallet"
         app:titleTextColor="@android:color/white"/>
 
-    <LinearLayout
+    <com.sbai.finance.view.slidingTab.SlidingTabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/wallet_bg"
-        android:paddingLeft="@dimen/common_padding">
+        android:background="@color/wallet_bg"/>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/balance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lineSpacingExtra="5dp"
-            android:paddingBottom="22dp"
-            android:paddingTop="11dp"
-            android:textColor="@android:color/white"
-            android:textSize="15sp"
-            tools:text="账户余额 \n0.00000000000000"/>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-
-        <android.support.v7.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:srcCompat="@drawable/ic_mine_bankcard_money"/>
-    </LinearLayout>
-
-    <com.sbai.finance.view.IconTextRow
-        android:id="@+id/recharge"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_padding"
-        android:background="@android:color/white"
-        app:hasBottomSplitLine="true"
-        app:leftIcon="@drawable/ic_mine_wallet_recharge"
-        app:rightIcon="@drawable/ic_arrow_right_tint"
-        app:rowText="@string/recharge"
-        app:rowTextColor="@color/primaryText"
-        app:splitLineColor="@color/split"/>
-
-    <com.sbai.finance.view.IconTextRow
-        android:id="@+id/withdraw"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:visibility="gone"
-        app:hasBottomSplitLine="true"
-        app:leftIcon="@drawable/ic_mine_wallet_withdrawal"
-        app:rightIcon="@drawable/ic_arrow_right_tint"
-        app:rowText="@string/withdraw"
-        app:rowTextColor="@color/primaryText"
-        app:splitLineColor="@color/split"/>
-
-    <com.sbai.finance.view.IconTextRow
-        android:id="@+id/market_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        app:leftIcon="@drawable/ic_mine_wallet_detail"
-        app:rightIcon="@drawable/ic_arrow_right_tint"
-        app:rowText="@string/market_detail"
-        app:rowTextColor="@color/primaryText"
-        app:splitLineColor="@color/split"/>
-
-    <com.sbai.finance.view.IconTextRow
-        android:id="@+id/bankCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_split_height"
-        android:background="@android:color/white"
-        app:leftIcon="@drawable/ic_mine_wallet_bankcard"
-        app:rightIcon="@drawable/ic_arrow_right_tint"
-        app:rowText="@string/bank_card"
-        app:rowTextColor="@color/primaryText"
-        app:splitLineColor="@color/split"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 </LinearLayout>

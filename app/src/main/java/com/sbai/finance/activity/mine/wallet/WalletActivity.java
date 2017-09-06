@@ -3,27 +3,24 @@ package com.sbai.finance.activity.mine.wallet;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatTextView;
+import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
 import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mine.FundDetailActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
 import com.sbai.finance.model.payment.UserFundInfoModel;
-import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
-import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
 import java.util.List;
 
@@ -39,16 +36,10 @@ public class WalletActivity extends BaseActivity {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
-    @BindView(R.id.balance)
-    AppCompatTextView mBalance;
-    @BindView(R.id.recharge)
-    IconTextRow mRecharge;
-    @BindView(R.id.withdraw)
-    IconTextRow mWithdraw;
-    @BindView(R.id.market_detail)
-    IconTextRow mMarketDetail;
-    @BindView(R.id.bankCard)
-    IconTextRow mBankCard;
+    @BindView(R.id.tabLayout)
+    SlidingTabLayout mTabLayout;
+    @BindView(R.id.viewPager)
+    ViewPager mViewPager;
 
     private UserFundInfoModel mUserFundInfoModel;
 
@@ -74,7 +65,7 @@ public class WalletActivity extends BaseActivity {
 
     private void updateUserFund(double fund) {
         SpannableString spannableString = StrUtil.mergeTextWithRatio(getString(R.string.balance), "\n" + FinanceUtil.formatWithScale(fund), 2.6f);
-        mBalance.setText(spannableString);
+//        mBalance.setText(spannableString);
     }
 
     private void requestUserFindInfo() {
@@ -94,43 +85,43 @@ public class WalletActivity extends BaseActivity {
 
     @OnClick({R.id.balance, R.id.recharge, R.id.withdraw, R.id.market_detail, R.id.bankCard})
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.balance:
-                break;
-            case R.id.recharge:
-                umengEventCount(UmengCountEventIdUtils.WALLET_RECHARGE);
-                Launcher.with(getActivity(), RechargeActivity.class)
-                        .execute();
-                break;
-            case R.id.withdraw:
-                umengEventCount(UmengCountEventIdUtils.WALLET_WITHDRAW);
-                requestUserHasPassWord();
-                break;
-            case R.id.market_detail:
-                umengEventCount(UmengCountEventIdUtils.WALLET_DETAILS);
-                Launcher.with(getActivity(), FundDetailActivity.class).execute();
-                break;
-            case R.id.bankCard:
-                umengEventCount(UmengCountEventIdUtils.WALLET_BANK_CARD);
-                Client.requestUserBankCardInfo()
-                        .setTag(TAG)
-                        .setIndeterminate(this)
-                        .setCallback(new Callback<Resp<List<UserBankCardInfoModel>>>() {
-                            @Override
-                            protected void onRespSuccess(Resp<List<UserBankCardInfoModel>> resp) {
-                                if (resp.isSuccess()) {
-                                    if (resp.hasData()) {
-                                        mUserBankCardInfoModel = resp.getData().get(0);
-                                    }
-                                    Launcher.with(getActivity(), BindBankCardActivity.class)
-                                            .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
-                                            .executeForResult(REQ_CODE_BIND_BANK);
-                                }
-                            }
-                        })
-                        .fire();
-                break;
-        }
+//        switch (view.getId()) {
+//            case R.id.balance:
+//                break;
+//            case R.id.recharge:
+//                umengEventCount(UmengCountEventIdUtils.WALLET_RECHARGE);
+//                Launcher.with(getActivity(), RechargeActivity.class)
+//                        .execute();
+//                break;
+//            case R.id.withdraw:
+//                umengEventCount(UmengCountEventIdUtils.WALLET_WITHDRAW);
+//                requestUserHasPassWord();
+//                break;
+//            case R.id.market_detail:
+//                umengEventCount(UmengCountEventIdUtils.WALLET_DETAILS);
+//                Launcher.with(getActivity(), FundDetailActivity.class).execute();
+//                break;
+//            case R.id.bankCard:
+//                umengEventCount(UmengCountEventIdUtils.WALLET_BANK_CARD);
+//                Client.requestUserBankCardInfo()
+//                        .setTag(TAG)
+//                        .setIndeterminate(this)
+//                        .setCallback(new Callback<Resp<List<UserBankCardInfoModel>>>() {
+//                            @Override
+//                            protected void onRespSuccess(Resp<List<UserBankCardInfoModel>> resp) {
+//                                if (resp.isSuccess()) {
+//                                    if (resp.hasData()) {
+//                                        mUserBankCardInfoModel = resp.getData().get(0);
+//                                    }
+//                                    Launcher.with(getActivity(), BindBankCardActivity.class)
+//                                            .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+//                                            .executeForResult(REQ_CODE_BIND_BANK);
+//                                }
+//                            }
+//                        })
+//                        .fire();
+//                break;
+//        }
     }
 
     private void requestUserHasPassWord() {
