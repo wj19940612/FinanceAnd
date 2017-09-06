@@ -47,13 +47,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/sortQuestionRecyclerView"
-            android:visibility="visible"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <ImageView
-                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
                 android:src="@drawable/bg_annals_materials_create_top"/>
 
             <android.support.v4.widget.NestedScrollView
@@ -61,6 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="none">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -95,22 +96,22 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@+id/progressBar"
-            android:layout_marginBottom="35dp"
+            android:layout_marginBottom="25dp"
             android:layout_marginTop="30dp"/>
     </RelativeLayout>
 
-        <TextView
-            android:id="@+id/copyView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/holo_red_dark"
-            android:gravity="center"
-            android:minHeight="40dp"
-            android:paddingBottom="11dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="11dp"
-            android:textColor="@android:color/white"
-            android:textSize="15sp"
-            android:visibility="gone"/>
+    <TextView
+        android:id="@+id/copyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_red_dark"
+        android:gravity="center"
+        android:minHeight="40dp"
+        android:paddingBottom="11dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="11dp"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:visibility="gone"/>
 </FrameLayout>
