@@ -33,6 +33,7 @@ public class Preference {
         String MISS_TALK_ANSWERS = "miss_talk_answers";
         String USER_LOOK_DETAIL = "user_look_detail";
         String IS_FIRST_TRAIN = "IS_FIRST_TRAIN";
+        String IS_FIRST_OPEN_APP = "IS_FIRST_OPEN_APP";
         String STUDY_OPTION = "study_option";
         String MY_STUDY = "my_study";
         String TRAINING_SUBMITS = "training_submits";
@@ -209,6 +210,14 @@ public class Preference {
 
     public void setIsFirstTrainFalse(int trainId, boolean isFirst) {
         apply(Key.IS_FIRST_TRAIN + trainId, isFirst);
+    }
+
+    public boolean isFirstOpenApp() {
+        return mPrefs.getBoolean(Key.IS_FIRST_OPEN_APP, true);
+    }
+
+    public void setIsFirstOpenAppFalse() {
+        apply(Key.IS_FIRST_OPEN_APP, false);
     }
 
     public void setTrainingSubmits(String phone, List<TrainingSubmit> submits) {
