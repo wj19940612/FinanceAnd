@@ -116,6 +116,21 @@ android {
                     UMENG_CHANNEL   : "OFFICIAL"
             ]
         }
+
+        tencent {
+            versionCode 38
+            versionName "1.52"
+            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
+            buildConfigField('boolean', 'IS_PROD', 'true')
+
+            manifestPlaceholders = [
+                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
+                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
+                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
+                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
+                    UMENG_CHANNEL   : "Tencent"
+            ]
+        }
     }
 }
 
