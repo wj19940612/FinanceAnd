@@ -218,7 +218,7 @@ public class Preference {
     }
 
     public boolean isGuideUpdate(String versionName) {
-        return mPrefs.getBoolean(Key.IS_GUIDE_UPDATE + versionName, false);
+        return mPrefs.getBoolean(Key.IS_GUIDE_UPDATE + versionName, true);
     }
 
     public void setIsFirstOpenAppFalse(String versionName) {

@@ -1,7 +1,6 @@
 package com.sbai.finance.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -18,17 +16,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
-import com.sbai.finance.model.DailyReport;
+import com.sbai.finance.model.SkinExchangeRecord;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
-import com.sbai.httplib.CookieManger;
 
 import java.util.HashSet;
 import java.util.List;
@@ -52,19 +47,19 @@ public class SkinExchangeRecordActivity extends BaseActivity implements CustomSw
 
     private int mPageSize = 20;
     private int mPageNo = 0;
-    private String mReportId;
-    private HashSet<String> mSet;
-    private DailyReportAdapter mDailyReportAdapter;
+    private int mActivityId = 1;
+    private HashSet<Integer> mSet;
+    private SkinAdapter mSkinAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_daily_report);
+        setContentView(R.layout.activity_exchange_skin_record_list);
         ButterKnife.bind(this);
         initListHeader();
         initListFooter();
         initListView();
-        requestDailyList();
+        requestSkinRecordList();
     }
 
     private void initListHeader() {
@@ -84,94 +79,49 @@ public class SkinExchangeRecordActivity extends BaseActivity implements CustomSw
     private void initListView() {
         mSet = new HashSet<>();
         scrollToTop(mTitleBar, mListView);
-        mDailyReportAdapter = new DailyReportAdapter(this);
+        mSkinAdapter = new SkinAdapter(this);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
-        mSwipeRefreshLayout.setAdapter(mListView, mDailyReportAdapter);
+        mSwipeRefreshLayout.setAdapter(mListView, mSkinAdapter);
         mListView.setEmptyView(mEmpty);
-        mListView.setAdapter(mDailyReportAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DailyReport dailyReport = (DailyReport) parent.getItemAtPosition(position);
-                if (dailyReport != null) {
-                    mReportId = dailyReport.getId();
-                    Launcher.with(getActivity(), DailyReportDetailActivity.class)
-                            .putExtra(DailyReportDetailActivity.EX_FORMAT, dailyReport.getFormat())
-                            .putExtra(DailyReportDetailActivity.EX_ID, dailyReport.getId())
-                            .putExtra(DailyReportDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-                            .executeForResult(DailyReportDetailActivity.READ_CODE);
-                }
-            }
-        });
+        mListView.setAdapter(mSkinAdapter);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == DailyReportDetailActivity.READ_CODE) {
-            requestDailyListForUpdate();
-        }
-    }
-
-    private void requestDailyListForUpdate() {
-        Client.getDailyReportList(mPageNo).setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<DailyReport>>, List<DailyReport>>() {
-                    @Override
-                    protected void onRespSuccessData(List<DailyReport> data) {
-                        updateSingleDailyReport(data);
-                    }
-                }).fireFree();
-    }
-
-    private void updateSingleDailyReport(List<DailyReport> data) {
-        int clicks = -1;
-        for (DailyReport report : data) {
-            if (report.getId().equalsIgnoreCase(mReportId)) {
-                clicks = report.getClicks();
-                break;
-            }
-        }
-        if (clicks == -1) return;
-        for (int i = 0; i < mDailyReportAdapter.getCount(); i++) {
-            DailyReport report = mDailyReportAdapter.getItem(i);
-            if (report != null && report.getId().equalsIgnoreCase(mReportId)) {
-                report.setClicks(clicks);
-                mDailyReportAdapter.notifyDataSetChanged();
-                break;
-            }
-        }
-    }
 
     @Override
     public void onLoadMore() {
-        requestDailyList();
+        requestSkinRecordList();
     }
 
     @Override
     public void onRefresh() {
         reset();
-        requestDailyList();
+        requestSkinRecordList();
     }
 
-    private void requestDailyList() {
-        Client.getDailyReportList(mPageNo).setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<DailyReport>>, List<DailyReport>>() {
+    private void requestSkinRecordList() {
+        Client.getSkinList(mActivityId, mPageNo).setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<SkinExchangeRecord>>, List<SkinExchangeRecord>>() {
                     @Override
-                    protected void onRespSuccessData(List<DailyReport> data) {
-                        updateDailyList(data);
+                    protected void onRespSuccessData(List<SkinExchangeRecord> data) {
+                        updateSkinRecordList(data);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
                     }
                 }).fireFree();
     }
 
-    private void updateDailyList(List<DailyReport> data) {
-        stopRefreshAnimation();
+    private void updateSkinRecordList(List<SkinExchangeRecord> data) {
         if (mSet.isEmpty()) {
-            mDailyReportAdapter.clear();
+            mSkinAdapter.clear();
         }
-        for (DailyReport dailyReport : data) {
-            if (mSet.add(dailyReport.getId())) {
-                mDailyReportAdapter.add(dailyReport);
+        for (SkinExchangeRecord skinExchangeRecord : data) {
+            if (mSet.add(skinExchangeRecord.getId())) {
+                mSkinAdapter.add(skinExchangeRecord);
             }
         }
         if (data.size() < mPageSize) {
@@ -179,7 +129,7 @@ public class SkinExchangeRecordActivity extends BaseActivity implements CustomSw
         } else {
             mPageNo++;
         }
-        mDailyReportAdapter.notifyDataSetChanged();
+        mSkinAdapter.notifyDataSetChanged();
     }
 
     private void stopRefreshAnimation() {
@@ -197,15 +147,9 @@ public class SkinExchangeRecordActivity extends BaseActivity implements CustomSw
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        requestDailyList();
-    }
+    static class SkinAdapter extends ArrayAdapter<SkinExchangeRecord> {
 
-    static class DailyReportAdapter extends ArrayAdapter<DailyReport> {
-
-        public DailyReportAdapter(@NonNull Context context) {
+        public SkinAdapter(@NonNull Context context) {
             super(context, 0);
         }
 
@@ -214,7 +158,7 @@ public class SkinExchangeRecordActivity extends BaseActivity implements CustomSw
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_daily_report, null, true);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_exchange_skin, null, true);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -225,24 +169,24 @@ public class SkinExchangeRecordActivity extends BaseActivity implements CustomSw
         }
 
         static class ViewHolder {
-            @BindView(R.id.image)
-            ImageView mImage;
-            @BindView(R.id.click)
-            TextView mClick;
+            @BindView(R.id.skin)
+            ImageView mSkin;
+            @BindView(R.id.name)
+            TextView mName;
             @BindView(R.id.time)
             TextView mTime;
-            @BindView(R.id.title)
-            TextView mTitle;
+            @BindView(R.id.ingot)
+            TextView mIngot;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(DailyReport item, Context context) {
-                Glide.with(context).load(item.getCoverUrl()).into(mImage);
-                mClick.setText(context.getString(R.string.read_count, item.getClicks()));
-                mTime.setText(DateUtil.getMissFormatTime(item.getCreateTime()));
-                mTitle.setText(item.getTitle());
+            public void bindDataWithView(SkinExchangeRecord item, Context context) {
+                Glide.with(context).load(item.getProductUrl()).into(mSkin);
+                mName.setText(item.getProductName());
+                mTime.setText(DateUtil.format(item.getCreateTime()));
+                mIngot.setText(context.getString(R.string.ingot_number_no_blank, item.getPrice()));
             }
         }
     }
