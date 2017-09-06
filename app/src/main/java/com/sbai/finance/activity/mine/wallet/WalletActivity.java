@@ -15,7 +15,6 @@ import android.view.View;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
-import com.sbai.finance.fragment.mine.AccountCrashFragment;
 import com.sbai.finance.fragment.mine.AccountFundDetailFragment;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.model.payment.UserBankCardInfoModel;
@@ -91,9 +90,9 @@ public class WalletActivity extends BaseActivity {
                 ingotFragment.updateUserFund(fund.getYuanbao());
             }
 
-            AccountCrashFragment accountCrashFragment = (AccountCrashFragment) mFundFragmentAdapter.getFragment(1);
+            AccountFundDetailFragment accountCrashFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(1);
             if (accountCrashFragment != null) {
-                accountCrashFragment.setUserFundData(fund.getMoney());
+                accountCrashFragment.updateUserFund(fund.getMoney());
             }
 
             AccountFundDetailFragment scoreFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(2);

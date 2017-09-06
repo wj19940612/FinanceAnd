@@ -82,6 +82,7 @@ public class AccountCrashFragment extends BaseFragment {
             }
         });
 
+        // TODO: 2017/9/6 看情况 如果可以合并为一个页面 则后期删除 目前没有用 
     }
 
     private void updateUserFund(double fund) {
@@ -147,7 +148,7 @@ public class AccountCrashFragment extends BaseFragment {
 
 
     private void requestDetailList(final boolean isRefresh) {
-        Client.getCrashDetail(mPageNo, Client.DEFAULT_PAGE_SIZE)
+        Client.requestUserFundCrashDetail(mPageNo)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<AccountFundDetail>>, List<AccountFundDetail>>() {

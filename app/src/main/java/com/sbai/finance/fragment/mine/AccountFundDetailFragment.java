@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.net.Callback2D;
@@ -20,6 +22,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.autofit.AutofitTextView;
 
 import java.util.ArrayList;
@@ -146,7 +149,7 @@ public class AccountFundDetailFragment extends BaseFragment {
     //RecycleView 滑动的时候 根据tag 显示对应的吸顶文字
     private void handleRecycleScroll(RecyclerView recyclerView) {
         if (isSlideToBottom(mRecyclerView) && mLoadMore) {
-            requestDetailList(true);
+            requestDetailList(false);
         }
         View stickyInfoView = recyclerView.findChildViewUnder(
                 mAdsorbText.getMeasuredWidth() / 2, 5);
@@ -195,7 +198,7 @@ public class AccountFundDetailFragment extends BaseFragment {
     }
 
     private void requestUserCrashDetail(final boolean isRefresh) {
-        Client.getCrashDetail(mPage, Client.DEFAULT_PAGE_SIZE)
+        Client.requestUserFundCrashDetail(mPage)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<AccountFundDetail>>, List<AccountFundDetail>>() {
@@ -214,7 +217,7 @@ public class AccountFundDetailFragment extends BaseFragment {
     }
 
     private void requestUserIngotOrScoreDetail(final boolean isRefresh) {
-        Client.getExchangeDetailList(mFundType, mPage)
+        Client.requestUserIngotOrScoreDetailList(mFundType, mPage)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<AccountFundDetail>>, List<AccountFundDetail>>() {
@@ -268,6 +271,23 @@ public class AccountFundDetailFragment extends BaseFragment {
 
     @OnClick(R.id.recharge)
     public void onViewClicked() {
+        switch (mFundType) {
+            case AccountFundDetail.TYPE_CRASH:
+                Launcher.with(getActivity(), RechargeActivity.class)
+                        .putExtra(ExtraKeys.RECHARGE_TYPE,AccountFundDetail.TYPE_CRASH)
+                        .execute();
+                break;
+            case AccountFundDetail.TYPE_INGOT:
+                Launcher.with(getActivity(), RechargeActivity.class)
+                        .putExtra(ExtraKeys.RECHARGE_TYPE,AccountFundDetail.TYPE_INGOT)
+                        .execute();
+                break;
+            case AccountFundDetail.TYPE_SCORE:
+                Launcher.with(getActivity(), RechargeActivity.class)
+                        .putExtra(ExtraKeys.RECHARGE_TYPE,AccountFundDetail.TYPE_SCORE)
+                        .execute();
+                break;
+        }
     }
 
     class UserFundDetailAdapter extends RecyclerView.Adapter<UserFundDetailAdapter.ViewHolder> {

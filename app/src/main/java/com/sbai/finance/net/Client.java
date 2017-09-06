@@ -11,7 +11,7 @@ import com.sbai.httplib.ApiParams;
 public class Client {
 
     private static final int POST = Request.Method.POST;
-    public static final int DEFAULT_PAGE_SIZE = 15;
+    public static final int DEFAULT_PAGE_SIZE = 20;
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
@@ -1124,14 +1124,13 @@ public class Client {
      * 查询明细
      *
      * @param page
-     * @param pageSize
      * @return
      */
-    public static API getCrashDetail(int page, int pageSize) {
+    public static API requestUserFundCrashDetail(int page) {
         return new API("/user/userFlow/queryUserFlow.do",
                 new ApiParams()
                         .put("page", page)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
 
     /**
@@ -1143,13 +1142,14 @@ public class Client {
      * @param page
      * @return
      */
-    public static API getExchangeDetailList(int currencyType, int page) {
+    // TODO: 2017/9/6 测试数据 ,后期需要换接口 
+    public static API requestUserIngotOrScoreDetailList(int currencyType, int page) {
         return new API("/user/userAccount/userCurrencyFlow.do", new ApiParams()
+                .put("inOrOut", 1)
                 .put("currencyType", currencyType)
                 .put("page", page)
                 .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
-
 
 
     /**
