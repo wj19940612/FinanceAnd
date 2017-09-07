@@ -73,7 +73,7 @@ public class GuideActivity extends BaseActivity {
     @OnClick(R.id.enter)
     public void onViewClicked() {
         if (mPage == 2) {
-            Preference.get().setIsFirstOpenAppFalse(AppInfo.getVersionName(this));
+            Preference.get().setNoShowGuide();
             startActivity(new Intent(this, MainActivity.class));
             supportFinishAfterTransition();
         }
