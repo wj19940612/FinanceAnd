@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,10 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.target.DrawableImageViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -57,6 +59,7 @@ import com.sbai.finance.websocket.WSPush;
 import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.callback.WSCallback;
 import com.sbai.finance.websocket.cmd.QuickMatch;
+import com.sbai.glide.GlideApp;
 import com.sbai.httplib.BuildConfig;
 
 import java.util.ArrayList;
@@ -178,12 +181,21 @@ public class BattleListActivity extends BaseActivity implements
         ImageView battleBanner = (ImageView) header.findViewById(R.id.battleBanner);
         TextView checkBattleRecord = (TextView) header.findViewById(R.id.checkBattleRecord);
         TextView battleRule = (TextView) header.findViewById(R.id.battleRule);
-        Glide.with(getActivity())
+        GlideApp.with(getActivity())
                 .load(R.drawable.battle_banner)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .priority(Priority.HIGH)
                 .fitCenter()
-                .into(new GlideDrawableImageViewTarget(battleBanner, 1));
+                .into(new DrawableImageViewTarget(battleBanner) {
+                    @Override
+                    public void onResourceReady(Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        if (resource instanceof GifDrawable) {
+                            ((GifDrawable) resource).setLoopCount(1);
+                        }
+                        super.onResourceReady(resource, transition);
+                    }
+                });
+        // TODO: 06/09/2017 check
         checkBattleRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -521,7 +533,7 @@ public class BattleListActivity extends BaseActivity implements
 
     private void updateAvatar() {
         if (LocalUser.getUser().isLogin()) {
-            Glide.with(getActivity())
+            GlideApp.with(getActivity())
                     .load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .placeholder(R.drawable.ic_default_avatar)
                     .transform(new GlideCircleTransform(getActivity()))
@@ -924,7 +936,7 @@ public class BattleListActivity extends BaseActivity implements
 
             private void bindDataWithView(final Battle item, Context context, final Callback callback) {
                 mVarietyName.setText(item.getVarietyName());
-                Glide.with(context).load(item.getLaunchUserPortrait())
+                GlideApp.with(context).load(item.getLaunchUserPortrait())
                         .load(item.getLaunchUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
                         .transform(new GlideCircleTransform(context))
@@ -958,7 +970,7 @@ public class BattleListActivity extends BaseActivity implements
                         mDepositAndTime.setText(reward + " " + context.getString(R.string.versusing));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
-                        Glide.with(context).load(item.getLaunchUserPortrait())
+                        GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
                                 .transform(new GlideCircleTransform(context))
@@ -968,7 +980,7 @@ public class BattleListActivity extends BaseActivity implements
                         break;
                     case Battle.GAME_STATUS_END:
                         mDepositAndTime.setText(reward + " " + context.getString(R.string.versus_end));
-                        Glide.with(context).load(item.getLaunchUserPortrait())
+                        GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
                                 .transform(new GlideCircleTransform(context))
