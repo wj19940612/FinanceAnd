@@ -14,11 +14,6 @@
         app:hasBottomSplitLine="true"
         app:titleText="@string/discovery"/>
 
-    <com.sbai.finance.view.HomeBanner
-        android:id="@+id/banner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -29,6 +24,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <com.sbai.finance.view.HomeBanner
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <com.sbai.finance.view.FeaturesNavigation
                 android:id="@+id/featuresNavigation"
