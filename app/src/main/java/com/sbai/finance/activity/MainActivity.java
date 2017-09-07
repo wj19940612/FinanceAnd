@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.activities.SkinExchangeRecordActivity;
 import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
@@ -45,7 +46,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
-        startActivity(new Intent(this, SkinExchangeRecordActivity.class));
 //      translucentStatusBar();
 
         checkVersion();

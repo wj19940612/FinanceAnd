@@ -33,6 +33,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.training.MoreTrainFeedbackActivity;
 import com.sbai.finance.activity.training.TrainingDetailActivity;
+import com.sbai.finance.model.BannerModel;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.MyTrainingRecord;
@@ -45,6 +46,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.utils.ViewGroupUtil;
 import com.sbai.finance.view.FeaturesNavigation;
+import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.CookieManger;
@@ -94,6 +96,8 @@ public class DiscoveryFragment extends BaseFragment {
 
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
+    @BindView(R.id.banner)
+    HomeBanner mBanner;
 
     private TrainAdapter mTrainAdapter;
 
@@ -124,6 +128,12 @@ public class DiscoveryFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
+            @Override
+            public void onBannerClick(BannerModel information) {
+
+            }
+        });
         mFeaturesNavigation.setOnNavItemClickListener(new FeaturesNavigation.OnNavItemClickListener() {
             @Override
             public void onOptionalClick() {
@@ -160,6 +170,17 @@ public class DiscoveryFragment extends BaseFragment {
         initDailyReportView();
         requestTrainingList();
         requestDailyReportData();
+        requestBannerData();
+    }
+
+    private void requestBannerData() {
+        Client.getBannerData().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<BannerModel>>, List<BannerModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<BannerModel> data) {
+                        mBanner.setHomeAdvertisement(data);
+                    }
+                }).fireFree();
     }
 
     private void initDailyReportView() {

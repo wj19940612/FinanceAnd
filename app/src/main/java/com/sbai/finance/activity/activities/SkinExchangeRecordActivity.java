@@ -1,4 +1,4 @@
-package com.sbai.finance.activity;
+package com.sbai.finance.activity.activities;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.SkinExchangeRecord;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;

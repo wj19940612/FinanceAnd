@@ -435,7 +435,7 @@
             android:name=".activity.GuideActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.SkinExchangeRecordActivity"
+            android:name=".activity.activities.SkinExchangeRecordActivity"
             android:screenOrientation="portrait"/>
     </application>
 
