@@ -183,7 +183,7 @@ public class HomeBanner extends FrameLayout {
 
             container.addView(imageView);
             if (!TextUtils.isEmpty(information.getCover())) {
-                Glide.with(mContext).load(information.getCover()).thumbnail(0.1f).into(imageView);
+                Glide.with(mContext).load(information.getCover()).into(imageView);
             }
             imageView.setOnClickListener(new OnClickListener() {
                 @Override
