@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.mine.wallet;
+package com.sbai.finance.activity.mine.fund;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -17,8 +17,8 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.fragment.mine.AccountFundDetailFragment;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
-import com.sbai.finance.model.payment.UserBankCardInfoModel;
-import com.sbai.finance.model.payment.UserFundInfoModel;
+import com.sbai.finance.model.fund.UserBankCardInfo;
+import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -46,7 +46,7 @@ public class WalletActivity extends BaseActivity {
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
 
-    private UserBankCardInfoModel mUserBankCardInfoModel;
+    private UserBankCardInfo mUserBankCardInfo;
     private FundFragmentAdapter mFundFragmentAdapter;
 
     @Override
@@ -83,7 +83,7 @@ public class WalletActivity extends BaseActivity {
     }
 
 
-    private void updateUserFund(UserFundInfoModel fund) {
+    private void updateUserFund(UserFundInfo fund) {
         if (fund != null) {
             AccountFundDetailFragment ingotFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(0);
             if (ingotFragment != null) {
@@ -106,9 +106,9 @@ public class WalletActivity extends BaseActivity {
         Client.requestUserFundInfo()
                 .setIndeterminate(this)
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
                     @Override
-                    protected void onRespSuccessData(UserFundInfoModel data) {
+                    protected void onRespSuccessData(UserFundInfo data) {
                         updateUserFund(data);
                     }
                 })
@@ -182,7 +182,7 @@ public class WalletActivity extends BaseActivity {
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         Launcher.with(getActivity(), BindBankCardActivity.class)
-                                .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                                .putExtra(Launcher.EX_PAY_END, mUserBankCardInfo)
                                 .executeForResult(BindBankCardActivity.REQ_CODE_BIND_CARD);
                     }
                 })
@@ -193,13 +193,13 @@ public class WalletActivity extends BaseActivity {
         Client.requestUserBankCardInfo()
                 .setTag(TAG)
                 .setIndeterminate(WalletActivity.this)
-                .setCallback(new Callback2D<Resp<List<UserBankCardInfoModel>>, List<UserBankCardInfoModel>>() {
+                .setCallback(new Callback2D<Resp<List<UserBankCardInfo>>, List<UserBankCardInfo>>() {
                     @Override
-                    protected void onRespSuccessData(List<UserBankCardInfoModel> data) {
+                    protected void onRespSuccessData(List<UserBankCardInfo> data) {
                         if (data != null && !data.isEmpty()) {
-                            mUserBankCardInfoModel = data.get(0);
-                            if (mUserBankCardInfoModel != null) {
-                                if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+                            mUserBankCardInfo = data.get(0);
+                            if (mUserBankCardInfo != null) {
+                                if (mUserBankCardInfo.isNotConfirmBankInfo()) {
                                     showOpenBindCardDialog();
                                 } else {
 //                                    Launcher.with(getActivity(), WithDrawActivity.class)
@@ -224,7 +224,7 @@ public class WalletActivity extends BaseActivity {
 //                    openWithDrawPage();
                     break;
                 case BindBankCardActivity.REQ_CODE_BIND_CARD:
-                    mUserBankCardInfoModel = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+                    mUserBankCardInfo = data.getParcelableExtra(Launcher.EX_PAYLOAD);
                     Launcher.with(getActivity(), WithDrawActivity.class)
                             .execute();
                     break;

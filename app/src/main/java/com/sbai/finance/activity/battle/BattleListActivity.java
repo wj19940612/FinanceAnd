@@ -34,7 +34,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.model.mutual.ArticleProtocol;
-import com.sbai.finance.model.payment.UserFundInfoModel;
+import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -335,9 +335,9 @@ public class BattleListActivity extends BaseActivity implements
     private void requestUserFindInfo() {
         Client.requestUserFundInfo()
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
                     @Override
-                    protected void onRespSuccessData(UserFundInfoModel data) {
+                    protected void onRespSuccessData(UserFundInfo data) {
                         updateUserFund(data);
                     }
 
@@ -513,7 +513,7 @@ public class BattleListActivity extends BaseActivity implements
         mVersusListAdapter.notifyDataSetChanged();
     }
 
-    private void updateUserFund(UserFundInfoModel data) {
+    private void updateUserFund(UserFundInfo data) {
         if (data == null) return;
         mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
         mIngot.setText(getString(R.string.number_ge, StrFormatter.getFormIngot(data.getYuanbao())));

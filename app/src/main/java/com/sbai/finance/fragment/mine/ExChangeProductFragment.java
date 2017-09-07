@@ -16,12 +16,12 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.fund.RechargeActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
-import com.sbai.finance.activity.mine.wallet.RechargeActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
-import com.sbai.finance.model.mine.cornucopia.CornucopiaProductModel;
-import com.sbai.finance.model.payment.UserFundInfoModel;
+import com.sbai.finance.model.fund.UserFundInfo;
+import com.sbai.finance.model.mine.cornucopia.VirtualProductModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -59,7 +59,7 @@ public class ExChangeProductFragment extends BaseFragment {
     private Unbinder mBind;
     private int mType;
     private ExchangeProductAdapter mExchangeProductAdapter;
-    private UserFundInfoModel mUserFundInfoModel;
+    private UserFundInfo mUserFundInfo;
 
     public interface OnUserFundChangeListener {
         void onUserFundChange();
@@ -113,16 +113,16 @@ public class ExChangeProductFragment extends BaseFragment {
 
         mExchangeProductAdapter.setOnExchangeListener(new ExchangeProductAdapter.OnExchangeListener() {
             @Override
-            public void exchange(CornucopiaProductModel item) {
+            public void exchange(VirtualProductModel item) {
                 if (item != null) {
                     if (item.isIngot()) {
                         umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_BUY_INGOT);
                     } else {
                         umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_EXCHANGE_INTEGRAL);
                     }
-                    if (mUserFundInfoModel != null) {
-                        if (item.isIngot() ? mUserFundInfoModel.getMoney() >= item.getFromRealMoney()
-                                : mUserFundInfoModel.getYuanbao() >= item.getFromRealMoney()) {
+                    if (mUserFundInfo != null) {
+                        if (item.isIngot() ? mUserFundInfo.getMoney() >= item.getFromRealMoney()
+                                : mUserFundInfo.getYuanbao() >= item.getFromRealMoney()) {
                             showExchangeConfirmDialog(item);
                         } else {
                             showExchangeFailDialog(item);
@@ -140,7 +140,7 @@ public class ExChangeProductFragment extends BaseFragment {
         mListView.smoothScrollToPosition(0);
     }
 
-    private void showExchangeConfirmDialog(final CornucopiaProductModel item) {
+    private void showExchangeConfirmDialog(final VirtualProductModel item) {
         String msg = item.isIngot() ? getString(R.string.confirm_use_money_buy_ingot, FinanceUtil.formatWithScale(item.getFromRealMoney()), StrFormatter.getFormIngot(item.getToRealMoney())) :
                 getString(R.string.confirm_use_ingot_buy_integrate, StrFormatter.getFormIngot(item.getFromRealMoney()), StrFormatter.getFormIntegrate(item.getToRealMoney()));
         String title = item.isIngot() ? getString(R.string.buy_confirm) : getString(R.string.exchange_confirm);
@@ -163,7 +163,7 @@ public class ExChangeProductFragment extends BaseFragment {
                 .show();
     }
 
-    private void requestUserHasSafetyPass(final CornucopiaProductModel item) {
+    private void requestUserHasSafetyPass(final VirtualProductModel item) {
         Client.getUserHasPassWord()
                 .setTag(TAG)
                 .setIndeterminate(ExChangeProductFragment.this)
@@ -191,7 +191,7 @@ public class ExChangeProductFragment extends BaseFragment {
                 }).show();
     }
 
-    private void showInputSafetyPassDialog(final CornucopiaProductModel item) {
+    private void showInputSafetyPassDialog(final VirtualProductModel item) {
         String content = item.isIngot() ? getString(R.string.ingot_number, StrFormatter.getFormIngot(item.getToRealMoney())) :
                 getString(R.string.integrate_number, StrFormatter.getFormIntegrate(item.getToRealMoney()));
         String hintText = item.isIngot() ? getString(R.string.buy) : getString(R.string.exchange);
@@ -204,11 +204,11 @@ public class ExChangeProductFragment extends BaseFragment {
                 }).show(getChildFragmentManager());
     }
 
-    public void setUserFundInfo(UserFundInfoModel userFundInfo) {
-        mUserFundInfoModel = userFundInfo;
+    public void setUserFundInfo(UserFundInfo userFundInfo) {
+        mUserFundInfo = userFundInfo;
     }
 
-    private void exchange(final CornucopiaProductModel item, String passWord) {
+    private void exchange(final VirtualProductModel item, String passWord) {
         Client.exchange(item.getId(), passWord, item.getFromRealMoney(), item.getToRealMoney())
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -236,7 +236,7 @@ public class ExChangeProductFragment extends BaseFragment {
                 }).fire();
     }
 
-    private void showExchangeFailDialog(CornucopiaProductModel item) {
+    private void showExchangeFailDialog(VirtualProductModel item) {
         if (item.isIngot()) {
             SmartDialog.with(getActivity(), getString(R.string.money_is_not_enough), getString(R.string.buy_fail))
                     .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
@@ -264,18 +264,18 @@ public class ExChangeProductFragment extends BaseFragment {
         Client.getExchangeProduct()
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<CornucopiaProductModel>>, List<CornucopiaProductModel>>() {
+                .setCallback(new Callback2D<Resp<List<VirtualProductModel>>, List<VirtualProductModel>>() {
                     @Override
-                    protected void onRespSuccessData(List<CornucopiaProductModel> data) {
+                    protected void onRespSuccessData(List<VirtualProductModel> data) {
                         mExchangeProductAdapter.clear();
-                        ListIterator<CornucopiaProductModel> cornucopiaProductModelListIterator = data.listIterator();
+                        ListIterator<VirtualProductModel> cornucopiaProductModelListIterator = data.listIterator();
                         while (cornucopiaProductModelListIterator.hasNext()) {
-                            CornucopiaProductModel productModel = cornucopiaProductModelListIterator.next();
-                            if (mType == CornucopiaProductModel.TYPE_VCOIN) {
+                            VirtualProductModel productModel = cornucopiaProductModelListIterator.next();
+                            if (mType == VirtualProductModel.TYPE_VCOIN) {
                                 if (!productModel.isIngot()) {
                                     cornucopiaProductModelListIterator.remove();
                                 }
-                            } else if (mType == CornucopiaProductModel.TYPE_INTEGRATION) {
+                            } else if (mType == VirtualProductModel.TYPE_INTEGRATION) {
                                 if (productModel.isIngot()) {
                                     cornucopiaProductModelListIterator.remove();
                                 }
@@ -315,13 +315,13 @@ public class ExChangeProductFragment extends BaseFragment {
         mBind.unbind();
     }
 
-    static class ExchangeProductAdapter extends ArrayAdapter<CornucopiaProductModel> {
+    static class ExchangeProductAdapter extends ArrayAdapter<VirtualProductModel> {
 
         private Context mContext;
         private OnExchangeListener mOnExchangeListener;
 
         public interface OnExchangeListener {
-            void exchange(CornucopiaProductModel cornucopiaProductModel);
+            void exchange(VirtualProductModel virtualProductModel);
         }
 
         public void setOnExchangeListener(OnExchangeListener onExchangeListener) {
@@ -360,7 +360,7 @@ public class ExChangeProductFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(Context context, final CornucopiaProductModel item, int position, final OnExchangeListener onExchangeListener) {
+            public void bindDataWithView(Context context, final VirtualProductModel item, int position, final OnExchangeListener onExchangeListener) {
                 if (item.isIngot()) {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_ingot_big, 0, 0, 0);
                     mProduct.setText(StrFormatter.getFormIngot(item.getToRealMoney()));

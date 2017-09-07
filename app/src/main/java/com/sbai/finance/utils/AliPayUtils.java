@@ -1,7 +1,6 @@
 package com.sbai.finance.utils;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
@@ -9,7 +8,7 @@ import android.util.Log;
 
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
-import com.sbai.finance.model.payment.AliPayResult;
+import com.sbai.finance.model.fund.AliPayResult;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 

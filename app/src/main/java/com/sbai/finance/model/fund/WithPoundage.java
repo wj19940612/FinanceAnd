@@ -1,11 +1,11 @@
-package com.sbai.finance.model.payment;
+package com.sbai.finance.model.fund;
 
 /**
  * Created by ${wangJie} on 2017/6/22.
  * 提现手续费
  */
 
-public class WithPoundageModel {
+public class WithPoundage {
     //固定手续费
     private double fee;
     //浮动手续费

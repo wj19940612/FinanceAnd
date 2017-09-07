@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sbai.finance.model.payment.UsablePlatform;
+import com.sbai.finance.model.fund.UsablePlatform;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.model.training.TrainingSubmit;
 

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.mine.wallet.RechargeActivity;
+import com.sbai.finance.activity.mine.fund.RechargeActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.net.Callback2D;
@@ -113,11 +114,11 @@ public class AccountFundDetailFragment extends BaseFragment {
         switch (mFundType) {
             case AccountFundDetail.TYPE_CRASH:
                 mFundName.setText(R.string.mine_crash);
-                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparatorAndScale(fund, 0));
+                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparator(fund));
                 break;
             case AccountFundDetail.TYPE_INGOT:
                 mFundName.setText(R.string.mine_ingot);
-                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparator(fund));
+                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparatorAndScale(fund, 0));
                 break;
             case AccountFundDetail.TYPE_SCORE:
                 mFundName.setText(R.string.mine_score);
@@ -274,17 +275,17 @@ public class AccountFundDetailFragment extends BaseFragment {
         switch (mFundType) {
             case AccountFundDetail.TYPE_CRASH:
                 Launcher.with(getActivity(), RechargeActivity.class)
-                        .putExtra(ExtraKeys.RECHARGE_TYPE,AccountFundDetail.TYPE_CRASH)
+                        .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_CRASH)
                         .execute();
                 break;
             case AccountFundDetail.TYPE_INGOT:
                 Launcher.with(getActivity(), RechargeActivity.class)
-                        .putExtra(ExtraKeys.RECHARGE_TYPE,AccountFundDetail.TYPE_INGOT)
+                        .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
                         .execute();
                 break;
             case AccountFundDetail.TYPE_SCORE:
                 Launcher.with(getActivity(), RechargeActivity.class)
-                        .putExtra(ExtraKeys.RECHARGE_TYPE,AccountFundDetail.TYPE_SCORE)
+                        .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_SCORE)
                         .execute();
                 break;
         }
@@ -376,21 +377,40 @@ public class AccountFundDetailFragment extends BaseFragment {
                 }
                 mTime.setText(DateUtil.formatUserFundDetailTime(detail.getCreateTime()));
                 mPayWay.setText(detail.getRemark());
-                if (detail.isIngot()) {
-                    if (detail.getFlowType() < 0) {
-                        mMoney.setText(context.getString(R.string.plus_int, (int) detail.getMoney()));
-                        mMoney.setSelected(false);
+
+                if (fundType == AccountFundDetail.TYPE_CRASH) {
+                    if (!TextUtils.isEmpty(detail.getPlatformName())) {
+                        mPayWay.setText(context.getString(R.string.money_from, detail.getRemark(), detail.getPlatformName()));
                     } else {
-                        mMoney.setText(context.getString(R.string.minus_int, (int) detail.getMoney()));
+                        mPayWay.setText(detail.getRemark());
+                    }
+                    if (detail.getType() < 0) {
+                        mMoney.setSelected(false);
+                        mMoney.setText(context.getString(R.string.minus_string, FinanceUtil.formatWithScale(detail.getMoney())));
+                    } else {
                         mMoney.setSelected(true);
+                        mMoney.setText(context.getString(R.string.plus_string, FinanceUtil.formatWithScale(detail.getMoney())));
                     }
                 } else {
-                    if (detail.getFlowType() < 0) {
-                        mMoney.setSelected(false);
-                        mMoney.setText(context.getString(R.string.plus_string, FinanceUtil.formatWithScale(detail.getMoney())));
+
+                    // TODO: 2017/9/7 以前的处理方式，需要对应接口修改I啊
+
+                    if (detail.isIngot()) {
+                        if (detail.getFlowType() < 0) {
+                            mMoney.setText(context.getString(R.string.plus_int, (int) detail.getMoney()));
+                            mMoney.setSelected(false);
+                        } else {
+                            mMoney.setText(context.getString(R.string.minus_int, (int) detail.getMoney()));
+                            mMoney.setSelected(true);
+                        }
                     } else {
-                        mMoney.setText(context.getString(R.string.minus_string, FinanceUtil.formatWithScale(detail.getMoney())));
-                        mMoney.setSelected(true);
+                        if (detail.getFlowType() < 0) {
+                            mMoney.setSelected(false);
+                            mMoney.setText(context.getString(R.string.plus_string, FinanceUtil.formatWithScale(detail.getMoney())));
+                        } else {
+                            mMoney.setText(context.getString(R.string.minus_string, FinanceUtil.formatWithScale(detail.getMoney())));
+                            mMoney.setSelected(true);
+                        }
                     }
                 }
             }

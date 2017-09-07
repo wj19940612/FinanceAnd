@@ -1,4 +1,4 @@
-package com.sbai.finance.model.payment;
+package com.sbai.finance.model.fund;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,7 +8,7 @@ import android.os.Parcelable;
  * 用户所绑定的银行卡信息
  */
 
-public class UserBankCardInfoModel implements Parcelable {
+public class UserBankCardInfo implements Parcelable {
 
 
     /**
@@ -165,7 +165,7 @@ public class UserBankCardInfoModel implements Parcelable {
     }
 
 
-    public UserBankCardInfoModel() {
+    public UserBankCardInfo() {
     }
 
     @Override
@@ -209,7 +209,7 @@ public class UserBankCardInfoModel implements Parcelable {
         dest.writeString(this.hasBindBankCard);
     }
 
-    protected UserBankCardInfoModel(Parcel in) {
+    protected UserBankCardInfo(Parcel in) {
         this.idStatus = in.readInt();
         this.realName = in.readString();
         this.bankId = in.readInt();
@@ -225,15 +225,15 @@ public class UserBankCardInfoModel implements Parcelable {
         this.hasBindBankCard = in.readString();
     }
 
-    public static final Creator<UserBankCardInfoModel> CREATOR = new Creator<UserBankCardInfoModel>() {
+    public static final Creator<UserBankCardInfo> CREATOR = new Creator<UserBankCardInfo>() {
         @Override
-        public UserBankCardInfoModel createFromParcel(Parcel source) {
-            return new UserBankCardInfoModel(source);
+        public UserBankCardInfo createFromParcel(Parcel source) {
+            return new UserBankCardInfo(source);
         }
 
         @Override
-        public UserBankCardInfoModel[] newArray(int size) {
-            return new UserBankCardInfoModel[size];
+        public UserBankCardInfo[] newArray(int size) {
+            return new UserBankCardInfo[size];
         }
     };
 }

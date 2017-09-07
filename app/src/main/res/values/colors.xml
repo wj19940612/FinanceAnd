@@ -33,6 +33,7 @@
     <color name="walletRechargeText">#EEB000</color>
     <color name="bank_card_hint">#bfbfbf</color>
     <color name="userEarnFundTextColor">#FEC022</color>
+    <color name="rechargeSelectProduct">#FFC336</color>
 
     <!--gradient-->
     <color name="backgroundGradientStart">#69b2ff</color>

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -18,7 +17,7 @@ import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.fragment.dialog.RewardInputSafetyPassDialogFragment;
 import com.sbai.finance.fragment.dialog.RewardOtherMoneyDialogFragment;
-import com.sbai.finance.model.payment.UserFundInfoModel;
+import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -141,9 +140,9 @@ public class RewardMissActivity extends BaseActivity {
         umengEventCount(UmengCountEventIdUtils.MISS_TALK_REWARD);
         Client.requestUserFundInfo()
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
                     @Override
-                    protected void onRespSuccessData(UserFundInfoModel data) {
+                    protected void onRespSuccessData(UserFundInfo data) {
                         if (data.getYuanbao() < Long.valueOf(mRewardMoney.getText().toString())) {
                             showRechargeDialog(getActivity());
                         } else {

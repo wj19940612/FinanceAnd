@@ -1,4 +1,4 @@
-package com.sbai.finance.model.payment;
+package com.sbai.finance.model.fund;
 
 /**
  * Created by ${wangJie} on 2017/7/13.

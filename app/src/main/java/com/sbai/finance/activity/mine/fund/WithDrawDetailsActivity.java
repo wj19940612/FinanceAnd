@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.mine.wallet;
+package com.sbai.finance.activity.mine.fund;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.payment.UserBankCardInfoModel;
+import com.sbai.finance.model.fund.UserBankCardInfo;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 
@@ -32,12 +32,12 @@ public class WithDrawDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_with_draw_details);
         ButterKnife.bind(this);
-        UserBankCardInfoModel userBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+        UserBankCardInfo userBankCardInfo = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
         String money = getIntent().getStringExtra(Launcher.EX_PAY_END);
         double mPredict_poundage = getIntent().getDoubleExtra(Launcher.EX_PAYLOAD_1, 0);
 
-        if (userBankCardInfoModel != null && !TextUtils.isEmpty(userBankCardInfoModel.getCardNumber())) {
-            String withDrawBankAndNumber = "      " + userBankCardInfoModel.getIssuingBankName() + "  (" + userBankCardInfoModel.getCardNumber().substring(userBankCardInfoModel.getCardNumber().length() - 4) + ")";
+        if (userBankCardInfo != null && !TextUtils.isEmpty(userBankCardInfo.getCardNumber())) {
+            String withDrawBankAndNumber = "      " + userBankCardInfo.getIssuingBankName() + "  (" + userBankCardInfo.getCardNumber().substring(userBankCardInfo.getCardNumber().length() - 4) + ")";
             mBankCardAndName.setText(withDrawBankAndNumber);
         }
         mWithDrawMoney.setText(getString(R.string.yuan, FinanceUtil.formatWithScale(money)));

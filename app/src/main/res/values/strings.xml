@@ -272,16 +272,6 @@
     <string name="preview">预览</string>
     <string name="all_image">所有图片</string>
 
-    <!--借款有道-->
-    <string name="pay_intention">支付意向金</string>
-    <string name="confirm_payment">确认支付</string>
-    <string name="pay_intention_hint1">意向金为平台服务费</string>
-    <string name="we_chat_pay">微信支付</string>
-    <string name="intention_amount">￥0.01</string>
-    <string name="complete_payment">已完成支付</string>
-    <string name="save_picture">保存图片</string>
-    <string name="save_picture_failed">保存失败</string>
-    <string name="save_picture_success">图片成功保存至%1$s目录</string>
 
     <!--股票财务-->
     <string name="one_stock_net_asset">每股净资产</string>
@@ -346,6 +336,7 @@
     <string name="mine_crash">我的现金(元)</string>
     <string name="mine_score">我的积分</string>
     <string name="mine_ingot">我的元宝</string>
+    <string name="confirm_payment">确认支付  (%1$s)</string>
 
     <!--银行卡绑定-->
     <string name="bind_bank_card_warn">持卡人必须与账号信息一致,信息不做其他用途</string>
@@ -788,6 +779,4 @@
     <string name="accuracy_to_">准确率达到%1$s</string>
     <string name="accuracy_">准确率：%1$s</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

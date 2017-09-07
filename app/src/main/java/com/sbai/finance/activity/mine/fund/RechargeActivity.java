@@ -1,11 +1,13 @@
-package com.sbai.finance.activity.mine.wallet;
+package com.sbai.finance.activity.mine.fund;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -16,22 +18,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.BuildConfig;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
-import com.sbai.finance.activity.recharge.BankCardPayActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.payment.AliPayOrderInfo;
-import com.sbai.finance.model.payment.BankLimit;
-import com.sbai.finance.model.payment.PaymentPath;
-import com.sbai.finance.model.payment.UsablePlatform;
-import com.sbai.finance.model.payment.UserBankCardInfoModel;
+import com.sbai.finance.model.fund.AliPayOrderInfo;
+import com.sbai.finance.model.fund.BankLimit;
+import com.sbai.finance.model.fund.PaymentPath;
+import com.sbai.finance.model.fund.UsablePlatform;
+import com.sbai.finance.model.fund.UserBankCardInfo;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
+import com.sbai.finance.model.mine.cornucopia.VirtualProductModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -39,6 +44,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AliPayUtils;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.OnItemClickListener;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
@@ -63,14 +69,20 @@ public class RechargeActivity extends BaseActivity {
     AppCompatTextView mConnectService;
     @BindView(R.id.rechargeCount)
     AppCompatEditText mRechargeCount;
+    @BindView(R.id.crashRecharge)
+    LinearLayout mCrashRecharge;
+    @BindView(R.id.virtualProductRecycleView)
+    RecyclerView mVirtualProductRecycleView;
 
     private List<UsablePlatform> mUsablePlatformList;
     private UsablePlatform mUsablePlatform;
-    private UserBankCardInfoModel mUserBankCardInfoModel;
+    private UserBankCardInfo mUserBankCardInfo;
     private BankLimit mBankLimit;
 
     private int mSelectPayWay;
     private RechargeWayAdapter mRechargeWayAdapter;
+    private int mRechargeType;
+    private VirtualProductAdapter mVirtualProductAdapter;
 
 
     public interface OnPayWayListener {
@@ -90,6 +102,35 @@ public class RechargeActivity extends BaseActivity {
         setContentView(R.layout.activity_recharge);
         ButterKnife.bind(this);
         initListView();
+        mRechargeType = getIntent().getIntExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_CRASH);
+        switch (mRechargeType) {
+            case AccountFundDetail.TYPE_CRASH:
+                initCrashRecharge();
+                break;
+            default:
+                initVirtualProduct();
+                break;
+        }
+    }
+
+    private void initVirtualProduct() {
+        mCrashRecharge.setVisibility(View.GONE);
+        mVirtualProductRecycleView.setVisibility(View.VISIBLE);
+        mVirtualProductAdapter = new VirtualProductAdapter(getActivity(), new ArrayList<VirtualProductModel>());
+        mVirtualProductRecycleView.setAdapter(mVirtualProductAdapter);
+        mVirtualProductAdapter.setOnItemClickListener(new OnItemClickListener<VirtualProductModel>() {
+            @Override
+            public void onItemClick(VirtualProductModel virtualProductModel, int position) {
+                virtualProductModel.setSelect(true);
+                mVirtualProductAdapter.notifyItemChanged(position, virtualProductModel);
+            }
+        });
+        requestVirtualProductList();
+    }
+
+    private void initCrashRecharge() {
+        mCrashRecharge.setVisibility(View.VISIBLE);
+        mVirtualProductRecycleView.setVisibility(View.GONE);
         mRechargeCount.addTextChangedListener(mValidationWatcher);
         formatBankPay();
         requestUserBankInfo();
@@ -99,6 +140,7 @@ public class RechargeActivity extends BaseActivity {
         mRechargeWayAdapter = new RechargeWayAdapter(new ArrayList<UsablePlatform>());
         mRecyclerView.setAdapter(mRechargeWayAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mVirtualProductRecycleView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         mRechargeWayAdapter.setOnPayWayListener(new OnPayWayListener() {
             @Override
             public void onPayWay(UsablePlatform usablePlatform, int position) {
@@ -109,6 +151,20 @@ public class RechargeActivity extends BaseActivity {
             }
 
         });
+    }
+
+    private void requestVirtualProductList() {
+        Client.getExchangeProduct()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<VirtualProductModel>>, List<VirtualProductModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<VirtualProductModel> data) {
+                        mVirtualProductAdapter.addAll(data);
+                    }
+
+                })
+                .fireFree();
     }
 
     private void updateSelectPayWay(UsablePlatform usablePlatform, int position) {
@@ -125,8 +181,8 @@ public class RechargeActivity extends BaseActivity {
     }
 
     private String formatBankPay() {
-        if (mUserBankCardInfoModel != null && !TextUtils.isEmpty(mUserBankCardInfoModel.getCardNumber())) {
-            return mUserBankCardInfoModel.getIssuingBankName() + "(" + mUserBankCardInfoModel.getCardNumber().substring(mUserBankCardInfoModel.getCardNumber().length() - 4) + ")";
+        if (mUserBankCardInfo != null && !TextUtils.isEmpty(mUserBankCardInfo.getCardNumber())) {
+            return mUserBankCardInfo.getIssuingBankName() + "(" + mUserBankCardInfo.getCardNumber().substring(mUserBankCardInfo.getCardNumber().length() - 4) + ")";
         }
         return "";
     }
@@ -135,11 +191,11 @@ public class RechargeActivity extends BaseActivity {
         Client.requestUserBankCardInfo()
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<UserBankCardInfoModel>>, List<UserBankCardInfoModel>>() {
+                .setCallback(new Callback2D<Resp<List<UserBankCardInfo>>, List<UserBankCardInfo>>() {
                     @Override
-                    protected void onRespSuccessData(List<UserBankCardInfoModel> data) {
+                    protected void onRespSuccessData(List<UserBankCardInfo> data) {
                         if (data != null && !data.isEmpty()) {
-                            mUserBankCardInfoModel = data.get(0);
+                            mUserBankCardInfo = data.get(0);
                             requestUsablePlatformList();
                         }
                     }
@@ -149,8 +205,8 @@ public class RechargeActivity extends BaseActivity {
     }
 
     private void requestBankLimit() {
-        if (mUserBankCardInfoModel != null) {
-            Client.getBankLimit(mUserBankCardInfoModel.getBankId())
+        if (mUserBankCardInfo != null) {
+            Client.getBankLimit(mUserBankCardInfo.getBankId())
                     .setTag(TAG)
                     .setCallback(new Callback2D<Resp<List<BankLimit>>, List<BankLimit>>() {
                         @Override
@@ -276,14 +332,14 @@ public class RechargeActivity extends BaseActivity {
         if (mUsablePlatform == null) return;
         final String money = mRechargeCount.getText().toString();
         Integer bankId = null;
-        if (mUserBankCardInfoModel != null && mUsablePlatform.isBankPay() && !mUserBankCardInfoModel.isNotConfirmBankInfo()) {
-            bankId = mUserBankCardInfoModel.getId();
+        if (mUserBankCardInfo != null && mUsablePlatform.isBankPay() && !mUserBankCardInfo.isNotConfirmBankInfo()) {
+            bankId = mUserBankCardInfo.getId();
         }
 
         if (mUsablePlatform.isBankPay()) {
-            if (mUserBankCardInfoModel == null || mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+            if (mUserBankCardInfo == null || mUserBankCardInfo.isNotConfirmBankInfo()) {
                 Launcher.with(getActivity(), BindBankCardActivity.class)
-                        .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                        .putExtra(Launcher.EX_PAY_END, mUserBankCardInfo)
                         .executeForResult(BindBankCardActivity.REQ_CODE_BIND_CARD);
             } else {
                 if (mUsablePlatform.isBankPay() && mBankLimit != null && mBankLimit.getLimitSingle() < Double.parseDouble(money)) {
@@ -302,7 +358,7 @@ public class RechargeActivity extends BaseActivity {
         if (mUsablePlatform.isBankPay()) {
             Launcher.with(getActivity(), BankCardPayActivity.class)
                     .putExtra(Launcher.EX_PAYLOAD, money)
-                    .putExtra(Launcher.EX_PAY_END, mUserBankCardInfoModel)
+                    .putExtra(Launcher.EX_PAY_END, mUserBankCardInfo)
                     .putExtra(Launcher.EX_PAYLOAD_1, mUsablePlatform)
                     .execute();
             finish();
@@ -346,14 +402,14 @@ public class RechargeActivity extends BaseActivity {
                     Client.requestUserBankCardInfo()
                             .setTag(TAG)
                             .setIndeterminate(this)
-                            .setCallback(new Callback<Resp<List<UserBankCardInfoModel>>>() {
+                            .setCallback(new Callback<Resp<List<UserBankCardInfo>>>() {
                                 @Override
-                                protected void onRespSuccess(Resp<List<UserBankCardInfoModel>> resp) {
+                                protected void onRespSuccess(Resp<List<UserBankCardInfo>> resp) {
                                     if (resp.isSuccess()) {
                                         formatBankPay();
                                         requestUsablePlatformList();
                                         if (resp.hasData()) {
-                                            mUserBankCardInfoModel = resp.getData().get(0);
+                                            mUserBankCardInfo = resp.getData().get(0);
                                             submitRechargeData();
                                         }
                                     } else {
@@ -455,4 +511,67 @@ public class RechargeActivity extends BaseActivity {
         }
     }
 
+
+    static class VirtualProductAdapter extends RecyclerView.Adapter<VirtualProductAdapter.ViewHolder> {
+
+        private Context mContext;
+        private List<VirtualProductModel> mVirtualProductModelList;
+        private OnItemClickListener mOnItemClickListener;
+
+        public VirtualProductAdapter(Context context, List<VirtualProductModel> virtualProductModelList) {
+            this.mContext = context;
+            this.mVirtualProductModelList = virtualProductModelList;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.row_virtual_product, parent, false);
+            return new ViewHolder(view);
+        }
+
+        public void addAll(List<VirtualProductModel> virtualProductModelList) {
+            this.mVirtualProductModelList.addAll(virtualProductModelList);
+            notifyItemRangeChanged(0, mVirtualProductModelList.size());
+        }
+
+        public void setOnItemClickListener(OnItemClickListener<VirtualProductModel> onItemClickListener) {
+            mOnItemClickListener = onItemClickListener;
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bindDataWithView(mVirtualProductModelList.get(position), position, mOnItemClickListener);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mVirtualProductModelList.size();
+        }
+
+        static class ViewHolder extends RecyclerView.ViewHolder {
+
+            @BindView(R.id.product)
+            AppCompatTextView mProduct;
+
+            ViewHolder(View view) {
+                super(view);
+                ButterKnife.bind(this, view);
+            }
+
+            public void bindDataWithView(final VirtualProductModel virtualProductModel,
+                                         final int position, final OnItemClickListener onItemClickListener) {
+                if (virtualProductModel == null) return;
+                mProduct.setText(virtualProductModel.getToMoney() + "");
+                mProduct.setSelected(virtualProductModel.isSelect());
+                mProduct.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onItemClick(virtualProductModel, position);
+                        }
+                    }
+                });
+            }
+        }
+    }
 }

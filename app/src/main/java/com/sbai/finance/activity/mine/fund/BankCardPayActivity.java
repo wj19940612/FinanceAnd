@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.recharge;
+package com.sbai.finance.activity.mine.fund;
 
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -20,9 +20,9 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.model.mutual.ArticleProtocol;
-import com.sbai.finance.model.payment.PaymentPath;
-import com.sbai.finance.model.payment.UsablePlatform;
-import com.sbai.finance.model.payment.UserBankCardInfoModel;
+import com.sbai.finance.model.fund.PaymentPath;
+import com.sbai.finance.model.fund.UsablePlatform;
+import com.sbai.finance.model.fund.UserBankCardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -73,7 +73,7 @@ public class BankCardPayActivity extends BaseActivity {
     private int mCounter;
     //获取验证是否开始
     private boolean mFreezeObtainAuthCode;
-    private UserBankCardInfoModel mUserBankCardInfoModel;
+    private UserBankCardInfo mUserBankCardInfo;
     private String mMoney;
     private KeyBoardHelper mKeyBoardHelper;
     private int bottomHeight;
@@ -87,7 +87,7 @@ public class BankCardPayActivity extends BaseActivity {
         ButterKnife.bind(this);
         setKeyboardHelper();
         mMoney = getIntent().getStringExtra(Launcher.EX_PAYLOAD);
-        mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
+        mUserBankCardInfo = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
         mUsablePlatform = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD_1);
 
         mAuthCode.addTextChangedListener(mValidationWatcher);
@@ -106,12 +106,12 @@ public class BankCardPayActivity extends BaseActivity {
     }
 
     private void initPayInfo() {
-        if (mUserBankCardInfoModel != null) {
-            String cardNumber = mUserBankCardInfoModel.getCardNumber();
-            mBankCard.setText(getString(R.string.text_number, mUserBankCardInfoModel.getIssuingBankName(), cardNumber.substring(cardNumber.length() - 4)));
-            mName.setText(formatUserName(mUserBankCardInfoModel.getRealName()));
-            mIdentityCard.setText(formatIdentityCard(mUserBankCardInfoModel.getIdCard()));
-            mPhone.setText(mUserBankCardInfoModel.getCardPhone());
+        if (mUserBankCardInfo != null) {
+            String cardNumber = mUserBankCardInfo.getCardNumber();
+            mBankCard.setText(getString(R.string.text_number, mUserBankCardInfo.getIssuingBankName(), cardNumber.substring(cardNumber.length() - 4)));
+            mName.setText(formatUserName(mUserBankCardInfo.getRealName()));
+            mIdentityCard.setText(formatIdentityCard(mUserBankCardInfo.getIdCard()));
+            mPhone.setText(mUserBankCardInfo.getCardPhone());
         }
 
         mDealTime.setText(DateUtil.format(SysTime.getSysTime().getSystemTimestamp(), DateUtil.DEFAULT_FORMAT));
@@ -265,8 +265,8 @@ public class BankCardPayActivity extends BaseActivity {
     }
 
     private void getBankPayAuthCode() {
-        if (mUserBankCardInfoModel != null) {
-            Client.submitRechargeData(mUsablePlatform.getPlatform(), mMoney, mUserBankCardInfoModel.getId())
+        if (mUserBankCardInfo != null) {
+            Client.submitRechargeData(mUsablePlatform.getPlatform(), mMoney, mUserBankCardInfo.getId())
                     .setRetryPolicy(new DefaultRetryPolicy(20000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {

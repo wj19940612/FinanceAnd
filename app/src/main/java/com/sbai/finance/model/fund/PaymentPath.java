@@ -1,4 +1,4 @@
-package com.sbai.finance.model.payment;
+package com.sbai.finance.model.fund;
 
 import android.os.Parcel;
 import android.os.Parcelable;

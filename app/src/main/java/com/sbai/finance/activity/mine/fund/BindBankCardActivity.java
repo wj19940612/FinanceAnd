@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.mine.wallet;
+package com.sbai.finance.activity.mine.fund;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -21,8 +21,8 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.fragment.dialog.BindBankHintDialogFragment;
-import com.sbai.finance.model.payment.CanUseBankListModel;
-import com.sbai.finance.model.payment.UserBankCardInfoModel;
+import com.sbai.finance.model.fund.CanUseBankList;
+import com.sbai.finance.model.fund.UserBankCardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -77,21 +77,21 @@ public class BindBankCardActivity extends BaseActivity {
     @BindView(R.id.bankCardLayout)
     RelativeLayout mBankCardLayout;
 
-    private List<CanUseBankListModel> mCanUseBankListModels;
+    private List<CanUseBankList> mCanUseBankLists;
     //可用银行卡列表的银行卡名
     private String[] mBankNameList;
-    private UserBankCardInfoModel mUserBankCardInfoModel;
-    private CanUseBankListModel mCanUseBankListModel;
+    private UserBankCardInfo mUserBankCardInfo;
+    private CanUseBankList mCanUseBankList;
 
-    private UserBankCardInfoModel mUserBank;
+    private UserBankCardInfo mUserBank;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bind_bank_card);
         ButterKnife.bind(this);
-        mUserBank = new UserBankCardInfoModel();
-        mUserBankCardInfoModel = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
+        mUserBank = new UserBankCardInfo();
+        mUserBankCardInfo = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
         mBankCardNumber.addTextChangedListener(mBankCardValidationWatcher);
         mName.addTextChangedListener(mValidationWatcher);
         mIdentityCard.addTextChangedListener(mValidationWatcher);
@@ -101,24 +101,24 @@ public class BindBankCardActivity extends BaseActivity {
     }
 
     private void updateBankCardInfo() {
-        if (mUserBankCardInfoModel == null) return;
-        if (mUserBankCardInfoModel.isBindBank()) {
+        if (mUserBankCardInfo == null) return;
+        if (mUserBankCardInfo.isBindBank()) {
             mAddBackLayout.setVisibility(View.GONE);
             mBankCardLayout.setVisibility(View.VISIBLE);
-            SpannableString spannableString = StrUtil.mergeTextWithRatio(getString(R.string.bank_card_name, mUserBankCardInfoModel.getIssuingBankName()), getString(R.string.deposit_card), 0.8f);
+            SpannableString spannableString = StrUtil.mergeTextWithRatio(getString(R.string.bank_card_name, mUserBankCardInfo.getIssuingBankName()), getString(R.string.deposit_card), 0.8f);
             mBindBankName.setText(spannableString);
-            mBindBankCard.setText(mUserBankCardInfoModel.getCardNumber().substring(mUserBankCardInfoModel.getCardNumber().length() - 4));
+            mBindBankCard.setText(mUserBankCardInfo.getCardNumber().substring(mUserBankCardInfo.getCardNumber().length() - 4));
 
         } else {
             mAddBackLayout.setVisibility(View.VISIBLE);
             mBankCardLayout.setVisibility(View.GONE);
-            mName.setText(mUserBankCardInfoModel.getRealName());
-            mIdentityCard.setText(mUserBankCardInfoModel.getIdCard());
-            mBankCardNumber.setText(mUserBankCardInfoModel.getCardNumber());
-            mBank.setText(mUserBankCardInfoModel.getIssuingBankName());
-            mPhoneNumber.setText(mUserBankCardInfoModel.getCardPhone());
-            mCanUseBankListModel = new CanUseBankListModel();
-            mCanUseBankListModel.setName(mUserBankCardInfoModel.getIssuingBankName());
+            mName.setText(mUserBankCardInfo.getRealName());
+            mIdentityCard.setText(mUserBankCardInfo.getIdCard());
+            mBankCardNumber.setText(mUserBankCardInfo.getCardNumber());
+            mBank.setText(mUserBankCardInfo.getIssuingBankName());
+            mPhoneNumber.setText(mUserBankCardInfo.getCardPhone());
+            mCanUseBankList = new CanUseBankList();
+            mCanUseBankList.setName(mUserBankCardInfo.getIssuingBankName());
             mName.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -219,7 +219,7 @@ public class BindBankCardActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (mUserBankCardInfoModel != null && mUserBankCardInfoModel.isNotConfirmBankInfo()) {
+        if (mUserBankCardInfo != null && mUserBankCardInfo.isNotConfirmBankInfo()) {
             showGiveUpBindBankDialog();
         } else {
             try {
@@ -268,8 +268,8 @@ public class BindBankCardActivity extends BaseActivity {
         picker.setTopHeight(50);
         picker.setAnimationStyle(R.style.BottomDialogAnimation);
         picker.setOffset(2);
-        if (mCanUseBankListModel != null && mCanUseBankListModel.getName() != null) {
-            picker.setSelectedItem(mCanUseBankListModel.getName());
+        if (mCanUseBankList != null && mCanUseBankList.getName() != null) {
+            picker.setSelectedItem(mCanUseBankList.getName());
         }
         picker.setTextColor(ContextCompat.getColor(getActivity(), R.color.primaryText));
         WheelView.LineConfig lineConfig = new WheelView.LineConfig(0);//使用最长的分割线
@@ -280,10 +280,10 @@ public class BindBankCardActivity extends BaseActivity {
             public void onOptionPicked(int index, String item) {
                 if (!TextUtils.isEmpty(item)) {
                     mBank.setText(item);
-                    for (CanUseBankListModel data : mCanUseBankListModels) {
+                    for (CanUseBankList data : mCanUseBankLists) {
                         if (data.getName().equalsIgnoreCase(item)) {
-                            mCanUseBankListModel = data;
-                            mUserBankCardInfoModel.setBankId(mCanUseBankListModel.getId());
+                            mCanUseBankList = data;
+                            mUserBankCardInfo.setBankId(mCanUseBankList.getId());
                             break;
                         }
                     }
@@ -299,16 +299,16 @@ public class BindBankCardActivity extends BaseActivity {
         String bank = getBank();
         String identityCard = getIdentityCard();
         String phoneNumber = getPhoneNumber();
-        if (mUserBankCardInfoModel != null) {
-            if (mUserBankCardInfoModel.isNotConfirmBankInfo()) {
-                Client.bindBankCard(name, identityCard, bankCardNumber, phoneNumber, bank, mCanUseBankListModel.getId())
+        if (mUserBankCardInfo != null) {
+            if (mUserBankCardInfo.isNotConfirmBankInfo()) {
+                Client.bindBankCard(name, identityCard, bankCardNumber, phoneNumber, bank, mCanUseBankList.getId())
                         .setTag(TAG)
                         .setIndeterminate(this)
                         .setCallback(new Callback<Resp<Integer>>() {
                             @Override
                             protected void onRespSuccess(Resp<Integer> resp) {
                                 if (resp.isSuccess()) {
-                                    mUserBankCardInfoModel.setBindStatus(1);
+                                    mUserBankCardInfo.setBindStatus(1);
                                     Intent intent = new Intent();
                                     intent.putExtra(Launcher.EX_PAY_END, true);
                                     intent.putExtra(Launcher.EX_PAYLOAD, mUserBank);
@@ -322,7 +322,7 @@ public class BindBankCardActivity extends BaseActivity {
                         })
                         .fire();
             } else {
-                Client.updateBankCard(name, identityCard, bankCardNumber, phoneNumber, bank, mUserBankCardInfoModel.getBankId(), mUserBankCardInfoModel.getId())
+                Client.updateBankCard(name, identityCard, bankCardNumber, phoneNumber, bank, mUserBankCardInfo.getBankId(), mUserBankCardInfo.getId())
                         .setTag(TAG)
                         .setIndeterminate(this)
                         .setCallback(new Callback<Resp<Integer>>() {
@@ -330,12 +330,12 @@ public class BindBankCardActivity extends BaseActivity {
                             protected void onRespSuccess(Resp<Integer> resp) {
                                 ToastUtil.show(resp.getMsg());
                                 if (resp.isSuccess()) {
-                                    mUserBankCardInfoModel.setBindStatus(1);
+                                    mUserBankCardInfo.setBindStatus(1);
                                     if (resp.hasData()) {
-                                        mUserBankCardInfoModel.setId(resp.getData());
+                                        mUserBankCardInfo.setId(resp.getData());
                                     }
                                     Intent intent = new Intent();
-                                    intent.putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfoModel);
+                                    intent.putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfo);
                                     setResult(RESULT_OK, intent);
                                     ToastUtil.show(resp.getMsg());
                                     finish();
@@ -349,7 +349,7 @@ public class BindBankCardActivity extends BaseActivity {
     }
 
     private void showCanUserBankList() {
-        if (mCanUseBankListModels != null && !mCanUseBankListModels.isEmpty() && mBankNameList != null) {
+        if (mCanUseBankLists != null && !mCanUseBankLists.isEmpty() && mBankNameList != null) {
             showBankCardPicker();
         } else {
             requestCanUserBankList();
@@ -361,10 +361,10 @@ public class BindBankCardActivity extends BaseActivity {
         Client.requestCanUseBankList()
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<CanUseBankListModel>>, List<CanUseBankListModel>>() {
+                .setCallback(new Callback2D<Resp<List<CanUseBankList>>, List<CanUseBankList>>() {
                     @Override
-                    protected void onRespSuccessData(List<CanUseBankListModel> canUseBankListModelList) {
-                        mCanUseBankListModels = canUseBankListModelList;
+                    protected void onRespSuccessData(List<CanUseBankList> canUseBankListModelList) {
+                        mCanUseBankLists = canUseBankListModelList;
                         mBankNameList = new String[canUseBankListModelList.size()];
                         for (int i = 0; i < canUseBankListModelList.size(); i++) {
                             mBankNameList[i] = canUseBankListModelList.get(i).getName();

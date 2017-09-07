@@ -15,10 +15,10 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.fragment.mine.ExChangeProductFragment;
-import com.sbai.finance.model.mine.cornucopia.CornucopiaProductModel;
+import com.sbai.finance.model.mine.cornucopia.VirtualProductModel;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.model.mutual.ArticleProtocol;
-import com.sbai.finance.model.payment.UserFundInfoModel;
+import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -104,10 +104,10 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
         });
     }
 
-    private void updateCoinAndIntegrateNumber(UserFundInfoModel userFundInfoModel) {
-        if (userFundInfoModel != null) {
-            mIngot.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.ingot_number, FinanceUtil.formatWithScaleNoZero(userFundInfoModel.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
-            mIntegrate.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.integrate_number, FinanceUtil.formatWithScale(userFundInfoModel.getCredit())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+    private void updateCoinAndIntegrateNumber(UserFundInfo userFundInfo) {
+        if (userFundInfo != null) {
+            mIngot.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.ingot_number, FinanceUtil.formatWithScaleNoZero(userFundInfo.getYuanbao())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
+            mIntegrate.setText(StrUtil.mergeTextWithRatioColor(getString(R.string.integrate_number, FinanceUtil.formatWithScale(userFundInfo.getCredit())), "\n" + getString(R.string.check_details), 0.66f, ContextCompat.getColor(getActivity(), R.color.unluckyText)));
         }
     }
 
@@ -116,9 +116,9 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
         Client.requestUserFundInfo()
                 .setIndeterminate(this)
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
                     @Override
-                    protected void onRespSuccessData(UserFundInfoModel data) {
+                    protected void onRespSuccessData(UserFundInfo data) {
                         updateCoinAndIntegrateNumber(data);
                         ExChangeProductFragment ingotChangeProductFragment = (ExChangeProductFragment) mExchangeProductAdapter.getFragment(0);
                         ExChangeProductFragment integrateChangeProductFragment2 = (ExChangeProductFragment) mExchangeProductAdapter.getFragment(1);
@@ -197,9 +197,9 @@ public class CornucopiaActivity extends BaseActivity implements ExChangeProductF
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return ExChangeProductFragment.newInstance(CornucopiaProductModel.TYPE_VCOIN);
+                    return ExChangeProductFragment.newInstance(VirtualProductModel.TYPE_VCOIN);
                 case 1:
-                    return ExChangeProductFragment.newInstance(CornucopiaProductModel.TYPE_INTEGRATION);
+                    return ExChangeProductFragment.newInstance(VirtualProductModel.TYPE_INTEGRATION);
             }
             return null;
         }

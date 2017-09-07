@@ -2,10 +2,10 @@ package com.sbai.finance.model.mine.cornucopia;
 
 /**
  * Created by ${wangJie} on 2017/6/21.
- * 聚宝盆 可兑换元宝或者积分列表model
+ * 虚拟的元宝或者积分商品model
  */
 
-public class CornucopiaProductModel {
+public class VirtualProductModel {
 
     //元宝
     public static final int TYPE_VCOIN = 0;
@@ -43,6 +43,17 @@ public class CornucopiaProductModel {
     private double toRealMoney;
     //货币类型  1元宝 3 积分
     private int toType;
+
+    //自己加的标识
+    private boolean isSelect;
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
 
     public boolean isDiscount() {
         return getFromMoney() != getFromRealMoney();

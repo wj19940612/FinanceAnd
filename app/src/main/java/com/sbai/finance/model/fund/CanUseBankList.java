@@ -1,11 +1,11 @@
-package com.sbai.finance.model.payment;
+package com.sbai.finance.model.fund;
 
 /**
  * Created by ${wangJie} on 2017/6/16.
  * 可使用的银行列表model
  */
 
-public class CanUseBankListModel {
+public class CanUseBankList {
 
     /**
      * appIcon : https://hystock.oss-cn-qingdao.aliyuncs.com/ueditor/1486633661724033370.png
