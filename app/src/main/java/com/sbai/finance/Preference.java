@@ -17,6 +17,8 @@ import java.util.List;
 
 public class Preference {
     private static final String SHARED_PREFERENCES_NAME = BuildConfig.FLAVOR + "_prefs";
+    //更新引导页 GUIDE_UPDATE_VERSION增加1
+    private static final int GUIDE_UPDATE_VERSION = 0;
 
     interface Key {
         String FOREGROUND = "foreground";
@@ -33,7 +35,6 @@ public class Preference {
         String MISS_TALK_ANSWERS = "miss_talk_answers";
         String USER_LOOK_DETAIL = "user_look_detail";
         String IS_FIRST_TRAIN = "IS_FIRST_TRAIN";
-        String IS_FIRST_OPEN_APP = "IS_FIRST_OPEN_APP";
         String IS_GUIDE_UPDATE = "IS_GUIDE_UPDATE";
         String STUDY_OPTION = "study_option";
         String MY_STUDY = "my_study";
@@ -213,17 +214,12 @@ public class Preference {
         apply(Key.IS_FIRST_TRAIN + trainId, isFirst);
     }
 
-    public boolean isFirstOpenApp() {
-        return mPrefs.getBoolean(Key.IS_FIRST_OPEN_APP, true);
+    public boolean isShowGuide() {
+        return mPrefs.getInt(Key.IS_GUIDE_UPDATE, -1) < GUIDE_UPDATE_VERSION;
     }
 
-    public boolean isGuideUpdate(String versionName) {
-        return mPrefs.getBoolean(Key.IS_GUIDE_UPDATE + versionName, true);
-    }
-
-    public void setIsFirstOpenAppFalse(String versionName) {
-        apply(Key.IS_FIRST_OPEN_APP, false);
-        apply(Key.IS_GUIDE_UPDATE + versionName, false);
+    public void setNoShowGuide() {
+        apply(Key.IS_GUIDE_UPDATE, GUIDE_UPDATE_VERSION);
     }
 
     public void setTrainingSubmits(String phone, List<TrainingSubmit> submits) {
