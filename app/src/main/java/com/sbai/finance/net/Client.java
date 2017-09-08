@@ -2,9 +2,11 @@ package com.sbai.finance.net;
 
 import com.android.volley.Request;
 import com.google.gson.Gson;
+import com.sbai.finance.App;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.levelevaluation.QuestionAnswer;
+import com.sbai.finance.utils.AppInfo;
 import com.sbai.httplib.ApiParams;
 
 
@@ -266,7 +268,8 @@ public class Client {
                 .put("phone", phone)
                 .put("msgCode", authCode)
                 .put("deviceId", Preference.get().getPushClientId())
-                .put("platform", 0));
+                .put("platform", 0)
+                .put("channel", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL")));
     }
 
     /**
@@ -298,7 +301,8 @@ public class Client {
                 .put("password", password)
                 .put("code", code)
                 .put("deviceId", Preference.get().getPushClientId())
-                .put("platform", 0));
+                .put("platform", 0)
+                .put("channel", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL")));
     }
 
     /**
