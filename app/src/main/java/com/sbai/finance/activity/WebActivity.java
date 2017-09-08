@@ -3,11 +3,14 @@ package com.sbai.finance.activity;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Picture;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -20,7 +23,9 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.sbai.finance.AppJs;
 import com.sbai.finance.R;
+import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.view.TitleBar;
 import com.umeng.analytics.MobclickAgent;
@@ -151,7 +156,8 @@ public class WebActivity extends BaseActivity {
         mWebView.clearCache(true);
         mWebView.clearFormData();
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-
+        mWebView.setDrawingCacheEnabled(true);
+        mWebView.addJavascriptInterface(new AppJs(this), "AppJs");
         if (Build.VERSION.SDK_INT >= 19) {
             mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else {
@@ -321,6 +327,19 @@ public class WebActivity extends BaseActivity {
     }
 
     protected void screenShot() {
+        mWebView.buildDrawingCache();
+        Bitmap bitmap = mWebView.getDrawingCache();
+        if (bitmap == null) {
+            Picture snapShot = mWebView.capturePicture();
+            bitmap = Bitmap.createBitmap(mWebView.getWidth(), getWindowManager().getDefaultDisplay().getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            snapShot.draw(canvas);
+        }
+        if (bitmap == null) {
+            Log.d(TAG, "获取图片失败");
+            return;
+        }
+        ImageUtils.saveImageToGallery(getApplicationContext(), bitmap);
     }
 
     protected boolean onShouldOverrideUrlLoading(WebView view, String url) {

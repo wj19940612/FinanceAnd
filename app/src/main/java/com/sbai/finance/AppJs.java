@@ -5,8 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 
-import com.sbai.finance.activity.activities.ActivitiesWebActivity;
-import com.sbai.finance.activity.activities.SkinExchangeRecordActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
@@ -14,6 +13,7 @@ import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
+import com.sbai.httplib.CookieManger;
 
 public class AppJs {
 
@@ -76,21 +76,22 @@ public class AppJs {
      * 显示兑换记录按钮
      */
     @JavascriptInterface
-    public void showExchangeButton(boolean isShow, final int activityCode) {
+    public void showExchangeButton(boolean isShow, String text, final String url) {
         if (mContext != null && mContext instanceof Activity) {
             final Activity activity = (Activity) mContext;
-            if (activity instanceof ActivitiesWebActivity) {
-                TitleBar titleBar = ((ActivitiesWebActivity) activity).getTitleBar();
+            if (activity instanceof WebActivity) {
+                TitleBar titleBar = ((WebActivity) activity).getTitleBar();
                 if (titleBar != null) {
                     if (isShow) {
-                        titleBar.setRightViewEnable(true);
-                        titleBar.setRightText(mContext.getString(R.string.exchange_record));
+                        titleBar.setRightVisible(true);
+                        titleBar.setRightText(text);
                         titleBar.setOnRightViewClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 if (LocalUser.getUser().isLogin()) {
-                                    Launcher.with(activity, SkinExchangeRecordActivity.class)
-                                            .putExtra(SkinExchangeRecordActivity.TYPE_ACTIVITIES, activityCode)
+                                    Launcher.with(activity, WebActivity.class)
+                                            .putExtra(WebActivity.EX_URL, url)
+                                            .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                                             .execute();
                                 } else {
                                     Launcher.with(activity, LoginActivity.class).execute();
@@ -98,7 +99,7 @@ public class AppJs {
                             }
                         });
                     } else {
-                        titleBar.setVisibility(View.GONE);
+                        titleBar.setRightVisible(false);
                     }
                 }
             }

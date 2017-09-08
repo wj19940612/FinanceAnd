@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.discovery.DailyReportActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
@@ -38,6 +39,7 @@ import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.MyTrainingRecord;
 import com.sbai.finance.model.training.Training;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -131,7 +133,19 @@ public class DiscoveryFragment extends BaseFragment {
         mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
             @Override
             public void onBannerClick(BannerModel information) {
+//                if (information.isH5Style()) {
+//                    Launcher.with(getActivity(), WebActivity.class)
+//                            .putExtra(WebActivity.EX_HTML, information.getContent())
+//                            .execute();
+//                } else {
+//                    Launcher.with(getActivity(), WebActivity.class)
+//                            .putExtra(WebActivity.EX_URL, information.getContent())
+//                            .execute();
+//                }
 
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, API.getHost() + "/lm/activityk.html ")
+                        .execute();
             }
         });
         mFeaturesNavigation.setOnNavItemClickListener(new FeaturesNavigation.OnNavItemClickListener() {
