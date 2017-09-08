@@ -23,6 +23,7 @@ import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
