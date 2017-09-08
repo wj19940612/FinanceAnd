@@ -7,13 +7,9 @@ import android.webkit.JavascriptInterface;
 
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
-import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
-import com.sbai.httplib.CookieManger;
 
 public class AppJs {
 
@@ -28,7 +24,7 @@ public class AppJs {
      */
     @JavascriptInterface
     public void openShareDialog(String title, String description, String shareUrl, String shareThumbnailUrl) {
-        if (mContext != null && mContext instanceof Activity) {
+        if (mContext instanceof Activity) {
             Activity activity = (Activity) mContext;
             ShareDialog.with(activity)
                     .setTitle(title)
@@ -56,7 +52,7 @@ public class AppJs {
      */
     @JavascriptInterface
     public void openBattlePage() {
-        if (mContext != null && mContext instanceof Activity) {
+        if (mContext instanceof Activity) {
             Activity activity = (Activity) mContext;
             Launcher.with(activity, BattleListActivity.class).execute();
         }
@@ -78,7 +74,7 @@ public class AppJs {
      */
     @JavascriptInterface
     public void showExchangeButton(final boolean isShow, final String text, final String url) {
-        if (mContext != null && mContext instanceof WebActivity) {
+        if (mContext instanceof WebActivity) {
             final WebActivity activity = (WebActivity) mContext;
             activity.runOnUiThread(new Runnable() {
                 @Override
@@ -98,7 +94,7 @@ public class AppJs {
      */
     @JavascriptInterface
     public void screenShot() {
-        if (mContext != null && mContext instanceof WebActivity) {
+        if (mContext instanceof WebActivity) {
             WebActivity activity = (WebActivity) mContext;
             activity.screenShot();
         }
