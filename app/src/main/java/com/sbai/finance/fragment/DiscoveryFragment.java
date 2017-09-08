@@ -145,6 +145,7 @@ public class DiscoveryFragment extends BaseFragment {
 
                 Launcher.with(getActivity(), WebActivity.class)
                         .putExtra(WebActivity.EX_URL, API.getHost() + "/lm/activityk.html ")
+                        .putExtra(WebActivity.EX_RAW_COOKIE,CookieManger.getInstance().getRawCookie())
                         .execute();
             }
         });

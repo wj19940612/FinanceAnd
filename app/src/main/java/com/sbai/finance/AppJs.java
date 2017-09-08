@@ -77,34 +77,31 @@ public class AppJs {
      * 显示兑换记录按钮
      */
     @JavascriptInterface
-    public void showExchangeButton(boolean isShow, String text, final String url) {
-        if (mContext != null && mContext instanceof Activity) {
-            final Activity activity = (Activity) mContext;
-            if (activity instanceof WebActivity) {
-                TitleBar titleBar = ((WebActivity) activity).getTitleBar();
-                if (titleBar != null) {
+    public void showExchangeButton(final boolean isShow, final String text, final String url) {
+        if (mContext != null && mContext instanceof WebActivity) {
+            final WebActivity activity = (WebActivity) mContext;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
                     if (isShow) {
-                        titleBar.setRightVisible(true);
-                        titleBar.setRightText(text);
-                        titleBar.setOnRightViewClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (LocalUser.getUser().isLogin()) {
-                                    Launcher.with(activity, WebActivity.class)
-                                            .putExtra(WebActivity.EX_URL, url)
-                                            .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-                                            .execute();
-                                } else {
-                                    Launcher.with(activity, LoginActivity.class).execute();
-                                }
-                            }
-                        });
+                        activity.showRightView(text, url);
                     } else {
-                        titleBar.setRightVisible(false);
+                        activity.hideRightView();
                     }
                 }
-            }
-
+            });
         }
     }
+
+    /**
+     * 截图
+     */
+    @JavascriptInterface
+    public void screenShot() {
+        if (mContext != null && mContext instanceof WebActivity) {
+            WebActivity activity = (WebActivity) mContext;
+            activity.screenShot();
+        }
+    }
+
 }

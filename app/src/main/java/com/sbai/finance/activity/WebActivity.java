@@ -25,9 +25,13 @@ import android.widget.ProgressBar;
 
 import com.sbai.finance.AppJs;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.httplib.CookieManger;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
@@ -249,6 +253,28 @@ public class WebActivity extends BaseActivity {
         getWebView().loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
     }
 
+    public void showRightView(String text, final String url) {
+        mTitleBar.setRightVisible(true);
+        mTitleBar.setRightText(text);
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_URL, url)
+                            .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
+        });
+    }
+
+    public void hideRightView() {
+        mTitleBar.setRightVisible(false);
+    }
+
     private String getHtmlData(String bodyHTML) {
         String head = "<head><style>img{max-width: 100%; width:auto; height: auto;}</style>" + INFO_HTML_META + "</head>";
         return "<html>" + head + bodyHTML + "</html>";
@@ -326,7 +352,7 @@ public class WebActivity extends BaseActivity {
         return true;
     }
 
-    protected void screenShot() {
+    public void screenShot() {
         mWebView.buildDrawingCache();
         Bitmap bitmap = mWebView.getDrawingCache();
         if (bitmap == null) {

@@ -485,6 +485,7 @@ public class ImageUtils {
         }
         // 最后通知图库更新
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+        ToastUtil.show("图片保存成功");
     }
 
     private static String getRootPath() {
