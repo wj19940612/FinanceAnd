@@ -22,7 +22,7 @@
         tools:drawableLeft="@drawable/ic_we_chat_pay"
         tools:text="微信支付"/>
 
-    <ImageView
+    <CheckBox
         android:id="@+id/checkboxClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,7 +30,20 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="14dp"
         android:clickable="false"
-        android:src="@drawable/checkbox_pay_way"/>
+        android:background="@drawable/checkout_select"
+        android:button="@null"/>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/balanceNotEnough"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="14dp"
+        android:text="@string/balance_not_enough"
+        android:textColor="@color/unluckyText"
+        android:textSize="15sp"/>
 
     <View
         android:layout_width="match_parent"

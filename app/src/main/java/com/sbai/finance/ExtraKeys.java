@@ -24,4 +24,5 @@ public interface ExtraKeys {
     String TRAIN_RESULT = "train_result";
 
     String RECHARGE_TYPE = "recharge_type";
+    String USER_FUND = "user_fund";
 }

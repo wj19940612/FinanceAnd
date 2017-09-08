@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,9 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.fund.RechargeActivity;
+import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -68,6 +69,9 @@ public class AccountFundDetailFragment extends BaseFragment {
     private ArrayList<AccountFundDetail> mAccountFundDetailList;
     private UserFundDetailAdapter mUserFundDetailAdapter;
     private boolean mLoadMore = true;
+    //用户账户资金 元宝
+    private double mFundCount;
+    private UserFundInfo mUserFundInfo;
 
 
     public static AccountFundDetailFragment newInstance(int type) {
@@ -107,22 +111,26 @@ public class AccountFundDetailFragment extends BaseFragment {
                 requestDetailList(true);
             }
         });
-        updateUserFund(0.0);
+        updateUserFund(null);
     }
 
-    public void updateUserFund(double fund) {
+    public void updateUserFund(UserFundInfo fund) {
+        mUserFundInfo = fund;
         switch (mFundType) {
             case AccountFundDetail.TYPE_CRASH:
                 mFundName.setText(R.string.mine_crash);
-                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparator(fund));
+                mFundCount = fund != null ? fund.getMoney() : 0;
+                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparator(mFundCount));
                 break;
             case AccountFundDetail.TYPE_INGOT:
                 mFundName.setText(R.string.mine_ingot);
-                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparatorAndScale(fund, 0));
+                mFundCount = fund != null ? fund.getYuanbao() : 0;
+                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparatorAndScale(mFundCount, 0));
                 break;
             case AccountFundDetail.TYPE_SCORE:
                 mFundName.setText(R.string.mine_score);
-                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparator(fund));
+                mFundCount = fund != null ? fund.getCredit() : 0;
+                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparator(mFundCount));
                 break;
         }
 
@@ -182,26 +190,12 @@ public class AccountFundDetailFragment extends BaseFragment {
         return recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange();
     }
 
-    public void scrollToTop() {
-        mRecyclerView.smoothScrollToPosition(0);
-    }
 
     private void requestDetailList(final boolean isRefresh) {
-        switch (mFundType) {
-            case AccountFundDetail.TYPE_CRASH:
-                requestUserCrashDetail(isRefresh);
-                break;
-            default:
-                requestUserIngotOrScoreDetail(isRefresh);
-                break;
-        }
 
-    }
-
-    private void requestUserCrashDetail(final boolean isRefresh) {
-        Client.requestUserFundCrashDetail(mPage)
-                .setTag(TAG)
+        Client.requestAccountFundDetailList(mFundType, mPage)
                 .setIndeterminate(this)
+                .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<AccountFundDetail>>, List<AccountFundDetail>>() {
                     @Override
                     protected void onRespSuccessData(List<AccountFundDetail> data) {
@@ -214,26 +208,8 @@ public class AccountFundDetailFragment extends BaseFragment {
                         stopRefreshAnimation();
                     }
                 })
-                .fire();
-    }
+                .fireFree();
 
-    private void requestUserIngotOrScoreDetail(final boolean isRefresh) {
-        Client.requestUserIngotOrScoreDetailList(mFundType, mPage)
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<AccountFundDetail>>, List<AccountFundDetail>>() {
-                    @Override
-                    protected void onRespSuccessData(List<AccountFundDetail> data) {
-                        updateDetailList(data, isRefresh);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        stopRefreshAnimation();
-                    }
-                })
-                .fire();
     }
 
     private void updateDetailList(List<AccountFundDetail> exchangeDetailList, boolean isRefresh) {
@@ -279,13 +255,15 @@ public class AccountFundDetailFragment extends BaseFragment {
                         .execute();
                 break;
             case AccountFundDetail.TYPE_INGOT:
-                Launcher.with(getActivity(), RechargeActivity.class)
+                Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
                         .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
+                        .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0)
                         .execute();
                 break;
             case AccountFundDetail.TYPE_SCORE:
-                Launcher.with(getActivity(), RechargeActivity.class)
+                Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
                         .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_SCORE)
+                        .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? Double.parseDouble(mUserFundInfo.getYuanbao() + "") : 0)
                         .execute();
                 break;
         }
@@ -378,12 +356,10 @@ public class AccountFundDetailFragment extends BaseFragment {
                 mTime.setText(DateUtil.formatUserFundDetailTime(detail.getCreateTime()));
                 mPayWay.setText(detail.getRemark());
 
+                mPayWay.setText(detail.getRemark());
+//                mPayWay.setText(context.getString(R.string.money_from, detail.getRemark(), detail.getPlatformName()));
                 if (fundType == AccountFundDetail.TYPE_CRASH) {
-                    if (!TextUtils.isEmpty(detail.getPlatformName())) {
-                        mPayWay.setText(context.getString(R.string.money_from, detail.getRemark(), detail.getPlatformName()));
-                    } else {
-                        mPayWay.setText(detail.getRemark());
-                    }
+
                     if (detail.getType() < 0) {
                         mMoney.setSelected(false);
                         mMoney.setText(context.getString(R.string.minus_string, FinanceUtil.formatWithScale(detail.getMoney())));
@@ -393,10 +369,8 @@ public class AccountFundDetailFragment extends BaseFragment {
                     }
                 } else {
 
-                    // TODO: 2017/9/7 以前的处理方式，需要对应接口修改I啊
-
                     if (detail.isIngot()) {
-                        if (detail.getFlowType() < 0) {
+                        if (detail.getType() > 0) {
                             mMoney.setText(context.getString(R.string.plus_int, (int) detail.getMoney()));
                             mMoney.setSelected(false);
                         } else {
@@ -404,7 +378,7 @@ public class AccountFundDetailFragment extends BaseFragment {
                             mMoney.setSelected(true);
                         }
                     } else {
-                        if (detail.getFlowType() < 0) {
+                        if (detail.getType() > 0) {
                             mMoney.setSelected(false);
                             mMoney.setText(context.getString(R.string.plus_string, FinanceUtil.formatWithScale(detail.getMoney())));
                         } else {

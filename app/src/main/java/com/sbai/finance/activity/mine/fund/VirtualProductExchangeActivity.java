@@ -1,0 +1,362 @@
+package com.sbai.finance.activity.mine.fund;
+
+import android.app.Dialog;
+import android.content.Context;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.sbai.finance.R;
+import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
+import com.sbai.finance.model.fund.AliPayOrderInfo;
+import com.sbai.finance.model.fund.UsableRechargeWay;
+import com.sbai.finance.model.fund.VirtualProductInfo;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.AliPayHelper;
+import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.OnItemClickListener;
+import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.view.SmartDialog;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.sbai.finance.R.id.position;
+
+/**
+ *
+ *
+ */
+
+public class VirtualProductExchangeActivity extends RechargeActivity {
+
+    private VirtualProductAdapter mVirtualProductAdapter;
+
+    //被选中的model
+    private VirtualProductInfo mSelectVirtualProductInfo;
+    private int mSelectProductPosition;
+
+    private boolean isIngotRecharge;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initData();
+        initView();
+        requestVirtualProductList();
+    }
+
+    private void initView() {
+        mRecharge.setEnabled(true);
+        mSplit.setBackgroundColor(Color.WHITE);
+        mCrashRecharge.setVisibility(View.GONE);
+        mVirtualProductRecycleView.setVisibility(View.VISIBLE);
+        mVirtualProductAdapter = new VirtualProductAdapter(getActivity(), new ArrayList<VirtualProductInfo>());
+        mVirtualProductRecycleView.setAdapter(mVirtualProductAdapter);
+        mVirtualProductRecycleView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+        mVirtualProductAdapter.setOnItemClickListener(new OnItemClickListener<VirtualProductInfo>() {
+            @Override
+            public void onItemClick(VirtualProductInfo virtualProductInfo, int position) {
+                if (mSelectVirtualProductInfo != null) {
+                    mSelectVirtualProductInfo.setSelect(false);
+                    mVirtualProductAdapter.notifyItemChanged(mSelectProductPosition, mSelectVirtualProductInfo);
+                }
+
+                if (mUserSelectRechargeWay.isBalancePay()) {
+                    changeUserFundEnoughStatus(virtualProductInfo);
+                } else if (mUserSelectRechargeWay.isIngotPay()) {
+                    changeUserFundEnoughStatus(virtualProductInfo);
+                }
+                changeUserSelectProduct(virtualProductInfo, position);
+                changeOtherPayStatus(virtualProductInfo);
+            }
+        });
+    }
+
+    private void changeOtherPayStatus(VirtualProductInfo virtualProductInfo) {
+        if (virtualProductInfo.getFromMoney() > mUserFundCount) {
+            mOtherRechargeWay.setBalanceIsEnough(false);
+            mRechargeWayAdapter.notifyItemChanged(mOtherRechargeWayPosition, mOtherRechargeWay);
+        } else {
+            mOtherRechargeWay.setBalanceIsEnough(true);
+            mRechargeWayAdapter.notifyItemChanged(mOtherRechargeWayPosition, mOtherRechargeWay);
+        }
+    }
+
+    private void changeConfirmBtnStatus() {
+        if (mUserSelectRechargeWay != null && mUserSelectRechargeWay.isIngotOrBalancePay()) {
+            mRecharge.setEnabled(mUserSelectRechargeWay.isBalanceIsEnough());
+        } else {
+            mRecharge.setEnabled(true);
+        }
+
+        String text = getString(R.string.confirm_money);
+        if (mRechargeType == AccountFundDetail.TYPE_INGOT) {
+            text = getString(R.string.confirm_payment_money, FinanceUtil.formatWithScale(mSelectVirtualProductInfo.getFromMoney()));
+        } else {
+            text = getString(R.string.confirm_payment_ingot, FinanceUtil.formatWithScale(mSelectVirtualProductInfo.getFromMoney(), 0));
+        }
+
+        mRecharge.setText(text);
+    }
+
+    private void changeUserFundEnoughStatus(VirtualProductInfo virtualProductInfo) {
+        if (virtualProductInfo.getFromMoney() > mUserFundCount) {
+            mUserSelectRechargeWay.setBalanceIsEnough(false);
+            mRechargeWayAdapter.notifyItemChanged(mHistorySelectPayWayPosition, mUserSelectRechargeWay);
+        } else {
+            mUserSelectRechargeWay.setBalanceIsEnough(true);
+            mRechargeWayAdapter.notifyItemChanged(mHistorySelectPayWayPosition, mUserSelectRechargeWay);
+        }
+    }
+
+    private void changeUserSelectProduct(VirtualProductInfo virtualProductInfo, int position) {
+        virtualProductInfo.setSelect(true);
+        mSelectVirtualProductInfo = virtualProductInfo;
+        mSelectProductPosition = position;
+        mVirtualProductAdapter.notifyItemChanged(position, virtualProductInfo);
+        changeConfirmBtnStatus();
+    }
+
+    private void initData() {
+        isIngotRecharge = mRechargeType == AccountFundDetail.TYPE_INGOT;
+        if (isIngotRecharge) {
+            mTitleBar.setTitle(R.string.ingot_recharge);
+        } else {
+            mTitleBar.setTitle(R.string.score_recharge);
+        }
+    }
+
+    private void requestVirtualProductList() {
+        Client.getExchangeProduct()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<VirtualProductInfo>>, List<VirtualProductInfo>>() {
+                    @Override
+                    protected void onRespSuccessData(List<VirtualProductInfo> data) {
+                        if (!data.isEmpty()) {
+                            ListIterator<VirtualProductInfo> virtualProductModelListIterator = data.listIterator();
+                            while (virtualProductModelListIterator.hasNext()) {
+                                VirtualProductInfo virtualProductInfo = virtualProductModelListIterator.next();
+                                if (mRechargeType == AccountFundDetail.TYPE_INGOT) {
+                                    if (!virtualProductInfo.isIngot()) {
+                                        virtualProductModelListIterator.remove();
+                                    }
+                                } else if (mRechargeType == AccountFundDetail.TYPE_SCORE) {
+                                    if (virtualProductInfo.isIngot()) {
+                                        virtualProductModelListIterator.remove();
+                                    }
+                                }
+                            }
+                            mVirtualProductAdapter.addAll(data);
+                            if (!data.isEmpty()) {
+                                mSelectVirtualProductInfo = data.get(0);
+                                changeUserSelectProduct(mSelectVirtualProductInfo, 0);
+                            }
+                        }
+                    }
+
+                })
+                .fireFree();
+
+    }
+
+    @Override
+    protected void updateVirtualProductSelect(UsableRechargeWay nowSelectRechargeWay, int nowSelectPosition,
+                                              UsableRechargeWay historySelectUsableRechargeWay, int historySelectPosition) {
+        if (!nowSelectRechargeWay.isIngotOrBalancePay()) {
+            historySelectUsableRechargeWay.setBalanceIsEnough(true);
+        }
+        historySelectUsableRechargeWay.setSelectPayWay(false);
+        mRechargeWayAdapter.notifyItemChanged(historySelectPosition, historySelectUsableRechargeWay);
+
+        nowSelectRechargeWay.setSelectPayWay(true);
+        mRechargeWayAdapter.notifyItemChanged(nowSelectPosition, position);
+        mHistorySelectPayWayPosition = nowSelectPosition;
+        mUserSelectRechargeWay = nowSelectRechargeWay;
+
+        if (nowSelectRechargeWay.isBalancePay()) {
+            changeUserFundEnoughStatus(mSelectVirtualProductInfo);
+        } else if (historySelectUsableRechargeWay.isIngotPay()) {
+            changeUserFundEnoughStatus(mSelectVirtualProductInfo);
+        }
+        changeConfirmBtnStatus();
+    }
+
+    @Override
+    protected void requestAliPayProductInfo(String money) {
+        // TODO: 2017/9/8 后期需要改
+        Client.requestAliPayOrderInfo(String.valueOf(mSelectVirtualProductInfo.getFromMoney()), 0)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<AliPayOrderInfo>, AliPayOrderInfo>() {
+                    @Override
+                    protected void onRespSuccessData(AliPayOrderInfo data) {
+                        new AliPayHelper(VirtualProductExchangeActivity.this).aliPay(data.getOrderString());
+                    }
+                })
+                .setTag(TAG)
+                .fire();
+    }
+
+    @Override
+    protected void confirmOtherPay(UsableRechargeWay userSelectRechargeWay) {
+        if (userSelectRechargeWay != null) {
+            if (userSelectRechargeWay.isIngotPay()) {
+                umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_BUY_INGOT);
+            } else {
+                umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_EXCHANGE_INTEGRAL);
+            }
+            showExchangeConfirmDialog(mSelectVirtualProductInfo);
+        }
+
+    }
+
+    private void showExchangeConfirmDialog(final VirtualProductInfo virtualProductInfo) {
+        String msg = virtualProductInfo.isIngot() ?
+                getString(R.string.confirm_use_money_buy_ingot, FinanceUtil.formatWithScale(virtualProductInfo.getFromMoney()), FinanceUtil.formatWithScale(virtualProductInfo.getToMoney(), 0)) :
+                getString(R.string.confirm_use_ingot_buy_integrate, StrFormatter.getFormIngot(virtualProductInfo.getFromMoney()), FinanceUtil.formatWithScale(virtualProductInfo.getToMoney(), 0));
+
+        String title = getString(R.string.confirm_recharge);
+        SmartDialog.with(getActivity(), msg, title)
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_POPUP_WINDOW_CONFIRM);
+                        dialog.dismiss();
+                        showInputSafetyPassDialog(virtualProductInfo);
+                    }
+                })
+                .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_POPUP_WINDOW_CANCEL);
+                    }
+                })
+                .show();
+    }
+
+    private void showInputSafetyPassDialog(final VirtualProductInfo item) {
+        String content = item.isIngot() ? getString(R.string.ingot_number, StrFormatter.getFormIngot(item.getToMoney())) :
+                getString(R.string.integrate_number, StrFormatter.getFormIntegrate(item.getToMoney()));
+        String hintText = item.isIngot() ? getString(R.string.buy) : getString(R.string.exchange);
+        InputSafetyPassDialogFragment.newInstance(content, hintText)
+                .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
+                    @Override
+                    public void onPassWord(String passWord) {
+                        exchangeVirtualProduct(item, passWord);
+                    }
+                }).show(getSupportFragmentManager());
+    }
+
+    private void exchangeVirtualProduct(VirtualProductInfo item, String passWord) {
+        Client.exchange(item.getId(), passWord, item.getFromMoney(), item.getToMoney())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        ToastUtil.show(resp.getMsg());
+                        finish();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
+                            //资金不足。不必管
+                        } else {
+                            ToastUtil.show(failedResp.getMsg());
+                            if (failedResp.getCode() == Resp.CODE_EXCHANGE_ITEM_IS_GONE
+                                    || failedResp.getCode() == Resp.CODE_EXCHANGE_ITEM_IS_MODIFIED) {
+                                requestVirtualProductList();
+                            }
+                        }
+                    }
+                }).fire();
+    }
+
+    static class VirtualProductAdapter extends RecyclerView.Adapter<VirtualProductAdapter.ViewHolder> {
+
+        private Context mContext;
+        private List<VirtualProductInfo> mVirtualProductModelList;
+        private OnItemClickListener mOnItemClickListener;
+
+        public VirtualProductAdapter(Context context, List<VirtualProductInfo> virtualProductModelList) {
+            this.mContext = context;
+            this.mVirtualProductModelList = virtualProductModelList;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.row_virtual_product, parent, false);
+            return new ViewHolder(view);
+        }
+
+        public void addAll(List<VirtualProductInfo> virtualProductModelList) {
+            mVirtualProductModelList.clear();
+            this.mVirtualProductModelList.addAll(virtualProductModelList);
+//            notifyItemRangeChanged(0, mVirtualProductModelList.size());
+            notifyDataSetChanged();
+        }
+
+        public void setOnItemClickListener(OnItemClickListener<VirtualProductInfo> onItemClickListener) {
+            mOnItemClickListener = onItemClickListener;
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bindDataWithView(mVirtualProductModelList.get(position),
+                    position, mOnItemClickListener, mContext);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mVirtualProductModelList.size();
+        }
+
+        static class ViewHolder extends RecyclerView.ViewHolder {
+
+            @BindView(R.id.product)
+            AppCompatTextView mProduct;
+
+            ViewHolder(View view) {
+                super(view);
+                ButterKnife.bind(this, view);
+            }
+
+            public void bindDataWithView(final VirtualProductInfo virtualProductModel, final int position,
+                                         final OnItemClickListener onItemClickListener, Context context) {
+                if (virtualProductModel == null) return;
+                if (virtualProductModel.isIngot()) {
+                    mProduct.setText(context.getString(R.string.number_ingot, FinanceUtil.formatWithScale(virtualProductModel.getToMoney(), 0)));
+                } else {
+                    mProduct.setText(context.getString(R.string.number_score, FinanceUtil.formatWithScale(virtualProductModel.getToMoney(), 0)));
+                }
+                mProduct.setSelected(virtualProductModel.isSelect());
+                mProduct.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onItemClick(virtualProductModel, position);
+                        }
+                    }
+                });
+            }
+        }
+    }
+}

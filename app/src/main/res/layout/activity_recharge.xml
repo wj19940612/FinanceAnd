@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.mine.wallet.RechargeActivity">
+    tools:context="com.sbai.finance.activity.mine.fund.RechargeActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,12 +16,19 @@
         android:orientation="vertical">
 
         <com.sbai.finance.view.TitleBar
+            android:id="@+id/titleBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/common_split_height"
             android:gravity="center_vertical"
             app:backFeature="true"
+            app:hasBottomSplitLine="true"
+            app:splitLineColor="@color/background"
             app:titleText="@string/recharge"/>
+
+        <View
+            android:id="@+id/split"
+            android:layout_width="match_parent"
+            android:layout_height="13dp"/>
 
         <LinearLayout
             android:id="@+id/crashRecharge"
@@ -52,8 +59,9 @@
                 android:inputType="numberDecimal"
                 android:maxLength="9"
                 android:textColor="@color/primaryText"
-                android:textColorHint="#bfbfbf"
+                android:textColorHint="@color/bank_card_hint"
                 android:textSize="15sp"/>
+
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
@@ -61,6 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
+            android:padding="@dimen/common_margin"
             android:visibility="gone"/>
 
         <android.support.v7.widget.RecyclerView
@@ -79,7 +88,7 @@
             android:layout_marginTop="31dp"
             android:background="@drawable/btn_primary_rounded"
             android:enabled="false"
-            android:text="@string/confirm_payment"
+            android:text="@string/confirm_money"
             android:textColor="@android:color/white"/>
 
         <android.support.v7.widget.AppCompatTextView

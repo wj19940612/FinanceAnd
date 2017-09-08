@@ -7,11 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.mine.AccountFundDetailFragment;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
@@ -73,15 +71,7 @@ public class EarningsAndExpendDetailsActivity extends BaseActivity {
 
             }
         });
-        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment = exchangeDetailAdapter.getFragment(mSelectPosition);
-                if (fragment != null) {
-                    ((AccountFundDetailFragment) (fragment)).scrollToTop();
-                }
-            }
-        });
+
     }
 
     class ExchangeDetailAdapter extends FragmentPagerAdapter {

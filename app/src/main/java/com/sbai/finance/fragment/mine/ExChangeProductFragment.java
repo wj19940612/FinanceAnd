@@ -143,7 +143,7 @@ public class ExChangeProductFragment extends BaseFragment {
     private void showExchangeConfirmDialog(final VirtualProductModel item) {
         String msg = item.isIngot() ? getString(R.string.confirm_use_money_buy_ingot, FinanceUtil.formatWithScale(item.getFromRealMoney()), StrFormatter.getFormIngot(item.getToRealMoney())) :
                 getString(R.string.confirm_use_ingot_buy_integrate, StrFormatter.getFormIngot(item.getFromRealMoney()), StrFormatter.getFormIntegrate(item.getToRealMoney()));
-        String title = item.isIngot() ? getString(R.string.buy_confirm) : getString(R.string.exchange_confirm);
+        String title = getString(R.string.confirm_recharge);
         SmartDialog.with(getActivity(), msg, title)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
@@ -364,7 +364,7 @@ public class ExChangeProductFragment extends BaseFragment {
                 if (item.isIngot()) {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_ingot_big, 0, 0, 0);
                     mProduct.setText(StrFormatter.getFormIngot(item.getToRealMoney()));
-                    mPrice.setText(context.getString(R.string.yuan, FinanceUtil.formatWithScale(item.getFromRealMoney())));
+                    mPrice.setText(context.getString(R.string.yuan_symbol, FinanceUtil.formatWithScale(item.getFromRealMoney())));
                 } else {
                     mProduct.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cell_integration, 0, 0, 0);
                     mProduct.setText(StrFormatter.getFormIntegrate(item.getToRealMoney()));

@@ -26,7 +26,7 @@ public class AccountFundDetail {
      * flowType : 45
      */
 
-    //流水类型
+    //流水类型  1元宝 2 积分 0 现金
     private int currencyType;
     private double money;
     private long createTime;
@@ -38,11 +38,8 @@ public class AccountFundDetail {
     private int userId;
     //流水后的金额
     private double moneyLeft;
-    //流水类型
-    private int flowType;
 
-    //现金的
-    private String platformName;
+    //用来判断正负
     private int type;
 
     public boolean isIngot() {
@@ -113,22 +110,6 @@ public class AccountFundDetail {
         this.moneyLeft = moneyLeft;
     }
 
-    public int getFlowType() {
-        return flowType;
-    }
-
-    public void setFlowType(int flowType) {
-        this.flowType = flowType;
-    }
-
-    public String getPlatformName() {
-        return platformName;
-    }
-
-    public void setPlatformName(String platformName) {
-        this.platformName = platformName;
-    }
-
     public int getType() {
         return type;
     }
@@ -148,8 +129,6 @@ public class AccountFundDetail {
                 ", typeDetail=" + typeDetail +
                 ", userId=" + userId +
                 ", moneyLeft=" + moneyLeft +
-                ", flowType=" + flowType +
-                ", platformName='" + platformName + '\'' +
                 ", type=" + type +
                 '}';
     }

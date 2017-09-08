@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
@@ -19,18 +18,16 @@ import java.util.Map;
  * Created by ${wangJie} on 2017/7/11.
  */
 
-public class AliPayUtils {
+public class AliPayHelper {
     private static final String TAG = "AliPayUtils";
 
     private static final int ALI_PAY_FLAG = 55000;
 
     private FragmentActivity mFragmentActivity;
-    private boolean mIsIntentionMoney;
 
-    public AliPayUtils(FragmentActivity activity, boolean isIntentionMoney) {
+    public AliPayHelper(FragmentActivity activity) {
         WeakReference<FragmentActivity> fragmentActivityWeakReference = new WeakReference<>(activity);
         mFragmentActivity = fragmentActivityWeakReference.get();
-        mIsIntentionMoney = isIntentionMoney;
     }
 
     @SuppressLint("HandlerLeak")
@@ -54,9 +51,7 @@ public class AliPayUtils {
 //                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
 //                        ToastUtil.show("支付失败");
 //                    }
-                    Log.d(TAG, "客户端 aliPayResult: " + aliPayResult.toString());
                     String toJson = new Gson().toJson(aliPayResult);
-                    Log.d(TAG, "handleMessage: " + toJson);
                     if (aliPayResult.isUserCancelPay()) {
                         return;
                     }
@@ -65,15 +60,8 @@ public class AliPayUtils {
                             .setCallback(new com.sbai.finance.net.Callback<Resp<Object>>() {
                                 @Override
                                 protected void onRespSuccess(Resp<Object> resp) {
-                                    Log.d(TAG, "onRespSuccess: " + resp.toString());
                                     if (resp.isSuccess()) {
                                         ToastUtil.show(resp.getMsg());
-                                        if (mIsIntentionMoney) {
-//                                            Intent intent = new Intent(mFragmentActivity, BorrowDetailsActivity.class);
-//                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                                            mFragmentActivity.startActivity(intent);
-                                        }
                                         mFragmentActivity.finish();
                                     } else {
                                         ToastUtil.show(resp.getMsg());

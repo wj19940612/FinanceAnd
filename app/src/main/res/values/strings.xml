@@ -336,7 +336,15 @@
     <string name="mine_crash">我的现金(元)</string>
     <string name="mine_score">我的积分</string>
     <string name="mine_ingot">我的元宝</string>
-    <string name="confirm_payment">确认支付  (%1$s)</string>
+    <string name="confirm_payment_money">确认支付  (%1$s元)</string>
+    <string name="confirm_payment_ingot">确认支付  (%1$s元宝)</string>
+    <string name="confirm_money">确认支付</string>
+    <string name="ingot_recharge">元宝充值</string>
+    <string name="score_recharge">积分充值</string>
+    <string name="balance_not_enough">余额不足</string>
+    <string name="number_ingot">%1$s元宝</string>
+    <string name="number_score">%1$s积分</string>
+    <string name="yuan">元</string>
 
     <!--银行卡绑定-->
     <string name="bind_bank_card_warn">持卡人必须与账号信息一致,信息不做其他用途</string>
@@ -404,7 +412,7 @@
     <string name="with_draw_check_is_submit">提现审核已提交</string>
     <string name="complete">完成</string>
     <string name="REM_HINT">￥</string>
-    <string name="yuan">￥%1$s</string>
+    <string name="yuan_symbol">￥%1$s</string>
     <string name="please_input_pass">请输入安全密码</string>
     <string name="input_money_more_than_limit">输入金额超过单笔限制</string>
     <string name="you_not_bind_bank_card">您还未绑定任何银行卡</string>
@@ -428,8 +436,6 @@
     <string name="old_price_exchange_integrate">原价: %1$s元宝</string>
     <string name="exchange">兑换</string>
     <string name="buy">购买</string>
-    <string name="exchange_confirm">确认兑换</string>
-    <string name="buy_confirm">确认购买</string>
     <string name="confirm_use_ingot_buy_integrate">确认使用%1$s元宝兑换%2$s积分?</string>
     <string name="confirm_use_money_buy_ingot">确认使用%1$s元购买%2$s元宝?</string>
     <string name="earnings">收入</string>
@@ -439,7 +445,7 @@
     <string name="buy_fail">购买失败</string>
     <string name="ingot_is_not_enough">元宝余额不足，请充值或降低兑换数量</string>
     <string name="money_is_not_enough">现金余额不足，请充值或降低购买数量</string>
-    <string name="is_not_set_safety_pass">未设置安全密码</string>
+    <string name="is_not_set_safety_pass">为了您的账户安全，请设置安全密码</string>
     <string name="full_text">...全文</string>
     <string name="go_to_set">去设置</string>
     <!--future versus-->

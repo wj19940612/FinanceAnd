@@ -1121,36 +1121,21 @@ public class Client {
     }
 
     /**
-     * 查询明细
+     * /user/userAccount/userFlow.do
+     * GET
+     * 用户流水 新接口 （wms）
      *
+     * @param type
      * @param page
      * @return
      */
-    public static API requestUserFundCrashDetail(int page) {
-        return new API("/user/userFlow/queryUserFlow.do",
+    public static API requestAccountFundDetailList(int type, int page) {
+        return new API("/user/userAccount/userFlow.do",
                 new ApiParams()
+                        .put("type", type)
                         .put("page", page)
                         .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
-
-    /**
-     * /user/userAccount/userCurrencyFlow.do
-     * GET
-     * 元宝积分明细（wms）
-     *
-     * @param currencyType
-     * @param page
-     * @return
-     */
-    // TODO: 2017/9/6 测试数据 ,后期需要换接口 
-    public static API requestUserIngotOrScoreDetailList(int currencyType, int page) {
-        return new API("/user/userAccount/userCurrencyFlow.do", new ApiParams()
-                .put("inOrOut", 1)
-                .put("currencyType", currencyType)
-                .put("page", page)
-                .put("pageSize", Client.DEFAULT_PAGE_SIZE));
-    }
-
 
     /**
      * 获取品种简介
@@ -1201,11 +1186,14 @@ public class Client {
 
     /**
      * 获取可用平台
+     * /user/finance/platform/selectUsablePlatformByType.do
+     * GET
+     * 可用支付平台（wms）
      *
      * @return
      */
-    public static API getUsablePlatform() {
-        return new API("/user/finance/platform/selectUsablePlatform.do");
+    public static API getUsablePlatform(int type) {
+        return new API("/user/finance/platform/selectUsablePlatformByType.do", new ApiParams().put("type", type));
     }
 
     /**

@@ -187,16 +187,8 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
 
                     }
                     break;
-                //   30.意向金支付成功
-                case HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS:
-                    if (!historyNewsModel.isLossEfficacy()) {
-                        Launcher.with(getActivity(), FundDetailActivity.class).execute();
-                    }
-                    break;
                 case HistoryNewsModel.WITH_DRAW_SUCCESS:
-                    if (!historyNewsModel.isLossEfficacy()) {
-                        Launcher.with(getActivity(), FundDetailActivity.class).execute();
-                    }
+
                     break;
                 case HistoryNewsModel.WITH_DRAW_FAIL:
                     if (!historyNewsModel.isLossEfficacy()) {

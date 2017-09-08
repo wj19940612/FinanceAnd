@@ -21,7 +21,7 @@ import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.fund.PaymentPath;
-import com.sbai.finance.model.fund.UsablePlatform;
+import com.sbai.finance.model.fund.UsableRechargeWay;
 import com.sbai.finance.model.fund.UserBankCardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -77,7 +77,7 @@ public class BankCardPayActivity extends BaseActivity {
     private String mMoney;
     private KeyBoardHelper mKeyBoardHelper;
     private int bottomHeight;
-    private UsablePlatform mUsablePlatform;
+    private UsableRechargeWay mUsableRechargeWay;
     private PaymentPath mPaymentPath;
 
     @Override
@@ -88,7 +88,7 @@ public class BankCardPayActivity extends BaseActivity {
         setKeyboardHelper();
         mMoney = getIntent().getStringExtra(Launcher.EX_PAYLOAD);
         mUserBankCardInfo = getIntent().getParcelableExtra(Launcher.EX_PAY_END);
-        mUsablePlatform = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD_1);
+        mUsableRechargeWay = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD_1);
 
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mAgreeProtocol.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -266,7 +266,7 @@ public class BankCardPayActivity extends BaseActivity {
 
     private void getBankPayAuthCode() {
         if (mUserBankCardInfo != null) {
-            Client.submitRechargeData(mUsablePlatform.getPlatform(), mMoney, mUserBankCardInfo.getId())
+            Client.submitRechargeData(mUsableRechargeWay.getPlatform(), mMoney, mUserBankCardInfo.getId())
                     .setRetryPolicy(new DefaultRetryPolicy(20000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
                     .setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<PaymentPath>, PaymentPath>() {

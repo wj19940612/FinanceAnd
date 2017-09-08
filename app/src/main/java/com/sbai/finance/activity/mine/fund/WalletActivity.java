@@ -87,17 +87,17 @@ public class WalletActivity extends BaseActivity {
         if (fund != null) {
             AccountFundDetailFragment ingotFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(0);
             if (ingotFragment != null) {
-                ingotFragment.updateUserFund(fund.getYuanbao());
+                ingotFragment.updateUserFund(fund);
             }
 
             AccountFundDetailFragment accountCrashFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(1);
             if (accountCrashFragment != null) {
-                accountCrashFragment.updateUserFund(fund.getMoney());
+                accountCrashFragment.updateUserFund(fund);
             }
 
             AccountFundDetailFragment scoreFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(2);
             if (scoreFragment != null) {
-                scoreFragment.updateUserFund(fund.getCredit());
+                scoreFragment.updateUserFund(fund);
             }
         }
     }

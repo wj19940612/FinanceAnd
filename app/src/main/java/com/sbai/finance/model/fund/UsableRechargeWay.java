@@ -4,16 +4,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by lixiaokuan0819 on 2017/5/16.
+ * 充值方式model
  */
 
-public class UsablePlatform implements Parcelable {
+public class UsableRechargeWay implements Parcelable {
 
-    public static final int TYPE_AIL_PAY = 1;
-    public static final int TYPE_WECHAT_PAY = 2;
-    public static final int TYPE_BANK_PAY = 3;
+    public static final int TYPE_RECHARGE_PAY_AIL = 1;
+    public static final int TYPE_RECHARGE_WE_CHAT_PAY = 2;
+    public static final int TYPE_RECHARGE_PAY_BANK = 3;
+    public static final int TYPE_RECHARGE_PAY_BALANCE = 4;
+    public static final int TYPE_RECHARGE_PAY_INGOT = 5;
 
-    public static final String PLATFORM_AIL_PAY = "alipay";
 
     /**
      * createTime : 1494402852000
@@ -35,16 +36,30 @@ public class UsablePlatform implements Parcelable {
     private int id;
     private String name;
     private int payment;
+    //平台简称
     private String platform;
     private int status;
     private int transfer;
     private long updateTime;
-    //1 支付宝
+    //1 支付宝  2 微信  3银行卡  4 现金余额  5 元宝余额
     private int type;
+
+
+    //是否是被选中的方式
     private boolean isSelectPayWay;
+    //余额是否充足
+    private boolean balanceIsEnough = true;
 
     public boolean isSelectPayWay() {
         return isSelectPayWay;
+    }
+
+    public boolean isBalanceIsEnough() {
+        return balanceIsEnough;
+    }
+
+    public void setBalanceIsEnough(boolean balanceIsEnough) {
+        this.balanceIsEnough = balanceIsEnough;
     }
 
     public void setSelectPayWay(boolean selectPayWay) {
@@ -52,16 +67,30 @@ public class UsablePlatform implements Parcelable {
     }
 
     public boolean isWeChatPay() {
-        return getType() == TYPE_WECHAT_PAY;
+        return getType() == TYPE_RECHARGE_WE_CHAT_PAY;
     }
 
     public boolean isAliPay() {
-        return getType() == TYPE_AIL_PAY;
+        return getType() == TYPE_RECHARGE_PAY_AIL;
     }
 
     public boolean isBankPay() {
-        return getType() == TYPE_BANK_PAY;
+        return getType() == TYPE_RECHARGE_PAY_BANK;
     }
+
+
+    public boolean isIngotOrBalancePay() {
+        return getType() == TYPE_RECHARGE_PAY_BALANCE || getType() == TYPE_RECHARGE_PAY_INGOT;
+    }
+
+    public boolean isBalancePay() {
+        return getType() == TYPE_RECHARGE_PAY_BALANCE;
+    }
+
+    public boolean isIngotPay() {
+        return getType() == TYPE_RECHARGE_PAY_INGOT;
+    }
+
 
     public int getType() {
         return type;
@@ -151,7 +180,7 @@ public class UsablePlatform implements Parcelable {
                 '}';
     }
 
-    public UsablePlatform() {
+    public UsableRechargeWay() {
     }
 
     @Override
@@ -173,7 +202,7 @@ public class UsablePlatform implements Parcelable {
         dest.writeByte(this.isSelectPayWay ? (byte) 1 : (byte) 0);
     }
 
-    protected UsablePlatform(Parcel in) {
+    protected UsableRechargeWay(Parcel in) {
         this.createTime = in.readLong();
         this.id = in.readInt();
         this.name = in.readString();
@@ -186,15 +215,15 @@ public class UsablePlatform implements Parcelable {
         this.isSelectPayWay = in.readByte() != 0;
     }
 
-    public static final Creator<UsablePlatform> CREATOR = new Creator<UsablePlatform>() {
+    public static final Creator<UsableRechargeWay> CREATOR = new Creator<UsableRechargeWay>() {
         @Override
-        public UsablePlatform createFromParcel(Parcel source) {
-            return new UsablePlatform(source);
+        public UsableRechargeWay createFromParcel(Parcel source) {
+            return new UsableRechargeWay(source);
         }
 
         @Override
-        public UsablePlatform[] newArray(int size) {
-            return new UsablePlatform[size];
+        public UsableRechargeWay[] newArray(int size) {
+            return new UsableRechargeWay[size];
         }
     };
 }

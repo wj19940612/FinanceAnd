@@ -199,7 +199,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                 break;
             case R.id.withdraw:
                 umengEventCount(UmengCountEventIdUtils.WITHDRAW_NEXT_STEP);
-                InputSafetyPassDialogFragment.newInstance(getString(R.string.yuan, mWithdrawMoney.getText().toString())).show(getSupportFragmentManager());
+                InputSafetyPassDialogFragment.newInstance(getString(R.string.yuan_symbol, mWithdrawMoney.getText().toString())).show(getSupportFragmentManager());
                 break;
             case R.id.connect_service:
                 umengEventCount(UmengCountEventIdUtils.WITHDRAW_CONTACT_CUSTOMER_SERVICE);

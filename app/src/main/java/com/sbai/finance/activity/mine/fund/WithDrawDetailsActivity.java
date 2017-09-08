@@ -40,8 +40,8 @@ public class WithDrawDetailsActivity extends AppCompatActivity {
             String withDrawBankAndNumber = "      " + userBankCardInfo.getIssuingBankName() + "  (" + userBankCardInfo.getCardNumber().substring(userBankCardInfo.getCardNumber().length() - 4) + ")";
             mBankCardAndName.setText(withDrawBankAndNumber);
         }
-        mWithDrawMoney.setText(getString(R.string.yuan, FinanceUtil.formatWithScale(money)));
-        mPoundage.setText(getString(R.string.yuan, FinanceUtil.formatWithScale(mPredict_poundage)));
+        mWithDrawMoney.setText(getString(R.string.yuan_symbol, FinanceUtil.formatWithScale(money)));
+        mPoundage.setText(getString(R.string.yuan_symbol, FinanceUtil.formatWithScale(mPredict_poundage)));
     }
 
     @OnClick(R.id.withdraw)
