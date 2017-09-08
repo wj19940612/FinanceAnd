@@ -143,6 +143,13 @@
                                     tools:text="100 次阅读"/>
                             </LinearLayout>
 
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_common_mask_black"/>
+
 
                             <TextView
                                 android:id="@+id/title1"
@@ -177,7 +184,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:adjustViewBounds="true"
-                                    android:scaleType="fitXY"
+                                    android:scaleType="centerCrop"
                                     tools:src="@drawable/ic_feedback_time_bg"/>
 
                                 <TextView
@@ -185,7 +192,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:ellipsize="end"
-                                    android:gravity="center_vertical"
+                                    android:gravity="center"
                                     android:maxLines="2"
                                     android:padding="@dimen/common_padding"
                                     android:textColor="@android:color/white"
@@ -203,7 +210,7 @@
                                     android:id="@+id/image3"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:scaleType="fitXY"
+                                    android:scaleType="centerCrop"
                                     tools:src="@drawable/ic_feedback_time_bg"/>
 
                                 <TextView
