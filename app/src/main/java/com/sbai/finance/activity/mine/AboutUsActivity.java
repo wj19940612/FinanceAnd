@@ -102,7 +102,8 @@ public class AboutUsActivity extends BaseActivity {
                 break;
             case R.id.action_product:
                 umengEventCount(UmengCountEventIdUtils.ME_FUNCTION_INTRODUCE);
-                Launcher.with(getActivity(), WebActivity.class).putExtra(WebActivity.EX_URL, Client.ABOUT_US_PAGE_URL).execute();
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, Client.ABOUT_US_PAGE_URL).execute();
                 break;
             case R.id.user_protocol:
                 umengEventCount(UmengCountEventIdUtils.ME_USER_AGREEMENT);

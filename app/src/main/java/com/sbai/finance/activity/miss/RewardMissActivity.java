@@ -197,7 +197,7 @@ public class RewardMissActivity extends BaseActivity {
                         mRewardArea.setVisibility(View.VISIBLE);
                     }
                 })
-                .setPositive(R.string.go_exchange, new SmartDialog.OnClickListener() {
+                .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();

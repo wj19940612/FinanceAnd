@@ -50,7 +50,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void gotoMain() {
-        if (Preference.get().isFirstOpenApp() || Preference.get().isGuideUpdate(AppInfo.getVersionName(this))) {
+        if (Preference.get().isShowGuide()) {
             startActivity(new Intent(this, GuideActivity.class));
         } else {
             startActivity(new Intent(this, MainActivity.class));

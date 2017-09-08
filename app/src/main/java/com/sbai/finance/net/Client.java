@@ -2,9 +2,11 @@ package com.sbai.finance.net;
 
 import com.android.volley.Request;
 import com.google.gson.Gson;
+import com.sbai.finance.App;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.levelevaluation.QuestionAnswer;
+import com.sbai.finance.utils.AppInfo;
 import com.sbai.httplib.ApiParams;
 
 
@@ -14,7 +16,7 @@ public class Client {
     public static final int DEFAULT_PAGE_SIZE = 20;
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
-    public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
+    public static final String ABOUT_US_PAGE_URL = API.getHost() + "/lm/introduce.html";
     //h5的用户协议界面网址
     public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/authCodeLogin/user_protocol?nohead=1";
 
@@ -266,7 +268,8 @@ public class Client {
                 .put("phone", phone)
                 .put("msgCode", authCode)
                 .put("deviceId", Preference.get().getPushClientId())
-                .put("platform", 0));
+                .put("platform", 0)
+                .put("channel", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL")));
     }
 
     /**
@@ -298,7 +301,8 @@ public class Client {
                 .put("password", password)
                 .put("code", code)
                 .put("deviceId", Preference.get().getPushClientId())
-                .put("platform", 0));
+                .put("platform", 0)
+                .put("channel", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL")));
     }
 
     /**
