@@ -127,6 +127,7 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
                 }else {
                     ToastUtil.show(getString(R.string.please_open_camera_permission));
                 }
+                this.dismissAllowingStateLoss();
                 break;
             case R.id.takePhoneFromGallery:
                 if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
@@ -136,9 +137,10 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
                 } else {
                     ToastUtil.show(R.string.sd_is_not_useful);
                 }
+                this.dismissAllowingStateLoss();
                 break;
             case R.id.takePhoneCancel:
-                this.dismiss();
+                this.dismissAllowingStateLoss();
                 break;
         }
     }
