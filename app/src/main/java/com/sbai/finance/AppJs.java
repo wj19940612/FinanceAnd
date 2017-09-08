@@ -32,6 +32,7 @@ public class AppJs {
             Activity activity = (Activity) mContext;
             ShareDialog.with(activity)
                     .setTitle(title)
+                    .setTitleVisible(false)
                     .setShareTitle(title)
                     .setShareDescription(description)
                     .setShareUrl(shareUrl)
