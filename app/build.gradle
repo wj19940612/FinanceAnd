@@ -232,7 +232,7 @@ android {
                     GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
                     GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
                     UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "OFFICIAL"
+                    UMENG_CHANNEL   : "others"
             ]
         }
 
