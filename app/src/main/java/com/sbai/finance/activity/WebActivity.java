@@ -283,7 +283,9 @@ public class WebActivity extends BaseActivity {
             } else {
                 mTitleBar.setTitle(mTitle);
             }
-
+            if (url.contains("/lm/screenshot.html")) {
+                screenShot();
+            }
         }
 
         @Override
@@ -316,6 +318,9 @@ public class WebActivity extends BaseActivity {
 
     protected boolean isNeedViewTitle() {
         return true;
+    }
+
+    protected void screenShot() {
     }
 
     protected boolean onShouldOverrideUrlLoading(WebView view, String url) {

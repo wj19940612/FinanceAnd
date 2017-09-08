@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,6 +38,7 @@ import butterknife.ButterKnife;
  */
 
 public class SkinExchangeRecordActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+    public static final String TYPE_ACTIVITIES = "TYPE_ACTIVITIES";
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.listView)
@@ -57,10 +59,15 @@ public class SkinExchangeRecordActivity extends BaseActivity implements CustomSw
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exchange_skin_record_list);
         ButterKnife.bind(this);
+        initData(getIntent());
         initListHeader();
         initListFooter();
         initListView();
         requestSkinRecordList();
+    }
+
+    private void initData(Intent intent) {
+        mActivityId = intent.getIntExtra(TYPE_ACTIVITIES, -1);
     }
 
     private void initListHeader() {
