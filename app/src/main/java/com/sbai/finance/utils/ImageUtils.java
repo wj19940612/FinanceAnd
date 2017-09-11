@@ -487,7 +487,6 @@ public class ImageUtils {
         }
         // 最后通知图库更新
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
-        ToastUtil.show(context.getString(R.string.image_saved_please_open_wechat_to_share));
     }
 
     private static String getRootPath() {

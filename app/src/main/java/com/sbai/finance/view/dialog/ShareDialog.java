@@ -1,6 +1,8 @@
 package com.sbai.finance.view.dialog;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -263,5 +265,36 @@ public class ShareDialog {
                 .setGravity(Gravity.BOTTOM)
                 .setWindowAnim(R.style.BottomDialogAnimation)
                 .show();
+    }
+
+
+    public static void shareImageToWechat(Context context, Bitmap bitmap) {
+        UMImage image = new UMImage(context, bitmap);
+        if (context instanceof Activity) {
+            new ShareAction((Activity) context)
+                    .withMedia(image)
+                    .setPlatform(SHARE_MEDIA.WEIXIN)
+                    .setCallback(new UMShareListener() {
+                        @Override
+                        public void onStart(SHARE_MEDIA share_media) {
+                        }
+
+                        @Override
+                        public void onResult(SHARE_MEDIA share_media) {
+                            ToastUtil.show(R.string.share_succeed);
+                        }
+
+                        @Override
+                        public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                            ToastUtil.show(R.string.share_failed);
+                        }
+
+                        @Override
+                        public void onCancel(SHARE_MEDIA share_media) {
+                            ToastUtil.show(R.string.share_cancel);
+                        }
+                    })
+                    .share();
+        }
     }
 }
