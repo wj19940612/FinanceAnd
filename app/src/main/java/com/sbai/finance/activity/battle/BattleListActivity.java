@@ -185,7 +185,6 @@ public class BattleListActivity extends BaseActivity implements
                 .load(R.drawable.battle_banner)
                 .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .priority(Priority.HIGH)
-                .fitCenter()
                 .into(new DrawableImageViewTarget(battleBanner) {
                     @Override
                     public void onResourceReady(Drawable resource, @Nullable Transition<? super Drawable> transition) {

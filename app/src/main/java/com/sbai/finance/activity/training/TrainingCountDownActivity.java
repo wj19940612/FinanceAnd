@@ -2,21 +2,13 @@ package com.sbai.finance.activity.training;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.android.volley.VolleyError;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
@@ -34,8 +26,8 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.GifView;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
-import com.sbai.glide.GlideApp;
 import com.sbai.httplib.BuildConfig;
 
 import java.util.ArrayList;
@@ -51,7 +43,7 @@ import butterknife.ButterKnife;
 public class TrainingCountDownActivity extends BaseActivity {
 
     @BindView(R.id.gif)
-    ImageView mGif;
+    GifView mGif;
     @BindView(R.id.background)
     RelativeLayout mBackground;
 
@@ -218,7 +210,7 @@ public class TrainingCountDownActivity extends BaseActivity {
     }
 
     private void startGifAnimation() {
-        if (mGifRes != 0) {
+        /*if (mGifRes != 0) {
             GlideApp.with(getActivity())
                     .load(mGifRes)
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
@@ -239,7 +231,17 @@ public class TrainingCountDownActivity extends BaseActivity {
                         }
                     })
                     .into(mGif);
-        }
+        }*/
+        mGif.setGifResource(mGifRes);
+        mGif.play();
+        mGif.setGifCallBack(new GifView.GifCallBack() {
+            @Override
+            public void onGifPaying(boolean playing) {
+                if (!playing) {
+                    mHandler.sendEmptyMessage(0);
+                }
+            }
+        });
     }
 
     @Override

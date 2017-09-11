@@ -10,7 +10,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.Glide;
+import com.sbai.glide.GlideApp;
 
 /**
  * @author zhy
@@ -68,7 +68,7 @@ public class ClipImageLayout extends RelativeLayout {
 //        int width = getImageWidthHeight(bitmapUrl)[0];
 //        int height = getImageWidthHeight(bitmapUrl)[1];
 
-        Glide.with(getContext()).load(bitmapUrl).fitCenter().into(mZoomImageView);
+        GlideApp.with(getContext()).load(bitmapUrl).fitCenter().into(mZoomImageView);
     }
 
     public static int[] getImageWidthHeight(String path) {

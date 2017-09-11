@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,7 +60,7 @@ public class AvatarDialogFragment extends DialogFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		mUserPortrait = getArguments().getString(Launcher.EX_PAYLOAD);
-		Glide.with(getActivity()).load(mUserPortrait)
+		GlideApp.with(getActivity()).load(mUserPortrait)
 				.placeholder(R.drawable.ic_default_avatar_big)
 				.into(mAvatar);
 		mDialog = getDialog();

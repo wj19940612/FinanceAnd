@@ -6,10 +6,10 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.glide.GlideApp;
 
 import java.util.List;
 
@@ -102,7 +102,7 @@ public class ImageListView extends RelativeLayout {
     }
 
     private void loadImage(ImageView imageView, String url) {
-        Glide.with(getContext())
+        GlideApp.with(getContext())
                 .load(url).placeholder(R.drawable.ic_default_avatar)
                 .transform(new GlideCircleTransform(getContext()))
                 .into(imageView);

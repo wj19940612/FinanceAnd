@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
@@ -34,6 +33,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -448,7 +448,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 mIdentityCardReverseImage.setBackground(null);
             }
-            Glide.with(this).load(imagePath)
+            GlideApp.with(this).load(imagePath)
                     .centerCrop()
                     .placeholder(R.drawable.bg_add_identity_card_reserve)
                     .error(R.drawable.bg_add_identity_card_reserve)
@@ -463,7 +463,7 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 mIdentityCardFrontImage.setBackground(null);
             }
-            Glide.with(this).load(imagePath)
+            GlideApp.with(this).load(imagePath)
                     .skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .placeholder(R.drawable.bg_add_identity_card_font)

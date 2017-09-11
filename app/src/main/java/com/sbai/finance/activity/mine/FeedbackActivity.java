@@ -23,14 +23,13 @@ import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.JsonObject;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.dialog.UploadFeedbackImageDialogFragment;
 import com.sbai.finance.fragment.dialog.PreviewDialogFragment;
+import com.sbai.finance.fragment.dialog.UploadFeedbackImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.Feedback;
 import com.sbai.finance.net.Callback;
@@ -44,6 +43,7 @@ import com.sbai.finance.utils.GlideThumbTransform;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -523,19 +523,19 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     //create imageview and add
                     imageview = createImageview(context);
                     mWrapper.addView(imageview);
-                    Glide.with(context).load(feedback.getContent())
-                            .bitmapTransform(new GlideThumbTransform(context))
+                    GlideApp.with(context).load(feedback.getContent())
+                            .transform(new GlideThumbTransform(context))
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(imageview);
                 }
                 if (!TextUtils.isEmpty(feedback.getUserPortrait())) {
-                    Glide.with(context).load(feedback.getUserPortrait())
-                            .bitmapTransform(new GlideCircleTransform(context))
+                    GlideApp.with(context).load(feedback.getUserPortrait())
+                            .transform(new GlideCircleTransform(context))
                             .placeholder(R.drawable.ic_avatar_feedback)
                             .into(mHeadImage);
                 } else {
-                    Glide.with(context).load(feedback.getPortrait())
-                            .bitmapTransform(new GlideCircleTransform(context))
+                    GlideApp.with(context).load(feedback.getPortrait())
+                            .transform(new GlideCircleTransform(context))
                             .placeholder(R.drawable.ic_avatar_feedback)
                             .into(mHeadImage);
                 }
@@ -619,8 +619,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     mTimestamp.setText(DateUtil.format(DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT), FORMAT_HOUR_MINUTE));
                 }
                 mText.setText(feedback.getContent());
-                Glide.with(context).load(R.drawable.ic_feedback_service)
-                        .bitmapTransform(new GlideCircleTransform(context))
+                GlideApp.with(context).load(R.drawable.ic_feedback_service)
+                        .transform(new GlideCircleTransform(context))
                         .into(mHeadImage);
             }
         }

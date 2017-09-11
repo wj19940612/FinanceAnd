@@ -29,7 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -60,6 +59,7 @@ import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.VerticalSwipeRefreshLayout;
+import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -680,7 +680,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             public void bindDataWithView(Context context, final Miss item, final OnItemClickListener onItemClickListener) {
                 if (item == null) return;
 
-                Glide.with(context).load(item.getPortrait())
+                GlideApp.with(context).load(item.getPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
                         .transform(new GlideCircleTransform(context))
                         .into(mAvatar);
@@ -770,12 +770,12 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             public void bindingData(final Context context, final Question item, final Callback callback) {
                 if (item == null) return;
 
-                Glide.with(context).load(item.getUserPortrait())
+                GlideApp.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .transform(new GlideCircleTransform(context))
                         .into(mAvatar);
 
-                Glide.with(context).load(item.getCustomPortrait())
+                GlideApp.with(context).load(item.getCustomPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .transform(new GlideCircleTransform(context))
                         .into(mMissAvatar);

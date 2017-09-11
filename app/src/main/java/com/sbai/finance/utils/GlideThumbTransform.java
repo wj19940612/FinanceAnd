@@ -9,6 +9,8 @@ import android.graphics.Paint;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
+import java.security.MessageDigest;
+
 /**
  * Created by linrongfang on 2017/5/9.
  * 获取图片后压缩
@@ -63,7 +65,7 @@ public class GlideThumbTransform extends BitmapTransformation {
     }
 
     @Override
-    public String getId() {
-        return getClass().getName();
+    public void updateDiskCacheKey(MessageDigest messageDigest) {
+
     }
 }

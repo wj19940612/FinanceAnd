@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -28,6 +27,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.List;
 
@@ -201,8 +201,8 @@ public class OpinionActivity extends BaseActivity implements AbsListView.OnScrol
             }
 
             private void bindDataWithView(ViewPointMater item, Context context) {
-                Glide.with(context).load(item.getUserPortrait())
-                        .bitmapTransform(new GlideCircleTransform(context))
+                GlideApp.with(context).load(item.getUserPortrait())
+                        .transform(new GlideCircleTransform(context))
                         .placeholder(R.drawable.ic_default_avatar)
                         .into(mUserImg);
                 mUserName.setText(item.getUserName());
