@@ -435,7 +435,7 @@ public class BattleListActivity extends BaseActivity implements
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
-                        showJoinBattleFailureDialog(failedResp);
+                        showJoinBattleFailureDialog(failedResp, data);
                     }
                 }).fireFree();
     }
@@ -594,6 +594,7 @@ public class BattleListActivity extends BaseActivity implements
                 umengEventCount(UmengCountEventId.BATTLE_HALL_CREATE_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), CreateBattleActivity.class)
+                            .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
                             .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -645,7 +646,7 @@ public class BattleListActivity extends BaseActivity implements
 
     }
 
-    private void showJoinBattleFailureDialog(final Resp failedResp) {
+    private void showJoinBattleFailureDialog(final Resp failedResp, final Battle data) {
         final int code = failedResp.getCode();
         String msg = failedResp.getMsg();
         int positiveMsg;
@@ -674,7 +675,7 @@ public class BattleListActivity extends BaseActivity implements
                                         .execute();
                             }
                         } else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
-                            openRechargePage(mCurrentBattle);
+                            openRechargePage(data);
                         }
                     }
                 })
