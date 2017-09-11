@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.glide.GlideApp;
 
 /**
  * Created by linrongfang on 2017/7/10.
@@ -35,7 +35,7 @@ public class StartGameDialog extends BaseDialog {
 
         ImageView matchHead = (ImageView) customView.findViewById(R.id.matchHead);
 
-        Glide.with(activity)
+        GlideApp.with(activity)
                 .load(url)
                 .placeholder(R.drawable.ic_default_avatar_big)
                 .transform(new GlideCircleTransform(activity))

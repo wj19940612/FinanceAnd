@@ -34,6 +34,9 @@ import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.CookieManger;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -63,6 +66,7 @@ public class WebActivity extends BaseActivity {
     protected String mTitle;
     protected String mRawCookie;
     protected String mPureHtml;
+    private Set<String> mUrlSet;
 
     private BroadcastReceiver mNetworkChangeReceiver;
     private WebViewClient mWebViewClient;
@@ -87,6 +91,7 @@ public class WebActivity extends BaseActivity {
         mNetworkChangeReceiver = new NetworkReceiver();
         mLoadSuccess = true;
         initData(getIntent());
+        mUrlSet = new HashSet<>();
         initWebView();
         mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
             @Override
@@ -254,6 +259,7 @@ public class WebActivity extends BaseActivity {
     }
 
     public void showRightView(String text, final String url) {
+        mUrlSet.add(mPageUrl);
         mTitleBar.setRightVisible(true);
         mTitleBar.setRightText(text);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
@@ -314,6 +320,9 @@ public class WebActivity extends BaseActivity {
                 mTitleBar.setTitle(mTitle);
             } else {
                 mTitleBar.setTitle(mTitle);
+            }
+            if (!mUrlSet.contains(url)) {
+                hideRightView();
             }
         }
 

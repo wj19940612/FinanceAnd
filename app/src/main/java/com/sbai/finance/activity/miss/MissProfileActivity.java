@@ -25,7 +25,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -52,6 +51,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.MissProfileSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -375,7 +375,7 @@ public class MissProfileActivity extends BaseActivity implements
 	}
 
 	private void updateMissDetail(final Miss miss) {
-		Glide.with(this).load(miss.getPortrait())
+		GlideApp.with(this).load(miss.getPortrait())
 				.placeholder(R.drawable.ic_default_avatar)
 				.transform(new GlideCircleTransform(this))
 				.into(mAvatar);
@@ -647,12 +647,12 @@ public class MissProfileActivity extends BaseActivity implements
 			                        final int position, final ItemCallback callback) {
 				if (item == null) return;
 
-				Glide.with(context).load(item.getUserPortrait())
+				GlideApp.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(context))
 						.into(mAvatar);
 
-				Glide.with(context).load(item.getCustomPortrait())
+				GlideApp.with(context).load(item.getCustomPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(context))
 						.into(mMissAvatar);
