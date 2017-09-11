@@ -399,17 +399,12 @@ public class WebActivity extends BaseActivity {
             Log.d(TAG, "获取图片失败");
             return;
         }
-        final Bitmap finalBitmap = bitmap;
-        SmartDialog.single(getActivity(), getString(R.string.image_saved_please_open_wechat_to_share))
-                .setTitle(R.string.share_to_wechat)
-                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        ShareDialog.shareImageToWechat(getActivity(), finalBitmap);
-                    }
-                })
-                .setNegative(R.string.cancel)
+        ShareDialog.with(getActivity())
+                .setTitle(getString(R.string.share_to))
+                .setTitleVisible(false)
+                .hasFeedback(false)
+                .hasWeiBo(false)
+                .setBitmap(bitmap)
                 .show();
         ImageUtils.saveImageToGallery(getApplicationContext(), bitmap);
     }
