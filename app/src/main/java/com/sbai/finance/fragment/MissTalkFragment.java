@@ -253,6 +253,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                                     public void onCompletion(MediaPlayer mp) {
                                         item.setPlaying(false);
                                         mHotQuestionListAdapter.notifyDataSetChanged();
+                                        mPlayingID = -1;
                                     }
                                 });
 
@@ -277,6 +278,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                             public void onCompletion(MediaPlayer mp) {
                                 item.setPlaying(false);
                                 mHotQuestionListAdapter.notifyDataSetChanged();
+                                mPlayingID = -1;
                             }
                         });
                         item.setPlaying(true);
@@ -351,6 +353,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                                     public void onCompletion(MediaPlayer mp) {
                                         item.setPlaying(false);
                                         mLatestQuestionListAdapter.notifyDataSetChanged();
+                                        mPlayingID = -1;
                                     }
                                 });
 
@@ -375,6 +378,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                             public void onCompletion(MediaPlayer mp) {
                                 item.setPlaying(false);
                                 mLatestQuestionListAdapter.notifyDataSetChanged();
+                                mPlayingID = -1;
                             }
                         });
                         item.setPlaying(true);
