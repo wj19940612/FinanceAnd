@@ -6,7 +6,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -213,7 +212,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
     }
 
     @Override
-    public void onPassWord(String passWord) {
+    public void onPassWord(String passWord, final InputSafetyPassDialogFragment dialogFragment) {
         mPassWord = passWord;
         if (!TextUtils.isEmpty(passWord) && mUserBankCardInfo != null) {
             Client.withDraw(mWithdrawMoney.getText().toString(), mUserBankCardInfo.getId(), passWord)
@@ -222,7 +221,7 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
-                            Log.d(TAG, "onRespSuccess: " + resp.toString());
+                            dialogFragment.dismissAllowingStateLoss();
                             if (resp.isSuccess()) {
                                 Launcher.with(getActivity(), WithDrawDetailsActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, mUserBankCardInfo)
@@ -230,6 +229,8 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                                         .putExtra(Launcher.EX_PAYLOAD_1, mPoundage)
                                         .execute();
                                 finish();
+                            }else {
+                                // TODO: 2017/9/11 看需求是否需要关闭弹窗 
                             }
                         }
                     })
