@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.discovery.DailyReportActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
@@ -33,10 +34,12 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.training.MoreTrainFeedbackActivity;
 import com.sbai.finance.activity.training.TrainingDetailActivity;
+import com.sbai.finance.model.BannerModel;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.MyTrainingRecord;
 import com.sbai.finance.model.training.Training;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -45,6 +48,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ViewGroupUtil;
 import com.sbai.finance.view.FeaturesNavigation;
+import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.CookieManger;
@@ -94,6 +98,8 @@ public class DiscoveryFragment extends BaseFragment {
 
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
+    @BindView(R.id.banner)
+    HomeBanner mBanner;
 
     private TrainAdapter mTrainAdapter;
 
@@ -124,6 +130,22 @@ public class DiscoveryFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
+            @Override
+            public void onBannerClick(BannerModel information) {
+                if (information.isH5Style()) {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_URL, information.getContent())
+                            .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_HTML, information.getContent())
+                            .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                            .execute();
+                }
+            }
+        });
         mFeaturesNavigation.setOnNavItemClickListener(new FeaturesNavigation.OnNavItemClickListener() {
             @Override
             public void onOptionalClick() {
@@ -160,6 +182,17 @@ public class DiscoveryFragment extends BaseFragment {
         initDailyReportView();
         requestTrainingList();
         requestDailyReportData();
+        requestBannerData();
+    }
+
+    private void requestBannerData() {
+        Client.getBannerData().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<BannerModel>>, List<BannerModel>>() {
+                    @Override
+                    protected void onRespSuccessData(List<BannerModel> data) {
+                        mBanner.setHomeAdvertisement(data);
+                    }
+                }).fireFree();
     }
 
     private void initDailyReportView() {

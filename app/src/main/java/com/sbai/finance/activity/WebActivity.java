@@ -3,11 +3,14 @@ package com.sbai.finance.activity;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Picture;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -20,9 +23,15 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.sbai.finance.AppJs;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.httplib.CookieManger;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
@@ -151,7 +160,8 @@ public class WebActivity extends BaseActivity {
         mWebView.clearCache(true);
         mWebView.clearFormData();
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-
+        mWebView.setDrawingCacheEnabled(true);
+        mWebView.addJavascriptInterface(new AppJs(this), "AppJs");
         if (Build.VERSION.SDK_INT >= 19) {
             mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else {
@@ -243,6 +253,28 @@ public class WebActivity extends BaseActivity {
         getWebView().loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
     }
 
+    public void showRightView(String text, final String url) {
+        mTitleBar.setRightVisible(true);
+        mTitleBar.setRightText(text);
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_URL, url)
+                            .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
+        });
+    }
+
+    public void hideRightView() {
+        mTitleBar.setRightVisible(false);
+    }
+
     private String getHtmlData(String bodyHTML) {
         String head = "<head><style>img{max-width: 100%; width:auto; height: auto;}</style>" + INFO_HTML_META + "</head>";
         return "<html>" + head + bodyHTML + "</html>";
@@ -283,7 +315,6 @@ public class WebActivity extends BaseActivity {
             } else {
                 mTitleBar.setTitle(mTitle);
             }
-
         }
 
         @Override
@@ -316,6 +347,22 @@ public class WebActivity extends BaseActivity {
 
     protected boolean isNeedViewTitle() {
         return true;
+    }
+
+    public void screenShot() {
+        mWebView.buildDrawingCache();
+        Bitmap bitmap = mWebView.getDrawingCache();
+        if (bitmap == null) {
+            Picture snapShot = mWebView.capturePicture();
+            bitmap = Bitmap.createBitmap(mWebView.getWidth(), getWindowManager().getDefaultDisplay().getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            snapShot.draw(canvas);
+        }
+        if (bitmap == null) {
+            Log.d(TAG, "获取图片失败");
+            return;
+        }
+        ImageUtils.saveImageToGallery(getApplicationContext(), bitmap);
     }
 
     protected boolean onShouldOverrideUrlLoading(WebView view, String url) {

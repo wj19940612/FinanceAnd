@@ -782,5 +782,8 @@
     <string name="mission_complete">成功完成任务</string>
     <string name="accuracy_to_">准确率达到%1$s</string>
     <string name="accuracy_">准确率：%1$s</string>
+    
+    <string name="exchange_record">兑换记录</string>
+    <string name="no_exchange_skin_record">暂无兑换记录</string>
 
 </resources>

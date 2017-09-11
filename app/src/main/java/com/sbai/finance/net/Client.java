@@ -2481,4 +2481,15 @@ public class Client {
     public static API requestServiceConnectWay() {
         return new API("/user/dictionary/findDictionaryForJson.do?type=aboutus");
     }
+
+    /**
+     * 活动兑换记录
+     */
+    public static API getSkinList(int activityId, int page) {
+        return new API("/user/skin/queryExchangeLogByUser.do",
+                new ApiParams()
+                        .put("activityId", activityId)
+                        .put("page", page)
+                        .put("pageSize", 20));
+    }
 }

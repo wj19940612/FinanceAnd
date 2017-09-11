@@ -56,6 +56,7 @@ public class ShareDialog {
     private String mShareUrl;
     private String mShareThumbUrl;
     private boolean mHasFeedback;
+    private boolean mHasTitle = true;
 
     private OnShareDialogCallback mListener;
 
@@ -212,6 +213,11 @@ public class ShareDialog {
         return this;
     }
 
+    public ShareDialog setTitleVisible(boolean visible) {
+        mHasTitle = visible;
+        return this;
+    }
+
     public ShareDialog setTitle(CharSequence title) {
         mTitle = title;
         return this;
@@ -245,6 +251,12 @@ public class ShareDialog {
         if (!TextUtils.isEmpty(mTitle)) {
             TextView title = (TextView) mView.findViewById(R.id.title);
             title.setText(mTitle);
+            if (mHasTitle) {
+                title.setVisibility(View.VISIBLE);
+            } else {
+                title.setVisibility(View.GONE);
+            }
+
         }
 
         mSmartDialog.setWidthScale(1)
