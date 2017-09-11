@@ -28,7 +28,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import java.util.List;
@@ -191,18 +191,18 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.withDrawRule:
-                umengEventCount(UmengCountEventIdUtils.WITHDRAW_RULES);
+                umengEventCount(UmengCountEventId.WITHDRAW_RULES);
                 showWithDrawRuleDialog();
                 break;
             case R.id.allWithDraw:
                 mWithdrawMoney.setText(FinanceUtil.formatWithScale(mMoney));
                 break;
             case R.id.withdraw:
-                umengEventCount(UmengCountEventIdUtils.WITHDRAW_NEXT_STEP);
+                umengEventCount(UmengCountEventId.WITHDRAW_NEXT_STEP);
                 InputSafetyPassDialogFragment.newInstance(getString(R.string.yuan_symbol, mWithdrawMoney.getText().toString())).show(getSupportFragmentManager());
                 break;
             case R.id.connect_service:
-                umengEventCount(UmengCountEventIdUtils.WITHDRAW_CONTACT_CUSTOMER_SERVICE);
+                umengEventCount(UmengCountEventId.WITHDRAW_CONTACT_CUSTOMER_SERVICE);
                 Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 break;
         }

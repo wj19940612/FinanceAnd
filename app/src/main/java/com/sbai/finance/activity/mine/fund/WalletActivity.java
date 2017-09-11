@@ -14,16 +14,16 @@ import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.fragment.mine.AccountFundDetailFragment;
-import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.model.fund.UserBankCardInfo;
 import com.sbai.finance.model.fund.UserFundInfo;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
@@ -73,6 +73,33 @@ public class WalletActivity extends BaseActivity {
         mTabLayout.setSelectedIndicatorColors(Color.WHITE);
         mTabLayout.setHasBottomBorder(false);
         mTabLayout.setViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        umengEventCount(UmengCountEventId.WALLET_INGOT_DETAILS);
+                        break;
+                    case 1:
+                        umengEventCount(UmengCountEventId.WALLET_DETAILS);
+                        break;
+                    case 2:
+                        umengEventCount(UmengCountEventId.WALLET_INTEGRAL_DETAILS);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
 
@@ -156,24 +183,6 @@ public class WalletActivity extends BaseActivity {
 //        }
 //    }
 
-    private void requestUserHasPassWord() {
-        Client.getUserHasPassWord()
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
-                    @Override
-                    protected void onRespSuccessData(Boolean data) {
-                        if (!data) {
-                            Launcher.with(getActivity(), UpdateSecurityPassActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, data.booleanValue())
-                                    .executeForResult(REQ_CODE_ADD_SAFETY_PASS);
-                        } else {
-                            openWithDrawPage();
-                        }
-                    }
-                })
-                .fire();
-    }
 
     private void showOpenBindCardDialog() {
         SmartDialog.with(getActivity(), R.string.you_not_bind_bank_card)

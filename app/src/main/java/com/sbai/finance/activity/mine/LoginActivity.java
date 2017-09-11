@@ -23,13 +23,12 @@ import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.PasswordEditText;
 
@@ -292,7 +291,7 @@ public class LoginActivity extends BaseActivity {
                 mAuthCode.requestFocus();
                 break;
             case R.id.login:
-                umengEventCount(UmengCountEventIdUtils.ME_LOGIN);
+                umengEventCount(UmengCountEventId.ME_LOGIN);
                 login();
                 break;
             case R.id.rootView:

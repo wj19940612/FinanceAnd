@@ -32,7 +32,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.httplib.CookieManger;
 
@@ -204,11 +204,11 @@ public class BankCardPayActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.getAuthCode:
-                umengEventCount(UmengCountEventIdUtils.GET_VERIFICATION_CODE);
+                umengEventCount(UmengCountEventId.GET_VERIFICATION_CODE);
                 getBankPayAuthCode();
                 break;
             case R.id.submitRechargeInfo:
-                umengEventCount(UmengCountEventIdUtils.CONFIRM_RECHARGE);
+                umengEventCount(UmengCountEventId.CONFIRM_RECHARGE);
                 recharge();
                 break;
             case R.id.serviceProtocol:
@@ -257,6 +257,7 @@ public class BankCardPayActivity extends BaseActivity {
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
                             ToastUtil.show(resp.getMsg());
+                            setResult(RESULT_OK);
                             finish();
                         }
                     })

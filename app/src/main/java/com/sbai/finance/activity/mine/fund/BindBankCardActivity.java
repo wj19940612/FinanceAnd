@@ -32,7 +32,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SmartDialog;
 
@@ -207,11 +207,11 @@ public class BindBankCardActivity extends BaseActivity {
                 showCanUserBankList();
                 break;
             case R.id.submitBankCardInfo:
-                umengEventCount(UmengCountEventIdUtils.BANK_CARD_FILL_NEXT_STEP);
+                umengEventCount(UmengCountEventId.BANK_CARD_FILL_NEXT_STEP);
                 submitBankCardInfo();
                 break;
             case R.id.unBind:
-                umengEventCount(UmengCountEventIdUtils.BANK_CARD_LIST_UNBUNDLED);
+                umengEventCount(UmengCountEventId.BANK_CARD_LIST_UNBUNDLED);
                 unbindBankCard();
                 break;
         }

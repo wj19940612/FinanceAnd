@@ -77,7 +77,7 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 			mTitleBar.setVisibility(View.VISIBLE);
 			if (mDelete != -1) {
 				mTitleBar.setRightVisible(true);
-				mTitleBar.setRightImage(ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete_photo));
+				mTitleBar.setRightTextLeftImage(ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete_photo));
 				mTitleBar.setOnRightViewClickListener(this);
 			} else {
 				mTitleBar.setRightVisible(false);

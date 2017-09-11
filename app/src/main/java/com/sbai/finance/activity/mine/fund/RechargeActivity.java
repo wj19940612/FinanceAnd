@@ -19,16 +19,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.BuildConfig;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.model.fund.AliPayOrderInfo;
 import com.sbai.finance.model.fund.BankLimit;
 import com.sbai.finance.model.fund.UsableRechargeWay;
 import com.sbai.finance.model.fund.UserBankCardInfo;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
+import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -40,9 +43,10 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +57,7 @@ import butterknife.OnClick;
 
 public class RechargeActivity extends BaseActivity {
 
+    private static final int REQ_CODE_BANK_PAY = 492033;
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -106,10 +111,28 @@ public class RechargeActivity extends BaseActivity {
         setContentView(R.layout.activity_recharge);
         ButterKnife.bind(this);
 
-        mRechargeType = getIntent().getIntExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_CRASH);
-        mUserFundCount = getIntent().getDoubleExtra(ExtraKeys.USER_FUND, 0);
+        initData();
         initView();
         requestUsablePlatformList();
+    }
+
+    private void initData() {
+        mRechargeType = getIntent().getIntExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_CRASH);
+        mUserFundCount = getIntent().getDoubleExtra(ExtraKeys.USER_FUND, 0);
+
+        //友盟统计埋点统一入口
+        switch (mRechargeType) {
+            case AccountFundDetail.TYPE_CRASH:
+                umengEventCount(UmengCountEventId.WALLET_RECHARGE);
+                mTitleBar.setRightVisible(false);
+                break;
+            case AccountFundDetail.TYPE_INGOT:
+                mTitleBar.setRightVisible(true);
+                break;
+            default:
+                mTitleBar.setRightVisible(true);
+                break;
+        }
     }
 
 
@@ -127,6 +150,51 @@ public class RechargeActivity extends BaseActivity {
                 }
             }
         });
+        if (mRechargeType != AccountFundDetail.TYPE_CRASH) {
+            mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    umengEventCount(UmengCountEventId.WALLET_EXCHANGE_RULES);
+                    openExchangeRulePage();
+                }
+            });
+        } else {
+            mRechargeCount.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    KeyBoardUtils.openKeyBoard(mRechargeCount);
+                }
+            }, 200);
+        }
+    }
+
+    private void openExchangeRulePage() {
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_EXCHANGE).setTag(TAG)
+                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
+                    @Override
+                    protected void onRespSuccessData(ArticleProtocol data) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, data.getTitle())
+                                .putExtra(WebActivity.EX_HTML, data.getContent())
+                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                                .execute();
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
+                                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
+                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                                .execute();
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
+                    }
+                }).fire();
     }
 
     private void requestUsablePlatformList() {
@@ -285,19 +353,23 @@ public class RechargeActivity extends BaseActivity {
             mRecharge.setText(R.string.confirm_money);
         } else {
             String formatRechargeMoney = StrFormatter.getFormatMoney(oldMoney);
-            if (!oldMoney.equalsIgnoreCase(formatRechargeMoney)) {
+            if (TextUtils.isEmpty(formatRechargeMoney)) {
+                mRechargeCount.setText("");
+                mRechargeCount.setSelection(0);
+            } else if (!oldMoney.equalsIgnoreCase(formatRechargeMoney)) {
                 mRechargeCount.setText(formatRechargeMoney);
                 mRechargeCount.setSelection(formatRechargeMoney.length());
             }
-
-            mRecharge.setText(getString(R.string.confirm_payment_money, formatRechargeMoney));
+            if (!TextUtils.isEmpty(formatRechargeMoney)) {
+                mRecharge.setText(getString(R.string.confirm_payment_money, formatRechargeMoney));
+            }
         }
     }
 
     private boolean checkRechargeBtnEnable() {
         String count = mRechargeCount.getText().toString();
         double limitMoney;
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.IS_PROD) {
             limitMoney = 0.01;
         } else {
             limitMoney = 5;
@@ -317,11 +389,11 @@ public class RechargeActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.recharge:
-                umengEventCount(UmengCountEventIdUtils.RECHARGE_NEXT_STEP);
+                umengEventCount(UmengCountEventId.RECHARGE_NEXT_STEP);
                 submitRechargeData();
                 break;
             case R.id.connect_service:
-                umengEventCount(UmengCountEventIdUtils.RECHARGE_CONTACT_CUSTOMER_SERVICE);
+                umengEventCount(UmengCountEventId.RECHARGE_CONTACT_CUSTOMER_SERVICE);
                 Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 break;
         }
@@ -359,8 +431,7 @@ public class RechargeActivity extends BaseActivity {
                     .putExtra(Launcher.EX_PAYLOAD, money)
                     .putExtra(Launcher.EX_PAY_END, mUserBankCardInfo)
                     .putExtra(Launcher.EX_PAYLOAD_1, mUserSelectRechargeWay)
-                    .execute();
-            finish();
+                    .executeForResult(REQ_CODE_BANK_PAY);
         } else if (mUserSelectRechargeWay.isAliPay()) {
             requestAliPayProductInfo(money);
         } else if (mUserSelectRechargeWay.isWeChatPay()) {
@@ -386,7 +457,7 @@ public class RechargeActivity extends BaseActivity {
     }
 
     protected void requestAliPayProductInfo(String money) {
-        Client.requestAliPayOrderInfo(money, 0)
+        Client.requestAliPayOrderInfo(money, AliPayHelper.PAY_DEFAULT)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<AliPayOrderInfo>, AliPayOrderInfo>() {
                     @Override
@@ -424,6 +495,10 @@ public class RechargeActivity extends BaseActivity {
                                 }
                             })
                             .fire();
+                    break;
+                case REQ_CODE_BANK_PAY:
+                    setResult(RESULT_OK);
+                    finish();
                     break;
                 default:
                     break;
@@ -521,7 +596,6 @@ public class RechargeActivity extends BaseActivity {
                 } else {
                     mCheckboxClick.setChecked(false);
                 }
-
 
                 mRecharge.setOnClickListener(new View.OnClickListener() {
                     @Override

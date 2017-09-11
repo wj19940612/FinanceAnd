@@ -1,10 +1,10 @@
 package com.sbai.finance.utils;
 
 /**
- * Created by lixiaokuan0819 on 2017/6/29.
+ * 友盟事件统计 id
  */
 
-public class UmengCountEventIdUtils {
+public class UmengCountEventId {
 
     /**
      * 期货对战
@@ -112,19 +112,19 @@ public class UmengCountEventIdUtils {
      */
 
     //聚宝盆_元宝明细
-    public static final String VIRTUSL_WALLET_INGOT_DETAILS = "virtualwallet0100";
+    public static final String WALLET_INGOT_DETAILS = "virtualwallet0100";
     //聚宝盆_积分明细
-    public static final String VIRTUSL_WALLET_INTEGRAL_DETAILS = "virtualwallet0200";
+    public static final String WALLET_INTEGRAL_DETAILS = "virtualwallet0200";
     //聚宝盆_兑换规则
-    public static final String VIRTUSL_WALLET_EXCHANGE_RULES = "virtualwallet0300";
+    public static final String WALLET_EXCHANGE_RULES = "virtualwallet0300";
     //聚宝盆_购买元宝
-    public static final String VIRTUSL_WALLET_BUY_INGOT = "virtualwallet0400";
+    public static final String WALLET_BUY_INGOT = "virtualwallet0400";
     //聚宝盆_兑换积分
-    public static final String VIRTUSL_WALLET_EXCHANGE_INTEGRAL = "virtualwallet0500";
+    public static final String WALLET_EXCHANGE_INTEGRAL = "virtualwallet0500";
     //聚宝盆_购买兑换确认弹窗_取消
-    public static final String VIRTUSL_WALLET_POPUP_WINDOW_CANCEL = "virtualwallet0600";
+    public static final String WALLET_POPUP_WINDOW_CANCEL = "virtualwallet0600";
     //聚宝盆_购买兑换确认弹窗_确定
-    public static final String VIRTUSL_WALLET_POPUP_WINDOW_CONFIRM = "virtualwallet0700";
+    public static final String WALLET_POPUP_WINDOW_CONFIRM = "virtualwallet0700";
     /**
      * 我的
      * me0100,头像,0

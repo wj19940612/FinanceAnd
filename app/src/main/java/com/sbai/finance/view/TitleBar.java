@@ -32,7 +32,7 @@ public class TitleBar extends RelativeLayout {
     private CharSequence mRightText;
     private float mRightTextSize;
     private ColorStateList mRightTextColor;
-    private Drawable mRightImage;
+    private Drawable mRightTextLeftImage;
     private Drawable mRightBackground;
     private boolean mRightVisible;
     private boolean mBackFeature;
@@ -48,6 +48,7 @@ public class TitleBar extends RelativeLayout {
     private ColorStateList mSplitLineColor;
     private Paint mPaint;
     private float mSplitLineHeight;
+    private Drawable mRightTextRightImage;
 
     public TitleBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -84,7 +85,8 @@ public class TitleBar extends RelativeLayout {
         mRightText = typedArray.getText(R.styleable.TitleBar_rightText);
         mRightTextSize = typedArray.getDimension(R.styleable.TitleBar_rightTextSize, defaultFontSize);
         mRightTextColor = typedArray.getColorStateList(R.styleable.TitleBar_rightTextColor);
-        mRightImage = typedArray.getDrawable(R.styleable.TitleBar_rightImage);
+        mRightTextLeftImage = typedArray.getDrawable(R.styleable.TitleBar_rightImage);
+        mRightTextRightImage = typedArray.getDrawable(R.styleable.TitleBar_rightTextRightImage);
         mRightBackground = typedArray.getDrawable(R.styleable.TitleBar_rightBackground);
         mRightVisible = typedArray.getBoolean(R.styleable.TitleBar_rightVisible, false);
         mBackFeature = typedArray.getBoolean(R.styleable.TitleBar_backFeature, false);
@@ -174,7 +176,8 @@ public class TitleBar extends RelativeLayout {
         setRightText(mRightText);
         setRightTextSize(TypedValue.COMPLEX_UNIT_PX, mRightTextSize);
         setRightTextColor(mRightTextColor);
-        setRightImage(mRightImage);
+        setRightTextLeftImage(mRightTextLeftImage);
+        setRightTextRightImage(mRightTextRightImage);
         setRightBackground(mRightBackground);
         setRightVisible(mRightVisible);
     }
@@ -217,7 +220,7 @@ public class TitleBar extends RelativeLayout {
         mTitleSize = mTitleView.getTextSize();
     }
 
-    public void setTitleAlpha (float titleAlpha) {
+    public void setTitleAlpha(float titleAlpha) {
         if (mTitleView == null) return;
         mTitleView.setAlpha(titleAlpha);
         mTitleAlpha = mTitleView.getAlpha();
@@ -266,10 +269,17 @@ public class TitleBar extends RelativeLayout {
         }
     }
 
-    public void setRightImage(Drawable rightImage) {
-        mRightImage = rightImage;
-        mRightView.setCompoundDrawablesWithIntrinsicBounds(mRightImage, null, null, null);
+    public void setRightTextLeftImage(Drawable rightImage) {
+        mRightTextLeftImage = rightImage;
+        mRightView.setCompoundDrawablesWithIntrinsicBounds(mRightTextLeftImage, null, null, null);
     }
+
+    private void setRightTextRightImage(Drawable rightTextRightImage) {
+        mRightTextRightImage = rightTextRightImage;
+        mRightView.setCompoundDrawablePadding(8);
+        mRightView.setCompoundDrawablesWithIntrinsicBounds(null, null, mRightTextRightImage, null);
+    }
+
 
     public void setRightVisible(boolean rightVisible) {
         mRightVisible = rightVisible;

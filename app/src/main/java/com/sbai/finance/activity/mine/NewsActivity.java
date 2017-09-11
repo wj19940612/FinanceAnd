@@ -19,7 +19,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mine.cornucopia.EarningsAndExpendDetailsActivity;
+import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.UserInfo;
@@ -199,7 +199,7 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                 case HistoryNewsModel.WORSHIP_REWARD:
                 case HistoryNewsModel.REWARD:
                     if (!historyNewsModel.isLossEfficacy()) {
-                        Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class)
+                        Launcher.with(getActivity(), WalletActivity.class)
                                 .putExtra(Launcher.EX_PAY_END, AccountFundDetail.TYPE_INGOT)
                                 .execute();
                     }

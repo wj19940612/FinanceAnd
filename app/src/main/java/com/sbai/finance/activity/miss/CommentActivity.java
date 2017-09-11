@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.RetryPolicy;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.Callback;
@@ -17,7 +16,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SmartDialog;
 
@@ -113,7 +112,7 @@ public class CommentActivity extends BaseActivity {
 
     @OnClick(R.id.publish)
     public void onViewClicked() {
-        umengEventCount(UmengCountEventIdUtils.MISS_TALK_COMMENT);
+        umengEventCount(UmengCountEventId.MISS_TALK_COMMENT);
         requestPublishComment();
 
     }

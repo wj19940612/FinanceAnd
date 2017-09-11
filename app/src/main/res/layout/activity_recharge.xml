@@ -22,6 +22,11 @@
             android:gravity="center_vertical"
             app:backFeature="true"
             app:hasBottomSplitLine="true"
+            app:rightText="@string/exchange_rule"
+            app:rightTextColor="@color/luckyText"
+            app:rightTextRightImage="@drawable/ic_exchange_rule"
+            app:rightTextSize="14sp"
+            app:rightVisible="true"
             app:splitLineColor="@color/background"
             app:titleText="@string/recharge"/>
 

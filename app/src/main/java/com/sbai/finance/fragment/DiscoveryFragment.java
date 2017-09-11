@@ -42,7 +42,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ViewGroupUtil;
 import com.sbai.finance.view.FeaturesNavigation;
 import com.sbai.finance.view.IconTextRow;
@@ -128,7 +128,7 @@ public class DiscoveryFragment extends BaseFragment {
             @Override
             public void onOptionalClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.DISCOVERY_SELF_OPTIONAL);
+                    umengEventCount(UmengCountEventId.DISCOVERY_SELF_OPTIONAL);
                     Launcher.with(getActivity(), OptionalActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -137,19 +137,19 @@ public class DiscoveryFragment extends BaseFragment {
 
             @Override
             public void onFuturesClick() {
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_FUTURES);
+                umengEventCount(UmengCountEventId.DISCOVERY_FUTURES);
                 Launcher.with(getActivity(), FuturesListActivity.class).execute();
             }
 
             @Override
             public void onStockClick() {
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_STOCK);
+                umengEventCount(UmengCountEventId.DISCOVERY_STOCK);
                 Launcher.with(getActivity(), StockListActivity.class).execute();
             }
 
             @Override
             public void onLeaderboardClick() {
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_LEADER_BOARD);
+                umengEventCount(UmengCountEventId.DISCOVERY_LEADER_BOARD);
                 Launcher.with(getActivity(), LeaderBoardsActivity.class).execute();
             }
         });
@@ -166,7 +166,7 @@ public class DiscoveryFragment extends BaseFragment {
         mDaily.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                umengEventCount(UmengCountEventIdUtils.REPORT_VIEW_LIST);
+                umengEventCount(UmengCountEventId.REPORT_VIEW_LIST);
                 Launcher.with(getActivity(), DailyReportActivity.class).execute();
             }
         });
@@ -248,7 +248,7 @@ public class DiscoveryFragment extends BaseFragment {
                 Launcher.with(getActivity(), BattleListActivity.class).execute();
                 break;
             case R.id.training:
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_YOU_WANT_LEARN);
+                umengEventCount(UmengCountEventId.DISCOVERY_YOU_WANT_LEARN);
                 Launcher.with(getActivity(), MoreTrainFeedbackActivity.class).execute();
                 break;
             case R.id.daily:

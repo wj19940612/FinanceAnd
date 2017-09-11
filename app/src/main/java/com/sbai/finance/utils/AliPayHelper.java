@@ -1,6 +1,7 @@
 package com.sbai.finance.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +21,12 @@ import java.util.Map;
 
 public class AliPayHelper {
     private static final String TAG = "AliPayUtils";
+
+    //普通充值
+    public static final int PAY_DEFAULT = 0;
+    //元宝充值
+    public static final int PAY_INGOT = 1;
+
 
     private static final int ALI_PAY_FLAG = 55000;
 
@@ -62,6 +69,7 @@ public class AliPayHelper {
                                 protected void onRespSuccess(Resp<Object> resp) {
                                     if (resp.isSuccess()) {
                                         ToastUtil.show(resp.getMsg());
+                                        mFragmentActivity.setResult(Activity.RESULT_OK);
                                         mFragmentActivity.finish();
                                     } else {
                                         ToastUtil.show(resp.getMsg());

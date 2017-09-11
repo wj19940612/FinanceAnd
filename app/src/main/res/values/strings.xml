@@ -423,8 +423,7 @@
     <string name="plus_int">+%1$d</string>
     <string name="minus_int">-%1$d</string>
     <!--  聚宝盆  -->
-    <string name="cornucopia">聚宝盆</string>
-    <string name="exchange_rule">兑换规则</string>
+    <string name="exchange_rule">规则</string>
     <string name="exchange_ingot">购买元宝</string>
     <string name="ingot_detail">元宝明细</string>
     <string name="integrate_detail">积分明细</string>

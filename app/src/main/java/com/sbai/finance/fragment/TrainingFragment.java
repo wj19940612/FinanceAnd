@@ -40,7 +40,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -308,13 +308,13 @@ public class TrainingFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.gift:
-                umengEventCount(UmengCountEventIdUtils.TRAINING_ACTIVITY);
+                umengEventCount(UmengCountEventId.TRAINING_ACTIVITY);
                 // TODO: 2017/8/10 礼物接口
                 break;
             case R.id.lookTrainDetail:
                 if (LocalUser.getUser().isLogin()) {
                     if (mUserEachTrainingScoreModel != null) {
-                        umengEventCount(UmengCountEventIdUtils.TRAINING_KNOW_CREDITS);
+                        umengEventCount(UmengCountEventId.TRAINING_KNOW_CREDITS);
                         Launcher.with(getActivity(), CreditIntroduceActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, mUserEachTrainingScoreModel)
                                 .execute();
@@ -328,11 +328,11 @@ public class TrainingFragment extends BaseFragment {
                 }
                 break;
             case R.id.rankingList:
-                umengEventCount(UmengCountEventIdUtils.TRAINING_LEADER_BOARD);
+                umengEventCount(UmengCountEventId.TRAINING_LEADER_BOARD);
                 Launcher.with(getActivity(), LeaderBoardsActivity.class).execute();
                 break;
             case R.id.reviewLessonRoom:
-                umengEventCount(UmengCountEventIdUtils.TRAINING_STUDY_ROOM);
+                umengEventCount(UmengCountEventId.TRAINING_STUDY_ROOM);
                 Launcher.with(getActivity(), StudyRoomActivity.class).execute();
                 break;
             case R.id.closeHint:
@@ -341,7 +341,7 @@ public class TrainingFragment extends BaseFragment {
                 break;
             case R.id.testHint:
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.TRAINING_TEST);
+                    umengEventCount(UmengCountEventId.TRAINING_TEST);
                     Launcher.with(getActivity(), EvaluationStartActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();

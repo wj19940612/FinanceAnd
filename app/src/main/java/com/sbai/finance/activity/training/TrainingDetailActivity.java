@@ -34,7 +34,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.ImageListView;
 import com.sbai.finance.view.ObservableScrollView;
@@ -506,7 +506,7 @@ public class TrainingDetailActivity extends BaseActivity {
                         @Override
                         public void onFeedbackClick(View view) {
                             if (LocalUser.getUser().isLogin()) {
-                                umengEventCount(UmengCountEventIdUtils.ME_FEEDBACK);
+                                umengEventCount(UmengCountEventId.ME_FEEDBACK);
                                 Launcher.with(getActivity(), FeedbackActivity.class)
                                         .putExtra(ExtraKeys.TRAINING, mTraining.getId())
                                         .execute();

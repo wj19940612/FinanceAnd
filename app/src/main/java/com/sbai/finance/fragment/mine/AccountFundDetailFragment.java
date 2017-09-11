@@ -1,6 +1,7 @@
 package com.sbai.finance.fragment.mine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.fund.RechargeActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -24,7 +26,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.autofit.AutofitTextView;
 
 import java.util.ArrayList;
@@ -41,6 +43,10 @@ import butterknife.Unbinder;
  */
 
 public class AccountFundDetailFragment extends BaseFragment {
+
+    private static final int REQ_CODE_RECHARGE_CRASH = 4920;
+    private static final int REQ_CODE_RECHARGE_INGOOT = 45550;
+    private static final int REQ_CODE_RECHARGE_SCORE = 88820;
 
     private static final String KEY_TYPE = "TYPE";
 
@@ -192,7 +198,6 @@ public class AccountFundDetailFragment extends BaseFragment {
 
 
     private void requestDetailList(final boolean isRefresh) {
-
         Client.requestAccountFundDetailList(mFundType, mPage)
                 .setIndeterminate(this)
                 .setTag(TAG)
@@ -227,9 +232,10 @@ public class AccountFundDetailFragment extends BaseFragment {
             if (exchangeDetailList.size() < Client.DEFAULT_PAGE_SIZE) {
                 mLoadMore = false;
             } else {
-                mLoadMore = true;
                 mPage++;
+                mLoadMore = true;
             }
+
             mUserFundDetailAdapter.addAll(exchangeDetailList);
         }
     }
@@ -250,22 +256,32 @@ public class AccountFundDetailFragment extends BaseFragment {
     public void onViewClicked() {
         switch (mFundType) {
             case AccountFundDetail.TYPE_CRASH:
-                Launcher.with(getActivity(), RechargeActivity.class)
-                        .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_CRASH)
-                        .execute();
+                umengEventCount(UmengCountEventId.WALLET_RECHARGE);
+                Intent intent = new Intent(getActivity(), RechargeActivity.class);
+                intent.putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_CRASH);
+                startActivityForResult(intent, REQ_CODE_RECHARGE_CRASH);
                 break;
             case AccountFundDetail.TYPE_INGOT:
-                Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
-                        .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
-                        .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0)
-                        .execute();
+                Intent ingotIntent = new Intent(getActivity(), VirtualProductExchangeActivity.class);
+                ingotIntent.putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT);
+                ingotIntent.putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0);
+                startActivityForResult(ingotIntent, REQ_CODE_RECHARGE_CRASH);
                 break;
             case AccountFundDetail.TYPE_SCORE:
-                Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
-                        .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_SCORE)
-                        .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? Double.parseDouble(mUserFundInfo.getYuanbao() + "") : 0)
-                        .execute();
+                Intent scoreIntent = new Intent(getActivity(), VirtualProductExchangeActivity.class);
+                scoreIntent.putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_SCORE);
+                scoreIntent.putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? Double.parseDouble(mUserFundInfo.getYuanbao() + "") : 0);
+                startActivityForResult(scoreIntent, REQ_CODE_RECHARGE_CRASH);
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == BaseActivity.RESULT_OK) {
+            mPage = 0;
+            requestDetailList(true);
         }
     }
 
@@ -284,12 +300,13 @@ public class AccountFundDetailFragment extends BaseFragment {
 
         public void addAll(List<AccountFundDetail> detailArrayList) {
             mExchangeDetailArrayList.addAll(detailArrayList);
-            this.notifyItemRangeChanged(0, mExchangeDetailArrayList.size());
+//            this.notifyItemRangeChanged(0, mExchangeDetailArrayList.size());
+            notifyDataSetChanged();
         }
 
         public void clear() {
             mExchangeDetailArrayList.clear();
-            notifyItemRangeRemoved(0, mExchangeDetailArrayList.size());
+            notifyDataSetChanged();
         }
 
         public void setDetailType(int fundType) {

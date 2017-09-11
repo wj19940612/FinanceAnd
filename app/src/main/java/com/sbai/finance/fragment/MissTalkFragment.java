@@ -56,7 +56,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.VerticalSwipeRefreshLayout;
@@ -213,7 +213,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void loveOnClick(final Question item) {
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.MISS_TALK_PRAISE);
+                    umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
                     Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
 
                         @Override
@@ -301,7 +301,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                     Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
                     intent.putExtra(Launcher.EX_PAYLOAD, item.getId());
                     startActivityForResult(intent, REQ_QUESTION_DETAIL);
-                    umengEventCount(UmengCountEventIdUtils.MISS_TALK_QUESTION_DETAIL);
+                    umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
                 }
             }
         });
@@ -310,7 +310,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void loveOnClick(final Question item) {
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.MISS_TALK_PRAISE);
+                    umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
                     Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
 
                         @Override
@@ -336,7 +336,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 
             @Override
             public void voiceOnClick(final Question item) {
-                umengEventCount(UmengCountEventIdUtils.MISS_TALK_VOICE);
+                umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
                 //播放下一个之前把上一个播放位置的动画停了
                 stopPreviousAnimation();
 
@@ -858,7 +858,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.message:
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.MISS_TALK_MINE_MESSAGE);
+                    umengEventCount(UmengCountEventId.MISS_TALK_MINE_MESSAGE);
                     Launcher.with(getActivity(), MessagesActivity.class).execute();
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -901,7 +901,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 }
 
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.MISS_TALK_MINE_QUESTION);
+                    umengEventCount(UmengCountEventId.MISS_TALK_MINE_QUESTION);
                     Launcher.with(getActivity(), MyQuestionsActivity.class).execute();
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);

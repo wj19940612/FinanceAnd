@@ -197,13 +197,13 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                 String reward="" ;
                 if (item.getWinResult() == Battle.WIN_RESULT_TIE) {
                     switch (item.getCoinType()) {
-                        case Battle.COIN_TYPE_BAO:
+                        case Battle.COIN_TYPE_INGOT:
                             reward = 0 + context.getString(R.string.ingot);
                             break;
                         case Battle.COIN_TYPE_CASH:
                             reward = 0 + context.getString(R.string.cash);
                             break;
-                        case Battle.COIN_TYPE_INTEGRAL:
+                        case Battle.COIN_TYPE_SCORE:
                             reward = 0 + context.getString(R.string.integral);
                             break;
                     }
@@ -213,25 +213,25 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                         ||(LocalUser.getUser().getUserInfo().getId() == item.getAgainstUser()
                         && item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN)) {
                     switch (item.getCoinType()) {
-                        case Battle.COIN_TYPE_BAO:
+                        case Battle.COIN_TYPE_INGOT:
                             reward = Math.round(item.getReward()-item.getCommission()) + context.getString(R.string.ingot);
                             break;
                         case Battle.COIN_TYPE_CASH:
                             reward = item.getReward() + context.getString(R.string.cash);
                             break;
-                        case Battle.COIN_TYPE_INTEGRAL:
+                        case Battle.COIN_TYPE_SCORE:
                             reward = StrFormatter.getFormIntegrate(item.getReward()-item.getCommission()) + context.getString(R.string.integral);
                             break;
                     }
                 }else{
                     switch (item.getCoinType()) {
-                        case Battle.COIN_TYPE_BAO:
+                        case Battle.COIN_TYPE_INGOT:
                             reward = item.getReward() + context.getString(R.string.ingot);
                             break;
                         case Battle.COIN_TYPE_CASH:
                             reward = item.getReward() + context.getString(R.string.cash);
                             break;
-                        case Battle.COIN_TYPE_INTEGRAL:
+                        case Battle.COIN_TYPE_SCORE:
                             reward = item.getReward() + context.getString(R.string.integral);
                             break;
                     }

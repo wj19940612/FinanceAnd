@@ -2,6 +2,7 @@ package com.sbai.finance.activity.mine.fund;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
+import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.dialog.InputSafetyPassDialogFragment;
 import com.sbai.finance.model.fund.AliPayOrderInfo;
 import com.sbai.finance.model.fund.UsableRechargeWay;
@@ -23,10 +26,11 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AliPayHelper;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnItemClickListener;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
@@ -50,8 +54,6 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
     //被选中的model
     private VirtualProductInfo mSelectVirtualProductInfo;
     private int mSelectProductPosition;
-
-    private boolean isIngotRecharge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,8 +136,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
     }
 
     private void initData() {
-        isIngotRecharge = mRechargeType == AccountFundDetail.TYPE_INGOT;
-        if (isIngotRecharge) {
+        if (mRechargeType == AccountFundDetail.TYPE_INGOT) {
             mTitleBar.setTitle(R.string.ingot_recharge);
         } else {
             mTitleBar.setTitle(R.string.score_recharge);
@@ -200,8 +201,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
 
     @Override
     protected void requestAliPayProductInfo(String money) {
-        // TODO: 2017/9/8 后期需要改
-        Client.requestAliPayOrderInfo(String.valueOf(mSelectVirtualProductInfo.getFromMoney()), 0)
+        Client.requestAliPayOrderInfo(String.valueOf(mSelectVirtualProductInfo.getFromMoney()), AliPayHelper.PAY_INGOT)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<AliPayOrderInfo>, AliPayOrderInfo>() {
                     @Override
@@ -217,9 +217,9 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
     protected void confirmOtherPay(UsableRechargeWay userSelectRechargeWay) {
         if (userSelectRechargeWay != null) {
             if (userSelectRechargeWay.isIngotPay()) {
-                umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_BUY_INGOT);
+                umengEventCount(UmengCountEventId.WALLET_BUY_INGOT);
             } else {
-                umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_EXCHANGE_INTEGRAL);
+                umengEventCount(UmengCountEventId.WALLET_EXCHANGE_INTEGRAL);
             }
             showExchangeConfirmDialog(mSelectVirtualProductInfo);
         }
@@ -236,25 +236,57 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
-                        umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_POPUP_WINDOW_CONFIRM);
+                        umengEventCount(UmengCountEventId.WALLET_POPUP_WINDOW_CONFIRM);
                         dialog.dismiss();
-                        showInputSafetyPassDialog(virtualProductInfo);
+                        requestUserHasSafetyPassword(virtualProductInfo);
                     }
                 })
                 .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        umengEventCount(UmengCountEventIdUtils.VIRTUSL_WALLET_POPUP_WINDOW_CANCEL);
+                        umengEventCount(UmengCountEventId.WALLET_POPUP_WINDOW_CANCEL);
                     }
                 })
                 .show();
     }
 
+    private void requestUserHasSafetyPassword(final VirtualProductInfo virtualProductInfo) {
+
+        Client.getUserHasPassWord()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                    @Override
+                    protected void onRespSuccessData(Boolean data) {
+                        if (!data) {
+                            showAddSafetyPassDialog();
+                        } else {
+                            showInputSafetyPassDialog(virtualProductInfo);
+                        }
+                    }
+                })
+                .fire();
+
+    }
+
+    private void showAddSafetyPassDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.is_not_set_safety_pass))
+                .setPositive(R.string.go_to_set, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        Launcher.with(getActivity(), UpdateSecurityPassActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, false)
+                                .executeForResult(MineFragment.REQ_CODE_OPEN_WALLET_SET_SAFETY_PASSWORD);
+                    }
+                }).show();
+    }
+
     private void showInputSafetyPassDialog(final VirtualProductInfo item) {
-        String content = item.isIngot() ? getString(R.string.ingot_number, StrFormatter.getFormIngot(item.getToMoney())) :
-                getString(R.string.integrate_number, StrFormatter.getFormIntegrate(item.getToMoney()));
-        String hintText = item.isIngot() ? getString(R.string.buy) : getString(R.string.exchange);
+        String content = item.isIngot() ? getString(R.string.ingot_number, FinanceUtil.formatWithScale(item.getToMoney(), 0)) :
+                getString(R.string.integrate_number, FinanceUtil.formatWithScale(item.getToMoney(), 0));
+        String hintText = getString(R.string.recharge);
         InputSafetyPassDialogFragment.newInstance(content, hintText)
                 .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
                     @Override
@@ -272,6 +304,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         ToastUtil.show(resp.getMsg());
+                        setResult(RESULT_OK);
                         finish();
                     }
 
@@ -288,6 +321,19 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
                         }
                     }
                 }).fire();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case MineFragment.REQ_CODE_OPEN_WALLET_SET_SAFETY_PASSWORD:
+                    //暂时先不管，回调太多了。
+                    break;
+            }
+        }
+
     }
 
     static class VirtualProductAdapter extends RecyclerView.Adapter<VirtualProductAdapter.ViewHolder> {
@@ -310,7 +356,6 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
         public void addAll(List<VirtualProductInfo> virtualProductModelList) {
             mVirtualProductModelList.clear();
             this.mVirtualProductModelList.addAll(virtualProductModelList);
-//            notifyItemRangeChanged(0, mVirtualProductModelList.size());
             notifyDataSetChanged();
         }
 

@@ -1478,14 +1478,15 @@ public class Client {
      * app生成订单信息（wms）
      * 借款ID 充值传0
      *
-     * @param money   订单金额
-     * @param orderId 借款ID 充值传0
+     * @param money 订单金额
+     * @param type  0 现金 1 元宝 2 积分
      * @return
      */
-    public static API requestAliPayOrderInfo(String money, int orderId) {
+    public static API requestAliPayOrderInfo(String money, int type) {
         return new API(POST, "/user/userPay/alipayTrade.do", new ApiParams()
                 .put("money", money)
-                .put("orderId", orderId));
+                .put("orderId", 0)
+                .put("type", type));
     }
 
     /**
