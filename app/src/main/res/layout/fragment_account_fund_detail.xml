@@ -83,6 +83,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:drawablePadding="10dp"
+                android:background="@android:color/white"
                 android:drawableTop="@drawable/img_no_message"
                 android:gravity="center_horizontal"
                 android:paddingTop="150dp"
