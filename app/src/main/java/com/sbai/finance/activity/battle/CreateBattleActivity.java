@@ -17,10 +17,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.FutureBattleConfig;
+import com.sbai.finance.model.fund.UserFundInfo;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -73,12 +77,14 @@ public class CreateBattleActivity extends BaseActivity {
     private DurationAdapter mDurationAdapter;
     private boolean mBountySelected = false;
     private boolean mDurationSelected = false;
+    private UserFundInfo mUserFundInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_fight);
         ButterKnife.bind(this);
+        initData(getIntent());
         mLaunchBattle.setEnabled(false);
         mBountyAdapter = new BountyAdapter(this);
         mDurationAdapter = new DurationAdapter(this);
@@ -116,6 +122,10 @@ public class CreateBattleActivity extends BaseActivity {
         });
 
         requestFutureBattleConfig();
+    }
+
+    private void initData(Intent intent) {
+        mUserFundInfo = intent.getParcelableExtra(ExtraKeys.USER_FUND);
     }
 
     private void requestFutureBattleConfig() {
@@ -355,7 +365,7 @@ public class CreateBattleActivity extends BaseActivity {
                                     .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
                                         @Override
                                         public void onClick(Dialog dialog) {
-                                            dialog.dismiss();
+                                            openRechargePage(mCoinType);
                                         }
                                     })
                                     .setTitle(R.string.hint)
@@ -366,5 +376,22 @@ public class CreateBattleActivity extends BaseActivity {
                         }
                     }
                 }).fire();
+    }
+
+    private void openRechargePage(int coinType) {
+        switch (coinType) {
+            case Battle.COIN_TYPE_INGOT:
+                Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
+                        .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
+                        .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0)
+                        .execute();
+                break;
+            case Battle.COIN_TYPE_SCORE:
+                Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
+                        .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_SCORE)
+                        .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? Double.parseDouble(mUserFundInfo.getYuanbao() + "") : 0)
+                        .execute();
+                break;
+        }
     }
 }
