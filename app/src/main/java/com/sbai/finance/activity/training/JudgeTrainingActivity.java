@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -31,6 +30,7 @@ import com.sbai.finance.utils.RenderScriptGaussianBlur;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
 import com.sbai.finance.view.training.Kline.MvKlineView;
+import com.sbai.glide.GlideApp;
 
 import java.util.Collections;
 import java.util.List;
@@ -116,8 +116,8 @@ public class JudgeTrainingActivity extends BaseActivity {
         Collections.reverse(dataList); // first is the last data
         mKlineView.setDataList(dataList);
 
-        Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                .bitmapTransform(new GlideCircleTransform(getActivity()))
+        GlideApp.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
+                .transform(new GlideCircleTransform(getActivity()))
                 .placeholder(R.drawable.ic_default_avatar_big)
                 .into(mUserPortrait);
         mUsername.setText(LocalUser.getUser().getUserInfo().getUserName());

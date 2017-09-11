@@ -24,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -41,9 +40,10 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -97,7 +97,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
         mMyQuestionAdapter.setOnClickCallback(new MyQuestionAdapter.OnClickCallback() {
             @Override
             public void onLoveClick(final Question item) {
-                umengEventCount(UmengCountEventIdUtils.MISS_TALK_PRAISE);
+                umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
                 Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
 
                     @Override
@@ -116,7 +116,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 
             @Override
             public void onVoiceClick(final Question item) {
-                umengEventCount(UmengCountEventIdUtils.MISS_TALK_VOICE);
+                umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
                 //播放下一个之前把上一个播放位置的动画停了
                 if (mPlayingID != -1) {
                     for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
@@ -377,12 +377,12 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
                                     final OnClickCallback onClickCallback, final int position) {
                 if (item == null) return;
 
-                Glide.with(context).load(item.getUserPortrait())
+                GlideApp.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .transform(new GlideCircleTransform(context))
                         .into(mAvatar);
 
-                Glide.with(context).load(item.getCustomPortrait())
+                GlideApp.with(context).load(item.getCustomPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .transform(new GlideCircleTransform(context))
                         .into(mMissAvatar);

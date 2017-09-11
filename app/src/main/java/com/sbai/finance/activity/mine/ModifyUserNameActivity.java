@@ -7,7 +7,6 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -111,11 +110,8 @@ public class ModifyUserNameActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
-//                            UserInfo userInfo = LocalUser.getUser().getUserInfo();
-//                            userInfo.setUserName(userName);
-//                            LocalUser.getUser().setUserInfo(userInfo);
+                            ToastUtil.show(R.string.modify_success);
                             LocalUser.getUser().getUserInfo().setUserName(userName);
-                            Log.d(TAG, "onRespSuccess: " + LocalUser.getUser().getUserInfo());
                             setResult(RESULT_OK);
                             finish();
                         }

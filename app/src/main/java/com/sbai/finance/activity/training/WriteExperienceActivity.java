@@ -28,6 +28,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.List;
 
@@ -120,7 +121,7 @@ public class WriteExperienceActivity extends BaseActivity {
 			@Override
 			public void onGetImagePath(String path) {
 				if (!TextUtils.isEmpty(path)) {
-					Glide.with(getActivity()).load(path)
+					GlideApp.with(getActivity()).load(path)
 							.placeholder(R.drawable.ic_default_image)
 							.into(mAddPhoto);
 					mPath = path;

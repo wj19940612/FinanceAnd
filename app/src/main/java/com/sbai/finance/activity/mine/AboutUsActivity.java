@@ -27,7 +27,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.httplib.CookieManger;
 
@@ -101,23 +101,24 @@ public class AboutUsActivity extends BaseActivity {
             case R.id.versionName:
                 break;
             case R.id.action_product:
-                umengEventCount(UmengCountEventIdUtils.ME_FUNCTION_INTRODUCE);
-                Launcher.with(getActivity(), WebActivity.class).putExtra(WebActivity.EX_URL, Client.ABOUT_US_PAGE_URL).execute();
+                umengEventCount(UmengCountEventId.ME_FUNCTION_INTRODUCE);
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, Client.ABOUT_US_PAGE_URL).execute();
                 break;
             case R.id.user_protocol:
-                umengEventCount(UmengCountEventIdUtils.ME_USER_AGREEMENT);
+                umengEventCount(UmengCountEventId.ME_USER_AGREEMENT);
                 openUserProtocolPage();
                 break;
             case R.id.checkUpdate:
-                umengEventCount(UmengCountEventIdUtils.ME_CHECK_UPDATE);
+                umengEventCount(UmengCountEventId.ME_CHECK_UPDATE);
                 checkVersion();
                 break;
             case R.id.weChat:
-                umengEventCount(UmengCountEventIdUtils.ME_SERVICE_WECHAT);
+                umengEventCount(UmengCountEventId.ME_SERVICE_WECHAT);
                 copyConnectWay(mServiceConnectWay.getWeixin());
                 break;
             case R.id.qq:
-                umengEventCount(UmengCountEventIdUtils.ME_SERVICE_QQ);
+                umengEventCount(UmengCountEventId.ME_SERVICE_QQ);
                 openQQ();
                 break;
         }

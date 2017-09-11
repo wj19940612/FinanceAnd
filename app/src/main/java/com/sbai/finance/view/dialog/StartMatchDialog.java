@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
+import com.sbai.glide.GlideApp;
 
 /**
  * Created by linrongfang on 2017/7/10.
@@ -41,9 +41,9 @@ public class StartMatchDialog extends BaseDialog {
 
         ImageView mMatchLoading = (ImageView) customView.findViewById(R.id.matchLoading);
 
-        Glide.with(activity)
+        GlideApp.with(activity)
                 .load(R.drawable.ic_future_svs_looking_for)
-                .asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE)//添加缓存
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)//添加缓存
                 .into(mMatchLoading);
 
         StartMatchDialog.single(activity)

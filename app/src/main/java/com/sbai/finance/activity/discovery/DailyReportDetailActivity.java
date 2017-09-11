@@ -13,13 +13,11 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.DownloadListener;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,10 +33,8 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Network;
-import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.dialog.ShareDialog;
 
 import butterknife.BindView;
@@ -120,7 +116,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         initView();
         initWebView();
         requestDailyReportDetail();
-        umengEventCount(UmengCountEventIdUtils.REPORT_VIEW_DETAIL);
+        umengEventCount(UmengCountEventId.REPORT_VIEW_DETAIL);
     }
 
     private void requestDailyReportDetail() {
@@ -187,7 +183,7 @@ public class DailyReportDetailActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
-        mWebView.onPause();
+        //   mWebView.onPause();
     }
 
     @OnClick({R.id.back, R.id.share, R.id.refreshButton, R.id.shareArea, R.id.backArea})
@@ -200,8 +196,7 @@ public class DailyReportDetailActivity extends BaseActivity {
             case R.id.share:
             case R.id.shareArea:
                 // TODO: 10/08/2017 添加乐米日报分享弹框
-                //ShareReportDialogFragment
-                umengEventCount(UmengCountEventIdUtils.REPORT_SHARE);
+                umengEventCount(UmengCountEventId.REPORT_SHARE);
                 ShareDialog.with(getActivity())
                         .hasFeedback(false)
                         .setShareThumbUrl(mShareImgUrl)
@@ -214,13 +209,13 @@ public class DailyReportDetailActivity extends BaseActivity {
                             public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
                                 switch (platform) {
                                     case SINA_WEIBO:
-                                        umengEventCount(UmengCountEventIdUtils.REPORT_SHARE_SINA_WEIBO);
+                                        umengEventCount(UmengCountEventId.REPORT_SHARE_SINA_WEIBO);
                                         break;
                                     case WECHAT_FRIEND:
-                                        umengEventCount(UmengCountEventIdUtils.REPORT_SHARE_FRIEND);
+                                        umengEventCount(UmengCountEventId.REPORT_SHARE_FRIEND);
                                         break;
                                     case WECHAT_CIRCLE:
-                                        umengEventCount(UmengCountEventIdUtils.REPORT_SHARE_CIRCLE);
+                                        umengEventCount(UmengCountEventId.REPORT_SHARE_CIRCLE);
                                         break;
                                 }
                             }
@@ -267,7 +262,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         mWebView.clearCache(true);
         mWebView.clearFormData();
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        mWebView.setBackgroundColor(0);
+        //   mWebView.setBackgroundColor(0);
         //硬件加速 有些API19手机不支持
 //        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
 //            mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -282,13 +277,8 @@ public class DailyReportDetailActivity extends BaseActivity {
         }
         mWebViewClient = new WebViewClient();
         mWebView.setWebViewClient(mWebViewClient);
-//        mWebView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                ((WebView) v).requestDisallowInterceptTouchEvent(true);
-//                return false;
-//            }
-//        });
+        mWebView.setDrawingCacheEnabled(true);
+        mWebView.setBackgroundColor(0);
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {

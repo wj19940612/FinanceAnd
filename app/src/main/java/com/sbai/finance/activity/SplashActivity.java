@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.igexin.sdk.PushManager;
 import com.sbai.finance.BuildConfig;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.service.PushIntentService;
 import com.sbai.finance.service.PushService;
@@ -21,6 +22,7 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
 
         translucentStatusBar();
+
         // init getui push
         PushManager.getInstance().initialize(this.getApplicationContext(), PushService.class);
         // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
@@ -48,7 +50,11 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void gotoMain() {
-        startActivity(new Intent(this, MainActivity.class));
+        if (Preference.get().isShowGuide()) {
+            startActivity(new Intent(this, GuideActivity.class));
+        } else {
+            startActivity(new Intent(this, MainActivity.class));
+        }
         supportFinishAfterTransition();
     }
 

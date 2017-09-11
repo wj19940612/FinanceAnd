@@ -19,11 +19,11 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mine.cornucopia.EarningsAndExpendDetailsActivity;
+import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.UserInfo;
-import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -187,16 +187,8 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
 
                     }
                     break;
-                //   30.意向金支付成功
-                case HistoryNewsModel.THE_EARNEST_MONEY_APY_SUCCESS:
-                    if (!historyNewsModel.isLossEfficacy()) {
-                        Launcher.with(getActivity(), FundDetailActivity.class).execute();
-                    }
-                    break;
                 case HistoryNewsModel.WITH_DRAW_SUCCESS:
-                    if (!historyNewsModel.isLossEfficacy()) {
-                        Launcher.with(getActivity(), FundDetailActivity.class).execute();
-                    }
+
                     break;
                 case HistoryNewsModel.WITH_DRAW_FAIL:
                     if (!historyNewsModel.isLossEfficacy()) {
@@ -207,8 +199,8 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                 case HistoryNewsModel.WORSHIP_REWARD:
                 case HistoryNewsModel.REWARD:
                     if (!historyNewsModel.isLossEfficacy()) {
-                        Launcher.with(getActivity(), EarningsAndExpendDetailsActivity.class)
-                                .putExtra(Launcher.EX_PAY_END, ExchangeDetailModel.TYPE_INGOT)
+                        Launcher.with(getActivity(), WalletActivity.class)
+                                .putExtra(Launcher.EX_PAY_END, AccountFundDetail.TYPE_INGOT)
                                 .execute();
                     }
                     break;

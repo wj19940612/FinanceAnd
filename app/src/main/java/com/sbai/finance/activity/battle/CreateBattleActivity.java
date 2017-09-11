@@ -26,7 +26,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
@@ -206,7 +206,7 @@ public class CreateBattleActivity extends BaseActivity {
                 mCoinType = 3;
                 break;
             case R.id.launch_battle:
-                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_LAUNCH_BATTLE);
+                umengEventCount(UmengCountEventId.BATTLE_HALL_LAUNCH_BATTLE);
                 launchBattle();
                 break;
         }

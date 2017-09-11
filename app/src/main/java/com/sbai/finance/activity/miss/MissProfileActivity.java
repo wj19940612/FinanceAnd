@@ -25,7 +25,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -49,9 +48,10 @@ import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.MissProfileSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -135,7 +135,7 @@ public class MissProfileActivity extends BaseActivity implements
 			@Override
 			public void loveOnClick(final Question item) {
 				if (LocalUser.getUser().isLogin()) {
-					umengEventCount(UmengCountEventIdUtils.MISS_TALK_PRAISE);
+					umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
 					Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
 
 						@Override
@@ -277,7 +277,7 @@ public class MissProfileActivity extends BaseActivity implements
 		switch (v.getId()) {
 			case R.id.avatar:
 				if (mMiss != null) {
-					umengEventCount(UmengCountEventIdUtils.MISS_TALK_AVATAR);
+					umengEventCount(UmengCountEventId.MISS_TALK_AVATAR);
 					Launcher.with(this, LookBigPictureActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
 							.putExtra(Launcher.EX_PAYLOAD_2, 0)
@@ -292,7 +292,7 @@ public class MissProfileActivity extends BaseActivity implements
 			case R.id.attention:
 				if (mMiss != null) {
 					if (LocalUser.getUser().isLogin()) {
-						umengEventCount(UmengCountEventIdUtils.MISS_TALK_ATTENTION);
+						umengEventCount(UmengCountEventId.MISS_TALK_ATTENTION);
 
 						Client.attention(mMiss.getId()).setCallback(new Callback2D<Resp<Attention>, Attention>() {
 
@@ -375,7 +375,7 @@ public class MissProfileActivity extends BaseActivity implements
 	}
 
 	private void updateMissDetail(final Miss miss) {
-		Glide.with(this).load(miss.getPortrait())
+		GlideApp.with(this).load(miss.getPortrait())
 				.placeholder(R.drawable.ic_default_avatar)
 				.transform(new GlideCircleTransform(this))
 				.into(mAvatar);
@@ -410,7 +410,7 @@ public class MissProfileActivity extends BaseActivity implements
 		mVoiceIntroduce.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				umengEventCount(UmengCountEventIdUtils.MISS_TALK_VOICE);
+				umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
 				//播放下一个之前把上一个播放位置的动画停了
 				if (mPlayingID != -1) {
 					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
@@ -647,12 +647,12 @@ public class MissProfileActivity extends BaseActivity implements
 			                        final int position, final ItemCallback callback) {
 				if (item == null) return;
 
-				Glide.with(context).load(item.getUserPortrait())
+				GlideApp.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(context))
 						.into(mAvatar);
 
-				Glide.with(context).load(item.getCustomPortrait())
+				GlideApp.with(context).load(item.getCustomPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(context))
 						.into(mMissAvatar);

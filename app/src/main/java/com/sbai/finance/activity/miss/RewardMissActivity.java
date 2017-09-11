@@ -6,25 +6,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
+import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.fragment.dialog.RewardInputSafetyPassDialogFragment;
 import com.sbai.finance.fragment.dialog.RewardOtherMoneyDialogFragment;
-import com.sbai.finance.model.payment.UserFundInfoModel;
+import com.sbai.finance.model.fund.UserFundInfo;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.RewardSelectMoneyView;
 import com.sbai.finance.view.SmartDialog;
 
@@ -138,14 +139,14 @@ public class RewardMissActivity extends BaseActivity {
     }
 
     private void requestUserFindInfo() {
-        umengEventCount(UmengCountEventIdUtils.MISS_TALK_REWARD);
+        umengEventCount(UmengCountEventId.MISS_TALK_REWARD);
         Client.requestUserFundInfo()
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
                     @Override
-                    protected void onRespSuccessData(UserFundInfoModel data) {
+                    protected void onRespSuccessData(UserFundInfo data) {
                         if (data.getYuanbao() < Long.valueOf(mRewardMoney.getText().toString())) {
-                            showRechargeDialog(getActivity());
+                            showRechargeDialog(getActivity(), data);
                         } else {
                             requestUserHasSafetyPass();
                         }
@@ -188,7 +189,7 @@ public class RewardMissActivity extends BaseActivity {
                 }).show();
     }
 
-    private void showRechargeDialog(final FragmentActivity activity) {
+    private void showRechargeDialog(final FragmentActivity activity, final UserFundInfo data) {
         mRewardArea.setVisibility(View.GONE);
         SmartDialog.single(getActivity(), getString(R.string.ignot_not_enough))
                 .setOnDismissListener(new SmartDialog.OnDismissListener() {
@@ -198,11 +199,15 @@ public class RewardMissActivity extends BaseActivity {
                         mRewardArea.setVisibility(View.VISIBLE);
                     }
                 })
-                .setPositive(R.string.go_exchange, new SmartDialog.OnClickListener() {
+                .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(activity, CornucopiaActivity.class).execute();
+
+                        Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
+                                .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
+                                .putExtra(ExtraKeys.USER_FUND, data != null ? data.getMoney() : 0)
+                                .execute();
                     }
                 })
                 .setNegative(R.string.cancel)

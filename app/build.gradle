@@ -16,7 +16,7 @@ android {
                 GETUI_APP_KEY   : "Cm5IpNQNesA7Pg6hQI6wq8",
                 GETUI_APP_SECRET: "dIHXqXMBzt6rhfAFui4Gt9",
                 UMENG_APP_KEY   : "591a6342677baa75060024bf",
-                UMENG_CHANNEL   : "OFFICIAL"
+                UMENG_CHANNEL   : "android"
         ]
 
         // the ndk and manifest configs are for getui
@@ -88,8 +88,8 @@ android {
 
         alpha {
             applicationId "com.sbai.finance.alpha"
-            versionCode 96
-            versionName "1.2.090104"
+            versionCode 97
+            versionName "1.2.0911"
             buildConfigField('String', 'HOST', '\"fanli.esongbai.xyz\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 
@@ -98,13 +98,13 @@ android {
                     GETUI_APP_KEY   : "Cm5IpNQNesA7Pg6hQI6wq8",
                     GETUI_APP_SECRET: "dIHXqXMBzt6rhfAFui4Gt9",
                     UMENG_APP_KEY   : "591a6342677baa75060024bf",
-                    UMENG_CHANNEL   : "OFFICIAL"
+                    UMENG_CHANNEL   : "android"
             ]
         }
 
         prod {
-            versionCode 35
-            versionName "1.49"
+            versionCode 38
+            versionName "1.52"
             buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
             buildConfigField('boolean', 'IS_PROD', 'true')
 
@@ -113,7 +113,22 @@ android {
                     GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
                     GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
                     UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "OFFICIAL"
+                    UMENG_CHANNEL   : "android"
+            ]
+        }
+
+        tencent {
+            versionCode 38
+            versionName "2.0"
+            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
+            buildConfigField('boolean', 'IS_PROD', 'true')
+
+            manifestPlaceholders = [
+                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
+                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
+                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
+                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
+                    UMENG_CHANNEL   : "tencent"
             ]
         }
     }
@@ -126,13 +141,15 @@ dependencies {
     })
     compile project(':httplib')
     compile project(':chart')
+    compile project(':glide')
+
     compile('cn.qqtheme.framework:WheelPicker:1.4.4') {
         exclude group: 'com.android.support'
     }
     compile files('libs/alipaySdk-20170623-proguard.jar')
+
+
     compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.jakewharton:butterknife:8.0.1'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
@@ -141,6 +158,7 @@ dependencies {
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.github.chrisbanes:PhotoView:1.3.1'
     compile 'com.koushikdutta.async:androidasync:2.+'
+    compile 'com.jakewharton:butterknife:8.0.1'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
 }

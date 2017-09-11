@@ -20,7 +20,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.mine.cornucopia.ExchangeDetailModel;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
@@ -183,7 +183,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
 
     private void requestRewardMiss(String password) {
         if (mType == RewardInfo.TYPE_MISS) {
-            Client.rewardMiss(mId, Double.valueOf(mRewardMoney), ExchangeDetailModel.TYPE_INGOT, password)
+            Client.rewardMiss(mId, Double.valueOf(mRewardMoney), AccountFundDetail.TYPE_INGOT, password)
                     .setTag(TAG)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
@@ -209,7 +209,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
 
         }
         if (mType == RewardInfo.TYPE_QUESTION) {
-            Client.rewardQuestion(mId, Double.valueOf(mRewardMoney), ExchangeDetailModel.TYPE_INGOT, password)
+            Client.rewardQuestion(mId, Double.valueOf(mRewardMoney), AccountFundDetail.TYPE_INGOT, password)
                     .setTag(TAG)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override

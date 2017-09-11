@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,13 +38,13 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 		initData(getIntent());
 		initTitleBar();
 		if (mMissAvatar != -1) {
-			Glide.with(this).load(mPortrait)
+			GlideApp.with(this).load(mPortrait)
 					.thumbnail(0.1f)
 					.error(R.drawable.ic_default_avatar_big)
 					.dontAnimate()
 					.into(mImageView);
 		} else {
-			Glide.with(this).load(mPortrait)
+			GlideApp.with(this).load(mPortrait)
 					.thumbnail(0.1f)
 					.error(R.drawable.ic_default_image)
 					.dontAnimate()
@@ -77,7 +77,7 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 			mTitleBar.setVisibility(View.VISIBLE);
 			if (mDelete != -1) {
 				mTitleBar.setRightVisible(true);
-				mTitleBar.setRightImage(ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete_photo));
+				mTitleBar.setRightTextLeftImage(ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete_photo));
 				mTitleBar.setOnRightViewClickListener(this);
 			} else {
 				mTitleBar.setRightVisible(false);

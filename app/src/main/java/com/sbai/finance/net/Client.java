@@ -2,19 +2,21 @@ package com.sbai.finance.net;
 
 import com.android.volley.Request;
 import com.google.gson.Gson;
+import com.sbai.finance.App;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.levelevaluation.QuestionAnswer;
+import com.sbai.finance.utils.AppInfo;
 import com.sbai.httplib.ApiParams;
 
 
 public class Client {
 
     private static final int POST = Request.Method.POST;
-    public static final int DEFAULT_PAGE_SIZE = 15;
+    public static final int DEFAULT_PAGE_SIZE = 20;
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
-    public static final String ABOUT_US_PAGE_URL = API.getHost() + "/mobi/user/about/about_details?nohead=1";
+    public static final String ABOUT_US_PAGE_URL = API.getHost() + "/lm/introduce.html";
     //h5的用户协议界面网址
     public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/authCodeLogin/user_protocol?nohead=1";
 
@@ -266,7 +268,8 @@ public class Client {
                 .put("phone", phone)
                 .put("msgCode", authCode)
                 .put("deviceId", Preference.get().getPushClientId())
-                .put("platform", 0));
+                .put("platform", 0)
+                .put("channel", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL")));
     }
 
     /**
@@ -298,7 +301,8 @@ public class Client {
                 .put("password", password)
                 .put("code", code)
                 .put("deviceId", Preference.get().getPushClientId())
-                .put("platform", 0));
+                .put("platform", 0)
+                .put("channel", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL")));
     }
 
     /**
@@ -1121,19 +1125,21 @@ public class Client {
     }
 
     /**
-     * 查询明细
+     * /user/userAccount/userFlow.do
+     * GET
+     * 用户流水 新接口 （wms）
      *
+     * @param type
      * @param page
-     * @param pageSize
      * @return
      */
-    public static API getDetail(int page, int pageSize) {
-        return new API("/user/userFlow/queryUserFlow.do",
+    public static API requestAccountFundDetailList(int type, int page) {
+        return new API("/user/userAccount/userFlow.do",
                 new ApiParams()
+                        .put("type", type)
                         .put("page", page)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
-
 
     /**
      * 获取品种简介
@@ -1184,11 +1190,14 @@ public class Client {
 
     /**
      * 获取可用平台
+     * /user/finance/platform/selectUsablePlatformByType.do
+     * GET
+     * 可用支付平台（wms）
      *
      * @return
      */
-    public static API getUsablePlatform() {
-        return new API("/user/finance/platform/selectUsablePlatform.do");
+    public static API getUsablePlatform(int type) {
+        return new API("/user/finance/platform/selectUsablePlatformByType.do", new ApiParams().put("type", type));
     }
 
     /**
@@ -1469,14 +1478,17 @@ public class Client {
      * app生成订单信息（wms）
      * 借款ID 充值传0
      *
-     * @param money   订单金额
-     * @param orderId 借款ID 充值传0
+     * @param money      订单金额
+     * @param type       0 现金 1 元宝 2 积分
+     * @param exchangeId 元宝兑换需要
      * @return
      */
-    public static API requestAliPayOrderInfo(String money, int orderId) {
+    public static API requestAliPayOrderInfo(String money, int type, int exchangeId) {
         return new API(POST, "/user/userPay/alipayTrade.do", new ApiParams()
                 .put("money", money)
-                .put("orderId", orderId));
+                .put("orderId", 0)
+                .put("exchangeId", exchangeId)
+                .put("type", type));
     }
 
     /**
@@ -1649,24 +1661,6 @@ public class Client {
                 .put("password", password)
                 .put("fromRealMoney", fromRealMoney)
                 .put("toMoney", toMoney));
-    }
-
-    /**
-     * /user/userAccount/userCurrencyFlow.do
-     * GET
-     * 元宝积分明细（wms）
-     *
-     * @param inOrOut
-     * @param currencyType
-     * @param page
-     * @return
-     */
-    public static API getExchangeDetailList(int inOrOut, int currencyType, int page) {
-        return new API("/user/userAccount/userCurrencyFlow.do", new ApiParams()
-                .put("inOrOut", inOrOut)
-                .put("currencyType", currencyType)
-                .put("page", page)
-                .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
 
     /**
@@ -2488,5 +2482,16 @@ public class Client {
     //获取客服联系方式
     public static API requestServiceConnectWay() {
         return new API("/user/dictionary/findDictionaryForJson.do?type=aboutus");
+    }
+
+    /**
+     * 活动兑换记录
+     */
+    public static API getSkinList(int activityId, int page) {
+        return new API("/user/skin/queryExchangeLogByUser.do",
+                new ApiParams()
+                        .put("activityId", activityId)
+                        .put("page", page)
+                        .put("pageSize", 20));
     }
 }

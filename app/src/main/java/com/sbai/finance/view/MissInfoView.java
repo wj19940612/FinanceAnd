@@ -3,14 +3,13 @@ package com.sbai.finance.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +48,7 @@ public class MissInfoView extends LinearLayout {
     }
 
     public MissInfoView setImgRes(String url) {
-        Glide.with(getContext())
+        GlideApp.with(getContext())
                 .load(url).placeholder(R.drawable.ic_default_avatar)
                 .transform(new GlideCircleTransform(getContext()))
                 .into(mAvatar);
@@ -57,7 +56,7 @@ public class MissInfoView extends LinearLayout {
     }
 
     public MissInfoView setImgRes(Integer resourceId) {
-        Glide.with(getContext())
+        GlideApp.with(getContext())
                 .load(resourceId).placeholder(R.drawable.ic_default_avatar)
                 .transform(new GlideCircleTransform(getContext()))
                 .into(mAvatar);

@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
@@ -29,6 +28,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 
@@ -182,12 +182,12 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
             }
 
             private void bindDataWithView(final Battle item, Context context) {
-                    Glide.with(context)
+                    GlideApp.with(context)
                             .load(item.getLaunchUserPortrait())
                             .placeholder(R.drawable.ic_default_avatar)
                             .transform(new GlideCircleTransform(context))
                             .into(mMyAvatar);
-                    Glide.with(context)
+                    GlideApp.with(context)
                             .load(item.getAgainstUserPortrait())
                             .placeholder(R.drawable.ic_default_avatar)
                             .transform(new GlideCircleTransform(context))
@@ -197,13 +197,13 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                 String reward="" ;
                 if (item.getWinResult() == Battle.WIN_RESULT_TIE) {
                     switch (item.getCoinType()) {
-                        case Battle.COIN_TYPE_BAO:
+                        case Battle.COIN_TYPE_INGOT:
                             reward = 0 + context.getString(R.string.ingot);
                             break;
                         case Battle.COIN_TYPE_CASH:
                             reward = 0 + context.getString(R.string.cash);
                             break;
-                        case Battle.COIN_TYPE_INTEGRAL:
+                        case Battle.COIN_TYPE_SCORE:
                             reward = 0 + context.getString(R.string.integral);
                             break;
                     }
@@ -213,25 +213,25 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                         ||(LocalUser.getUser().getUserInfo().getId() == item.getAgainstUser()
                         && item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN)) {
                     switch (item.getCoinType()) {
-                        case Battle.COIN_TYPE_BAO:
+                        case Battle.COIN_TYPE_INGOT:
                             reward = Math.round(item.getReward()-item.getCommission()) + context.getString(R.string.ingot);
                             break;
                         case Battle.COIN_TYPE_CASH:
                             reward = item.getReward() + context.getString(R.string.cash);
                             break;
-                        case Battle.COIN_TYPE_INTEGRAL:
+                        case Battle.COIN_TYPE_SCORE:
                             reward = StrFormatter.getFormIntegrate(item.getReward()-item.getCommission()) + context.getString(R.string.integral);
                             break;
                     }
                 }else{
                     switch (item.getCoinType()) {
-                        case Battle.COIN_TYPE_BAO:
+                        case Battle.COIN_TYPE_INGOT:
                             reward = item.getReward() + context.getString(R.string.ingot);
                             break;
                         case Battle.COIN_TYPE_CASH:
                             reward = item.getReward() + context.getString(R.string.cash);
                             break;
-                        case Battle.COIN_TYPE_INTEGRAL:
+                        case Battle.COIN_TYPE_SCORE:
                             reward = item.getReward() + context.getString(R.string.integral);
                             break;
                     }

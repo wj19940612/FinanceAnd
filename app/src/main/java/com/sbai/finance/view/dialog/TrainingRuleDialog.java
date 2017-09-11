@@ -12,12 +12,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
 import com.sbai.finance.model.training.Training;
+import com.sbai.finance.view.GifView;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.glide.GlideApp;
 
 public class TrainingRuleDialog {
 
@@ -92,9 +93,9 @@ public class TrainingRuleDialog {
 
         }
         if (gifDrawable != 0) {
-            Glide.with(mActivity)
+            GlideApp.with(mActivity)
                     .load(gifDrawable)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .priority(Priority.HIGH)
                     .into(image);
         }

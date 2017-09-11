@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -39,6 +38,7 @@ import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 import java.util.List;
@@ -333,7 +333,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 				if (item == null) return;
 
 				if (item.getUserModel() != null) {
-					Glide.with(context).load(item.getUserModel().getUserPortrait())
+					GlideApp.with(context).load(item.getUserModel().getUserPortrait())
 							.placeholder(R.drawable.ic_default_avatar)
 							.transform(new GlideCircleTransform(context))
 							.into(mAvatar);
@@ -341,7 +341,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 					mUserName.setText(item.getUserModel().getUserName());
 					mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
 				} else {
-					Glide.with(context).load(R.drawable.ic_default_avatar)
+					GlideApp.with(context).load(R.drawable.ic_default_avatar)
 							.transform(new GlideCircleTransform(context))
 							.into(mAvatar);
 					mUserName.setText("");
@@ -385,7 +385,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 					mImageView.setVisibility(View.GONE);
 				} else {
 					mImageView.setVisibility(View.VISIBLE);
-					Glide.with(context).load(item.getPicture())
+					GlideApp.with(context).load(item.getPicture())
 							.placeholder(R.drawable.ic_default_image)
 							.into(mImageView);
 

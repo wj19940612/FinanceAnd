@@ -254,7 +254,7 @@ public class MvKlineView extends RelativeLayout {
 
         @Override
         public void run() {
-            if (mTotalAnswers == mIntersectionPointArray.size() - 1) {
+            if (mTotalAnswers >= mIntersectionPointArray.size()) {
                 onFinish();
                 return;
             }

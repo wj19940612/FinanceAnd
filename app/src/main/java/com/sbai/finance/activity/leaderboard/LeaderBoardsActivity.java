@@ -23,7 +23,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.ImageListView;
 
 import java.util.ArrayList;
@@ -145,18 +145,18 @@ public class LeaderBoardsActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ingotBoardArea:
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_INGOT_BOARD);
+                umengEventCount(UmengCountEventId.DISCOVERY_INGOT_BOARD);
                 Launcher.with(getActivity(), IngotOrSavantLeaderBoardActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, LeaderBoardRank.INGOT)
                         .execute();
                 break;
             case R.id.profitBoardArea:
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_PROFIT_BOARD);
+                umengEventCount(UmengCountEventId.DISCOVERY_PROFIT_BOARD);
                 Launcher.with(getActivity(), ProfitBoardListActivity.class)
                         .execute();
                 break;
             case R.id.savantBoardArea:
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_SAVANT);
+                umengEventCount(UmengCountEventId.DISCOVERY_SAVANT);
                 Launcher.with(getActivity(), IngotOrSavantLeaderBoardActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, LeaderBoardRank.SAVANT)
                         .execute();

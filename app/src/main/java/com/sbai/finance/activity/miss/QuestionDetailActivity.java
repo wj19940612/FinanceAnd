@@ -25,7 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -46,10 +45,11 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
+import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 import java.util.List;
@@ -142,7 +142,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	}
 
 	private void share() {
-		umengEventCount(UmengCountEventIdUtils.MISS_TALK_SHARE);
+		umengEventCount(UmengCountEventId.MISS_TALK_SHARE);
 		ShareDialog.with(getActivity())
 				.setTitle(getString(R.string.share_title))
 				.setShareTitle(getString(R.string.question_share_share_title))
@@ -155,13 +155,13 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 						Client.share().setTag(TAG).fire();
 						switch (platform) {
 							case SINA_WEIBO:
-								umengEventCount(UmengCountEventIdUtils.MISS_TALK_SHARE_WEIBO);
+								umengEventCount(UmengCountEventId.MISS_TALK_SHARE_WEIBO);
 								break;
 							case WECHAT_FRIEND:
-								umengEventCount(UmengCountEventIdUtils.MISS_TALK_SHARE_FRIEND);
+								umengEventCount(UmengCountEventId.MISS_TALK_SHARE_FRIEND);
 								break;
 							case WECHAT_CIRCLE:
-								umengEventCount(UmengCountEventIdUtils.MISS_TALK_SHARE_CIRCLE);
+								umengEventCount(UmengCountEventId.MISS_TALK_SHARE_CIRCLE);
 								break;
 						}
 					}
@@ -255,12 +255,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	}
 
 	private void updateQuestionDetail(final Question question) {
-		Glide.with(this).load(question.getUserPortrait())
+		GlideApp.with(this).load(question.getUserPortrait())
 				.placeholder(R.drawable.ic_default_avatar)
 				.transform(new GlideCircleTransform(this))
 				.into(mAvatar);
 
-		Glide.with(this).load(question.getCustomPortrait())
+		GlideApp.with(this).load(question.getCustomPortrait())
 				.placeholder(R.drawable.ic_default_avatar)
 				.transform(new GlideCircleTransform(this))
 				.into(mMissAvatar);
@@ -445,7 +445,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			case R.id.love:
 				if (mQuestionDetail != null) {
 					if (LocalUser.getUser().isLogin()) {
-						umengEventCount(UmengCountEventIdUtils.MISS_TALK_PRAISE);
+						umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
 						Client.prise(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
 
 							@Override
@@ -534,13 +534,13 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				if (item == null) return;
 
 				if (item.getUserModel() != null) {
-					Glide.with(context).load(item.getUserModel().getUserPortrait())
+					GlideApp.with(context).load(item.getUserModel().getUserPortrait())
 							.placeholder(R.drawable.ic_default_avatar)
 							.transform(new GlideCircleTransform(context))
 							.into(mAvatar);
 					mUserName.setText(item.getUserModel().getUserName());
 				} else {
-					Glide.with(context).load(R.drawable.ic_default_avatar)
+					GlideApp.with(context).load(R.drawable.ic_default_avatar)
 							.transform(new GlideCircleTransform(context))
 							.into(mAvatar);
 					mUserName.setText("");

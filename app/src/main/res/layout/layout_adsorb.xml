@@ -6,9 +6,9 @@
     android:id="@+id/adsorb_text"
     android:layout_width="match_parent"
     android:layout_height="32dp"
-    android:background="@color/split"
+    android:background="@color/background"
     android:gravity="center_vertical"
     android:paddingLeft="13dp"
-    android:textColor="#F5F5F5"
+    android:textColor="@color/unluckyText"
     android:textSize="13sp"
     tool:text="2月"/>

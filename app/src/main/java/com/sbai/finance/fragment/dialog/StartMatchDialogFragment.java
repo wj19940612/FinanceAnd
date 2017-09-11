@@ -15,9 +15,9 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
+import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,9 +90,9 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
     }
 
     private void init() {
-        Glide.with(getContext())
+        GlideApp.with(getContext())
                 .load(R.drawable.ic_future_svs_looking_for)
-                .asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE)//添加缓存
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)//添加缓存
                 .into(mMatchLoading);
 
         mCancel.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +106,7 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
     public StartMatchDialogFragment setMatchSuccess(String imageUrl) {
         mTitle.setText(getString(R.string.title_match_success));
         mMatchLoading.setVisibility(View.GONE);
-        Glide.with(getContext())
+        GlideApp.with(getContext())
                 .load(imageUrl)
                 .placeholder(R.drawable.ic_default_avatar_big)
                 .into(mMatchHead);
