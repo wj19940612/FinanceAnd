@@ -44,7 +44,7 @@ import static com.sbai.finance.R.id.position;
 
 /**
  *
- *
+ *元宝 积分等虚拟产品兑换界面
  */
 
 public class VirtualProductExchangeActivity extends RechargeActivity {
@@ -137,6 +137,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
         mSelectProductPosition = position;
         mVirtualProductAdapter.notifyItemChanged(position, virtualProductInfo);
         changeConfirmBtnStatus();
+        changeOtherPayStatus(mSelectVirtualProductInfo);
     }
 
     private void initData() {

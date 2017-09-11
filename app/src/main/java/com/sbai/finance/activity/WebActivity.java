@@ -1,5 +1,6 @@
 package com.sbai.finance.activity;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,9 +34,15 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
+import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.httplib.CookieManger;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -89,7 +96,7 @@ public class WebActivity extends BaseActivity {
     private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            initCookies(CookieManger.getInstance().getRawCookie(),mPageUrl);
+            initCookies(CookieManger.getInstance().getRawCookie(), mPageUrl);
             loadPage();
         }
     };
@@ -279,14 +286,14 @@ public class WebActivity extends BaseActivity {
         getWebView().loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
     }
 
-    public void showRightView(String text, final String url) {
+    public void showRightView(String text, final String url, final boolean isNeedLogin) {
         mUrlSet.add(mPageUrl);
         mTitleBar.setRightVisible(true);
         mTitleBar.setRightText(text);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (LocalUser.getUser().isLogin()) {
+                if (!isNeedLogin) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, url)
                             .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
@@ -392,6 +399,18 @@ public class WebActivity extends BaseActivity {
             Log.d(TAG, "获取图片失败");
             return;
         }
+        final Bitmap finalBitmap = bitmap;
+        SmartDialog.single(getActivity(), getString(R.string.image_saved_please_open_wechat_to_share))
+                .setTitle(R.string.share_to_wechat)
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        ShareDialog.shareImageToWechat(getActivity(), finalBitmap);
+                    }
+                })
+                .setNegative(R.string.cancel)
+                .show();
         ImageUtils.saveImageToGallery(getApplicationContext(), bitmap);
     }
 

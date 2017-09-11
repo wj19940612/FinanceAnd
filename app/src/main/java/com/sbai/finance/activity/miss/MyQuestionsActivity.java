@@ -141,6 +141,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
                                     public void onCompletion(MediaPlayer mp) {
                                         item.setPlaying(false);
                                         mMyQuestionAdapter.notifyDataSetChanged();
+                                        mPlayingID = -1;
                                     }
                                 });
 
@@ -165,6 +166,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
                             public void onCompletion(MediaPlayer mp) {
                                 item.setPlaying(false);
                                 mMyQuestionAdapter.notifyDataSetChanged();
+                                mPlayingID = -1;
                             }
                         });
                         item.setPlaying(true);
