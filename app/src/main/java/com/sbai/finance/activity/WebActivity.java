@@ -1,7 +1,9 @@
 package com.sbai.finance.activity;
 
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Picture;
@@ -9,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -83,6 +86,14 @@ public class WebActivity extends BaseActivity {
         return mWebView;
     }
 
+    private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            initCookies(CookieManger.getInstance().getRawCookie(),mPageUrl);
+            loadPage();
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +102,7 @@ public class WebActivity extends BaseActivity {
         mNetworkChangeReceiver = new NetworkReceiver();
         mLoadSuccess = true;
         initData(getIntent());
+        initLoginReceiver();
         mUrlSet = new HashSet<>();
         initWebView();
         mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
@@ -99,6 +111,13 @@ public class WebActivity extends BaseActivity {
                 mWebView.scrollTo(0, 0);
             }
         });
+    }
+
+    private void initLoginReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LoginActivity.ACTION_LOGIN_SUCCESS);
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(mLoginReceiver, intentFilter);
     }
 
     @Override
@@ -111,6 +130,8 @@ public class WebActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mWebView.destroy();
+        LocalBroadcastManager.getInstance(getActivity())
+                .unregisterReceiver(mLoginReceiver);
     }
 
     @Override

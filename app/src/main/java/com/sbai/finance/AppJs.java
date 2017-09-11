@@ -7,6 +7,7 @@ import android.webkit.JavascriptInterface;
 
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.dialog.ShareDialog;
@@ -100,6 +101,17 @@ public class AppJs {
         if (mContext instanceof WebActivity) {
             WebActivity activity = (WebActivity) mContext;
             activity.screenShot();
+        }
+    }
+
+    /**
+     * 登录
+     */
+    @JavascriptInterface
+    public void login() {
+        if (mContext instanceof WebActivity) {
+            WebActivity activity = (WebActivity) mContext;
+            Launcher.with(activity, LoginActivity.class).execute();
         }
     }
 
