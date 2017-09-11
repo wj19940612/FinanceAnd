@@ -194,7 +194,6 @@ public class BattleListActivity extends BaseActivity implements
                         super.onResourceReady(resource, transition);
                     }
                 });
-        // TODO: 06/09/2017 check
         checkBattleRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
