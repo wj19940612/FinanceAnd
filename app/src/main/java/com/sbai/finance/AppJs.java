@@ -77,14 +77,14 @@ public class AppJs {
      * 显示兑换记录按钮
      */
     @JavascriptInterface
-    public void showExchangeButton(final boolean isShow, final String text, final String url) {
+    public void showExchangeButton(final boolean isShow, final String text, final String url, final boolean isNeedLogin) {
         if (mContext instanceof WebActivity) {
             final WebActivity activity = (WebActivity) mContext;
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if (isShow) {
-                        activity.showRightView(text, url);
+                        activity.showRightView(text, url, isNeedLogin);
                     } else {
                         activity.hideRightView();
                     }
