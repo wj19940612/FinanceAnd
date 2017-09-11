@@ -374,6 +374,7 @@
     <string name="tie">平局</string>
     <string name="duration">时长</string>
     <string name="minute">%1$s分钟</string>
+    <string name="balance_is_not_enough">余额不足,创建失败</string>
     <string name="holder_card_state">持卡人说明</string>
     <string name="holder_card_content">1.为了您的资金安全,只能绑定持卡人本人的银行卡。\n2.未成年人禁止交易</string>
 

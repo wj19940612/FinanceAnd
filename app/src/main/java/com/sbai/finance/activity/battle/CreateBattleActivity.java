@@ -351,15 +351,15 @@ public class CreateBattleActivity extends BaseActivity {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         if (failedResp.getCode() == 2201) {
-                            SmartDialog.with(getActivity(), "余额不足,创建失败")
-                                    .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                            SmartDialog.with(getActivity(), getString(R.string.balance_is_not_enough))
+                                    .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
                                         @Override
                                         public void onClick(Dialog dialog) {
                                             dialog.dismiss();
                                         }
                                     })
                                     .setTitle(R.string.hint)
-                                    .setNegativeVisible(View.GONE)
+                                    .setNegative(R.string.cancel)
                                     .show();
                         } else {
                             ToastUtil.show(failedResp.getMsg());
