@@ -275,9 +275,12 @@ public class TitleBar extends RelativeLayout {
     }
 
     private void setRightTextRightImage(Drawable rightTextRightImage) {
-        mRightTextRightImage = rightTextRightImage;
-        mRightView.setCompoundDrawablePadding(8);
-        mRightView.setCompoundDrawablesWithIntrinsicBounds(null, null, mRightTextRightImage, null);
+        if(mRightTextRightImage!=null){
+            mRightTextRightImage = rightTextRightImage;
+            mRightView.setCompoundDrawablePadding(8);
+            mRightView.setCompoundDrawablesWithIntrinsicBounds(null, null, mRightTextRightImage, null);
+        }
+
     }
 
 

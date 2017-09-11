@@ -308,6 +308,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 									public void onCompletion(MediaPlayer mp) {
 										mVoiceLevel.clearAnimation();
 										mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+										mPlayingID = -1;
 									}
 								});
 
@@ -336,6 +337,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 							public void onCompletion(MediaPlayer mp) {
 								mVoiceLevel.clearAnimation();
 								mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+								mPlayingID = -1;
 							}
 						});
 

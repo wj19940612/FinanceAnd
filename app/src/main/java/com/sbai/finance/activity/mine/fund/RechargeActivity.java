@@ -119,7 +119,6 @@ public class RechargeActivity extends BaseActivity {
     private void initData() {
         mRechargeType = getIntent().getIntExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_CRASH);
         mUserFundCount = getIntent().getDoubleExtra(ExtraKeys.USER_FUND, 0);
-
         //友盟统计埋点统一入口
         switch (mRechargeType) {
             case AccountFundDetail.TYPE_CRASH:

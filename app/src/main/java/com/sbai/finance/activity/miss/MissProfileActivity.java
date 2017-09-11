@@ -203,6 +203,7 @@ public class MissProfileActivity extends BaseActivity implements
 									public void onCompletion(MediaPlayer mp) {
 										item.setPlaying(false);
 										mHerAnswerAdapter.notifyDataSetChanged();
+										mPlayingID = -1;
 									}
 								});
 
@@ -227,6 +228,7 @@ public class MissProfileActivity extends BaseActivity implements
 							public void onCompletion(MediaPlayer mp) {
 								item.setPlaying(false);
 								mHerAnswerAdapter.notifyDataSetChanged();
+								mPlayingID = -1;
 							}
 						});
 						item.setPlaying(true);
@@ -435,6 +437,7 @@ public class MissProfileActivity extends BaseActivity implements
 						public void onCompletion(MediaPlayer mp) {
 							mVoiceLevel.clearAnimation();
 							mVoiceLevel.setBackgroundResource(R.drawable.ic_miss_voice_4);
+							mMissIntroducePlayingID = -1;
 						}
 					});
 
