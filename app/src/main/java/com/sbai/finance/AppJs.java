@@ -11,6 +11,9 @@ import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.dialog.ShareDialog;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class AppJs {
 
     private Context mContext;
