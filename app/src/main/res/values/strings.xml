@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">乐米金融 DEV</string>
+    <string name="app_name">乐米金融</string>
 
     <!-- Dialog -->
     <string name="ok">确定</string>
@@ -728,7 +728,7 @@
     <string name="train_level">L%1$d</string>
     <string name="share_success">分享成功</string>
     <string name="share_title">登录用户分享就得10元宝,每日最多30元宝</string>
-    <string name="train_share_share_title">大家都在用乐米进行%1$s训练，你还不快来加入我们?</string>
+    <string name="train_share_share_title">大家都在用乐米进行%1$s，你还不快来加入我们?</string>
     <string name="train_share_description">快来和我一起进行最有趣的金融训练课程，乐米金融，金融小白的第一站</string>
     <string name="question_share_share_title">这个小姐姐对于金融的见解好独特！</string>
     <string name="question_share_description">快来一起听小姐姐的语音回答,学金融知识,乐米金融,金融小白的第一站!</string>
