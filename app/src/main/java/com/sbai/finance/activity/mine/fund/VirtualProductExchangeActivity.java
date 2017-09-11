@@ -109,16 +109,19 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
         }
 
         String text = getString(R.string.confirm_money);
-        if (mRechargeType == AccountFundDetail.TYPE_INGOT) {
-            text = getString(R.string.confirm_payment_money, FinanceUtil.formatWithScale(mSelectVirtualProductInfo.getFromMoney()));
-        } else {
-            text = getString(R.string.confirm_payment_ingot, FinanceUtil.formatWithScale(mSelectVirtualProductInfo.getFromMoney(), 0));
+        if (mSelectVirtualProductInfo != null) {
+            if (mRechargeType == AccountFundDetail.TYPE_INGOT) {
+                text = getString(R.string.confirm_payment_money, FinanceUtil.formatWithScale(mSelectVirtualProductInfo.getFromMoney()));
+            } else {
+                text = getString(R.string.confirm_payment_ingot, FinanceUtil.formatWithScale(mSelectVirtualProductInfo.getFromMoney(), 0));
+            }
         }
 
         mRecharge.setText(text);
     }
 
     private void changeUserFundEnoughStatus(VirtualProductInfo virtualProductInfo) {
+        if (mUserSelectRechargeWay == null) return;
         if (virtualProductInfo.getFromMoney() > mUserFundCount) {
             mUserSelectRechargeWay.setBalanceIsEnough(false);
             mRechargeWayAdapter.notifyItemChanged(mHistorySelectPayWayPosition, mUserSelectRechargeWay);
@@ -202,6 +205,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
 
     @Override
     protected void requestAliPayProductInfo(String money) {
+        if (mSelectVirtualProductInfo == null) return;
         Client.requestAliPayOrderInfo(String.valueOf(mSelectVirtualProductInfo.getFromMoney()),
                 AliPayHelper.PAY_INGOT,
                 mSelectVirtualProductInfo != null ? mSelectVirtualProductInfo.getId() : -1)
