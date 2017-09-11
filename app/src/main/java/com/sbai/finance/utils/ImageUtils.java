@@ -13,6 +13,8 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 
+import com.sbai.finance.R;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -485,7 +487,7 @@ public class ImageUtils {
         }
         // 最后通知图库更新
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
-        ToastUtil.show("图片保存成功");
+        ToastUtil.show(context.getString(R.string.image_saved_please_open_wechat_to_share));
     }
 
     private static String getRootPath() {
