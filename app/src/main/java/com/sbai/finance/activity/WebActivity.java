@@ -286,14 +286,14 @@ public class WebActivity extends BaseActivity {
         getWebView().loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
     }
 
-    public void showRightView(String text, final String url) {
+    public void showRightView(String text, final String url, final boolean isNeedLogin) {
         mUrlSet.add(mPageUrl);
         mTitleBar.setRightVisible(true);
         mTitleBar.setRightText(text);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (LocalUser.getUser().isLogin()) {
+                if (!isNeedLogin) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, url)
                             .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())

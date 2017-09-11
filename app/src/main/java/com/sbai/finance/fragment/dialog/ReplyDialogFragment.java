@@ -41,20 +41,8 @@ public class ReplyDialogFragment extends BaseDialogFragment {
 
 	private QuestionReply.DataBean mQuestionReply;
 
-	public static ReplyDialogFragment newInstance(QuestionReply.DataBean questionReply) {
-		ReplyDialogFragment fragment = new ReplyDialogFragment();
-		Bundle bundle = new Bundle();
-		bundle.putParcelable("questionReply", questionReply);
-		fragment.setArguments(bundle);
-		return fragment;
-	}
-
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (getArguments() != null) {
-			mQuestionReply = getArguments().getParcelable("questionReply");
-		}
+	public static ReplyDialogFragment newInstance() {
+		return new ReplyDialogFragment();
 	}
 
 	@Nullable
@@ -62,13 +50,16 @@ public class ReplyDialogFragment extends BaseDialogFragment {
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.dialog_fragment_reply, container, false);
 		unbinder = ButterKnife.bind(this, view);
-		if (mQuestionReply.getUserModel() != null && mQuestionReply != null) {
-			mReplyContent.setText(mQuestionReply.getUserModel().getUserName() + ":" + mQuestionReply.getContent());
-		}
-
 		return view;
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mQuestionReply.getUserModel() != null && mQuestionReply != null) {
+			mReplyContent.setText(mQuestionReply.getUserModel().getUserName() + ":" + mQuestionReply.getContent());
+		}
+	}
 
 	@OnClick({R.id.reply, R.id.cancel})
 	public void onViewClicked(View view) {
@@ -115,5 +106,9 @@ public class ReplyDialogFragment extends BaseDialogFragment {
 				dismissAllowingStateLoss();
 			}
 		}
+	}
+
+	public void setItemData(QuestionReply.DataBean questionReply) {
+		this.mQuestionReply = questionReply;
 	}
 }

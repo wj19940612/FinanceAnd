@@ -111,6 +111,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private TextView mRewardNumber;
 	private TextView mCommentNumber;
 	private TextView mNoComment;
+	private ReplyDialogFragment mReplyDialogFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -307,6 +308,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 									public void onCompletion(MediaPlayer mp) {
 										mVoiceLevel.clearAnimation();
 										mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+										mPlayingID = -1;
 									}
 								});
 
@@ -335,6 +337,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 							public void onCompletion(MediaPlayer mp) {
 								mVoiceLevel.clearAnimation();
 								mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+								mPlayingID = -1;
 							}
 						});
 
@@ -475,7 +478,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		if (position == 0) return;
 		QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
-		ReplyDialogFragment.newInstance(item).show(getSupportFragmentManager());
+		if (mReplyDialogFragment == null) {
+			mReplyDialogFragment = ReplyDialogFragment.newInstance();
+		}
+		mReplyDialogFragment.setItemData(item);
+		mReplyDialogFragment.showAsync(getSupportFragmentManager());
 	}
 
 	static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
