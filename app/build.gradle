@@ -4,20 +4,14 @@ apply plugin: 'com.neenbedankt.android-apt'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-    defaultConfig {
+
+    defaultConfig { // default is prod
         applicationId "com.sbai.finance"
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders = [
-                GETUI_APP_ID    : "3OXiQAgdLK74blL5qrfvn7",
-                GETUI_APP_KEY   : "Cm5IpNQNesA7Pg6hQI6wq8",
-                GETUI_APP_SECRET: "dIHXqXMBzt6rhfAFui4Gt9",
-                UMENG_APP_KEY   : "591a6342677baa75060024bf",
-                UMENG_CHANNEL   : "OFFICIAL"
-        ]
 
         // the ndk and manifest configs are for getui
         ndk {
@@ -76,7 +70,11 @@ android {
     }
 
     productFlavors {
+
+        flavorDimensions "pkg", "channel"
+
         dev {
+            dimension 'pkg'
             minSdkVersion 21
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
@@ -84,10 +82,20 @@ android {
 //            buildConfigField('String', 'HOST', '\"192.168.1.7\"')
             buildConfigField('String', 'HOST', '\"var.esongbai.xyz\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
+
+            manifestPlaceholders = [
+                    GETUI_APP_ID    : "3OXiQAgdLK74blL5qrfvn7",
+                    GETUI_APP_KEY   : "Cm5IpNQNesA7Pg6hQI6wq8",
+                    GETUI_APP_SECRET: "dIHXqXMBzt6rhfAFui4Gt9",
+                    UMENG_APP_KEY   : "591a6342677baa75060024bf",
+                    UMENG_CHANNEL   : "android"
+            ]
         }
 
         alpha {
+            dimension 'pkg'
             applicationId "com.sbai.finance.alpha"
+            versionNameSuffix '-Alpha'
             versionCode 96
             versionName "1.2.0907"
             buildConfigField('String', 'HOST', '\"fanli.esongbai.xyz\"')
@@ -98,26 +106,12 @@ android {
                     GETUI_APP_KEY   : "Cm5IpNQNesA7Pg6hQI6wq8",
                     GETUI_APP_SECRET: "dIHXqXMBzt6rhfAFui4Gt9",
                     UMENG_APP_KEY   : "591a6342677baa75060024bf",
-                    UMENG_CHANNEL   : "OFFICIAL"
+                    UMENG_CHANNEL   : "android"
             ]
         }
 
         prod {
-            versionCode 38
-            versionName "1.52"
-            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
-            buildConfigField('boolean', 'IS_PROD', 'true')
-
-            manifestPlaceholders = [
-                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
-                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
-                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
-                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "OFFICIAL"
-            ]
-        }
-
-        tencent {
+            dimension 'pkg'
             versionCode 38
             versionName "2.0.0"
             buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
@@ -128,114 +122,31 @@ android {
                     GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
                     GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
                     UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "Tencent"
+                    UMENG_CHANNEL   : "android"
             ]
         }
 
-        m360 {
-            versionCode 38
-            versionName "2.0.0"
-            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
-            buildConfigField('boolean', 'IS_PROD', 'true')
+        // channel use default configuration
+        tencent { dimension 'channel' }
+        m360 { dimension 'channel' }
+        xiaomi { dimension 'channel' }
+        baidu { dimension 'channel' }
+        huawei { dimension 'channel' }
+        vivo { dimension 'channel' }
+        oppo { dimension 'channel' }
+        others { dimension 'channel' }
+    }
 
-            manifestPlaceholders = [
+    productFlavors.all { flavor ->
+        if (flavor.dimension == 'channel') {
+            flavor.manifestPlaceholders = [
                     GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
                     GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
                     GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
                     UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "m360"
+                    UMENG_CHANNEL   : name
             ]
         }
-        xiaomi {
-            versionCode 38
-            versionName "2.0.0"
-            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
-            buildConfigField('boolean', 'IS_PROD', 'true')
-
-            manifestPlaceholders = [
-                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
-                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
-                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
-                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "xiaomi"
-            ]
-        }
-
-        baidu {
-            versionCode 38
-            versionName "2.0.0"
-            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
-            buildConfigField('boolean', 'IS_PROD', 'true')
-
-            manifestPlaceholders = [
-                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
-                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
-                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
-                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "baidu"
-            ]
-        }
-
-        huawei {
-            versionCode 38
-            versionName "2.0.0"
-            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
-            buildConfigField('boolean', 'IS_PROD', 'true')
-
-            manifestPlaceholders = [
-                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
-                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
-                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
-                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "huawei"
-            ]
-        }
-
-        vivo {
-            versionCode 38
-            versionName "2.0.0"
-            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
-            buildConfigField('boolean', 'IS_PROD', 'true')
-
-            manifestPlaceholders = [
-                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
-                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
-                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
-                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "vivo"
-            ]
-        }
-
-        oppo {
-            versionCode 38
-            versionName "2.0.0"
-            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
-            buildConfigField('boolean', 'IS_PROD', 'true')
-
-            manifestPlaceholders = [
-                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
-                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
-                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
-                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "oppo"
-            ]
-        }
-
-        others {
-            versionCode 38
-            versionName "2.0.0"
-            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
-            buildConfigField('boolean', 'IS_PROD', 'true')
-
-            manifestPlaceholders = [
-                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
-                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
-                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
-                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "others"
-            ]
-        }
-
     }
 }
 
