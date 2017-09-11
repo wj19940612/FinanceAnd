@@ -8,8 +8,6 @@
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.future.FutureTradeActivity">
 
-    <!--app:rightImage="@drawable/ic_share"-->
-    <!--app:rightVisible="true"-->
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"

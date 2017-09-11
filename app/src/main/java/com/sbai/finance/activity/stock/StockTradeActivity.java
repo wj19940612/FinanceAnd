@@ -22,7 +22,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
@@ -381,32 +380,33 @@ public abstract class StockTradeActivity extends BaseActivity {
                 mVariety.getVarietyType(), mVariety.getVarietyId());
         final String shareTitle = getString(R.string.wonderful_viewpoint, mVariety.getVarietyName());
         final String shareDescribe = getString(R.string.share_desc);
-        titleBar.setOnRightViewClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                umengEventCount(UmengCountEventId.DISCOVERY_SHARE_STOCK);
-                ShareDialogFragment
-                        .newInstance()
-                        .setShareContent(shareTitle, shareDescribe, shareUrl)
-                        .setListener(new ShareDialogFragment.OnShareDialogCallback() {
-                            @Override
-                            public void onSharePlatformClick(ShareDialogFragment.SHARE_PLATFORM platform) {
-                                switch (platform) {
-                                    case SINA_WEIBO:
-                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_STOCK_WEIBO);
-                                        break;
-                                    case WECHAT_FRIEND:
-                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_STOCK_FRIEND);
-                                        break;
-                                    case WECHAT_CIRCLE:
-                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_STOCK_CIRCLE);
-                                        break;
-                                }
-                            }
-                        })
-                        .show(getSupportFragmentManager());
-            }
-        });
+        // TODO: 2017/9/11 先隐藏分享 
+//        titleBar.setOnRightViewClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                umengEventCount(UmengCountEventId.DISCOVERY_SHARE_STOCK);
+//                ShareDialogFragment
+//                        .newInstance()
+//                        .setShareContent(shareTitle, shareDescribe, shareUrl)
+//                        .setListener(new ShareDialogFragment.OnShareDialogCallback() {
+//                            @Override
+//                            public void onSharePlatformClick(ShareDialogFragment.SHARE_PLATFORM platform) {
+//                                switch (platform) {
+//                                    case SINA_WEIBO:
+//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_STOCK_WEIBO);
+//                                        break;
+//                                    case WECHAT_FRIEND:
+//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_STOCK_FRIEND);
+//                                        break;
+//                                    case WECHAT_CIRCLE:
+//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_STOCK_CIRCLE);
+//                                        break;
+//                                }
+//                            }
+//                        })
+//                        .show(getSupportFragmentManager());
+//            }
+//        });
     }
 
     private void initData() {
