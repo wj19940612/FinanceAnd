@@ -369,7 +369,7 @@ public class RechargeActivity extends BaseActivity {
     private boolean checkRechargeBtnEnable() {
         String count = mRechargeCount.getText().toString();
         double limitMoney;
-        if (BuildConfig.IS_PROD) {
+        if (!BuildConfig.IS_PROD) {
             limitMoney = 0.01;
         } else {
             limitMoney = 5;
