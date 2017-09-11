@@ -401,10 +401,10 @@ public class WebActivity extends BaseActivity {
         }
         ShareDialog.with(getActivity())
                 .setTitle(getString(R.string.share_to))
-                .setTitleVisible(false)
                 .hasFeedback(false)
                 .hasWeiBo(false)
                 .setBitmap(bitmap)
+                .setOnShareImage(true)
                 .show();
         ImageUtils.saveImageToGallery(getApplicationContext(), bitmap);
     }

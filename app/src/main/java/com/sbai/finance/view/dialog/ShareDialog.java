@@ -88,7 +88,7 @@ public class ShareDialog {
                 case R.id.weChatFriendCircle:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.WEIXIN_CIRCLE)) {
                         if (mOnlyShareImage) {
-                            shareImageToPlatform(SHARE_MEDIA.WEIXIN);
+                            shareImageToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
                         } else {
                             mShareUrl += "&userFrom=friend";
                             shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
@@ -182,7 +182,8 @@ public class ShareDialog {
 
         @Override
         public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-            ToastUtil.show(R.string.share_failed);
+         //   ToastUtil.show(R.string.share_failed);
+            ToastUtil.show(throwable.getMessage());
         }
 
         @Override
