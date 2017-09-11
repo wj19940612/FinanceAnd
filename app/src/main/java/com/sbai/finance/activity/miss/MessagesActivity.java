@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.miss.MissMessage;
@@ -33,6 +32,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 import java.util.List;
@@ -327,7 +327,7 @@ public class MessagesActivity extends BaseActivity implements
                 if (item.getSourceUser() != null) {
                     if (item.getType() == MissMessage.TYPE_MISS_ANSWER) {
                         mUserName.setText(item.getSourceUser().getName());
-                        Glide.with(context)
+                        GlideApp.with(context)
                                 .load(item.getSourceUser().getPortrait())
                                 .placeholder(R.drawable.ic_default_avatar)
                                 .transform(new GlideCircleTransform(context))
@@ -335,7 +335,7 @@ public class MessagesActivity extends BaseActivity implements
 
                     } else {
                         mUserName.setText(item.getSourceUser().getUserName());
-                        Glide.with(context)
+                        GlideApp.with(context)
                                 .load(item.getSourceUser().getUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar)
                                 .transform(new GlideCircleTransform(context))

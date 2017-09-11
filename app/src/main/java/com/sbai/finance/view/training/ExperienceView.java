@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
@@ -24,6 +23,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,7 +71,7 @@ public class ExperienceView extends LinearLayout {
 	public void setData (final Experience data) {
 		if (data != null) {
 			if (data.getUserModel() != null) {
-				Glide.with(getContext()).load(data.getUserModel().getUserPortrait())
+				GlideApp.with(getContext()).load(data.getUserModel().getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(getContext()))
 						.into(mAvatar);
@@ -79,7 +79,7 @@ public class ExperienceView extends LinearLayout {
 				mUserName.setText(data.getUserModel().getUserName());
 				mPublishTime.setText(DateUtil.getMissFormatTime(data.getCreateDate()));
 			} else {
-				Glide.with(getContext()).load(R.drawable.ic_default_avatar)
+				GlideApp.with(getContext()).load(R.drawable.ic_default_avatar)
 						.transform(new GlideCircleTransform(getContext()))
 						.into(mAvatar);
 				mUserName.setText("");
@@ -123,7 +123,7 @@ public class ExperienceView extends LinearLayout {
 				mImageView.setVisibility(View.GONE);
 			} else {
 				mImageView.setVisibility(View.VISIBLE);
-				Glide.with(getContext()).load(data.getPicture())
+				GlideApp.with(getContext()).load(data.getPicture())
 						.placeholder(R.drawable.ic_default_image)
 						.into(mImageView);
 

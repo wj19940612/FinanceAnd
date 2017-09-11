@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
@@ -36,6 +35,7 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.IconTextRow;
+import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
 
@@ -198,13 +198,13 @@ public class MineFragment extends BaseFragment {
 
     private void updateUserImage() {
         if (LocalUser.getUser().isLogin()) {
-            Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                    .bitmapTransform(new GlideCircleTransform(getActivity()))
+            GlideApp.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
+                    .transform(new GlideCircleTransform(getActivity()))
                     .placeholder(R.drawable.ic_default_avatar_big)
                     .into(mUserHeadImage);
         } else {
-            Glide.with(this).load(R.drawable.ic_default_avatar_big)
-                    .bitmapTransform(new GlideCircleTransform(getActivity()))
+            GlideApp.with(this).load(R.drawable.ic_default_avatar_big)
+                    .transform(new GlideCircleTransform(getActivity()))
                     .into(mUserHeadImage);
         }
     }

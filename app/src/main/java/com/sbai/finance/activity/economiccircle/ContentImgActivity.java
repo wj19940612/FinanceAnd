@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.view.HackyViewPager;
+import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -164,7 +164,7 @@ public class ContentImgActivity extends BaseActivity implements ViewPager.OnPage
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             PhotoView imageView = new PhotoView(mContext);
-            Glide.with(mContext).load(mList.get(position))
+            GlideApp.with(mContext).load(mList.get(position))
                     .thumbnail(0.1f)
                     .error(R.drawable.ic_default_avatar_big)
                     .dontAnimate()

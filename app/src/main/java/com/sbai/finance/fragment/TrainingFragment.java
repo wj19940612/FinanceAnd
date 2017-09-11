@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
@@ -41,6 +40,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -451,7 +451,7 @@ public class TrainingFragment extends BaseFragment {
                 }
 
                 if (train != null) {
-                    Glide.with(context)
+                    GlideApp.with(context)
                             .load(train.getImageUrl())
                             .placeholder(R.drawable.bg_common_replace_image)
                             .into(mTrainIcon);

@@ -9,7 +9,8 @@
     <ImageView
         android:id="@+id/battleBanner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="210dp"
+        android:scaleType="centerCrop"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

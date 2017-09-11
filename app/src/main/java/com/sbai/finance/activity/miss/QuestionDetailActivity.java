@@ -25,7 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -50,6 +49,7 @@ import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
+import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 import java.util.List;
@@ -254,12 +254,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	}
 
 	private void updateQuestionDetail(final Question question) {
-		Glide.with(this).load(question.getUserPortrait())
+		GlideApp.with(this).load(question.getUserPortrait())
 				.placeholder(R.drawable.ic_default_avatar)
 				.transform(new GlideCircleTransform(this))
 				.into(mAvatar);
 
-		Glide.with(this).load(question.getCustomPortrait())
+		GlideApp.with(this).load(question.getCustomPortrait())
 				.placeholder(R.drawable.ic_default_avatar)
 				.transform(new GlideCircleTransform(this))
 				.into(mMissAvatar);
@@ -529,13 +529,13 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				if (item == null) return;
 
 				if (item.getUserModel() != null) {
-					Glide.with(context).load(item.getUserModel().getUserPortrait())
+					GlideApp.with(context).load(item.getUserModel().getUserPortrait())
 							.placeholder(R.drawable.ic_default_avatar)
 							.transform(new GlideCircleTransform(context))
 							.into(mAvatar);
 					mUserName.setText(item.getUserModel().getUserName());
 				} else {
-					Glide.with(context).load(R.drawable.ic_default_avatar)
+					GlideApp.with(context).load(R.drawable.ic_default_avatar)
 							.transform(new GlideCircleTransform(context))
 							.into(mAvatar);
 					mUserName.setText("");
