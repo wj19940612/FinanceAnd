@@ -133,20 +133,17 @@ public class DiscoveryFragment extends BaseFragment {
         mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
             @Override
             public void onBannerClick(BannerModel information) {
-//                if (information.isH5Style()) {
-//                    Launcher.with(getActivity(), WebActivity.class)
-//                            .putExtra(WebActivity.EX_HTML, information.getContent())
-//                            .execute();
-//                } else {
-//                    Launcher.with(getActivity(), WebActivity.class)
-//                            .putExtra(WebActivity.EX_URL, information.getContent())
-//                            .execute();
-//                }
-
-                Launcher.with(getActivity(), WebActivity.class)
-                        .putExtra(WebActivity.EX_URL, API.getHost() + "/lm/activityk.html ")
-                        .putExtra(WebActivity.EX_RAW_COOKIE,CookieManger.getInstance().getRawCookie())
-                        .execute();
+                if (information.isH5Style()) {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_URL, information.getContent())
+                            .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_HTML, information.getContent())
+                            .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                            .execute();
+                }
             }
         });
         mFeaturesNavigation.setOnNavItemClickListener(new FeaturesNavigation.OnNavItemClickListener() {
