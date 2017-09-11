@@ -4,18 +4,23 @@ apply plugin: 'com.neenbedankt.android-apt'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-    defaultConfig {
+
+    defaultConfig { // default is prod
         applicationId "com.sbai.finance"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 38
+        versionName "2.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
+        buildConfigField('boolean', 'IS_PROD', 'true')
+
         manifestPlaceholders = [
-                GETUI_APP_ID    : "3OXiQAgdLK74blL5qrfvn7",
-                GETUI_APP_KEY   : "Cm5IpNQNesA7Pg6hQI6wq8",
-                GETUI_APP_SECRET: "dIHXqXMBzt6rhfAFui4Gt9",
-                UMENG_APP_KEY   : "591a6342677baa75060024bf",
+                GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
+                GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
+                GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
+                UMENG_APP_KEY   : "5923f21eaed1793376000b30",
                 UMENG_CHANNEL   : "android"
         ]
 
@@ -23,7 +28,6 @@ android {
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64", "x86", "x86_64"
         }
-
     }
 
     java.util.Properties properties = new Properties();
@@ -76,6 +80,7 @@ android {
     }
 
     productFlavors {
+
         dev {
             minSdkVersion 21
             versionNameSuffix '-dev'
@@ -84,10 +89,19 @@ android {
 //            buildConfigField('String', 'HOST', '\"192.168.1.7\"')
             buildConfigField('String', 'HOST', '\"var.esongbai.xyz\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
+
+            manifestPlaceholders = [
+                    GETUI_APP_ID    : "3OXiQAgdLK74blL5qrfvn7",
+                    GETUI_APP_KEY   : "Cm5IpNQNesA7Pg6hQI6wq8",
+                    GETUI_APP_SECRET: "dIHXqXMBzt6rhfAFui4Gt9",
+                    UMENG_APP_KEY   : "591a6342677baa75060024bf",
+                    UMENG_CHANNEL   : "android"
+            ]
         }
 
         alpha {
             applicationId "com.sbai.finance.alpha"
+            versionNameSuffix '-Alpha'
             versionCode 97
             versionName "1.2.0911"
             buildConfigField('String', 'HOST', '\"fanli.esongbai.xyz\"')
@@ -102,34 +116,20 @@ android {
             ]
         }
 
-        prod {
-            versionCode 38
-            versionName "1.52"
-            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
-            buildConfigField('boolean', 'IS_PROD', 'true')
+        // channel use default (prod) configuration
+        tencent {}
+        m360 {}
+        xiaomi {}
+        baidu {}
+        huawei {}
+        vivo {}
+        oppo {}
+        others {}
+    }
 
-            manifestPlaceholders = [
-                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
-                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
-                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
-                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "android"
-            ]
-        }
-
-        tencent {
-            versionCode 38
-            versionName "2.0"
-            buildConfigField('String', 'HOST', '\"lemi.esongbai.com\"')
-            buildConfigField('boolean', 'IS_PROD', 'true')
-
-            manifestPlaceholders = [
-                    GETUI_APP_ID    : "e3evlSF5eY65Jukyyjugo4",
-                    GETUI_APP_KEY   : "BCSENAMNPp8PUog0E52y98",
-                    GETUI_APP_SECRET: "XSHhMzgCN16WmzYwdmwMh",
-                    UMENG_APP_KEY   : "5923f21eaed1793376000b30",
-                    UMENG_CHANNEL   : "tencent"
-            ]
+    productFlavors.all { flavor ->
+        if (flavor.name != 'dev' && flavor.name != 'alpha') {
+            flavor.manifestPlaceholders = [UMENG_CHANNEL: name]
         }
     }
 }
@@ -148,7 +148,6 @@ dependencies {
     }
     compile files('libs/alipaySdk-20170623-proguard.jar')
 
-
     compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
@@ -158,9 +157,11 @@ dependencies {
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.github.chrisbanes:PhotoView:1.3.1'
     compile 'com.koushikdutta.async:androidasync:2.+'
+
     compile 'com.jakewharton:butterknife:8.0.1'
-    testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
+
+    testCompile 'junit:junit:4.12'
 }
 
 

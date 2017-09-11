@@ -10,13 +10,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"/>
-
-    <TextView
-        android:id="@+id/enter"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:background="@android:color/transparent"/>
 </RelativeLayout>
