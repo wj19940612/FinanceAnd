@@ -377,12 +377,12 @@ public class AccountFundDetailFragment extends BaseFragment {
 //                mPayWay.setText(context.getString(R.string.money_from, detail.getRemark(), detail.getPlatformName()));
                 if (fundType == AccountFundDetail.TYPE_CRASH) {
 
-                    if (detail.getType() < 0) {
+                    if (detail.getType() > 0) {
                         mMoney.setSelected(false);
-                        mMoney.setText(context.getString(R.string.minus_string, FinanceUtil.formatWithScale(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.plus_string, FinanceUtil.formatWithScale(detail.getMoney())));
                     } else {
                         mMoney.setSelected(true);
-                        mMoney.setText(context.getString(R.string.plus_string, FinanceUtil.formatWithScale(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.minus_string, FinanceUtil.formatWithScale(detail.getMoney())));
                     }
                 } else {
 
