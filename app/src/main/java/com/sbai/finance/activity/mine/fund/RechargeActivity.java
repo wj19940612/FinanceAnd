@@ -457,7 +457,7 @@ public class RechargeActivity extends BaseActivity {
     }
 
     protected void requestAliPayProductInfo(String money) {
-        Client.requestAliPayOrderInfo(money, AliPayHelper.PAY_DEFAULT)
+        Client.requestAliPayOrderInfo(money, AliPayHelper.PAY_DEFAULT, -1)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<AliPayOrderInfo>, AliPayOrderInfo>() {
                     @Override

@@ -1480,9 +1480,11 @@ public class Client {
      *
      * @param money 订单金额
      * @param type  0 现金 1 元宝 2 积分
+     *
+     * @param exchangeId  元宝兑换需要
      * @return
      */
-    public static API requestAliPayOrderInfo(String money, int type) {
+    public static API requestAliPayOrderInfo(String money, int type, int exchangeId) {
         return new API(POST, "/user/userPay/alipayTrade.do", new ApiParams()
                 .put("money", money)
                 .put("orderId", 0)

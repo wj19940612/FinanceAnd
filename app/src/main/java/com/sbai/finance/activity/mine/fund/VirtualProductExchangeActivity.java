@@ -202,7 +202,9 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
 
     @Override
     protected void requestAliPayProductInfo(String money) {
-        Client.requestAliPayOrderInfo(String.valueOf(mSelectVirtualProductInfo.getFromMoney()), AliPayHelper.PAY_INGOT)
+        Client.requestAliPayOrderInfo(String.valueOf(mSelectVirtualProductInfo.getFromMoney()),
+                AliPayHelper.PAY_INGOT,
+                mSelectVirtualProductInfo != null ? mSelectVirtualProductInfo.getId() : -1)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<AliPayOrderInfo>, AliPayOrderInfo>() {
                     @Override
