@@ -195,13 +195,13 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                 mProgress.setRightText(String.valueOf(item.getAgainstScore()));
                 String reward = "";
                 switch (item.getCoinType()) {
-                    case Battle.COIN_TYPE_BAO:
+                    case Battle.COIN_TYPE_INGOT:
                         reward = item.getReward() + context.getString(R.string.ingot);
                         break;
                     case Battle.COIN_TYPE_CASH:
                         reward = item.getReward() + context.getString(R.string.cash);
                         break;
-                    case Battle.COIN_TYPE_INTEGRAL:
+                    case Battle.COIN_TYPE_SCORE:
                         reward = item.getReward() + context.getString(R.string.integral);
                         break;
                 }

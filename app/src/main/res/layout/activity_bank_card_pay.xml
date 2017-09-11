@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.recharge.BankCardPayActivity">
+    tools:context="com.sbai.finance.activity.mine.fund.BankCardPayActivity">
 
     <LinearLayout
         android:id="@+id/showLayout"
@@ -203,7 +203,7 @@
                 android:layout_width="93dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/btn_auth_code_rounded"
+                android:background="@drawable/btn_white_one_hundred_rounded"
                 android:enabled="true"
                 android:gravity="center"
                 android:text="@string/get_auth_code"

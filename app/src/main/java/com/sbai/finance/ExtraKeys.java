@@ -22,4 +22,7 @@ public interface ExtraKeys {
     String TRAIN_QUESTIONS = "train_questions";
     String TRAIN_LEVEL = "train_level";
     String TRAIN_RESULT = "train_result";
+
+    String RECHARGE_TYPE = "recharge_type";
+    String USER_FUND = "user_fund";
 }

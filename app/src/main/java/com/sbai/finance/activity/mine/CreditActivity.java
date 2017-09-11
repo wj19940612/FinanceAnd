@@ -12,7 +12,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 
 import butterknife.BindView;
@@ -74,7 +74,7 @@ public class CreditActivity extends BaseActivity {
 
     @OnClick(R.id.credit)
     public void onViewClicked() {
-        umengEventCount(UmengCountEventIdUtils.ME_CERTIFICATION);
+        umengEventCount(UmengCountEventId.ME_CERTIFICATION);
         Launcher.with(getActivity(), CreditApproveActivity.class).executeForResult(REQ_CODE_CREDIT_APPROVE);
     }
 

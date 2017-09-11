@@ -40,7 +40,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
@@ -97,7 +97,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
         mMyQuestionAdapter.setOnClickCallback(new MyQuestionAdapter.OnClickCallback() {
             @Override
             public void onLoveClick(final Question item) {
-                umengEventCount(UmengCountEventIdUtils.MISS_TALK_PRAISE);
+                umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
                 Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
 
                     @Override
@@ -116,7 +116,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 
             @Override
             public void onVoiceClick(final Question item) {
-                umengEventCount(UmengCountEventIdUtils.MISS_TALK_VOICE);
+                umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
                 //播放下一个之前把上一个播放位置的动画停了
                 if (mPlayingID != -1) {
                     for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {

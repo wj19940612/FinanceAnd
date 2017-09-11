@@ -22,7 +22,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.EditWithWordLimitView;
 import com.sbai.finance.view.MyListView;
 
@@ -98,7 +98,7 @@ public class MoreTrainFeedbackActivity extends BaseActivity {
     }
 
     private void requestTrainData() {
-        umengEventCount(UmengCountEventIdUtils.DISCOVERY_CHANGE_BATCH);
+        umengEventCount(UmengCountEventId.DISCOVERY_CHANGE_BATCH);
         Client.getFeedBackTrainList(5).setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<TrainFeedback>>, List<TrainFeedback>>() {

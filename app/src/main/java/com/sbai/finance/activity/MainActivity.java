@@ -21,7 +21,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.view.ScrollableViewPager;
 import com.sbai.finance.websocket.WsClient;
@@ -127,7 +127,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 mBottomTabs.selectTab(position);
                 mViewPager.setCurrentItem(position, false);
                 if (position == 1) {
-                    umengEventCount(UmengCountEventIdUtils.MISS_TALK_NAVIGATION);
+                    umengEventCount(UmengCountEventId.MISS_TALK_NAVIGATION);
                 }
             }
         });

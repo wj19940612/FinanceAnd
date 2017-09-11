@@ -7,7 +7,6 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sbai.finance.model.payment.UsablePlatform;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.model.training.TrainingSubmit;
 
@@ -29,7 +28,6 @@ public class Preference {
         String SERVER_IP_PORT = "server_ip_port";
         String SERVER_TIME = "server_time";
         String AUTHORIZATION_LOGIN_TIME = "authorization_login_time";
-        String RECHARGE_WAY = "recharge_way_string";
         String IS_FIRST_WITH_DRAW = "is_first_with_draw";
         String USER_HAS_SafePass = "user_has_safe_pass";
         String MISS_TALK_ANSWERS = "miss_talk_answers";
@@ -40,7 +38,7 @@ public class Preference {
         String MY_STUDY = "my_study";
         String TRAINING_SUBMITS = "training_submits";
         String SERVICE_CONNECT_WAY = "service_connect_way";
-        String ACCOUNT_CREDIT = "account_credit";
+        String FIRST_OPEN_WALLET_PAGE = "first_open_wallet_page";
     }
 
     private static Preference sInstance;
@@ -150,13 +148,6 @@ public class Preference {
         return mPrefs.getLong(Key.AUTHORIZATION_LOGIN_TIME, 0);
     }
 
-    public void setRechargeWay(String key, String way) {
-        apply(key + Key.RECHARGE_WAY, way);
-    }
-
-    public String getRechargeWay(String key) {
-        return mPrefs.getString(key + Key.RECHARGE_WAY, UsablePlatform.PLATFORM_AIL_PAY);
-    }
 
     public boolean isFirstWithDraw(String key) {
         return mPrefs.getBoolean(key + Key.IS_FIRST_WITH_DRAW, true);
@@ -258,4 +249,13 @@ public class Preference {
         String string = mPrefs.getString(Key.SERVICE_CONNECT_WAY, "");
         return !TextUtils.isEmpty(string) ? new Gson().fromJson(string, ServiceConnectWay.class) : null;
     }
+
+    public boolean isFirstOpenWalletPage(String account) {
+        return mPrefs.getBoolean(Key.FIRST_OPEN_WALLET_PAGE + account, true);
+    }
+
+    public void setIsFirstOpenWalletPage(String account) {
+        apply(Key.FIRST_OPEN_WALLET_PAGE + account, false);
+    }
+
 }

@@ -3,8 +3,6 @@ package com.sbai.finance.activity.discovery;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Picture;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,13 +13,11 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.DownloadListener;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,16 +33,13 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Network;
-import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.dialog.ShareDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.qqtheme.framework.util.ScreenUtils;
 
 import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
@@ -123,7 +116,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         initView();
         initWebView();
         requestDailyReportDetail();
-        umengEventCount(UmengCountEventIdUtils.REPORT_VIEW_DETAIL);
+        umengEventCount(UmengCountEventId.REPORT_VIEW_DETAIL);
     }
 
     private void requestDailyReportDetail() {
@@ -203,7 +196,7 @@ public class DailyReportDetailActivity extends BaseActivity {
             case R.id.share:
             case R.id.shareArea:
                 // TODO: 10/08/2017 添加乐米日报分享弹框
-                umengEventCount(UmengCountEventIdUtils.REPORT_SHARE);
+                umengEventCount(UmengCountEventId.REPORT_SHARE);
                 ShareDialog.with(getActivity())
                         .hasFeedback(false)
                         .setShareThumbUrl(mShareImgUrl)
@@ -216,13 +209,13 @@ public class DailyReportDetailActivity extends BaseActivity {
                             public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
                                 switch (platform) {
                                     case SINA_WEIBO:
-                                        umengEventCount(UmengCountEventIdUtils.REPORT_SHARE_SINA_WEIBO);
+                                        umengEventCount(UmengCountEventId.REPORT_SHARE_SINA_WEIBO);
                                         break;
                                     case WECHAT_FRIEND:
-                                        umengEventCount(UmengCountEventIdUtils.REPORT_SHARE_FRIEND);
+                                        umengEventCount(UmengCountEventId.REPORT_SHARE_FRIEND);
                                         break;
                                     case WECHAT_CIRCLE:
-                                        umengEventCount(UmengCountEventIdUtils.REPORT_SHARE_CIRCLE);
+                                        umengEventCount(UmengCountEventId.REPORT_SHARE_CIRCLE);
                                         break;
                                 }
                             }

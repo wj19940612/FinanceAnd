@@ -24,19 +24,25 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import com.sbai.finance.ExtraKeys;
+
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
+
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
+import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
+import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.fragment.dialog.BattleRuleDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.FutureVersus;
+import com.sbai.finance.model.fund.UserFundInfo;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.model.mutual.ArticleProtocol;
-import com.sbai.finance.model.payment.UserFundInfoModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -47,7 +53,7 @@ import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
@@ -105,6 +111,8 @@ public class BattleListActivity extends BaseActivity implements
     private HashSet<Integer> mSet;
     private Battle mCurrentBattle;
     private StringBuilder mRefusedIds;
+
+    private UserFundInfo mUserFundInfo;
 
     @Override
     protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
@@ -166,14 +174,32 @@ public class BattleListActivity extends BaseActivity implements
         mRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_RECHARGE);
+                umengEventCount(UmengCountEventId.BATTLE_HALL_RECHARGE);
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), CornucopiaActivity.class).execute();
+                    Launcher.with(getActivity(), WalletActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
         });
+    }
+
+    private void openRechargePage(Battle currentBattle) {
+        if (currentBattle == null) return;
+        switch (currentBattle.getCoinType()) {
+            case Battle.COIN_TYPE_INGOT:
+                Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
+                        .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
+                        .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0)
+                        .execute();
+                break;
+            case Battle.COIN_TYPE_SCORE:
+                Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
+                        .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_SCORE)
+                        .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? Double.parseDouble(mUserFundInfo.getYuanbao() + "") : 0)
+                        .execute();
+                break;
+        }
     }
 
     private void initListHeaderAndFooter() {
@@ -197,7 +223,7 @@ public class BattleListActivity extends BaseActivity implements
         checkBattleRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CHECK_RECODE);
+                umengEventCount(UmengCountEventId.BATTLE_HALL_CHECK_RECODE);
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), BattleRecordListActivity.class).execute();
                 } else {
@@ -208,7 +234,7 @@ public class BattleListActivity extends BaseActivity implements
         battleRule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_DUEL_RULES);
+                umengEventCount(UmengCountEventId.BATTLE_HALL_DUEL_RULES);
                 Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BATTLE).setTag(TAG)
                         .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                             @Override
@@ -345,10 +371,11 @@ public class BattleListActivity extends BaseActivity implements
     private void requestUserFindInfo() {
         Client.requestUserFundInfo()
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<UserFundInfoModel>, UserFundInfoModel>() {
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
                     @Override
-                    protected void onRespSuccessData(UserFundInfoModel data) {
+                    protected void onRespSuccessData(UserFundInfo data) {
                         updateUserFund(data);
+                        mUserFundInfo = data;
                     }
 
                     @Override
@@ -523,7 +550,7 @@ public class BattleListActivity extends BaseActivity implements
         mVersusListAdapter.notifyDataSetChanged();
     }
 
-    private void updateUserFund(UserFundInfoModel data) {
+    private void updateUserFund(UserFundInfo data) {
         if (data == null) return;
         mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
         mIngot.setText(getString(R.string.number_ge, StrFormatter.getFormIngot(data.getYuanbao())));
@@ -564,7 +591,7 @@ public class BattleListActivity extends BaseActivity implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.createBattle:
-                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CREATE_BATTLE);
+                umengEventCount(UmengCountEventId.BATTLE_HALL_CREATE_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), CreateBattleActivity.class).execute();
                 } else {
@@ -572,7 +599,7 @@ public class BattleListActivity extends BaseActivity implements
                 }
                 break;
             case R.id.matchBattle:
-                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_MATCH_BATTLE);
+                umengEventCount(UmengCountEventId.BATTLE_HALL_MATCH_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
                     showAskMatchDialog();
                 } else {
@@ -580,7 +607,7 @@ public class BattleListActivity extends BaseActivity implements
                 }
                 break;
             case R.id.currentBattle:
-                umengEventCount(UmengCountEventIdUtils.BATTLE_HALL_CURRENT_BATTLE);
+                umengEventCount(UmengCountEventId.BATTLE_HALL_CURRENT_BATTLE);
                 if (mCurrentBattle != null) {
                     requestLastBattleInfo(mCurrentBattle);
                 }
@@ -593,13 +620,13 @@ public class BattleListActivity extends BaseActivity implements
     private void showJoinBattleDialog(final Battle item) {
         String reward = "";
         switch (item.getCoinType()) {
-            case Battle.COIN_TYPE_BAO:
+            case Battle.COIN_TYPE_INGOT:
                 reward = item.getReward() + getActivity().getString(R.string.ingot);
                 break;
             case Battle.COIN_TYPE_CASH:
                 reward = item.getReward() + getActivity().getString(R.string.cash);
                 break;
-            case Battle.COIN_TYPE_INTEGRAL:
+            case Battle.COIN_TYPE_SCORE:
                 reward = item.getReward() + getActivity().getString(R.string.integral);
                 break;
         }
@@ -617,7 +644,7 @@ public class BattleListActivity extends BaseActivity implements
 
     }
 
-    private void showJoinBattleFailureDialog(Resp failedResp) {
+    private void showJoinBattleFailureDialog(final Resp failedResp) {
         final int code = failedResp.getCode();
         String msg = failedResp.getMsg();
         int positiveMsg;
@@ -646,7 +673,7 @@ public class BattleListActivity extends BaseActivity implements
                                         .execute();
                             }
                         } else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
-                            Launcher.with(getActivity(), CornucopiaActivity.class).execute();
+                            openRechargePage(mCurrentBattle);
                         }
                     }
                 })
@@ -730,13 +757,13 @@ public class BattleListActivity extends BaseActivity implements
 
         String reward = "";
         switch (data.getCoinType()) {
-            case Battle.COIN_TYPE_BAO:
+            case Battle.COIN_TYPE_INGOT:
                 reward = data.getReward() + getActivity().getString(R.string.ingot);
                 break;
             case Battle.COIN_TYPE_CASH:
                 reward = data.getReward() + getActivity().getString(R.string.cash);
                 break;
-            case Battle.COIN_TYPE_INTEGRAL:
+            case Battle.COIN_TYPE_SCORE:
                 reward = data.getReward() + getActivity().getString(R.string.integral);
                 break;
         }
@@ -943,13 +970,13 @@ public class BattleListActivity extends BaseActivity implements
                 mAgainstName.setText(item.getAgainstUserName());
                 String reward = "";
                 switch (item.getCoinType()) {
-                    case Battle.COIN_TYPE_BAO:
+                    case Battle.COIN_TYPE_INGOT:
                         reward = item.getReward() + context.getString(R.string.ingot);
                         break;
                     case Battle.COIN_TYPE_CASH:
                         reward = item.getReward() + context.getString(R.string.cash);
                         break;
-                    case Battle.COIN_TYPE_INTEGRAL:
+                    case Battle.COIN_TYPE_SCORE:
                         reward = item.getReward() + context.getString(R.string.integral);
                         break;
                 }

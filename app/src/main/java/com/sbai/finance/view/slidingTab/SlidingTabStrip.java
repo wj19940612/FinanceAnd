@@ -40,6 +40,7 @@ class SlidingTabStrip extends LinearLayout {
 
     private final int mBottomBorderThickness;
     private final Paint mBottomBorderPaint;
+    private boolean mHasBottomBorder;
 
     private final int mSelectedIndicatorThickness;
     private final Paint mSelectedIndicatorPaint;
@@ -69,7 +70,7 @@ class SlidingTabStrip extends LinearLayout {
 
         TypedValue outValue = new TypedValue();
         context.getTheme().resolveAttribute(android.R.attr.colorForeground, outValue, true);
-        final int themeForegroundColor =  outValue.data;
+        final int themeForegroundColor = outValue.data;
 
         mDefaultBottomBorderColor = setColorAlpha(themeForegroundColor,
                 DEFAULT_BOTTOM_BORDER_COLOR_ALPHA);
@@ -91,6 +92,7 @@ class SlidingTabStrip extends LinearLayout {
         mDividerPaint.setStrokeWidth((int) (DEFAULT_DIVIDER_THICKNESS_DIPS * density));
 
         mSelectedPadding = (int) (DEFAULT_SELECTED_INDICATOR_PADDING_DIPS * density);
+        mHasBottomBorder = true;
     }
 
     void setCustomTabColorizer(SlidingTabLayout.TabColorizer customTabColorizer) {
@@ -120,6 +122,11 @@ class SlidingTabStrip extends LinearLayout {
 
     void setSelectedIndicatorPadding(float padding) {
         mSelectedPadding = padding;
+        invalidate();
+    }
+
+    public void setHasBottomBorder(boolean hasBottomBorder) {
+        mHasBottomBorder = hasBottomBorder;
         invalidate();
     }
 
@@ -160,7 +167,9 @@ class SlidingTabStrip extends LinearLayout {
         }
 
         // Thin underline along the entire bottom edge
-        canvas.drawRect(0, height - mBottomBorderThickness, getWidth(), height, mBottomBorderPaint);
+        if (mHasBottomBorder) {
+            canvas.drawRect(0, height - mBottomBorderThickness, getWidth(), height, mBottomBorderPaint);
+        }
 
         // Vertical separators between the titles
         int separatorTop = (height - dividerHeightPx) / 2;

@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.Preference;
+
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
@@ -22,9 +25,9 @@ import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
-import com.sbai.finance.activity.mine.cornucopia.CornucopiaActivity;
+import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
-import com.sbai.finance.activity.mine.wallet.WalletActivity;
+import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.net.Callback;
@@ -33,8 +36,9 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
@@ -51,6 +55,8 @@ public class MineFragment extends BaseFragment {
     private static final int REQ_CODE_USER_INFO = 801;
     private static final int REQ_CODE_MESSAGE = 18;
     private static final int REQ_CODE_LOGIN = 10700;
+    //打开钱包页面时需要设置安全密码的请求吗
+    public static final int REQ_CODE_OPEN_WALLET_SET_SAFETY_PASSWORD = 7004;
 
     Unbinder unbinder;
 
@@ -62,8 +68,6 @@ public class MineFragment extends BaseFragment {
     LinearLayout mUserInfoArea;
     @BindView(R.id.wallet)
     IconTextRow mWallet;
-    @BindView(R.id.cornucopia)
-    IconTextRow mCornucopia;
     @BindView(R.id.message)
     IconTextRow mMessage;
     @BindView(R.id.feedback)
@@ -209,30 +213,28 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.userInfoArea,
-            R.id.cornucopia, R.id.wallet,
+    @OnClick({R.id.userInfoArea, R.id.wallet,
             R.id.message, R.id.feedback, R.id.financeEvaluation,
             R.id.setting, R.id.aboutUs})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.userInfoArea:
-                umengEventCount(UmengCountEventIdUtils.ME_AVATAR);
+                umengEventCount(UmengCountEventId.ME_AVATAR);
                 if (LocalUser.getUser().isLogin()) {
                     startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
-            case R.id.cornucopia:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), CornucopiaActivity.class).execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-                break;
+
             case R.id.wallet:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), WalletActivity.class).execute();
+                    boolean firstOpenWalletPage = Preference.get().isFirstOpenWalletPage(LocalUser.getUser().getPhone());
+                    if (firstOpenWalletPage) {
+                        requestUserHasSafetyPassword();
+                    } else {
+                        openWalletPage();
+                    }
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -240,7 +242,7 @@ public class MineFragment extends BaseFragment {
 
             case R.id.message:
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.ME_NEWS);
+                    umengEventCount(UmengCountEventId.ME_NEWS);
                     startActivityForResult(new Intent(getActivity(), NewsActivity.class), REQ_CODE_MESSAGE);
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -248,7 +250,7 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.feedback:
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.ME_FEEDBACK);
+                    umengEventCount(UmengCountEventId.ME_FEEDBACK);
                     Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -256,7 +258,7 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.financeEvaluation:
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.ME_FINANCE_TEST);
+                    umengEventCount(UmengCountEventId.ME_FINANCE_TEST);
                     openLevelStartPage();
                 } else {
                     startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQ_CODE_LOGIN);
@@ -264,21 +266,65 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.setting:
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.ME_SETTING);
+                    umengEventCount(UmengCountEventId.ME_SETTING);
                     Launcher.with(getActivity(), SettingActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
                 break;
             case R.id.aboutUs:
-                umengEventCount(UmengCountEventIdUtils.ME_ABOUT_US);
+                umengEventCount(UmengCountEventId.ME_ABOUT_US);
                 Launcher.with(getActivity(), AboutUsActivity.class).execute();
                 break;
         }
     }
 
+    private void requestUserHasSafetyPassword() {
+        Client.getUserHasPassWord()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                    @Override
+                    protected void onRespSuccessData(Boolean data) {
+                        if (!data) {
+                            showAddSafetyPassDialog();
+                        } else {
+                            openWalletPage();
+                        }
+                    }
+                })
+                .fire();
+    }
+
+    private void openWalletPage() {
+        Launcher.with(getActivity(), WalletActivity.class).execute();
+        Preference.get().setIsFirstOpenWalletPage(LocalUser.getUser().getPhone());
+    }
+
+    private void showAddSafetyPassDialog() {
+        SmartDialog.with(getActivity(), getString(R.string.is_not_set_safety_pass))
+                .setPositive(R.string.go_to_set, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        Intent intent = new Intent(getActivity(), UpdateSecurityPassActivity.class);
+                        intent.putExtra(Launcher.EX_PAYLOAD, false);
+                        startActivityForResult(intent, REQ_CODE_OPEN_WALLET_SET_SAFETY_PASSWORD);
+                    }
+                })
+                .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        openWalletPage();
+                    }
+                })
+                .show();
+    }
+
     private void openLevelStartPage() {
         Launcher.with(getActivity(), EvaluationStartActivity.class).execute();
+        Preference.get().setIsFirstOpenWalletPage(LocalUser.getUser().getPhone());
     }
 
     @Override
@@ -299,6 +345,9 @@ public class MineFragment extends BaseFragment {
                     break;
                 case REQ_CODE_LOGIN:
                     openLevelStartPage();
+                    break;
+                case REQ_CODE_OPEN_WALLET_SET_SAFETY_PASSWORD:
+                    openWalletPage();
                     break;
             }
         }

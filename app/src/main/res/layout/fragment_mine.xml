@@ -60,19 +60,6 @@
         app:rowVerticalPadding="0dp"
         app:splitLineColor="@color/split"/>
 
-    <com.sbai.finance.view.IconTextRow
-        android:id="@+id/cornucopia"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="@drawable/bg_white"
-        android:visibility="visible"
-        app:leftIcon="@drawable/ic_mine_cornucopia"
-        app:rightIcon="@drawable/ic_arrow_right_tint"
-        app:rowText="@string/cornucopia"
-        app:rowTextColor="@color/primaryText"
-        app:rowTextSize="15sp"
-        app:rowVerticalPadding="0dp"
-        app:splitLineColor="@color/split"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/message"

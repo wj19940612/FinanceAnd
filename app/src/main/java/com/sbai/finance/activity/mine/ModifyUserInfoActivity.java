@@ -25,7 +25,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.autofit.AutofitTextView;
 import com.sbai.finance.websocket.WsClient;
@@ -176,25 +176,25 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
                 uploadUserImageDialogFragment.show(getSupportFragmentManager());
                 break;
             case R.id.nickName:
-                umengEventCount(UmengCountEventIdUtils.ME_NICK_NAME);
+                umengEventCount(UmengCountEventId.ME_NICK_NAME);
                 Launcher.with(getActivity(), ModifyUserNameActivity.class).executeForResult(REQ_CODE_USER_NAME);
                 break;
             case R.id.sex:
-                umengEventCount(UmengCountEventIdUtils.ME_SEX);
+                umengEventCount(UmengCountEventId.ME_SEX);
                 new ChooseSexDialogFragment().show(getSupportFragmentManager());
                 break;
             case R.id.age:
-                umengEventCount(UmengCountEventIdUtils.ME_AGE);
+                umengEventCount(UmengCountEventId.ME_AGE);
                 showAgePicker();
                 break;
             case R.id.location:
-                umengEventCount(UmengCountEventIdUtils.ME_LOCATION);
+                umengEventCount(UmengCountEventId.ME_LOCATION);
                 Launcher.with(getActivity(), LocationActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, true)
                         .executeForResult(REQ_CODE_LOCATION);
                 break;
             case R.id.credit:
-                umengEventCount(UmengCountEventIdUtils.ME_CREDIT);
+                umengEventCount(UmengCountEventId.ME_CREDIT);
                 Launcher.with(getActivity(), CreditActivity.class).execute();
                 break;
             case R.id.logout:
@@ -208,7 +208,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
         picker.setCancelTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
         picker.setSubmitTextColor(ContextCompat.getColor(getActivity(), R.color.warningText));
         picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background));
-        picker.setPressedTextColor(ContextCompat.getColor(getActivity(), R.color.picker_press));
+        picker.setPressedTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
         picker.setTopHeight(50);
         picker.setAnimationStyle(R.style.BottomDialogAnimation);
         picker.setOffset(2);

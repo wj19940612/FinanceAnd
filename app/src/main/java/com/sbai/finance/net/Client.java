@@ -13,7 +13,7 @@ import com.sbai.httplib.ApiParams;
 public class Client {
 
     private static final int POST = Request.Method.POST;
-    public static final int DEFAULT_PAGE_SIZE = 15;
+    public static final int DEFAULT_PAGE_SIZE = 20;
 
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/lm/introduce.html";
@@ -1125,19 +1125,21 @@ public class Client {
     }
 
     /**
-     * 查询明细
+     * /user/userAccount/userFlow.do
+     * GET
+     * 用户流水 新接口 （wms）
      *
+     * @param type
      * @param page
-     * @param pageSize
      * @return
      */
-    public static API getDetail(int page, int pageSize) {
-        return new API("/user/userFlow/queryUserFlow.do",
+    public static API requestAccountFundDetailList(int type, int page) {
+        return new API("/user/userAccount/userFlow.do",
                 new ApiParams()
+                        .put("type", type)
                         .put("page", page)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
-
 
     /**
      * 获取品种简介
@@ -1188,11 +1190,14 @@ public class Client {
 
     /**
      * 获取可用平台
+     * /user/finance/platform/selectUsablePlatformByType.do
+     * GET
+     * 可用支付平台（wms）
      *
      * @return
      */
-    public static API getUsablePlatform() {
-        return new API("/user/finance/platform/selectUsablePlatform.do");
+    public static API getUsablePlatform(int type) {
+        return new API("/user/finance/platform/selectUsablePlatformByType.do", new ApiParams().put("type", type));
     }
 
     /**
@@ -1473,14 +1478,17 @@ public class Client {
      * app生成订单信息（wms）
      * 借款ID 充值传0
      *
-     * @param money   订单金额
-     * @param orderId 借款ID 充值传0
+     * @param money      订单金额
+     * @param type       0 现金 1 元宝 2 积分
+     * @param exchangeId 元宝兑换需要
      * @return
      */
-    public static API requestAliPayOrderInfo(String money, int orderId) {
+    public static API requestAliPayOrderInfo(String money, int type, int exchangeId) {
         return new API(POST, "/user/userPay/alipayTrade.do", new ApiParams()
                 .put("money", money)
-                .put("orderId", orderId));
+                .put("orderId", 0)
+                .put("exchangeId", exchangeId)
+                .put("type", type));
     }
 
     /**
@@ -1653,24 +1661,6 @@ public class Client {
                 .put("password", password)
                 .put("fromRealMoney", fromRealMoney)
                 .put("toMoney", toMoney));
-    }
-
-    /**
-     * /user/userAccount/userCurrencyFlow.do
-     * GET
-     * 元宝积分明细（wms）
-     *
-     * @param inOrOut
-     * @param currencyType
-     * @param page
-     * @return
-     */
-    public static API getExchangeDetailList(int inOrOut, int currencyType, int page) {
-        return new API("/user/userAccount/userCurrencyFlow.do", new ApiParams()
-                .put("inOrOut", inOrOut)
-                .put("currencyType", currencyType)
-                .put("page", page)
-                .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
 
     /**
