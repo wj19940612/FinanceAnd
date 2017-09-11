@@ -75,7 +75,6 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
             @Override
             public void onItemClick(VirtualProductInfo virtualProductInfo, int position) {
                 if (mUserSelectRechargeWay == null) return;
-
                 if (mSelectVirtualProductInfo != null) {
                     mSelectVirtualProductInfo.setSelect(false);
                     mVirtualProductAdapter.notifyItemChanged(mSelectProductPosition, mSelectVirtualProductInfo);
@@ -92,6 +91,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
     }
 
     private void changeOtherPayStatus(VirtualProductInfo virtualProductInfo) {
+        if (mOtherRechargeWay == null) return;
         if (virtualProductInfo.getFromMoney() > mUserFundCount) {
             mOtherRechargeWay.setBalanceIsEnough(false);
             mRechargeWayAdapter.notifyItemChanged(mOtherRechargeWayPosition, mOtherRechargeWay);
