@@ -124,6 +124,7 @@ public class DiscoveryFragment extends BaseFragment {
         super.onResume();
         requestTrainingList();
         requestDailyReportData();
+        startScheduleJob(5 * 1000);
     }
 
     @Override
@@ -272,6 +273,13 @@ public class DiscoveryFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        stopScheduleJob();
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        mBanner.nextAdvertisement();
     }
 
     @OnClick({R.id.futureBattle, R.id.training, R.id.daily, R.id.daily1, R.id.daily2, R.id.daily3})
