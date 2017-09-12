@@ -1,6 +1,5 @@
 package com.sbai.finance.activity;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -30,19 +29,13 @@ import android.widget.ProgressBar;
 import com.sbai.finance.AppJs;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
-import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.httplib.CookieManger;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.ShareAction;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.media.UMImage;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -404,7 +397,7 @@ public class WebActivity extends BaseActivity {
                 .hasFeedback(false)
                 .hasWeiBo(false)
                 .setBitmap(bitmap)
-                .setOnShareImage(true)
+                .setShareImageOnly(true)
                 .show();
         ImageUtils.saveImageToGallery(getApplicationContext(), bitmap);
     }
