@@ -82,7 +82,7 @@ android {
     productFlavors {
 
         dev {
-            minSdkVersion 21
+            minSdkVersion 19
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"

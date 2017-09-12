@@ -34,12 +34,12 @@ import com.sbai.finance.model.training.MyTrainingRecord;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingRecord;
 import com.sbai.finance.model.training.UserEachTrainingScoreModel;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -93,8 +93,8 @@ public class TrainingFragment extends BaseFragment {
     ImageView mCloseHint;
     @BindView(R.id.testHint)
     LinearLayout mTestHint;
-    @BindView(R.id.scrollView)
-    RelativeLayout mScrollView;
+    @BindView(R.id.card)
+    LinearLayout mCard;
 
 
     private TrainAdapter mTrainAdapter;
@@ -145,6 +145,7 @@ public class TrainingFragment extends BaseFragment {
         if (isVisibleToUser && isAdded()) {
             requestUserScore();
             requestMyTrainingList();
+            requestGiftActivity();
         }
     }
 
@@ -152,11 +153,11 @@ public class TrainingFragment extends BaseFragment {
         Client.requestGiftActivity()
                 .setIndeterminate(this)
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<Banner>, Banner>() {
+                .setCallback(new Callback<Resp<Banner>>() {
                     @Override
-                    protected void onRespSuccessData(Banner data) {
-                        mBanner = data;
-                        if (data != null) {
+                    protected void onRespSuccess(Resp<Banner> resp) {
+                        if (resp.isSuccess()) {
+                            mBanner = resp.getData();
                             updateGiftActivity();
                         }
                     }
@@ -165,12 +166,14 @@ public class TrainingFragment extends BaseFragment {
     }
 
     private void updateGiftActivity() {
-        mGift.setVisibility(View.VISIBLE);
-        GlideApp.with(TrainingFragment.this)
-                .load(mBanner.getSmallPic())
-                .transform(new GlideCircleTransform(getActivity()))
-                .placeholder(R.drawable.ic_home_gift)
-                .into(mGift);
+        if (mBanner == null) {
+            mGift.setVisibility(View.GONE);
+        } else {
+            mGift.setVisibility(View.VISIBLE);
+            GlideApp.with(TrainingFragment.this)
+                    .load(mBanner.getSmallPic())
+                    .into(mGift);
+        }
     }
 
     private void requestMyTrainingList() {
@@ -395,6 +398,7 @@ public class TrainingFragment extends BaseFragment {
         } else {
             Launcher.with(getActivity(), WebActivity.class)
                     .putExtra(WebActivity.EX_HTML, mBanner.getContent())
+                    .putExtra(WebActivity.EX_TITLE, mBanner.getTitle())
                     .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                     .execute();
         }
