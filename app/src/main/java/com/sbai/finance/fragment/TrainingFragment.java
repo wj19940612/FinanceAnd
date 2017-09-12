@@ -54,9 +54,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.android.volley.Request.Method.HEAD;
-
-
 public class TrainingFragment extends BaseFragment {
 
 
