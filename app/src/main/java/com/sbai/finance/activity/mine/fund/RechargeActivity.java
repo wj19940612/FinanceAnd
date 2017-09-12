@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.BuildConfig;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
@@ -179,20 +178,6 @@ public class RechargeActivity extends BaseActivity {
                                 .execute();
                     }
 
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
-                                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
-                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-                                .execute();
-                    }
-
-                    @Override
-                    protected boolean onErrorToast() {
-                        return false;
-                    }
                 }).fire();
     }
 

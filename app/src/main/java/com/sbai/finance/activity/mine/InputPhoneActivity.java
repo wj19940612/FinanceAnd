@@ -191,6 +191,13 @@ public class InputPhoneActivity extends BaseActivity {
     }
 
     private void openUserProtocolPage() {
+
+        Launcher.with(getActivity(), WebActivity.class)
+                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
+                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
+                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                .execute();
+
         Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER).setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                     @Override
@@ -205,11 +212,7 @@ public class InputPhoneActivity extends BaseActivity {
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
-                        Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
-                                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
-                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-                                .execute();
+
                     }
 
                     @Override
