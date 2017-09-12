@@ -136,13 +136,11 @@ public class DiscoveryFragment extends BaseFragment {
                 if (information.isH5Style()) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, information.getContent())
-                            .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                             .execute();
                 } else {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_HTML, information.getContent())
                             .putExtra(WebActivity.EX_TITLE, information.getTitle())
-                            .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                             .execute();
                 }
             }

@@ -94,9 +94,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     @Override
     protected void onDestroy() {
         WsClient.get().close();
-
         MarketSubscriber.get().disconnect();
-
         super.onDestroy();
     }
 

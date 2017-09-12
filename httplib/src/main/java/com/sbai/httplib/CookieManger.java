@@ -29,12 +29,6 @@ public class CookieManger {
         mAppDataDir = file;
     }
 
-    /**
-     * rawCookie:
-     * <p>
-     * token1="NzF4aGpldmJhcHRmd3NleHZucWJudm1ocWU4NQ=="; Version=1; Path=/
-     * token2="NzQ5ZjAxMjE0ZjQzZWE4ZjI3NGIyYzkyNTIzYmY0MWQ="; Version=1; Path=/
-     */
     public void parse(Map<String, String> headers) {
         String rawCookie = headers.get("Set-Cookie");
         if (!TextUtils.isEmpty(rawCookie)) {
@@ -46,6 +40,12 @@ public class CookieManger {
         }
     }
 
+    /**
+     * rawCookie:
+     * <p>
+     * token1="NzF4aGpldmJhcHRmd3NleHZucWJudm1ocWU4NQ=="; Version=1; Path=/
+     * token2="NzQ5ZjAxMjE0ZjQzZWE4ZjI3NGIyYzkyNTIzYmY0MWQ="; Version=1; Path=/
+     */
     public String getRawCookie() {
         if (TextUtils.isEmpty(mRawCookie)) {
             mRawCookie = getRawCookies();

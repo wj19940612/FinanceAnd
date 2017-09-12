@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -48,11 +47,12 @@ import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 public class WebActivity extends BaseActivity {
+    public static final String TAG = "WebActivity";
+
     public static final String INFO_HTML_META = "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\">";
 
     public static final String EX_URL = "url";
     public static final String EX_TITLE = "title";
-    public static String EX_RAW_COOKIE = "rawCookie";
     public static final String EX_HTML = "html";
 
     @BindView(R.id.titleBar)
@@ -67,7 +67,6 @@ public class WebActivity extends BaseActivity {
     private boolean mLoadSuccess;
     protected String mPageUrl;
     protected String mTitle;
-    protected String mRawCookie;
     protected String mPureHtml;
     private Set<String> mUrlSet;
 
@@ -78,10 +77,6 @@ public class WebActivity extends BaseActivity {
         return mTitleBar;
     }
 
-    public String getRawCookie() {
-        return mRawCookie;
-    }
-
     public WebView getWebView() {
         return mWebView;
     }
@@ -89,7 +84,7 @@ public class WebActivity extends BaseActivity {
     private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            initCookies(CookieManger.getInstance().getRawCookie(), mPageUrl);
+            syncCookies(mPageUrl);
             loadPage();
         }
     };
@@ -101,10 +96,14 @@ public class WebActivity extends BaseActivity {
         ButterKnife.bind(this);
         mNetworkChangeReceiver = new NetworkReceiver();
         mLoadSuccess = true;
+
+        mUrlSet = new HashSet<>();
+
         initData(getIntent());
         initLoginReceiver();
-        mUrlSet = new HashSet<>();
+
         initWebView();
+
         mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,7 +146,6 @@ public class WebActivity extends BaseActivity {
     protected void initData(Intent intent) {
         mTitle = intent.getStringExtra(EX_TITLE);
         mPageUrl = intent.getStringExtra(EX_URL);
-        mRawCookie = intent.getStringExtra(EX_RAW_COOKIE);
         mPureHtml = intent.getStringExtra(EX_HTML);
         tryToFixPageUrl();
     }
@@ -162,7 +160,7 @@ public class WebActivity extends BaseActivity {
 
     protected void initWebView() {
         // init cookies
-        initCookies(mRawCookie, mPageUrl);
+        syncCookies(mPageUrl);
 
         // init webSettings
         WebSettings webSettings = mWebView.getSettings();
@@ -180,7 +178,6 @@ public class WebActivity extends BaseActivity {
         webSettings.setEnableSmoothTransition(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setUseWideViewPort(true);
-
 
         mWebView.clearHistory();
         mWebView.clearCache(true);
@@ -238,23 +235,25 @@ public class WebActivity extends BaseActivity {
         loadPage();
     }
 
-    protected void initCookies(String rawCookie, String pageUrl) {
+    protected void syncCookies(String pageUrl) {
+        String rawCookie = CookieManger.getInstance().getRawCookie();
+        Log.d(TAG, "syncCookies: " + rawCookie + ", " + pageUrl);
+
         if (!TextUtils.isEmpty(rawCookie) && !TextUtils.isEmpty(pageUrl)) {
-            String[] cookies = rawCookie.split("\n");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                CookieManager.getInstance().removeSessionCookies(null);
-            } else {
-                CookieManager.getInstance().removeAllCookie();
-            }
             CookieManager.getInstance().setAcceptCookie(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                CookieManager.getInstance().acceptThirdPartyCookies(mWebView);
+            }
+            String[] cookies = rawCookie.split("\n");
             for (String cookie : cookies) {
                 CookieManager.getInstance().setCookie(pageUrl, cookie);
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 CookieManager.getInstance().flush();
-            } else {
-                CookieSyncManager.getInstance().sync();
             }
+            Log.d(TAG, "getCookies: " + CookieManager.getInstance().getCookie(pageUrl));
+            boolean sync = !TextUtils.isEmpty(CookieManager.getInstance().getCookie(pageUrl));
+            Log.d(TAG, "syncCookies: " + sync);
         }
     }
 
@@ -288,7 +287,6 @@ public class WebActivity extends BaseActivity {
                 if (!isNeedLogin) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, url)
-                            .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                             .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();

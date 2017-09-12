@@ -33,7 +33,6 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
-import com.sbai.httplib.CookieManger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -224,7 +223,6 @@ public class BankCardPayActivity extends BaseActivity {
                         Launcher.with(getActivity(), WebActivity.class)
                                 .putExtra(WebActivity.EX_TITLE, data.getTitle())
                                 .putExtra(WebActivity.EX_HTML, data.getContent())
-                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                                 .execute();
                     }
 

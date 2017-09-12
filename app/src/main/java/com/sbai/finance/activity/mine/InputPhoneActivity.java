@@ -25,7 +25,6 @@ import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ValidationWatcher;
-import com.sbai.httplib.CookieManger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -195,7 +194,6 @@ public class InputPhoneActivity extends BaseActivity {
         Launcher.with(getActivity(), WebActivity.class)
                 .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
                 .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
-                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                 .execute();
 
         Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER).setTag(TAG)
@@ -205,7 +203,6 @@ public class InputPhoneActivity extends BaseActivity {
                         Launcher.with(getActivity(), WebActivity.class)
                                 .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
                                 .putExtra(WebActivity.EX_HTML, data.getContent())
-                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                                 .execute();
                     }
 

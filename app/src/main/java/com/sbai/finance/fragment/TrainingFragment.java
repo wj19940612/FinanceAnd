@@ -43,7 +43,6 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.glide.GlideApp;
-import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -389,12 +388,10 @@ public class TrainingFragment extends BaseFragment {
         if (mBanner.isH5Style()) {
             Launcher.with(getActivity(), WebActivity.class)
                     .putExtra(WebActivity.EX_URL, mBanner.getContent())
-                    .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                     .execute();
         } else {
             Launcher.with(getActivity(), WebActivity.class)
                     .putExtra(WebActivity.EX_HTML, mBanner.getContent())
-                    .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                     .execute();
         }
     }

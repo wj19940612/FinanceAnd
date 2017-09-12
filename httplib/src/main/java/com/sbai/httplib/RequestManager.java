@@ -8,6 +8,8 @@ import com.android.volley.toolbox.DiskBasedCache;
 
 import java.io.File;
 
+import javax.net.ssl.SSLSocketFactory;
+
 public class RequestManager {
 
     public static final String VOLLEY_TAG = "VolleyHttp";
@@ -19,7 +21,7 @@ public class RequestManager {
 
         public static RequestQueue newRequestQueue(File cacheDirectory) {
             File cacheDir = new File(cacheDirectory, DEFAULT_CACHE_DIR);
-            Network network = new BasicNetwork(new CookieHurlStack());
+            Network network = new BasicNetwork(new CookieHurlStack(null, (SSLSocketFactory) SSLSocketFactory.getDefault()));
             RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network);
             queue.start();
             return queue;

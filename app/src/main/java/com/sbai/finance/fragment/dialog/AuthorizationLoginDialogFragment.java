@@ -20,7 +20,6 @@ import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
-import com.sbai.httplib.CookieManger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -111,7 +110,6 @@ public class AuthorizationLoginDialogFragment extends DialogFragment {
         Launcher.with(getActivity(), WebActivity.class)
                 .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
                 .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
-                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                 .execute();
 
     }

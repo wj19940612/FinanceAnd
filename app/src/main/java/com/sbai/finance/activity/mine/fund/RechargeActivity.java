@@ -177,7 +177,6 @@ public class RechargeActivity extends BaseActivity {
                         Launcher.with(getActivity(), WebActivity.class)
                                 .putExtra(WebActivity.EX_TITLE, data.getTitle())
                                 .putExtra(WebActivity.EX_HTML, data.getContent())
-                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                                 .execute();
                     }
 
