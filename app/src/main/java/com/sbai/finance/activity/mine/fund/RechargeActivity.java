@@ -311,7 +311,11 @@ public class RechargeActivity extends BaseActivity {
                 mOtherRechargeWayPosition = i;
                 break;
             } else if (usableRechargeWay.isIngotPay()) {
-                String balanceName = usableRechargeWay.getName() + ": " + FinanceUtil.formatWithScale(mUserFundCount, 0);
+                String name = usableRechargeWay.getName();
+                if (name.contains(":")) {
+                    name = name.substring(0, name.indexOf(":"));
+                }
+                String balanceName =name + ": " + FinanceUtil.formatWithScale(mUserFundCount, 0);
                 usableRechargeWay.setName(balanceName);
                 mRechargeWayAdapter.notifyItemChanged(i, usableRechargeWay);
                 mOtherRechargeWay = usableRechargeWay;
