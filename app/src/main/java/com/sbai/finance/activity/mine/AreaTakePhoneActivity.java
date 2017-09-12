@@ -24,7 +24,7 @@ public class AreaTakePhoneActivity extends BaseActivity {
     TitleBar mTitleBar;
     @BindView(R.id.cameraSurfaceView)
     CameraSurfaceView mCameraSurfaceView;
-//    @BindView(R.id.cameraTopRectView)
+    //    @BindView(R.id.cameraTopRectView)
 //    CameraTopRectView mCameraTopRectView;
     @BindView(R.id.takePhone)
     ImageView mTakePhone;
@@ -47,6 +47,18 @@ public class AreaTakePhoneActivity extends BaseActivity {
                 mImageUrl = imageUrl;
             }
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
     }
 
     @OnClick({R.id.takePhone, R.id.cancel, R.id.confirm})
