@@ -360,7 +360,7 @@
         <activity
             android:name=".activity.miss.RewardMissActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/DialogTheme.NoTitle"/>
+            android:theme="@style/UpLoadHeadImageDialog"/>
 
         <!-- 发现 -->
         <activity
