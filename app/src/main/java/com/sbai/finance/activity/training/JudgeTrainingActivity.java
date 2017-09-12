@@ -24,7 +24,7 @@ import com.sbai.finance.model.training.TrainingSubmit;
 import com.sbai.finance.model.training.question.KData;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
+import com.sbai.finance.utils.transform.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.RenderScriptGaussianBlur;
 import com.sbai.finance.view.SmartDialog;
