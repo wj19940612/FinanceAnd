@@ -7,8 +7,10 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.model.training.TrainingSubmit;
+import com.sbai.finance.utils.AppInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,7 @@ public class Preference {
         String TRAINING_SUBMITS = "training_submits";
         String SERVICE_CONNECT_WAY = "service_connect_way";
         String FIRST_OPEN_WALLET_PAGE = "first_open_wallet_page";
+        String SHOW_REGISTER_INVITE = "show_register_invite";
     }
 
     private static Preference sInstance;
@@ -258,4 +261,14 @@ public class Preference {
         apply(Key.FIRST_OPEN_WALLET_PAGE + account, false);
     }
 
+    public boolean showRegisterInviteDialog() {
+        // TODO: 2017/9/12 测试用 后期改成 2.0.1
+        return mPrefs.getBoolean(Key.SHOW_REGISTER_INVITE, true)
+                && AppInfo.getVersionName(App.getAppContext()).equalsIgnoreCase("1.2.0913-Alpha")
+                && !LocalUser.getUser().isLogin();
+    }
+
+    public void setShowRegisterInviteDialog() {
+        apply(Key.SHOW_REGISTER_INVITE, false);
+    }
 }

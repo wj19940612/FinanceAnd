@@ -291,9 +291,12 @@ public class RechargeActivity extends BaseActivity {
 
     private void handleUserPayPlatform(List<UsableRechargeWay> usableRechargeWayList) {
         if (!usableRechargeWayList.isEmpty()) {
-            mUserSelectRechargeWay = usableRechargeWayList.get(0);
-            mUserSelectRechargeWay.setSelectPayWay(true);
-            mRechargeWayAdapter.notifyItemChanged(0, mUserSelectRechargeWay);
+            if (mOtherRechargeWay == null || !mOtherRechargeWay.isSelectPayWay()) {
+                mUserSelectRechargeWay = usableRechargeWayList.get(0);
+                mUserSelectRechargeWay.setSelectPayWay(true);
+                mRechargeWayAdapter.notifyItemChanged(0, mUserSelectRechargeWay);
+            }
+
         }
 
         for (int i = 0; i < usableRechargeWayList.size(); i++) {
@@ -305,6 +308,7 @@ public class RechargeActivity extends BaseActivity {
                 }
                 String balanceName = name + ": " + FinanceUtil.formatWithScale(mUserFundCount) + "元";
                 usableRechargeWay.setName(balanceName);
+
                 mRechargeWayAdapter.notifyItemChanged(i, usableRechargeWay);
                 mOtherRechargeWay = usableRechargeWay;
                 mOtherRechargeWayPosition = i;
@@ -314,7 +318,7 @@ public class RechargeActivity extends BaseActivity {
                 if (name.contains(":")) {
                     name = name.substring(0, name.indexOf(":"));
                 }
-                String balanceName =name + ": " + FinanceUtil.formatWithScale(mUserFundCount, 0);
+                String balanceName = name + ": " + FinanceUtil.formatWithScale(mUserFundCount, 0);
                 usableRechargeWay.setName(balanceName);
                 mRechargeWayAdapter.notifyItemChanged(i, usableRechargeWay);
                 mOtherRechargeWay = usableRechargeWay;

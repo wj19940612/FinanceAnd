@@ -20,8 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static android.R.attr.bitmap;
-
 /**
  * Created by ${wangJie} on 2017/6/6.
  */
@@ -86,19 +84,29 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        setCameraParams(mCamera, mScreenWidth, mScreenHeight);
-        mCamera.startPreview();
-        Log.d("wangjie", "surfaceChanged: ");
+    protected void onWindowVisibilityChanged(int visibility) {
+        super.onWindowVisibilityChanged(visibility);
+        Log.d(TAG, "onWindowVisibilityChanged: " + visibility);
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        setCameraParams(mCamera, mScreenWidth, mScreenHeight);
+        mCamera.startPreview();
+        Log.d(TAG, "surfaceChanged: ");
+    }
+
+    public void cameraClose() {
         mCamera.stopPreview();//停止预览
         mCamera.release();//释放相机资源
         mCamera = null;
         mHolder.removeCallback(this);
         mHolder = null;
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        cameraClose();
     }
 
     private void setCameraParams(Camera camera, int width, int height) {
@@ -107,15 +115,15 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         // 获取摄像头支持的PictureSize列表
         List<Camera.Size> pictureSizeList = parameters.getSupportedPictureSizes();
         for (Camera.Size size : pictureSizeList) {
-            Log.i(TAG, "pictureSizeList size.width=" + size.width + "  size.height=" + size.height);
+//            Log.i(TAG, "pictureSizeList size.width=" + size.width + "  size.height=" + size.height);
         }
         /**从列表中选取合适的分辨率*/
         Camera.Size picSize = getProperSize(pictureSizeList, ((float) height / width));
         if (null == picSize) {
-            Log.i(TAG, "null == picSize");
+//            Log.i(TAG, "null == picSize");
             picSize = parameters.getPictureSize();
         }
-        Log.i(TAG, "picSize.width=" + picSize.width + "  picSize.height=" + picSize.height);
+//        Log.i(TAG, "picSize.width=" + picSize.width + "  picSize.height=" + picSize.height);
         // 根据选出的PictureSize重新设置SurfaceView大小
         float w = picSize.width;
         float h = picSize.height;
@@ -126,11 +134,11 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
 
         for (Camera.Size size : previewSizeList) {
-            Log.i(TAG, "previewSizeList size.width=" + size.width + "  size.height=" + size.height);
+//            Log.i(TAG, "previewSizeList size.width=" + size.width + "  size.height=" + size.height);
         }
         Camera.Size preSize = getProperSize(previewSizeList, ((float) height) / width);
         if (null != preSize) {
-            Log.i(TAG, "preSize.width=" + preSize.width + "  preSize.height=" + preSize.height);
+//            Log.i(TAG, "preSize.width=" + preSize.width + "  preSize.height=" + preSize.height);
             parameters.setPreviewSize(preSize.width, preSize.height);
         }
 

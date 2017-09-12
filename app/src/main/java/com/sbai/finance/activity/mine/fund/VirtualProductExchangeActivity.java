@@ -188,9 +188,9 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
     @Override
     protected void updateVirtualProductSelect(UsableRechargeWay nowSelectRechargeWay, int nowSelectPosition,
                                               UsableRechargeWay historySelectUsableRechargeWay, int historySelectPosition) {
-        if (!nowSelectRechargeWay.isIngotOrBalancePay()) {
-            historySelectUsableRechargeWay.setBalanceIsEnough(true);
-        }
+//        if (!nowSelectRechargeWay.isIngotOrBalancePay()) {
+//            historySelectUsableRechargeWay.setBalanceIsEnough(true);
+//        }
         historySelectUsableRechargeWay.setSelectPayWay(false);
         mRechargeWayAdapter.notifyItemChanged(historySelectPosition, historySelectUsableRechargeWay);
 
