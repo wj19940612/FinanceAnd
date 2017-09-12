@@ -156,11 +156,19 @@ public class RechargeActivity extends BaseActivity {
                     openExchangeRulePage();
                 }
             });
+        } else {
+            mRechargeCount.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    KeyBoardUtils.openKeyBoard(mRechargeCount);
+                }
+            }, 500);
         }
     }
 
     private void openExchangeRulePage() {
-        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_EXCHANGE).setTag(TAG)
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_EXCHANGE)
+                .setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                     @Override
                     protected void onRespSuccessData(ArticleProtocol data) {
@@ -221,7 +229,6 @@ public class RechargeActivity extends BaseActivity {
     private void requestUserBankInfo() {
         Client.requestUserBankCardInfo()
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<UserBankCardInfo>>, List<UserBankCardInfo>>() {
                     @Override
                     protected void onRespSuccessData(List<UserBankCardInfo> data) {

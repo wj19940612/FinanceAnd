@@ -164,7 +164,12 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.fund.RechargeActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.mine.fund.VirtualProductExchangeActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.fund.BindBankCardActivity"
@@ -417,8 +422,6 @@
         <activity
             android:name=".activity.GuideActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.mine.fund.VirtualProductExchangeActivity">
-        </activity>
     </application>
 
 </manifest>
