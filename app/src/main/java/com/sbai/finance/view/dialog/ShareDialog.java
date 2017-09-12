@@ -58,7 +58,10 @@ public class ShareDialog {
     private String mShareUrl;
     private String mShareThumbUrl;
     private boolean mHasFeedback;
+    private boolean mHasWeiBo = true;
     private boolean mHasTitle = true;
+    private boolean mOnlyShareImage;
+    private Bitmap mBitmap;
 
     private OnShareDialogCallback mListener;
 
@@ -69,8 +72,12 @@ public class ShareDialog {
             switch (v.getId()) {
                 case R.id.weChatFriend:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.WEIXIN)) {
-                        mShareUrl += "&userFrom=friend";
-                        shareToPlatform(SHARE_MEDIA.WEIXIN);
+                        if (mOnlyShareImage) {
+                            shareImageToPlatform(SHARE_MEDIA.WEIXIN);
+                        } else {
+                            mShareUrl += "&userFrom=friend";
+                            shareToPlatform(SHARE_MEDIA.WEIXIN);
+                        }
                         onSharePlatformClicked(SHARE_PLATFORM.WECHAT_FRIEND);
                         mSmartDialog.dismiss();
                     } else {
@@ -80,8 +87,12 @@ public class ShareDialog {
                     break;
                 case R.id.weChatFriendCircle:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.WEIXIN_CIRCLE)) {
-                        mShareUrl += "&userFrom=friend";
-                        shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
+                        if (mOnlyShareImage) {
+                            shareImageToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
+                        } else {
+                            mShareUrl += "&userFrom=friend";
+                            shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
+                        }
                         onSharePlatformClicked(SHARE_PLATFORM.WECHAT_CIRCLE);
                         mSmartDialog.dismiss();
                     } else {
@@ -142,6 +153,17 @@ public class ShareDialog {
         }
     }
 
+    private void shareImageToPlatform(SHARE_MEDIA platform) {
+        UMImage image = new UMImage(mActivity, mBitmap);
+        if (mActivity != null && !mActivity.isFinishing()) {
+            new ShareAction(mActivity)
+                    .withMedia(image)
+                    .setPlatform(platform)
+                    .setCallback(mUMShareListener)
+                    .share();
+        }
+    }
+
     private void onSharePlatformClicked(SHARE_PLATFORM platform) {
         if (mListener != null) {
             mListener.onSharePlatformClick(platform);
@@ -160,7 +182,8 @@ public class ShareDialog {
 
         @Override
         public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-            ToastUtil.show(R.string.share_failed);
+         //   ToastUtil.show(R.string.share_failed);
+            ToastUtil.show(throwable.getMessage());
         }
 
         @Override
@@ -210,6 +233,11 @@ public class ShareDialog {
         return this;
     }
 
+    public ShareDialog hasWeiBo(boolean hasWeiBo) {
+        mHasWeiBo = hasWeiBo;
+        return this;
+    }
+
     public ShareDialog setTitle(int titleRes) {
         mTitle = mActivity.getText(titleRes);
         return this;
@@ -217,6 +245,16 @@ public class ShareDialog {
 
     public ShareDialog setTitleVisible(boolean visible) {
         mHasTitle = visible;
+        return this;
+    }
+
+    public ShareDialog setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
+        return this;
+    }
+
+    public ShareDialog setOnShareImage(boolean isShow) {
+        mOnlyShareImage = isShow;
         return this;
     }
 
@@ -250,6 +288,9 @@ public class ShareDialog {
             mView.findViewById(R.id.secondSplitLine).setVisibility(View.GONE);
             mView.findViewById(R.id.secondArea).setVisibility(View.GONE);
         }
+        if (!mHasWeiBo) {
+            mView.findViewById(R.id.sinaWeibo).setVisibility(View.INVISIBLE);
+        }
         if (!TextUtils.isEmpty(mTitle)) {
             TextView title = (TextView) mView.findViewById(R.id.title);
             title.setText(mTitle);
@@ -258,43 +299,11 @@ public class ShareDialog {
             } else {
                 title.setVisibility(View.GONE);
             }
-
         }
 
         mSmartDialog.setWidthScale(1)
                 .setGravity(Gravity.BOTTOM)
                 .setWindowAnim(R.style.BottomDialogAnimation)
                 .show();
-    }
-
-
-    public static void shareImageToWechat(Context context, Bitmap bitmap) {
-        UMImage image = new UMImage(context, bitmap);
-        if (context instanceof Activity) {
-            new ShareAction((Activity) context)
-                    .withMedia(image)
-                    .setPlatform(SHARE_MEDIA.WEIXIN)
-                    .setCallback(new UMShareListener() {
-                        @Override
-                        public void onStart(SHARE_MEDIA share_media) {
-                        }
-
-                        @Override
-                        public void onResult(SHARE_MEDIA share_media) {
-                            ToastUtil.show(R.string.share_succeed);
-                        }
-
-                        @Override
-                        public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-                            ToastUtil.show(R.string.share_failed);
-                        }
-
-                        @Override
-                        public void onCancel(SHARE_MEDIA share_media) {
-                            ToastUtil.show(R.string.share_cancel);
-                        }
-                    })
-                    .share();
-        }
     }
 }

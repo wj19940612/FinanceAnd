@@ -43,8 +43,7 @@ import butterknife.ButterKnife;
 import static com.sbai.finance.R.id.position;
 
 /**
- *
- *元宝 积分等虚拟产品兑换界面
+ * 元宝 积分等虚拟产品兑换界面
  */
 
 public class VirtualProductExchangeActivity extends RechargeActivity {
@@ -298,19 +297,21 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
         InputSafetyPassDialogFragment.newInstance(content, hintText)
                 .setOnPasswordListener(new InputSafetyPassDialogFragment.OnPasswordListener() {
                     @Override
-                    public void onPassWord(String passWord) {
-                        exchangeVirtualProduct(item, passWord);
+                    public void onPassWord(String passWord, InputSafetyPassDialogFragment dialogFragment) {
+                        exchangeVirtualProduct(item, passWord, dialogFragment);
                     }
+
+
                 }).show(getSupportFragmentManager());
     }
 
-    private void exchangeVirtualProduct(VirtualProductInfo item, String passWord) {
+    private void exchangeVirtualProduct(VirtualProductInfo item, String passWord, final InputSafetyPassDialogFragment dialogFragment) {
         Client.exchange(item.getId(), passWord, item.getFromMoney(), item.getToMoney())
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
+                        dialogFragment.dismissAllowingStateLoss();
                         ToastUtil.show(resp.getMsg());
                         setResult(RESULT_OK);
                         finish();
@@ -322,6 +323,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
                             //资金不足。不必管
                         } else {
                             ToastUtil.show(failedResp.getMsg());
+                            dialogFragment.clearPassword();
                             if (failedResp.getCode() == Resp.CODE_EXCHANGE_ITEM_IS_GONE
                                     || failedResp.getCode() == Resp.CODE_EXCHANGE_ITEM_IS_MODIFIED) {
                                 requestVirtualProductList();

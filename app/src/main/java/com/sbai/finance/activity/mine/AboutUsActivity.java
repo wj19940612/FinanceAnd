@@ -99,6 +99,7 @@ public class AboutUsActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.versionName:
+                ToastUtil.show(AppInfo.getMetaData(getActivity(), "UMENG_CHANNEL"));
                 break;
             case R.id.action_product:
                 umengEventCount(UmengCountEventId.ME_FUNCTION_INTRODUCE);

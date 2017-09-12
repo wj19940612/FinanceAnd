@@ -50,7 +50,7 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
     private String mTitleHint;
 
     public interface OnPasswordListener {
-        void onPassWord(String passWord);
+        void onPassWord(String passWord, InputSafetyPassDialogFragment dialogFragment);
     }
 
 
@@ -66,7 +66,7 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
         Bundle args = new Bundle();
         InputSafetyPassDialogFragment fragment = new InputSafetyPassDialogFragment();
         args.putString(KEY_MONEY, money);
-        args.putString(KEY_HINT,hint);
+        args.putString(KEY_HINT, hint);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,9 +81,8 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
         public void afterTextChanged(Editable s) {
             if (s.toString().length() == 6) {
                 if (mOnPasswordListener != null) {
-                    mOnPasswordListener.onPassWord(s.toString());
+                    mOnPasswordListener.onPassWord(s.toString(), InputSafetyPassDialogFragment.this);
                 }
-                dismissAllowingStateLoss();
             }
         }
     };
@@ -120,7 +119,6 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
         if (!TextUtils.isEmpty(mTitleHint)) {
             mHint.setText(mTitleHint);
         }
-
     }
 
     @Nullable
@@ -144,6 +142,12 @@ public class InputSafetyPassDialogFragment extends DialogFragment {
 
     public void show(FragmentManager manager) {
         this.show(manager, this.getClass().getSimpleName());
+    }
+
+    public void clearPassword() {
+        if (isVisible()) {
+            mSafetyPasswordNumber.clearSafetyNumber();
+        }
     }
 
     @Override
