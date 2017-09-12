@@ -27,7 +27,6 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -330,7 +329,7 @@ public class MessagesActivity extends BaseActivity implements
                         GlideApp.with(context)
                                 .load(item.getSourceUser().getPortrait())
                                 .placeholder(R.drawable.ic_default_avatar)
-                                .transform(new GlideCircleTransform(context))
+                                .circleCrop()
                                 .into(mAvatar);
 
                     } else {
@@ -338,7 +337,7 @@ public class MessagesActivity extends BaseActivity implements
                         GlideApp.with(context)
                                 .load(item.getSourceUser().getUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar)
-                                .transform(new GlideCircleTransform(context))
+                                .circleCrop()
                                 .into(mAvatar);
                     }
                 }

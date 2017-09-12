@@ -39,7 +39,6 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -168,7 +167,7 @@ public class TrainingFragment extends BaseFragment {
         mGift.setVisibility(View.VISIBLE);
         GlideApp.with(TrainingFragment.this)
                 .load(mBanner.getSmallPic())
-                .transform(new GlideCircleTransform(getActivity()))
+                .circleCrop()
                 .placeholder(R.drawable.ic_home_gift)
                 .into(mGift);
     }

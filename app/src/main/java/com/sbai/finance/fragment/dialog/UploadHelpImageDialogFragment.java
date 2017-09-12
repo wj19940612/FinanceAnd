@@ -124,7 +124,6 @@ public class UploadHelpImageDialogFragment extends DialogFragment {
                 } else {
                     ToastUtil.show(getString(R.string.please_open_camera_permission));
                 }
-                this.dismiss();
                 break;
             case R.id.takePhoneFromGallery:
                 if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
@@ -135,7 +134,6 @@ public class UploadHelpImageDialogFragment extends DialogFragment {
                 } else {
                     ToastUtil.show(R.string.sd_is_not_useful);
                 }
-                this.dismiss();
                 break;
             case R.id.takePhoneCancel:
                 this.dismiss();
@@ -170,8 +168,9 @@ public class UploadHelpImageDialogFragment extends DialogFragment {
                     }
                     break;
             }
+        }else {
+            this.dismiss();
         }
-
     }
 
     private String getGalleryBitmapPath(Intent data) {

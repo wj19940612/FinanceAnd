@@ -16,7 +16,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.glide.GlideApp;
 
 import java.util.HashMap;
@@ -416,7 +415,7 @@ public class SmartDialog {
             if (!TextUtils.isEmpty(mIconUrl)) {
                 mIcon.setVisibility(View.VISIBLE);
                 GlideApp.with(mActivity).load(mIconUrl)
-                        .transform(new GlideCircleTransform(mActivity))
+                        .circleCrop()
                         .into(mIcon);
             } else {
                 mIcon.setVisibility(View.GONE);
@@ -425,7 +424,7 @@ public class SmartDialog {
             if (mIconResId != -1) {
                 mIcon.setVisibility(View.VISIBLE);
                 GlideApp.with(mActivity).load(mIconResId)
-                        .transform(new GlideCircleTransform(mActivity))
+                        .circleCrop()
                         .into(mIcon);
             } else {
                 mIcon.setVisibility(View.GONE);

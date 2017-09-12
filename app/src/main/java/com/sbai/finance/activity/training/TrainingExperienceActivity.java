@@ -32,7 +32,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -200,9 +199,9 @@ public class TrainingExperienceActivity extends BaseActivity {
 						@Override
 						public void onFailure(VolleyError volleyError) {
 							super.onFailure(volleyError);
+							stopRefreshAnimation();
 							mSpit.setVisibility(View.GONE);
 							mHotExperience.setVisibility(View.GONE);
-							stopRefreshAnimation();
 						}
 					}).fire();
 		}
@@ -235,7 +234,9 @@ public class TrainingExperienceActivity extends BaseActivity {
 						public void onFailure(VolleyError volleyError) {
 							super.onFailure(volleyError);
 							stopRefreshAnimation();
-							mEmpty.setVisibility(View.VISIBLE);
+							if (mPage == 0) {
+								mEmpty.setVisibility(View.VISIBLE);
+							}
 						}
 					}).fire();
 		}
@@ -347,14 +348,14 @@ public class TrainingExperienceActivity extends BaseActivity {
 				if (item.getUserModel() != null) {
 					GlideApp.with(context).load(item.getUserModel().getUserPortrait())
 							.placeholder(R.drawable.ic_default_avatar)
-							.transform(new GlideCircleTransform(context))
+							.circleCrop()
 							.into(mAvatar);
 
 					mUserName.setText(item.getUserModel().getUserName());
 					mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
 				} else {
 					GlideApp.with(context).load(R.drawable.ic_default_avatar)
-							.transform(new GlideCircleTransform(context))
+							.circleCrop()
 							.into(mAvatar);
 					mUserName.setText("");
 					mPublishTime.setText("");
@@ -465,10 +466,10 @@ public class TrainingExperienceActivity extends BaseActivity {
 			if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
 				mSet.clear();
 				mPage = 0;
-				requestHotExperienceList();
-				requestLatestExperienceList(true);
 				mLatestListView.removeFooterView(mFootView);
 				mFootView = null;
+				requestHotExperienceList();
+				requestLatestExperienceList(true);
 			}
 		}
 	}
