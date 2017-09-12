@@ -59,7 +59,8 @@ public class StartGameDialog extends BaseDialog {
         CountDownTimer timer = new CountDownTimer(4000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                int count = (int) (millisUntilFinished / 1000 - 1);
+                int count = (int) (millisUntilFinished / 1000);
+                if (count == 0) return;
                 message.setText(activity.getString(R.string.desc_match_success, count));
             }
 

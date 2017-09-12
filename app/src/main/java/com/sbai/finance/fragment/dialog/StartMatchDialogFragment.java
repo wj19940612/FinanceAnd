@@ -28,7 +28,7 @@ import butterknife.Unbinder;
  */
 
 public class StartMatchDialogFragment extends BaseDialogFragment {
-    public static final String TAG="StartMatchDialogFragment";
+    public static final String TAG = "StartMatchDialogFragment";
 
     @BindView(R.id.title)
     TextView mTitle;
@@ -117,6 +117,7 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
     }
 
     public void updateDeadline(int count) {
+        if (count == 0) return;
         mMessage.setText(getString(R.string.desc_match_success, count));
     }
 
@@ -128,7 +129,7 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
 
     public void show(FragmentManager manager) {
         if (manager == null) return;
-        if (!this.isAdded()){
+        if (!this.isAdded()) {
             FragmentTransaction ft = manager.beginTransaction();
             ft.add(this, TAG);
             ft.commitAllowingStateLoss();
@@ -139,7 +140,7 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
 
         @Override
         public void onTick(long millisUntilFinished) {
-            updateDeadline((int) (millisUntilFinished / 1000) - 1);
+            updateDeadline((int) (millisUntilFinished / 1000));
         }
 
         @Override
