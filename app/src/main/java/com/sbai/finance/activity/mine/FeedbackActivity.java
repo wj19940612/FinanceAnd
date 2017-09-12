@@ -39,7 +39,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.transform.GlideCircleTransform;
-import com.sbai.finance.utils.transform.GlideThumbTransform;
+import com.sbai.finance.utils.transform.ThumbTransform;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
@@ -524,7 +524,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     imageview = createImageview(context);
                     mWrapper.addView(imageview);
                     GlideApp.with(context).load(feedback.getContent())
-                            .transform(new GlideThumbTransform(context))
+                            .transform(new ThumbTransform(context))
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(imageview);
                 }

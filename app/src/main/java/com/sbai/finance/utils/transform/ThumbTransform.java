@@ -17,11 +17,14 @@ import java.security.MessageDigest;
  * 获取图片后压缩
  */
 
-public class GlideThumbTransform extends BitmapTransformation {
+public class ThumbTransform extends BitmapTransformation {
+
+    private static final String ID = "com.sbai.finance.utils.transform.GlideThumbTransform";
+    private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
 
     private Context mContext;
 
-    public GlideThumbTransform(Context context) {
+    public ThumbTransform(Context context) {
         super(context);
         mContext = context;
     }
@@ -62,11 +65,20 @@ public class GlideThumbTransform extends BitmapTransformation {
         canvas.drawBitmap(newBitmap, 0f, 0f, paint);
 
         return result;
+    }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ThumbTransform;
+    }
+
+    @Override
+    public int hashCode() {
+        return ID.hashCode();
     }
 
     @Override
     public void updateDiskCacheKey(MessageDigest messageDigest) {
-
+        messageDigest.update(ID_BYTES);
     }
 }
