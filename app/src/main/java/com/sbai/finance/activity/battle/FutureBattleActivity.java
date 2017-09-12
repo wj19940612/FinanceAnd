@@ -1302,6 +1302,7 @@ public class FutureBattleActivity extends BaseActivity implements
     }
 
     private void showGameOverDialog() {
+        mBattleTradeView.setVisibility(View.INVISIBLE);
         int result;
         String content;
         if (mBattle.getWinResult() == 0) {
