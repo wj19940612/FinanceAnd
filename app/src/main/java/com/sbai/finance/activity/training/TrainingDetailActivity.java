@@ -392,6 +392,7 @@ public class TrainingDetailActivity extends BaseActivity {
             case R.id.writeExperience:
                 Launcher.with(getActivity(), WriteExperienceActivity.class)
                         .putExtra(ExtraKeys.TRAINING, mTraining)
+                        .putExtra(ExtraKeys.TRAIN_RESULT, 0)
                         .execute();
                 break;
             case R.id.startTraining:
