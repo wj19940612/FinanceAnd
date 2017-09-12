@@ -687,6 +687,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 GlideApp.with(context).load(item.getPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
                         .transform(new GlideCircleTransform(context))
+                        .dontAnimate()
                         .into(mAvatar);
                 mName.setText(item.getName());
 

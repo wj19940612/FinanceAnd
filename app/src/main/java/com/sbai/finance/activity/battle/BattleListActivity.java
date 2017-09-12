@@ -412,8 +412,8 @@ public class BattleListActivity extends BaseActivity implements
                 }).fire();
     }
 
-    private void requestJoinBattle(final Battle data) {
-        Client.joinBattle(data.getId(), Battle.SOURCE_HALL).setTag(TAG)
+    private void requestJoinBattle(final Battle data, String userFrom) {
+        Client.joinBattle(data.getId(), userFrom).setTag(TAG)
                 .setCallback(new Callback<Resp<Battle>>() {
                     @Override
                     protected void onRespSuccess(Resp<Battle> resp) {
@@ -637,7 +637,7 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        requestJoinBattle(item);
+                        requestJoinBattle(item, Battle.SOURCE_HALL);
                     }
                 })
                 .setTitle(getString(R.string.join_versus_title))
@@ -782,7 +782,7 @@ public class BattleListActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        requestJoinBattle(data);
+                        requestJoinBattle(data, Battle.SOURCE_MATCH);
                     }
                 })
                 .setNegative(R.string.continue_match, new SmartDialog.OnClickListener() {
