@@ -217,7 +217,9 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
                 .setCallback(new Callback2D<Resp<AliPayOrderInfo>, AliPayOrderInfo>() {
                     @Override
                     protected void onRespSuccessData(AliPayOrderInfo data) {
-                        new AliPayHelper(VirtualProductExchangeActivity.this).aliPay(data.getOrderString());
+                        new AliPayHelper(VirtualProductExchangeActivity.this)
+                                .setToastFailMsg("支付失败")
+                                .aliPay(data.getOrderString());
                     }
                 })
                 .setTag(TAG)
@@ -324,7 +326,10 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         if (failedResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
-                            //资金不足。不必管
+                            ToastUtil.show(failedResp.getMsg());
+                            dialogFragment.dismissAllowingStateLoss();
+                            requestUserFund();
+                            mRecharge.setEnabled(false);
                         } else {
                             ToastUtil.show(failedResp.getMsg());
                             dialogFragment.clearPassword();

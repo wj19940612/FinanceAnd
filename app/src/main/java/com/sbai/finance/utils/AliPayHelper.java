@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
@@ -30,10 +31,16 @@ public class AliPayHelper {
     private static final int ALI_PAY_FLAG = 55000;
 
     private FragmentActivity mFragmentActivity;
+    private String mFailToastMsg;
 
     public AliPayHelper(FragmentActivity activity) {
         WeakReference<FragmentActivity> fragmentActivityWeakReference = new WeakReference<>(activity);
         mFragmentActivity = fragmentActivityWeakReference.get();
+    }
+
+    public AliPayHelper setToastFailMsg(String msg) {
+        mFailToastMsg = msg;
+        return this;
     }
 
     @SuppressLint("HandlerLeak")
@@ -59,6 +66,9 @@ public class AliPayHelper {
 //                    }
                     String toJson = new Gson().toJson(aliPayResult);
                     if (aliPayResult.isUserCancelPay()) {
+                        if (!TextUtils.isEmpty(mFailToastMsg)) {
+                            ToastUtil.show(mFailToastMsg);
+                        }
                         return;
                     }
                     Client.requestAliPayWebSign(toJson)

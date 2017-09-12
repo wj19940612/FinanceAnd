@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,102 +9,109 @@
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.mine.fund.RechargeActivity">
 
-    <LinearLayout
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:backFeature="true"
+        app:hasBottomSplitLine="true"
+        app:rightText="@string/exchange_rule"
+        app:rightTextColor="@color/luckyText"
+        app:rightTextRightImage="@drawable/ic_exchange_rule"
+        app:rightTextSize="14sp"
+        app:rightVisible="true"
+        app:splitLineColor="@color/background"
+        app:titleText="@string/recharge"/>
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <com.sbai.finance.view.TitleBar
-            android:id="@+id/titleBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            app:backFeature="true"
-            app:hasBottomSplitLine="true"
-            app:rightText="@string/exchange_rule"
-            app:rightTextColor="@color/luckyText"
-            app:rightTextRightImage="@drawable/ic_exchange_rule"
-            app:rightTextSize="14sp"
-            app:rightVisible="true"
-            app:splitLineColor="@color/background"
-            app:titleText="@string/recharge"/>
-
-        <View
-            android:id="@+id/split"
-            android:layout_width="match_parent"
-            android:layout_height="13dp"/>
 
         <LinearLayout
-            android:id="@+id/crashRecharge"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@android:color/white"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/common_padding"
-            android:paddingRight="@dimen/common_padding">
-
-            <android.support.v7.widget.AppCompatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="24dp"
-                android:text="@string/recharge_count"
-                android:textColor="@color/primaryText"
-                android:textSize="15sp"/>
-
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/rechargeCount"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@null"
-                android:gravity="center_vertical"
-                android:hint="@string/recharge_hint"
-                android:inputType="numberDecimal"
-                android:maxLength="9"
-                android:textColor="@color/primaryText"
-                android:textColorHint="@color/bank_card_hint"
-                android:textSize="15sp"/>
-
-        </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/virtualProductRecycleView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:padding="@dimen/common_margin"
-            android:visibility="gone"/>
+            android:background="@color/background"
+            android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:divider="@null"/>
+            <View
+                android:id="@+id/split"
+                android:layout_width="match_parent"
+                android:layout_height="13dp"/>
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/recharge"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/common_height"
-            android:layout_marginLeft="@dimen/common_padding"
-            android:layout_marginRight="@dimen/common_padding"
-            android:layout_marginTop="31dp"
-            android:background="@drawable/btn_primary_rounded"
-            android:enabled="false"
-            android:text="@string/confirm_money"
-            android:textColor="@android:color/white"/>
+            <LinearLayout
+                android:id="@+id/crashRecharge"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/common_padding"
+                android:paddingRight="@dimen/common_padding">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/connect_service"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/recharge_service"
-            android:textColor="@color/unluckyText"
-            android:textSize="15sp"/>
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="24dp"
+                    android:text="@string/recharge_count"
+                    android:textColor="@color/primaryText"
+                    android:textSize="15sp"/>
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/rechargeCount"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="@string/recharge_hint"
+                    android:inputType="numberDecimal"
+                    android:maxLength="9"
+                    android:textColor="@color/primaryText"
+                    android:textColorHint="@color/bank_card_hint"
+                    android:textSize="15sp"/>
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/virtualProductRecycleView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:padding="@dimen/common_margin"
+                android:visibility="gone"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:divider="@null"/>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/recharge"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_height"
+                android:layout_marginLeft="@dimen/common_padding"
+                android:layout_marginRight="@dimen/common_padding"
+                android:layout_marginTop="31dp"
+                android:background="@drawable/btn_primary_rounded"
+                android:enabled="false"
+                android:text="@string/confirm_money"
+                android:textColor="@android:color/white"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/connect_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/recharge_service"
+                android:textColor="@color/unluckyText"
+                android:textSize="15sp"/>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

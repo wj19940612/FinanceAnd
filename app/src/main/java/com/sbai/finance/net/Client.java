@@ -538,6 +538,15 @@ public class Client {
     }
 
     /**
+     * 获取首页礼物活动
+     *
+     * @return
+     */
+    public static API requestGiftActivity() {
+        return new API("/user/news/getBanner.do");
+    }
+
+    /**
      * 接口名称 大事件列表
      *
      * @param page     页码

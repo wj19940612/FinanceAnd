@@ -34,12 +34,11 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.training.MoreTrainFeedbackActivity;
 import com.sbai.finance.activity.training.TrainingDetailActivity;
-import com.sbai.finance.model.BannerModel;
+import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.MyTrainingRecord;
 import com.sbai.finance.model.training.Training;
-import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -133,7 +132,7 @@ public class DiscoveryFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
             @Override
-            public void onBannerClick(BannerModel information) {
+            public void onBannerClick(Banner information) {
                 if (information.isH5Style()) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, information.getContent())
@@ -189,9 +188,9 @@ public class DiscoveryFragment extends BaseFragment {
 
     private void requestBannerData() {
         Client.getBannerData().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<BannerModel>>, List<BannerModel>>() {
+                .setCallback(new Callback2D<Resp<List<Banner>>, List<Banner>>() {
                     @Override
-                    protected void onRespSuccessData(List<BannerModel> data) {
+                    protected void onRespSuccessData(List<Banner> data) {
                         mBanner.setHomeAdvertisement(data);
                     }
                 }).fireFree();
