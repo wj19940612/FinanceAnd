@@ -529,12 +529,12 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 }
                 if (!TextUtils.isEmpty(feedback.getUserPortrait())) {
                     GlideApp.with(context).load(feedback.getUserPortrait())
-                            .transform(new GlideCircleTransform(context))
+                            .circleCrop()
                             .placeholder(R.drawable.ic_avatar_feedback)
                             .into(mHeadImage);
                 } else {
                     GlideApp.with(context).load(feedback.getPortrait())
-                            .transform(new GlideCircleTransform(context))
+                            .circleCrop()
                             .placeholder(R.drawable.ic_avatar_feedback)
                             .into(mHeadImage);
                 }
@@ -619,7 +619,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 }
                 mText.setText(feedback.getContent());
                 GlideApp.with(context).load(R.drawable.ic_feedback_service)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mHeadImage);
             }
         }

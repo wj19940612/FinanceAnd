@@ -37,7 +37,7 @@ public class StartGameDialog extends BaseDialog {
         GlideApp.with(activity)
                 .load(url)
                 .placeholder(R.drawable.ic_default_avatar_big)
-                .transform(new GlideCircleTransform(activity))
+                .circleCrop()
                 .into(matchHead);
         TextView cancel = (TextView) customView.findViewById(R.id.cancel);
         cancel.setText("");

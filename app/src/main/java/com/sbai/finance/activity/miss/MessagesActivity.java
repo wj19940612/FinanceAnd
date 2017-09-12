@@ -329,7 +329,7 @@ public class MessagesActivity extends BaseActivity implements
                         GlideApp.with(context)
                                 .load(item.getSourceUser().getPortrait())
                                 .placeholder(R.drawable.ic_default_avatar)
-                                .transform(new GlideCircleTransform(context))
+                                .circleCrop()
                                 .into(mAvatar);
 
                     } else {
@@ -337,7 +337,7 @@ public class MessagesActivity extends BaseActivity implements
                         GlideApp.with(context)
                                 .load(item.getSourceUser().getUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar)
-                                .transform(new GlideCircleTransform(context))
+                                .circleCrop()
                                 .into(mAvatar);
                     }
                 }

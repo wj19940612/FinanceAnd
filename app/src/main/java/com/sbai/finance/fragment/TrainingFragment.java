@@ -167,7 +167,7 @@ public class TrainingFragment extends BaseFragment {
         mGift.setVisibility(View.VISIBLE);
         GlideApp.with(TrainingFragment.this)
                 .load(mBanner.getSmallPic())
-                .transform(new GlideCircleTransform(getActivity()))
+                .circleCrop()
                 .placeholder(R.drawable.ic_home_gift)
                 .into(mGift);
     }

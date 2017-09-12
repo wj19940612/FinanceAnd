@@ -184,12 +184,12 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                     GlideApp.with(context)
                             .load(item.getLaunchUserPortrait())
                             .placeholder(R.drawable.ic_default_avatar)
-                            .transform(new GlideCircleTransform(context))
+                            .circleCrop()
                             .into(mMyAvatar);
                     GlideApp.with(context)
                             .load(item.getAgainstUserPortrait())
                             .placeholder(R.drawable.ic_default_avatar)
-                            .transform(new GlideCircleTransform(context))
+                            .circleCrop()
                             .into(mAgainstAvatar);
                     mMyName.setText(item.getLaunchUserName());
                     mAgainstName.setText(item.getAgainstUserName());

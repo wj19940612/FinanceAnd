@@ -380,12 +380,12 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 
                 GlideApp.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mAvatar);
 
                 GlideApp.with(context).load(item.getCustomPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mMissAvatar);
 
                 if (item.getSolve() == 0) {

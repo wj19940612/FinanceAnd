@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.Preference;
-
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
@@ -202,12 +201,12 @@ public class MineFragment extends BaseFragment {
     private void updateUserImage() {
         if (LocalUser.getUser().isLogin()) {
             GlideApp.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                    .transform(new GlideCircleTransform(getActivity()))
+                    .circleCrop()
                     .placeholder(R.drawable.ic_default_avatar_big)
                     .into(mUserHeadImage);
         } else {
             GlideApp.with(this).load(R.drawable.ic_default_avatar_big)
-                    .transform(new GlideCircleTransform(getActivity()))
+                    .circleCrop()
                     .into(mUserHeadImage);
         }
     }

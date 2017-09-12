@@ -3,6 +3,7 @@ package com.sbai.finance.activity.mine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
@@ -99,12 +100,12 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     private void updateUserImage() {
         if (LocalUser.getUser().isLogin()) {
             GlideApp.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                    .transform(new GlideCircleTransform(getActivity()))
+                    .circleCrop()
                     .placeholder(R.drawable.ic_default_avatar)
                     .into(mUserHeadImage);
         } else {
             GlideApp.with(this).load(R.drawable.ic_default_avatar)
-                    .transform(new GlideCircleTransform(getActivity()))
+                    .circleCrop()
                     .into(mUserHeadImage);
         }
     }
@@ -270,12 +271,18 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
                             LocalUser.getUser().logout();
                             CookieManger.getInstance().clearRawCookies();
                             WsClient.get().close();
+                            sendLogoutSuccessBroadcast();
                             setResult(RESULT_OK);
                             finish();
                         }
                     }
                 })
                 .fire();
+    }
+
+    private void sendLogoutSuccessBroadcast() {
+        LocalBroadcastManager.getInstance(getActivity())
+                .sendBroadcast(new Intent(ACTION_LOGOUT_SUCCESS));
     }
 
 

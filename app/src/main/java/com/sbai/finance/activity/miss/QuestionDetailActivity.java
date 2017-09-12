@@ -191,6 +191,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				if (mMongoId != null) {
 					mMongoId = null;
 				}
+				mSwipeRefreshLayout.setLoadMoreEnable(true);
+				mListView.removeFooterView(mFootView);
+				mFootView = null;
 				requestQuestionDetail();
 				requestQuestionReplyList(true);
 
@@ -256,12 +259,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private void updateQuestionDetail(final Question question) {
 		GlideApp.with(this).load(question.getUserPortrait())
 				.placeholder(R.drawable.ic_default_avatar)
-				.transform(new GlideCircleTransform(this))
+				.circleCrop()
 				.into(mAvatar);
 
 		GlideApp.with(this).load(question.getCustomPortrait())
 				.placeholder(R.drawable.ic_default_avatar)
-				.transform(new GlideCircleTransform(this))
+				.circleCrop()
 				.into(mMissAvatar);
 
 		mName.setText(question.getUserName());
@@ -389,15 +392,17 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			mCommentArea.setBackgroundColor(Color.WHITE);
 		}
 
-		if (questionReplyList == null) {
-			stopRefreshAnimation();
-			return;
-		}
-
 		if (questionReplyList.size() < mPageSize) {
 			mSwipeRefreshLayout.setLoadMoreEnable(false);
 		} else {
 			mPage++;
+		}
+
+		if (questionReplyList.size() < mPageSize && mPage > 0) {
+			if (mFootView == null) {
+				mFootView = View.inflate(getActivity(), R.layout.view_footer_load_complete, null);
+				mListView.addFooterView(mFootView, null, true);
+			}
 		}
 
 		if (isRefresh) {
@@ -537,12 +542,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				if (item.getUserModel() != null) {
 					GlideApp.with(context).load(item.getUserModel().getUserPortrait())
 							.placeholder(R.drawable.ic_default_avatar)
-							.transform(new GlideCircleTransform(context))
+							.circleCrop()
 							.into(mAvatar);
 					mUserName.setText(item.getUserModel().getUserName());
 				} else {
 					GlideApp.with(context).load(R.drawable.ic_default_avatar)
-							.transform(new GlideCircleTransform(context))
+							.circleCrop()
 							.into(mAvatar);
 					mUserName.setText("");
 				}
@@ -582,6 +587,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			mSet.clear();
 			mPage = 0;
 			mMongoId = null;
+			mSwipeRefreshLayout.setLoadMoreEnable(true);
+			mListView.removeFooterView(mFootView);
+			mFootView = null;
 			requestQuestionDetail();
 			requestQuestionReplyList(true);
 			mListView.setSelection(0);
@@ -614,6 +622,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				mSet.clear();
 				mPage = 0;
 				mMongoId = null;
+				mListView.removeFooterView(mFootView);
+				mFootView = null;
+				mSwipeRefreshLayout.setLoadMoreEnable(true);
 				requestQuestionDetail();
 				requestQuestionReplyList(true);
 				mListView.setSelection(0);
@@ -631,6 +642,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				mSet.clear();
 				mPage = 0;
 				mMongoId = null;
+				mListView.removeFooterView(mFootView);
+				mFootView = null;
 				requestQuestionDetail();
 				requestQuestionReplyList(true);
 			}

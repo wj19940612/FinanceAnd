@@ -200,7 +200,7 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
             GlideApp.with(getActivity())
                     .load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .placeholder(R.drawable.ic_default_avatar)
-                    .transform(new GlideCircleTransform(getActivity()))
+                    .circleCrop()
                     .into(mAvatar);
             mUserName.setText(getString(R.string.me));
             if (mType.equalsIgnoreCase(LeaderBoardRank.INGOT)
@@ -418,7 +418,7 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                 GlideApp.with(context)
                         .load(item.getUser().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mAvatar);
                 mUserName.setText(item.getUser().getUserName());
 
@@ -476,7 +476,7 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                 GlideApp.with(context)
                         .load(item.getUser().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mAvatar);
                 mUserName.setText(item.getUser().getUserName());
                 switch (type) {

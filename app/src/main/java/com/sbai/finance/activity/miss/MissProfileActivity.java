@@ -378,7 +378,7 @@ public class MissProfileActivity extends BaseActivity implements
 	private void updateMissDetail(final Miss miss) {
 		GlideApp.with(this).load(miss.getPortrait())
 				.placeholder(R.drawable.ic_default_avatar)
-				.transform(new GlideCircleTransform(this))
+				.circleCrop()
 				.into(mAvatar);
 
 		mName.setText(miss.getName());
@@ -495,7 +495,7 @@ public class MissProfileActivity extends BaseActivity implements
 				.setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
 					@Override
 					protected void onRespSuccessData(List<Question> questionList) {
-						if (questionList.size() == 0) {
+						if (questionList.size() == 0 && mCreateTime == null) {
 							mEmpty.setVisibility(View.VISIBLE);
 							stopRefreshAnimation();
 						} else {
@@ -509,11 +509,15 @@ public class MissProfileActivity extends BaseActivity implements
 					public void onFailure(VolleyError volleyError) {
 						super.onFailure(volleyError);
 						stopRefreshAnimation();
-						mEmpty.setVisibility(View.VISIBLE);
-						mVoiceIntroduce.setVisibility(View.GONE);
-						mAttentionNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(0)));
-						mRewardNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(0)));
-						mIntroduce.setText(R.string.no_miss_introduce);
+						if (mCreateTime == null) {
+							mEmpty.setVisibility(View.VISIBLE);
+							mVoiceIntroduce.setVisibility(View.GONE);
+							mAttentionNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(0)));
+							mRewardNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(0)));
+							mIntroduce.setText(R.string.no_miss_introduce);
+							mHerAnswerAdapter.clear();
+							mHerAnswerAdapter.notifyDataSetChanged();
+						}
 					}
 				}).fire();
 	}
@@ -651,12 +655,12 @@ public class MissProfileActivity extends BaseActivity implements
 
 				GlideApp.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
-						.transform(new GlideCircleTransform(context))
+						.circleCrop()
 						.into(mAvatar);
 
 				GlideApp.with(context).load(item.getCustomPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
-						.transform(new GlideCircleTransform(context))
+						.circleCrop()
 						.into(mMissAvatar);
 
 				mName.setText(item.getUserName());

@@ -103,7 +103,7 @@ public class ImageListView extends RelativeLayout {
     private void loadImage(ImageView imageView, String url) {
         GlideApp.with(getContext())
                 .load(url).placeholder(R.drawable.ic_default_avatar)
-                .transform(new GlideCircleTransform(getContext()))
+                .circleCrop()
                 .into(imageView);
     }
 

@@ -72,14 +72,14 @@ public class ExperienceView extends LinearLayout {
 			if (data.getUserModel() != null) {
 				GlideApp.with(getContext()).load(data.getUserModel().getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
-						.transform(new GlideCircleTransform(getContext()))
+						.circleCrop()
 						.into(mAvatar);
 
 				mUserName.setText(data.getUserModel().getUserName());
 				mPublishTime.setText(DateUtil.getMissFormatTime(data.getCreateDate()));
 			} else {
 				GlideApp.with(getContext()).load(R.drawable.ic_default_avatar)
-						.transform(new GlideCircleTransform(getContext()))
+						.circleCrop()
 						.into(mAvatar);
 				mUserName.setText("");
 				mPublishTime.setText("");

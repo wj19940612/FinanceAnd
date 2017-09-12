@@ -116,7 +116,7 @@ public class JudgeTrainingActivity extends BaseActivity {
         mKlineView.setDataList(dataList);
 
         GlideApp.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                .transform(new GlideCircleTransform(getActivity()))
+                .circleCrop()
                 .placeholder(R.drawable.ic_default_avatar_big)
                 .into(mUserPortrait);
         mUsername.setText(LocalUser.getUser().getUserInfo().getUserName());

@@ -72,6 +72,7 @@ import butterknife.Unbinder;
 import static android.app.Activity.RESULT_OK;
 import static com.sbai.finance.R.id.missAvatar;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
+import static com.sbai.finance.activity.BaseActivity.ACTION_LOGOUT_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
@@ -96,7 +97,6 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
     RelativeLayout mTitleBar;
 
     private List<Miss> mMissList;
-    private List<Question> mHotQuestionList;
     private List<Question> mLatestQuestionList;
     private MissListAdapter mMissListAdapter;
     private QuestionListAdapter mHotQuestionListAdapter;
@@ -112,6 +112,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
     private MyListView mHotListView;
     private LinearLayout mEmpty;
     private TextView mMissEmpty;
+    private View mFootView;
 
     @Nullable
     @Override
@@ -422,6 +423,8 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 mSet.clear();
                 mCreateTime = null;
                 mSwipeRefreshLayout.setLoadMoreEnable(true);
+                mLatestListView.removeFooterView(mFootView);
+                mFootView = null;
                 requestMissList();
                 requestHotQuestionList();
                 requestLatestQuestionList(true);
@@ -515,6 +518,13 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                     protected void onRespSuccessData(List<Miss> missList) {
                         updateMissList(missList);
                     }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        mMissListAdapter.clear();
+                        mMissListAdapter.notifyDataSetChanged();
+                    }
                 }).fire();
     }
 
@@ -530,7 +540,6 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                             mHotQuestion.setVisibility(View.VISIBLE);
                         }
 
-                        mHotQuestionList = questionList;
                         updateHotQuestionList(questionList);
                     }
 
@@ -538,6 +547,8 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
                         mHotQuestion.setVisibility(View.GONE);
+	                    mHotQuestionListAdapter.clear();
+                        mHotQuestionListAdapter.notifyDataSetChanged();
                         stopRefreshAnimation();
                     }
                 }).fire();
@@ -548,7 +559,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
                     @Override
                     protected void onRespSuccessData(List<Question> questionList) {
-                        if (questionList.size() == 0) {
+                        if (questionList.size() == 0 && mCreateTime == null) {
                             mEmpty.setVisibility(View.VISIBLE);
                             stopRefreshAnimation();
                         } else {
@@ -562,7 +573,11 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
                         stopRefreshAnimation();
-                        mEmpty.setVisibility(View.VISIBLE);
+                        if (mCreateTime == null) {
+                            mLatestQuestionListAdapter.clear();
+                            mLatestQuestionListAdapter.notifyDataSetChanged();
+                            mEmpty.setVisibility(View.VISIBLE);
+                        }
                     }
                 }).fire();
     }
@@ -588,15 +603,18 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void updateLatestQuestionList(List<Question> questionList, boolean isRefresh) {
-        if (questionList == null) {
-            stopRefreshAnimation();
-            return;
-        }
 
         if (questionList.size() < mPageSize) {
             mSwipeRefreshLayout.setLoadMoreEnable(false);
         } else {
             mCreateTime = mLatestQuestionList.get(mLatestQuestionList.size() - 1).getCreateTime();
+        }
+
+        if (questionList.size() < mPageSize && mCreateTime != null) {
+            if (mFootView == null) {
+                mFootView = View.inflate(getActivity(), R.layout.view_footer_load_complete, null);
+                mLatestListView.addFooterView(mFootView, null, true);
+            }
         }
 
         if (isRefresh) {
@@ -684,8 +702,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 if (item == null) return;
                 GlideApp.with(context).load(item.getPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
-                        .transform(new GlideCircleTransform(context))
-                        .onlyRetrieveFromCache(true)
+                        .circleCrop()
                         .into(mAvatar);
                 mName.setText(item.getName());
 
@@ -775,12 +792,12 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 
                 GlideApp.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mAvatar);
 
                 GlideApp.with(context).load(item.getCustomPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mMissAvatar);
 
                 mName.setText(item.getUserName());
@@ -1034,6 +1051,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_REWARD_SUCCESS);
         filter.addAction(ACTION_LOGIN_SUCCESS);
+        filter.addAction(ACTION_LOGOUT_SUCCESS);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshReceiver, filter);
     }
 
@@ -1068,9 +1086,12 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                 }
             }
 
-            if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())
+                    || ACTION_LOGOUT_SUCCESS.equalsIgnoreCase(intent.getAction())) {
                 mSet.clear();
                 mCreateTime = null;
+                mLatestListView.removeFooterView(mFootView);
+                mFootView = null;
                 requestMissList();
                 requestHotQuestionList();
                 requestLatestQuestionList(true);

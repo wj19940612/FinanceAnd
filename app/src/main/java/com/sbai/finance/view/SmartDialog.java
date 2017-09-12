@@ -415,7 +415,7 @@ public class SmartDialog {
             if (!TextUtils.isEmpty(mIconUrl)) {
                 mIcon.setVisibility(View.VISIBLE);
                 GlideApp.with(mActivity).load(mIconUrl)
-                        .transform(new GlideCircleTransform(mActivity))
+                        .circleCrop()
                         .into(mIcon);
             } else {
                 mIcon.setVisibility(View.GONE);
@@ -424,7 +424,7 @@ public class SmartDialog {
             if (mIconResId != -1) {
                 mIcon.setVisibility(View.VISIBLE);
                 GlideApp.with(mActivity).load(mIconResId)
-                        .transform(new GlideCircleTransform(mActivity))
+                        .circleCrop()
                         .into(mIcon);
             } else {
                 mIcon.setVisibility(View.GONE);

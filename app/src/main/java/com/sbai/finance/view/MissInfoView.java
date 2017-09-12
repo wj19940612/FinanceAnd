@@ -49,7 +49,7 @@ public class MissInfoView extends LinearLayout {
     public MissInfoView setImgRes(String url) {
         GlideApp.with(getContext())
                 .load(url).placeholder(R.drawable.ic_default_avatar)
-                .transform(new GlideCircleTransform(getContext()))
+                .circleCrop()
                 .into(mAvatar);
         return this;
     }
@@ -57,7 +57,7 @@ public class MissInfoView extends LinearLayout {
     public MissInfoView setImgRes(Integer resourceId) {
         GlideApp.with(getContext())
                 .load(resourceId).placeholder(R.drawable.ic_default_avatar)
-                .transform(new GlideCircleTransform(getContext()))
+                .circleCrop()
                 .into(mAvatar);
         return this;
 

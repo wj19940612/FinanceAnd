@@ -186,7 +186,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                 GlideApp.with(context).load(item.getLaunchUserPortrait())
                         .load(item.getLaunchUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mCreateAvatar);
                 mCreateName.setText(item.getLaunchUserName());
                 mProgress.setLeftText(String.valueOf(item.getLaunchScore()));
@@ -222,7 +222,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
-                                .transform(new GlideCircleTransform(context))
+                                .circleCrop()
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
                         mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
@@ -232,7 +232,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
-                                .transform(new GlideCircleTransform(context))
+                                .circleCrop()
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
                         if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
