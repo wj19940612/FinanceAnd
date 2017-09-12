@@ -18,7 +18,7 @@ public class Client {
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/lm/introduce.html";
     //h5的用户协议界面网址
-    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/authCodeLogin/user_protocol?nohead=1";
+    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/login/user_protocol?nohead=1";
 
     // 期货分享地址
     public static final String SHARE_URL_FUTURE = API.getHost() + "/mobi/future/future_quota?varietyId=%d";

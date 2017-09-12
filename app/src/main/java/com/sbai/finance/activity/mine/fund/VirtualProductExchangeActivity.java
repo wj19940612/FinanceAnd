@@ -90,7 +90,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
     }
 
     private void changeOtherPayStatus(VirtualProductInfo virtualProductInfo) {
-        if (mOtherRechargeWay == null) return;
+        if (mOtherRechargeWay == null || virtualProductInfo == null) return;
         if (virtualProductInfo.getFromMoney() > mUserFundCount) {
             mOtherRechargeWay.setBalanceIsEnough(false);
             mRechargeWayAdapter.notifyItemChanged(mOtherRechargeWayPosition, mOtherRechargeWay);
@@ -98,6 +98,10 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
             mOtherRechargeWay.setBalanceIsEnough(true);
             mRechargeWayAdapter.notifyItemChanged(mOtherRechargeWayPosition, mOtherRechargeWay);
         }
+        if (mUserSelectRechargeWay.isIngotOrBalancePay()) {
+            mRecharge.setEnabled(mUserSelectRechargeWay.isBalanceIsEnough());
+        }
+
     }
 
     private void changeConfirmBtnStatus() {
@@ -120,7 +124,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
     }
 
     private void changeUserFundEnoughStatus(VirtualProductInfo virtualProductInfo) {
-        if (mUserSelectRechargeWay == null) return;
+        if (mUserSelectRechargeWay == null || virtualProductInfo == null) return;
         if (virtualProductInfo.getFromMoney() > mUserFundCount) {
             mUserSelectRechargeWay.setBalanceIsEnough(false);
             mRechargeWayAdapter.notifyItemChanged(mHistorySelectPayWayPosition, mUserSelectRechargeWay);
