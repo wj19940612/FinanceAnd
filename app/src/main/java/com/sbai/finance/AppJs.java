@@ -8,6 +8,7 @@ import android.webkit.JavascriptInterface;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.dialog.ShareDialog;
@@ -29,7 +30,7 @@ public class AppJs {
     @JavascriptInterface
     public void openShareDialog(String title, String description, String shareUrl, String shareThumbnailUrl) {
         if (mContext instanceof Activity) {
-            Activity activity = (Activity) mContext;
+            final Activity activity = (Activity) mContext;
             ShareDialog.with(activity)
                     .setTitle(title)
                     .setTitleVisible(false)
@@ -41,7 +42,7 @@ public class AppJs {
                     .setListener(new ShareDialog.OnShareDialogCallback() {
                         @Override
                         public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
-
+                            Client.share().setTag(activity.getClass().getSimpleName()).fire();
                         }
 
                         @Override

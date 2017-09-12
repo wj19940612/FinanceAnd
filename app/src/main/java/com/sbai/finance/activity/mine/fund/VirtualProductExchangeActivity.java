@@ -218,7 +218,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
                     @Override
                     protected void onRespSuccessData(AliPayOrderInfo data) {
                         new AliPayHelper(VirtualProductExchangeActivity.this)
-                                .setToastFailMsg("购买失败")
+                                .setToastFailMsg("支付失败")
                                 .aliPay(data.getOrderString());
                     }
                 })

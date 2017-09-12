@@ -31,6 +31,7 @@ public class Battle implements Parcelable {
 
     public static final String SOURCE_COTERIE = "coterie";
     public static final String SOURCE_HALL = "hall";
+    public static final String SOURCE_MATCH = "match";
     public static final String SOURCE_WEIBO = "weibo";
     public static final String SOURCE_FRIEND = "friend";
 
