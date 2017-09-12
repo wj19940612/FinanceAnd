@@ -217,7 +217,9 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
                 .setCallback(new Callback2D<Resp<AliPayOrderInfo>, AliPayOrderInfo>() {
                     @Override
                     protected void onRespSuccessData(AliPayOrderInfo data) {
-                        new AliPayHelper(VirtualProductExchangeActivity.this).aliPay(data.getOrderString());
+                        new AliPayHelper(VirtualProductExchangeActivity.this)
+                                .setToastFailMsg("购买失败")
+                                .aliPay(data.getOrderString());
                     }
                 })
                 .setTag(TAG)

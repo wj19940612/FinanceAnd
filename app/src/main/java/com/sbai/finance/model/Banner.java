@@ -1,9 +1,8 @@
 package com.sbai.finance.model;
-import com.sbai.finance.net.API;
 
 import java.io.Serializable;
 
-public class BannerModel implements Serializable {
+public class Banner implements Serializable {
 
     private static final long serialVersionUID = -7266947195942724446L;
 
@@ -11,8 +10,8 @@ public class BannerModel implements Serializable {
      * 首页banner
      */
     public static final int TYPE_BANNER = 0;
-    public static final int STATUS_HIDE=0;
-    public static final int STATUS_SHOW=1;
+    public static final int STATUS_HIDE = 0;
+    public static final int STATUS_SHOW = 1;
     /**
      * summary : 测试内容q550
      * content : N多美图
@@ -29,7 +28,7 @@ public class BannerModel implements Serializable {
      */
     private String summary;
     private String content;
-    private String cover;
+    private String cover;   //封面
     private long createTime;
     private String id;
     private int index;
@@ -39,9 +38,16 @@ public class BannerModel implements Serializable {
     private String title;
     private int type;
     private long updateTime;
+
+    //gift 独有的
+    private int clicks; //点击次数
+    private String smallPic;  //小图
+
+
     public boolean isH5Style() {
         return this.style.equalsIgnoreCase("h5");
     }
+
     public String getSummary() {
         return summary;
     }
@@ -138,6 +144,23 @@ public class BannerModel implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public int getClicks() {
+        return clicks;
+    }
+
+    public void setClicks(int clicks) {
+        this.clicks = clicks;
+    }
+
+
+    public String getSmallPic() {
+        return smallPic;
+    }
+
+    public void setSmallPic(String smallPic) {
+        this.smallPic = smallPic;
+    }
+
     @Override
     public String toString() {
         return "BannerModel{" +
@@ -153,6 +176,8 @@ public class BannerModel implements Serializable {
                 ", title='" + title + '\'' +
                 ", type=" + type +
                 ", updateTime=" + updateTime +
+                ", clicks=" + clicks +
+                ", smallPic='" + smallPic + '\'' +
                 '}';
     }
 }

@@ -21,12 +21,14 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.training.CreditIntroduceActivity;
 import com.sbai.finance.activity.training.TrainingDetailActivity;
+import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.MyTrainingRecord;
 import com.sbai.finance.model.training.Training;
@@ -37,10 +39,12 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.glide.GlideApp;
+import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +105,7 @@ public class TrainingFragment extends BaseFragment {
     private double mScoreOffset;
     //如果点击了删除按钮，则退出再次进来在出现
     private boolean showJoinTestHint;
+    private Banner mBanner;
 
     @Nullable
     @Override
@@ -130,6 +135,8 @@ public class TrainingFragment extends BaseFragment {
                 }
             }
         });
+
+        requestGiftActivity();
     }
 
     @Override
@@ -139,6 +146,31 @@ public class TrainingFragment extends BaseFragment {
             requestUserScore();
             requestMyTrainingList();
         }
+    }
+
+    private void requestGiftActivity() {
+        Client.requestGiftActivity()
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<Banner>, Banner>() {
+                    @Override
+                    protected void onRespSuccessData(Banner data) {
+                        mBanner = data;
+                        if (data != null) {
+                            updateGiftActivity();
+                        }
+                    }
+                })
+                .fire();
+    }
+
+    private void updateGiftActivity() {
+        mGift.setVisibility(View.VISIBLE);
+        GlideApp.with(TrainingFragment.this)
+                .load(mBanner.getSmallPic())
+                .transform(new GlideCircleTransform(getActivity()))
+                .placeholder(R.drawable.ic_home_gift)
+                .into(mGift);
     }
 
     private void requestMyTrainingList() {
@@ -309,7 +341,7 @@ public class TrainingFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.gift:
                 umengEventCount(UmengCountEventId.TRAINING_ACTIVITY);
-                // TODO: 2017/8/10 礼物接口
+                openGiftPage();
                 break;
             case R.id.lookTrainDetail:
                 if (LocalUser.getUser().isLogin()) {
@@ -350,6 +382,21 @@ public class TrainingFragment extends BaseFragment {
             case android.R.id.empty:
                 requestMyTrainingList();
                 break;
+        }
+    }
+
+    private void openGiftPage() {
+        if (mBanner == null) return;
+        if (mBanner.isH5Style()) {
+            Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_URL, mBanner.getContent())
+                    .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                    .execute();
+        } else {
+            Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_HTML, mBanner.getContent())
+                    .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                    .execute();
         }
     }
 
