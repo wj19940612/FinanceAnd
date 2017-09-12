@@ -124,7 +124,7 @@ public class DiscoveryFragment extends BaseFragment {
         super.onResume();
         requestTrainingList();
         requestDailyReportData();
-        startScheduleJob(3 * 1000);
+        startScheduleJob(5 * 1000);
     }
 
     @Override
