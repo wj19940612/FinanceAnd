@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -30,6 +29,7 @@ import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.autofit.AutofitTextView;
 import com.sbai.finance.websocket.WsClient;
+import com.sbai.glide.GlideApp;
 import com.sbai.httplib.CookieManger;
 
 import java.util.Calendar;
@@ -99,13 +99,13 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
 
     private void updateUserImage() {
         if (LocalUser.getUser().isLogin()) {
-            Glide.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                    .bitmapTransform(new GlideCircleTransform(getActivity()))
+            GlideApp.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
+                    .transform(new GlideCircleTransform(getActivity()))
                     .placeholder(R.drawable.ic_default_avatar)
                     .into(mUserHeadImage);
         } else {
-            Glide.with(this).load(R.drawable.ic_default_avatar)
-                    .bitmapTransform(new GlideCircleTransform(getActivity()))
+            GlideApp.with(this).load(R.drawable.ic_default_avatar)
+                    .transform(new GlideCircleTransform(getActivity()))
                     .into(mUserHeadImage);
         }
     }

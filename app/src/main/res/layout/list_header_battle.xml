@@ -6,10 +6,12 @@
              android:background="@android:color/transparent"
              android:orientation="vertical">
 
-    <ImageView
+
+    <com.sbai.finance.view.GifView
         android:id="@+id/battleBanner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="210dp"
+        android:scaleType="centerCrop"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

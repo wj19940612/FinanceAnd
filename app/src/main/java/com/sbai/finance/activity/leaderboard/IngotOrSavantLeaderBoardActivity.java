@@ -37,6 +37,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -198,7 +199,7 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
         if (LocalUser.getUser().isLogin()) {
             mMyBoardInfo.setVisibility(View.VISIBLE);
             mTipInfo.setVisibility(View.GONE);
-            Glide.with(getActivity())
+            GlideApp.with(getActivity())
                     .load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .placeholder(R.drawable.ic_default_avatar)
                     .transform(new GlideCircleTransform(getActivity()))
@@ -416,7 +417,7 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                 } else {
                     mWorship.setEnabled(false);
                 }
-                Glide.with(context)
+                GlideApp.with(context)
                         .load(item.getUser().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
                         .transform(new GlideCircleTransform(context))
@@ -474,7 +475,7 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
             }
 
             public void bindDataWithView(LeaderBoardRank.DataBean item, int position, Context context, String type) {
-                Glide.with(context)
+                GlideApp.with(context)
                         .load(item.getUser().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
                         .transform(new GlideCircleTransform(context))

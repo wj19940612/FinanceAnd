@@ -24,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -44,6 +43,7 @@ import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -377,12 +377,12 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
                                     final OnClickCallback onClickCallback, final int position) {
                 if (item == null) return;
 
-                Glide.with(context).load(item.getUserPortrait())
+                GlideApp.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .transform(new GlideCircleTransform(context))
                         .into(mAvatar);
 
-                Glide.with(context).load(item.getCustomPortrait())
+                GlideApp.with(context).load(item.getCustomPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .transform(new GlideCircleTransform(context))
                         .into(mMissAvatar);

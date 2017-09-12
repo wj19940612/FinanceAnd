@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
@@ -29,6 +28,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 
@@ -182,12 +182,12 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
             }
 
             private void bindDataWithView(final Battle item, Context context) {
-                    Glide.with(context)
+                    GlideApp.with(context)
                             .load(item.getLaunchUserPortrait())
                             .placeholder(R.drawable.ic_default_avatar)
                             .transform(new GlideCircleTransform(context))
                             .into(mMyAvatar);
-                    Glide.with(context)
+                    GlideApp.with(context)
                             .load(item.getAgainstUserPortrait())
                             .placeholder(R.drawable.ic_default_avatar)
                             .transform(new GlideCircleTransform(context))

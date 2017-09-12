@@ -35,6 +35,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -208,7 +209,7 @@ public class ProfitBoardListFragment extends BaseFragment implements
         if (LocalUser.getUser().isLogin()) {
             mMyBoardInfo.setVisibility(View.VISIBLE);
             mTipInfo.setVisibility(View.GONE);
-            Glide.with(getActivity())
+            GlideApp.with(getActivity())
                     .load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .placeholder(R.drawable.ic_default_avatar)
                     .transform(new GlideCircleTransform(getActivity()))

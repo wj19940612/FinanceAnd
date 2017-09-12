@@ -141,6 +141,8 @@ dependencies {
     })
     compile project(':httplib')
     compile project(':chart')
+    compile project(':glide')
+
     compile('cn.qqtheme.framework:WheelPicker:1.4.4') {
         exclude group: 'com.android.support'
     }
@@ -155,11 +157,8 @@ dependencies {
     compile 'com.github.chrisbanes:PhotoView:1.3.1'
     compile 'com.koushikdutta.async:androidasync:2.+'
     testCompile 'junit:junit:4.12'
-
     compile 'com.jakewharton:butterknife:8.0.1'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
-
-    compile 'com.github.bumptech.glide:glide:3.7.0'
 }
 
 

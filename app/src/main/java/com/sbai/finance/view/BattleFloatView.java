@@ -11,8 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
@@ -22,6 +20,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.glide.GlideApp;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
@@ -183,9 +182,9 @@ public class BattleFloatView extends RelativeLayout {
     }
 
     public BattleFloatView setCreateAvatar(String url) {
-        Glide.with(getContext())
+        GlideApp.with(getContext())
                 .load(url)
-                .bitmapTransform(new GlideCircleTransform(getContext()))
+                .transform(new GlideCircleTransform(getContext()))
                 .placeholder(R.drawable.ic_default_avatar_big)
                 .into(mCreateAvatar);
         return this;
@@ -201,9 +200,9 @@ public class BattleFloatView extends RelativeLayout {
     }
 
     public BattleFloatView setAgainstAvatar(String url) {
-        Glide.with(getContext())
+        GlideApp.with(getContext())
                 .load(url)
-                .bitmapTransform(new GlideCircleTransform(getContext()))
+                .transform(new GlideCircleTransform(getContext()))
                 .placeholder(R.drawable.ic_default_avatar_big)
                 .into(mAgainstAvatar);
         return this;
