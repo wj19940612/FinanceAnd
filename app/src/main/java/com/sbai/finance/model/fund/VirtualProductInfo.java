@@ -14,15 +14,15 @@ public class VirtualProductInfo {
     private boolean isSelect;
 
 
-    //兑换来源金额  价格
-    private double fromMoney;
+    //兑换来源金额  价格   真实的价格
+    private double fromRealMoney;
     //货币类型  0 现金 1元宝
     private int fromType;
     //兑换配置Id
     private int id;
 
-    //要兑换的金额  产品
-    private double toMoney;
+    //要兑换的金额  产品  真实的产品
+    private double toRealMoney;
 
     //货币类型  1元宝 3 积分
     private int toType;
@@ -32,11 +32,11 @@ public class VirtualProductInfo {
     }
 
     public double getFromMoney() {
-        return fromMoney;
+        return fromRealMoney;
     }
 
     public void setFromMoney(double fromMoney) {
-        this.fromMoney = fromMoney;
+        this.fromRealMoney = fromMoney;
     }
 
     public int getFromType() {
@@ -56,11 +56,11 @@ public class VirtualProductInfo {
     }
 
     public double getToMoney() {
-        return toMoney;
+        return toRealMoney;
     }
 
     public void setToMoney(double toMoney) {
-        this.toMoney = toMoney;
+        this.toRealMoney = toMoney;
     }
 
     public int getToType() {
@@ -84,10 +84,10 @@ public class VirtualProductInfo {
         return "VirtualProductInfo{" +
                 "isSelect=" + isSelect +
                 ", type=" + type +
-                ", fromMoney=" + fromMoney +
+                ", fromMoney=" + fromRealMoney +
                 ", fromType=" + fromType +
                 ", id=" + id +
-                ", toMoney=" + toMoney +
+                ", toMoney=" + toRealMoney +
                 ", toType=" + toType +
                 '}';
     }

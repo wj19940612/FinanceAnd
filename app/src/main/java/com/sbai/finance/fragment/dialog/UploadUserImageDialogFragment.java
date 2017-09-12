@@ -206,7 +206,7 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                 } else {
                     ToastUtil.show(getString(R.string.please_open_camera_permission));
                 }
-                this.dismissAllowingStateLoss();
+
                 break;
             case R.id.takePhoneFromGallery:
                 if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
@@ -217,7 +217,6 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                 } else {
                     ToastUtil.show(R.string.sd_is_not_useful);
                 }
-                this.dismissAllowingStateLoss();
                 break;
             case R.id.takePhoneCancel:
                 this.dismissAllowingStateLoss();
@@ -236,7 +235,6 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == FragmentActivity.RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_TAKE_PHONE_FROM_CAMERA:
@@ -262,6 +260,8 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                     }
                     break;
             }
+        } else {
+            dismissAllowingStateLoss();
         }
 
     }

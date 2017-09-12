@@ -380,7 +380,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                 mVariety.getVarietyType(), mVariety.getVarietyId());
         final String shareTitle = getString(R.string.wonderful_viewpoint, mVariety.getVarietyName());
         final String shareDescribe = getString(R.string.share_desc);
-        // TODO: 2017/9/11 先隐藏分享 
+        // TODO: 2017/9/11 先隐藏分享
 //        titleBar.setOnRightViewClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

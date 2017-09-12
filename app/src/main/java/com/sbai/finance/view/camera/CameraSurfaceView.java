@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static android.R.attr.bitmap;
+
 /**
  * Created by ${wangJie} on 2017/6/6.
  */
@@ -184,7 +186,13 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
     private Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            Bitmap bitmap = null;
+            try {
+                bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            } catch (OutOfMemoryError error) {
+                Log.d(TAG, "onPictureTaken: " + error.toString());
+            }
+
             if (bitmap != null) {
                 //图片存储前旋转
                 Matrix m = new Matrix();

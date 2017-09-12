@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.BuildConfig;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
@@ -30,6 +29,7 @@ import com.sbai.finance.model.fund.AliPayOrderInfo;
 import com.sbai.finance.model.fund.BankLimit;
 import com.sbai.finance.model.fund.UsableRechargeWay;
 import com.sbai.finance.model.fund.UserBankCardInfo;
+import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.net.Callback;
@@ -93,6 +93,7 @@ public class RechargeActivity extends BaseActivity {
     //对不是支付宝或者微信的充值方式,选择项目的时候  就算没有选择该支付方式，对应的文案也要变化
     protected UsableRechargeWay mOtherRechargeWay;
     protected int mOtherRechargeWayPosition;
+    private UserFundInfo mUserFundInfo;
 
     public interface OnPayWayListener {
         void onPayWay(UsableRechargeWay usableRechargeWay, int position);
@@ -163,12 +164,13 @@ public class RechargeActivity extends BaseActivity {
                 public void run() {
                     KeyBoardUtils.openKeyBoard(mRechargeCount);
                 }
-            }, 200);
+            }, 500);
         }
     }
 
     private void openExchangeRulePage() {
-        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_EXCHANGE).setTag(TAG)
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_EXCHANGE)
+                .setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                     @Override
                     protected void onRespSuccessData(ArticleProtocol data) {
@@ -179,20 +181,6 @@ public class RechargeActivity extends BaseActivity {
                                 .execute();
                     }
 
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
-                                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
-                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-                                .execute();
-                    }
-
-                    @Override
-                    protected boolean onErrorToast() {
-                        return false;
-                    }
                 }).fire();
     }
 
@@ -243,7 +231,6 @@ public class RechargeActivity extends BaseActivity {
     private void requestUserBankInfo() {
         Client.requestUserBankCardInfo()
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<UserBankCardInfo>>, List<UserBankCardInfo>>() {
                     @Override
                     protected void onRespSuccessData(List<UserBankCardInfo> data) {
@@ -313,14 +300,22 @@ public class RechargeActivity extends BaseActivity {
         for (int i = 0; i < usableRechargeWayList.size(); i++) {
             UsableRechargeWay usableRechargeWay = usableRechargeWayList.get(i);
             if (usableRechargeWay.isBalancePay()) {
-                String balanceName = usableRechargeWay.getName() + ": " + FinanceUtil.formatWithScale(mUserFundCount) + "元";
+                String name = usableRechargeWay.getName();
+                if (name.contains(":")) {
+                    name = name.substring(0, name.indexOf(":"));
+                }
+                String balanceName = name + ": " + FinanceUtil.formatWithScale(mUserFundCount) + "元";
                 usableRechargeWay.setName(balanceName);
                 mRechargeWayAdapter.notifyItemChanged(i, usableRechargeWay);
                 mOtherRechargeWay = usableRechargeWay;
                 mOtherRechargeWayPosition = i;
                 break;
             } else if (usableRechargeWay.isIngotPay()) {
-                String balanceName = usableRechargeWay.getName() + ": " + FinanceUtil.formatWithScale(mUserFundCount, 0);
+                String name = usableRechargeWay.getName();
+                if (name.contains(":")) {
+                    name = name.substring(0, name.indexOf(":"));
+                }
+                String balanceName =name + ": " + FinanceUtil.formatWithScale(mUserFundCount, 0);
                 usableRechargeWay.setName(balanceName);
                 mRechargeWayAdapter.notifyItemChanged(i, usableRechargeWay);
                 mOtherRechargeWay = usableRechargeWay;
@@ -396,6 +391,33 @@ public class RechargeActivity extends BaseActivity {
                 Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 break;
         }
+    }
+
+    public void requestUserFund() {
+        Client.requestUserFundInfo()
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
+                    @Override
+                    protected void onRespSuccessData(UserFundInfo data) {
+                        mUserFundInfo = data;
+                        updateUserFund(mUserFundInfo);
+                    }
+                })
+                .fireFree();
+    }
+
+    public void updateUserFund(UserFundInfo userFundInfo) {
+        if (userFundInfo == null) return;
+        switch (mRechargeType) {
+            case AccountFundDetail.TYPE_INGOT:
+                mUserFundCount = userFundInfo.getMoney();
+                break;
+            case AccountFundDetail.TYPE_SCORE:
+                mUserFundCount = userFundInfo.getYuanbao();
+                break;
+        }
+        handleUserPayPlatform(mUsableRechargeWayList);
     }
 
     private void submitRechargeData() {

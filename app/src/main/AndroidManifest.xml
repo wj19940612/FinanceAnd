@@ -164,6 +164,12 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.fund.RechargeActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.mine.fund.VirtualProductExchangeActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.fund.BindBankCardActivity"
@@ -354,7 +360,7 @@
         <activity
             android:name=".activity.miss.RewardMissActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/DialogTheme.NoTitle"/>
+            android:theme="@style/UpLoadHeadImageDialog"/>
 
         <!-- 发现 -->
         <activity
@@ -416,8 +422,6 @@
         <activity
             android:name=".activity.GuideActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.mine.fund.VirtualProductExchangeActivity">
-        </activity>
     </application>
 
 </manifest>

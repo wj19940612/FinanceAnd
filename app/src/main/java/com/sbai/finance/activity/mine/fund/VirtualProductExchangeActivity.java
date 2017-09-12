@@ -90,7 +90,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
     }
 
     private void changeOtherPayStatus(VirtualProductInfo virtualProductInfo) {
-        if (mOtherRechargeWay == null) return;
+        if (mOtherRechargeWay == null || virtualProductInfo == null) return;
         if (virtualProductInfo.getFromMoney() > mUserFundCount) {
             mOtherRechargeWay.setBalanceIsEnough(false);
             mRechargeWayAdapter.notifyItemChanged(mOtherRechargeWayPosition, mOtherRechargeWay);
@@ -98,6 +98,10 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
             mOtherRechargeWay.setBalanceIsEnough(true);
             mRechargeWayAdapter.notifyItemChanged(mOtherRechargeWayPosition, mOtherRechargeWay);
         }
+        if (mUserSelectRechargeWay.isIngotOrBalancePay()) {
+            mRecharge.setEnabled(mUserSelectRechargeWay.isBalanceIsEnough());
+        }
+
     }
 
     private void changeConfirmBtnStatus() {
@@ -120,7 +124,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
     }
 
     private void changeUserFundEnoughStatus(VirtualProductInfo virtualProductInfo) {
-        if (mUserSelectRechargeWay == null) return;
+        if (mUserSelectRechargeWay == null || virtualProductInfo == null) return;
         if (virtualProductInfo.getFromMoney() > mUserFundCount) {
             mUserSelectRechargeWay.setBalanceIsEnough(false);
             mRechargeWayAdapter.notifyItemChanged(mHistorySelectPayWayPosition, mUserSelectRechargeWay);
@@ -213,7 +217,9 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
                 .setCallback(new Callback2D<Resp<AliPayOrderInfo>, AliPayOrderInfo>() {
                     @Override
                     protected void onRespSuccessData(AliPayOrderInfo data) {
-                        new AliPayHelper(VirtualProductExchangeActivity.this).aliPay(data.getOrderString());
+                        new AliPayHelper(VirtualProductExchangeActivity.this)
+                                .setToastFailMsg("支付失败")
+                                .aliPay(data.getOrderString());
                     }
                 })
                 .setTag(TAG)
@@ -320,7 +326,10 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         if (failedResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
-                            //资金不足。不必管
+                            ToastUtil.show(failedResp.getMsg());
+                            dialogFragment.dismissAllowingStateLoss();
+                            requestUserFund();
+                            mRecharge.setEnabled(false);
                         } else {
                             ToastUtil.show(failedResp.getMsg());
                             dialogFragment.clearPassword();

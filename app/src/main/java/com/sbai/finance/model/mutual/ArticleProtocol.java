@@ -6,7 +6,6 @@ package com.sbai.finance.model.mutual;
 
 public class ArticleProtocol {
 
-    public static final int PROTOCOL_BORROW = 2;
     public static final int PROTOCOL_USER = 3;
     public static final int PROTOCOL_EXCHANGE = 4;
     public static final int PROTOCOL_BATTLE = 5;

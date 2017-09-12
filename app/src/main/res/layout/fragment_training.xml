@@ -27,37 +27,43 @@
                     android:id="@+id/gift"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="33dp"
+                    android:layout_marginTop="23dp"
+                    android:padding="10dp"
                     android:src="@drawable/ic_home_gift"
                     android:visibility="gone"/>
 
-                <FrameLayout
-                    android:id="@+id/lookTrainDetail"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/bg_home_training_circle_inside"/>
+                    <FrameLayout
+                        android:id="@+id/lookTrainDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:id="@+id/titleTrainingCircleMiddle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/bg_home_training_circle_middle"/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/bg_home_training_circle_inside"/>
 
-                    <ImageView
-                        android:id="@+id/titleTrainingCircleOutside"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/bg_home_training_circle_outside"/>
-                </FrameLayout>
+                        <ImageView
+                            android:id="@+id/titleTrainingCircleMiddle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/bg_home_training_circle_middle"/>
+
+                        <ImageView
+                            android:id="@+id/titleTrainingCircleOutside"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/bg_home_training_circle_outside"/>
+                    </FrameLayout>
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="wrap_content"
