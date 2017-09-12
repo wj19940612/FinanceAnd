@@ -306,6 +306,7 @@ public class RechargeActivity extends BaseActivity {
                 }
                 String balanceName = name + ": " + FinanceUtil.formatWithScale(mUserFundCount) + "元";
                 usableRechargeWay.setName(balanceName);
+
                 mRechargeWayAdapter.notifyItemChanged(i, usableRechargeWay);
                 mOtherRechargeWay = usableRechargeWay;
                 mOtherRechargeWayPosition = i;

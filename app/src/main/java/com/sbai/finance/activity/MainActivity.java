@@ -13,6 +13,7 @@ import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.TrainingFragment;
+import com.sbai.finance.fragment.dialog.system.RegisterInviteDialogFragment;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
 import com.sbai.finance.model.AppVersion;
 import com.sbai.finance.model.system.ServiceConnectWay;
@@ -47,9 +48,15 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         initView();
 //      translucentStatusBar();
 
-      //  checkVersion();
+        //  checkVersion();
 
         requestServiceConnectWay();
+
+
+        if (Preference.get().showRegisterInviteDialog()) {
+            RegisterInviteDialogFragment registerInviteDialogFragment = new RegisterInviteDialogFragment();
+            registerInviteDialogFragment.show(getSupportFragmentManager());
+        }
     }
 
     @Override
