@@ -6,8 +6,8 @@
              android:background="@android:color/transparent"
              android:orientation="vertical">
 
-    <ImageView
-        android:scaleType="fitXY"
+    <com.sbai.finance.view.GifView
+        android:scaleType="centerCrop"
         android:id="@+id/battleBanner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

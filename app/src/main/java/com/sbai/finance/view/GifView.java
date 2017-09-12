@@ -140,11 +140,14 @@ public class GifView extends android.support.v7.widget.AppCompatImageView {
             float scaleH = 1f;
             int measureModeWidth = MeasureSpec.getMode(widthMeasureSpec);
 
-            if (measureModeWidth != MeasureSpec.UNSPECIFIED) {
+            if (measureModeWidth == MeasureSpec.AT_MOST) {
                 int maximumWidth = MeasureSpec.getSize(widthMeasureSpec);
                 if (movieWidth > maximumWidth) {
                     scaleH = (float) movieWidth / (float) maximumWidth;
                 }
+            }else if(measureModeWidth == MeasureSpec.EXACTLY) {
+                int maximumWidth = MeasureSpec.getSize(widthMeasureSpec);
+                    scaleH = (float) movieWidth / (float) maximumWidth;
             }
 
             /*
@@ -153,17 +156,24 @@ public class GifView extends android.support.v7.widget.AppCompatImageView {
             float scaleW = 1f;
             int measureModeHeight = MeasureSpec.getMode(heightMeasureSpec);
 
-            if (measureModeHeight != MeasureSpec.UNSPECIFIED) {
+            if (measureModeHeight == MeasureSpec.AT_MOST) {
                 int maximumHeight = MeasureSpec.getSize(heightMeasureSpec);
                 if (movieHeight > maximumHeight) {
                     scaleW = (float) movieHeight / (float) maximumHeight;
                 }
+            } else if (measureModeWidth == MeasureSpec.EXACTLY){
+                int maximumHeight = MeasureSpec.getSize(heightMeasureSpec);
+                    scaleW = (float) movieHeight / (float) maximumHeight;
             }
 
             /*
              * calculate overall scale
              */
-            mScale = 1f / Math.max(scaleH, scaleW);
+            if (measureModeHeight == MeasureSpec.AT_MOST) {
+                mScale = 1f / Math.max(scaleH, scaleW);
+            } else if (measureModeHeight == MeasureSpec.EXACTLY){
+                mScale = 1f / Math.min(scaleH, scaleW);
+            }
 
             mMeasuredMovieWidth = (int) (movieWidth * mScale);
             mMeasuredMovieHeight = (int) (movieHeight * mScale);
@@ -296,5 +306,23 @@ public class GifView extends android.support.v7.widget.AppCompatImageView {
         super.onWindowVisibilityChanged(visibility);
         mVisible = visibility == View.VISIBLE;
         invalidateView();
+    }
+
+    /**
+     * get gif width
+     *
+     * @return width
+     */
+    public int getGifWidth() {
+        return movie.width();
+    }
+
+    /**
+     * get gif height
+     *
+     * @return height
+     */
+    public int getGifHeight() {
+        return movie.height();
     }
 }

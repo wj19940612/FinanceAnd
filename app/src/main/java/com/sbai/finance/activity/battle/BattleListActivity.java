@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,11 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -50,6 +44,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.view.GifView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.StartMatchDialog;
@@ -178,23 +173,19 @@ public class BattleListActivity extends BaseActivity implements
 
     private void initListHeaderAndFooter() {
         FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.list_header_battle, null);
-        ImageView battleBanner = (ImageView) header.findViewById(R.id.battleBanner);
+        GifView battleBanner = (GifView) header.findViewById(R.id.battleBanner);
         TextView checkBattleRecord = (TextView) header.findViewById(R.id.checkBattleRecord);
         TextView battleRule = (TextView) header.findViewById(R.id.battleRule);
-        GlideApp.with(getActivity())
-                .load(R.drawable.battle_banner)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .priority(Priority.HIGH)
-                .into(new DrawableImageViewTarget(battleBanner) {
-                    @Override
-                    public void onResourceReady(Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        if (resource instanceof GifDrawable) {
-                            ((GifDrawable) resource).setLoopCount(1);
-                        }
-                        super.onResourceReady(resource, transition);
-                    }
-                });
-        // TODO: 06/09/2017 check
+
+        battleBanner.setGifResource(R.drawable.battle_banner);
+        battleBanner.play();
+        battleBanner.setGifCallBack(new GifView.GifCallBack() {
+            @Override
+            public void onGifPaying(boolean playing) {
+
+            }
+        });
+
         checkBattleRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -12,11 +12,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
+        <com.sbai.finance.view.GifView
             android:id="@+id/trainGif"
             android:layout_width="match_parent"
             android:layout_height="140dp"
-            android:scaleType="fitXY"/>
+            android:layout_gravity="center_horizontal"
+            android:scaleType="centerCrop"/>
 
         <LinearLayout
             android:layout_width="match_parent"
