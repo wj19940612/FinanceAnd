@@ -24,13 +24,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
-import com.sbai.finance.ExtraKeys;
-
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
-
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -49,7 +46,6 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
@@ -561,7 +557,7 @@ public class BattleListActivity extends BaseActivity implements
             GlideApp.with(getActivity())
                     .load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .placeholder(R.drawable.ic_default_avatar)
-                    .transform(new GlideCircleTransform(getActivity()))
+                    .circleCrop()
                     .into(mAvatar);
         } else {
             mAvatar.setImageResource(R.drawable.ic_default_avatar);
@@ -966,7 +962,7 @@ public class BattleListActivity extends BaseActivity implements
                 GlideApp.with(context).load(item.getLaunchUserPortrait())
                         .load(item.getLaunchUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mCreateAvatar);
                 mCreateName.setText(item.getLaunchUserName());
                 mAgainstName.setText(item.getAgainstUserName());
@@ -1000,7 +996,7 @@ public class BattleListActivity extends BaseActivity implements
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
-                                .transform(new GlideCircleTransform(context))
+                                .circleCrop()
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
                         mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
@@ -1010,7 +1006,7 @@ public class BattleListActivity extends BaseActivity implements
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
-                                .transform(new GlideCircleTransform(context))
+                                .circleCrop()
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
                         if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {

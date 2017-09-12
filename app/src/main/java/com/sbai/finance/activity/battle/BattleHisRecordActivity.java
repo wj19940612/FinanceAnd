@@ -22,7 +22,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -187,7 +186,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                 GlideApp.with(context).load(item.getLaunchUserPortrait())
                         .load(item.getLaunchUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mCreateAvatar);
                 mCreateName.setText(item.getLaunchUserName());
                 mProgress.setLeftText(String.valueOf(item.getLaunchScore()));
@@ -223,7 +222,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
-                                .transform(new GlideCircleTransform(context))
+                                .circleCrop()
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
                         mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
@@ -233,7 +232,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
-                                .transform(new GlideCircleTransform(context))
+                                .circleCrop()
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
                         if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {

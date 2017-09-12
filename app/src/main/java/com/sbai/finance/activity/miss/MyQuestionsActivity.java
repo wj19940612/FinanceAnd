@@ -35,7 +35,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
@@ -381,12 +380,12 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
 
                 GlideApp.with(context).load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mAvatar);
 
                 GlideApp.with(context).load(item.getCustomPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mMissAvatar);
 
                 if (item.getSolve() == 0) {

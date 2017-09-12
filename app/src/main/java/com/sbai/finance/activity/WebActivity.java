@@ -235,7 +235,6 @@ public class WebActivity extends BaseActivity {
             }
         });
 
-
         loadPage();
     }
 

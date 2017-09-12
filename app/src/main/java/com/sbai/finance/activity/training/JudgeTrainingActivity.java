@@ -24,7 +24,6 @@ import com.sbai.finance.model.training.TrainingSubmit;
 import com.sbai.finance.model.training.question.KData;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.RenderScriptGaussianBlur;
 import com.sbai.finance.view.SmartDialog;
@@ -117,7 +116,7 @@ public class JudgeTrainingActivity extends BaseActivity {
         mKlineView.setDataList(dataList);
 
         GlideApp.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                .transform(new GlideCircleTransform(getActivity()))
+                .circleCrop()
                 .placeholder(R.drawable.ic_default_avatar_big)
                 .into(mUserPortrait);
         mUsername.setText(LocalUser.getUser().getUserInfo().getUserName());
