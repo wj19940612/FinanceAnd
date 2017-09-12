@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.utils.transform.GlideCircleTransform;
 import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;

@@ -38,7 +38,6 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.transform.GlideCircleTransform;
 import com.sbai.finance.utils.transform.ThumbTransform;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.Launcher;

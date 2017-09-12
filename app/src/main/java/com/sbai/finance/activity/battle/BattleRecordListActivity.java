@@ -23,7 +23,6 @@ import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.transform.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;

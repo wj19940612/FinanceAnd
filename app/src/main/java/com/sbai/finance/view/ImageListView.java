@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 
 import com.sbai.finance.R;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.transform.GlideCircleTransform;
 import com.sbai.glide.GlideApp;
 
 import java.util.List;

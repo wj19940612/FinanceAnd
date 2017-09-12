@@ -22,7 +22,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.transform.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
