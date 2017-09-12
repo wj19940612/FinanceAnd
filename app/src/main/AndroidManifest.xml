@@ -164,6 +164,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.fund.RechargeActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.fund.BindBankCardActivity"

@@ -156,13 +156,6 @@ public class RechargeActivity extends BaseActivity {
                     openExchangeRulePage();
                 }
             });
-        } else {
-            mRechargeCount.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    KeyBoardUtils.openKeyBoard(mRechargeCount);
-                }
-            }, 200);
         }
     }
 

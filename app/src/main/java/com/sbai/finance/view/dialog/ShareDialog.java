@@ -1,7 +1,6 @@
 package com.sbai.finance.view.dialog;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -60,7 +59,7 @@ public class ShareDialog {
     private boolean mHasFeedback;
     private boolean mHasWeiBo = true;
     private boolean mHasTitle = true;
-    private boolean mOnlyShareImage;
+    private boolean mShareImageOnly;
     private Bitmap mBitmap;
 
     private OnShareDialogCallback mListener;
@@ -72,12 +71,13 @@ public class ShareDialog {
             switch (v.getId()) {
                 case R.id.weChatFriend:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.WEIXIN)) {
-                        if (mOnlyShareImage) {
+                        if (mShareImageOnly) {
                             shareImageToPlatform(SHARE_MEDIA.WEIXIN);
                         } else {
                             mShareUrl += "&userFrom=friend";
                             shareToPlatform(SHARE_MEDIA.WEIXIN);
                         }
+
                         onSharePlatformClicked(SHARE_PLATFORM.WECHAT_FRIEND);
                         mSmartDialog.dismiss();
                     } else {
@@ -87,12 +87,13 @@ public class ShareDialog {
                     break;
                 case R.id.weChatFriendCircle:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.WEIXIN_CIRCLE)) {
-                        if (mOnlyShareImage) {
+                        if (mShareImageOnly) {
                             shareImageToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
                         } else {
                             mShareUrl += "&userFrom=friend";
                             shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
                         }
+
                         onSharePlatformClicked(SHARE_PLATFORM.WECHAT_CIRCLE);
                         mSmartDialog.dismiss();
                     } else {
@@ -253,8 +254,8 @@ public class ShareDialog {
         return this;
     }
 
-    public ShareDialog setOnShareImage(boolean isShow) {
-        mOnlyShareImage = isShow;
+    public ShareDialog setShareImageOnly(boolean shareImageOnly) {
+        mShareImageOnly = shareImageOnly;
         return this;
     }
 
