@@ -43,6 +43,8 @@ public class BattleTradeView extends LinearLayout {
     public static final int STATE_CLOSE_POSITION = 0;
     //可交易
     public static final int STATE_TRADE = 1;
+    //结束
+    public static final int STATE_TRADE_END = 1;
 
     @BindView(R.id.listView)
     ListView mListView;
@@ -187,6 +189,8 @@ public class BattleTradeView extends LinearLayout {
             mTradeDataArea.removeAllViews();
             mNoPosition.setVisibility(VISIBLE);
             mTradeDataArea.addView(mNoPosition);
+        } else if (state == STATE_TRADE_END) {
+            mTradeArea.setVisibility(INVISIBLE);
         }
     }
 
@@ -308,7 +312,7 @@ public class BattleTradeView extends LinearLayout {
             private void bindDataWithView(TradeRecord item, boolean isLeft, Context context) {
 
                 StringBuilder info = new StringBuilder();
-                info.append(FinanceUtil.formatWithScale(item.getOptPrice(),item.getMarketPoint()));
+                info.append(FinanceUtil.formatWithScale(item.getOptPrice(), item.getMarketPoint()));
                 String time = DateUtil.getBattleFormatTime(item.getOptTime());
 
                 switch (item.getOptStatus()) {
