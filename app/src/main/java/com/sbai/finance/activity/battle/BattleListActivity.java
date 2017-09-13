@@ -44,7 +44,6 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventIdUtils;
 import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
-import com.sbai.finance.view.GifView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.StartMatchDialog;
@@ -57,6 +56,7 @@ import com.sbai.finance.websocket.cmd.QuickMatch;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.BuildConfig;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -64,6 +64,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 import static com.sbai.finance.view.dialog.BaseDialog.DIALOG_START_MATCH;
 
@@ -173,18 +175,16 @@ public class BattleListActivity extends BaseActivity implements
 
     private void initListHeaderAndFooter() {
         FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.list_header_battle, null);
-        GifView battleBanner = (GifView) header.findViewById(R.id.battleBanner);
+        GifImageView battleBanner = (GifImageView) header.findViewById(R.id.battleBanner);
         TextView checkBattleRecord = (TextView) header.findViewById(R.id.checkBattleRecord);
         TextView battleRule = (TextView) header.findViewById(R.id.battleRule);
 
-        battleBanner.setGifResource(R.drawable.battle_banner);
-        battleBanner.play();
-        battleBanner.setGifCallBack(new GifView.GifCallBack() {
-            @Override
-            public void onGifPaying(boolean playing) {
-
-            }
-        });
+        try {
+            GifDrawable gifFromResource = new GifDrawable(getResources(), R.drawable.battle_banner);
+            battleBanner.setImageDrawable(gifFromResource);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         checkBattleRecord.setOnClickListener(new View.OnClickListener() {
             @Override

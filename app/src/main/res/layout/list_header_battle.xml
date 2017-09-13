@@ -7,7 +7,7 @@
              android:orientation="vertical">
 
 
-    <com.sbai.finance.view.GifView
+    <pl.droidsonroids.gif.GifImageView
         android:id="@+id/battleBanner"
         android:layout_width="match_parent"
         android:layout_height="210dp"

@@ -5,18 +5,20 @@ import android.app.Dialog;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.training.Training;
-import com.sbai.finance.view.GifView;
 import com.sbai.finance.view.SmartDialog;
+
+import java.io.IOException;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 public class TrainingRuleDialog {
 
@@ -45,13 +47,13 @@ public class TrainingRuleDialog {
 		}
 		trainingRuleDialog.mSmartDialog.setCustomView(trainingRuleDialog.mView);
 		trainingRuleDialog.mTraining = training;
-		trainingRuleDialog.init(training.getPlayType());
+		trainingRuleDialog.init();
 		return trainingRuleDialog;
 	}
 
-	private void init(int playType) {
+	private void init() {
 		Button confirm = (Button) mView.findViewById(R.id.confirm);
-		GifView image = (GifView) mView.findViewById(R.id.trainGif);
+		GifImageView image = (GifImageView) mView.findViewById(R.id.trainGif);
 		TextView content = (TextView) mView.findViewById(R.id.content);
 
 		confirm.setOnClickListener(new View.OnClickListener() {
@@ -91,15 +93,12 @@ public class TrainingRuleDialog {
 
 		}
 		if (gifDrawable != 0) {
-			image.setGifResource(gifDrawable);
-			image.setRepeatCount(100000);
-			image.play();
-			image.setGifCallBack(new GifView.GifCallBack() {
-				@Override
-				public void onGifPaying(boolean playing) {
-
-				}
-			});
+			try {
+				GifDrawable gifFromResource = new GifDrawable(mActivity.getResources(),gifDrawable);
+				image.setImageDrawable(gifFromResource);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		if (contentRes != 0) {
@@ -140,10 +139,4 @@ public class TrainingRuleDialog {
 		mSmartDialog.show();
 	}
 
-	private DisplayMetrics getScreenSize() {
-		WindowManager manager = mActivity.getWindowManager();
-		DisplayMetrics outMetrics = new DisplayMetrics();
-		manager.getDefaultDisplay().getMetrics(outMetrics);
-		return outMetrics;
-	}
 }

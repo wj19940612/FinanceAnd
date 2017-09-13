@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.sbai.finance.view.GifView
+        <pl.droidsonroids.gif.GifImageView
             android:id="@+id/trainGif"
             android:layout_width="match_parent"
             android:layout_height="140dp"

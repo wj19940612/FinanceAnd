@@ -15,13 +15,16 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
 import com.sbai.glide.GlideApp;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * Created by linrongfang on 2017/6/21.
@@ -35,7 +38,7 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
     @BindView(R.id.matchHead)
     ImageView mMatchHead;
     @BindView(R.id.matchLoading)
-    ImageView mMatchLoading;
+    GifImageView mMatchLoading;
     @BindView(R.id.message)
     TextView mMessage;
     @BindView(R.id.cancel)
@@ -90,10 +93,12 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
     }
 
     private void init() {
-        GlideApp.with(getContext())
-                .load(R.drawable.ic_future_svs_looking_for)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)//添加缓存
-                .into(mMatchLoading);
+        try {
+            GifDrawable gifFromResource = new GifDrawable(getResources(), R.drawable.ic_future_svs_looking_for);
+            mMatchLoading.setImageDrawable(gifFromResource);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override

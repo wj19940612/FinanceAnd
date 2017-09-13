@@ -26,16 +26,18 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.view.GifView;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
 import com.sbai.httplib.BuildConfig;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * 训练倒计时页面
@@ -43,7 +45,7 @@ import butterknife.ButterKnife;
 public class TrainingCountDownActivity extends BaseActivity {
 
     @BindView(R.id.gif)
-    GifView mGif;
+    GifImageView mGif;
     @BindView(R.id.background)
     RelativeLayout mBackground;
 
@@ -97,6 +99,7 @@ public class TrainingCountDownActivity extends BaseActivity {
             }
         }
     };
+    private GifDrawable mGifFromResource;
 
 
     @Override
@@ -232,16 +235,15 @@ public class TrainingCountDownActivity extends BaseActivity {
                     })
                     .into(mGif);
         }*/
-        mGif.setGifResource(mGifRes);
-        mGif.play();
-        mGif.setGifCallBack(new GifView.GifCallBack() {
-            @Override
-            public void onGifPaying(boolean playing) {
-                if (!playing) {
-                    mHandler.sendEmptyMessage(0);
-                }
-            }
-        });
+
+        try {
+            mGifFromResource = new GifDrawable(getResources(), mGifRes);
+            mGifFromResource.setLoopCount(1);
+            mGif.setImageDrawable(mGifFromResource);
+            mHandler.sendEmptyMessageDelayed(0, mGifFromResource.getDuration());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -250,5 +252,6 @@ public class TrainingCountDownActivity extends BaseActivity {
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
+        mGifFromResource.recycle();
     }
 }
