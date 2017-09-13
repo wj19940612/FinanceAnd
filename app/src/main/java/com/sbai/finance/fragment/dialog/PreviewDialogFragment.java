@@ -56,7 +56,7 @@ public class PreviewDialogFragment extends DialogFragment {
         WindowManager.LayoutParams wlp = window.getAttributes();
         wlp.gravity = Gravity.CENTER;
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        wlp.height = WindowManager.LayoutParams.MATCH_PARENT;
         window.setAttributes(wlp);
     }
 
@@ -67,7 +67,6 @@ public class PreviewDialogFragment extends DialogFragment {
         unbinder = ButterKnife.bind(this, view);
         mUserPortrait = getArguments().getString(Launcher.EX_PAYLOAD);
         Glide.with(getActivity()).load(mUserPortrait)
-                .thumbnail(0.4f)
                 .into(mImageview);
         return view;
     }
