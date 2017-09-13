@@ -168,8 +168,9 @@ public class UploadHelpImageDialogFragment extends DialogFragment {
                     }
                     break;
             }
+        }else {
+            this.dismiss();
         }
-
     }
 
     private String getGalleryBitmapPath(Intent data) {

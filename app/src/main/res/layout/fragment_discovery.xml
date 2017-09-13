@@ -25,6 +25,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <com.sbai.finance.view.HomeBanner
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <com.sbai.finance.view.FeaturesNavigation
                 android:id="@+id/featuresNavigation"
                 android:layout_width="match_parent"
@@ -108,8 +113,7 @@
                             android:id="@+id/daily1"
                             android:layout_width="match_parent"
                             android:layout_height="140dp"
-                            android:layout_marginBottom="2dp"
-                            android:background="@drawable/ic_common_mask_black">
+                            android:layout_marginBottom="2dp">
 
                             <ImageView
                                 android:id="@+id/image1"
@@ -149,7 +153,6 @@
                                 android:layout_alignParentBottom="true"
                                 android:scaleType="fitXY"
                                 android:src="@drawable/ic_common_mask_black"/>
-
 
                             <TextView
                                 android:id="@+id/title1"
@@ -191,13 +194,14 @@
                                     android:id="@+id/title2"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
+                                    android:background="#50000000"
                                     android:ellipsize="end"
                                     android:gravity="center"
                                     android:maxLines="2"
                                     android:padding="@dimen/common_padding"
                                     android:textColor="@android:color/white"
                                     android:textSize="14sp"
-                                    tools:text="乐米专访：葛卫东，从百万到百亿乐米专访"/>
+                                    tools:text="乐米专访：葛卫"/>
                             </FrameLayout>
 
                             <FrameLayout

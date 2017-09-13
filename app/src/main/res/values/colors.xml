@@ -29,9 +29,11 @@
     <color name="luckyText">#666</color>
     <color name="primaryText">#222</color>
 
-    <color name="wallet_bg">#424242</color>
+    <color name="bgWallet">#FFB804</color>
+    <color name="walletRechargeText">#EEB000</color>
     <color name="bank_card_hint">#bfbfbf</color>
-    <color name="picker_press">#999999</color>
+    <color name="userEarnFundTextColor">#FEC022</color>
+    <color name="rechargeSelectProduct">#FFC336</color>
 
     <!--gradient-->
     <color name="backgroundGradientStart">#69b2ff</color>
@@ -49,4 +51,5 @@
     <color name="redTheoryCountDown">#E44B58</color>
     <color name="violetTechnologyCountDown">#6843C4</color>
     <color name="yellowFundamentalCountDown">#F9B727</color>
+
 </resources>

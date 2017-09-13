@@ -12,14 +12,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
 import com.sbai.finance.model.AppVersion;
-import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -27,7 +25,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.httplib.CookieManger;
 
@@ -102,24 +100,24 @@ public class AboutUsActivity extends BaseActivity {
                 ToastUtil.show(AppInfo.getMetaData(getActivity(), "UMENG_CHANNEL"));
                 break;
             case R.id.action_product:
-                umengEventCount(UmengCountEventIdUtils.ME_FUNCTION_INTRODUCE);
+                umengEventCount(UmengCountEventId.ME_FUNCTION_INTRODUCE);
                 Launcher.with(getActivity(), WebActivity.class)
                         .putExtra(WebActivity.EX_URL, Client.ABOUT_US_PAGE_URL).execute();
                 break;
             case R.id.user_protocol:
-                umengEventCount(UmengCountEventIdUtils.ME_USER_AGREEMENT);
+                umengEventCount(UmengCountEventId.ME_USER_AGREEMENT);
                 openUserProtocolPage();
                 break;
             case R.id.checkUpdate:
-                umengEventCount(UmengCountEventIdUtils.ME_CHECK_UPDATE);
+                umengEventCount(UmengCountEventId.ME_CHECK_UPDATE);
                 checkVersion();
                 break;
             case R.id.weChat:
-                umengEventCount(UmengCountEventIdUtils.ME_SERVICE_WECHAT);
+                umengEventCount(UmengCountEventId.ME_SERVICE_WECHAT);
                 copyConnectWay(mServiceConnectWay.getWeixin());
                 break;
             case R.id.qq:
-                umengEventCount(UmengCountEventIdUtils.ME_SERVICE_QQ);
+                umengEventCount(UmengCountEventId.ME_SERVICE_QQ);
                 openQQ();
                 break;
         }
@@ -163,26 +161,28 @@ public class AboutUsActivity extends BaseActivity {
     }
 
     private void openUserProtocolPage() {
-        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER).setTag(TAG)
-                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
-                    @Override
-                    protected void onRespSuccessData(ArticleProtocol data) {
-                        Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
-                                .putExtra(WebActivity.EX_HTML, data.getContent())
-                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-                                .execute();
-                    }
 
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
-                                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
-                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-                                .execute();
-                    }
-                }).fire();
+        Launcher.with(getActivity(), WebActivity.class)
+                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
+                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
+                .execute();
+
+//        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER).setTag(TAG)
+//                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
+//                    @Override
+//                    protected void onRespSuccessData(ArticleProtocol data) {
+//
+////                        Launcher.with(getActivity(), WebActivity.class)
+////                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
+////                                .putExtra(WebActivity.EX_HTML, data.getContent())
+////                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+////                                .execute();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(VolleyError volleyError) {
+//                        super.onFailure(volleyError);
+//                    }
+//                }).fire();
     }
 }

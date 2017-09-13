@@ -212,29 +212,6 @@ public class TrainingCountDownActivity extends BaseActivity {
     }
 
     private void startGifAnimation() {
-        /*if (mGifRes != 0) {
-            GlideApp.with(getActivity())
-                    .load(mGifRes)
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            if (resource instanceof GifDrawable) {
-                                GifDrawable gifDrawable = (GifDrawable) resource;
-                                gifDrawable.setLoopCount(1);
-
-                            }
-                            return false;
-                        }
-                    })
-                    .into(mGif);
-        }*/
-
         try {
             mGifFromResource = new GifDrawable(getResources(), mGifRes);
             mGifFromResource.setLoopCount(1);

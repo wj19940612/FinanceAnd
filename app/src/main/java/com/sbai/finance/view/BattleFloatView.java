@@ -17,9 +17,8 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.glide.GlideApp;
 import com.umeng.analytics.MobclickAgent;
 
@@ -129,7 +128,7 @@ public class BattleFloatView extends RelativeLayout {
             mCreateAvatar.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MobclickAgent.onEvent(getContext(), UmengCountEventIdUtils.BATTLE_USER_AVATAR);
+                    MobclickAgent.onEvent(getContext(), UmengCountEventId.BATTLE_USER_AVATAR);
                     if (LocalUser.getUser().isLogin()) {
 
                     } else {
@@ -143,7 +142,7 @@ public class BattleFloatView extends RelativeLayout {
             mAgainstAvatar.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MobclickAgent.onEvent(getContext(), UmengCountEventIdUtils.BATTLE_USER_AVATAR);
+                    MobclickAgent.onEvent(getContext(), UmengCountEventId.BATTLE_USER_AVATAR);
                     if (LocalUser.getUser().isLogin()) {
                         if (mBattle.getAgainstUser() != 0) {
 
@@ -184,7 +183,7 @@ public class BattleFloatView extends RelativeLayout {
     public BattleFloatView setCreateAvatar(String url) {
         GlideApp.with(getContext())
                 .load(url)
-                .transform(new GlideCircleTransform(getContext()))
+                .circleCrop()
                 .placeholder(R.drawable.ic_default_avatar_big)
                 .into(mCreateAvatar);
         return this;
@@ -202,7 +201,7 @@ public class BattleFloatView extends RelativeLayout {
     public BattleFloatView setAgainstAvatar(String url) {
         GlideApp.with(getContext())
                 .load(url)
-                .transform(new GlideCircleTransform(getContext()))
+                .circleCrop()
                 .placeholder(R.drawable.ic_default_avatar_big)
                 .into(mAgainstAvatar);
         return this;

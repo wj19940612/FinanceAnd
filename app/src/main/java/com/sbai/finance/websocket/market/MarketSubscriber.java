@@ -19,7 +19,7 @@ import java.util.Queue;
 public class MarketSubscriber implements MarketSubscribe, Connector {
 
     private static final String TAG = "MarketSubscriber";
-    private static final String URI = "ws://" + API.getDomain() + "/ws.do";
+    private static final String URI = "wss://" + API.getDomain() + "/ws.do";
 
     private static MarketSubscriber sSubscriber;
 

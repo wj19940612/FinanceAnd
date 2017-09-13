@@ -42,13 +42,12 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.MissProfileSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
@@ -135,7 +134,7 @@ public class MissProfileActivity extends BaseActivity implements
 			@Override
 			public void loveOnClick(final Question item) {
 				if (LocalUser.getUser().isLogin()) {
-					umengEventCount(UmengCountEventIdUtils.MISS_TALK_PRAISE);
+					umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
 					Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
 
 						@Override
@@ -203,6 +202,7 @@ public class MissProfileActivity extends BaseActivity implements
 									public void onCompletion(MediaPlayer mp) {
 										item.setPlaying(false);
 										mHerAnswerAdapter.notifyDataSetChanged();
+										mPlayingID = -1;
 									}
 								});
 
@@ -227,6 +227,7 @@ public class MissProfileActivity extends BaseActivity implements
 							public void onCompletion(MediaPlayer mp) {
 								item.setPlaying(false);
 								mHerAnswerAdapter.notifyDataSetChanged();
+								mPlayingID = -1;
 							}
 						});
 						item.setPlaying(true);
@@ -277,7 +278,7 @@ public class MissProfileActivity extends BaseActivity implements
 		switch (v.getId()) {
 			case R.id.avatar:
 				if (mMiss != null) {
-					umengEventCount(UmengCountEventIdUtils.MISS_TALK_AVATAR);
+					umengEventCount(UmengCountEventId.MISS_TALK_AVATAR);
 					Launcher.with(this, LookBigPictureActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
 							.putExtra(Launcher.EX_PAYLOAD_2, 0)
@@ -292,7 +293,7 @@ public class MissProfileActivity extends BaseActivity implements
 			case R.id.attention:
 				if (mMiss != null) {
 					if (LocalUser.getUser().isLogin()) {
-						umengEventCount(UmengCountEventIdUtils.MISS_TALK_ATTENTION);
+						umengEventCount(UmengCountEventId.MISS_TALK_ATTENTION);
 
 						Client.attention(mMiss.getId()).setCallback(new Callback2D<Resp<Attention>, Attention>() {
 
@@ -377,7 +378,7 @@ public class MissProfileActivity extends BaseActivity implements
 	private void updateMissDetail(final Miss miss) {
 		GlideApp.with(this).load(miss.getPortrait())
 				.placeholder(R.drawable.ic_default_avatar)
-				.transform(new GlideCircleTransform(this))
+				.circleCrop()
 				.into(mAvatar);
 
 		mName.setText(miss.getName());
@@ -410,7 +411,7 @@ public class MissProfileActivity extends BaseActivity implements
 		mVoiceIntroduce.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				umengEventCount(UmengCountEventIdUtils.MISS_TALK_VOICE);
+				umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
 				//播放下一个之前把上一个播放位置的动画停了
 				if (mPlayingID != -1) {
 					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
@@ -435,6 +436,7 @@ public class MissProfileActivity extends BaseActivity implements
 						public void onCompletion(MediaPlayer mp) {
 							mVoiceLevel.clearAnimation();
 							mVoiceLevel.setBackgroundResource(R.drawable.ic_miss_voice_4);
+							mMissIntroducePlayingID = -1;
 						}
 					});
 
@@ -493,7 +495,7 @@ public class MissProfileActivity extends BaseActivity implements
 				.setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
 					@Override
 					protected void onRespSuccessData(List<Question> questionList) {
-						if (questionList.size() == 0) {
+						if (questionList.size() == 0 && mCreateTime == null) {
 							mEmpty.setVisibility(View.VISIBLE);
 							stopRefreshAnimation();
 						} else {
@@ -507,11 +509,15 @@ public class MissProfileActivity extends BaseActivity implements
 					public void onFailure(VolleyError volleyError) {
 						super.onFailure(volleyError);
 						stopRefreshAnimation();
-						mEmpty.setVisibility(View.VISIBLE);
-						mVoiceIntroduce.setVisibility(View.GONE);
-						mAttentionNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(0)));
-						mRewardNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(0)));
-						mIntroduce.setText(R.string.no_miss_introduce);
+						if (mCreateTime == null) {
+							mEmpty.setVisibility(View.VISIBLE);
+							mVoiceIntroduce.setVisibility(View.GONE);
+							mAttentionNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(0)));
+							mRewardNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(0)));
+							mIntroduce.setText(R.string.no_miss_introduce);
+							mHerAnswerAdapter.clear();
+							mHerAnswerAdapter.notifyDataSetChanged();
+						}
 					}
 				}).fire();
 	}
@@ -649,12 +655,12 @@ public class MissProfileActivity extends BaseActivity implements
 
 				GlideApp.with(context).load(item.getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
-						.transform(new GlideCircleTransform(context))
+						.circleCrop()
 						.into(mAvatar);
 
 				GlideApp.with(context).load(item.getCustomPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
-						.transform(new GlideCircleTransform(context))
+						.circleCrop()
 						.into(mMissAvatar);
 
 				mName.setText(item.getUserName());

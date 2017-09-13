@@ -3,6 +3,7 @@ package com.sbai.finance.activity.mine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
@@ -23,9 +24,8 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.autofit.AutofitTextView;
 import com.sbai.finance.websocket.WsClient;
@@ -100,12 +100,12 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     private void updateUserImage() {
         if (LocalUser.getUser().isLogin()) {
             GlideApp.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                    .transform(new GlideCircleTransform(getActivity()))
+                    .circleCrop()
                     .placeholder(R.drawable.ic_default_avatar)
                     .into(mUserHeadImage);
         } else {
             GlideApp.with(this).load(R.drawable.ic_default_avatar)
-                    .transform(new GlideCircleTransform(getActivity()))
+                    .circleCrop()
                     .into(mUserHeadImage);
         }
     }
@@ -176,25 +176,25 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
                 uploadUserImageDialogFragment.show(getSupportFragmentManager());
                 break;
             case R.id.nickName:
-                umengEventCount(UmengCountEventIdUtils.ME_NICK_NAME);
+                umengEventCount(UmengCountEventId.ME_NICK_NAME);
                 Launcher.with(getActivity(), ModifyUserNameActivity.class).executeForResult(REQ_CODE_USER_NAME);
                 break;
             case R.id.sex:
-                umengEventCount(UmengCountEventIdUtils.ME_SEX);
+                umengEventCount(UmengCountEventId.ME_SEX);
                 new ChooseSexDialogFragment().show(getSupportFragmentManager());
                 break;
             case R.id.age:
-                umengEventCount(UmengCountEventIdUtils.ME_AGE);
+                umengEventCount(UmengCountEventId.ME_AGE);
                 showAgePicker();
                 break;
             case R.id.location:
-                umengEventCount(UmengCountEventIdUtils.ME_LOCATION);
+                umengEventCount(UmengCountEventId.ME_LOCATION);
                 Launcher.with(getActivity(), LocationActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, true)
                         .executeForResult(REQ_CODE_LOCATION);
                 break;
             case R.id.credit:
-                umengEventCount(UmengCountEventIdUtils.ME_CREDIT);
+                umengEventCount(UmengCountEventId.ME_CREDIT);
                 Launcher.with(getActivity(), CreditActivity.class).execute();
                 break;
             case R.id.logout:
@@ -208,7 +208,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
         picker.setCancelTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
         picker.setSubmitTextColor(ContextCompat.getColor(getActivity(), R.color.warningText));
         picker.setTopBackgroundColor(ContextCompat.getColor(getActivity(), R.color.background));
-        picker.setPressedTextColor(ContextCompat.getColor(getActivity(), R.color.picker_press));
+        picker.setPressedTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
         picker.setTopHeight(50);
         picker.setAnimationStyle(R.style.BottomDialogAnimation);
         picker.setOffset(2);
@@ -271,12 +271,18 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
                             LocalUser.getUser().logout();
                             CookieManger.getInstance().clearRawCookies();
                             WsClient.get().close();
+                            sendLogoutSuccessBroadcast();
                             setResult(RESULT_OK);
                             finish();
                         }
                     }
                 })
                 .fire();
+    }
+
+    private void sendLogoutSuccessBroadcast() {
+        LocalBroadcastManager.getInstance(getActivity())
+                .sendBroadcast(new Intent(ACTION_LOGOUT_SUCCESS));
     }
 
 

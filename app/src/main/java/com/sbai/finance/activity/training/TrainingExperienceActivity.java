@@ -32,7 +32,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -67,6 +66,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 	private ExperienceListAdapter mLatestExperienceListAdapter;
 	private TextView mHotExperience;
 	private View mSpit;
+	private View mFootView;
 	private MyListView mHotListView;
 	private RefreshReceiver mRefreshReceiver;
 	private int mIsFromTrainingResult;
@@ -80,7 +80,8 @@ public class TrainingExperienceActivity extends BaseActivity {
 		mSet = new HashSet<>();
 
 		initTitleBar();
-		initHeadView();
+		initHeadView1();
+		initHeadView2();
 		initLatestExperienceList();
 		requestHotExperienceList();
 		requestLatestExperienceList(true);
@@ -102,7 +103,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 		}
 	}
 
-	private void initHeadView() {
+	private void initHeadView1() {
 		LinearLayout header = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.view_header_training_experience, null);
 		mHotExperience = (TextView) header.findViewById(R.id.hotExperience);
 		mSpit = header.findViewById(R.id.spit);
@@ -114,6 +115,11 @@ public class TrainingExperienceActivity extends BaseActivity {
 		mLatestListView.addHeaderView(header);
 	}
 
+	private void initHeadView2() {
+		LinearLayout header = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.view_header_trainning_experience2, null);
+		mLatestListView.addHeaderView(header);
+	}
+
 	private void initSwipeRefreshLayout() {
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
@@ -122,6 +128,8 @@ public class TrainingExperienceActivity extends BaseActivity {
 				mPage = 0;
 				mIsFromTrainingResult = -1;
 				mSwipeRefreshLayout.setLoadMoreEnable(true);
+				mLatestListView.removeFooterView(mFootView);
+				mFootView = null;
 				requestHotExperienceList();
 				requestLatestExperienceList(true);
 			}
@@ -191,9 +199,9 @@ public class TrainingExperienceActivity extends BaseActivity {
 						@Override
 						public void onFailure(VolleyError volleyError) {
 							super.onFailure(volleyError);
+							stopRefreshAnimation();
 							mSpit.setVisibility(View.GONE);
 							mHotExperience.setVisibility(View.GONE);
-							stopRefreshAnimation();
 						}
 					}).fire();
 		}
@@ -213,7 +221,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 					.setCallback(new Callback2D<Resp<List<Experience>>, List<Experience>>() {
 						@Override
 						protected void onRespSuccessData(List<Experience> experienceList) {
-							if (experienceList.size() == 0) {
+							if (experienceList.size() == 0 && mPage == 0) {
 								mEmpty.setVisibility(View.VISIBLE);
 								stopRefreshAnimation();
 							} else {
@@ -226,7 +234,9 @@ public class TrainingExperienceActivity extends BaseActivity {
 						public void onFailure(VolleyError volleyError) {
 							super.onFailure(volleyError);
 							stopRefreshAnimation();
-							mEmpty.setVisibility(View.VISIBLE);
+							if (mPage == 0) {
+								mEmpty.setVisibility(View.VISIBLE);
+							}
 						}
 					}).fire();
 		}
@@ -243,15 +253,17 @@ public class TrainingExperienceActivity extends BaseActivity {
 	}
 
 	private void updateLatestExperienceList(List<Experience> experienceList, boolean isRefresh) {
-		if (experienceList == null) {
-			stopRefreshAnimation();
-			return;
-		}
-
 		if (experienceList.size() < mPageSize) {
 			mSwipeRefreshLayout.setLoadMoreEnable(false);
 		} else {
 			mPage++;
+		}
+
+		if (experienceList.size() < mPageSize && mPage > 0) {
+			if (mFootView == null) {
+				mFootView = View.inflate(getActivity(), R.layout.view_footer_load_complete, null);
+				mLatestListView.addFooterView(mFootView, null, true);
+			}
 		}
 
 		if (isRefresh) {
@@ -266,6 +278,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 				mLatestExperienceListAdapter.add(experience);
 			}
 		}
+
 		if (mIsFromTrainingResult == 0) {
 			mLatestListView.setSelection(1);
 		}
@@ -335,14 +348,14 @@ public class TrainingExperienceActivity extends BaseActivity {
 				if (item.getUserModel() != null) {
 					GlideApp.with(context).load(item.getUserModel().getUserPortrait())
 							.placeholder(R.drawable.ic_default_avatar)
-							.transform(new GlideCircleTransform(context))
+							.circleCrop()
 							.into(mAvatar);
 
 					mUserName.setText(item.getUserModel().getUserName());
 					mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
 				} else {
 					GlideApp.with(context).load(R.drawable.ic_default_avatar)
-							.transform(new GlideCircleTransform(context))
+							.circleCrop()
 							.into(mAvatar);
 					mUserName.setText("");
 					mPublishTime.setText("");
@@ -427,6 +440,9 @@ public class TrainingExperienceActivity extends BaseActivity {
 			mSet.clear();
 			mPage = 0;
 			requestLatestExperienceList(true);
+			mSwipeRefreshLayout.setLoadMoreEnable(true);
+			mLatestListView.removeFooterView(mFootView);
+			mFootView = null;
 			mLatestListView.setSelection(1);
 		}
 
@@ -450,6 +466,8 @@ public class TrainingExperienceActivity extends BaseActivity {
 			if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
 				mSet.clear();
 				mPage = 0;
+				mLatestListView.removeFooterView(mFootView);
+				mFootView = null;
 				requestHotExperienceList();
 				requestLatestExperienceList(true);
 			}

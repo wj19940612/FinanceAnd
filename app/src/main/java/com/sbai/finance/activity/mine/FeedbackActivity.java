@@ -38,8 +38,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.GlideCircleTransform;
-import com.sbai.finance.utils.GlideThumbTransform;
+import com.sbai.finance.utils.transform.ThumbTransform;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
@@ -524,18 +523,18 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     imageview = createImageview(context);
                     mWrapper.addView(imageview);
                     GlideApp.with(context).load(feedback.getContent())
-                            .transform(new GlideThumbTransform(context))
+                            .transform(new ThumbTransform(context))
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(imageview);
                 }
                 if (!TextUtils.isEmpty(feedback.getUserPortrait())) {
                     GlideApp.with(context).load(feedback.getUserPortrait())
-                            .transform(new GlideCircleTransform(context))
+                            .circleCrop()
                             .placeholder(R.drawable.ic_avatar_feedback)
                             .into(mHeadImage);
                 } else {
                     GlideApp.with(context).load(feedback.getPortrait())
-                            .transform(new GlideCircleTransform(context))
+                            .circleCrop()
                             .placeholder(R.drawable.ic_avatar_feedback)
                             .into(mHeadImage);
                 }
@@ -620,7 +619,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 }
                 mText.setText(feedback.getContent());
                 GlideApp.with(context).load(R.drawable.ic_feedback_service)
-                        .transform(new GlideCircleTransform(context))
+                        .circleCrop()
                         .into(mHeadImage);
             }
         }

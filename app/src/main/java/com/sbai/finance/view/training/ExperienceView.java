@@ -20,7 +20,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.glide.GlideApp;
@@ -73,14 +72,14 @@ public class ExperienceView extends LinearLayout {
 			if (data.getUserModel() != null) {
 				GlideApp.with(getContext()).load(data.getUserModel().getUserPortrait())
 						.placeholder(R.drawable.ic_default_avatar)
-						.transform(new GlideCircleTransform(getContext()))
+						.circleCrop()
 						.into(mAvatar);
 
 				mUserName.setText(data.getUserModel().getUserName());
 				mPublishTime.setText(DateUtil.getMissFormatTime(data.getCreateDate()));
 			} else {
 				GlideApp.with(getContext()).load(R.drawable.ic_default_avatar)
-						.transform(new GlideCircleTransform(getContext()))
+						.circleCrop()
 						.into(mAvatar);
 				mUserName.setText("");
 				mPublishTime.setText("");

@@ -13,7 +13,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -32,11 +32,11 @@ public class SettingActivity extends BaseActivity {
             case R.id.shieldSetting:
                 break;
             case R.id.newMessageNotification:
-                umengEventCount(UmengCountEventIdUtils.ME_NEW_AWAIT);
+                umengEventCount(UmengCountEventId.ME_NEW_AWAIT);
                 Launcher.with(getActivity(), SetNotificationSwitchActivity.class).execute();
                 break;
             case R.id.securityCenter:
-                umengEventCount(UmengCountEventIdUtils.ME_SAFETY_CENTER);
+                umengEventCount(UmengCountEventId.ME_SAFETY_CENTER);
                 Client.getUserHasPassWord()
                         .setTag(TAG).setIndeterminate(this)
                         .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {

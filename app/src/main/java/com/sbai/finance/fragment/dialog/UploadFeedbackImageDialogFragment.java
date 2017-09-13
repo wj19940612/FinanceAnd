@@ -72,7 +72,7 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
 
     public static UploadFeedbackImageDialogFragment newInstance(int amount) {
         Bundle args = new Bundle();
-        args.putInt("amount",amount);
+        args.putInt("amount", amount);
         UploadFeedbackImageDialogFragment fragment = new UploadFeedbackImageDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -124,21 +124,21 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
                     Uri mMBitmapUri = Uri.fromFile(mFile);
                     openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMBitmapUri);
                     startActivityForResult(openCameraIntent, REQ_CODE_TAKE_PHONE_FROM_CAMERA);
-                }else {
+                } else {
                     ToastUtil.show(getString(R.string.please_open_camera_permission));
                 }
                 break;
             case R.id.takePhoneFromGallery:
                 if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
                     Intent openGalleryIntent = new Intent(getContext(), ImageSelectActivity.class);
-                    openGalleryIntent.putExtra(Launcher.EX_PAYLOAD,mPhotoAmount);
+                    openGalleryIntent.putExtra(Launcher.EX_PAYLOAD, mPhotoAmount);
                     startActivityForResult(openGalleryIntent, REQ_CODE_TAKE_PHONE_FROM_GALLERY);
                 } else {
                     ToastUtil.show(R.string.sd_is_not_useful);
                 }
                 break;
             case R.id.takePhoneCancel:
-                this.dismiss();
+                this.dismissAllowingStateLoss();
                 break;
         }
     }
@@ -150,9 +150,6 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
-
         if (resultCode == FragmentActivity.RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_TAKE_PHONE_FROM_CAMERA:
@@ -167,11 +164,13 @@ public class UploadFeedbackImageDialogFragment extends DialogFragment {
                     break;
                 case REQ_CODE_TAKE_PHONE_FROM_GALLERY:
                     String mImagePath = data.getStringExtra(Launcher.EX_PAYLOAD);
-                    if (!TextUtils.isEmpty(mImagePath)){
+                    if (!TextUtils.isEmpty(mImagePath)) {
                         saveImagePage(mImagePath);
                     }
                     break;
             }
+        } else {
+            this.dismissAllowingStateLoss();
         }
 
     }

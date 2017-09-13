@@ -12,7 +12,7 @@ import android.view.View;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.stock.FinanceFragment;
 import com.sbai.finance.fragment.stock.StockNewsFragment;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.TitleBar;
 
 public class StockDetailActivity extends StockTradeActivity {
@@ -32,7 +32,7 @@ public class StockDetailActivity extends StockTradeActivity {
             public void onPageSelected(int position) {
                 pagePosition = position;
                 if (position == 0) {
-                    umengEventCount(UmengCountEventIdUtils.DISCOVERY_NEWS);
+                    umengEventCount(UmengCountEventId.DISCOVERY_NEWS);
                     StockNewsFragment stockNewsFragment = getStockNewsFragment();
                     if (stockNewsFragment != null) {
                         stockNewsFragment.requestStockNewsList(0);
@@ -40,7 +40,7 @@ public class StockDetailActivity extends StockTradeActivity {
                 }
 
                 if (position == 1) {
-                    umengEventCount(UmengCountEventIdUtils.DISCOVERY_FINANCE);
+                    umengEventCount(UmengCountEventId.DISCOVERY_FINANCE);
                     FinanceFragment financeFragment = getFinanceFragment();
                     if (financeFragment != null) {
                         financeFragment.requestCompanyAnnualReport(0);

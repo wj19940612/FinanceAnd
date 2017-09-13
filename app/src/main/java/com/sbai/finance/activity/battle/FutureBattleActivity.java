@@ -43,7 +43,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.BattleButtons;
 import com.sbai.finance.view.BattleFloatView;
 import com.sbai.finance.view.BattleTradeView;
@@ -85,6 +85,7 @@ import static com.sbai.finance.model.battle.TradeOrder.DIRECTION_LONG_PURCHASE;
 import static com.sbai.finance.model.battle.TradeOrder.DIRECTION_SHORT_PURCHASE;
 import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
+import static com.sbai.finance.view.BattleTradeView.STATE_TRADE_END;
 import static com.sbai.finance.view.dialog.BaseDialog.DIALOG_START_MATCH;
 import static com.sbai.finance.view.dialog.BattleResultDialog.GAME_RESULT_DRAW;
 import static com.sbai.finance.view.dialog.BattleResultDialog.GAME_RESULT_LOSE;
@@ -338,7 +339,7 @@ public class FutureBattleActivity extends BaseActivity implements
     }
 
     private void requestAddBattlePraise(final int userId) {
-        umengEventCount(UmengCountEventIdUtils.WITNESS_BATTLE_PRAISE);
+        umengEventCount(UmengCountEventId.WITNESS_BATTLE_PRAISE);
 
         WsClient.get().send(new UserPraise(mBattle.getId(), userId)); // praise push received
     }
@@ -945,7 +946,7 @@ public class FutureBattleActivity extends BaseActivity implements
 
     @Override
     public void onInviteButtonClick() {
-        umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_INVITE_FRIENDS);
+        umengEventCount(UmengCountEventId.WAITING_ROOM_INVITE_FRIENDS);
 
         showInviteDialog();
     }
@@ -965,7 +966,7 @@ public class FutureBattleActivity extends BaseActivity implements
 
     @Override
     public void onMatchButtonClick() {
-        umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_FAST_MATCH);
+        umengEventCount(UmengCountEventId.WAITING_ROOM_FAST_MATCH);
 
         showMatchConfirmDialog();
     }
@@ -1040,7 +1041,7 @@ public class FutureBattleActivity extends BaseActivity implements
 
     @Override
     public void onCancelButtonClick() {
-        umengEventCount(UmengCountEventIdUtils.WAITING_ROOM_CANCEL_BATTLE);
+        umengEventCount(UmengCountEventId.WAITING_ROOM_CANCEL_BATTLE);
 
         showCancelBattleDialog();
     }
@@ -1080,21 +1081,21 @@ public class FutureBattleActivity extends BaseActivity implements
 
     @Override
     public void onLongPurchaseButtonClick() {
-        umengEventCount(UmengCountEventIdUtils.BATTLE_BULLISH);
+        umengEventCount(UmengCountEventId.BATTLE_BULLISH);
 
         requestCreateOrder(DIRECTION_LONG_PURCHASE);
     }
 
     @Override
     public void onShortPurchaseButtonClick() {
-        umengEventCount(UmengCountEventIdUtils.BATTLE_BEARISH);
+        umengEventCount(UmengCountEventId.BATTLE_BEARISH);
 
         requestCreateOrder(DIRECTION_SHORT_PURCHASE);
     }
 
     @Override
     public void onClosePositionButtonClick() {
-        umengEventCount(UmengCountEventIdUtils.BATTLE_CLOSE_POSITION);
+        umengEventCount(UmengCountEventId.BATTLE_CLOSE_POSITION);
 
         if (mCurrentOrder != null) {
             requestClosePosition(mCurrentOrder.getId());
@@ -1302,6 +1303,7 @@ public class FutureBattleActivity extends BaseActivity implements
     }
 
     private void showGameOverDialog() {
+        setBattleTradeState(STATE_TRADE_END);
         int result;
         String content;
         if (mBattle.getWinResult() == 0) {

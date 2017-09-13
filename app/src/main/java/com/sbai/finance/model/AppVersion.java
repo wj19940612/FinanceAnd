@@ -2,6 +2,7 @@ package com.sbai.finance.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.sbai.finance.App;
 import com.sbai.finance.utils.AppInfo;
@@ -146,6 +147,9 @@ public class AppVersion implements Parcelable {
         if (getForceUpdateAllPreVersions() == 1 && isLastVersionLawful()) {
             return true;
         } else if (isLastVersionLawful()) {
+            if (TextUtils.isEmpty(getForceUpdatePreVersions())) {
+                return false;
+            }
             String[] split = getForceUpdatePreVersions().split(",");
             for (String data : split) {
                 if (data.equalsIgnoreCase(versionName)) {
@@ -162,6 +166,9 @@ public class AppVersion implements Parcelable {
     }
 
     public boolean isLastVersionLawful() {
+        if (TextUtils.isEmpty(getLastVersion())) {
+            return false;
+        }
         return AppInfo.getVersionName(App.getAppContext()).compareToIgnoreCase(getLastVersion()) < 0;
     }
 

@@ -27,7 +27,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.fragment.dialog.ShareDialogFragment;
 import com.sbai.finance.fragment.dialog.TradeOptionDialogFragment;
 import com.sbai.finance.fragment.trade.IntroduceFragment;
 import com.sbai.finance.model.LocalUser;
@@ -45,7 +44,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -299,7 +298,7 @@ public class FutureTradeActivity extends BaseActivity {
 
             @Override
             public void onTradeButtonClick() {
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_FUTURES_TRADE);
+                umengEventCount(UmengCountEventId.DISCOVERY_FUTURES_TRADE);
                 TradeOptionDialogFragment.newInstance().show(getSupportFragmentManager());
             }
         });
@@ -345,7 +344,7 @@ public class FutureTradeActivity extends BaseActivity {
     }
 
     private void requestAddOptional() {
-        umengEventCount(UmengCountEventIdUtils.DISCOVERY_ADD_SELF_OPTIONAL);
+        umengEventCount(UmengCountEventId.DISCOVERY_ADD_SELF_OPTIONAL);
         Client.addOption(mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -615,32 +614,33 @@ public class FutureTradeActivity extends BaseActivity {
         final String shareUrl = String.format(Client.SHARE_URL_FUTURE, mVariety.getVarietyId());
         final String shareTitle = getString(R.string.wonderful_viewpoint, mVariety.getVarietyName());
         final String shareDescribe = getString(R.string.share_desc);
-        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_SHARE_FUTURES);
-                ShareDialogFragment
-                        .newInstance()
-                        .setShareContent(shareTitle, shareDescribe, shareUrl)
-                        .setListener(new ShareDialogFragment.OnShareDialogCallback() {
-                            @Override
-                            public void onSharePlatformClick(ShareDialogFragment.SHARE_PLATFORM platform) {
-                                switch (platform) {
-                                    case SINA_WEIBO:
-                                        umengEventCount(UmengCountEventIdUtils.DISCOVERY_SHARE_FUTURES_WEIBO);
-                                        break;
-                                    case WECHAT_FRIEND:
-                                        umengEventCount(UmengCountEventIdUtils.DISCOVERY_SHARE_FUTURES_FRIEND);
-                                        break;
-                                    case WECHAT_CIRCLE:
-                                        umengEventCount(UmengCountEventIdUtils.DISCOVERY_SHARE_FUTURES_CIRCLE);
-                                        break;
-                                }
-                            }
-                        })
-                        .show(getSupportFragmentManager());
-            }
-        });
+        // 先隐藏分享按钮点击事件
+//        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES);
+//                ShareDialogFragment
+//                        .newInstance()
+//                        .setShareContent(shareTitle, shareDescribe, shareUrl)
+//                        .setListener(new ShareDialogFragment.OnShareDialogCallback() {
+//                            @Override
+//                            public void onSharePlatformClick(ShareDialogFragment.SHARE_PLATFORM platform) {
+//                                switch (platform) {
+//                                    case SINA_WEIBO:
+//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES_WEIBO);
+//                                        break;
+//                                    case WECHAT_FRIEND:
+//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES_FRIEND);
+//                                        break;
+//                                    case WECHAT_CIRCLE:
+//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES_CIRCLE);
+//                                        break;
+//                                }
+//                            }
+//                        })
+//                        .show(getSupportFragmentManager());
+//            }
+//        });
         mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

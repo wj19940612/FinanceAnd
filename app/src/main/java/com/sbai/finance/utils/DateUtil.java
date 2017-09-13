@@ -24,6 +24,11 @@ public class DateUtil {
     public static final String FORMAT_SPECIAL_SLASH = "yyyy/MM/dd HH:mm";
     public static final String FORMAT_SPECIAL_SLASH_NO_HOUR = "yyyy/MM/dd";
     public static final String FORMAT_HOUR_MINUTE = "HH:mm";
+    public static final String FORMAT_DATE_HOUR_MINUTE = "dd日 HH:mm";
+
+
+    private static final String TODAY = "今日";
+    private static final String YESTODAY = "昨日";
 
     public static String format(long time, String toFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(toFormat);
@@ -423,12 +428,23 @@ public class DateUtil {
     public static String getDetailFormatTime(long createTime) {
         long systemTime = SysTime.getSysTime().getSystemTimestamp();
         if (isToday(createTime, systemTime)) {
-            return "今日";
+            return TODAY;
         }
         if (isYesterday(createTime, systemTime)) {
-            return "昨日";
+            return YESTODAY;
         }
         return DateUtil.format(createTime, FORMAT_ONLY_DATE);
+    }
+
+    public static String formatUserFundDetailTime(long time) {
+        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+        if (isToday(time, systemTime)) {
+            return TODAY + " " + DateUtil.format(time, FORMAT_HOUR_MINUTE);
+        }
+        if (isYesterday(time, systemTime)) {
+            return YESTODAY + " " + DateUtil.format(time, FORMAT_HOUR_MINUTE);
+        }
+        return DateUtil.format(time, FORMAT_DATE_HOUR_MINUTE);
     }
 
     /**
@@ -463,7 +479,7 @@ public class DateUtil {
      * @param createTime
      * @return
      */
-    public static String getFormatMonth(long createTime) {
+    public static String formatMonth(long createTime) {
         long systemTime = SysTime.getSysTime().getSystemTimestamp();
         if (DateUtil.isInThisMonth(createTime, systemTime)) {
             return "本月";

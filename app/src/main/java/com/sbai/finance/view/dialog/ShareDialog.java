@@ -1,6 +1,7 @@
 package com.sbai.finance.view.dialog;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -56,6 +57,10 @@ public class ShareDialog {
     private String mShareUrl;
     private String mShareThumbUrl;
     private boolean mHasFeedback;
+    private boolean mHasWeiBo = true;
+    private boolean mHasTitle = true;
+    private boolean mShareImageOnly;
+    private Bitmap mBitmap;
 
     private OnShareDialogCallback mListener;
 
@@ -66,8 +71,13 @@ public class ShareDialog {
             switch (v.getId()) {
                 case R.id.weChatFriend:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.WEIXIN)) {
-                        mShareUrl += "&userFrom=friend";
-                        shareToPlatform(SHARE_MEDIA.WEIXIN);
+                        if (mShareImageOnly) {
+                            shareImageToPlatform(SHARE_MEDIA.WEIXIN);
+                        } else {
+                            mShareUrl += "&userFrom=friend";
+                            shareToPlatform(SHARE_MEDIA.WEIXIN);
+                        }
+
                         onSharePlatformClicked(SHARE_PLATFORM.WECHAT_FRIEND);
                         mSmartDialog.dismiss();
                     } else {
@@ -77,8 +87,13 @@ public class ShareDialog {
                     break;
                 case R.id.weChatFriendCircle:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.WEIXIN_CIRCLE)) {
-                        mShareUrl += "&userFrom=friend";
-                        shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
+                        if (mShareImageOnly) {
+                            shareImageToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
+                        } else {
+                            mShareUrl += "&userFrom=friend";
+                            shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
+                        }
+
                         onSharePlatformClicked(SHARE_PLATFORM.WECHAT_CIRCLE);
                         mSmartDialog.dismiss();
                     } else {
@@ -139,6 +154,17 @@ public class ShareDialog {
         }
     }
 
+    private void shareImageToPlatform(SHARE_MEDIA platform) {
+        UMImage image = new UMImage(mActivity, mBitmap);
+        if (mActivity != null && !mActivity.isFinishing()) {
+            new ShareAction(mActivity)
+                    .withMedia(image)
+                    .setPlatform(platform)
+                    .setCallback(mUMShareListener)
+                    .share();
+        }
+    }
+
     private void onSharePlatformClicked(SHARE_PLATFORM platform) {
         if (mListener != null) {
             mListener.onSharePlatformClick(platform);
@@ -157,7 +183,8 @@ public class ShareDialog {
 
         @Override
         public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-            ToastUtil.show(R.string.share_failed);
+         //   ToastUtil.show(R.string.share_failed);
+            ToastUtil.show(throwable.getMessage());
         }
 
         @Override
@@ -207,8 +234,28 @@ public class ShareDialog {
         return this;
     }
 
+    public ShareDialog hasWeiBo(boolean hasWeiBo) {
+        mHasWeiBo = hasWeiBo;
+        return this;
+    }
+
     public ShareDialog setTitle(int titleRes) {
         mTitle = mActivity.getText(titleRes);
+        return this;
+    }
+
+    public ShareDialog setTitleVisible(boolean visible) {
+        mHasTitle = visible;
+        return this;
+    }
+
+    public ShareDialog setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
+        return this;
+    }
+
+    public ShareDialog setShareImageOnly(boolean shareImageOnly) {
+        mShareImageOnly = shareImageOnly;
         return this;
     }
 
@@ -242,9 +289,17 @@ public class ShareDialog {
             mView.findViewById(R.id.secondSplitLine).setVisibility(View.GONE);
             mView.findViewById(R.id.secondArea).setVisibility(View.GONE);
         }
+        if (!mHasWeiBo) {
+            mView.findViewById(R.id.sinaWeibo).setVisibility(View.INVISIBLE);
+        }
         if (!TextUtils.isEmpty(mTitle)) {
             TextView title = (TextView) mView.findViewById(R.id.title);
             title.setText(mTitle);
+            if (mHasTitle) {
+                title.setVisibility(View.VISIBLE);
+            } else {
+                title.setVisibility(View.GONE);
+            }
         }
 
         mSmartDialog.setWidthScale(1)

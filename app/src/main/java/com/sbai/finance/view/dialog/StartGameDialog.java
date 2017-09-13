@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.utils.GlideCircleTransform;
 import com.sbai.glide.GlideApp;
 
 /**
@@ -38,7 +37,7 @@ public class StartGameDialog extends BaseDialog {
         GlideApp.with(activity)
                 .load(url)
                 .placeholder(R.drawable.ic_default_avatar_big)
-                .transform(new GlideCircleTransform(activity))
+                .circleCrop()
                 .into(matchHead);
         TextView cancel = (TextView) customView.findViewById(R.id.cancel);
         cancel.setText("");
@@ -59,7 +58,8 @@ public class StartGameDialog extends BaseDialog {
         CountDownTimer timer = new CountDownTimer(4000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                int count = (int) (millisUntilFinished / 1000 - 1);
+                int count = (int) (millisUntilFinished / 1000);
+                if (count == 0) return;
                 message.setText(activity.getString(R.string.desc_match_success, count));
             }
 

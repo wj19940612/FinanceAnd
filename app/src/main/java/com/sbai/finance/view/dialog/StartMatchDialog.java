@@ -58,6 +58,4 @@ public class StartMatchDialog extends BaseDialog {
                 .setCustomView(customView)
                 .show();
     }
-
-
 }

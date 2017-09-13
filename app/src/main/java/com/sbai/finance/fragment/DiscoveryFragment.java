@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.discovery.DailyReportActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
@@ -33,6 +34,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.activity.training.MoreTrainFeedbackActivity;
 import com.sbai.finance.activity.training.TrainingDetailActivity;
+import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.MyTrainingRecord;
@@ -42,9 +44,10 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ViewGroupUtil;
 import com.sbai.finance.view.FeaturesNavigation;
+import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.httplib.CookieManger;
@@ -94,6 +97,8 @@ public class DiscoveryFragment extends BaseFragment {
 
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
+    @BindView(R.id.banner)
+    HomeBanner mBanner;
 
     private TrainAdapter mTrainAdapter;
 
@@ -119,16 +124,32 @@ public class DiscoveryFragment extends BaseFragment {
         super.onResume();
         requestTrainingList();
         requestDailyReportData();
+        startScheduleJob(5 * 1000);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
+            @Override
+            public void onBannerClick(Banner information) {
+                if (information.isH5Style()) {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_URL, information.getContent())
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_HTML, information.getContent())
+                            .putExtra(WebActivity.EX_TITLE, information.getTitle())
+                            .execute();
+                }
+            }
+        });
         mFeaturesNavigation.setOnNavItemClickListener(new FeaturesNavigation.OnNavItemClickListener() {
             @Override
             public void onOptionalClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.DISCOVERY_SELF_OPTIONAL);
+                    umengEventCount(UmengCountEventId.DISCOVERY_SELF_OPTIONAL);
                     Launcher.with(getActivity(), OptionalActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -137,19 +158,19 @@ public class DiscoveryFragment extends BaseFragment {
 
             @Override
             public void onFuturesClick() {
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_FUTURES);
+                umengEventCount(UmengCountEventId.DISCOVERY_FUTURES);
                 Launcher.with(getActivity(), FuturesListActivity.class).execute();
             }
 
             @Override
             public void onStockClick() {
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_STOCK);
+                umengEventCount(UmengCountEventId.DISCOVERY_STOCK);
                 Launcher.with(getActivity(), StockListActivity.class).execute();
             }
 
             @Override
             public void onLeaderboardClick() {
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_LEADER_BOARD);
+                umengEventCount(UmengCountEventId.DISCOVERY_LEADER_BOARD);
                 Launcher.with(getActivity(), LeaderBoardsActivity.class).execute();
             }
         });
@@ -160,13 +181,24 @@ public class DiscoveryFragment extends BaseFragment {
         initDailyReportView();
         requestTrainingList();
         requestDailyReportData();
+        requestBannerData();
+    }
+
+    private void requestBannerData() {
+        Client.getBannerData().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Banner>>, List<Banner>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Banner> data) {
+                        mBanner.setHomeAdvertisement(data);
+                    }
+                }).fireFree();
     }
 
     private void initDailyReportView() {
         mDaily.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                umengEventCount(UmengCountEventIdUtils.REPORT_VIEW_LIST);
+                umengEventCount(UmengCountEventId.REPORT_VIEW_LIST);
                 Launcher.with(getActivity(), DailyReportActivity.class).execute();
             }
         });
@@ -239,6 +271,13 @@ public class DiscoveryFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        stopScheduleJob();
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        mBanner.nextAdvertisement();
     }
 
     @OnClick({R.id.futureBattle, R.id.training, R.id.daily, R.id.daily1, R.id.daily2, R.id.daily3})
@@ -248,7 +287,7 @@ public class DiscoveryFragment extends BaseFragment {
                 Launcher.with(getActivity(), BattleListActivity.class).execute();
                 break;
             case R.id.training:
-                umengEventCount(UmengCountEventIdUtils.DISCOVERY_YOU_WANT_LEARN);
+                umengEventCount(UmengCountEventId.DISCOVERY_YOU_WANT_LEARN);
                 Launcher.with(getActivity(), MoreTrainFeedbackActivity.class).execute();
                 break;
             case R.id.daily:

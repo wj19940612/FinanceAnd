@@ -272,19 +272,6 @@
     <string name="preview">预览</string>
     <string name="all_image">所有图片</string>
 
-    <!--借款有道-->
-    <string name="pay_intention">支付意向金</string>
-    <string name="confirm_payment">确认支付</string>
-    <string name="pay_intention_hint1">意向金为平台服务费</string>
-    <string name="pay_intention_hint2">无论用户是否成功借款都不予退还,请谅解</string>
-    <string name="we_chat_pay">微信支付</string>
-    <string name="intention_amount">￥0.01</string>
-    <string name="we_chat_pay_hint_1">1.长按二维码保存至相册或者直接使用微信扫描二维码。</string>
-    <string name="we_chat_pay_hint_2">2.如果你已完成,请点击“已完成支付”。</string>
-    <string name="complete_payment">已完成支付</string>
-    <string name="save_picture">保存图片</string>
-    <string name="save_picture_failed">保存失败</string>
-    <string name="save_picture_success">图片成功保存至%1$s目录</string>
 
     <!--股票财务-->
     <string name="one_stock_net_asset">每股净资产</string>
@@ -337,7 +324,6 @@
     <string name="please_open_camera_permission">请打开相机权限</string>
 
     <!--钱包-->
-    <string name="balance">账户余额</string>
     <string name="recharge">充值</string>
     <string name="withdraw">提现</string>
     <string name="bank_card">银行卡</string>
@@ -347,6 +333,18 @@
     <string name="recharge_service">遇到任何问题，请联系客服></string>
     <string name="next">下一步</string>
     <string name="money_from">%1$s(%2$s)</string>
+    <string name="mine_crash">我的现金(元)</string>
+    <string name="mine_score">我的积分</string>
+    <string name="mine_ingot">我的元宝</string>
+    <string name="confirm_payment_money">确认支付  (%1$s元)</string>
+    <string name="confirm_payment_ingot">确认支付  (%1$s元宝)</string>
+    <string name="confirm_money">确认支付</string>
+    <string name="ingot_recharge">元宝充值</string>
+    <string name="score_recharge">积分充值</string>
+    <string name="balance_not_enough">余额不足</string>
+    <string name="number_ingot">%1$s元宝</string>
+    <string name="number_score">%1$s积分</string>
+    <string name="yuan">元</string>
 
     <!--银行卡绑定-->
     <string name="bind_bank_card_warn">持卡人必须与账号信息一致,信息不做其他用途</string>
@@ -368,12 +366,14 @@
     <string name="integral">积分</string>
     <string name="ingot">元宝</string>
     <string name="cash">现金</string>
+    <string name="score">积分</string>
     <string name="bounty">赏金</string>
     <string name="versusing">对战中</string>
     <string name="versus_end">已结束</string>
     <string name="tie">平局</string>
     <string name="duration">时长</string>
     <string name="minute">%1$s分钟</string>
+    <string name="balance_is_not_enough">余额不足,创建失败</string>
     <string name="holder_card_state">持卡人说明</string>
     <string name="holder_card_content">1.为了您的资金安全,只能绑定持卡人本人的银行卡。\n2.未成年人禁止交易</string>
 
@@ -413,34 +413,29 @@
     <string name="with_draw_check_is_submit">提现审核已提交</string>
     <string name="complete">完成</string>
     <string name="REM_HINT">￥</string>
-    <string name="yuan">￥%1$s</string>
+    <string name="yuan_symbol">￥%1$s</string>
     <string name="please_input_pass">请输入安全密码</string>
     <string name="input_money_more_than_limit">输入金额超过单笔限制</string>
     <string name="you_not_bind_bank_card">您还未绑定任何银行卡</string>
     <string name="go_to_bind_card">去绑卡</string>
     <string name="with_draw_limit">最低提现金额5元</string>
-    <string name="earnings_yuan">+%1$s元</string>
-    <string name="minus_yuan">-%1$s元</string>
+    <string name="plus_string">+%1$s</string>
+    <string name="minus_string">-%1$s</string>
+    <string name="plus_int">+%1$d</string>
+    <string name="minus_int">-%1$d</string>
     <!--  聚宝盆  -->
-    <string name="cornucopia">聚宝盆</string>
-    <string name="exchange_rule">兑换规则</string>
+    <string name="exchange_rule">规则</string>
     <string name="exchange_ingot">购买元宝</string>
     <string name="ingot_detail">元宝明细</string>
     <string name="integrate_detail">积分明细</string>
     <string name="exchange_integrate">兑换积分</string>
     <string name="ingot_number">%1$s  元宝</string>
-    <string name="add_ingot">+%1$s  元宝</string>
-    <string name="minus_ingot">-%1$s  元宝</string>
     <string name="integrate_number">%1$s  积分</string>
-    <string name="add_integrate_number">+%1$s  积分</string>
-    <string name="minus_integrate_number">-%1$s  积分</string>
     <string name="check_details">查看明细></string>
     <string name="old_price">原价: ￥%1$s</string>
     <string name="old_price_exchange_integrate">原价: %1$s元宝</string>
     <string name="exchange">兑换</string>
     <string name="buy">购买</string>
-    <string name="exchange_confirm">确认兑换</string>
-    <string name="buy_confirm">确认购买</string>
     <string name="confirm_use_ingot_buy_integrate">确认使用%1$s元宝兑换%2$s积分?</string>
     <string name="confirm_use_money_buy_ingot">确认使用%1$s元购买%2$s元宝?</string>
     <string name="earnings">收入</string>
@@ -450,7 +445,7 @@
     <string name="buy_fail">购买失败</string>
     <string name="ingot_is_not_enough">元宝余额不足，请充值或降低兑换数量</string>
     <string name="money_is_not_enough">现金余额不足，请充值或降低购买数量</string>
-    <string name="is_not_set_safety_pass">未设置安全密码</string>
+    <string name="is_not_set_safety_pass">为了您的账户安全，请设置安全密码</string>
     <string name="full_text">...全文</string>
     <string name="go_to_set">去设置</string>
     <!--future versus-->
@@ -533,6 +528,8 @@
     <string name="now_update">立即更新</string>
     <string name="version">v%1$s</string>
     <string name="is_already_latest_version">已经是最新版本了</string>
+    
+    <string name="immediately_register">立即注册</string>
 
 
     <string name="number_ge">%1$s个</string>
@@ -601,7 +598,6 @@
     <string name="success_reward">成功打赏</string>
     <string name="question_commit_and_please_wait_miss_answer">问题提交成功,请耐心等候小姐姐回复</string>
     <string name="publish_success">发布成功</string>
-    <string name="go_exchange">去兑换</string>
     <string name="ignot_not_enough">元宝不足</string>
 
 
@@ -621,6 +617,7 @@
     <string name="day">%1$d天</string>
     <string name="level">L%1$d</string>
     <string name="share_to">分享至</string>
+    <string name="share_to_wechat">分享到微信</string>
     <string name="latest_finance_hot_from_lemi">来自乐米的每日最新金融热点</string>
 
 
@@ -789,4 +786,8 @@
     <string name="mission_complete">成功完成任务</string>
     <string name="accuracy_to_">准确率达到%1$s</string>
     <string name="accuracy_">准确率：%1$s</string>
+    
+    <string name="exchange_record">兑换记录</string>
+    <string name="no_exchange_skin_record">暂无兑换记录</string>
+    <string name="image_saved_please_open_wechat_to_share">图片已保存。请打开微信，从相册中\n选择图片进行分享</string>
 </resources>

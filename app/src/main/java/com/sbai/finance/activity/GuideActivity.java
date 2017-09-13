@@ -1,7 +1,6 @@
 package com.sbai.finance.activity;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -9,47 +8,28 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
-import com.sbai.finance.utils.AppInfo;
+import com.sbai.finance.utils.Launcher;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * 引导页
  */
 
 public class GuideActivity extends BaseActivity {
+
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
-    @BindView(R.id.enter)
-    TextView mEnter;
+
     private ViewPageAdapter mViewPageAdapter;
-    private int mPage;
-    private ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            mPage = position;
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +37,7 @@ public class GuideActivity extends BaseActivity {
         setContentView(R.layout.activity_guide);
         ButterKnife.bind(this);
         translucentStatusBar();
+
         initViewPager();
     }
 
@@ -67,16 +48,6 @@ public class GuideActivity extends BaseActivity {
         resList.add(R.drawable.ic_guide_page3);
         mViewPageAdapter = new ViewPageAdapter(resList, getActivity());
         mViewPager.setAdapter(mViewPageAdapter);
-        mViewPager.setOnPageChangeListener(mPageChangeListener);
-    }
-
-    @OnClick(R.id.enter)
-    public void onViewClicked() {
-        if (mPage == 2) {
-            Preference.get().setNoShowGuide();
-            startActivity(new Intent(this, MainActivity.class));
-            supportFinishAfterTransition();
-        }
     }
 
     @Override
@@ -86,11 +57,11 @@ public class GuideActivity extends BaseActivity {
 
     private static class ViewPageAdapter extends PagerAdapter {
         private List<Integer> mRes;
-        private Context mContext;
+        private Activity mActivity;
 
-        public ViewPageAdapter(List<Integer> res, Context context) {
+        public ViewPageAdapter(List<Integer> res, Activity activity) {
             mRes = res;
-            mContext = context;
+            mActivity = activity;
         }
 
         @Override
@@ -105,12 +76,23 @@ public class GuideActivity extends BaseActivity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            final int pos = position;
-            ImageView imageView = new ImageView(mContext);
+            ImageView imageView = new ImageView(mActivity);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
             container.addView(imageView);
-            Glide.with(mContext).load(mRes.get(pos)).into(imageView);
+            Glide.with(mActivity).load(mRes.get(position)).into(imageView);
+
+            if (position == getCount() - 1) {
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Preference.get().setNoShowGuide();
+                        Launcher.with(mActivity, MainActivity.class).execute();
+                        mActivity.finish();
+                    }
+                });
+            }
+
             return imageView;
         }
 

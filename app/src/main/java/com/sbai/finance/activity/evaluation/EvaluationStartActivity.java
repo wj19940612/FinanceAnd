@@ -20,7 +20,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.TitleBar;
 
 import java.lang.reflect.Type;
@@ -85,7 +85,7 @@ public class EvaluationStartActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.startTest:
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.ME_START_TEST);
+                    umengEventCount(UmengCountEventId.ME_START_TEST);
                     openLevelExamQuestionsPage();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -93,7 +93,7 @@ public class EvaluationStartActivity extends BaseActivity {
                 break;
             case R.id.historyResult:
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.ME_TEST_RESULT);
+                    umengEventCount(UmengCountEventId.ME_TEST_RESULT);
                     Launcher.with(getActivity(), HistoryEvaluationResultActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();

@@ -21,17 +21,20 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.training.CreditIntroduceActivity;
 import com.sbai.finance.activity.training.TrainingDetailActivity;
+import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.MyTrainingRecord;
 import com.sbai.finance.model.training.Training;
 import com.sbai.finance.model.training.TrainingRecord;
 import com.sbai.finance.model.training.UserEachTrainingScoreModel;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -39,7 +42,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
-import com.sbai.finance.utils.UmengCountEventIdUtils;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
@@ -49,7 +52,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-
 
 public class TrainingFragment extends BaseFragment {
 
@@ -89,8 +91,8 @@ public class TrainingFragment extends BaseFragment {
     ImageView mCloseHint;
     @BindView(R.id.testHint)
     LinearLayout mTestHint;
-    @BindView(R.id.scrollView)
-    RelativeLayout mScrollView;
+    @BindView(R.id.card)
+    LinearLayout mCard;
 
 
     private TrainAdapter mTrainAdapter;
@@ -101,6 +103,7 @@ public class TrainingFragment extends BaseFragment {
     private double mScoreOffset;
     //如果点击了删除按钮，则退出再次进来在出现
     private boolean showJoinTestHint;
+    private Banner mBanner;
 
     @Nullable
     @Override
@@ -130,6 +133,8 @@ public class TrainingFragment extends BaseFragment {
                 }
             }
         });
+
+        requestGiftActivity();
     }
 
     @Override
@@ -138,6 +143,35 @@ public class TrainingFragment extends BaseFragment {
         if (isVisibleToUser && isAdded()) {
             requestUserScore();
             requestMyTrainingList();
+            requestGiftActivity();
+        }
+    }
+
+    private void requestGiftActivity() {
+        Client.requestGiftActivity()
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback<Resp<Banner>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Banner> resp) {
+                        if (resp.isSuccess()) {
+                            mBanner = resp.getData();
+                            updateGiftActivity();
+                        }
+                    }
+                })
+                .fire();
+    }
+
+    private void updateGiftActivity() {
+        if (mBanner == null) {
+            mGift.setVisibility(View.GONE);
+        } else {
+            mGift.setVisibility(View.VISIBLE);
+            GlideApp.with(TrainingFragment.this)
+                    .load(mBanner.getSmallPic())
+                    .placeholder(R.drawable.ic_home_gift)
+                    .into(mGift);
         }
     }
 
@@ -308,13 +342,13 @@ public class TrainingFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.gift:
-                umengEventCount(UmengCountEventIdUtils.TRAINING_ACTIVITY);
-                // TODO: 2017/8/10 礼物接口
+                umengEventCount(UmengCountEventId.TRAINING_ACTIVITY);
+                openGiftPage();
                 break;
             case R.id.lookTrainDetail:
                 if (LocalUser.getUser().isLogin()) {
                     if (mUserEachTrainingScoreModel != null) {
-                        umengEventCount(UmengCountEventIdUtils.TRAINING_KNOW_CREDITS);
+                        umengEventCount(UmengCountEventId.TRAINING_KNOW_CREDITS);
                         Launcher.with(getActivity(), CreditIntroduceActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, mUserEachTrainingScoreModel)
                                 .execute();
@@ -328,11 +362,11 @@ public class TrainingFragment extends BaseFragment {
                 }
                 break;
             case R.id.rankingList:
-                umengEventCount(UmengCountEventIdUtils.TRAINING_LEADER_BOARD);
+                umengEventCount(UmengCountEventId.TRAINING_LEADER_BOARD);
                 Launcher.with(getActivity(), LeaderBoardsActivity.class).execute();
                 break;
             case R.id.reviewLessonRoom:
-                umengEventCount(UmengCountEventIdUtils.TRAINING_STUDY_ROOM);
+                umengEventCount(UmengCountEventId.TRAINING_STUDY_ROOM);
                 Launcher.with(getActivity(), StudyRoomActivity.class).execute();
                 break;
             case R.id.closeHint:
@@ -341,7 +375,7 @@ public class TrainingFragment extends BaseFragment {
                 break;
             case R.id.testHint:
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventIdUtils.TRAINING_TEST);
+                    umengEventCount(UmengCountEventId.TRAINING_TEST);
                     Launcher.with(getActivity(), EvaluationStartActivity.class).execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -350,6 +384,20 @@ public class TrainingFragment extends BaseFragment {
             case android.R.id.empty:
                 requestMyTrainingList();
                 break;
+        }
+    }
+
+    private void openGiftPage() {
+        if (mBanner == null) return;
+        if (mBanner.isH5Style()) {
+            Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_URL, mBanner.getContent())
+                    .execute();
+        } else {
+            Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_HTML, mBanner.getContent())
+                    .putExtra(WebActivity.EX_TITLE, mBanner.getTitle())
+                    .execute();
         }
     }
 

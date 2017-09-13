@@ -2,13 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/background"
                 android:orientation="vertical">
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -23,41 +22,38 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_home_training">
 
-                <ImageView
-                    android:id="@+id/gift"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="33dp"
-                    android:src="@drawable/ic_home_gift"
-                    android:visibility="gone"/>
-
-                <FrameLayout
-                    android:id="@+id/lookTrainDetail"
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/bg_home_training_circle_inside"/>
+                    <FrameLayout
+                        android:id="@+id/lookTrainDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:id="@+id/titleTrainingCircleMiddle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/bg_home_training_circle_middle"/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/bg_home_training_circle_inside"/>
 
-                    <ImageView
-                        android:id="@+id/titleTrainingCircleOutside"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/bg_home_training_circle_outside"/>
-                </FrameLayout>
+                        <ImageView
+                            android:id="@+id/titleTrainingCircleMiddle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/bg_home_training_circle_middle"/>
+
+                        <ImageView
+                            android:id="@+id/titleTrainingCircleOutside"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/bg_home_training_circle_outside"/>
+                    </FrameLayout>
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -197,7 +193,16 @@
                 android:text="@string/now_not_has_data"
                 android:visibility="gone"/>
         </RelativeLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
+
+    <ImageView
+        android:id="@+id/gift"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="23dp"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/ic_home_gift"
+        android:visibility="visible"/>
 
     <LinearLayout
         android:id="@+id/testHint"

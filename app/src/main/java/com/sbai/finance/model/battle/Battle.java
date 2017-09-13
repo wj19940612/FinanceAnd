@@ -9,10 +9,10 @@ import android.os.Parcelable;
 
 public class Battle implements Parcelable {
 
-    //0现金 1元宝 2积分
+    //1现金 2元宝 3积分
     public static final int COIN_TYPE_CASH = 1;
-    public static final int COIN_TYPE_BAO = 2;
-    public static final int COIN_TYPE_INTEGRAL = 3;
+    public static final int COIN_TYPE_INGOT = 2;
+    public static final int COIN_TYPE_SCORE = 3;
 
     // 0取消 1发起 2对战开始 3对战结束 4观战  5正在取消
     public static final int GAME_STATUS_CANCELED = 0;
@@ -31,6 +31,7 @@ public class Battle implements Parcelable {
 
     public static final String SOURCE_COTERIE = "coterie";
     public static final String SOURCE_HALL = "hall";
+    public static final String SOURCE_MATCH = "match";
     public static final String SOURCE_WEIBO = "weibo";
     public static final String SOURCE_FRIEND = "friend";
 
@@ -70,7 +71,7 @@ public class Battle implements Parcelable {
     private String againstUserName;
     private String againstUserPortrait;
     private String batchCode;
-    private int coinType;
+    private int coinType;     //1 现金 2元宝 3积分
     private long createTime;
     private long endTime;
     private int endline;
