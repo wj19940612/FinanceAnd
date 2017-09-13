@@ -85,6 +85,7 @@ import static com.sbai.finance.model.battle.TradeOrder.DIRECTION_LONG_PURCHASE;
 import static com.sbai.finance.model.battle.TradeOrder.DIRECTION_SHORT_PURCHASE;
 import static com.sbai.finance.view.BattleTradeView.STATE_CLOSE_POSITION;
 import static com.sbai.finance.view.BattleTradeView.STATE_TRADE;
+import static com.sbai.finance.view.BattleTradeView.STATE_TRADE_END;
 import static com.sbai.finance.view.dialog.BaseDialog.DIALOG_START_MATCH;
 import static com.sbai.finance.view.dialog.BattleResultDialog.GAME_RESULT_DRAW;
 import static com.sbai.finance.view.dialog.BattleResultDialog.GAME_RESULT_LOSE;
@@ -1302,7 +1303,7 @@ public class FutureBattleActivity extends BaseActivity implements
     }
 
     private void showGameOverDialog() {
-        mBattleTradeView.setVisibility(View.INVISIBLE);
+        setBattleTradeState(STATE_TRADE_END);
         int result;
         String content;
         if (mBattle.getWinResult() == 0) {
