@@ -192,7 +192,6 @@ public class NewsActivity extends BaseActivity implements AdapterView.OnItemClic
                     break;
                 case HistoryNewsModel.WITH_DRAW_FAIL:
                     if (!historyNewsModel.isLossEfficacy()) {
-                        // TODO: 2017/9/1 先隐藏提现界面
 //                        Launcher.with(getActivity(), WithDrawActivity.class).execute();
                     }
                     break;

@@ -230,7 +230,6 @@ public class WithDrawActivity extends BaseActivity implements InputSafetyPassDia
                                         .execute();
                                 finish();
                             }else {
-                                // TODO: 2017/9/11 看需求是否需要关闭弹窗 
                             }
                         }
                     })

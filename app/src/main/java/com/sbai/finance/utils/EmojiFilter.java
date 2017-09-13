@@ -111,7 +111,7 @@ public class EmojiFilter implements InputFilter {
         addUnicodeRangeToSet(filterSet, 0X23F3);
         addUnicodeRangeToSet(filterSet, 0X25AA, 0X25AB);
         addUnicodeRangeToSet(filterSet, 0X25FB, 0X25FE);
-        //TODO： 26XX 太杂全部过滤
+        // 26XX 太杂全部过滤
         addUnicodeRangeToSet(filterSet, 0X2600, 0X26FE);
         addUnicodeRangeToSet(filterSet, 0X2934, 0X2935);
         addUnicodeRangeToSet(filterSet, 0X2B05, 0X2B07);

@@ -262,9 +262,8 @@ public class Preference {
     }
 
     public boolean showRegisterInviteDialog() {
-        // TODO: 2017/9/12 测试用 后期改成 2.0.1
         return mPrefs.getBoolean(Key.SHOW_REGISTER_INVITE, true)
-                && AppInfo.getVersionName(App.getAppContext()).equalsIgnoreCase("1.2.0913-Alpha")
+                && AppInfo.getVersionName(App.getAppContext()).equalsIgnoreCase("2.0.1")
                 && !LocalUser.getUser().isLogin();
     }
 
