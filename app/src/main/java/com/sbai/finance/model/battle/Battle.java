@@ -66,24 +66,24 @@ public class Battle implements Parcelable {
      * winResult : 1
      */
 
-    private String againstFrom;
-    private int againstUser;
-    private String againstUserName;
-    private String againstUserPortrait;
-    private String batchCode;
-    private int coinType;     //1 现金 2元宝 3积分
-    private long createTime;
+    private String againstFrom;   //应战者来源
+    private int againstUser;      //应战者ID
+    private String againstUserName; //应战者用户名
+    private String againstUserPortrait;  //应战者头像
+    private String batchCode;    //房间代码
+    private int coinType;        //1 现金 2元宝 3积分
+    private long createTime;     //创建时间
     private long endTime;
-    private int endline;
+    private int endline;         // 游戏存在时常 对战时间，单位秒
     private int gameStatus;
     private int id;
-    private int launchUser;
-    private String launchUserName;
-    private String launchUserPortrait;
-    private long modifyTime;
-    private int reward;
-    private long startTime;
-    private int varietyId;
+    private int launchUser;            //发起人ID
+    private String launchUserName;     //发起人名字
+    private String launchUserPortrait; //发起人头像
+    private long modifyTime;           //修改时间
+    private int reward;                //赏金
+    private long startTime;            //游戏开始时间
+    private int varietyId;             //品种ID
     private String varietyName;
     private String varietyType;
     private int winResult;
