@@ -207,6 +207,7 @@ public class DailyReportDetailActivity extends BaseActivity {
                         .setListener(new ShareDialog.OnShareDialogCallback() {
                             @Override
                             public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
+                                Client.share().setTag(TAG).fire();
                                 switch (platform) {
                                     case SINA_WEIBO:
                                         umengEventCount(UmengCountEventId.REPORT_SHARE_SINA_WEIBO);
