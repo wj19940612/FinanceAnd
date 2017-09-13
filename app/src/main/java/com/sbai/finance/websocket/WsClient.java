@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class WsClient implements AbsWsClient {
 
     private static final String TAG = "WebSocket";
+    private static final String URI = "wss://" + API.getDomain() + "/game/ws.do";
 
     private static final int TIMEOUT_REQ = 3000;
 
@@ -144,7 +145,7 @@ public class WsClient implements AbsWsClient {
     @Override
     public void connect() {
         mConnecting = true;
-        AsyncHttpClient.getDefaultInstance().websocket(createURI(), null, new AsyncHttpClient.WebSocketConnectCallback() {
+        AsyncHttpClient.getDefaultInstance().websocket(URI, null, new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
                 mConnecting = false;
@@ -372,9 +373,5 @@ public class WsClient implements AbsWsClient {
                 iterator.remove();
             }
         }
-    }
-
-    private String createURI() {
-        return "ws://" + API.getDomain() + "/game/ws.do";
     }
 }

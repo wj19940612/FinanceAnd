@@ -66,6 +66,7 @@ public class WebActivity extends BaseActivity {
 
     private boolean mLoadSuccess;
     protected String mPageUrl;
+    protected String mHomeUrl;
     protected String mTitle;
     protected String mPureHtml;
     private Set<String> mUrlSet;
@@ -135,7 +136,9 @@ public class WebActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (mWebView.canGoBack()) {
+        if (!TextUtils.isEmpty(mHomeUrl) && mHomeUrl.equalsIgnoreCase(mPageUrl)) {
+            super.onBackPressed();
+        } else if (mWebView.canGoBack()) {
             mWebView.goBack();
         } else {
             super.onBackPressed();
@@ -148,6 +151,7 @@ public class WebActivity extends BaseActivity {
         mPageUrl = intent.getStringExtra(EX_URL);
         mPureHtml = intent.getStringExtra(EX_HTML);
         tryToFixPageUrl();
+        mHomeUrl = mPageUrl;
     }
 
     private void tryToFixPageUrl() {

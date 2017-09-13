@@ -102,8 +102,8 @@ android {
         alpha {
             applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-Alpha'
-            versionCode 102
-            versionName "1.2.0913"
+            versionCode 104
+            versionName "1.2.0913.1"
             buildConfigField('String', 'HOST', '\"testlemi.ailemi.com\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 
@@ -160,6 +160,8 @@ dependencies {
 
     compile 'com.jakewharton:butterknife:8.0.1'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
+
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.8'
 
     testCompile 'junit:junit:4.12'
 }

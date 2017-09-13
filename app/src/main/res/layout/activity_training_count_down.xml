@@ -6,9 +6,9 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <com.sbai.finance.view.GifView
+    <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gif"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_centerInParent="true"/>
 </RelativeLayout>
