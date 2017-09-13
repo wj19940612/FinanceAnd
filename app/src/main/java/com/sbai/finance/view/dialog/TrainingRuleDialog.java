@@ -9,131 +9,137 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
 import com.sbai.finance.model.training.Training;
-import com.sbai.finance.view.GifView;
 import com.sbai.finance.view.SmartDialog;
-import com.sbai.glide.GlideApp;
+
+import java.io.IOException;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 public class TrainingRuleDialog {
 
-    public interface OnDismissListener {
-        void onDismiss();
-    }
+	private GifDrawable mGifFromResource;
 
-    private OnDismissListener mOnDismissListener;
+	public interface OnDismissListener {
+		void onDismiss();
+	}
 
-    private Activity mActivity;
-    private SmartDialog mSmartDialog;
-    private View mView;
-    private Training mTraining;
+	private OnDismissListener mOnDismissListener;
 
-    public static TrainingRuleDialog with(Activity activity, Training training) {
-        TrainingRuleDialog trainingRuleDialog = new TrainingRuleDialog();
-        trainingRuleDialog.mActivity = activity;
-        trainingRuleDialog.mSmartDialog = SmartDialog.single(activity);
-        if (training.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
-            trainingRuleDialog.mView = LayoutInflater.from(activity)
-                    .inflate(R.layout.dialog_training_rule_land, null);
-            trainingRuleDialog.mSmartDialog.setHeightScale(0.8f);
-        } else {
-            trainingRuleDialog.mView = LayoutInflater.from(activity)
-                    .inflate(R.layout.dialog_training_rule, null);
-        }
-        trainingRuleDialog.mSmartDialog.setCustomView(trainingRuleDialog.mView);
-        trainingRuleDialog.mTraining = training;
-        trainingRuleDialog.init();
-        return trainingRuleDialog;
-    }
+	private Activity mActivity;
+	private SmartDialog mSmartDialog;
+	private View mView;
+	private Training mTraining;
 
-    private void init() {
-        Button confirm = (Button) mView.findViewById(R.id.confirm);
-        ImageView image = (ImageView) mView.findViewById(R.id.trainGif);
-        TextView content = (TextView) mView.findViewById(R.id.content);
+	public static TrainingRuleDialog with(Activity activity, Training training) {
+		TrainingRuleDialog trainingRuleDialog = new TrainingRuleDialog();
+		trainingRuleDialog.mActivity = activity;
+		trainingRuleDialog.mSmartDialog = SmartDialog.single(activity);
+		if (training.getPlayType() == Training.PLAY_TYPE_JUDGEMENT) {
+			trainingRuleDialog.mView = LayoutInflater.from(activity)
+					.inflate(R.layout.dialog_training_rule_land, null);
+			trainingRuleDialog.mSmartDialog.setHeightScale(0.8f);
+		} else {
+			trainingRuleDialog.mView = LayoutInflater.from(activity)
+					.inflate(R.layout.dialog_training_rule, null);
+		}
+		trainingRuleDialog.mSmartDialog.setCustomView(trainingRuleDialog.mView);
+		trainingRuleDialog.mTraining = training;
+		trainingRuleDialog.init();
+		return trainingRuleDialog;
+	}
 
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSmartDialog.dismiss();
-            }
-        });
+	private void init() {
+		Button confirm = (Button) mView.findViewById(R.id.confirm);
+		GifImageView image = (GifImageView) mView.findViewById(R.id.trainGif);
+		TextView content = (TextView) mView.findViewById(R.id.content);
 
-        int gifDrawable = 0;
-        int contentRes = 0;
-        GradientDrawable gradientDrawable = null;
-        float radius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100,
-                mActivity.getResources().getDisplayMetrics());
+		confirm.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mSmartDialog.dismiss();
+				mGifFromResource.recycle();
+			}
+		});
 
-        switch (mTraining.getPlayType()) {
-            case Training.PLAY_TYPE_REMOVE:
-                gifDrawable = R.drawable.ic_kline_train;
-                contentRes = R.string.remove_train_rule;
-                gradientDrawable = roundDrawable(R.drawable.bg_train_technology, radius);
-                break;
-            case Training.PLAY_TYPE_SORT:
-                gifDrawable = R.drawable.ic_annual_report_train;
-                contentRes = R.string.sort_train_rule;
-                gradientDrawable = roundDrawable(R.drawable.bg_train_fundamentals, radius);
-                break;
-            case Training.PLAY_TYPE_MATCH_STAR:
-                gifDrawable = R.drawable.ic_identification_train;
-                contentRes = R.string.match_star_train_rule;
-                gradientDrawable = roundDrawable(R.drawable.bg_train_theory, radius);
-                break;
-            case Training.PLAY_TYPE_JUDGEMENT:
-                gifDrawable = R.drawable.ic_average_line_train;
-                contentRes = R.string.judgement_train_rule;
-                gradientDrawable = roundDrawable(R.drawable.bg_train_technology, radius);
-                break;
+		int gifDrawable = 0;
+		int contentRes = 0;
+		GradientDrawable gradientDrawable = null;
+		float radius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100,
+				mActivity.getResources().getDisplayMetrics());
 
-        }
-        if (gifDrawable != 0) {
-            GlideApp.with(mActivity)
-                    .load(gifDrawable)
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .priority(Priority.HIGH)
-                    .into(image);
-        }
-        if (contentRes != 0) {
-            content.setText(contentRes);
-        }
+		switch (mTraining.getPlayType()) {
+			case Training.PLAY_TYPE_REMOVE:
+				gifDrawable = R.drawable.ic_kline_train;
+				contentRes = R.string.remove_train_rule;
+				gradientDrawable = roundDrawable(R.drawable.bg_train_technology, radius);
+				break;
+			case Training.PLAY_TYPE_SORT:
+				gifDrawable = R.drawable.ic_annual_report_train;
+				contentRes = R.string.sort_train_rule;
+				gradientDrawable = roundDrawable(R.drawable.bg_train_fundamentals, radius);
+				break;
+			case Training.PLAY_TYPE_MATCH_STAR:
+				gifDrawable = R.drawable.ic_identification_train;
+				contentRes = R.string.match_star_train_rule;
+				gradientDrawable = roundDrawable(R.drawable.bg_train_theory, radius);
+				break;
+			case Training.PLAY_TYPE_JUDGEMENT:
+				gifDrawable = R.drawable.ic_average_line_train;
+				contentRes = R.string.judgement_train_rule;
+				gradientDrawable = roundDrawable(R.drawable.bg_train_technology, radius);
+				break;
 
-        if (gradientDrawable != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                confirm.setBackground(gradientDrawable);
-            } else {
-                confirm.setBackgroundDrawable(gradientDrawable);
-            }
-        }
+		}
+		if (gifDrawable != 0) {
+			try {
+				mGifFromResource = new GifDrawable(mActivity.getResources(),gifDrawable);
+				image.setImageDrawable(mGifFromResource);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
-        mSmartDialog.setOnDismissListener(new SmartDialog.OnDismissListener() {
-            @Override
-            public void onDismiss(Dialog dialog) {
-                if (mOnDismissListener != null) {
-                    mOnDismissListener.onDismiss();
-                }
-            }
-        });
-    }
+		if (contentRes != 0) {
+			content.setText(contentRes);
+		}
 
-    private GradientDrawable roundDrawable(int drawableRes, float radius) {
-        GradientDrawable oldDrawable = (GradientDrawable) ContextCompat.getDrawable(mActivity, drawableRes);
-        GradientDrawable drawable = (GradientDrawable) oldDrawable.getConstantState().newDrawable().mutate();
-        drawable.setCornerRadius(radius);
-        return drawable;
-    }
+		if (gradientDrawable != null) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				confirm.setBackground(gradientDrawable);
+			} else {
+				confirm.setBackgroundDrawable(gradientDrawable);
+			}
+		}
 
-    public TrainingRuleDialog setOnDismissListener(OnDismissListener onDismissListener) {
-        mOnDismissListener = onDismissListener;
-        return this;
-    }
+		mSmartDialog.setOnDismissListener(new SmartDialog.OnDismissListener() {
+			@Override
+			public void onDismiss(Dialog dialog) {
+				if (mOnDismissListener != null) {
+					mOnDismissListener.onDismiss();
+				}
+			}
+		});
+	}
 
-    public void show() {
-        mSmartDialog.show();
-    }
+	private GradientDrawable roundDrawable(int drawableRes, float radius) {
+		GradientDrawable oldDrawable = (GradientDrawable) ContextCompat.getDrawable(mActivity, drawableRes);
+		GradientDrawable drawable = (GradientDrawable) oldDrawable.getConstantState().newDrawable().mutate();
+		drawable.setCornerRadius(radius);
+		return drawable;
+	}
+
+	public TrainingRuleDialog setOnDismissListener(OnDismissListener onDismissListener) {
+		mOnDismissListener = onDismissListener;
+		return this;
+	}
+
+	public void show() {
+		mSmartDialog.show();
+	}
+
 }

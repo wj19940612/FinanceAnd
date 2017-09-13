@@ -3,11 +3,13 @@ package com.sbai.finance.view.dialog;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sbai.finance.R;
-import com.sbai.glide.GlideApp;
+
+import java.io.IOException;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * Created by linrongfang on 2017/7/10.
@@ -15,6 +17,7 @@ import com.sbai.glide.GlideApp;
 
 public class StartMatchDialog extends BaseDialog {
 
+    private static GifDrawable mGifFromResource;
 
     public interface OnCancelListener {
         void onCancel();
@@ -36,15 +39,18 @@ public class StartMatchDialog extends BaseDialog {
             public void onClick(View v) {
                 dismiss(activity);
                 listener.onCancel();
+                mGifFromResource.recycle();
             }
         });
 
-        ImageView mMatchLoading = (ImageView) customView.findViewById(R.id.matchLoading);
+        GifImageView mMatchLoading = (GifImageView) customView.findViewById(R.id.matchLoading);
 
-        GlideApp.with(activity)
-                .load(R.drawable.ic_future_svs_looking_for)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)//添加缓存
-                .into(mMatchLoading);
+        try {
+            mGifFromResource = new GifDrawable(activity.getResources(), R.drawable.ic_future_svs_looking_for);
+            mMatchLoading.setImageDrawable(mGifFromResource);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         StartMatchDialog.single(activity)
                 .setCancelableOnBackPress(false)
@@ -52,6 +58,4 @@ public class StartMatchDialog extends BaseDialog {
                 .setCustomView(customView)
                 .show();
     }
-
-
 }

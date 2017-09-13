@@ -13,9 +13,10 @@
         android:background="@android:color/white"
         android:orientation="horizontal">
 
-        <ImageView
+        <pl.droidsonroids.gif.GifImageView
             android:id="@+id/trainGif"
             android:layout_width="0dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="centerCrop"/>

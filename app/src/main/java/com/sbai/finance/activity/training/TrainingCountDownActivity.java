@@ -26,16 +26,18 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.view.GifView;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
 import com.sbai.httplib.BuildConfig;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * 训练倒计时页面
@@ -43,7 +45,7 @@ import butterknife.ButterKnife;
 public class TrainingCountDownActivity extends BaseActivity {
 
     @BindView(R.id.gif)
-    GifView mGif;
+    GifImageView mGif;
     @BindView(R.id.background)
     RelativeLayout mBackground;
 
@@ -53,6 +55,7 @@ public class TrainingCountDownActivity extends BaseActivity {
 
     private int mGifRes;
     private int mBackgroundRes;
+    private GifDrawable mGifFromResource;
 
     private List<TrainingSubmit> mTrainingSubmitList;
 
@@ -97,7 +100,6 @@ public class TrainingCountDownActivity extends BaseActivity {
             }
         }
     };
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -210,38 +212,14 @@ public class TrainingCountDownActivity extends BaseActivity {
     }
 
     private void startGifAnimation() {
-        /*if (mGifRes != 0) {
-            GlideApp.with(getActivity())
-                    .load(mGifRes)
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            if (resource instanceof GifDrawable) {
-                                GifDrawable gifDrawable = (GifDrawable) resource;
-                                gifDrawable.setLoopCount(1);
-
-                            }
-                            return false;
-                        }
-                    })
-                    .into(mGif);
-        }*/
-        mGif.setGifResource(mGifRes);
-        mGif.play();
-        mGif.setGifCallBack(new GifView.GifCallBack() {
-            @Override
-            public void onGifPaying(boolean playing) {
-                if (!playing) {
-                    mHandler.sendEmptyMessage(0);
-                }
-            }
-        });
+        try {
+            mGifFromResource = new GifDrawable(getResources(), mGifRes);
+            mGifFromResource.setLoopCount(1);
+            mGif.setImageDrawable(mGifFromResource);
+            mHandler.sendEmptyMessageDelayed(0, mGifFromResource.getDuration());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -250,5 +228,6 @@ public class TrainingCountDownActivity extends BaseActivity {
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
+        mGifFromResource.recycle();
     }
 }

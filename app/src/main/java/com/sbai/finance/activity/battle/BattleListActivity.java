@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,11 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -64,6 +58,7 @@ import com.sbai.finance.websocket.cmd.QuickMatch;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.BuildConfig;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -71,6 +66,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 import static com.sbai.finance.view.dialog.BaseDialog.DIALOG_START_MATCH;
 
@@ -107,6 +104,7 @@ public class BattleListActivity extends BaseActivity implements
     private HashSet<Integer> mSet;
     private Battle mCurrentBattle;
     private StringBuilder mRefusedIds;
+    private GifDrawable mGifFromResource;
 
     private UserFundInfo mUserFundInfo;
 
@@ -140,7 +138,6 @@ public class BattleListActivity extends BaseActivity implements
         initLoginReceiver();
         initScreenOnReceiver();
         updateAvatar();
-        //   requestBattleList();
 
         scrollToTop(mTitleBar, mListView);
     }
@@ -200,22 +197,17 @@ public class BattleListActivity extends BaseActivity implements
 
     private void initListHeaderAndFooter() {
         FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.list_header_battle, null);
-        ImageView battleBanner = (ImageView) header.findViewById(R.id.battleBanner);
+        GifImageView battleBanner = (GifImageView) header.findViewById(R.id.battleBanner);
         TextView checkBattleRecord = (TextView) header.findViewById(R.id.checkBattleRecord);
         TextView battleRule = (TextView) header.findViewById(R.id.battleRule);
-        GlideApp.with(getActivity())
-                .load(R.drawable.battle_banner)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                .priority(Priority.HIGH)
-                .into(new DrawableImageViewTarget(battleBanner) {
-                    @Override
-                    public void onResourceReady(Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        if (resource instanceof GifDrawable) {
-                            ((GifDrawable) resource).setLoopCount(1);
-                        }
-                        super.onResourceReady(resource, transition);
-                    }
-                });
+
+        try {
+            mGifFromResource = new GifDrawable(getResources(), R.drawable.battle_banner);
+            battleBanner.setImageDrawable(mGifFromResource);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         checkBattleRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -811,6 +803,7 @@ public class BattleListActivity extends BaseActivity implements
         super.onDestroy();
         getActivity().unregisterReceiver(mScreenOnBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mLoginBroadcastReceiver);
+        mGifFromResource.recycle();
     }
 
     @Override

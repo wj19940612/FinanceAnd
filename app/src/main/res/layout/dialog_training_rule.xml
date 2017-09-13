@@ -12,10 +12,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
+        <pl.droidsonroids.gif.GifImageView
             android:id="@+id/trainGif"
             android:layout_width="match_parent"
             android:layout_height="140dp"
+            android:layout_gravity="center_horizontal"
             android:scaleType="centerCrop"/>
 
         <LinearLayout
