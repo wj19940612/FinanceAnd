@@ -12,12 +12,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
 import com.sbai.finance.model.AppVersion;
+import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -27,7 +29,6 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
-import com.sbai.httplib.CookieManger;
 
 import java.util.Calendar;
 
@@ -162,27 +163,25 @@ public class AboutUsActivity extends BaseActivity {
 
     private void openUserProtocolPage() {
 
-        Launcher.with(getActivity(), WebActivity.class)
-                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
-                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
-                .execute();
+//        Launcher.with(getActivity(), WebActivity.class)
+//                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
+//                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
+//                .execute();
 
-//        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER).setTag(TAG)
-//                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
-//                    @Override
-//                    protected void onRespSuccessData(ArticleProtocol data) {
-//
-////                        Launcher.with(getActivity(), WebActivity.class)
-////                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
-////                                .putExtra(WebActivity.EX_HTML, data.getContent())
-////                                .putExtra(WebActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
-////                                .execute();
-//                    }
-//
-//                    @Override
-//                    public void onFailure(VolleyError volleyError) {
-//                        super.onFailure(volleyError);
-//                    }
-//                }).fire();
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER).setTag(TAG)
+                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
+                    @Override
+                    protected void onRespSuccessData(ArticleProtocol data) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
+                                .putExtra(WebActivity.EX_HTML, data.getContent())
+                                .execute();
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                    }
+                }).fire();
     }
 }

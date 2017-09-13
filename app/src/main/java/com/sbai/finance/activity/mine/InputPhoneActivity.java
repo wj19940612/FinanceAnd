@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -191,10 +190,10 @@ public class InputPhoneActivity extends BaseActivity {
 
     private void openUserProtocolPage() {
 
-        Launcher.with(getActivity(), WebActivity.class)
-                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
-                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
-                .execute();
+//        Launcher.with(getActivity(), WebActivity.class)
+//                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
+//                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
+//                .execute();
 
         Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER).setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
@@ -206,16 +205,6 @@ public class InputPhoneActivity extends BaseActivity {
                                 .execute();
                     }
 
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-
-                    }
-
-                    @Override
-                    protected boolean onErrorToast() {
-                        return false;
-                    }
                 }).fire();
     }
 
