@@ -1242,6 +1242,7 @@ public class FutureBattleActivity extends BaseActivity implements
     }
 
     private void requestBattleInfo() {
+        if (mBattle == null) ;
         WsClient.get().send(new CurrentBattle(mBattle.getId(), mBattle.getBatchCode()),
                 new WSCallback<WSMessage<Resp<Battle>>>() {
                     @Override
@@ -1249,6 +1250,7 @@ public class FutureBattleActivity extends BaseActivity implements
                         if (resp.getContent().isSuccess()) {
                             int gameStatus = mBattle.getGameStatus();
                             mBattle = resp.getContent().getData();
+                            if (mBattle == null) return;
                             //更新左右点赞数
                             updatePraiseView(mBattle.getLaunchPraise(), mBattle.getLaunchUser());
                             updatePraiseView(mBattle.getAgainstPraise(), mBattle.getAgainstUser());
