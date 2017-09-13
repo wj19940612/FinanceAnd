@@ -195,7 +195,6 @@ public class DailyReportDetailActivity extends BaseActivity {
                 break;
             case R.id.share:
             case R.id.shareArea:
-                // TODO: 10/08/2017 添加乐米日报分享弹框
                 umengEventCount(UmengCountEventId.REPORT_SHARE);
                 ShareDialog.with(getActivity())
                         .hasFeedback(false)
