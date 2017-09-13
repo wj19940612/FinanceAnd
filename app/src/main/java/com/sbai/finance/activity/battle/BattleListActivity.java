@@ -102,6 +102,7 @@ public class BattleListActivity extends BaseActivity implements
     private HashSet<Integer> mSet;
     private Battle mCurrentBattle;
     private StringBuilder mRefusedIds;
+    private GifDrawable mGifFromResource;
 
     @Override
     protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
@@ -180,8 +181,8 @@ public class BattleListActivity extends BaseActivity implements
         TextView battleRule = (TextView) header.findViewById(R.id.battleRule);
 
         try {
-            GifDrawable gifFromResource = new GifDrawable(getResources(), R.drawable.battle_banner);
-            battleBanner.setImageDrawable(gifFromResource);
+            mGifFromResource = new GifDrawable(getResources(), R.drawable.battle_banner);
+            battleBanner.setImageDrawable(mGifFromResource);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -778,6 +779,7 @@ public class BattleListActivity extends BaseActivity implements
         super.onDestroy();
         getActivity().unregisterReceiver(mScreenOnBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mLoginBroadcastReceiver);
+        mGifFromResource.recycle();
     }
 
     @Override

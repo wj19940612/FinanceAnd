@@ -47,8 +47,9 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
     private OnCancelListener mOnCancelListener;
 
     Unbinder unbinder;
+	private GifDrawable mGifFromResource;
 
-    public interface OnCancelListener {
+	public interface OnCancelListener {
         void onCancel();
     }
 
@@ -94,8 +95,8 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
 
     private void init() {
         try {
-            GifDrawable gifFromResource = new GifDrawable(getResources(), R.drawable.ic_future_svs_looking_for);
-            mMatchLoading.setImageDrawable(gifFromResource);
+	        mGifFromResource = new GifDrawable(getResources(), R.drawable.ic_future_svs_looking_for);
+            mMatchLoading.setImageDrawable(mGifFromResource);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -104,6 +105,7 @@ public class StartMatchDialogFragment extends BaseDialogFragment {
             @Override
             public void onClick(View v) {
                 mOnCancelListener.onCancel();
+	            mGifFromResource.recycle();
             }
         });
     }

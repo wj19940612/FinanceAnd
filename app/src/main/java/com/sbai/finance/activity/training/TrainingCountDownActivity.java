@@ -55,6 +55,7 @@ public class TrainingCountDownActivity extends BaseActivity {
 
     private int mGifRes;
     private int mBackgroundRes;
+    private GifDrawable mGifFromResource;
 
     private List<TrainingSubmit> mTrainingSubmitList;
 
@@ -99,8 +100,6 @@ public class TrainingCountDownActivity extends BaseActivity {
             }
         }
     };
-    private GifDrawable mGifFromResource;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

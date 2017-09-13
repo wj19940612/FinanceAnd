@@ -22,6 +22,8 @@ import pl.droidsonroids.gif.GifImageView;
 
 public class TrainingRuleDialog {
 
+	private GifDrawable mGifFromResource;
+
 	public interface OnDismissListener {
 		void onDismiss();
 	}
@@ -60,6 +62,7 @@ public class TrainingRuleDialog {
 			@Override
 			public void onClick(View v) {
 				mSmartDialog.dismiss();
+				mGifFromResource.recycle();
 			}
 		});
 
@@ -94,8 +97,8 @@ public class TrainingRuleDialog {
 		}
 		if (gifDrawable != 0) {
 			try {
-				GifDrawable gifFromResource = new GifDrawable(mActivity.getResources(),gifDrawable);
-				image.setImageDrawable(gifFromResource);
+				mGifFromResource = new GifDrawable(mActivity.getResources(),gifDrawable);
+				image.setImageDrawable(mGifFromResource);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
