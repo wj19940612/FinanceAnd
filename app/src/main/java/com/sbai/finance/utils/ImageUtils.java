@@ -305,8 +305,8 @@ public class ImageUtils {
         newOpts.inJustDecodeBounds = false;
         int w = newOpts.outWidth;
         int h = newOpts.outHeight;
-        float hh = 960f;//
-        float ww = 540f;//
+        float hh = (float) (Display.getScreenHeight() * 0.5);//
+        float ww = (float) (Display.getScreenWidth() * 0.5);//
         // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
         int be = 1;// be=1表示不缩放
         if (w > h && w > ww) {// 如果宽度大的话根据宽度固定大小缩放
