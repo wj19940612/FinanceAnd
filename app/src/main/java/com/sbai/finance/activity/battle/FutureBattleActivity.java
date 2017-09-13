@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -1193,7 +1192,6 @@ public class FutureBattleActivity extends BaseActivity implements
         long currentTime = SysTime.getSysTime().getSystemTimestamp();
         long startTime = mBattle.getStartTime();
         int diff = mBattle.getEndline() - DateUtil.getDiffSeconds(currentTime, startTime);
-        Log.d(TAG, "showDeadlineTime: " + diff);
         if (diff == 0 && !mIsObserver) {
             showCalculatingView();
         }
