@@ -374,34 +374,23 @@ public class AccountFundDetailFragment extends BaseFragment {
                 mPayWay.setText(detail.getRemark());
 
                 mPayWay.setText(detail.getRemark());
-//                mPayWay.setText(context.getString(R.string.money_from, detail.getRemark(), detail.getPlatformName()));
-                if (fundType == AccountFundDetail.TYPE_CRASH) {
-
-                    if (detail.getType() > 0) {
-                        mMoney.setSelected(false);
+                if (detail.getType() > 0) {
+                    mMoney.setSelected(false);
+                    if (fundType == AccountFundDetail.TYPE_CRASH) {
                         mMoney.setText(context.getString(R.string.plus_string, FinanceUtil.formatWithScale(detail.getMoney())));
+                    } else if (detail.isIngot()) {
+                        mMoney.setText(context.getString(R.string.plus_int, (int) detail.getMoney()));
                     } else {
-                        mMoney.setSelected(true);
-                        mMoney.setText(context.getString(R.string.minus_string, FinanceUtil.formatWithScale(detail.getMoney())));
+                        mMoney.setText(context.getString(R.string.plus_string, FinanceUtil.formatWithScale(detail.getMoney())));
                     }
                 } else {
-
-                    if (detail.isIngot()) {
-                        if (detail.getType() > 0) {
-                            mMoney.setText(context.getString(R.string.plus_int, (int) detail.getMoney()));
-                            mMoney.setSelected(false);
-                        } else {
-                            mMoney.setText(context.getString(R.string.minus_int, (int) detail.getMoney()));
-                            mMoney.setSelected(true);
-                        }
+                    mMoney.setSelected(true);
+                    if (fundType == AccountFundDetail.TYPE_CRASH) {
+                        mMoney.setText(context.getString(R.string.minus_string, FinanceUtil.formatWithScale(detail.getMoney())));
+                    } else if (detail.isIngot()) {
+                        mMoney.setText(context.getString(R.string.minus_int, (int) detail.getMoney()));
                     } else {
-                        if (detail.getType() > 0) {
-                            mMoney.setSelected(false);
-                            mMoney.setText(context.getString(R.string.plus_string, FinanceUtil.formatWithScale(detail.getMoney())));
-                        } else {
-                            mMoney.setText(context.getString(R.string.minus_string, FinanceUtil.formatWithScale(detail.getMoney())));
-                            mMoney.setSelected(true);
-                        }
+                        mMoney.setText(context.getString(R.string.minus_string, FinanceUtil.formatWithScale(detail.getMoney())));
                     }
                 }
             }
