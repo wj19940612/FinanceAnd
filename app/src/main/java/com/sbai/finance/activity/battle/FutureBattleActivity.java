@@ -1424,6 +1424,6 @@ public class FutureBattleActivity extends BaseActivity implements
         super.onDestroy();
         BaseDialog.dismiss(this);
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
-        GlideApp.with(App.getAppContext()).onDestroy();
+        GlideApp.with(App.getAppContext()).pauseRequests();
     }
 }
