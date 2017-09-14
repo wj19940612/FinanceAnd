@@ -240,6 +240,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
     }
 
     private void showExchangeConfirmDialog(final VirtualProductInfo virtualProductInfo) {
+        // TODO: 2017/9/14 后期要去掉  临近上线 先不改 
         String msg = virtualProductInfo.isIngot() ?
                 getString(R.string.confirm_use_money_buy_ingot, FinanceUtil.formatWithScale(virtualProductInfo.getFromMoney()), FinanceUtil.formatWithScale(virtualProductInfo.getToMoney(), 0)) :
                 getString(R.string.confirm_use_ingot_buy_integrate, StrFormatter.getFormIngot(virtualProductInfo.getFromMoney()), FinanceUtil.formatWithScale(virtualProductInfo.getToMoney(), 0));

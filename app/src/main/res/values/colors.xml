@@ -17,6 +17,7 @@
     <color name="redAssist">#ef6d6a</color>
     <color name="greyAssist">#7B7B7B</color>
     <color name="blueAssist">#6A9CEF</color>
+    <color name="splash">#54ACFE</color>
 
     <!--Text-->
     <color name="secondaryText">#82848A</color>
