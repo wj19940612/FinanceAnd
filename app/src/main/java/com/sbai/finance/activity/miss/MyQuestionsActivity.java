@@ -214,6 +214,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
             public void onRefresh() {
                 mSet.clear();
                 mCreateTime = null;
+                mSwipeRefreshLayout.setLoadMoreEnable(true);
                 requestMyQuestionList();
                 //下拉刷新时关闭语音播放
                 mMediaPlayerManager.release();
