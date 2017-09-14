@@ -286,6 +286,7 @@ public class WebActivity extends BaseActivity {
     public void showRightView(String text, final String url, final boolean isNeedLogin) {
         mUrlSet.add(mPageUrl);
         mTitleBar.setRightVisible(true);
+        mTitleBar.setRightViewEnable(true);
         mTitleBar.setRightText(text);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
@@ -303,6 +304,7 @@ public class WebActivity extends BaseActivity {
 
     public void hideRightView() {
         mTitleBar.setRightVisible(false);
+        mTitleBar.setRightViewEnable(false);
     }
 
     private String getHtmlData(String bodyHTML) {
