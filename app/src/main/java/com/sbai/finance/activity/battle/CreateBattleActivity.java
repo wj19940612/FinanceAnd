@@ -366,6 +366,7 @@ public class CreateBattleActivity extends BaseActivity {
                                         @Override
                                         public void onClick(Dialog dialog) {
                                             openRechargePage(mCoinType);
+                                            dialog.dismiss();
                                         }
                                     })
                                     .setTitle(R.string.hint)
