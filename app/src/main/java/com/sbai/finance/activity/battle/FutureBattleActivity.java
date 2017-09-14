@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
@@ -67,6 +66,7 @@ import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
 import com.sbai.finance.websocket.cmd.UserPraise;
 import com.sbai.finance.websocket.market.DataReceiveListener;
 import com.sbai.finance.websocket.market.MarketSubscriber;
+import com.sbai.glide.GlideApp;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -1424,6 +1424,6 @@ public class FutureBattleActivity extends BaseActivity implements
         super.onDestroy();
         BaseDialog.dismiss(this);
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
-        Glide.with(App.getAppContext()).pauseRequests();
+        GlideApp.with(App.getAppContext()).onDestroy();
     }
 }
