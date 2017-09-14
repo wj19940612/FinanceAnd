@@ -12,6 +12,7 @@
         android:layout_centerInParent="true"
         android:layout_marginLeft="@dimen/common_padding"
         android:layout_marginRight="@dimen/common_padding"
+        android:paddingBottom="50dp"
         android:layout_marginTop="5dp"
         app:cardCornerRadius="8dp">
 
