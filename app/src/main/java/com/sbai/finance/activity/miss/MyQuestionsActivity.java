@@ -77,6 +77,7 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
     private RefreshReceiver mRefreshReceiver;
     private MediaPlayerManager mMediaPlayerManager;
     private int mPlayingID = -1;
+    private View mFootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,6 +216,8 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
                 mSet.clear();
                 mCreateTime = null;
                 mSwipeRefreshLayout.setLoadMoreEnable(true);
+                mListView.removeFooterView(mFootView);
+                mFootView = null;
                 requestMyQuestionList();
                 //下拉刷新时关闭语音播放
                 mMediaPlayerManager.release();
@@ -253,15 +256,18 @@ public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnI
     }
 
     private void updateMyQuestionList(final List<Question> questionList) {
-        if (questionList == null) {
-            stopRefreshAnimation();
-            return;
-        }
 
         if (questionList.size() < mPageSize) {
             mSwipeRefreshLayout.setLoadMoreEnable(false);
         } else {
             mCreateTime = mMyQuestionList.get(mMyQuestionList.size() - 1).getCreateTime();
+        }
+
+        if (questionList.size() < mPageSize && mCreateTime != null) {
+            if (mFootView == null) {
+                mFootView = View.inflate(getActivity(), R.layout.view_footer_load_complete, null);
+                mListView.addFooterView(mFootView, null, true);
+            }
         }
 
         if (mSwipeRefreshLayout.isRefreshing()) {
