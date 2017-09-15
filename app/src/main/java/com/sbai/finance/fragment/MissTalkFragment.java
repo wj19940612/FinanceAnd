@@ -518,13 +518,6 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                     protected void onRespSuccessData(List<Miss> missList) {
                         updateMissList(missList);
                     }
-
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        mMissListAdapter.clear();
-                        mMissListAdapter.notifyDataSetChanged();
-                    }
                 }).fire();
     }
 
@@ -546,9 +539,6 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
-                        mHotQuestion.setVisibility(View.GONE);
-	                    mHotQuestionListAdapter.clear();
-                        mHotQuestionListAdapter.notifyDataSetChanged();
                         stopRefreshAnimation();
                     }
                 }).fire();
@@ -561,23 +551,17 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                     protected void onRespSuccessData(List<Question> questionList) {
                         if (questionList.size() == 0 && mCreateTime == null) {
                             mEmpty.setVisibility(View.VISIBLE);
-                            stopRefreshAnimation();
                         } else {
                             mEmpty.setVisibility(View.GONE);
                             mLatestQuestionList = questionList;
-                            updateLatestQuestionList(questionList, isRefresh);
                         }
+                        updateLatestQuestionList(questionList, isRefresh);
                     }
 
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
                         stopRefreshAnimation();
-                        if (mCreateTime == null) {
-                            mLatestQuestionListAdapter.clear();
-                            mLatestQuestionListAdapter.notifyDataSetChanged();
-                            mEmpty.setVisibility(View.VISIBLE);
-                        }
                     }
                 }).fire();
     }

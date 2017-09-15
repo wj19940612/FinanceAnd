@@ -58,517 +58,519 @@ import butterknife.OnClick;
  */
 public class MyQuestionsActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
-    @BindView(R.id.titleBar)
-    TitleBar mTitleBar;
-    @BindView(R.id.listView)
-    ListView mListView;
-    @BindView(R.id.empty)
-    RelativeLayout mEmpty;
-    @BindView(R.id.swipeRefreshLayout)
-    CustomSwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.askQuestion)
-    TextView mAskQuestion;
+	@BindView(R.id.titleBar)
+	TitleBar mTitleBar;
+	@BindView(R.id.listView)
+	ListView mListView;
+	@BindView(R.id.empty)
+	RelativeLayout mEmpty;
+	@BindView(R.id.swipeRefreshLayout)
+	CustomSwipeRefreshLayout mSwipeRefreshLayout;
+	@BindView(R.id.askQuestion)
+	TextView mAskQuestion;
 
-    private MyQuestionAdapter mMyQuestionAdapter;
-    private Long mCreateTime;
-    private int mPageSize = 20;
-    private HashSet<Integer> mSet;
-    private List<Question> mMyQuestionList;
-    private RefreshReceiver mRefreshReceiver;
-    private MediaPlayerManager mMediaPlayerManager;
-    private int mPlayingID = -1;
-    private View mFootView;
+	private MyQuestionAdapter mMyQuestionAdapter;
+	private Long mCreateTime;
+	private int mPageSize = 20;
+	private HashSet<Integer> mSet;
+	private List<Question> mMyQuestionList;
+	private RefreshReceiver mRefreshReceiver;
+	private MediaPlayerManager mMediaPlayerManager;
+	private int mPlayingID = -1;
+	private View mFootView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_questions);
-        ButterKnife.bind(this);
-        mSet = new HashSet<>();
-        mMediaPlayerManager = new MediaPlayerManager(this);
-        mMyQuestionList = new ArrayList<>();
-        mMyQuestionAdapter = new MyQuestionAdapter(this);
-        mListView.setEmptyView(mEmpty);
-        mListView.setAdapter(mMyQuestionAdapter);
-        mListView.setOnItemClickListener(this);
-        initSwipeRefreshLayout();
-        registerRefreshReceiver();
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_my_questions);
+		ButterKnife.bind(this);
 
-        mMyQuestionAdapter.setOnClickCallback(new MyQuestionAdapter.OnClickCallback() {
-            @Override
-            public void onLoveClick(final Question item) {
-                umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
-                Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
+		mSet = new HashSet<>();
+		mMediaPlayerManager = new MediaPlayerManager(this);
+		mMyQuestionList = new ArrayList<>();
+		mMyQuestionAdapter = new MyQuestionAdapter(this);
+		mListView.setEmptyView(mEmpty);
+		mListView.setAdapter(mMyQuestionAdapter);
+		mListView.setOnItemClickListener(this);
 
-                    @Override
-                    protected void onRespSuccessData(Prise prise) {
-                        item.setIsPrise(prise.getIsPrise());
-                        item.setPriseCount(prise.getPriseCount());
-                        mMyQuestionAdapter.notifyDataSetChanged();
-                    }
-                }).fire();
-            }
+		initSwipeRefreshLayout();
+		registerRefreshReceiver();
 
-            @Override
-            public void onRewardClick(Question item) {
-                RewardMissActivity.show(getActivity(), item.getId(), RewardInfo.TYPE_QUESTION);
-            }
+		mMyQuestionAdapter.setCallback(new MyQuestionAdapter.Callback() {
+			@Override
+			public void onLoveClick(final Question item) {
+				umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
+				Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
 
-            @Override
-            public void onVoiceClick(final Question item) {
-                umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
-                //播放下一个之前把上一个播放位置的动画停了
-                if (mPlayingID != -1) {
-                    for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
-                        Question question = mMyQuestionAdapter.getItem(i);
-                        if (question != null) {
-                            if (question.getId() == mPlayingID) {
-                                question.setPlaying(false);
-                                mMyQuestionAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                }
+					@Override
+					protected void onRespSuccessData(Prise prise) {
+						item.setIsPrise(prise.getIsPrise());
+						item.setPriseCount(prise.getPriseCount());
+						mMyQuestionAdapter.notifyDataSetChanged();
+					}
+				}).fire();
+			}
 
-                if (!MissVoiceRecorder.isHeard(item.getId())) {
-                    //没听过的
-                    Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-                        @Override
-                        protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-                            if (resp.isSuccess()) {
-                                mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-                                    @Override
-                                    public void onCompletion(MediaPlayer mp) {
-                                        item.setPlaying(false);
-                                        mMyQuestionAdapter.notifyDataSetChanged();
-                                        mPlayingID = -1;
-                                    }
-                                });
+			@Override
+			public void onRewardClick(Question item) {
+				RewardMissActivity.show(getActivity(), item.getId(), RewardInfo.TYPE_QUESTION);
+			}
 
-                                MissVoiceRecorder.markHeard(item.getId());
-                                item.setPlaying(true);
-                                item.setListenCount(item.getListenCount() + 1);
-                                mMyQuestionAdapter.notifyDataSetChanged();
-                                mPlayingID = item.getId();
-                            }
-                        }
-                    }).fire();
-                } else {
-                    //听过的
-                    if (mPlayingID == item.getId()) {
-                        mMediaPlayerManager.release();
-                        item.setPlaying(false);
-                        mMyQuestionAdapter.notifyDataSetChanged();
-                        mPlayingID = -1;
-                    } else {
-                        mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mp) {
-                                item.setPlaying(false);
-                                mMyQuestionAdapter.notifyDataSetChanged();
-                                mPlayingID = -1;
-                            }
-                        });
-                        item.setPlaying(true);
-                        mMyQuestionAdapter.notifyDataSetChanged();
-                        mPlayingID = item.getId();
-                    }
-                }
-            }
-        });
-    }
+			@Override
+			public void onVoiceClick(final Question item) {
+				umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
+				//播放下一个之前把上一个播放位置的动画停了
+				if (mPlayingID != -1) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == mPlayingID) {
+								question.setPlaying(false);
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        requestMyQuestionList();
-    }
+				if (!MissVoiceRecorder.isHeard(item.getId())) {
+					//没听过的
+					Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+						@Override
+						protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+							if (resp.isSuccess()) {
+								mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+									@Override
+									public void onCompletion(MediaPlayer mp) {
+										item.setPlaying(false);
+										mMyQuestionAdapter.notifyDataSetChanged();
+										mPlayingID = -1;
+									}
+								});
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //锁屏或者在后台运行或者跳转页面时停止播放和动画
-        mMediaPlayerManager.release();
-        if (mPlayingID != -1) {
-            for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
-                Question question = mMyQuestionAdapter.getItem(i);
-                if (question != null) {
-                    if (question.getId() == mPlayingID) {
-                        question.setPlaying(false);
-                        mMyQuestionAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        }
-        mPlayingID = -1;
-    }
+								MissVoiceRecorder.markHeard(item.getId());
+								item.setPlaying(true);
+								item.setListenCount(item.getListenCount() + 1);
+								mMyQuestionAdapter.notifyDataSetChanged();
+								mPlayingID = item.getId();
+							}
+						}
+					}).fire();
+				} else {
+					//听过的
+					if (mPlayingID == item.getId()) {
+						mMediaPlayerManager.release();
+						item.setPlaying(false);
+						mMyQuestionAdapter.notifyDataSetChanged();
+						mPlayingID = -1;
+					} else {
+						mMediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
+							@Override
+							public void onCompletion(MediaPlayer mp) {
+								item.setPlaying(false);
+								mMyQuestionAdapter.notifyDataSetChanged();
+								mPlayingID = -1;
+							}
+						});
+						item.setPlaying(true);
+						mMyQuestionAdapter.notifyDataSetChanged();
+						mPlayingID = item.getId();
+					}
+				}
+			}
+		});
+	}
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
-    }
+	@Override
+	protected void onResume() {
+		super.onResume();
+		requestMyQuestionList(true);
+	}
 
-    private void initSwipeRefreshLayout() {
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSet.clear();
-                mCreateTime = null;
-                mSwipeRefreshLayout.setLoadMoreEnable(true);
-                mListView.removeFooterView(mFootView);
-                mFootView = null;
-                requestMyQuestionList();
-                //下拉刷新时关闭语音播放
-                mMediaPlayerManager.release();
-                mPlayingID = -1;
-            }
-        });
+	@Override
+	protected void onPause() {
+		super.onPause();
+		//锁屏或者在后台运行或者跳转页面时停止播放和动画
+		mMediaPlayerManager.release();
+		if (mPlayingID != -1) {
+			for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+				Question question = mMyQuestionAdapter.getItem(i);
+				if (question != null) {
+					if (question.getId() == mPlayingID) {
+						question.setPlaying(false);
+						mMyQuestionAdapter.notifyDataSetChanged();
+					}
+				}
+			}
+		}
+		mPlayingID = -1;
+	}
 
-        mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
-            @Override
-            public void onLoadMore() {
-                mListView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        requestMyQuestionList();
-                    }
-                }, 1000);
-            }
-        });
-    }
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
+	}
 
-    private void requestMyQuestionList() {
-        Client.getMyQuestionList(mCreateTime, mPageSize).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
-                    @Override
-                    protected void onRespSuccessData(List<Question> questionList) {
-                        mMyQuestionList = questionList;
-                        updateMyQuestionList(questionList);
-                    }
+	private void initSwipeRefreshLayout() {
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				mSet.clear();
+				mCreateTime = null;
+				mSwipeRefreshLayout.setLoadMoreEnable(true);
+				mListView.removeFooterView(mFootView);
+				mFootView = null;
+				requestMyQuestionList(true);
+				//下拉刷新时关闭语音播放
+				mMediaPlayerManager.release();
+				mPlayingID = -1;
+			}
+		});
 
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        stopRefreshAnimation();
-                    }
-                }).fire();
-    }
+		mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
+			@Override
+			public void onLoadMore() {
+				mListView.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						requestMyQuestionList(false);
+					}
+				}, 1000);
+			}
+		});
+	}
 
-    private void updateMyQuestionList(final List<Question> questionList) {
+	private void requestMyQuestionList(final boolean isRefresh) {
+		Client.getMyQuestionList(mCreateTime, mPageSize).setTag(TAG)
+				.setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
+					@Override
+					protected void onRespSuccessData(List<Question> questionList) {
+						mMyQuestionList = questionList;
+						updateMyQuestionList(questionList, isRefresh);
+					}
 
-        if (questionList.size() < mPageSize) {
-            mSwipeRefreshLayout.setLoadMoreEnable(false);
-        } else {
-            mCreateTime = mMyQuestionList.get(mMyQuestionList.size() - 1).getCreateTime();
-        }
+					@Override
+					public void onFailure(VolleyError volleyError) {
+						super.onFailure(volleyError);
+						stopRefreshAnimation();
+					}
+				}).fire();
+	}
 
-        if (questionList.size() < mPageSize && mCreateTime != null) {
-            if (mFootView == null) {
-                mFootView = View.inflate(getActivity(), R.layout.view_footer_load_complete, null);
-                mListView.addFooterView(mFootView, null, true);
-            }
-        }
+	private void updateMyQuestionList(final List<Question> questionList, boolean isRefresh) {
 
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            if (mMyQuestionAdapter != null) {
-                mMyQuestionAdapter.clear();
-            }
-        }
-        stopRefreshAnimation();
+		if (questionList.size() < mPageSize) {
+			mSwipeRefreshLayout.setLoadMoreEnable(false);
+		} else {
+			mCreateTime = mMyQuestionList.get(mMyQuestionList.size() - 1).getCreateTime();
+		}
 
-        for (Question question : questionList) {
-            if (mSet.add(question.getId())) {
-                mMyQuestionAdapter.add(question);
-            }
-        }
-    }
+		if (questionList.size() < mPageSize && mCreateTime != null) {
+			if (mFootView == null) {
+				mFootView = View.inflate(getActivity(), R.layout.view_footer_load_complete, null);
+				mListView.addFooterView(mFootView, null, true);
+			}
+		}
 
-    private void stopRefreshAnimation() {
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
+		if (isRefresh) {
+			if (mMyQuestionAdapter != null) {
+				mMyQuestionAdapter.clear();
+			}
+		}
+		stopRefreshAnimation();
 
-        if (mSwipeRefreshLayout.isLoading()) {
-            mSwipeRefreshLayout.setLoading(false);
-        }
-    }
+		for (Question question : questionList) {
+			if (mSet.add(question.getId())) {
+				mMyQuestionAdapter.add(question);
+			}
+		}
+	}
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Question item = (Question) parent.getItemAtPosition(position);
-        if (item != null && item.getSolve() == 1) {
-            Launcher.with(getActivity(), QuestionDetailActivity.class)
-                    .putExtra(Launcher.EX_PAYLOAD, item.getId()).executeForResult(REQ_QUESTION_DETAIL);
-        }
-    }
+	private void stopRefreshAnimation() {
+		if (mSwipeRefreshLayout.isRefreshing()) {
+			mSwipeRefreshLayout.setRefreshing(false);
+		}
 
-    @OnClick(R.id.askQuestion)
-    public void onViewClicked() {
-        Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
-    }
+		if (mSwipeRefreshLayout.isLoading()) {
+			mSwipeRefreshLayout.setLoading(false);
+		}
+	}
 
-    static class MyQuestionAdapter extends ArrayAdapter<Question> {
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		Question item = (Question) parent.getItemAtPosition(position);
+		if (item != null && item.getSolve() == 1) {
+			Launcher.with(getActivity(), QuestionDetailActivity.class)
+					.putExtra(Launcher.EX_PAYLOAD, item.getId()).executeForResult(REQ_QUESTION_DETAIL);
+		}
+	}
 
-        private Context mContext;
-        private OnClickCallback mOnClickCallback;
+	@OnClick(R.id.askQuestion)
+	public void onViewClicked() {
+		Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+	}
 
-        public void setOnClickCallback(OnClickCallback onClickCallback) {
-            mOnClickCallback = onClickCallback;
-        }
+	static class MyQuestionAdapter extends ArrayAdapter<Question> {
 
-        interface OnClickCallback {
-            void onLoveClick(Question item);
+		private Context mContext;
+		private Callback mCallback;
 
-            void onRewardClick(Question item);
+		public void setCallback(Callback callback) {
+			mCallback = callback;
+		}
 
-            void onVoiceClick(Question item);
-        }
+		interface Callback {
+			void onLoveClick(Question item);
 
-        private MyQuestionAdapter(@NonNull Context context) {
-            super(context, 0);
-            this.mContext = context;
-        }
+			void onRewardClick(Question item);
 
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+			void onVoiceClick(Question item);
+		}
 
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_misstalk_answer, null);
-                viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
+		private MyQuestionAdapter(@NonNull Context context) {
+			super(context, 0);
+			this.mContext = context;
+		}
 
-            viewHolder.bindingData(mContext, getItem(position), mOnClickCallback, position);
-            return convertView;
-        }
+		@NonNull
+		@Override
+		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        static class ViewHolder {
-            @BindView(R.id.avatar)
-            ImageView mAvatar;
-            @BindView(R.id.name)
-            TextView mName;
-            @BindView(R.id.askTime)
-            TextView mAskTime;
-            @BindView(R.id.question)
-            TextView mQuestion;
-            @BindView(R.id.missAvatar)
-            ImageView mMissAvatar;
-            @BindView(R.id.voice)
-            TextView mVoice;
-            @BindView(R.id.listenerNumber)
-            TextView mListenerNumber;
-            @BindView(R.id.loveNumber)
-            TextView mLoveNumber;
-            @BindView(R.id.commentNumber)
-            TextView mCommentNumber;
-            @BindView(R.id.ingotNumber)
-            TextView mIngotNumber;
-            @BindView(R.id.label)
-            LinearLayout mLabel;
-            @BindView(R.id.noMissReply)
-            TextView mNoMissReply;
-            @BindView(R.id.voiceLevel)
-            View mVoiceLevel;
-            @BindView(R.id.voiceArea)
-            LinearLayout mVoiceArea;
+			ViewHolder viewHolder;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_misstalk_answer, null);
+				viewHolder = new ViewHolder(convertView);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
 
-            ViewHolder(View view) {
-                ButterKnife.bind(this, view);
-            }
+			viewHolder.bindingData(mContext, getItem(position), mCallback);
+			return convertView;
+		}
 
-            public void bindingData(final Context context, final Question item,
-                                    final OnClickCallback onClickCallback, final int position) {
-                if (item == null) return;
+		static class ViewHolder {
+			@BindView(R.id.avatar)
+			ImageView mAvatar;
+			@BindView(R.id.name)
+			TextView mName;
+			@BindView(R.id.askTime)
+			TextView mAskTime;
+			@BindView(R.id.question)
+			TextView mQuestion;
+			@BindView(R.id.missAvatar)
+			ImageView mMissAvatar;
+			@BindView(R.id.voice)
+			TextView mVoice;
+			@BindView(R.id.listenerNumber)
+			TextView mListenerNumber;
+			@BindView(R.id.loveNumber)
+			TextView mLoveNumber;
+			@BindView(R.id.commentNumber)
+			TextView mCommentNumber;
+			@BindView(R.id.ingotNumber)
+			TextView mIngotNumber;
+			@BindView(R.id.label)
+			LinearLayout mLabel;
+			@BindView(R.id.noMissReply)
+			TextView mNoMissReply;
+			@BindView(R.id.voiceLevel)
+			View mVoiceLevel;
+			@BindView(R.id.voiceArea)
+			LinearLayout mVoiceArea;
 
-                GlideApp.with(context).load(item.getUserPortrait())
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .circleCrop()
-                        .into(mAvatar);
+			ViewHolder(View view) {
+				ButterKnife.bind(this, view);
+			}
 
-                GlideApp.with(context).load(item.getCustomPortrait())
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .circleCrop()
-                        .into(mMissAvatar);
+			public void bindingData(final Context context, final Question item,
+			                        final Callback callback) {
+				if (item == null) return;
 
-                if (item.getSolve() == 0) {
-                    mLabel.setVisibility(View.GONE);
-                    mVoiceArea.setVisibility(View.GONE);
-                    mMissAvatar.setVisibility(View.GONE);
-                    mListenerNumber.setVisibility(View.GONE);
-                    mNoMissReply.setVisibility(View.VISIBLE);
-                } else {
-                    mLabel.setVisibility(View.VISIBLE);
-                    mLabel.setVisibility(View.VISIBLE);
-                    mVoiceArea.setVisibility(View.VISIBLE);
-                    mMissAvatar.setVisibility(View.VISIBLE);
-                    mListenerNumber.setVisibility(View.VISIBLE);
-                    mNoMissReply.setVisibility(View.GONE);
-                }
+				GlideApp.with(context).load(item.getUserPortrait())
+						.placeholder(R.drawable.ic_default_avatar)
+						.circleCrop()
+						.into(mAvatar);
 
-                mName.setText(item.getUserName());
-                mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(item.getCreateTime()));
-                mQuestion.setText(item.getQuestionContext());
-                mVoice.setText(context.getString(R.string.voice_time, item.getSoundTime()));
-                mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
-                mLoveNumber.setText(StrFormatter.getFormatCount(item.getPriseCount()));
-                mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
-                mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
+				GlideApp.with(context).load(item.getCustomPortrait())
+						.placeholder(R.drawable.ic_default_avatar)
+						.circleCrop()
+						.into(mMissAvatar);
 
-                if (MissVoiceRecorder.isHeard(item.getId())) {
-                    mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
-                } else {
-                    mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-                }
+				if (item.getSolve() == 0) {
+					mLabel.setVisibility(View.GONE);
+					mVoiceArea.setVisibility(View.GONE);
+					mMissAvatar.setVisibility(View.GONE);
+					mListenerNumber.setVisibility(View.GONE);
+					mNoMissReply.setVisibility(View.VISIBLE);
+				} else {
+					mLabel.setVisibility(View.VISIBLE);
+					mLabel.setVisibility(View.VISIBLE);
+					mVoiceArea.setVisibility(View.VISIBLE);
+					mMissAvatar.setVisibility(View.VISIBLE);
+					mListenerNumber.setVisibility(View.VISIBLE);
+					mNoMissReply.setVisibility(View.GONE);
+				}
 
-                if (item.getIsPrise() == 0) {
-                    mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
-                } else {
-                    mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
-                }
+				mName.setText(item.getUserName());
+				mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(item.getCreateTime()));
+				mQuestion.setText(item.getQuestionContext());
+				mVoice.setText(context.getString(R.string.voice_time, item.getSoundTime()));
+				mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
+				mLoveNumber.setText(StrFormatter.getFormatCount(item.getPriseCount()));
+				mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
+				mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
 
-                mMissAvatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Launcher.with(context, MissProfileActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, item.getAnswerCustomId())
-                                .execute();
-                    }
-                });
+				if (MissVoiceRecorder.isHeard(item.getId())) {
+					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
+				} else {
+					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+				}
 
-                mIngotNumber.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (onClickCallback != null) {
-                            onClickCallback.onRewardClick(item);
-                        }
-                    }
-                });
+				if (item.getIsPrise() == 0) {
+					mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love, 0, 0, 0);
+				} else {
+					mLoveNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_love_yellow, 0, 0, 0);
+				}
 
-                mLoveNumber.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (onClickCallback != null) {
-                            onClickCallback.onLoveClick(item);
-                        }
-                    }
-                });
+				mMissAvatar.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Launcher.with(context, MissProfileActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, item.getAnswerCustomId())
+								.execute();
+					}
+				});
 
-                if (!item.isPlaying()) {
-                    mVoiceLevel.clearAnimation();
-                    mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
-                } else {
-                    mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
-                    AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
-                    if (animation != null) {
-                        animation.start();
-                    }
-                }
+				mIngotNumber.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (callback != null) {
+							callback.onRewardClick(item);
+						}
+					}
+				});
 
-                mVoiceArea.setOnClickListener(new View.OnClickListener() {
+				mLoveNumber.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (callback != null) {
+							callback.onLoveClick(item);
+						}
+					}
+				});
 
-                    @Override
-                    public void onClick(View v) {
-                        if (onClickCallback != null) {
-                            onClickCallback.onVoiceClick(item);
-                        }
-                    }
-                });
-            }
-        }
-    }
+				if (!item.isPlaying()) {
+					mVoiceLevel.clearAnimation();
+					mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
+				} else {
+					mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
+					AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
+					if (animation != null) {
+						animation.start();
+					}
+				}
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
-            if (data != null) {
-                Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-                int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-                int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
-                int listenCount = data.getIntExtra(Launcher.EX_PAYLOAD_3, -1);
-                if (prise != null) {
-                    for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
-                        Question question = mMyQuestionAdapter.getItem(i);
-                        if (question != null) {
-                            if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
-                                question.setIsPrise(prise.getIsPrise());
-                                question.setPriseCount(prise.getPriseCount());
-                                mMyQuestionAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                }
+				mVoiceArea.setOnClickListener(new View.OnClickListener() {
 
-                if (replyCount != -1) {
-                    for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
-                        Question question = mMyQuestionAdapter.getItem(i);
-                        if (question != null) {
-                            if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
-                                question.setReplyCount(replyCount);
-                                mMyQuestionAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                }
+					@Override
+					public void onClick(View v) {
+						if (callback != null) {
+							callback.onVoiceClick(item);
+						}
+					}
+				});
+			}
+		}
+	}
 
-                if (rewardCount != -1) {
-                    for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
-                        Question question = mMyQuestionAdapter.getItem(i);
-                        if (question != null) {
-                            if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
-                                question.setAwardCount(rewardCount);
-                                mMyQuestionAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                }
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
+			if (data != null) {
+				Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+				int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+				int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+				int listenCount = data.getIntExtra(Launcher.EX_PAYLOAD_3, -1);
+				if (prise != null) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setIsPrise(prise.getIsPrise());
+								question.setPriseCount(prise.getPriseCount());
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
 
-                if (listenCount != -1) {
-                    for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
-                        Question question = mMyQuestionAdapter.getItem(i);
-                        if (question != null) {
-                            if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
-                                question.setListenCount(listenCount);
-                                mMyQuestionAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+				if (replyCount != -1) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setReplyCount(replyCount);
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
 
-    private void registerRefreshReceiver() {
-        mRefreshReceiver = new RefreshReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_REWARD_SUCCESS);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshReceiver, filter);
-    }
+				if (rewardCount != -1) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setAwardCount(rewardCount);
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
 
-    private class RefreshReceiver extends BroadcastReceiver {
+				if (listenCount != -1) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+								question.setListenCount(listenCount);
+								mMyQuestionAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-                if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
-                    for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
-                        Question question = mMyQuestionAdapter.getItem(i);
-                        if (question != null) {
-                            if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
-                                int questionRewardCount = question.getAwardCount() + 1;
-                                question.setAwardCount(questionRewardCount);
-                                mMyQuestionAdapter.notifyDataSetChanged();
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+	private void registerRefreshReceiver() {
+		mRefreshReceiver = new RefreshReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(ACTION_REWARD_SUCCESS);
+		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshReceiver, filter);
+	}
+
+	private class RefreshReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+				if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
+					for (int i = 0; i < mMyQuestionAdapter.getCount(); i++) {
+						Question question = mMyQuestionAdapter.getItem(i);
+						if (question != null) {
+							if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
+								int questionRewardCount = question.getAwardCount() + 1;
+								question.setAwardCount(questionRewardCount);
+								mMyQuestionAdapter.notifyDataSetChanged();
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
