@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Picture;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -323,6 +325,15 @@ public class WebActivity extends BaseActivity {
             if (!Network.isNetworkAvailable()) {
                 mLoadSuccess = false;
                 mWebView.stopLoading();
+            }
+        }
+
+        @Override
+        public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, SslError sslError) {
+            if(sslError.getPrimaryError() == android.net.http.SslError.SSL_INVALID ){// 个别6.0 7.0手机ssl校验过程遇到了bug
+                sslErrorHandler.proceed();
+            }else{
+                sslErrorHandler.cancel();
             }
         }
 

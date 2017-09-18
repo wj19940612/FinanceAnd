@@ -480,16 +480,17 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		if (position == 0) return;
-		if (position == parent.getCount() - 1 && mPage > 0) {
-			return;
-		}
 		QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
-		if (mReplyDialogFragment == null) {
-			mReplyDialogFragment = ReplyDialogFragment.newInstance();
+		if (item != null) {
+			if (mReplyDialogFragment == null) {
+				mReplyDialogFragment = ReplyDialogFragment.newInstance();
+			}
+			mReplyDialogFragment.setItemData(item);
+			if (!mReplyDialogFragment.isAdded()) {
+				mReplyDialogFragment.show(getSupportFragmentManager());
+			}
+
 		}
-		mReplyDialogFragment.setItemData(item);
-		mReplyDialogFragment.showAsync(getSupportFragmentManager());
 	}
 
 	static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
