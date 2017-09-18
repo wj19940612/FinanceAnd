@@ -517,6 +517,7 @@
     <string name="start_match_and_battle">进行匹配对战，系统将进行撮合对战</string>
     <string name="you_not_install_weixin">您尚未安装微信</string>
     <string name="you_not_install_weibo">您尚未安装微博</string>
+    <string name="count_down">倒计时%1$s</string>
 
     <!--     版本更新             -->
     <string name="download_fail">下载失败</string>
@@ -528,7 +529,7 @@
     <string name="now_update">立即更新</string>
     <string name="version">v%1$s</string>
     <string name="is_already_latest_version">已经是最新版本了</string>
-    
+
     <string name="immediately_register">立即注册</string>
 
 
@@ -786,7 +787,7 @@
     <string name="mission_complete">成功完成任务</string>
     <string name="accuracy_to_">准确率达到%1$s</string>
     <string name="accuracy_">准确率：%1$s</string>
-    
+
     <string name="exchange_record">兑换记录</string>
     <string name="no_exchange_skin_record">暂无兑换记录</string>
     <string name="image_saved_please_open_wechat_to_share">图片已保存。请打开微信，从相册中\n选择图片进行分享</string>

@@ -25,4 +25,6 @@ public interface ExtraKeys {
 
     String RECHARGE_TYPE = "recharge_type";
     String USER_FUND = "user_fund";
+
+    String BATTLE = "battle";
 }

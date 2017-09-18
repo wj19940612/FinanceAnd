@@ -713,7 +713,6 @@ public class DateUtil {
      */
     public static int getDiffSeconds(long time1, long time2) {
         long diff = time1 - time2;
-        Log.d("TAG", "isLessThanTimeInterval: " + diff);
         return (int) (diff / 1000);
     }
 }

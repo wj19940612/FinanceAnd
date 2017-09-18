@@ -24,7 +24,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.fragment.battle.BattleRecordsFragment;
-import com.sbai.finance.fragment.dialog.ShareDialogFragment;
+import com.sbai.finance.fragment.dialog.BattleShareDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.battle.Battle;
@@ -43,8 +43,8 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
-import com.sbai.finance.view.BattleButtons;
-import com.sbai.finance.view.BattleFloatView;
+import com.sbai.finance.view.BattleWaitAgainstLayout;
+import com.sbai.finance.view.BattleInfoView;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -123,7 +123,7 @@ import static com.sbai.finance.websocket.market.MarketSubscribe.REQ_QUOTA;
  * 4 -> GAME_STATUS_END && mIsObserver
  */
 public class FutureBattleActivity extends BaseActivity implements
-        BattleButtons.OnViewClickListener,
+        BattleWaitAgainstLayout.OnViewClickListener,
         BattleTradeView.OnViewClickListener {
 
     @BindView(R.id.rootView)
@@ -156,7 +156,7 @@ public class FutureBattleActivity extends BaseActivity implements
     KlineView mKlineView;
 
     @BindView(R.id.battleButtons)
-    BattleButtons mBattleButtons;
+    BattleWaitAgainstLayout mBattleWaitAgainstLayout;
     @BindView(R.id.battleTradeView)
     BattleTradeView mBattleTradeView;
 
@@ -166,9 +166,9 @@ public class FutureBattleActivity extends BaseActivity implements
     LinearLayout mLoadingContent;
 
     @BindView(R.id.battleView)
-    BattleFloatView mBattleView;
+    BattleInfoView mBattleView;
 
-    private ShareDialogFragment mShareDialogFragment;
+    private BattleShareDialogFragment mBattleShareDialogFragment;
 
     private int mBattleId;
     private String mBatchCode;
@@ -307,17 +307,17 @@ public class FutureBattleActivity extends BaseActivity implements
 
     private void initBottomFloatView() {
         if (mIsObserver) {
-            mBattleView.setMode(BattleFloatView.Mode.VISITOR)
+            mBattleView.setMode(BattleInfoView.Mode.VISITOR)
                     .initWithModel(mBattle)
                     .setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false)
-                    .setOnPraiseListener(new BattleFloatView.OnPraiseListener() {
+                    .setOnUserPraiseListener(new BattleInfoView.OnUserPraiseListener() {
                         @Override
-                        public void addCreatePraiseCount() {
+                        public void onPraiseBattleInitiatorClick() {
                             requestAddBattlePraise(mBattle.getLaunchUser());
                         }
 
                         @Override
-                        public void addAgainstPraiseCount() {
+                        public void onPraiseBattleAgainstClick() {
                             requestAddBattlePraise(mBattle.getAgainstUser());
                         }
                     });
@@ -325,7 +325,7 @@ public class FutureBattleActivity extends BaseActivity implements
             startScheduleJob(1000);
         } else {
             //初始化
-            mBattleView.setMode(BattleFloatView.Mode.MINE)
+            mBattleView.setMode(BattleInfoView.Mode.MINE)
                     .initWithModel(mBattle);
 
             //分两种状态  1.发起匹配  2.对战中
@@ -361,13 +361,13 @@ public class FutureBattleActivity extends BaseActivity implements
 
     private void showBattleTradeView() {
         //显示交易视图 区分游客和对战者 默认对战者
-        mBattleButtons.setVisibility(View.GONE);
+        mBattleWaitAgainstLayout.setVisibility(View.GONE);
         mBattleTradeView.setVisibility(View.VISIBLE);
     }
 
     private void showBattleButtons() {
         //显示邀请等三个按钮 只针对游戏创建者
-        mBattleButtons.setVisibility(View.VISIBLE);
+        mBattleWaitAgainstLayout.setVisibility(View.VISIBLE);
         mBattleTradeView.setVisibility(View.GONE);
     }
 
@@ -382,11 +382,11 @@ public class FutureBattleActivity extends BaseActivity implements
     }
 
     private void updateTradeHistory(List<TradeRecord> resp) {
-        mBattleTradeView.addTradeData(resp, mBattle.getLaunchUser(), mBattle.getAgainstUser());
+        mBattleTradeView.updateUserHistoryOrderData(resp, mBattle.getLaunchUser(), mBattle.getAgainstUser());
     }
 
     private void updateTradeHistory(TradeRecord record) {
-        mBattleTradeView.addTradeData(record, mBattle.getLaunchUser(), mBattle.getAgainstUser());
+        mBattleTradeView.updateUserHistoryOrderData(record, mBattle.getLaunchUser(), mBattle.getAgainstUser());
     }
 
     private void requestCurrentOrder() {
@@ -474,13 +474,13 @@ public class FutureBattleActivity extends BaseActivity implements
     }
 
     private void initBattleViews() {
-        mBattleButtons.setOnViewClickListener(this);
+        mBattleWaitAgainstLayout.setOnViewClickListener(this);
         mBattleTradeView.setOnViewClickListener(this);
         scrollToTop(mTitleBar, mBattleTradeView.getListView());
     }
 
     private void requestVarietyData() {
-        Client.requsetVarietyPrice(mBattle.getVarietyId()).setTag(TAG)
+        Client.requestVarietyPrice(mBattle.getVarietyId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<Variety>, Variety>() {
                     @Override
                     protected void onRespSuccessData(Variety variety) {
@@ -733,10 +733,10 @@ public class FutureBattleActivity extends BaseActivity implements
         SmartDialog.dismiss(this);
         BaseDialog.dismiss(this);
 
-        if (mShareDialogFragment != null
-                && mShareDialogFragment.getDialog() != null
-                && mShareDialogFragment.getDialog().isShowing()) {
-            mShareDialogFragment.dismissAllowingStateLoss();
+        if (mBattleShareDialogFragment != null
+                && mBattleShareDialogFragment.getDialog() != null
+                && mBattleShareDialogFragment.getDialog().isShowing()) {
+            mBattleShareDialogFragment.dismissAllowingStateLoss();
         }
     }
 
@@ -945,27 +945,27 @@ public class FutureBattleActivity extends BaseActivity implements
 
 
     @Override
-    public void onInviteButtonClick() {
+    public void onInviteFriendClick() {
         umengEventCount(UmengCountEventId.WAITING_ROOM_INVITE_FRIENDS);
 
         showInviteDialog();
     }
 
     private void showInviteDialog() {
-        if (mShareDialogFragment == null) {
+        if (mBattleShareDialogFragment == null) {
             String shareTitle = getString(R.string.invite_you_join_future_battle,
                     LocalUser.getUser().getUserInfo().getUserName());
             String shareDescribe = getString(R.string.future_battle_desc);
-            mShareDialogFragment = ShareDialogFragment
+            mBattleShareDialogFragment = BattleShareDialogFragment
                     .newInstance()
                     .setShareMode(true)
                     .setShareContent(shareTitle, shareDescribe, mBattle.getBatchCode());
         }
-        mShareDialogFragment.showAsync(getSupportFragmentManager());
+        mBattleShareDialogFragment.show(getSupportFragmentManager());
     }
 
     @Override
-    public void onMatchButtonClick() {
+    public void onQuickMatchClick() {
         umengEventCount(UmengCountEventId.WAITING_ROOM_FAST_MATCH);
 
         showMatchConfirmDialog();
@@ -1040,7 +1040,7 @@ public class FutureBattleActivity extends BaseActivity implements
     }
 
     @Override
-    public void onCancelButtonClick() {
+    public void onCancelBattleClick() {
         umengEventCount(UmengCountEventId.WAITING_ROOM_CANCEL_BATTLE);
 
         showCancelBattleDialog();
@@ -1183,8 +1183,8 @@ public class FutureBattleActivity extends BaseActivity implements
         long currentTime = SysTime.getSysTime().getSystemTimestamp();
         long createTime = mBattle.getCreateTime();
         int diff = DateUtil.getDiffSeconds(currentTime, createTime);
-        if (mBattleButtons.getVisibility() == View.VISIBLE) {
-            mBattleButtons.updateCountDownTime(DateUtil.getCountdownTime(600, diff));
+        if (mBattleWaitAgainstLayout.getVisibility() == View.VISIBLE) {
+            mBattleWaitAgainstLayout.updateCountDownTime(DateUtil.getCountdownTime(600, diff));
         }
     }
 

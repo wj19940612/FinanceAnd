@@ -34,7 +34,7 @@ import static com.sbai.finance.model.battle.TradeRecord.STATUS_TAKE_SHOET_CLOSE_
 import static com.sbai.finance.model.battle.TradeRecord.STATUS_TAKE_SHORT_POSITION;
 
 /**
- * Created by linrongfang on 2017/6/20.
+ * 期货对战页面主要view
  */
 
 public class BattleTradeView extends LinearLayout {
@@ -44,7 +44,7 @@ public class BattleTradeView extends LinearLayout {
     //可交易
     public static final int STATE_TRADE = 1;
     //结束
-    public static final int STATE_TRADE_END = 1;
+    public static final int STATE_TRADE_END = 2;
 
     @BindView(R.id.listView)
     ListView mListView;
@@ -138,14 +138,14 @@ public class BattleTradeView extends LinearLayout {
         });
     }
 
-    public void addTradeData(List<TradeRecord> list, int creatorId, int againstId) {
+    public void updateUserHistoryOrderData(List<TradeRecord> list, int creatorId, int againstId) {
         mBattleTradeAdapter.setUserId(creatorId, againstId);
         mBattleTradeAdapter.setRecordList(list);
         mBattleTradeAdapter.notifyDataSetChanged();
         mListView.setSelection(mBattleTradeAdapter.getCount() - 1);
     }
 
-    public void addTradeData(TradeRecord record, int creatorId, int againstId) {
+    public void updateUserHistoryOrderData(TradeRecord record, int creatorId, int againstId) {
         mBattleTradeAdapter.setUserId(creatorId, againstId);
         mBattleTradeAdapter.addRecord(record);
         mBattleTradeAdapter.notifyDataSetChanged();

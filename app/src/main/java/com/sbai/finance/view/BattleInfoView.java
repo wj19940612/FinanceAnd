@@ -26,10 +26,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by linrongfang on 2017/6/19.
+ * 期货对战 页面底部对战双方信息 和 对战实时结果的vie
  */
 
-public class BattleFloatView extends RelativeLayout {
+public class BattleInfoView extends RelativeLayout implements View.OnClickListener {
 
     @BindView(R.id.createAvatar)
     ImageView mCreateAvatar;
@@ -73,19 +73,19 @@ public class BattleFloatView extends RelativeLayout {
     RelativeLayout mUserPerspective;
 
     private Mode mMode;
-    private OnPraiseListener mOnPraiseListener;
+    private OnUserPraiseListener mOnUserPraiseListener;
 
     private Battle mBattle;
 
-    public BattleFloatView(Context context) {
+    public BattleInfoView(Context context) {
         this(context, null);
     }
 
-    public BattleFloatView(Context context, AttributeSet attrs) {
+    public BattleInfoView(Context context, AttributeSet attrs) {
         this(context, attrs, -1);
     }
 
-    public BattleFloatView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BattleInfoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -106,54 +106,35 @@ public class BattleFloatView extends RelativeLayout {
             mVarietyName.setVisibility(GONE);
             //参观者可以点赞
             if (mMode == Mode.VISITOR) {
-                mMyPraiseButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnPraiseListener != null) {
-                            mOnPraiseListener.addCreatePraiseCount();
-                        }
-                    }
-                });
-
-                mUserPraiseButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnPraiseListener != null) {
-                            mOnPraiseListener.addAgainstPraiseCount();
-                        }
-                    }
-                });
+                mMyPraiseButton.setOnClickListener(this);
+                mUserPraiseButton.setOnClickListener(this);
             }
 
-            mCreateAvatar.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MobclickAgent.onEvent(getContext(), UmengCountEventId.BATTLE_USER_AVATAR);
-                    if (LocalUser.getUser().isLogin()) {
+            mCreateAvatar.setOnClickListener(this);
+            mAgainstAvatar.setOnClickListener(this);
+        }
+    }
 
-                    } else {
-                        if (!mBattle.isBattleOver()) {
-                            Launcher.with(getContext(), LoginActivity.class).execute();
-                        }
-                    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.myPraiseButton:
+                if (mOnUserPraiseListener != null) {
+                    mOnUserPraiseListener.onPraiseBattleInitiatorClick();
                 }
-            });
-
-            mAgainstAvatar.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MobclickAgent.onEvent(getContext(), UmengCountEventId.BATTLE_USER_AVATAR);
-                    if (LocalUser.getUser().isLogin()) {
-                        if (mBattle.getAgainstUser() != 0) {
-
-                        }
-                    } else {
-                        if (!mBattle.isBattleOver()) {
-                            Launcher.with(getContext(), LoginActivity.class).execute();
-                        }
-                    }
+                break;
+            case R.id.userPraiseButton:
+                if (mOnUserPraiseListener != null) {
+                    mOnUserPraiseListener.onPraiseBattleAgainstClick();
                 }
-            });
+                break;
+            case R.id.createAvatar:
+            case R.id.againstAvatar:
+                MobclickAgent.onEvent(getContext(), UmengCountEventId.BATTLE_USER_AVATAR);
+                if (!(mBattle.isBattleOver() && LocalUser.getUser().isLogin())) {
+                    Launcher.with(getContext(), LoginActivity.class).execute();
+                }
+                break;
         }
     }
 
@@ -163,7 +144,7 @@ public class BattleFloatView extends RelativeLayout {
         mFighterDataArea.setLayoutParams(params);
     }
 
-    public BattleFloatView initWithModel(Battle model) {
+    public BattleInfoView initWithModel(Battle model) {
         this.mBattle = model;
         this.setCreateAvatar(model.getLaunchUserPortrait())
                 .setCreateName(model.getLaunchUserName())
@@ -175,12 +156,12 @@ public class BattleFloatView extends RelativeLayout {
         return this;
     }
 
-    public BattleFloatView setCreateName(String name) {
+    public BattleInfoView setCreateName(String name) {
         mCreateName.setText(name);
         return this;
     }
 
-    public BattleFloatView setCreateAvatar(String url) {
+    public BattleInfoView setCreateAvatar(String url) {
         GlideApp.with(getContext())
                 .load(url)
                 .circleCrop()
@@ -189,7 +170,7 @@ public class BattleFloatView extends RelativeLayout {
         return this;
     }
 
-    public BattleFloatView setAgainstName(String userName) {
+    public BattleInfoView setAgainstName(String userName) {
         if (TextUtils.isEmpty(userName)) {
             mAgainstName.setText(getContext().getString(R.string.wait_to_join));
         } else {
@@ -198,7 +179,7 @@ public class BattleFloatView extends RelativeLayout {
         return this;
     }
 
-    public BattleFloatView setAgainstAvatar(String url) {
+    public BattleInfoView setAgainstAvatar(String url) {
         GlideApp.with(getContext())
                 .load(url)
                 .circleCrop()
@@ -207,7 +188,7 @@ public class BattleFloatView extends RelativeLayout {
         return this;
     }
 
-    public BattleFloatView setVarietyName(String varietyName) {
+    public BattleInfoView setVarietyName(String varietyName) {
         mVarietyName.setText(varietyName);
         return this;
     }
@@ -220,7 +201,7 @@ public class BattleFloatView extends RelativeLayout {
      * @param isInviting    是否正在邀请中
      * @return
      */
-    public BattleFloatView setProgress(double myProfit, double fighterProfit, boolean isInviting) {
+    public BattleInfoView setProgress(double myProfit, double fighterProfit, boolean isInviting) {
         String myFlag = "";
         String fighterFlag = "";
         if (isInviting) {
@@ -274,7 +255,7 @@ public class BattleFloatView extends RelativeLayout {
      * @param coinType 对战类型  2元宝 3积分
      * @return
      */
-    public BattleFloatView setDeposit(int reward, int coinType) {
+    public BattleInfoView setDeposit(int reward, int coinType) {
         StringBuilder builder = new StringBuilder();
         builder.append(reward);
         builder.append(coinType == 2 ? "元宝" : "积分");
@@ -289,7 +270,7 @@ public class BattleFloatView extends RelativeLayout {
      * @param endTime    对战剩余时长
      * @return
      */
-    public BattleFloatView setDeadline(int gameStatus, int endTime) {
+    public BattleInfoView setDeadline(int gameStatus, int endTime) {
         if (gameStatus == 3 || endTime < 0) {
             mDeadline.setText(getContext().getString(R.string.end));
         } else if (gameStatus == 2) {
@@ -301,7 +282,7 @@ public class BattleFloatView extends RelativeLayout {
     }
 
 
-    public BattleFloatView setPraise(int myPraiseCount, int fighterPraiseCount) {
+    public BattleInfoView setPraise(int myPraiseCount, int fighterPraiseCount) {
         String myPraiseNumber = myPraiseCount > 999 ? getContext().getString(R.string.number999) : String.valueOf(myPraiseCount);
         String fighterPraiseNumber = fighterPraiseCount > 999 ? getContext().getString(R.string.number999) : String.valueOf(fighterPraiseCount);
         if (mMode == Mode.HALL) {
@@ -331,7 +312,7 @@ public class BattleFloatView extends RelativeLayout {
      * @param result 0 平手  1发起者赢  2对抗者赢
      * @return
      */
-    public BattleFloatView setWinResult(int result) {
+    public BattleInfoView setWinResult(int result) {
         if (result == 1) {
             mAgainstKo.setVisibility(VISIBLE);
         } else if (result == 2) {
@@ -346,18 +327,19 @@ public class BattleFloatView extends RelativeLayout {
      * @param enable
      * @return
      */
-    public BattleFloatView setPraiseEnable(boolean enable) {
+    public BattleInfoView setPraiseEnable(boolean enable) {
         mMyPraiseButton.setEnabled(enable);
         mUserPraiseButton.setEnabled(enable);
         return this;
     }
 
 
-    public BattleFloatView setMode(Mode mode) {
+    public BattleInfoView setMode(Mode mode) {
         mMode = mode;
         initViews();
         return this;
     }
+
 
     public enum Mode {
         HALL,
@@ -365,15 +347,18 @@ public class BattleFloatView extends RelativeLayout {
         MINE
     }
 
-    public BattleFloatView setOnPraiseListener(OnPraiseListener listener) {
-        mOnPraiseListener = listener;
+    public BattleInfoView setOnUserPraiseListener(OnUserPraiseListener listener) {
+        mOnUserPraiseListener = listener;
         return this;
     }
 
-    public interface OnPraiseListener {
-        void addCreatePraiseCount();
+    public interface OnUserPraiseListener {
+        //为房间创建者点赞
+        void onPraiseBattleInitiatorClick();
 
-        void addAgainstPraiseCount();
+        // 为对战者点赞
+        void onPraiseBattleAgainstClick();
+
     }
 
 

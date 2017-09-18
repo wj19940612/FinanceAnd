@@ -14,7 +14,7 @@ import com.sbai.finance.model.battle.TradeRecord;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.view.BattleFloatView;
+import com.sbai.finance.view.BattleInfoView;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.TitleBar;
 
@@ -35,7 +35,7 @@ public class BattleRecordsFragment extends BaseFragment {
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.battleView)
-    BattleFloatView mBattleView;
+    BattleInfoView mBattleView;
 
     Unbinder unbinder;
 
@@ -77,7 +77,7 @@ public class BattleRecordsFragment extends BaseFragment {
         scrollToTop(mTitleBar, mListView);
         mBattleTradeAdapter = new BattleTradeView.BattleTradeAdapter(getContext());
         mListView.setAdapter(mBattleTradeAdapter);
-        mBattleView.setMode(BattleFloatView.Mode.MINE)
+        mBattleView.setMode(BattleInfoView.Mode.MINE)
                 .initWithModel(mBattle)
                 .setDeadline(mBattle.getGameStatus(), 0)
                 .setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false)

@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ScrollView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.FutureBattleActivity;
@@ -147,7 +148,10 @@ public class BaseActivity extends StatusBarActivity implements
                     if (isShowQuickJoinBattleDialog()) {
                         if (battleWSPush.getContent() != null) {
                             Battle data = (Battle) battleWSPush.getContent().getData();
-                            showQuickJoinBattleDialog(data);
+                            //只有在自己是房主的情况下才显示  并且训练页面也不出现弹窗
+                            if (isShowQuickJoinBattleDialog() && data != null) {
+                                showQuickJoinBattleDialog(data);
+                            }
                         }
                     }
                     break;
@@ -160,24 +164,20 @@ public class BaseActivity extends StatusBarActivity implements
     }
 
     protected void showQuickJoinBattleDialog(final Battle battle) {
-        //只有在自己是房主的情况下才显示  并且训练页面也不出现弹窗
-        if (isShowQuickJoinBattleDialog()) {
-            boolean isRoomCreator = battle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId();
-            if (isRoomCreator) {
-                SmartDialog.single(getActivity(), getString(R.string.quick_join_battle))
-                        .setTitle(getString(R.string.join_battle))
-                        .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog) {
-                                dialog.dismiss();
-                                Launcher.with(getActivity(), FutureBattleActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
-                                        .putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
-                                        .execute();
-                            }
-                        }).setNegative(R.string.cancel)
-                        .show();
-            }
+        boolean isRoomCreator = battle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId();
+        if (isRoomCreator) {
+            SmartDialog.single(getActivity(), getString(R.string.quick_join_battle))
+                    .setTitle(getString(R.string.join_battle))
+                    .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
+                        @Override
+                        public void onClick(Dialog dialog) {
+                            dialog.dismiss();
+                            Launcher.with(getActivity(), FutureBattleActivity.class)
+                                    .putExtra(ExtraKeys.BATTLE, battle)
+                                    .execute();
+                        }
+                    }).setNegative(R.string.cancel)
+                    .show();
         }
     }
 

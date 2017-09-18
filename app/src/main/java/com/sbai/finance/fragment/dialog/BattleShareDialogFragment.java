@@ -17,7 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.net.API;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomToast;
 import com.umeng.socialize.ShareAction;
@@ -35,9 +35,8 @@ import butterknife.Unbinder;
 /**
  * 对战分享好友弹框
  */
-public class ShareDialogFragment extends DialogFragment {
+public class BattleShareDialogFragment extends DialogFragment {
 
-    private static final String SHARE_URL = API.getHost() + "/mobi/login/share?code=";
 
     @BindView(R.id.weChatFriend)
     TextView mWeChatFriend;
@@ -68,25 +67,25 @@ public class ShareDialogFragment extends DialogFragment {
 
     private OnShareDialogCallback mListener;
 
-    public ShareDialogFragment setListener(OnShareDialogCallback listener) {
+    public BattleShareDialogFragment setListener(OnShareDialogCallback listener) {
         mListener = listener;
         return this;
     }
 
-    public static ShareDialogFragment newInstance() {
-        ShareDialogFragment fragment = new ShareDialogFragment();
+    public static BattleShareDialogFragment newInstance() {
+        BattleShareDialogFragment fragment = new BattleShareDialogFragment();
         return fragment;
     }
 
-    public ShareDialogFragment setShareMode(boolean isFutureGame) {
+    public BattleShareDialogFragment setShareMode(boolean isFutureGame) {
         this.isFutureGame = isFutureGame;
         return this;
     }
 
-    public ShareDialogFragment setShareContent(String shareTitle, String shareDescription, String batchCode) {
+    public BattleShareDialogFragment setShareContent(String shareTitle, String shareDescription, String batchCode) {
         mShareTitle = shareTitle;
         mShareDescription = shareDescription;
-        mShareUrl = isFutureGame ? SHARE_URL + batchCode : batchCode;
+        mShareUrl = isFutureGame ? Client.SHARE_URL_FUTURE_BATTLE + batchCode : batchCode;
         return this;
     }
 
@@ -226,7 +225,7 @@ public class ShareDialogFragment extends DialogFragment {
     };
 
     public void show(FragmentManager manager) {
-        this.show(manager, ShareDialogFragment.class.getSimpleName());
+        this.show(manager, BattleShareDialogFragment.class.getSimpleName());
     }
 
     public void showAsync(FragmentManager manager) {

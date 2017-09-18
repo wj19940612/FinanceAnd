@@ -15,7 +15,7 @@ public class Client {
     private static final int POST = Request.Method.POST;
     public static final int DEFAULT_PAGE_SIZE = 20;
 
-    //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
+    //h5功能介绍网址
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/lm/introduce.html";
     //h5的用户协议界面网址
     public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/login/user_protocol?nohead=1";
@@ -30,6 +30,8 @@ public class Client {
     public static final String SHARE_URL_REPORT = API.getHost() + "/lm/arcelor.html?id=%s";
     // 乐米训练心得分享地址
     public static final String SHARE_URL_TRAIN_EXPERIENCE = API.getHost() + "/lm/train.html?trainId=%d";
+    // 期货对战分享链接
+    public static final String SHARE_URL_FUTURE_BATTLE = API.getHost() + "/mobi/login/share?code=";
 
 
     public static String getServiceQQ(String serviceQQ) {
@@ -1855,7 +1857,7 @@ public class Client {
     }
 
 
-    public static API requsetVarietyPrice(int varietyId) {
+    public static API requestVarietyPrice(int varietyId) {
         return new API("/order/future/query/infoPrice.do", new ApiParams()
                 .put("varietyId", varietyId));
     }

@@ -11,11 +11,14 @@ public class TimerHandler extends Handler {
     public final static int STOCK_RT_PULL_TIME = 6;
     public final static int WATCH_REFRESH_TIME = 20;
 
+    public static final int DEFAULT_INTERVAL_TIME = 1_000;
+
     private static final int MAX = Integer.MAX_VALUE;
 
     public interface TimerCallback {
         /**
          * count: 1 ~ Integer.MAX_VALUE
+         *
          * @param count from 1 to Integer.MAX_VALUE
          */
         void onTimeUp(int count);

@@ -16,10 +16,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by linrongfang on 2017/6/19.
+ * 期货对战创建后，等待人加入的  快速匹配 邀请好友 取消对战3个按钮
  */
 
-public class BattleButtons extends LinearLayout {
+public class BattleWaitAgainstLayout extends LinearLayout {
 
     @BindView(R.id.invite)
     Button mInvite;
@@ -33,24 +33,24 @@ public class BattleButtons extends LinearLayout {
     private OnViewClickListener mOnViewClickListener;
 
     public interface OnViewClickListener {
-        void onInviteButtonClick();
+        void onInviteFriendClick();
 
-        void onMatchButtonClick();
+        void onQuickMatchClick();
 
-        void onCancelButtonClick();
+        void onCancelBattleClick();
     }
 
-    public BattleButtons(Context context) {
+    public BattleWaitAgainstLayout(Context context) {
         super(context);
         init();
     }
 
-    public BattleButtons(Context context, @Nullable AttributeSet attrs) {
+    public BattleWaitAgainstLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public BattleButtons(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public BattleWaitAgainstLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -65,7 +65,7 @@ public class BattleButtons extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if (mOnViewClickListener != null) {
-                    mOnViewClickListener.onInviteButtonClick();
+                    mOnViewClickListener.onInviteFriendClick();
                 }
             }
         });
@@ -74,7 +74,7 @@ public class BattleButtons extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if (mOnViewClickListener != null) {
-                    mOnViewClickListener.onMatchButtonClick();
+                    mOnViewClickListener.onQuickMatchClick();
                 }
             }
         });
@@ -83,14 +83,14 @@ public class BattleButtons extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if (mOnViewClickListener != null) {
-                    mOnViewClickListener.onCancelButtonClick();
+                    mOnViewClickListener.onCancelBattleClick();
                 }
             }
         });
     }
 
     public void updateCountDownTime(String time) {
-        mCountdown.setText("倒计时" + time);
+        mCountdown.setText(getContext().getString(R.string.count_down, time));
     }
 
     public void setOnViewClickListener(OnViewClickListener onViewClickListener) {
