@@ -2,7 +2,6 @@ package com.sbai.finance.activity.mine;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -37,10 +36,9 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.transform.ThumbTransform;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.transform.ThumbTransform;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
 
@@ -206,6 +204,12 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+            GlideApp.with(this).resumeRequestsRecursive();
+        } else {
+            GlideApp.with(this).pauseRequestsRecursive();
+        }
+
     }
 
     @Override
@@ -213,7 +217,15 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         int topRowVerticalPosition =
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
         if (mLoadMoreEnable) {
-            mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+//            mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+            if (firstVisibleItem == 0 && topRowVerticalPosition >= 0) {
+                mSwipeRefreshLayout.setEnabled(true);
+            } else {
+                if (!mSwipeRefreshLayout.isRefreshing()) {
+                    mSwipeRefreshLayout.setEnabled(false);
+                }
+            }
+
         }
     }
 
@@ -509,23 +521,18 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     mTimestamp.setText(DateUtil.format(DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT), FORMAT_HOUR_MINUTE));
                 }
 
-                mWrapper.removeAllViews();
-                TextView textview = null;
-                ImageView imageview = null;
                 //判断是否图片
                 if (feedback.getContentType() == CONTENT_TYPE_TEXT) {
-                    //create textview and add
-                    textview = createTextview(context);
-                    mWrapper.addView(textview);
-                    textview.setText(feedback.getContent());
+                    mText.setVisibility(View.VISIBLE);
+                    mImage.setVisibility(View.GONE);
+                    mText.setText(feedback.getContent());
                 } else {
-                    //create imageview and add
-                    imageview = createImageview(context);
-                    mWrapper.addView(imageview);
+                    mText.setVisibility(View.GONE);
+                    mImage.setVisibility(View.VISIBLE);
                     GlideApp.with(context).load(feedback.getContent())
                             .transform(new ThumbTransform(context))
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(imageview);
+                            .into(mImage);
                 }
                 if (!TextUtils.isEmpty(feedback.getUserPortrait())) {
                     GlideApp.with(context).load(feedback.getUserPortrait())
@@ -538,8 +545,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                             .placeholder(R.drawable.ic_avatar_feedback)
                             .into(mHeadImage);
                 }
-                if (imageview != null) {
-                    imageview.setOnClickListener(new View.OnClickListener() {
+                if (mImage != null) {
+                    mImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (feedback.getContentType() == CONTENT_TYPE_PICTURE) {
@@ -549,40 +556,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                         }
                     });
                 }
-
-                mHeadImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        Launcher.with(context, UserDataActivity.class)
-//                                .putExtra(Launcher.USER_ID, LocalUser.getUser().getUserInfo().getId()).execute();
-                    }
-                });
-
             }
-
-            private TextView createTextview(Context context) {
-                TextView tv = new TextView(context);
-                tv.setTextColor(Color.WHITE);
-                int spacing = (int) Display.dp2Px(5.0f, context.getResources());
-                tv.setLineSpacing(spacing, 1.2f);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                int margin = (int) Display.dp2Px(10.0f, context.getResources());
-                params.setMargins(0, 0, margin, 0);
-                tv.setLayoutParams(params);
-                return tv;
-            }
-
-            private ImageView createImageview(Context context) {
-                ImageView image = new ImageView(context);
-                image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.CENTER_VERTICAL);
-                int margin = (int) Display.dp2Px(5.0f, context.getResources());
-                params.setMargins(0, 0, margin, 0);
-                image.setLayoutParams(params);
-                return image;
-            }
-
         }
 
         static class CustomerViewHolder {

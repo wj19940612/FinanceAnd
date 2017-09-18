@@ -237,7 +237,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
         }
 
     }
-    
+
     private void requestUserHasSafetyPassword(final VirtualProductInfo virtualProductInfo) {
 
         Client.getUserHasPassWord()
