@@ -18,10 +18,16 @@ public class Client {
     //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/lm/introduce.html";
     //h5的用户协议界面网址
-    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/login/user_protocol?nohead=1";
+    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/lm/user_protocol.html";
 
+    /**
+     * @deprecated
+     */
     // 期货分享地址
     public static final String SHARE_URL_FUTURE = API.getHost() + "/mobi/future/future_quota?varietyId=%d";
+    /**
+     * @deprecated
+     */
     // 股票分享地址
     public static final String SHARE_URL_STOCK = API.getHost() + "/mobi/stock/stock_quota?varietyType=%s&varietyId=%d";
     // 提问分享地址
@@ -30,6 +36,8 @@ public class Client {
     public static final String SHARE_URL_REPORT = API.getHost() + "/lm/arcelor.html?id=%s";
     // 乐米训练心得分享地址
     public static final String SHARE_URL_TRAIN_EXPERIENCE = API.getHost() + "/lm/train.html?trainId=%d";
+    //期货对战分享
+    public static final String SHARE_URL_FUTURE_BATTLE = API.getHost() + "/lm/share.html";
 
 
     public static String getServiceQQ(String serviceQQ) {

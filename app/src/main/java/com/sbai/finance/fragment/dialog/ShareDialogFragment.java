@@ -17,7 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.net.API;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomToast;
 import com.umeng.socialize.ShareAction;
@@ -37,7 +37,6 @@ import butterknife.Unbinder;
  */
 public class ShareDialogFragment extends DialogFragment {
 
-    private static final String SHARE_URL = API.getHost() + "/mobi/login/share?code=";
 
     @BindView(R.id.weChatFriend)
     TextView mWeChatFriend;
@@ -55,11 +54,10 @@ public class ShareDialogFragment extends DialogFragment {
     private String mShareUrl;  //链接地址
     private String mShareDescription; //分享描述
 
-    private boolean isFutureGame = false;//默认分享不是游戏
-
     public interface OnShareDialogCallback {
         void onSharePlatformClick(SHARE_PLATFORM platform);
     }
+
     public enum SHARE_PLATFORM {
         WECHAT_FRIEND,
         WECHAT_CIRCLE,
@@ -78,15 +76,11 @@ public class ShareDialogFragment extends DialogFragment {
         return fragment;
     }
 
-    public ShareDialogFragment setShareMode(boolean isFutureGame) {
-        this.isFutureGame = isFutureGame;
-        return this;
-    }
 
     public ShareDialogFragment setShareContent(String shareTitle, String shareDescription, String batchCode) {
         mShareTitle = shareTitle;
         mShareDescription = shareDescription;
-        mShareUrl = isFutureGame ? SHARE_URL + batchCode : batchCode;
+        mShareUrl = Client.SHARE_URL_FUTURE_BATTLE;
         return this;
     }
 
@@ -122,7 +116,6 @@ public class ShareDialogFragment extends DialogFragment {
         switch (view.getId()) {
             case R.id.weChatFriend:
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN)) {
-                    if (isFutureGame) mShareUrl += "&userFrom=" + "friend";
                     shareToPlatform(SHARE_MEDIA.WEIXIN);
                     onSharePlatformClicked(SHARE_PLATFORM.WECHAT_FRIEND);
                 } else {
@@ -132,7 +125,6 @@ public class ShareDialogFragment extends DialogFragment {
                 break;
             case R.id.weChatFriendCircle:
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN_CIRCLE)) {
-                    if (isFutureGame) mShareUrl += "&userFrom=" + "friend";
                     shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
                     onSharePlatformClicked(SHARE_PLATFORM.WECHAT_CIRCLE);
                 } else {
@@ -142,7 +134,6 @@ public class ShareDialogFragment extends DialogFragment {
                 break;
             case R.id.weibo:
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.SINA)) {
-                    if (isFutureGame) mShareUrl += "&userFrom=" + "weibo";
                     shareToPlatform(SHARE_MEDIA.SINA);
                     onSharePlatformClicked(SHARE_PLATFORM.SINA_WEIBO);
                 } else {
@@ -170,11 +161,8 @@ public class ShareDialogFragment extends DialogFragment {
             mWeb.setDescription(mShareDescription);
 
             UMImage thumb = null;
-            if (isFutureGame) {
-                thumb = new UMImage(mActivity, R.drawable.ic_future_battle_game);
-            } else {
-                thumb = new UMImage(mActivity, R.drawable.ic_launcher_share);
-            }
+            thumb = new UMImage(mActivity, R.drawable.ic_future_battle_game);
+
             mWeb.setThumb(thumb);
             if (getActivity() != null && !getActivity().isFinishing()) {
                 new ShareAction(getActivity())
@@ -186,13 +174,8 @@ public class ShareDialogFragment extends DialogFragment {
         } else {
             String text = mShareTitle + mShareUrl;
             UMImage image = null;
-            if (isFutureGame) {
-                image = new UMImage(mActivity, R.drawable.ic_future_battle_game);
-                image.setThumb(new UMImage(mActivity, R.drawable.ic_future_battle_game));
-            } else {
-                image = new UMImage(mActivity, R.drawable.ic_launcher_share);
-                image.setThumb(new UMImage(mActivity, R.drawable.ic_launcher_share));
-            }
+            image = new UMImage(mActivity, R.drawable.ic_future_battle_game);
+            image.setThumb(new UMImage(mActivity, R.drawable.ic_future_battle_game));
             if (getActivity() != null && !getActivity().isFinishing()) {
                 new ShareAction(getActivity())
                         .withText(text)
