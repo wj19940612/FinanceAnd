@@ -20,12 +20,13 @@ import com.igexin.sdk.PushManager;
 import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
-import com.sbai.finance.activity.web.EventDetailActivity;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
 
@@ -138,8 +139,10 @@ public class PushIntentService extends GTIntentService {
         } else if (data.isBattleMatchSuccess()) {
             if (!Preference.get().isForeground() && data.getData() != null) {
                 intent = new Intent(context, FutureBattleActivity.class);
-                intent.putExtra(Launcher.EX_PAYLOAD_1, data.getData().getId());
-                intent.putExtra(Launcher.EX_PAYLOAD_2, data.getData().getBatchCode());
+                Battle battle = new Battle();
+                battle.setId(data.getData().getId());
+                battle.setBatchCode(data.getData().getBatchCode());
+                intent.putExtra(ExtraKeys.BATTLE, battle);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             }
         } else if (data.isMissAnswer()) {

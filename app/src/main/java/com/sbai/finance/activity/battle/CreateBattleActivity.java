@@ -351,8 +351,7 @@ public class CreateBattleActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(Battle battle) {
                         Launcher.with(getActivity(), FutureBattleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
-                                .putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
+                                .putExtra(ExtraKeys.BATTLE, battle)
                                 .execute();
                         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(CREATE_SUCCESS_ACTION));
                         finish();

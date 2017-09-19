@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ScrollView;
@@ -172,6 +173,7 @@ public class BaseActivity extends StatusBarActivity implements
                         @Override
                         public void onClick(Dialog dialog) {
                             dialog.dismiss();
+                            Log.d(TAG, "onClick: "+battle.toString());
                             Launcher.with(getActivity(), FutureBattleActivity.class)
                                     .putExtra(ExtraKeys.BATTLE, battle)
                                     .execute();

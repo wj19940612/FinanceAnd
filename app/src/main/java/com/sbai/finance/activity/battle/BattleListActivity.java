@@ -262,7 +262,7 @@ public class BattleListActivity extends BaseActivity implements
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
                     if (item.getGameStatus() == Battle.GAME_STATUS_END) {
-                        Launcher.with(getActivity(), FutureBattleRefactorActivity.class)
+                        Launcher.with(getActivity(), FutureBattleActivity.class)
                                 .putExtra(ExtraKeys.BATTLE, item)
                                 .executeForResult(CANCEL_BATTLE);
 
@@ -293,7 +293,7 @@ public class BattleListActivity extends BaseActivity implements
                             item.setEndTime(data.getEndTime());
                             mVersusListAdapter.notifyDataSetChanged();
                         }
-                        Launcher.with(getActivity(), FutureBattleRefactorActivity.class)
+                        Launcher.with(getActivity(), FutureBattleActivity.class)
                                 .putExtra(ExtraKeys.BATTLE, item)
                                 .executeForResult(CANCEL_BATTLE);
 
@@ -413,7 +413,7 @@ public class BattleListActivity extends BaseActivity implements
                             data.setAgainstUserName(battle.getAgainstUserName());
                             mVersusListAdapter.notifyDataSetChanged();
 
-                            Launcher.with(getActivity(), FutureBattleRefactorActivity.class)
+                            Launcher.with(getActivity(), FutureBattleActivity.class)
                                     .putExtra(ExtraKeys.BATTLE, battle)
                                     .executeForResult(CANCEL_BATTLE);
                         }
@@ -655,7 +655,7 @@ public class BattleListActivity extends BaseActivity implements
                         dialog.dismiss();
                         if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
                             if (mCurrentBattle != null) {
-                                Launcher.with(getActivity(), FutureBattleRefactorActivity.class)
+                                Launcher.with(getActivity(), FutureBattleActivity.class)
                                         .putExtra(ExtraKeys.BATTLE, mCurrentBattle)
                                         .execute();
                             }

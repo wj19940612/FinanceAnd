@@ -3,6 +3,8 @@ package com.sbai.finance.model.battle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sbai.finance.model.LocalUser;
+
 /**
  * Created by Administrator on 2017-06-21.
  */
@@ -145,9 +147,9 @@ public class Battle implements Parcelable {
         return getCoinType() == 2;
     }
 
-    public boolean getBattleResult(boolean mineIsInitiator) {
+    public boolean getBattleResult() {
         boolean result = false;
-        if (mineIsInitiator) {
+        if (getUserId() == LocalUser.getUser().getUserInfo().getId()) {
             result = getWinResult() == 1;
         } else {
             result = getWinResult() == 2;
