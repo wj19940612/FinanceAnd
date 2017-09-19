@@ -204,12 +204,6 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-            GlideApp.with(this).resumeRequestsRecursive();
-        } else {
-            GlideApp.with(this).pauseRequestsRecursive();
-        }
-
     }
 
     @Override
