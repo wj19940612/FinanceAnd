@@ -958,7 +958,6 @@ public class FutureBattleActivity extends BaseActivity implements
             String shareDescribe = getString(R.string.future_battle_desc);
             mBattleShareDialogFragment = BattleShareDialogFragment
                     .newInstance()
-                    .setShareMode(true)
                     .setShareContent(shareTitle, shareDescribe, mBattle.getBatchCode());
         }
         mBattleShareDialogFragment.show(getSupportFragmentManager());

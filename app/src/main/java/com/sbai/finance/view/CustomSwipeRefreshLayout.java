@@ -22,7 +22,7 @@ import com.sbai.finance.R;
 
 public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsListView.OnScrollListener {
 
-    private int mTouchSlop;
+    protected int mTouchSlop;
 
     private View mListViewFooter;
 
@@ -58,6 +58,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
     public CustomSwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        // 触发移动事件的最短距离，如果小于这个距离就不触发移动控件
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         mListViewFooter = LayoutInflater.from(context).inflate(R.layout.footer_item, null);
         mLoadMoreTv = (TextView) mListViewFooter.findViewById(R.id.loadMore);
@@ -198,7 +199,15 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
                          int visibleItemCount, int totalItemCount) {
         int topRowVerticalPosition =
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-        setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+
+        if (firstVisibleItem == 0 && topRowVerticalPosition >= 0) {
+            setEnabled(true);
+        } else {
+            if (!isRefreshing()) {
+                setEnabled(false);
+            }
+        }
+
         mVisibleItemCount = visibleItemCount;
         mTotalItemCount = totalItemCount;
         if (visibleItemCount < totalItemCount && canLoad()) {

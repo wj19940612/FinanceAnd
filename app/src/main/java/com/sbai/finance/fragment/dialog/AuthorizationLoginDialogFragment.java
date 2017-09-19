@@ -17,10 +17,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.trade.TradeWebActivity;
 import com.sbai.finance.model.local.SysTime;
-import com.sbai.finance.model.mutual.ArticleProtocol;
-import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
-import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
 
@@ -110,22 +107,10 @@ public class AuthorizationLoginDialogFragment extends DialogFragment {
     }
 
     private void openUserProtocolPage() {
-//        Launcher.with(getActivity(), WebActivity.class)
-//                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
-//                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
-//                .execute();
-        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_USER)
-                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
-                    @Override
-                    protected void onRespSuccessData(ArticleProtocol data) {
-                        Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
-                                .putExtra(WebActivity.EX_HTML, data.getContent())
-                                .execute();
-                    }
-
-                }).fire();
-
+        Launcher.with(getActivity(), WebActivity.class)
+                .putExtra(WebActivity.EX_TITLE, getString(R.string.user_protocol))
+                .putExtra(WebActivity.EX_URL, Client.WEB_USER_PROTOCOL_PAGE_URL)
+                .execute();
     }
 
 

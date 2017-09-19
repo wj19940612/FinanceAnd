@@ -32,6 +32,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static android.R.attr.src;
+
 /**
  * 对战分享好友弹框
  */
@@ -54,11 +56,10 @@ public class BattleShareDialogFragment extends DialogFragment {
     private String mShareUrl;  //链接地址
     private String mShareDescription; //分享描述
 
-    private boolean isFutureGame = false;//默认分享不是游戏
-
     public interface OnShareDialogCallback {
         void onSharePlatformClick(SHARE_PLATFORM platform);
     }
+
     public enum SHARE_PLATFORM {
         WECHAT_FRIEND,
         WECHAT_CIRCLE,
@@ -77,15 +78,12 @@ public class BattleShareDialogFragment extends DialogFragment {
         return fragment;
     }
 
-    public BattleShareDialogFragment setShareMode(boolean isFutureGame) {
-        this.isFutureGame = isFutureGame;
-        return this;
-    }
+
 
     public BattleShareDialogFragment setShareContent(String shareTitle, String shareDescription, String batchCode) {
         mShareTitle = shareTitle;
         mShareDescription = shareDescription;
-        mShareUrl = isFutureGame ? Client.SHARE_URL_FUTURE_BATTLE + batchCode : batchCode;
+        mShareUrl = Client.SHARE_URL_FUTURE_BATTLE;
         return this;
     }
 
@@ -121,7 +119,6 @@ public class BattleShareDialogFragment extends DialogFragment {
         switch (view.getId()) {
             case R.id.weChatFriend:
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN)) {
-                    if (isFutureGame) mShareUrl += "&userFrom=" + "friend";
                     shareToPlatform(SHARE_MEDIA.WEIXIN);
                     onSharePlatformClicked(SHARE_PLATFORM.WECHAT_FRIEND);
                 } else {
@@ -131,7 +128,6 @@ public class BattleShareDialogFragment extends DialogFragment {
                 break;
             case R.id.weChatFriendCircle:
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN_CIRCLE)) {
-                    if (isFutureGame) mShareUrl += "&userFrom=" + "friend";
                     shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
                     onSharePlatformClicked(SHARE_PLATFORM.WECHAT_CIRCLE);
                 } else {
@@ -141,7 +137,6 @@ public class BattleShareDialogFragment extends DialogFragment {
                 break;
             case R.id.weibo:
                 if (UMShareAPI.get(getContext()).isInstall(getActivity(), SHARE_MEDIA.SINA)) {
-                    if (isFutureGame) mShareUrl += "&userFrom=" + "weibo";
                     shareToPlatform(SHARE_MEDIA.SINA);
                     onSharePlatformClicked(SHARE_PLATFORM.SINA_WEIBO);
                 } else {
@@ -169,11 +164,8 @@ public class BattleShareDialogFragment extends DialogFragment {
             mWeb.setDescription(mShareDescription);
 
             UMImage thumb = null;
-            if (isFutureGame) {
-                thumb = new UMImage(mActivity, R.drawable.ic_future_battle_game);
-            } else {
-                thumb = new UMImage(mActivity, R.drawable.ic_launcher_share);
-            }
+            thumb = new UMImage(mActivity, R.drawable.ic_future_battle_game);
+
             mWeb.setThumb(thumb);
             if (getActivity() != null && !getActivity().isFinishing()) {
                 new ShareAction(getActivity())
@@ -185,13 +177,8 @@ public class BattleShareDialogFragment extends DialogFragment {
         } else {
             String text = mShareTitle + mShareUrl;
             UMImage image = null;
-            if (isFutureGame) {
-                image = new UMImage(mActivity, R.drawable.ic_future_battle_game);
-                image.setThumb(new UMImage(mActivity, R.drawable.ic_future_battle_game));
-            } else {
-                image = new UMImage(mActivity, R.drawable.ic_launcher_share);
-                image.setThumb(new UMImage(mActivity, R.drawable.ic_launcher_share));
-            }
+            image = new UMImage(mActivity, R.drawable.ic_future_battle_game);
+            image.setThumb(new UMImage(mActivity, R.drawable.ic_future_battle_game));
             if (getActivity() != null && !getActivity().isFinishing()) {
                 new ShareAction(getActivity())
                         .withText(text)

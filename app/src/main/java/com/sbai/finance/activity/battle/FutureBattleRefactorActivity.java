@@ -130,7 +130,6 @@ public class FutureBattleRefactorActivity extends BaseActivity implements
     private Battle mCurrentBattle;
     //
     private int mHistoryBattleId;
-    private int mGameStatus;
     private boolean mUserIsObserver;
     //登录的账号是不是对战的发起者
 
@@ -151,6 +150,121 @@ public class FutureBattleRefactorActivity extends BaseActivity implements
     private static final int HANDLER_WHAT_BATTLE_COUNTDOWN = 300;
 
     private BattleShareDialogFragment mBattleShareDialogFragment;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_future_battle);
+        ButterKnife.bind(this);
+        translucentStatusBar();
+        mCurrentBattle = getIntent().getParcelableExtra(ExtraKeys.BATTLE);
+        mHistoryBattleId = mCurrentBattle.getId();
+        requestLatestBattleInfo();
+    }
+
+    private void requestLatestBattleInfo() {
+        if (mCurrentBattle == null) return;
+        Client.getBattleInfo(mCurrentBattle.getId(), mCurrentBattle.getBatchCode()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Battle>, Battle>() {
+
+                    @Override
+                    protected void onRespSuccessData(Battle data) {
+                        mCurrentBattle = data;
+                        mUserIsObserver = checkUserIsObserver();
+
+                        if (mCurrentBattle.isBattleOver()) {
+                            openBattleRecordPage();
+                        } else {
+                            initBattlePage();
+                        }
+                    }
+                }).fire();
+    }
+
+    //显示这句的历史对战记录页面
+    private void openBattleRecordPage() {
+        mRootView.removeAllViews();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.rootView, BattleRecordsFragment.newInstance(mCurrentBattle))
+                .commitAllowingStateLoss();
+    }
+
+
+    private void initBattlePage() {
+        //未登录从通知栏点进来
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), MainActivity.class).execute();
+            finish();
+        }
+
+        initView();
+
+        if (mUserIsObserver || mCurrentBattle.isBattleStarted()) {
+            showBattleTradeView();
+            requestOrderHistory();
+            requestCurrentOrder();
+        } else if (mCurrentBattle.isBattleInitiating()) {
+            showBattlePrepareButtons();
+            updateRoomExistsTime();
+        }
+        requestVarietyPrice();
+    }
+
+
+    private void initView() {
+        mBattleContent.setVisibility(View.VISIBLE);
+        initTabLayout();
+        mBattleWaitAgainstLayout.setOnViewClickListener(this);
+        mBattleTradeView.setOnViewClickListener(this);
+        initBattleFloatView();
+        if (mUserIsObserver) {
+            mBattleTradeView.setObserver(true);
+        }
+    }
+
+    private void initTabLayout() {
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.trend_chart));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.one_min_k));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.three_min_k));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.five_min_k));
+        mTabLayout.addOnTabSelectedListener(mOnTabSelectedListener);
+    }
+
+    private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
+
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            switch (tab.getPosition()) {
+                case 0:
+                    showTrendView();
+                    break;
+                case 1:
+                    requestKlineDataAndSet("1");
+                    showKlineView();
+                    break;
+                case 2:
+                    requestKlineDataAndSet("3");
+                    showKlineView();
+                    break;
+                case 3:
+                    requestKlineDataAndSet("5");
+                    showKlineView();
+                    break;
+            }
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
+    };
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -537,18 +651,6 @@ public class FutureBattleRefactorActivity extends BaseActivity implements
     }
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_future_battle);
-        ButterKnife.bind(this);
-        translucentStatusBar();
-        mCurrentBattle = getIntent().getParcelableExtra(ExtraKeys.BATTLE);
-        mHistoryBattleId = mCurrentBattle.getId();
-        requestLatestBattleInfo();
-    }
-
-
     private void requestFastMatchResult() {
         Client.getQuickMatchResult(Battle.CREATE_FAST_MATCH, mCurrentBattle.getId()).setTag(TAG)
                 .setCallback(new Callback<Resp<Battle>>() {
@@ -601,26 +703,6 @@ public class FutureBattleRefactorActivity extends BaseActivity implements
         }
     }
 
-    private void requestLatestBattleInfo() {
-        if (mCurrentBattle == null) return;
-        Client.getBattleInfo(mCurrentBattle.getId(), mCurrentBattle.getBatchCode()).setTag(TAG)
-                .setCallback(new Callback2D<Resp<Battle>, Battle>() {
-
-                    @Override
-                    protected void onRespSuccessData(Battle data) {
-                        mCurrentBattle = data;
-
-                        mGameStatus = mCurrentBattle.getGameStatus();
-                        mUserIsObserver = checkUserIsObserver();
-
-                        if (mCurrentBattle.isBattleOver()) {
-                            openBattleRecordPage();
-                        } else {
-                            initBattlePage();
-                        }
-                    }
-                }).fire();
-    }
 
     private boolean checkUserIsObserver() {
         if (LocalUser.getUser().isLogin()) {
@@ -629,26 +711,6 @@ public class FutureBattleRefactorActivity extends BaseActivity implements
                     && mCurrentBattle.getAgainstUser() != userId;
         }
         return true;
-    }
-
-    private void initBattlePage() {
-        //未登录从通知栏点进来
-        if (!LocalUser.getUser().isLogin()) {
-            Launcher.with(getActivity(), MainActivity.class).execute();
-            finish();
-        }
-
-        initView();
-
-        if (mUserIsObserver || mCurrentBattle.isBattleStarted()) {
-            showBattleTradeView();
-            requestOrderHistory();
-            requestCurrentOrder();
-        } else if (mCurrentBattle.isBattleInitiating()) {
-            showBattlePrepareButtons();
-            updateRoomExistsTime();
-        }
-        requestVarietyPrice();
     }
 
     private void requestVarietyPrice() {
@@ -957,16 +1019,6 @@ public class FutureBattleRefactorActivity extends BaseActivity implements
         mBattleTradeView.updateUserHistoryOrderData(record, mCurrentBattle.getLaunchUser(), mCurrentBattle.getAgainstUser());
     }
 
-    private void initView() {
-        mBattleContent.setVisibility(View.VISIBLE);
-        initTabLayout();
-        mBattleWaitAgainstLayout.setOnViewClickListener(this);
-        mBattleTradeView.setOnViewClickListener(this);
-        initBattleFloatView();
-        if (mUserIsObserver) {
-            mBattleTradeView.setObserver(true);
-        }
-    }
 
     private void initBattleFloatView() {
         if (mUserIsObserver) {
@@ -974,7 +1026,6 @@ public class FutureBattleRefactorActivity extends BaseActivity implements
                     .initWithModel(mCurrentBattle)
                     .setProgress(mCurrentBattle.getLaunchScore(), mCurrentBattle.getAgainstScore(), false);
             mBattleView.setOnUserPraiseListener(this);
-//            startScheduleJob(0);
             mHandler.sendEmptyMessageDelayed(HANDLER_WHAT_BATTLE_COUNTDOWN, 0);
 
         } else {
@@ -987,61 +1038,9 @@ public class FutureBattleRefactorActivity extends BaseActivity implements
             } else if (mCurrentBattle.isBattleStarted()) {
                 mBattleView.setProgress(mCurrentBattle.getLaunchScore(), mCurrentBattle.getAgainstScore(), false);
                 mHandler.sendEmptyMessageDelayed(HANDLER_WHAT_BATTLE_COUNTDOWN, 0);
-//                startScheduleJob(0);
             }
         }
     }
-
-    //显示这句的历史对战记录页面
-    private void openBattleRecordPage() {
-        mRootView.removeAllViews();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.rootView, BattleRecordsFragment.newInstance(mCurrentBattle))
-                .commitAllowingStateLoss();
-    }
-
-    private void initTabLayout() {
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.trend_chart));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.one_min_k));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.three_min_k));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.five_min_k));
-        mTabLayout.addOnTabSelectedListener(mOnTabSelectedListener);
-    }
-
-    private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
-
-        @Override
-        public void onTabSelected(TabLayout.Tab tab) {
-            switch (tab.getPosition()) {
-                case 0:
-                    showTrendView();
-                    break;
-                case 1:
-                    requestKlineDataAndSet("1");
-                    showKlineView();
-                    break;
-                case 2:
-                    requestKlineDataAndSet("3");
-                    showKlineView();
-                    break;
-                case 3:
-                    requestKlineDataAndSet("5");
-                    showKlineView();
-                    break;
-            }
-        }
-
-        @Override
-        public void onTabUnselected(TabLayout.Tab tab) {
-
-        }
-
-        @Override
-        public void onTabReselected(TabLayout.Tab tab) {
-
-        }
-    };
 
 
     private void showTrendView() {
@@ -1080,7 +1079,6 @@ public class FutureBattleRefactorActivity extends BaseActivity implements
             String shareDescribe = getString(R.string.future_battle_desc);
             mBattleShareDialogFragment = BattleShareDialogFragment
                     .newInstance()
-                    .setShareMode(true)
                     .setShareContent(shareTitle, shareDescribe, mCurrentBattle.getBatchCode());
         }
         mBattleShareDialogFragment.show(getSupportFragmentManager());
