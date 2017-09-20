@@ -262,10 +262,10 @@ public class CreditApproveActivity extends BaseActivity implements UploadUserIma
                 mIdentityCardNumber.setText("");
                 break;
             case R.id.identityCardFrontImage:
-                UploadUserImageDialogFragment.newInstance(IDENTITY_CARD_FONT, false, true).show(getSupportFragmentManager());
+                UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMMOBILIZATION_AREA, IDENTITY_CARD_FONT).show(getSupportFragmentManager());
                 break;
             case R.id.identityCardReverseImage:
-                UploadUserImageDialogFragment.newInstance(IDENTITY_CARD_REVERSE, false, true).show(getSupportFragmentManager());
+                UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMMOBILIZATION_AREA, IDENTITY_CARD_REVERSE).show(getSupportFragmentManager());
                 break;
             case R.id.submit:
                 submit();
