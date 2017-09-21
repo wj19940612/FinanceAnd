@@ -149,7 +149,7 @@ public class Battle implements Parcelable {
 
     public boolean getBattleResult() {
         boolean result = false;
-        if (getUserId() == LocalUser.getUser().getUserInfo().getId()) {
+        if (getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
             result = getWinResult() == 1;
         } else {
             result = getWinResult() == 2;

@@ -173,7 +173,7 @@ public class BaseActivity extends StatusBarActivity implements
                         @Override
                         public void onClick(Dialog dialog) {
                             dialog.dismiss();
-                            Log.d(TAG, "onClick: "+battle.toString());
+                            Log.d(TAG, "onClick: " + battle.toString());
                             Launcher.with(getActivity(), FutureBattleActivity.class)
                                     .putExtra(ExtraKeys.BATTLE, battle)
                                     .execute();

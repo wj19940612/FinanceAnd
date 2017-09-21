@@ -90,11 +90,16 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                     protected void onRespSuccessData(FutureVersus data) {
                         updateVersusData(data);
                     }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
+                    }
                 }).fireFree();
     }
 
     private void updateVersusData(FutureVersus futureVersus) {
-        stopRefreshAnimation();
         if (mSet.isEmpty()) {
             mVersusRecordListAdapter.clear();
         }
@@ -181,6 +186,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
+
             private void bindDataWithView(final Battle item, Context context) {
                 mVarietyName.setText(item.getVarietyName());
                 GlideApp.with(context).load(item.getLaunchUserPortrait())

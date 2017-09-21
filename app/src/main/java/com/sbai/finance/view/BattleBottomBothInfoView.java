@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
  * 期货对战 页面底部对战双方信息 和 对战实时结果的vie
  */
 
-public class BattleInfoView extends RelativeLayout implements View.OnClickListener {
+public class BattleBottomBothInfoView extends RelativeLayout implements View.OnClickListener {
 
     @BindView(R.id.createAvatar)
     ImageView mCreateAvatar;
@@ -77,15 +77,15 @@ public class BattleInfoView extends RelativeLayout implements View.OnClickListen
 
     private Battle mBattle;
 
-    public BattleInfoView(Context context) {
+    public BattleBottomBothInfoView(Context context) {
         this(context, null);
     }
 
-    public BattleInfoView(Context context, AttributeSet attrs) {
+    public BattleBottomBothInfoView(Context context, AttributeSet attrs) {
         this(context, attrs, -1);
     }
 
-    public BattleInfoView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BattleBottomBothInfoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -131,7 +131,7 @@ public class BattleInfoView extends RelativeLayout implements View.OnClickListen
             case R.id.createAvatar:
             case R.id.againstAvatar:
                 MobclickAgent.onEvent(getContext(), UmengCountEventId.BATTLE_USER_AVATAR);
-                if (!(mBattle.isBattleOver() && LocalUser.getUser().isLogin())) {
+                if (!LocalUser.getUser().isLogin() && !mBattle.isBattleOver()) {
                     Launcher.with(getContext(), LoginActivity.class).execute();
                 }
                 break;
@@ -144,7 +144,7 @@ public class BattleInfoView extends RelativeLayout implements View.OnClickListen
         mFighterDataArea.setLayoutParams(params);
     }
 
-    public BattleInfoView initWithModel(Battle model) {
+    public BattleBottomBothInfoView initWithModel(Battle model) {
         this.mBattle = model;
         this.setCreateAvatar(model.getLaunchUserPortrait())
                 .setCreateName(model.getLaunchUserName())
@@ -156,21 +156,25 @@ public class BattleInfoView extends RelativeLayout implements View.OnClickListen
         return this;
     }
 
-    public BattleInfoView setCreateName(String name) {
+    public BattleBottomBothInfoView setCreateName(String name) {
         mCreateName.setText(name);
         return this;
     }
 
-    public BattleInfoView setCreateAvatar(String url) {
-        GlideApp.with(getContext())
-                .load(url)
-                .circleCrop()
-                .placeholder(R.drawable.ic_default_avatar_big)
-                .into(mCreateAvatar);
+    public BattleBottomBothInfoView setCreateAvatar(String url) {
+        try {
+            GlideApp.with(getContext())
+                    .load(url)
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_default_avatar_big)
+                    .into(mCreateAvatar);
+        } catch (IllegalArgumentException e) {
+
+        }
         return this;
     }
 
-    public BattleInfoView setAgainstName(String userName) {
+    public BattleBottomBothInfoView setAgainstName(String userName) {
         if (TextUtils.isEmpty(userName)) {
             mAgainstName.setText(getContext().getString(R.string.wait_to_join));
         } else {
@@ -179,16 +183,19 @@ public class BattleInfoView extends RelativeLayout implements View.OnClickListen
         return this;
     }
 
-    public BattleInfoView setAgainstAvatar(String url) {
-        GlideApp.with(getContext())
-                .load(url)
-                .circleCrop()
-                .placeholder(R.drawable.ic_default_avatar_big)
-                .into(mAgainstAvatar);
+    public BattleBottomBothInfoView setAgainstAvatar(String url) {
+        try {
+            GlideApp.with(getContext())
+                    .load(url)
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_default_avatar_big)
+                    .into(mAgainstAvatar);
+        } catch (IllegalArgumentException e) {
+        }
         return this;
     }
 
-    public BattleInfoView setVarietyName(String varietyName) {
+    public BattleBottomBothInfoView setVarietyName(String varietyName) {
         mVarietyName.setText(varietyName);
         return this;
     }
@@ -201,7 +208,7 @@ public class BattleInfoView extends RelativeLayout implements View.OnClickListen
      * @param isInviting    是否正在邀请中
      * @return
      */
-    public BattleInfoView setProgress(double myProfit, double fighterProfit, boolean isInviting) {
+    public BattleBottomBothInfoView setProgress(double myProfit, double fighterProfit, boolean isInviting) {
         String myFlag = "";
         String fighterFlag = "";
         if (isInviting) {
@@ -255,7 +262,7 @@ public class BattleInfoView extends RelativeLayout implements View.OnClickListen
      * @param coinType 对战类型  2元宝 3积分
      * @return
      */
-    public BattleInfoView setDeposit(int reward, int coinType) {
+    public BattleBottomBothInfoView setDeposit(int reward, int coinType) {
         StringBuilder builder = new StringBuilder();
         builder.append(reward);
         builder.append(coinType == 2 ? "元宝" : "积分");
@@ -270,7 +277,7 @@ public class BattleInfoView extends RelativeLayout implements View.OnClickListen
      * @param endTime    对战剩余时长
      * @return
      */
-    public BattleInfoView setDeadline(int gameStatus, int endTime) {
+    public BattleBottomBothInfoView setDeadline(int gameStatus, int endTime) {
         if (gameStatus == 3 || endTime < 0) {
             mDeadline.setText(getContext().getString(R.string.end));
         } else if (gameStatus == 2) {
@@ -282,7 +289,7 @@ public class BattleInfoView extends RelativeLayout implements View.OnClickListen
     }
 
 
-    public BattleInfoView setPraise(int myPraiseCount, int fighterPraiseCount) {
+    public BattleBottomBothInfoView setPraise(int myPraiseCount, int fighterPraiseCount) {
         String myPraiseNumber = myPraiseCount > 999 ? getContext().getString(R.string.number999) : String.valueOf(myPraiseCount);
         String fighterPraiseNumber = fighterPraiseCount > 999 ? getContext().getString(R.string.number999) : String.valueOf(fighterPraiseCount);
         if (mMode == Mode.HALL) {
@@ -312,7 +319,7 @@ public class BattleInfoView extends RelativeLayout implements View.OnClickListen
      * @param result 0 平手  1发起者赢  2对抗者赢
      * @return
      */
-    public BattleInfoView setWinResult(int result) {
+    public BattleBottomBothInfoView setWinResult(int result) {
         if (result == 1) {
             mAgainstKo.setVisibility(VISIBLE);
         } else if (result == 2) {
@@ -327,14 +334,14 @@ public class BattleInfoView extends RelativeLayout implements View.OnClickListen
      * @param enable
      * @return
      */
-    public BattleInfoView setPraiseEnable(boolean enable) {
+    public BattleBottomBothInfoView setPraiseEnable(boolean enable) {
         mMyPraiseButton.setEnabled(enable);
         mUserPraiseButton.setEnabled(enable);
         return this;
     }
 
 
-    public BattleInfoView setMode(Mode mode) {
+    public BattleBottomBothInfoView setMode(Mode mode) {
         mMode = mode;
         initViews();
         return this;
@@ -347,7 +354,7 @@ public class BattleInfoView extends RelativeLayout implements View.OnClickListen
         MINE
     }
 
-    public BattleInfoView setOnUserPraiseListener(OnUserPraiseListener listener) {
+    public BattleBottomBothInfoView setOnUserPraiseListener(OnUserPraiseListener listener) {
         mOnUserPraiseListener = listener;
         return this;
     }

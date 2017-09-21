@@ -21,7 +21,7 @@
         android:paddingTop="10dp"
         android:scrollbars="none"/>
 
-    <com.sbai.finance.view.BattleInfoView
+    <com.sbai.finance.view.BattleBottomBothInfoView
         android:id="@+id/battleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

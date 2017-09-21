@@ -45,14 +45,15 @@ public class ModifyUserNameActivity extends BaseActivity {
         ButterKnife.bind(this);
         mUserName.addTextChangedListener(mValidationWatcher);
         mUserName.setFilters(new InputFilter[]{new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                if (ValidityDecideUtil.isLegalNickName(source)) {
-                    return source;
-                }
-                return "";
-            }
-        }, new InputFilter.LengthFilter(8)});
+                    @Override
+                    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                        if (ValidityDecideUtil.isLegalNickName(source)) {
+                            return source;
+                        }
+                        return "";
+                    }
+                },
+                new InputFilter.LengthFilter(8)});
         mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
 
         mUserName.postDelayed(new Runnable() {

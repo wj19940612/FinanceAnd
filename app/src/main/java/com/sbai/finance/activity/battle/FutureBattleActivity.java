@@ -47,7 +47,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
-import com.sbai.finance.view.BattleInfoView;
+import com.sbai.finance.view.BattleBottomBothInfoView;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.BattleWaitAgainstLayout;
 import com.sbai.finance.view.SmartDialog;
@@ -84,7 +84,7 @@ import butterknife.ButterKnife;
 public class FutureBattleActivity extends BaseActivity implements
         BattleWaitAgainstLayout.OnViewClickListener,
         BattleTradeView.OnViewClickListener,
-        BattleInfoView.OnUserPraiseListener {
+        BattleBottomBothInfoView.OnUserPraiseListener {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -111,7 +111,7 @@ public class FutureBattleActivity extends BaseActivity implements
     @BindView(R.id.battleTradeView)
     BattleTradeView mBattleTradeView;
     @BindView(R.id.battleView)
-    BattleInfoView mBattleView;
+    BattleBottomBothInfoView mBattleView;
     @BindView(R.id.battleContent)
     LinearLayout mBattleContent;
     @BindView(R.id.rootView)
@@ -273,7 +273,7 @@ public class FutureBattleActivity extends BaseActivity implements
 
     private void initBattleFloatView() {
         if (mUserIsObserver) {
-            mBattleView.setMode(BattleInfoView.Mode.VISITOR)
+            mBattleView.setMode(BattleBottomBothInfoView.Mode.VISITOR)
                     .initWithModel(mCurrentBattle)
                     .setProgress(mCurrentBattle.getLaunchScore(), mCurrentBattle.getAgainstScore(), false);
             mBattleView.setOnUserPraiseListener(this);
@@ -281,7 +281,7 @@ public class FutureBattleActivity extends BaseActivity implements
 
         } else {
             //初始化
-            mBattleView.setMode(BattleInfoView.Mode.MINE)
+            mBattleView.setMode(BattleBottomBothInfoView.Mode.MINE)
                     .initWithModel(mCurrentBattle);
             if (mCurrentBattle.isBattleInitiating()) {
                 mBattleView.setProgress(mCurrentBattle.getLaunchScore(), mCurrentBattle.getAgainstScore(), true);
@@ -298,6 +298,7 @@ public class FutureBattleActivity extends BaseActivity implements
 
         WsClient.get().send(new UserPraise(mCurrentBattle.getId(), launchUser)); // praise push received
     }
+
 
     /**
      * @param praiseCount   被赞数量
@@ -414,6 +415,7 @@ public class FutureBattleActivity extends BaseActivity implements
             dismissAllDialog();
             updateRoomState();
             refreshTradeView();
+            mHandler.sendEmptyMessageDelayed(HANDLER_WHAT_BATTLE_COUNTDOWN, 0);
         } else if (data.isBattleOver()) {
             updateRoomState();
             if (mUserIsObserver) {
@@ -438,12 +440,15 @@ public class FutureBattleActivity extends BaseActivity implements
         dismissCalculatingView();
         int result;
         String content;
+        Log.d("WebSocket", "showGameOverDialog: " + mCurrentBattle.toString());
+        Log.d("WebSocket", "showGameOverDialog: " + LocalUser.getUser().getUserInfo().getId());
         if (mCurrentBattle.getWinResult() == 0) {
             //平局
             result = BattleResultDialog.GAME_RESULT_DRAW;
             content = getString(R.string.return_reward);
         } else {
             String coinType = getCoinType();
+
             if (mCurrentBattle.getBattleResult()) {
                 result = BattleResultDialog.GAME_RESULT_WIN;
                 content = "+" + (mCurrentBattle.getReward() - (int) mCurrentBattle.getCommission()) + coinType;
@@ -748,6 +753,7 @@ public class FutureBattleActivity extends BaseActivity implements
                         if (resp.getContent().isSuccess()) {
                             Resp<Battle> content = resp.getContent();
                             if (content != null && content.getData() != null) {
+                                Log.d(TAG, "网络v: " + content.getData().toString());
                                 updateBattleStatusAndInfo(resp.getContent().getData());
                             }
                         }
@@ -1140,6 +1146,7 @@ public class FutureBattleActivity extends BaseActivity implements
 
             @Override
             public void onError(int code) {
+                Log.d(TAG, "onError: " + code);
             }
         }, TAG);
     }
@@ -1231,6 +1238,7 @@ public class FutureBattleActivity extends BaseActivity implements
                     protected void onRespFailure(Resp failedResp) {
                         if (failedResp.getCode() == GameCode.ORDER_EXISIT) {
                             refreshTradeView();
+                            ToastUtil.show(failedResp.getMsg());
                         }
                     }
                 }).fire();
@@ -1334,6 +1342,6 @@ public class FutureBattleActivity extends BaseActivity implements
         mHandler.removeCallbacksAndMessages(null);
         BaseDialog.dismiss(this);
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
-        GlideApp.with(App.getAppContext()).pauseRequests();
+        GlideApp.with(App.getAppContext()).pauseRequestsRecursive();
     }
 }

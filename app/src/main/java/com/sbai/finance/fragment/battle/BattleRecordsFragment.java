@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.sbai.finance.App;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.battle.Battle;
@@ -14,9 +15,10 @@ import com.sbai.finance.model.battle.TradeRecord;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.view.BattleInfoView;
+import com.sbai.finance.view.BattleBottomBothInfoView;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.glide.GlideApp;
 
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class BattleRecordsFragment extends BaseFragment {
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.battleView)
-    BattleInfoView mBattleView;
+    BattleBottomBothInfoView mBattleView;
 
     Unbinder unbinder;
 
@@ -77,7 +79,7 @@ public class BattleRecordsFragment extends BaseFragment {
         scrollToTop(mTitleBar, mListView);
         mBattleTradeAdapter = new BattleTradeView.BattleTradeAdapter(getContext());
         mListView.setAdapter(mBattleTradeAdapter);
-        mBattleView.setMode(BattleInfoView.Mode.MINE)
+        mBattleView.setMode(BattleBottomBothInfoView.Mode.MINE)
                 .initWithModel(mBattle)
                 .setDeadline(mBattle.getGameStatus(), 0)
                 .setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false)
@@ -108,5 +110,6 @@ public class BattleRecordsFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        GlideApp.with(App.getAppContext()).pauseRequestsRecursive();
     }
 }

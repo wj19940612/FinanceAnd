@@ -92,11 +92,16 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                     protected void onRespSuccessData(FutureVersus data) {
                         updateVersusData(data);
                     }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
+                    }
                 }).fireFree();
     }
 
     private void updateVersusData(FutureVersus futureVersus) {
-        stopRefreshAnimation();
         if (mSet.isEmpty()) {
             mVersusRecordListAdapter.clear();
         }
