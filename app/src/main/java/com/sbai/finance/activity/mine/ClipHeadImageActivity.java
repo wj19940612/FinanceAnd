@@ -56,7 +56,7 @@ public class ClipHeadImageActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.complete:
-                Bitmap clipBitmap = mClipImageLayout.clip();
+                Bitmap clipBitmap = mClipImageLayout.clip(Bitmap.Config.RGB_565);
                 if (clipBitmap != null) {
 //                    String bitmapToBase64 = ImageUtils.compressImageToBase64(clipBitmap);
                     String bitmapToBase64 = ImageUtils.bitmapToBase64(clipBitmap);

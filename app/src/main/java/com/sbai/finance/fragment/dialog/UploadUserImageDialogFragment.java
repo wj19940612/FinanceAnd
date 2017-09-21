@@ -5,7 +5,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,10 +41,17 @@ import butterknife.Unbinder;
 public class UploadUserImageDialogFragment extends BaseDialogFragment {
     private static final String TAG = "UploadUserImageDialogFr";
 
-    private static final String KEY_IF_CLIP_IMAGE = "IF_CLIP_IMAGE";
-    private static final String KEY_IMAGE_URL_INDEX = "KEY_IMAGE_URL_INDEX";
-    private static final String KEY_IS_AREA_TAKE_PHONE = "KEY_isAreaTakePhone";
+
     private static final String KEY_IMAGE_URL = "KEY_IMAGE_URL";
+    private static final String KEY_TYPE = "type";
+    private static final String KEY_IMAGE_URL_INDEX = "key_image_url_index";
+
+    //不做任何处理，只返回图片地址
+    public static final int IMAGE_TYPE_NOT_DEAL = 1750;
+    //上传头像类似裁剪 图片可移动，缩放
+    public static final int IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE = 3750;
+    // 实名认证 型裁剪  拍照后，获取固定区域的图片
+    public static final int IMAGE_TYPE_CLIPPING_IMMOBILIZATION_AREA = 2750;
 
     /**
      * 打开相机的请求码
@@ -55,10 +61,6 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
      * 打开图册的请求码
      */
     private static final int REQ_CODE_TAKE_PHONE_FROM_PHONES = 600;
-    /**
-     * 打开裁剪界面的请求码
-     */
-    private static final int REQ_CODE_CROP_IMAGE = 204;
     /**
      * 打开自定义裁剪页面的请求码
      */
@@ -77,14 +79,12 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
 
     private Unbinder mBind;
     private File mFile;
-    private boolean mNeedClipImage;
-    //用来标记传回的图片地址加载到哪一个image
-    private int mImagePathIndex;
-    //是否区域拍照  上传身份证
-    private boolean mIsAreaTakePhone;
+
     private OnImagePathListener mOnImagePathListener;
 
-    private String[] HDPictureUrl;
+    private String HDPictureUrl;
+    private int mImageDealType;
+    private int mImageUrlIndex;
 
     public interface OnImagePathListener {
         void onImagePath(int index, String imagePath);
@@ -94,40 +94,31 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
 
     }
 
-    public static UploadUserImageDialogFragment newInstance(boolean ifClipImage, String url[]) {
+    public static UploadUserImageDialogFragment newInstance(int type) {
+        return newInstance(type, "");
+    }
+
+    public static UploadUserImageDialogFragment newInstance(int type, String url) {
+        return newInstance(type, url, -1);
+    }
+
+    public static UploadUserImageDialogFragment newInstance(int type, int imageIndex) {
+        return newInstance(type, "", imageIndex);
+    }
+
+    public static UploadUserImageDialogFragment newInstance(int type, String url, int imageIndex) {
         Bundle args = new Bundle();
-        args.putBoolean(KEY_IF_CLIP_IMAGE, ifClipImage);
-        args.putStringArray(KEY_IMAGE_URL, url);
+        args.putInt(KEY_TYPE, type);
+        args.putString(KEY_IMAGE_URL, url);
+        args.putInt(KEY_IMAGE_URL_INDEX, imageIndex);
         UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static UploadUserImageDialogFragment newInstance(boolean ifClipImage) {
-        Bundle args = new Bundle();
-        args.putBoolean(KEY_IF_CLIP_IMAGE, ifClipImage);
-        UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static UploadUserImageDialogFragment newInstance(int index, boolean ifClipImage) {
-        Bundle args = new Bundle();
-        args.putBoolean(KEY_IF_CLIP_IMAGE, ifClipImage);
-        args.putInt(KEY_IMAGE_URL_INDEX, index);
-        UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static UploadUserImageDialogFragment newInstance(int index, boolean ifClipImage, boolean isAreaTakePhone) {
-        Bundle args = new Bundle();
-        args.putBoolean(KEY_IF_CLIP_IMAGE, ifClipImage);
-        args.putInt(KEY_IMAGE_URL_INDEX, index);
-        args.putBoolean(KEY_IS_AREA_TAKE_PHONE, isAreaTakePhone);
-        UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public UploadUserImageDialogFragment setOnImagePathListener(OnImagePathListener onImagePathListener) {
+        mOnImagePathListener = onImagePathListener;
+        return this;
     }
 
     @Override
@@ -142,10 +133,9 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mNeedClipImage = getArguments().getBoolean(KEY_IF_CLIP_IMAGE, true);
-            mImagePathIndex = getArguments().getInt(KEY_IMAGE_URL_INDEX, -1);
-            mIsAreaTakePhone = getArguments().getBoolean(KEY_IS_AREA_TAKE_PHONE, false);
-            HDPictureUrl = getArguments().getStringArray(KEY_IMAGE_URL);
+            mImageDealType = getArguments().getInt(KEY_TYPE, IMAGE_TYPE_NOT_DEAL);
+            HDPictureUrl = getArguments().getString(KEY_IMAGE_URL);
+            mImageUrlIndex = getArguments().getInt(KEY_IMAGE_URL_INDEX, -1);
         }
     }
 
@@ -153,8 +143,10 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (HDPictureUrl != null) {
+        if (!TextUtils.isEmpty(HDPictureUrl) || mImageDealType == IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE) {
             mLookHDPicture.setVisibility(View.VISIBLE);
+        } else {
+            mLookHDPicture.setVisibility(View.GONE);
         }
     }
 
@@ -177,31 +169,10 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
         switch (view.getId()) {
             case R.id.takePhoneFromCamera:
                 if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                    if (mIsAreaTakePhone) {
-                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                            if (PermissionUtil.checkPermission(getContext(), Manifest.permission.CAMERA)) {
-                                startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
-                            } else {
-                                ToastUtil.show(getString(R.string.please_open_camera_permission));
-                            }
-                        } else {
-                            if (PermissionUtil.cameraIsCanUse()) {
-                                startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
-                            } else {
-                                ToastUtil.show(getString(R.string.please_open_camera_permission));
-                            }
-                        }
-
-
+                    if (mImageDealType == IMAGE_TYPE_CLIPPING_IMMOBILIZATION_AREA) {
+                        openAreaTakePage();
                     } else {
-                        Intent openCameraIntent = new Intent(
-                                MediaStore.ACTION_IMAGE_CAPTURE);
-                        mFile = new File(Environment
-                                .getExternalStorageDirectory(), System.currentTimeMillis() + "image.jpg");
-                        // 指定照片保存路径（SD卡），image.jpg为一个临时文件，防止拿到
-                        Uri mMBitmapUri = Uri.fromFile(mFile);
-                        openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMBitmapUri);
-                        startActivityForResult(openCameraIntent, REQ_CODE_TAKE_PHONE_FROM_CAMERA);
+                        openSystemCameraPage();
                     }
                 } else {
                     ToastUtil.show(getString(R.string.please_open_camera_permission));
@@ -224,10 +195,37 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
 
             case R.id.lookHDPicture:
                 Launcher.with(getActivity(), ContentImgActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, HDPictureUrl)
+                        .putExtra(Launcher.EX_PAYLOAD, new String[]{HDPictureUrl})
                         .execute();
                 this.dismissAllowingStateLoss();
                 break;
+        }
+    }
+
+    private void openSystemCameraPage() {
+        Intent openCameraIntent = new Intent(
+                MediaStore.ACTION_IMAGE_CAPTURE);
+        mFile = new File(Environment
+                .getExternalStorageDirectory(), System.currentTimeMillis() + "image.jpg");
+        // 指定照片保存路径（SD卡），image.jpg为一个临时文件，防止拿到
+        Uri mMBitmapUri = Uri.fromFile(mFile);
+        openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMBitmapUri);
+        startActivityForResult(openCameraIntent, REQ_CODE_TAKE_PHONE_FROM_CAMERA);
+    }
+
+    private void openAreaTakePage() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            if (PermissionUtil.checkPermission(getContext(), Manifest.permission.CAMERA)) {
+                startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
+            } else {
+                ToastUtil.show(getString(R.string.please_open_camera_permission));
+            }
+        } else {
+            if (PermissionUtil.cameraIsCanUse()) {
+                startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
+            } else {
+                ToastUtil.show(getString(R.string.please_open_camera_permission));
+            }
         }
     }
 
@@ -293,29 +291,29 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
     }
 
     private void openClipImagePage(String imaUri) {
-        if (mNeedClipImage) {
+        if (mImageDealType == IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE) {
             Intent intent = new Intent(getActivity(), ClipHeadImageActivity.class);
             intent.putExtra(ClipHeadImageActivity.KEY_CLIP_USER_IMAGE, imaUri);
             getActivity().startActivityForResult(intent, REQ_CLIP_HEAD_IMAGE_PAGE);
         } else {
             if (mOnImagePathListener != null) {
-                mOnImagePathListener.onImagePath(mImagePathIndex, imaUri.replace("/raw//", ""));
+                mOnImagePathListener.onImagePath(mImageUrlIndex, imaUri.replace("/raw//", ""));
             }
         }
-        dismiss();
+        dismissAllowingStateLoss();
     }
 
-    //调用系统裁剪，有问题，有些手机不支持裁剪后获取图片
-    private void cropImage(Uri uri) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra("crop", "true");// crop=true 有这句才能出来最后的裁剪页面.
-        intent.putExtra("aspectX", 1);// 这两项为裁剪框的比例.
-        intent.putExtra("aspectY", 1);// x:y=1:1
-        intent.putExtra("outputX", 600);//图片输出大小
-        intent.putExtra("outputY", 600);
-        intent.putExtra("output", uri);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());// 返回格式
-        startActivityForResult(intent, REQ_CODE_CROP_IMAGE);
-    }
+//    //调用系统裁剪，有问题，有些手机不支持裁剪后获取图片
+//    private void cropImage(Uri uri) {
+//        Intent intent = new Intent("com.android.camera.action.CROP");
+//        intent.setDataAndType(uri, "image/*");
+//        intent.putExtra("crop", "true");// crop=true 有这句才能出来最后的裁剪页面.
+//        intent.putExtra("aspectX", 1);// 这两项为裁剪框的比例.
+//        intent.putExtra("aspectY", 1);// x:y=1:1
+//        intent.putExtra("outputX", 600);//图片输出大小
+//        intent.putExtra("outputY", 600);
+//        intent.putExtra("output", uri);
+//        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());// 返回格式
+//        startActivityForResult(intent, REQ_CODE_CROP_IMAGE);
+//    }
 }

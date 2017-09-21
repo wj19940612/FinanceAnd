@@ -37,13 +37,11 @@ public class ClipImageBorderView extends View {
 
 	private Paint mPaint;
 
-	public ClipImageBorderView(Context context)
-	{
+	public ClipImageBorderView(Context context) {
 		this(context, null);
 	}
 
-	public ClipImageBorderView(Context context, AttributeSet attrs)
-	{
+	public ClipImageBorderView(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
 	}
 
@@ -90,5 +88,4 @@ public class ClipImageBorderView extends View {
 		this.mHorizontalPadding = mHorizontalPadding;
 		
 	}
-
 }

@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- * Created by linrongfang on 2017/5/10.
+ *快速交易
  */
 
 public class TradeOptionDialogFragment extends DialogFragment {

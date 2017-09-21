@@ -171,8 +171,9 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:
-                String url[] = new String[]{LocalUser.getUser().getUserInfo().getUserPortrait()};
-                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(true, url);
+                UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
+                        UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE,
+                        LocalUser.getUser().getUserInfo().getUserPortrait());
                 uploadUserImageDialogFragment.show(getSupportFragmentManager());
                 break;
             case R.id.nickName:
