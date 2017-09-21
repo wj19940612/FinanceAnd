@@ -370,8 +370,13 @@ public class ClipZoomImageView extends AppCompatImageView implements
      * @return
      */
     public Bitmap clip() {
+        return clip(Bitmap.Config.ARGB_8888);
+    }
+
+
+    public Bitmap clip(Bitmap.Config config) {
         Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(),
-                Bitmap.Config.ARGB_8888);
+                config);
         Canvas canvas = new Canvas(bitmap);
         draw(canvas);
         return Bitmap.createBitmap(bitmap, mHorizontalPadding,

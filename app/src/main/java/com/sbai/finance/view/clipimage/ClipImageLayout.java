@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.widget.RelativeLayout;
 
@@ -19,8 +18,6 @@ public class ClipImageLayout extends RelativeLayout {
     private static final String TAG = "ClipImageLayout";
 
     private ClipZoomImageView mZoomImageView;
-    private int mWidthPixels;
-    private int mHeightPixels;
 
     /**
      * 这里测试，直接写死了大小，真正使用过程中，可以提取为自定义属性
@@ -55,19 +52,10 @@ public class ClipImageLayout extends RelativeLayout {
 
         DisplayMetrics dm = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
-        mWidthPixels = dm.widthPixels;
-        mHeightPixels = dm.heightPixels;
-        Log.d(TAG, "ClipImageLayout: " + mWidthPixels + " 高 " + mHeightPixels);
     }
 
-    public void setZoomImageViewImage(Bitmap bitmap) {
-        mZoomImageView.setImageBitmap(bitmap);
-    }
 
     public void setZoomImageViewImage(String bitmapUrl) {
-//        int width = getImageWidthHeight(bitmapUrl)[0];
-//        int height = getImageWidthHeight(bitmapUrl)[1];
-
         GlideApp.with(getContext()).load(bitmapUrl).fitCenter().into(mZoomImageView);
     }
 
@@ -100,8 +88,12 @@ public class ClipImageLayout extends RelativeLayout {
      *
      * @return
      */
+    public Bitmap clip(Bitmap.Config config) {
+        return mZoomImageView.clip(config);
+    }
+
     public Bitmap clip() {
-        return mZoomImageView.clip();
+        return clip(Bitmap.Config.ARGB_8888);
     }
 
 }
