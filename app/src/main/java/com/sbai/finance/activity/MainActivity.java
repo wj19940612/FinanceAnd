@@ -46,7 +46,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
-//      translucentStatusBar();
+      translucentStatusBar();
         checkVersion();
         requestServiceConnectWay();
 

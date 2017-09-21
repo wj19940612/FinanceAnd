@@ -31,6 +31,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -404,7 +405,7 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                     public void onClick(View v) {
                         if (callback != null) {
                             callback.onWarshipClick(item);
-                            if (LocalUser.getUser().isLogin()) {
+                            if (LocalUser.getUser().isLogin()&& Network.isNetworkAvailable()) {
                                 mWorship.setEnabled(false);
                             }
                         }
