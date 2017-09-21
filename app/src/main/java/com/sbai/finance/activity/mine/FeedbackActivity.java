@@ -28,7 +28,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.PreviewDialogFragment;
-import com.sbai.finance.fragment.dialog.UploadFeedbackImageDialogFragment;
+import com.sbai.finance.fragment.dialog.UploadUserImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.Feedback;
 import com.sbai.finance.net.Callback;
@@ -245,14 +245,13 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void sendPicToCustomer() {
-        UploadFeedbackImageDialogFragment.newInstance()
-                .setOnDismissListener(new UploadFeedbackImageDialogFragment.OnDismissListener() {
+        UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_NOT_DEAL)
+                .setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
                     @Override
-                    public void onGetImagePath(String path) {
-                        requestSendFeedbackImage(path);
+                    public void onImagePath(int index, String imagePath) {
+                        requestSendFeedbackImage(imagePath);
                     }
-                })
-                .show(getSupportFragmentManager());
+                }).show(getSupportFragmentManager());
     }
 
     private void requestSendFeedbackImage(final String path) {

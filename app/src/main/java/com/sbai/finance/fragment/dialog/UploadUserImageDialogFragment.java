@@ -5,7 +5,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -63,10 +62,6 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
      */
     private static final int REQ_CODE_TAKE_PHONE_FROM_PHONES = 600;
     /**
-     * 打开裁剪界面的请求码
-     */
-    private static final int REQ_CODE_CROP_IMAGE = 204;
-    /**
      * 打开自定义裁剪页面的请求码
      */
     public static final int REQ_CLIP_HEAD_IMAGE_PAGE = 144;
@@ -119,6 +114,11 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
         UploadUserImageDialogFragment fragment = new UploadUserImageDialogFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public UploadUserImageDialogFragment setOnImagePathListener(OnImagePathListener onImagePathListener) {
+        mOnImagePathListener = onImagePathListener;
+        return this;
     }
 
     @Override
@@ -303,17 +303,17 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
         dismissAllowingStateLoss();
     }
 
-    //调用系统裁剪，有问题，有些手机不支持裁剪后获取图片
-    private void cropImage(Uri uri) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra("crop", "true");// crop=true 有这句才能出来最后的裁剪页面.
-        intent.putExtra("aspectX", 1);// 这两项为裁剪框的比例.
-        intent.putExtra("aspectY", 1);// x:y=1:1
-        intent.putExtra("outputX", 600);//图片输出大小
-        intent.putExtra("outputY", 600);
-        intent.putExtra("output", uri);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());// 返回格式
-        startActivityForResult(intent, REQ_CODE_CROP_IMAGE);
-    }
+//    //调用系统裁剪，有问题，有些手机不支持裁剪后获取图片
+//    private void cropImage(Uri uri) {
+//        Intent intent = new Intent("com.android.camera.action.CROP");
+//        intent.setDataAndType(uri, "image/*");
+//        intent.putExtra("crop", "true");// crop=true 有这句才能出来最后的裁剪页面.
+//        intent.putExtra("aspectX", 1);// 这两项为裁剪框的比例.
+//        intent.putExtra("aspectY", 1);// x:y=1:1
+//        intent.putExtra("outputX", 600);//图片输出大小
+//        intent.putExtra("outputY", 600);
+//        intent.putExtra("output", uri);
+//        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());// 返回格式
+//        startActivityForResult(intent, REQ_CODE_CROP_IMAGE);
+//    }
 }
