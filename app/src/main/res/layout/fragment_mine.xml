@@ -69,6 +69,8 @@
         app:leftIcon="@drawable/ic_mine_question_and_answer"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/mine_question_and_answer"
+        app:hasBottomSplitLine="true"
+        app:splitLineColor="@color/split"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"
         app:rowVerticalPadding="0dp"/>

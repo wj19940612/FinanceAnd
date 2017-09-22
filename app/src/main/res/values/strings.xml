@@ -793,4 +793,7 @@
     <string name="exchange_record">兑换记录</string>
     <string name="no_exchange_skin_record">暂无兑换记录</string>
     <string name="image_saved_please_open_wechat_to_share">图片已保存。请打开微信，从相册中\n选择图片进行分享</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

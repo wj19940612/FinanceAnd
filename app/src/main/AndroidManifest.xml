@@ -421,7 +421,8 @@
         <activity
             android:name=".activity.GuideActivity"
             android:screenOrientation="portrait"/>
-
+        <activity android:name=".activity.mine.MissMineQuestionAndAnswerActivity">
+        </activity>
     </application>
 
 </manifest>
