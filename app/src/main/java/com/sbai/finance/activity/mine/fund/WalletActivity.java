@@ -63,7 +63,7 @@ public class WalletActivity extends BaseActivity {
     private void initViewPager() {
         mFundFragmentAdapter = new FundFragmentAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mFundFragmentAdapter);
-        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(1);
 
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
@@ -274,15 +274,15 @@ public class WalletActivity extends BaseActivity {
                     return AccountFundDetailFragment.newInstance(AccountFundDetail.TYPE_INGOT);
                 case 1:
                     return AccountFundDetailFragment.newInstance(AccountFundDetail.TYPE_CRASH);
-                case 2:
-                    return AccountFundDetailFragment.newInstance(AccountFundDetail.TYPE_SCORE);
+//                case 2:
+//                    return AccountFundDetailFragment.newInstance(AccountFundDetail.TYPE_SCORE);
             }
             return null;
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
 
         @Override
@@ -292,8 +292,8 @@ public class WalletActivity extends BaseActivity {
                     return mContext.getString(R.string.ingot);
                 case 1:
                     return mContext.getString(R.string.cash);
-                case 2:
-                    return mContext.getString(R.string.score);
+//                case 2:
+//                    return mContext.getString(R.string.score);
             }
             return super.getPageTitle(position);
         }
