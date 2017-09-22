@@ -736,6 +736,7 @@
     <string name="train_share_description">快来和我一起进行最有趣的金融训练课程，乐米金融，金融小白的第一站</string>
     <string name="question_share_share_title">这个小姐姐对于金融的见解好独特！</string>
     <string name="question_share_description">快来一起听小姐姐的语音回答,学金融知识,乐米金融,金融小白的第一站!</string>
+    <string name="praise">赞</string>
 
     <!--Training-->
     <string name="my_grade">我的成绩</string>

@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -238,7 +239,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             }
 
             @Override
-            public void voiceOnClick(final Question item) {
+            public void voiceOnClick(final Question item, final ProgressBar progressBar) {
                 //播放下一个之前把上一个播放位置的动画停了
                 stopPreviousAnimation();
 
@@ -256,7 +257,6 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                                         mPlayingID = -1;
                                     }
                                 });
-
                                 MissVoiceRecorder.markHeard(item.getId());
                                 item.setPlaying(true);
                                 item.setListenCount(item.getListenCount() + 1);
@@ -337,7 +337,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             }
 
             @Override
-            public void voiceOnClick(final Question item) {
+            public void voiceOnClick(final Question item, ProgressBar progressBar) {
                 umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
                 //播放下一个之前把上一个播放位置的动画停了
                 stopPreviousAnimation();
@@ -712,7 +712,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
 
             void rewardOnClick(Question item);
 
-            void voiceOnClick(Question item);
+            void voiceOnClick(Question item, ProgressBar progressBar);
 
         }
 
@@ -766,6 +766,8 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             View mVoiceLevel;
             @BindView(R.id.voiceArea)
             LinearLayout mVoiceArea;
+            @BindView(R.id.progressBar)
+            ProgressBar mProgressBar;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -846,7 +848,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
                     @Override
                     public void onClick(View v) {
                         if (callback != null) {
-                            callback.voiceOnClick(item);
+                            callback.voiceOnClick(item, mProgressBar);
                         }
                     }
                 });

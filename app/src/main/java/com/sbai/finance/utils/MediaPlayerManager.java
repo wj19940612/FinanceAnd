@@ -3,6 +3,7 @@ package com.sbai.finance.utils;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 
@@ -56,6 +57,60 @@ public class MediaPlayerManager {
 			e.printStackTrace();
 		}
 	}
+
+	public void playUrl(String url, final ProgressBar progressBar, MediaPlayer.OnCompletionListener onCompletionListener) {
+
+		try {
+			if (mMediaPlayer == null) {
+				mMediaPlayer = new MediaPlayer();
+				mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+					@Override
+					public boolean onError(MediaPlayer mp, int what, int extra) {
+						mMediaPlayer.reset();
+						return false;
+					}
+				});
+			} else {
+				mMediaPlayer.reset();
+			}
+
+			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+			mMediaPlayer.setOnCompletionListener(onCompletionListener);
+			mMediaPlayer.setDataSource(url);
+			mMediaPlayer.prepareAsync();
+			mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+				@Override
+				public void onPrepared(MediaPlayer mp) {
+					int result = mAudioManager.requestAudioFocus(afChangeListener,
+							AudioManager.STREAM_MUSIC,
+							AudioManager.AUDIOFOCUS_GAIN);
+					if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+						mMediaPlayer.start();
+						progressBar.setMax(mMediaPlayer.getDuration());
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								while (true) {
+									// 将SeekBar位置设置到当前播放位置
+									progressBar.setProgress(mMediaPlayer.getCurrentPosition());
+									try {
+										// 每100毫秒更新一次位置
+										Thread.sleep(100);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+								}
+							}
+						}).start();
+					}
+				}
+			});
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	public void release() {
 		if (mMediaPlayer != null) {
