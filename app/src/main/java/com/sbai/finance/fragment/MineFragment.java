@@ -173,6 +173,19 @@ public class MineFragment extends BaseFragment {
                 }).fireFree();
     }
 
+    private void requestMyIngotNumber() {
+        Client.getNoReadFeedbackNumber().setTag(TAG)
+                .setCallback(new Callback<Resp<String>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<String> resp) {
+                        if (resp.isSuccess()) {
+                            int count = Integer.parseInt(resp.getData());
+                            updateNoReadFeedbackCount(count);
+                        }
+                    }
+                }).fireFree();
+    }
+
     private void updateNoReadFeedbackCount(int count) {
         if (count != 0) {
             mFeedback.setSubTextVisible(View.VISIBLE);
@@ -185,6 +198,7 @@ public class MineFragment extends BaseFragment {
         if (LocalUser.getUser().isLogin()) {
             requestNoReadNewsNumber();
             requestNoReadFeedbackNumber();
+            requestMyIngotNumber();
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
             int maxLevel = LocalUser.getUser().getUserInfo().getMaxLevel();
             if (maxLevel > 5) {

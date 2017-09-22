@@ -39,13 +39,15 @@
     <string name="lemi_the_third_party_protocol">《乐米第三方授权协议》</string>
     <string name="auth_code_login">验证码登录</string>
     <string name="password_login">密码登录</string>
+    <string name="wechat_login">使用微信登录</string>
     <string name="password">密码</string>
     <string name="new_password">新密码</string>
     <string name="old_password">旧密码</string>
+    <string name="six_to_eighteen_password">6-18位新密码</string>
     <string name="register_free">免费注册</string>
     <string name="forget_password">忘记密码</string>
     <string name="please_input_phone">请输入手机号</string>
-    <string name="auth_code_had_sent_">验证码已发送至\n%1$s</string>
+    <string name="auth_code_had_sent_">验证码已发送至%1$s</string>
     <string name="reset_password_success">重设密码成功，请重新登录</string>
     <string name="login_success">登录成功</string>
 
@@ -157,7 +159,7 @@
     <string name="company">浙江松柏信息技术有限公司 \nCopyright@%1$d</string>
     <string name="service">客服      ( 点击复制 )</string>
     <string name="qq">QQ:%1$s</string>
-    <string name="we_chat">微信:%1$s</string>
+    <string name="we_chat_">微信:%1$s</string>
     <string name="copy_success">复制成功</string>
     <string name="install_qq_first">请先安装QQ</string>
     <!--修改个人信息-->
@@ -190,6 +192,7 @@
     <string name="girl">女</string>
     <string name="restart_get_location">点击重新获取位置</string>
     <string name="RMB">%1$S元</string>
+    <string name="we_chat">微信</string>
 
     <!--   消息 -->
     <string name="up_load_more">加载更多</string>
@@ -620,6 +623,7 @@
     <string name="share_to">分享至</string>
     <string name="share_to_wechat">分享到微信</string>
     <string name="latest_finance_hot_from_lemi">来自乐米的每日最新金融热点</string>
+    <string name="collect">收藏</string>
 
 
     <string name="study_room">自习室</string>

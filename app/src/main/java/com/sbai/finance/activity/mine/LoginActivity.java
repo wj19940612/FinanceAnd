@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -31,6 +32,11 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.PasswordEditText;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,8 +72,6 @@ public class LoginActivity extends BaseActivity {
     TextView mPageTitle;
     @BindView(R.id.loginSwitchTop)
     TextView mLoginSwitchTop;
-    @BindView(R.id.loginSwitch)
-    TextView mLoginSwitch;
 
     @BindView(R.id.authCodeArea)
     LinearLayout mAuthCodeArea;
@@ -77,6 +81,8 @@ public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.password)
     PasswordEditText mPassword;
+    @BindView(R.id.weChatLogin)
+    TextView mWeChatLogin;
 
     private KeyBoardHelper mKeyBoardHelper;
 
@@ -185,12 +191,12 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void OnKeyBoardPop(int keyboardHeight) {
-            mLoginSwitchTop.setVisibility(View.VISIBLE);
+            //    mLoginSwitchTop.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void OnKeyBoardClose(int oldKeyboardHeight) {
-            mLoginSwitchTop.setVisibility(View.GONE);
+            //     mLoginSwitchTop.setVisibility(View.GONE);
         }
     };
 
@@ -276,7 +282,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @OnClick({R.id.closePage, R.id.phoneNumberClear, R.id.getAuthCode, R.id.login, R.id.rootView,
-            R.id.loginSwitch, R.id.loginSwitchTop, R.id.register, R.id.forgetPassword})
+            R.id.loginSwitchTop, R.id.register, R.id.forgetPassword, R.id.weChatLogin})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.closePage:
@@ -309,19 +315,54 @@ public class LoginActivity extends BaseActivity {
                         .execute();
                 break;
 
-            case R.id.loginSwitch:
             case R.id.loginSwitchTop:
                 switchLoginMode();
                 break;
+            case R.id.weChatLogin:
+                weChatLogin();
             default:
                 break;
         }
     }
 
+    private void weChatLogin() {
+        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
+            @Override
+            public void onStart(SHARE_MEDIA share_media) {
+                Log.d(TAG, "onStart " + "授权开始");
+            }
+
+            @Override
+            public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                //sdk是6.4.4的,但是获取值的时候用的是6.2以前的(access_token)才能获取到值,未知原因
+                String uid = map.get("uid");
+                String openid = map.get("openid");//微博没有
+                String unionid = map.get("unionid");//微博没有
+                String access_token = map.get("access_token");
+                String refresh_token = map.get("refresh_token");//微信,qq,微博都没有获取到
+                String expires_in = map.get("expires_in");
+                String name = map.get("name");
+                String gender = map.get("gender");
+                String iconurl = map.get("iconurl");
+                ToastUtil.show("name=" + name + ",gender=" + gender);
+                //拿到信息去请求登录接口。。。
+            }
+
+            @Override
+            public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                Log.d(TAG, "onError " + "授权失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA share_media, int i) {
+                Log.d(TAG, "onCancel " + "授权取消");
+            }
+        });
+    }
+
     private void switchLoginMode() {
         if (isAuthCodeLogin()) { // 当前是验证码登录 -> 密码登录
             mPageTitle.setText(R.string.password_login);
-            mLoginSwitch.setText(R.string.auth_code_login);
             mLoginSwitchTop.setText(R.string.auth_code_login);
             mAuthCodeArea.setVisibility(View.GONE);
             mPassword.setVisibility(View.VISIBLE);
@@ -329,7 +370,6 @@ public class LoginActivity extends BaseActivity {
             mAuthCode.setText("");
         } else {
             mPageTitle.setText(R.string.auth_code_login);
-            mLoginSwitch.setText(R.string.password_login);
             mLoginSwitchTop.setText(R.string.password_login);
             mAuthCodeArea.setVisibility(View.VISIBLE);
             mPassword.setVisibility(View.GONE);

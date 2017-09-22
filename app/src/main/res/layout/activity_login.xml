@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -189,14 +189,18 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/loginSwitch"
-        android:layout_width="160dp"
+        android:id="@+id/weChatLogin"
+        android:layout_width="180dp"
         android:layout_height="@dimen/common_height"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
         android:background="@drawable/btn_login_switch"
+        android:drawableLeft="@drawable/ic_login_wechat"
         android:gravity="center"
-        android:text="@string/password_login"
-        android:textColor="@color/primaryText"/>
+        android:paddingLeft="29dp"
+        android:paddingRight="29dp"
+        android:text="@string/wechat_login"
+        android:textColor="@color/primaryText"
+        android:visibility="visible"/>
 </RelativeLayout>

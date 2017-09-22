@@ -61,6 +61,8 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     AutofitTextView mLocation;
     @BindView(R.id.credit)
     IconTextRow mCredit;
+    @BindView(R.id.weChat)
+    IconTextRow mWeChat;
     @BindView(R.id.logout)
     AppCompatTextView mLogout;
 
@@ -167,7 +169,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
         super.onBackPressed();
     }
 
-    @OnClick({R.id.headImageLayout, R.id.nickName, R.id.sex, R.id.age, R.id.location, R.id.credit, R.id.logout})
+    @OnClick({R.id.headImageLayout, R.id.nickName, R.id.sex, R.id.age, R.id.location, R.id.credit, R.id.logout, R.id.weChat})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:

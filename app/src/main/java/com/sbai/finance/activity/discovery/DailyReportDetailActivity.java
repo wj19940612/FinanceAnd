@@ -82,6 +82,8 @@ public class DailyReportDetailActivity extends BaseActivity {
     LinearLayout mTitleInfo;
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
+    @BindView(R.id.collect)
+    TextView mCollect;
 
     private boolean mLoadSuccess;
     protected String mPageUrl;
@@ -186,13 +188,23 @@ public class DailyReportDetailActivity extends BaseActivity {
         //   mWebView.onPause();
     }
 
-    @OnClick({R.id.back, R.id.share, R.id.refreshButton, R.id.shareArea, R.id.backArea})
+    @OnClick({R.id.back, R.id.share, R.id.refreshButton, R.id.shareArea, R.id.backArea, R.id.collect, R.id.collectArea})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
             case R.id.backArea:
                 finish();
                 break;
+            case R.id.collect:
+            case R.id.collectArea:
+                if (mCollect.isSelected()){
+                    mCollect.setSelected(false);
+                }else {
+                    mCollect.setSelected(true);
+                }
+                //// TODO: 2017-09-22 收藏or取消收藏
+                break;
+
             case R.id.share:
             case R.id.shareArea:
                 umengEventCount(UmengCountEventId.REPORT_SHARE);
