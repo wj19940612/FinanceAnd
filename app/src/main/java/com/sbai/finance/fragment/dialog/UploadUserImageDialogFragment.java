@@ -20,8 +20,9 @@ import android.view.ViewGroup;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
-import com.sbai.finance.activity.mine.AreaTakePhoneActivity;
-import com.sbai.finance.activity.mine.ClipHeadImageActivity;
+import com.sbai.finance.activity.mine.ImageSelectActivity;
+import com.sbai.finance.activity.mine.userinfo.AreaTakePhoneActivity;
+import com.sbai.finance.activity.mine.userinfo.ClipHeadImageActivity;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.PermissionUtil;
 import com.sbai.finance.utils.ToastUtil;
@@ -52,6 +53,9 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
     public static final int IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE = 3750;
     // 实名认证 型裁剪  拍照后，获取固定区域的图片
     public static final int IMAGE_TYPE_CLIPPING_IMMOBILIZATION_AREA = 2750;
+    //打开自定义画廊
+    public static final int IMAGE_TYPE_OPEN_CUSTOM_GALLERY = 4750;
+
 
     /**
      * 打开相机的请求码
@@ -67,6 +71,8 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
     public static final int REQ_CLIP_HEAD_IMAGE_PAGE = 144;
     //打开区域拍照页面的请求吗
     private static final int REQ_CODE_AREA_TAKE_PHONE = 46605;
+    //打开自定义画廊页面请求码
+    private static final int REQ_CODE_TAKE_PHONE_FROM_GALLERY = 46606;
 
     @BindView(R.id.takePhoneFromCamera)
     AppCompatTextView mTakePhoneFromCamera;
@@ -181,10 +187,7 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                 break;
             case R.id.takePhoneFromGallery:
                 if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
-                    Intent openAlbumIntent = new Intent(
-                            Intent.ACTION_PICK);
-                    openAlbumIntent.setType("image/*");
-                    startActivityForResult(openAlbumIntent, REQ_CODE_TAKE_PHONE_FROM_PHONES);
+                    openGalleryPage();
                 } else {
                     ToastUtil.show(R.string.sd_is_not_useful);
                 }
@@ -199,6 +202,21 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                         .execute();
                 this.dismissAllowingStateLoss();
                 break;
+        }
+    }
+
+    private void openGalleryPage() {
+        if (mImageDealType == IMAGE_TYPE_OPEN_CUSTOM_GALLERY) {
+            Intent openGalleryIntent = new Intent(getContext(), ImageSelectActivity.class);
+            openGalleryIntent.putExtra(Launcher.EX_PAYLOAD, 0);
+            startActivityForResult(openGalleryIntent, REQ_CODE_TAKE_PHONE_FROM_GALLERY);
+        } else {
+            Intent openAlbumIntent = new Intent(
+                    Intent.ACTION_PICK);
+            openAlbumIntent.setType("image/*");
+            if (openAlbumIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                startActivityForResult(openAlbumIntent, REQ_CODE_TAKE_PHONE_FROM_PHONES);
+            }
         }
     }
 
@@ -240,7 +258,7 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                         Uri mMBitmapUri = Uri.fromFile(mFile);
                         if (mMBitmapUri != null) {
                             if (!TextUtils.isEmpty(mMBitmapUri.getPath())) {
-                                openClipImagePage(mMBitmapUri.getPath());
+                                dealImagePath(mMBitmapUri.getPath());
                             }
                         }
                     }
@@ -248,13 +266,19 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                 case REQ_CODE_TAKE_PHONE_FROM_PHONES:
                     String galleryBitmapPath = getGalleryBitmapPath(data);
                     if (!TextUtils.isEmpty(galleryBitmapPath)) {
-                        openClipImagePage(galleryBitmapPath);
+                        dealImagePath(galleryBitmapPath);
                     }
                     break;
                 case REQ_CODE_AREA_TAKE_PHONE:
                     String imageUrl = data.getStringExtra(Launcher.EX_PAYLOAD);
                     if (!TextUtils.isEmpty(imageUrl)) {
-                        openClipImagePage(imageUrl);
+                        dealImagePath(imageUrl);
+                    }
+                    break;
+                case REQ_CODE_TAKE_PHONE_FROM_GALLERY:
+                    String imagePath = data.getStringExtra(Launcher.EX_PAYLOAD);
+                    if (!TextUtils.isEmpty(imagePath)) {
+                        dealImagePath(imagePath);
                     }
                     break;
             }
@@ -290,7 +314,7 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
         return null;
     }
 
-    private void openClipImagePage(String imaUri) {
+    private void dealImagePath(String imaUri) {
         if (mImageDealType == IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE) {
             Intent intent = new Intent(getActivity(), ClipHeadImageActivity.class);
             intent.putExtra(ClipHeadImageActivity.KEY_CLIP_USER_IMAGE, imaUri);

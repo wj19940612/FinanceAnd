@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +23,11 @@ import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.mine.AboutUsActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
+import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.net.Callback;
@@ -34,6 +35,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
@@ -76,6 +78,10 @@ public class MineFragment extends BaseFragment {
     IconTextRow mAboutUs;
     @BindView(R.id.financeEvaluation)
     IconTextRow mFinanceEvaluation;
+    @BindView(R.id.mineQuestionsAndAnswers)
+    IconTextRow mMineQuestionsAndAnswers;
+    @BindView(R.id.mineCollection)
+    IconTextRow mMineCollection;
 
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -110,6 +116,8 @@ public class MineFragment extends BaseFragment {
                 .registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.ACTION_LOGIN_SUCCESS));
         mEvaluationLevel = getResources().getStringArray(R.array.evaluationLevel);
 
+        String s = NumberFormatUtils.formatTenThousandNumber(123456);
+        Log.d(TAG, "onActivityCreated: " + s);
     }
 
     @Override
@@ -226,9 +234,8 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.userInfoArea, R.id.wallet,
-            R.id.message, R.id.feedback, R.id.financeEvaluation,
-            R.id.setting, R.id.aboutUs})
+    @OnClick({R.id.userInfoArea, R.id.wallet, R.id.mineQuestionsAndAnswers, R.id.mineCollection,
+            R.id.message, R.id.feedback, R.id.financeEvaluation, R.id.setting, R.id.aboutUs})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.userInfoArea:
@@ -236,7 +243,7 @@ public class MineFragment extends BaseFragment {
                 if (LocalUser.getUser().isLogin()) {
                     startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
                 } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                    openLoginPage();
                 }
                 break;
 
@@ -249,16 +256,25 @@ public class MineFragment extends BaseFragment {
                         openWalletPage();
                     }
                 } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                    openLoginPage();
                 }
                 break;
 
+            case R.id.mineQuestionsAndAnswers:
+                if (LocalUser.getUser().isLogin()) {
+
+                } else {
+
+                }
+                break;
+            case R.id.mineCollection:
+                break;
             case R.id.message:
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.ME_NEWS);
                     startActivityForResult(new Intent(getActivity(), NewsActivity.class), REQ_CODE_MESSAGE);
                 } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                    openLoginPage();
                 }
                 break;
             case R.id.feedback:
@@ -266,7 +282,7 @@ public class MineFragment extends BaseFragment {
                     umengEventCount(UmengCountEventId.ME_FEEDBACK);
                     Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                    openLoginPage();
                 }
                 break;
             case R.id.financeEvaluation:
@@ -282,7 +298,7 @@ public class MineFragment extends BaseFragment {
                     umengEventCount(UmengCountEventId.ME_SETTING);
                     Launcher.with(getActivity(), SettingActivity.class).execute();
                 } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                    openLoginPage();
                 }
                 break;
             case R.id.aboutUs:
@@ -290,6 +306,10 @@ public class MineFragment extends BaseFragment {
                 Launcher.with(getActivity(), AboutUsActivity.class).execute();
                 break;
         }
+    }
+
+    private void openLoginPage() {
+        Launcher.with(getActivity(), LoginActivity.class).execute();
     }
 
     private void requestUserHasSafetyPassword() {

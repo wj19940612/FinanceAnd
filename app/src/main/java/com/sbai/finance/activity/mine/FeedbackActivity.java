@@ -245,7 +245,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void sendPicToCustomer() {
-        UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_NOT_DEAL)
+        UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_OPEN_CUSTOM_GALLERY)
                 .setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
                     @Override
                     public void onImagePath(int index, String imagePath) {

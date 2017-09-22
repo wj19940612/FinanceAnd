@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.mine;
+package com.sbai.finance.activity.mine.userinfo;
 
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;

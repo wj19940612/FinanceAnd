@@ -94,13 +94,13 @@
 
         <!-- 我的模块 -->
         <activity
-            android:name=".activity.mine.ModifyUserInfoActivity"
+            android:name=".activity.mine.userinfo.ModifyUserInfoActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.ModifyUserNameActivity"
+            android:name=".activity.mine.userinfo.ModifyUserNameActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.ClipHeadImageActivity"
+            android:name=".activity.mine.userinfo.ClipHeadImageActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.NewsActivity"
@@ -109,10 +109,10 @@
             android:name=".activity.trade.PredictionRuleActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.CreditApproveActivity"
+            android:name=".activity.mine.userinfo.CreditApproveActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.CreditActivity"
+            android:name=".activity.mine.userinfo.CreditActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.setting.LocationActivity"
@@ -154,7 +154,7 @@
             android:name=".activity.mine.setting.UpdatePasswordActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.AreaTakePhoneActivity"
+            android:name=".activity.mine.userinfo.AreaTakePhoneActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.AboutUsActivity"
@@ -421,7 +421,8 @@
         <activity
             android:name=".activity.GuideActivity"
             android:screenOrientation="portrait"/>
-
+        <activity android:name=".activity.mine.MissMineQuestionAndAnswerActivity">
+        </activity>
     </application>
 
 </manifest>

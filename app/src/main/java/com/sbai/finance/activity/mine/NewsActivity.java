@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
+import com.sbai.finance.activity.mine.userinfo.CreditApproveActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
 import com.sbai.finance.model.mine.UserInfo;

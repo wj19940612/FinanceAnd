@@ -97,7 +97,10 @@ public class API extends RequestManager {
         if (TextUtils.isEmpty(mHost)) {
             mHost = HOST;
         }
-        return "https://" + mHost;
+        if (!mHost.startsWith("http")) {
+            return "https://" + mHost;
+        }
+        return mHost;
     }
 
     public static String getDomain() {
