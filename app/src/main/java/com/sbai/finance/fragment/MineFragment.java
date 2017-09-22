@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
@@ -114,6 +116,8 @@ public class MineFragment extends BaseFragment {
                 .registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.ACTION_LOGIN_SUCCESS));
         mEvaluationLevel = getResources().getStringArray(R.array.evaluationLevel);
 
+        String s = NumberFormatUtils.formatTenThousandNumber(123456);
+        Log.d(TAG, "onActivityCreated: " + s);
     }
 
     @Override
@@ -245,7 +249,7 @@ public class MineFragment extends BaseFragment {
             case R.id.mineQuestionsAndAnswers:
                 if (LocalUser.getUser().isLogin()) {
 
-                }else {
+                } else {
 
                 }
                 break;

@@ -44,11 +44,17 @@ public class NumberFormatUtils {
 
     /**
      * 格式化 我的问答页面的人数数字显示   超过10000 用 万来表示
+     * 例子
      * @param number
      * @return
      */
     public static String formatTenThousandNumber(int number) {
-
+        if (number > 9999) {
+            String s = String.valueOf(number);
+            String substring = s.substring(s.length() - 4, s.length() - 3);
+            return number / 10000 + "." + substring + FinanceUtil.UNIT_WANG;
+        }
+        return String.valueOf(number);
     }
 
 }
