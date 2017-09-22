@@ -145,6 +145,8 @@
     <string name="feedback">意见反馈</string>
     <string name="finance_evaluation">金融水平初步测评</string>
     <string name="wallet">钱包</string>
+    <string name="mine_collection">我的收藏</string>
+    <string name="mine_question_and_answer">我的问答</string>
     <string name="now_not_has_news">暂无消息</string>
     <string name="now_not_has_data">暂无数据</string>
     <string name="please_input_here">请在此输入......</string>

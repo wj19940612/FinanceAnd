@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.mine;
+package com.sbai.finance.activity.mine.userinfo;
 
 import android.app.Dialog;
 import android.os.Build;

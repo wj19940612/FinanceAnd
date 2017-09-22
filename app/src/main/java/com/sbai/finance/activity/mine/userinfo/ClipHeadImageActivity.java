@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.mine;
+package com.sbai.finance.activity.mine.userinfo;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

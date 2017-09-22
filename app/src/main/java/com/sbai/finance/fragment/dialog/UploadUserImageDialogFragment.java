@@ -20,8 +20,8 @@ import android.view.ViewGroup;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.economiccircle.ContentImgActivity;
-import com.sbai.finance.activity.mine.AreaTakePhoneActivity;
-import com.sbai.finance.activity.mine.ClipHeadImageActivity;
+import com.sbai.finance.activity.mine.userinfo.AreaTakePhoneActivity;
+import com.sbai.finance.activity.mine.userinfo.ClipHeadImageActivity;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.PermissionUtil;
 import com.sbai.finance.utils.ToastUtil;

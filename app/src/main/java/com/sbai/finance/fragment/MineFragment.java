@@ -22,7 +22,7 @@ import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.mine.AboutUsActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.ModifyUserInfoActivity;
+import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;

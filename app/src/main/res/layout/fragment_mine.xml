@@ -60,6 +60,34 @@
 
 
     <com.sbai.finance.view.IconTextRow
+        android:id="@+id/mineQuestionsAndAnswers"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_white"
+        android:visibility="visible"
+        app:leftIcon="@drawable/ic_mine_question_and_answer"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/mine_question_and_answer"
+        app:rowTextColor="@color/primaryText"
+        app:rowTextSize="15sp"
+        app:rowVerticalPadding="0dp"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/mineCollection"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@drawable/bg_white"
+        android:visibility="visible"
+        app:leftIcon="@drawable/ic_mine_collection"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/mine_collection"
+        app:rowTextColor="@color/primaryText"
+        app:rowTextSize="15sp"
+        app:rowVerticalPadding="0dp"/>
+
+
+    <com.sbai.finance.view.IconTextRow
         android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="44dp"
