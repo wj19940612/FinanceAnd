@@ -145,7 +145,7 @@
     <string name="feedback">意见反馈</string>
     <string name="finance_evaluation">金融水平初步测评</string>
     <string name="wallet">钱包</string>
-    <string name="mine_collection">我的收藏</string>
+    <string name="my_collection">我的收藏</string>
     <string name="mine_question_and_answer">我的问答</string>
     <string name="now_not_has_news">暂无消息</string>
     <string name="now_not_has_data">暂无数据</string>
@@ -162,6 +162,11 @@
     <string name="we_chat">微信:%1$s</string>
     <string name="copy_success">复制成功</string>
     <string name="install_qq_first">请先安装QQ</string>
+    <string name="article">文章</string>
+
+    <string name="miss_is_answering">小姐姐正在抢答中~</string>
+    <string name="question_replay_content"> %1$s人点赞  %2$s人评论 %3$s人打赏</string>
+
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
     <string name="head_image">头像</string>
@@ -794,6 +799,25 @@
     <string name="no_exchange_skin_record">暂无兑换记录</string>
     <string name="image_saved_please_open_wechat_to_share">图片已保存。请打开微信，从相册中\n选择图片进行分享</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- 我的问答-->
+    <string name="you_not_has_question">你还未提问</string>
+    <string name="this_will_show_your_question">在这里会显示你的提问</string>
+    <string name="go_to_question">去提问</string>
+
+    <string name="you_not_has_comment">你还未评论</string>
+    <string name="this_will_show_comment_question">在这里会显示你评论过的问题</string>
+    <string name="go_to_comment">去评论</string>
+
+    <!--我的收藏-->
+    <string name="you_not_has_article_collection">暂无文章收藏</string>
+    <string name="collect_favorite_articles_here">在这里收藏喜欢的文章</string>
+    <string name="look_report">查看日报</string>
+    <string name="collect">收藏</string>
+
+    <string name="you_not_has_comment_collection">暂无提问收藏</string>
+    <string name="collect_favorite_miss_take_here">在这里收藏喜欢的姐说问答</string>
+    <string name="look_miss">查看姐说</string>
+
+
 </resources>

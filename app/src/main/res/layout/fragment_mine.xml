@@ -83,7 +83,7 @@
         android:visibility="visible"
         app:leftIcon="@drawable/ic_mine_collection"
         app:rightIcon="@drawable/ic_arrow_right_tint"
-        app:rowText="@string/mine_collection"
+        app:rowText="@string/my_collection"
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"
         app:rowVerticalPadding="0dp"/>

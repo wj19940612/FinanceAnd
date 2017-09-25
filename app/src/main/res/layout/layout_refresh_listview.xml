@@ -7,6 +7,7 @@
     android:background="@color/background">
 
     <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -18,7 +19,7 @@
             android:layout_height="match_parent"
             android:divider="@color/split"
             android:dividerHeight="0.5dp"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@android:id/empty"
@@ -27,7 +28,7 @@
             android:drawablePadding="10dp"
             android:drawableTop="@drawable/img_no_message"
             android:gravity="center"
-            android:visibility="visible"
+            android:visibility="gone"
             tools:text="@string/now_not_has_data"/>
     </LinearLayout>
 

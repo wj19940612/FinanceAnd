@@ -23,6 +23,8 @@ import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.mine.AboutUsActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.MissMineQuestionAndAnswerActivity;
+import com.sbai.finance.activity.mine.MyCollectionActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
@@ -35,7 +37,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
@@ -116,8 +117,7 @@ public class MineFragment extends BaseFragment {
                 .registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.ACTION_LOGIN_SUCCESS));
         mEvaluationLevel = getResources().getStringArray(R.array.evaluationLevel);
 
-        String s = NumberFormatUtils.formatTenThousandNumber(123456);
-        Log.d(TAG, "onActivityCreated: " + s);
+        Log.d(TAG, "onActivityCreated: " + "STRING".length());
     }
 
     @Override
@@ -248,12 +248,17 @@ public class MineFragment extends BaseFragment {
 
             case R.id.mineQuestionsAndAnswers:
                 if (LocalUser.getUser().isLogin()) {
-
+                    Launcher.with(getActivity(), MissMineQuestionAndAnswerActivity.class).execute();
                 } else {
-
+                    openLoginPage();
                 }
                 break;
             case R.id.mineCollection:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), MyCollectionActivity.class).execute();
+                } else {
+                    openLoginPage();
+                }
                 break;
             case R.id.message:
                 if (LocalUser.getUser().isLogin()) {

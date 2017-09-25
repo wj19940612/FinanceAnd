@@ -10,7 +10,6 @@
         app:backFeature="true"
         app:hasBottomSplitLine="true"
         app:splitLineColor="@color/split"
-        app:titleText="@string/my_collection"
         app:titleTextColor="@color/primaryText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

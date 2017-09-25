@@ -1,0 +1,259 @@
+package com.sbai.finance.fragment.mine;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.AppCompatTextView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.discovery.DailyReportActivity;
+import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
+import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.mine.MyCollect;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.view.ListEmptyView;
+import com.sbai.httplib.CookieManger;
+
+import java.util.HashSet;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
+
+public class ArticleCollectionFragment extends BaseFragment {
+
+    private static final int REQ_CODE_ARTICLE_DETAIL_PAGE = 491;
+
+    @BindView(android.R.id.list)
+    ListView mList;
+    @BindView(android.R.id.empty)
+    AppCompatTextView mEmpty;
+    @BindView(R.id.swipeRefreshLayout)
+    CustomSwipeRefreshLayout mSwipeRefreshLayout;
+    Unbinder unbinder;
+    @BindView(R.id.layout)
+    LinearLayout mLayout;
+    private ArticleCollectionAdapter mArticleCollectionAdapter;
+    private ListEmptyView mListEmptyView;
+    private int mPage;
+    private HashSet<Integer> mSet;
+
+    public ArticleCollectionFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.layout_refresh_listview, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initView();
+        requestMyArticleCollect();
+
+    }
+
+    private void requestMyArticleCollect() {
+        Client.requestMyCollection(MyCollect.COLLECTI_TYPE_ARTICLE, mPage)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<MyCollect>>, List<MyCollect>>() {
+                    @Override
+                    protected void onRespSuccessData(List<MyCollect> data) {
+                        updateArticleCollectionList(data);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
+                    }
+                })
+                .fire();
+    }
+
+    private void updateArticleCollectionList(List<MyCollect> data) {
+        if (data == null) return;
+
+        if (mSet.isEmpty()) {
+            mArticleCollectionAdapter.clear();
+        }
+
+        if (data.size() < Client.DEFAULT_PAGE_SIZE) {
+            mSwipeRefreshLayout.setLoadMoreEnable(false);
+        } else {
+            mPage++;
+        }
+
+        for (MyCollect result : data) {
+            if (mSet.add(result.getDataId())) {
+                mArticleCollectionAdapter.add(result);
+            }
+        }
+    }
+
+    private void initView() {
+        mSet = new HashSet<>();
+        initListEmptyView();
+        mList.setEmptyView(mListEmptyView);
+        mArticleCollectionAdapter = new ArticleCollectionAdapter(getActivity());
+        mList.setAdapter(mArticleCollectionAdapter);
+        initSwipeRefreshLayout();
+        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MyCollect myCollect = (MyCollect) parent.getAdapter().getItem(position);
+                if (myCollect != null) {
+
+                    Intent intent = new Intent(getActivity(), DailyReportDetailActivity.class);
+                    intent.putExtra(DailyReportDetailActivity.EX_FORMAT, myCollect.getFormat());
+                    intent.putExtra(DailyReportDetailActivity.EX_ID, myCollect.getMongoId());
+                    intent.putExtra(DailyReportDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie());
+                    startActivityForResult(intent, REQ_CODE_ARTICLE_DETAIL_PAGE);
+                }
+            }
+        });
+    }
+
+
+    private void initSwipeRefreshLayout() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+            }
+        });
+
+        mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                requestMyArticleCollect();
+            }
+        });
+    }
+
+    private void refreshData() {
+        mSet.clear();
+        mPage = 0;
+        mSwipeRefreshLayout.setLoadMoreEnable(true);
+        requestMyArticleCollect();
+    }
+
+    private void initListEmptyView() {
+        mListEmptyView = new ListEmptyView(getActivity());
+        mListEmptyView.setTitleImage(R.drawable.common_ic_no_article);
+        mListEmptyView.setGoingBg(R.drawable.bg_annals_materials_4);
+        mListEmptyView.setContentText(R.string.you_not_has_article_collection);
+        mListEmptyView.setHintText(R.string.collect_favorite_articles_here);
+        mListEmptyView.setGoingText(R.string.look_report);
+        mListEmptyView.setOnGoingViewClickListener(new ListEmptyView.OnGoingViewClickListener() {
+            @Override
+            public void onGoingViewClick() {
+                Launcher.with(getActivity(), DailyReportActivity.class).execute();
+            }
+        });
+        mLayout.addView(mListEmptyView);
+    }
+
+    private void stopRefreshAnimation() {
+        if (mSwipeRefreshLayout.isLoading()) {
+            mSwipeRefreshLayout.setLoading(false);
+        }
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == BaseActivity.RESULT_OK) {
+            switch (requestCode) {
+                case REQ_CODE_ARTICLE_DETAIL_PAGE:
+                    refreshData();
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+
+    static class ArticleCollectionAdapter extends ArrayAdapter<MyCollect> {
+
+        public ArticleCollectionAdapter(@NonNull Context context) {
+            super(context, 0);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_daily_report, null, true);
+                viewHolder = new ViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            viewHolder.bindDataWithView(getItem(position), getContext());
+            return convertView;
+        }
+
+        static class ViewHolder {
+            @BindView(R.id.image)
+            ImageView mImage;
+            @BindView(R.id.click)
+            TextView mClick;
+            @BindView(R.id.time)
+            TextView mTime;
+            @BindView(R.id.title)
+            TextView mTitle;
+
+            ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
+
+            public void bindDataWithView(MyCollect item, Context context) {
+                Glide.with(context).load(item.getCoverUrl()).into(mImage);
+                mClick.setText(context.getString(R.string.read_count, item.getClicks()));
+                mTitle.setText(item.getTitle());
+            }
+        }
+    }
+}
