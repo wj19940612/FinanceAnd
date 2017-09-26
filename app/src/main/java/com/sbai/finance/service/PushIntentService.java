@@ -25,7 +25,9 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
+import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
@@ -148,6 +150,13 @@ public class PushIntentService extends GTIntentService {
         } else if (data.isMissAnswer()) {
             intent = new Intent(context, QuestionDetailActivity.class);
             intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
+        } else if (data.isStudy()) {
+            intent = new Intent(context, StudyRoomActivity.class);
+        } else if (data.isFeedBackInfo()) {
+            intent = new Intent(context, FeedbackActivity.class);
+            if (data.getData() != null && data.getData().getId() > 0) {
+                intent.putExtra(ExtraKeys.TRAINING, data.getData().getId());
+            }
         }
 
         switch (data.getType()) {

@@ -28,7 +28,7 @@ public class DateUtil {
 
 
     private static final String TODAY = "今日";
-    private static final String YESTODAY = "昨日";
+    private static final String YESTERDAY = "昨日";
 
     public static String format(long time, String toFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(toFormat);
@@ -451,7 +451,7 @@ public class DateUtil {
             return TODAY;
         }
         if (isYesterday(createTime, systemTime)) {
-            return YESTODAY;
+            return YESTERDAY;
         }
         return DateUtil.format(createTime, FORMAT_ONLY_DATE);
     }
@@ -462,7 +462,7 @@ public class DateUtil {
             return TODAY + " " + DateUtil.format(time, FORMAT_HOUR_MINUTE);
         }
         if (isYesterday(time, systemTime)) {
-            return YESTODAY + " " + DateUtil.format(time, FORMAT_HOUR_MINUTE);
+            return YESTERDAY + " " + DateUtil.format(time, FORMAT_HOUR_MINUTE);
         }
         return DateUtil.format(time, FORMAT_DATE_HOUR_MINUTE);
     }

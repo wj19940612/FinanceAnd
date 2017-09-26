@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.miss;
+package com.sbai.finance.fragment.mine;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,9 +18,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.NewsActivity;
+import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.miss.MissMessage;
-import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -30,7 +31,7 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
-import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.ListEmptyView;
 import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
@@ -39,35 +40,40 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
- * 姐说功能的消息提醒页面
+ * 姐说消息
  */
-public class MessagesActivity extends BaseActivity implements
-        SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
 
+public class MissNewsFragment extends BaseFragment implements
+        SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
     @BindView(R.id.listView)
     ListView mListView;
+    @BindView(R.id.empty)
+    ListEmptyView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.title)
-    TitleBar mTitle;
-    @BindView(R.id.empty)
-    TextView mEmpty;
-
+    private Unbinder mBind;
     private MessageAdapter mMessageAdapter;
     private Set<Integer> mSet;
     private int mNoReadCount;
+    private NewsActivity.NoReadNewsCallback mNoReadNewsCallback;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_miss_news, container, false);
+        mBind = ButterKnife.bind(this, view);
+        return view;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_messages);
-        ButterKnife.bind(this);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         initHeaderView();
         initFooterView();
         initView();
-        initTitle();
         requestMessageData();
     }
 
@@ -85,17 +91,8 @@ public class MessagesActivity extends BaseActivity implements
         mListView.addFooterView(view);
     }
 
-    private void initTitle() {
-        mTitle.setOnRightViewClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestBatchReadMessage();
-            }
-        });
-    }
 
     private void initView() {
-        scrollToTop(mTitle, mListView);
         mSet = new HashSet<>();
         mMessageAdapter = new MessageAdapter(getActivity());
         mListView.setAdapter(mMessageAdapter);
@@ -133,17 +130,12 @@ public class MessagesActivity extends BaseActivity implements
         });
     }
 
-    private void requestMessageDetail(int dataId) {
-        Client.getQuestionDetails(dataId).setTag(TAG)
-                .setCallback(new Callback2D<Resp<Question>, Question>() {
-                    @Override
-                    protected void onRespSuccessData(Question data) {
-                        Launcher.with(getActivity(), QuestionDetailActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, data)
-                                .execute();
+    public void scrollToTop() {
+        mListView.smoothScrollToPosition(0);
+    }
 
-                    }
-                }).fireFree();
+    public void setNoReadNewsCallback(NewsActivity.NoReadNewsCallback noReadNewsCallback) {
+        mNoReadNewsCallback = noReadNewsCallback;
     }
 
     private void requestMessageData() {
@@ -174,12 +166,8 @@ public class MessagesActivity extends BaseActivity implements
             }
         }
         mMessageAdapter.notifyDataSetChanged();
-        if (mNoReadCount == 0) {
-            mTitle.setTitle(getString(R.string.message_remind));
-            mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.unluckyText));
-        } else {
-            mTitle.setTitle(getString(R.string.message_remind_count, mNoReadCount));
-            mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.blueAssist));
+        if (mNoReadNewsCallback != null) {
+            mNoReadNewsCallback.noReadNews(mNoReadCount);
         }
     }
 
@@ -195,7 +183,7 @@ public class MessagesActivity extends BaseActivity implements
                 }).fireFree();
     }
 
-    private void requestBatchReadMessage() {
+    public void requestBatchReadMessage() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < mMessageAdapter.getCount(); i++) {
             MissMessage missMessage = mMessageAdapter.getItem(i);
@@ -223,11 +211,8 @@ public class MessagesActivity extends BaseActivity implements
         if (mNoReadCount > 0) {
             mNoReadCount--;
         }
-        if (mNoReadCount == 0) {
-            mTitle.setTitle(R.string.message_remind);
-            mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.unluckyText));
-        } else {
-            mTitle.setTitle(getString(R.string.message_remind_count, mNoReadCount));
+        if (mNoReadNewsCallback != null) {
+            mNoReadNewsCallback.noReadNews(mNoReadCount);
         }
         if (mMessageAdapter != null) {
             for (int i = 0; i < mMessageAdapter.getCount(); i++) {
@@ -243,23 +228,24 @@ public class MessagesActivity extends BaseActivity implements
 
     private void updateAllMessageStatus() {
         mNoReadCount = 0;
-        mTitle.setTitle(R.string.message_remind);
-        mTitle.setRightTextColor(ContextCompat.getColorStateList(getActivity(), R.color.unluckyText));
         if (mMessageAdapter != null) {
             for (int i = 0; i < mMessageAdapter.getCount(); i++) {
                 MissMessage missMessage = mMessageAdapter.getItem(i);
                 if (missMessage != null && missMessage.isNoRead()) {
                     missMessage.setStatus(MissMessage.READ);
-                    mMessageAdapter.notifyDataSetChanged();
                 }
             }
+            mMessageAdapter.notifyDataSetChanged();
+        }
+        if (mNoReadNewsCallback != null) {
+            mNoReadNewsCallback.noReadNews(mNoReadCount);
         }
     }
 
     @Override
-    public void onRefresh() {
-        reset();
-        requestMessageData();
+    public void onDestroyView() {
+        super.onDestroyView();
+        mBind.unbind();
     }
 
     private void reset() {
@@ -277,6 +263,12 @@ public class MessagesActivity extends BaseActivity implements
         if (mSwipeRefreshLayout.isLoading()) {
             mSwipeRefreshLayout.setLoading(false);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        reset();
+        requestMessageData();
     }
 
     static class MessageAdapter extends ArrayAdapter<MissMessage> {
@@ -363,7 +355,7 @@ public class MessagesActivity extends BaseActivity implements
                         mReplyContent.setVisibility(View.VISIBLE);
                         break;
                 }
-                mTime.setText(DateUtil.getMissFormatTime(item.getCreateTime()));
+                mTime.setText(DateUtil.formatQuestionStyleTime(item.getCreateTime()));
                 if (item.isNoRead()) {
                     mRedDot.setVisibility(View.VISIBLE);
                 } else {

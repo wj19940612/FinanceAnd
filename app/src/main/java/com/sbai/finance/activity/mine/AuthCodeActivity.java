@@ -23,6 +23,7 @@ import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.PasswordEditText;
+import com.sbai.finance.view.autofit.AutofitTextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +34,7 @@ public class AuthCodeActivity extends BaseActivity {
     public static final int PAGE_TYPE_REGISTER = 801;
 
     @BindView(R.id.receivePhone)
-    TextView mReceivePhone;
+    AutofitTextView mReceivePhone;
 
     @BindView(R.id.authCode)
     EditText mAuthCode;
@@ -65,7 +66,7 @@ public class AuthCodeActivity extends BaseActivity {
         if (mPageType == PAGE_TYPE_REGISTER) {
             mPassword.setHint(R.string.password);
         } else {
-            mPassword.setHint(R.string.new_password);
+            mPassword.setHint(R.string.six_to_eighteen_password);
         }
         mReceivePhone.setText(
                 getString(R.string.auth_code_had_sent_, StrFormatter.getFormatPhoneNumber(mPhone)));

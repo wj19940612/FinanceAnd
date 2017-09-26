@@ -1,8 +1,8 @@
 <RelativeLayout
-    android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -22,14 +22,17 @@
         android:layout_marginRight="50dp"
         android:orientation="vertical">
 
-        <TextView
+        <com.sbai.finance.view.autofit.AutofitTextView
             android:id="@+id/receivePhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="35dp"
             android:layout_marginTop="91dp"
+            android:maxLines="1"
             android:text="@string/auth_code_had_sent_"
-            android:textColor="@color/unluckyText"
-            android:textSize="20sp"/>
+            android:textColor="@color/blackPrimary"
+            android:textSize="20sp"
+            app:sizeToFit="true"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,9 +73,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="50dp"
-            app:splitLineColor="@color/split"
             app:hasBottomSplitLine="true"
             app:maxCharNum="18"
+            app:splitLineColor="@color/split"
             app:textHint="@string/password"/>
 
         <TextView

@@ -282,6 +282,28 @@ public class Client {
     }
 
     /**
+     * 接口名称 快捷登入(for 微信)
+     *
+     * @param authCode 短信验证码
+     * @param phone    手机
+     *                 deviceId 设备id
+     *                 platform 平台 0-安卓 1-ios
+     * @return
+     */
+    public static API authCodeLogin(String phone, String authCode, String openId, String name, String iconUrl, int sex) {
+        return new API(POST, "/user/registerLogin/quickLogin.do", new ApiParams()
+                .put("phone", phone)
+                .put("msgCode", authCode)
+                .put("deviceId", Preference.get().getPushClientId())
+                .put("platform", 0)
+                .put("channel", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"))
+                .put("openId", openId)
+                .put("name", name)
+                .put("iconUrl", iconUrl)
+                .put("sex", sex));
+    }
+
+    /**
      * 常规登录
      *
      * @param phone
@@ -294,6 +316,31 @@ public class Client {
                 .put("password", password)
                 .put("deviceId", Preference.get().getPushClientId())
                 .put("platform", 0));
+    }
+
+    /**
+     * 微信登录
+     *
+     * @param openId
+     * @return
+     */
+    public static API weChatLogin(String openId) {
+        return new API(POST, "/user/registerLogin/wechatLogin.do", new ApiParams()
+                .put("openId", openId));
+    }
+
+    /**
+     * 绑定微信
+     *
+     * @param openId
+     * @return
+     */
+    public static API bindWeChat(String openId, String name, String iconUrl, int sex) {
+        return new API(POST, "/user/user/boundWechat.do", new ApiParams()
+                .put("openId", openId)
+                .put("name", name)
+                .put("iconUrl", iconUrl)
+                .put("sex", sex));
     }
 
     /**
@@ -2039,6 +2086,16 @@ public class Client {
     }
 
     /**
+     * 日报收藏
+     *
+     * @return
+     */
+    public static API collect(String id) {
+        return new API(POST, "/user/dailyReport/collect.do", new ApiParams()
+                .put("id", id));
+    }
+
+    /**
      * 日报详情
      *
      * @return
@@ -2413,6 +2470,16 @@ public class Client {
         return new API(POST, "/msg/msg/readBatch.do",
                 new ApiParams()
                         .put("ids", ids));
+    }
+
+    /**
+     * 批量读消息
+     * classify  1系统 4 姐说
+     */
+    public static API batchRead() {
+        return new API(POST, "/msg/msg/readAll.do",
+                new ApiParams()
+                        .put("classify", 1));
     }
 
     /**

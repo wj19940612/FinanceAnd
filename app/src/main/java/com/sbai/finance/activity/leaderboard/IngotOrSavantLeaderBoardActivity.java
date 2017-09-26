@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leaderboard.LeaderBoardRank;
 import com.sbai.finance.net.Callback;
@@ -203,6 +204,15 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                     .placeholder(R.drawable.ic_default_avatar)
                     .circleCrop()
                     .into(mAvatar);
+            mAvatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Launcher.with(getActivity(), LookBigPictureActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, LocalUser.getUser().getUserInfo().getUserPortrait())
+                            .putExtra(Launcher.EX_PAYLOAD_2, 0)
+                            .execute();
+                }
+            });
             mUserName.setText(getString(R.string.me));
             if (mType.equalsIgnoreCase(LeaderBoardRank.INGOT)
                     || mType.equalsIgnoreCase(LeaderBoardRank.PROFIT)) {
@@ -399,13 +409,13 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(final LeaderBoardRank.DataBean item, int position, Context context, final Callback callback, String type) {
+            public void bindDataWithView(final LeaderBoardRank.DataBean item, int position, final Context context, final Callback callback, String type) {
                 mWorship.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (callback != null) {
                             callback.onWarshipClick(item);
-                            if (LocalUser.getUser().isLogin()&& Network.isNetworkAvailable()) {
+                            if (LocalUser.getUser().isLogin() && Network.isNetworkAvailable()) {
                                 mWorship.setEnabled(false);
                             }
                         }
@@ -421,6 +431,15 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                         .placeholder(R.drawable.ic_default_avatar_big)
                         .circleCrop()
                         .into(mAvatar);
+                mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context, LookBigPictureActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, item.getUser().getUserPortrait())
+                                .putExtra(Launcher.EX_PAYLOAD_2, 0)
+                                .execute();
+                    }
+                });
                 mUserName.setText(item.getUser().getUserName());
 
                 switch (position) {
@@ -473,12 +492,21 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(LeaderBoardRank.DataBean item, int position, Context context, String type) {
+            public void bindDataWithView(final LeaderBoardRank.DataBean item, int position, final Context context, String type) {
                 GlideApp.with(context)
                         .load(item.getUser().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)
                         .circleCrop()
                         .into(mAvatar);
+                mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(context, LookBigPictureActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, item.getUser().getUserPortrait())
+                                .putExtra(Launcher.EX_PAYLOAD_2, 0)
+                                .execute();
+                    }
+                });
                 mUserName.setText(item.getUser().getUserName());
                 switch (type) {
                     case LeaderBoardRank.INGOT:

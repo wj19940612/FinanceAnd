@@ -29,7 +29,6 @@ public class DailyReport {
     public boolean isCollected() {
         return getCollect() == 1;
     }
-
     public String getUrl() {
         return url;
     }

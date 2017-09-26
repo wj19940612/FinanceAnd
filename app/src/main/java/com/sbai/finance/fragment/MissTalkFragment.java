@@ -32,7 +32,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.MessagesActivity;
 import com.sbai.finance.activity.miss.MissProfileActivity;
 import com.sbai.finance.activity.miss.MyQuestionsActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
@@ -863,7 +862,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
             case R.id.message:
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.MISS_TALK_MINE_MESSAGE);
-                    Launcher.with(getActivity(), MessagesActivity.class).execute();
+//                    Launcher.with(getActivity(), MessagesActivity.class).execute();
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivityForResult(intent, MESSAGE);
@@ -928,7 +927,7 @@ public class MissTalkFragment extends BaseFragment implements View.OnClickListen
         }
 
         if (requestCode == MESSAGE && resultCode == RESULT_OK) {
-            Launcher.with(getActivity(), MessagesActivity.class).execute();
+//            Launcher.with(getActivity(), MessagesActivity.class).execute();
         }
 
         if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {

@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mine.userinfo;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.google.gson.JsonObject;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.setting.LocationActivity;
@@ -25,14 +27,20 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.autofit.AutofitTextView;
 import com.sbai.finance.websocket.WsClient;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.CookieManger;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.Calendar;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +69,8 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     AutofitTextView mLocation;
     @BindView(R.id.credit)
     IconTextRow mCredit;
+    @BindView(R.id.weChat)
+    IconTextRow mWeChat;
     @BindView(R.id.logout)
     AppCompatTextView mLogout;
 
@@ -95,6 +105,31 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
             mAge.setSubText(userInfo.getAge().toString());
         }
         mLocation.setText(userInfo.getLand());
+        if (TextUtils.isEmpty(userInfo.getWxOpenId())) {
+            mWeChat.setSubText(getString(R.string.no_bind));
+            mWeChat.setRightIconVisible(true);
+            if (Preference.get().isShowBindWeChat()) {
+                showBindWeChatDialog();
+                Preference.get().setShowBindWeChat(false);
+            }
+
+        } else {
+            mWeChat.setSubText(userInfo.getWxName());
+            mWeChat.setRightIconVisible(false);
+        }
+    }
+
+    private void showBindWeChatDialog() {
+        SmartDialog.single(getActivity(), getString(R.string.bind_wechat_info))
+                .setCancelableOnTouchOutside(false)
+                .setNegative(R.string.cancel)
+                .setPositive(R.string.bind, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        bindWeChat();
+                    }
+                }).show();
     }
 
     private void updateUserImage() {
@@ -167,7 +202,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
         super.onBackPressed();
     }
 
-    @OnClick({R.id.headImageLayout, R.id.nickName, R.id.sex, R.id.age, R.id.location, R.id.credit, R.id.logout})
+    @OnClick({R.id.headImageLayout, R.id.nickName, R.id.sex, R.id.age, R.id.location, R.id.credit, R.id.logout, R.id.weChat})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.headImageLayout:
@@ -201,7 +236,56 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
             case R.id.logout:
                 logout();
                 break;
+            case R.id.weChat:
+                final UserInfo userInfo = LocalUser.getUser().getUserInfo();
+                if (TextUtils.isEmpty(userInfo.getWxOpenId())) {
+                    bindWeChat();
+                }
+                break;
         }
+    }
+
+    private void bindWeChat() {
+        onHttpUiShow(TAG);
+        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
+            @Override
+            public void onStart(SHARE_MEDIA share_media) {
+                Log.d(TAG, "onStart " + "授权开始");
+            }
+
+            @Override
+            public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                onHttpUiDismiss(TAG);
+                //sdk是6.4.4的,但是获取值的时候用的是6.2以前的(access_token)才能获取到值,未知原因
+                final String openid = map.get("openid");//微博没有
+                final String name = map.get("name");
+                String gender = map.get("gender");
+                String iconUrl = map.get("iconurl");
+                //拿到信息去请求登录接口。。。
+                Client.bindWeChat(openid, name, iconUrl, gender.equals("女") ? 1 : 2).setTag(TAG)
+                        .setCallback(new Callback<Resp<Object>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<Object> resp) {
+                                if (resp.isSuccess()) {
+                                    ToastUtil.show(getString(R.string.bind_success));
+                                    requestDetailUserInfo();
+                                }
+                            }
+                        }).fireFree();
+            }
+
+            @Override
+            public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                Log.d(TAG, "onError " + "授权失败:" + throwable.getMessage());
+                onHttpUiDismiss(TAG);
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA share_media, int i) {
+                Log.d(TAG, "onCancel " + "授权取消");
+                onHttpUiDismiss(TAG);
+            }
+        });
     }
 
     private void showAgePicker() {

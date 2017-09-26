@@ -143,6 +143,11 @@ public class DailyReportDetailActivity extends BaseActivity {
         mCollect.setSelected(data.isCollected());
         mTitleContent = data.getTitle();
         mShareImgUrl = data.getCoverUrl();
+        if (data.isCollected()) {
+            mCollect.setSelected(true);
+        } else {
+            mCollect.setSelected(false);
+        }
         if (data.isHtml()) {
             mTitleInfo.setVisibility(View.VISIBLE);
             mClick.setText(getString(R.string.read_count, data.getClicks()));
@@ -192,7 +197,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         //   mWebView.onPause();
     }
 
-    @OnClick({R.id.back, R.id.share, R.id.refreshButton, R.id.shareArea, R.id.backArea, R.id.collect})
+    @OnClick({R.id.back, R.id.share, R.id.refreshButton, R.id.shareArea, R.id.backArea, R.id.collect, R.id.collectArea})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -236,6 +241,7 @@ public class DailyReportDetailActivity extends BaseActivity {
                 mWebView.reload();
                 break;
             case R.id.collect:
+            case R.id.collectArea:
                 if (mDailyReport != null) {
                     changeCollectionStatus();
                 }

@@ -39,13 +39,15 @@
     <string name="lemi_the_third_party_protocol">《乐米第三方授权协议》</string>
     <string name="auth_code_login">验证码登录</string>
     <string name="password_login">密码登录</string>
+    <string name="wechat_login">使用微信登录</string>
     <string name="password">密码</string>
     <string name="new_password">新密码</string>
     <string name="old_password">旧密码</string>
+    <string name="six_to_eighteen_password">6-18位新密码</string>
     <string name="register_free">免费注册</string>
     <string name="forget_password">忘记密码</string>
     <string name="please_input_phone">请输入手机号</string>
-    <string name="auth_code_had_sent_">验证码已发送至\n%1$s</string>
+    <string name="auth_code_had_sent_">验证码已发送至%1$s</string>
     <string name="reset_password_success">重设密码成功，请重新登录</string>
     <string name="login_success">登录成功</string>
 
@@ -159,9 +161,11 @@
     <string name="company">浙江松柏信息技术有限公司 \nCopyright@%1$d</string>
     <string name="service">客服      ( 点击复制 )</string>
     <string name="qq">QQ:%1$s</string>
-    <string name="we_chat">微信:%1$s</string>
+    <string name="we_chat_">微信:%1$s</string>
     <string name="copy_success">复制成功</string>
     <string name="install_qq_first">请先安装QQ</string>
+    <string name="my_ingot_">我的元宝: %1$d</string>
+
     <string name="article">文章</string>
 
     <string name="miss_is_answering">小姐姐正在抢答中~</string>
@@ -199,7 +203,15 @@
     <string name="girl">女</string>
     <string name="restart_get_location">点击重新获取位置</string>
     <string name="RMB">%1$S元</string>
-
+    <string name="we_chat">微信</string>
+    <string name="system">系统</string>
+    <string name="system_">系统(%1$d)</string>
+    <string name="reply_">回复(%1$d)</string>
+    <string name="no_bind">未绑定</string>
+    <string name="bind_phone">绑定手机号</string>
+    <string name="bind_success">绑定成功</string>
+    <string name="bind_wechat_info">绑定微信号,登录更便捷,是否绑定?</string>
+    <string name="bind">绑定</string>
     <!--   消息 -->
     <string name="up_load_more">加载更多</string>
 
@@ -569,7 +581,7 @@
     </string-array>
 
     <string-array name="evaluationLevel">
-        <item>未测</item>
+        <item>测测金融水平</item>
         <item>入门</item>
         <item>初级</item>
         <item>中级</item>
@@ -822,6 +834,11 @@
     <string name="you_not_has_comment_collection">暂无提问收藏</string>
     <string name="collect_favorite_miss_take_here">在这里收藏喜欢的姐说问答</string>
     <string name="look_miss">查看姐说</string>
-
+    <!--我的回复-->
+    <string name="not_has_reply_news">暂无回复消息</string>
+    <string name="there_show_miss_answers_and_others_comment">在这里会显示小姐姐的回答\n和TA人的评论回复消息</string>
+    <!--我的回复-->
+    <string name="not_has_sys_news">暂无系统消息</string>
+    <string name="there_show_sys_news">在这里会显示系统的提醒消息</string>
 
 </resources>

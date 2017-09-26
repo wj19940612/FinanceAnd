@@ -60,7 +60,24 @@ public class UserInfo implements Parcelable {
 
     private int evaluate; //是否进行过测试
     private int maxLevel; //最高测评结果
+    private String wxOpenId;//微信openid
+    private String wxName;//微信昵称
 
+    public String getWxName() {
+        return wxName;
+    }
+
+    public void setWxName(String wxName) {
+        this.wxName = wxName;
+    }
+
+    public String getWxOpenId() {
+        return wxOpenId;
+    }
+
+    public void setWxOpenId(String wxOpenId) {
+        this.wxOpenId = wxOpenId;
+    }
 
     public boolean isNewUser() {
         return isNewUser;
@@ -166,6 +183,8 @@ public class UserInfo implements Parcelable {
         setUserPortrait(userDetailInfo.getUserPortrait());
         setUserSex(userDetailInfo.getUserSex());
         setStatus(userDetailInfo.getStatus());
+        setWxOpenId(userDetailInfo.getWxOpenId());
+        setWxName(userDetailInfo.getWxName());
         LocalUser.getUser().setUserInfo(this);
     }
 

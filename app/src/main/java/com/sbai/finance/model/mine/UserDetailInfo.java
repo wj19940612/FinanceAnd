@@ -55,7 +55,27 @@ public class UserDetailInfo {
 
     private String chinaSex;
     private int userSex;
+    /**
+     * 微信openid
+     */
+    private String wxOpenId;
+    private String wxName;
 
+    public String getWxName() {
+        return wxName;
+    }
+
+    public void setWxName(String wxName) {
+        this.wxName = wxName;
+    }
+
+    public String getWxOpenId() {
+        return wxOpenId;
+    }
+
+    public void setWxOpenId(String wxOpenId) {
+        this.wxOpenId = wxOpenId;
+    }
 
     public Integer getAge() {
         return age;

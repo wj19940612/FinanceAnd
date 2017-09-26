@@ -145,6 +145,18 @@
         app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/weChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_split_height"
+        android:background="@drawable/bg_white"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/we_chat"
+        app:rowTextColor="@color/primaryText"
+        app:subTextColor="@color/unluckyText"
+        app:subTextSize="@dimen/common_default_size"/>
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"

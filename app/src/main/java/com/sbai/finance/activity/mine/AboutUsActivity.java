@@ -84,7 +84,7 @@ public class AboutUsActivity extends BaseActivity {
             }
 
             if (!TextUtils.isEmpty(mServiceConnectWay.getWeixin())) {
-                mWeChat.setText(getString(R.string.we_chat, mServiceConnectWay.getWeixin()));
+                mWeChat.setText(getString(R.string.we_chat_, mServiceConnectWay.getWeixin()));
             } else {
                 mWeChat.setVisibility(View.GONE);
             }

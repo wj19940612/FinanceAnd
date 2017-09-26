@@ -21,6 +21,7 @@ import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.view.ScrollableViewPager;
@@ -30,7 +31,7 @@ import com.sbai.finance.websocket.market.MarketSubscriber;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
@@ -131,6 +132,11 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onNoReadNewsNumber(int count) {
+        mBottomTabs.setPointNum(count);
     }
 
 

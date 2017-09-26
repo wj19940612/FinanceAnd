@@ -31,12 +31,15 @@ import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.NumberFormatUtils;
+import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
@@ -149,16 +152,23 @@ public class MineFragment extends BaseFragment {
                     protected void onRespSuccessData(ArrayList<NotReadMessageNumberModel> data) {
                         int count = 0;
                         for (NotReadMessageNumberModel notReadMessageNumberData : data) {
-                            if (notReadMessageNumberData.isSystemNews()) {
-                                count = notReadMessageNumberData.getCount();
-                                break;
+                            if (notReadMessageNumberData.isSystemNews() || notReadMessageNumberData.isMissNews()) {
+                                count = count + notReadMessageNumberData.getCount();
                             }
                         }
                         if (count != 0) {
                             mMessage.setSubTextVisible(View.VISIBLE);
+                            if (count <= 99) {
+                                mMessage.setSubTextSize(12);
+                                mMessage.setSubText(String.valueOf(count));
+                            } else {
+                                mMessage.setSubTextSize(9);
+                                mMessage.setSubText("99+");
+                            }
                         } else {
                             mMessage.setSubTextVisible(View.GONE);
                         }
+                        setNoReadNewsCount(count);
                     }
 
                     @Override
@@ -181,6 +191,18 @@ public class MineFragment extends BaseFragment {
                 }).fireFree();
     }
 
+    private void requestMyIngotNumber() {
+        Client.requestUserFundInfo()
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
+                    @Override
+                    protected void onRespSuccessData(UserFundInfo data) {
+                        mWallet.setSubText(getString(R.string.my_ingot_, data.getYuanbao()));
+                    }
+                })
+                .fireFree();
+    }
+
     private void updateNoReadFeedbackCount(int count) {
         if (count != 0) {
             mFeedback.setSubTextVisible(View.VISIBLE);
@@ -193,6 +215,7 @@ public class MineFragment extends BaseFragment {
         if (LocalUser.getUser().isLogin()) {
             requestNoReadNewsNumber();
             requestNoReadFeedbackNumber();
+            requestMyIngotNumber();
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
             int maxLevel = LocalUser.getUser().getUserInfo().getMaxLevel();
             if (maxLevel > 5) {
@@ -202,8 +225,16 @@ public class MineFragment extends BaseFragment {
         } else {
             mUserName.setText(R.string.login);
             mFinanceEvaluation.setSubText("");
+            mWallet.setSubText("");
             mMessage.setSubTextVisible(View.GONE);
             mFeedback.setSubTextVisible(View.GONE);
+            setNoReadNewsCount(0);
+        }
+    }
+
+    private void setNoReadNewsCount(int count) {
+        if (getActivity() instanceof OnNoReadNewsListener) {
+            ((OnNoReadNewsListener) getActivity()).onNoReadNewsNumber(count);
         }
     }
 
@@ -264,6 +295,7 @@ public class MineFragment extends BaseFragment {
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.ME_NEWS);
                     startActivityForResult(new Intent(getActivity(), NewsActivity.class), REQ_CODE_MESSAGE);
+                    setNoReadNewsCount(0);
                 } else {
                     openLoginPage();
                 }
