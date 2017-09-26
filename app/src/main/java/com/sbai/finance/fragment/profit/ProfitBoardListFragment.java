@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.leaderboard.IngotOrSavantLeaderBoardActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leaderboard.LeaderBoardRank;
@@ -212,6 +213,15 @@ public class ProfitBoardListFragment extends BaseFragment implements
                     .placeholder(R.drawable.ic_default_avatar)
                     .circleCrop()
                     .into(mAvatar);
+            mAvatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Launcher.with(getActivity(), LookBigPictureActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, LocalUser.getUser().getUserInfo().getUserPortrait())
+                            .putExtra(Launcher.EX_PAYLOAD_2, 0)
+                            .execute();
+                }
+            });
             mUserName.setText(getString(R.string.me));
             if (data.getType().equalsIgnoreCase(LeaderBoardRank.INGOT)
                     || data.getType().equalsIgnoreCase(LeaderBoardRank.PROFIT)) {

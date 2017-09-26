@@ -59,6 +59,14 @@ public class PushMessageModel {
         return getClassify() == 4 && getType() == 1;
     }
 
+    public boolean isStudy() {
+        return getClassify() == 0 && getType() == 2;
+    }
+
+    public boolean isFeedBackInfo() {
+        return getClassify() == 2 && getType() == 2;
+    }
+
     public int getClassify() {
         return classify;
     }

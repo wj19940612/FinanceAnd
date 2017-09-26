@@ -21,6 +21,9 @@ public class NotReadMessageNumberModel implements Parcelable {
         return classify == 1;
     }
 
+    public boolean isMissNews() {
+        return classify == 4;
+    }
 
     public int getClassify() {
         return classify;

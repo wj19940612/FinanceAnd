@@ -2473,6 +2473,16 @@ public class Client {
     }
 
     /**
+     * 批量读消息
+     * classify  1系统 4 姐说
+     */
+    public static API batchRead() {
+        return new API(POST, "/msg/msg/readAll.do",
+                new ApiParams()
+                        .put("classify", 1));
+    }
+
+    /**
      * 获取训练详情
      *
      * @param trainId
