@@ -121,6 +121,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
 
     private void showBindWeChatDialog() {
         SmartDialog.single(getActivity(), getString(R.string.bind_wechat_info))
+                .setCancelableOnTouchOutside(false)
                 .setNegative(R.string.cancel)
                 .setPositive(R.string.bind, new SmartDialog.OnClickListener() {
                     @Override

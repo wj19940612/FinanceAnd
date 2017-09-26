@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <com.sbai.finance.view.CustomSwipeRefreshLayout
@@ -28,19 +29,13 @@
                 android:scrollbars="none"
                 android:visibility="visible"/>
 
-            <TextView
+            <com.sbai.finance.view.ListEmptyView
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:adjustViewBounds="true"
-                android:drawablePadding="25dp"
-                android:drawableTop="@drawable/img_no_message"
-                android:gravity="center_horizontal"
-                android:paddingTop="150dp"
-                android:text="@string/now_not_has_news"
-                android:textColor="@color/assistText"
-                android:textSize="@dimen/navigate_size"
-                android:visibility="gone"/>
+                app:titleImage="@drawable/common_ic_no_question_or_answer"
+                app:contentMessage="@string/not_has_reply_news"
+                app:contentHint="@string/there_show_miss_answers_and_others_comment"/>
         </LinearLayout>
 
     </com.sbai.finance.view.CustomSwipeRefreshLayout>

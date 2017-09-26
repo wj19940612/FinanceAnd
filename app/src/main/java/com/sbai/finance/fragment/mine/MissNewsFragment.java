@@ -31,6 +31,7 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.view.ListEmptyView;
 import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
@@ -50,7 +51,7 @@ public class MissNewsFragment extends BaseFragment implements
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.empty)
-    TextView mEmpty;
+    ListEmptyView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
     private Unbinder mBind;

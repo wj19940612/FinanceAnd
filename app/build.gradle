@@ -84,7 +84,7 @@ android {
         dev {
             minSdkVersion 19
             versionNameSuffix '-dev'
-        //    applicationIdSuffix '.dev'
+            applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
 //            buildConfigField('String', 'HOST', '\"192.168.1.7\"')
             buildConfigField('String', 'HOST', '\"http://devlm.esongbai.abc\"')
@@ -100,7 +100,7 @@ android {
         }
 
         alpha {
-//            applicationId "com.sbai.finance.alpha"
+            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-Alpha'
             versionCode 109
             versionName "1.2.0921"

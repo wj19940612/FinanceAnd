@@ -29,17 +29,6 @@ public class DailyReport {
     public boolean isCollected() {
         return getCollect() == 1;
     }
-
-    public boolean isCollect() {
-        return collect;
-    }
-
-    public void setCollect(boolean collect) {
-        this.collect = collect;
-    }
-
-    private boolean collect;
-
     public String getUrl() {
         return url;
     }

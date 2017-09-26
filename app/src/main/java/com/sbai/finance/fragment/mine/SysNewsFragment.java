@@ -35,6 +35,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.view.ListEmptyView;
 
 import java.util.HashSet;
 import java.util.List;
@@ -52,8 +53,8 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
 
     @BindView(android.R.id.list)
     ListView mListView;
-    @BindView(android.R.id.empty)
-    AppCompatTextView mEmpty;
+    @BindView(R.id.empty)
+    ListEmptyView mEmpty;
     @BindView(R.id.customSwipeRefreshLayout)
     CustomSwipeRefreshLayout mCustomSwipeRefreshLayout;
     private Unbinder mBind;
@@ -80,7 +81,6 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
     }
 
     private void initView() {
-        mEmpty.setText(R.string.now_not_has_news);
         mListView.setEmptyView(mEmpty);
         mListView.setDivider(null);
         mSet = new HashSet<>();

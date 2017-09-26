@@ -386,6 +386,13 @@ public class LoginActivity extends BaseActivity {
         mWeChatName = name;
         mWeChatIconurl = iconurl;
         mWeChatGender = gender.equals("女") ? 1 : 2;
+        if (!isAuthCodeLogin()) { // 当前是验证码登录 -> 密码登录
+            mLoginSwitchTop.setText(R.string.password_login);
+            mAuthCodeArea.setVisibility(View.VISIBLE);
+            mPassword.setVisibility(View.GONE);
+            mPasswordLoginOperations.setVisibility(View.GONE);
+            mPassword.setPassword("");
+        }
         mPageTitle.setText(getString(R.string.bind_phone));
         mLoginSwitchTop.setVisibility(View.GONE);
         mWeChatLogin.setVisibility(View.GONE);

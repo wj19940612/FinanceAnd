@@ -143,7 +143,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         mCollect.setSelected(data.isCollected());
         mTitleContent = data.getTitle();
         mShareImgUrl = data.getCoverUrl();
-        if (data.isCollect()) {
+        if (data.isCollected()) {
             mCollect.setSelected(true);
         } else {
             mCollect.setSelected(false);
