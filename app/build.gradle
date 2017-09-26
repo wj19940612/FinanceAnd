@@ -162,6 +162,7 @@ dependencies {
     compile 'com.koushikdutta.async:androidasync:2.+'
     compile 'com.jakewharton:butterknife:8.0.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.8'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
 }

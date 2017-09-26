@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
         app:cardCornerRadius="@dimen/common_eight_radius"
-        app:cardElevation="1dp"
+        app:cardElevation="0dp"
         app:contentPadding="@dimen/common_padding">
 
         <RelativeLayout
@@ -23,18 +23,36 @@
             android:gravity="center_vertical">
 
             <android.support.v7.widget.AppCompatTextView
+                android:layout_marginBottom="8dp"
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primaryText"
-                android:textSize="15sp"
-                tools:text="有什么好的选股方法?"/>
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/primary_or_unlucky_text_color"
+                android:textSize="16sp"
+                tools:text="有什么好的选股方法?\n测试啥空当接龙科技时代"/>
 
             <TextView
-                android:text="2.3万人点赞"
-                android:layout_width="match_parent"
+                android:id="@+id/content"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/title"/>
+                android:layout_below="@+id/title"
+                android:textColor="@color/user_question_answer_status_text_color"
+                android:textSize="12sp"
+                tools:text="2.3万人点赞  520 人评论 432 赞赏 "/>
+
+            <TextView
+                android:layout_marginTop="2dp"
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/title"
+                android:gravity="center"
+                android:textColor="@color/unluckyText"
+                android:textSize="10sp"
+                tools:text="12:20"/>
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

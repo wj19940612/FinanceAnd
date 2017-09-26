@@ -223,4 +223,18 @@
         <attr name="delayTime" format="float"/>
     </declare-styleable>
 
+    <declare-styleable name="ListEmptyView">
+        <attr name="titleImage" format="reference"/>
+        <attr name="contentMessage" format="reference|string"/>
+        <attr name="contentMessageSize" format="dimension|reference"/>
+        <attr name="contentMessageColor" format="color|reference"/>
+        <attr name="contentHint" format="reference|string"/>
+        <attr name="contentHintColor" format="reference|color"/>
+        <attr name="contentHintSize" format="reference|dimension"/>
+        <attr name="goingText" format="string|reference"/>
+        <attr name="goingTextColor" format="reference|color"/>
+        <attr name="goingTextSize" format="dimension|reference"/>
+        <attr name="goingBg" format="reference"/>
+    </declare-styleable>
+
 </resources>

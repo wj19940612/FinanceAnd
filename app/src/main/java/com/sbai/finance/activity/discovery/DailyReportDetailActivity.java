@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.DailyReport;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -82,6 +83,8 @@ public class DailyReportDetailActivity extends BaseActivity {
     LinearLayout mTitleInfo;
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
+    @BindView(R.id.collect)
+    TextView mCollect;
 
     private boolean mLoadSuccess;
     protected String mPageUrl;
@@ -95,6 +98,7 @@ public class DailyReportDetailActivity extends BaseActivity {
     private WebViewClient mWebViewClient;
     private String mFirstContent;
     private String mTitleContent;
+    private DailyReport mDailyReport;
 
 
     public String getRawCookie() {
@@ -126,6 +130,7 @@ public class DailyReportDetailActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<DailyReport>, DailyReport>() {
                     @Override
                     protected void onRespSuccessData(DailyReport data) {
+                        mDailyReport = data;
                         updateDailyReportData(data);
                     }
                 }).fireFree();
@@ -135,6 +140,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         Glide.with(getActivity())
                 .load(data.getCoverUrl())
                 .into(mImage);
+        mCollect.setSelected(data.isCollected());
         mTitleContent = data.getTitle();
         mShareImgUrl = data.getCoverUrl();
         if (data.isHtml()) {
@@ -186,7 +192,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         //   mWebView.onPause();
     }
 
-    @OnClick({R.id.back, R.id.share, R.id.refreshButton, R.id.shareArea, R.id.backArea})
+    @OnClick({R.id.back, R.id.share, R.id.refreshButton, R.id.shareArea, R.id.backArea, R.id.collect})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -229,7 +235,28 @@ public class DailyReportDetailActivity extends BaseActivity {
             case R.id.refreshButton:
                 mWebView.reload();
                 break;
+            case R.id.collect:
+                if (mDailyReport != null) {
+                    changeCollectionStatus();
+                }
+                break;
         }
+    }
+
+    private void changeCollectionStatus() {
+        Client.changeReportCollectionStatus(mDailyReport.getId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()) {
+                            mCollect.setSelected(!mDailyReport.isCollected());
+                            setResult(RESULT_OK);
+                        }
+                    }
+                })
+                .fire();
     }
 
     protected void initWebView() {

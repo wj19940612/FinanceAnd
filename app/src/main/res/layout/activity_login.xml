@@ -113,7 +113,7 @@
                 android:enabled="false"
                 android:gravity="center"
                 android:text="@string/get_auth_code"
-                android:textColor="@color/login_get_auth_code_color"/>
+                android:textColor="@color/primary_or_unlucky_text_color"/>
         </LinearLayout>
 
         <com.sbai.finance.view.PasswordEditText

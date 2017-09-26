@@ -416,6 +416,26 @@ public class DateUtil {
     }
 
     /**
+     * 格式化时间
+     * 如果是当天 则显示 18：20;
+     * 如果是本年内的其他时期  12/07;
+     * 跨年  2015/12/07
+     *
+     * @param createTime
+     * @return
+     */
+    public static String formatQuestionStyleTime(long createTime) {
+        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+        if (DateUtil.isToday(createTime, systemTime)) {
+            return DateUtil.format(createTime, "HH:mm");
+        } else if (DateUtil.isInThisYear(createTime)) {
+            return DateUtil.format(createTime, "MM/dd ");
+        } else {
+            return DateUtil.format(createTime, "yyyy/MM/dd ");
+        }
+    }
+
+    /**
      * 获取明细页面的格式化时间
      * 日期显示：
      * 本日记录：今日00:00；

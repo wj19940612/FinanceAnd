@@ -79,7 +79,7 @@
                 app:hasBottomSplitLine="true"
                 app:leftIcon="@drawable/ic_mine_question_and_answer"
                 app:rightIcon="@drawable/ic_arrow_right_tint"
-                app:rowText="@string/mine_question_and_answer"
+                app:rowText="@string/my_question_and_answer"
                 app:rowTextColor="@color/primaryText"
                 app:rowTextSize="15sp"
                 app:rowVerticalPadding="0dp"
@@ -93,7 +93,7 @@
                 android:visibility="visible"
                 app:leftIcon="@drawable/ic_mine_collection"
                 app:rightIcon="@drawable/ic_arrow_right_tint"
-                app:rowText="@string/mine_collection"
+                app:rowText="@string/my_collection"
                 app:rowTextColor="@color/primaryText"
                 app:rowTextSize="15sp"
                 app:rowVerticalPadding="0dp"/>
@@ -175,6 +175,4 @@
                 app:rowVerticalPadding="0dp"/>
         </LinearLayout>
     </ScrollView>
-
-
 </LinearLayout>

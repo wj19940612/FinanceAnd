@@ -2,32 +2,31 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sbai.finance.fragment.mine.QuestionOrCommentFragment">
+    android:background="@color/background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background"
         android:gravity="center"
         android:orientation="vertical">
 
         <ListView
-            android:id="@+id/listView"
+            android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:dividerHeight="0.5dp"
+            android:visibility="visible"/>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@android:id/empty"
+        <com.sbai.finance.view.ListEmptyView
+            android:id="@+id/listEmptyView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawablePadding="10dp"
-            android:drawableTop="@drawable/img_no_message"
-            android:gravity="center_horizontal"
-            android:paddingTop="20dp"
-            android:text="@string/now_not_has_data"
-            android:visibility="gone"/>
+            app:titleImage="@drawable/common_ic_no_question_or_answer"
+            app:goingBg="@drawable/bg_annals_materials_4"/>
     </LinearLayout>
 
 </com.sbai.finance.view.CustomSwipeRefreshLayout>
