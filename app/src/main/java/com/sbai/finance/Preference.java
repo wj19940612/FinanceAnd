@@ -42,6 +42,7 @@ public class Preference {
         String SERVICE_CONNECT_WAY = "service_connect_way";
         String FIRST_OPEN_WALLET_PAGE = "first_open_wallet_page";
         String SHOW_REGISTER_INVITE = "show_register_invite";
+        String SHOW_BIND_WECHAT = "show_bind_wechat";
     }
 
     private static Preference sInstance;
@@ -259,6 +260,14 @@ public class Preference {
 
     public void setIsFirstOpenWalletPage(String account) {
         apply(Key.FIRST_OPEN_WALLET_PAGE + account, false);
+    }
+
+    public boolean isShowBindWeChat() {
+        return mPrefs.getBoolean(Key.SHOW_BIND_WECHAT, false);
+    }
+
+    public void setShowBindWeChat(boolean isShow) {
+        apply(Key.SHOW_BIND_WECHAT, isShow);
     }
 
     public boolean showRegisterInviteDialog() {

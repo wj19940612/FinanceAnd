@@ -113,8 +113,10 @@
                 app:rowTextSize="15sp"
                 app:rowVerticalPadding="0dp"
                 app:splitLineColor="@color/split"
-                app:subTextLeftDrawable="@drawable/ic_new_message"
-                app:subTextVisible="gone"/>
+                app:subTextBackground="@drawable/bg_not_read_news"
+                app:subTextColor="@android:color/white"
+                app:subTextSize="10sp"
+                app:subTextVisible="visible"/>
 
             <com.sbai.finance.view.IconTextRow
                 android:id="@+id/feedback"

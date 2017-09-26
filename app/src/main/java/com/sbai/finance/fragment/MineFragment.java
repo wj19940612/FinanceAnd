@@ -29,6 +29,7 @@ import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -36,6 +37,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.NumberFormatUtils;
+import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
@@ -156,9 +158,17 @@ public class MineFragment extends BaseFragment {
                         }
                         if (count != 0) {
                             mMessage.setSubTextVisible(View.VISIBLE);
+                            if (count <= 99) {
+                                mMessage.setSubTextSize(11);
+                                mMessage.setSubText(String.valueOf(count));
+                            } else {
+                                mMessage.setSubTextSize(9);
+                                mMessage.setSubText("99+");
+                            }
                         } else {
                             mMessage.setSubTextVisible(View.GONE);
                         }
+                        setNoReadNewsCount(count);
                     }
 
                     @Override
@@ -182,16 +192,15 @@ public class MineFragment extends BaseFragment {
     }
 
     private void requestMyIngotNumber() {
-        Client.getNoReadFeedbackNumber().setTag(TAG)
-                .setCallback(new Callback<Resp<String>>() {
+        Client.requestUserFundInfo()
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
                     @Override
-                    protected void onRespSuccess(Resp<String> resp) {
-                        if (resp.isSuccess()) {
-                            int count = Integer.parseInt(resp.getData());
-                            updateNoReadFeedbackCount(count);
-                        }
+                    protected void onRespSuccessData(UserFundInfo data) {
+                        mWallet.setSubText(getString(R.string.my_ingot_, data.getYuanbao()));
                     }
-                }).fireFree();
+                })
+                .fireFree();
     }
 
     private void updateNoReadFeedbackCount(int count) {
@@ -216,8 +225,16 @@ public class MineFragment extends BaseFragment {
         } else {
             mUserName.setText(R.string.login);
             mFinanceEvaluation.setSubText("");
+            mWallet.setSubText("");
             mMessage.setSubTextVisible(View.GONE);
             mFeedback.setSubTextVisible(View.GONE);
+            setNoReadNewsCount(0);
+        }
+    }
+
+    private void setNoReadNewsCount(int count) {
+        if (getActivity() instanceof OnNoReadNewsListener) {
+            ((OnNoReadNewsListener) getActivity()).onNoReadNewsNumber(3, count);
         }
     }
 
@@ -273,6 +290,7 @@ public class MineFragment extends BaseFragment {
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.ME_NEWS);
                     startActivityForResult(new Intent(getActivity(), NewsActivity.class), REQ_CODE_MESSAGE);
+                    setNoReadNewsCount(0);
                 } else {
                     openLoginPage();
                 }

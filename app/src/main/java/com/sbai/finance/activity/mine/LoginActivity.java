@@ -11,11 +11,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.ExtraKeys;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
@@ -43,6 +45,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sbai.finance.R.id.authCode;
+import static com.sbai.finance.R.id.thirdPartyProtocol;
 
 public class LoginActivity extends BaseActivity {
 
@@ -83,11 +86,14 @@ public class LoginActivity extends BaseActivity {
     PasswordEditText mPassword;
     @BindView(R.id.weChatLogin)
     TextView mWeChatLogin;
-
     private KeyBoardHelper mKeyBoardHelper;
 
     private int mCounter;
     private boolean mFreezeObtainAuthCode;
+    private String mWeChatOpenid;
+    private String mWeChatName;
+    private String mWeChatIconurl;
+    private int mWeChatGender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -326,6 +332,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void weChatLogin() {
+        onHttpUiShow(TAG);
         UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
             @Override
             public void onStart(SHARE_MEDIA share_media) {
@@ -334,30 +341,54 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
-                //sdk是6.4.4的,但是获取值的时候用的是6.2以前的(access_token)才能获取到值,未知原因
-                String uid = map.get("uid");
-                String openid = map.get("openid");//微博没有
-                String unionid = map.get("unionid");//微博没有
-                String access_token = map.get("access_token");
-                String refresh_token = map.get("refresh_token");//微信,qq,微博都没有获取到
-                String expires_in = map.get("expires_in");
-                String name = map.get("name");
-                String gender = map.get("gender");
-                String iconurl = map.get("iconurl");
-                ToastUtil.show("name=" + name + ",gender=" + gender);
-                //拿到信息去请求登录接口。。。
+                onHttpUiDismiss(TAG);
+                final String openid = map.get("openid");//微博没有
+                final String name = map.get("name");
+                final String gender = map.get("gender");
+                final String iconUrl = map.get("iconurl");
+                Client.weChatLogin(openid).setTag(TAG)
+                        .setCallback(new Callback<Resp<UserInfo>>() {
+                            @Override
+                            public void onSuccess(Resp<UserInfo> userInfoResp) {
+                                if (userInfoResp.isSuccess()) {
+                                    LocalUser.getUser().setUserInfo(userInfoResp.getData());
+                                } else {
+                                    //214 尚未绑定的微信
+                                    if (userInfoResp.getCode() == 214 || userInfoResp.getData() == null) {
+                                        bindPhone(openid, name, iconUrl, gender);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            protected void onRespSuccess(Resp<UserInfo> resp) {
+                            }
+                        }).fireFree();
+
             }
 
             @Override
             public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
                 Log.d(TAG, "onError " + "授权失败:" + throwable.getMessage());
+                onHttpUiDismiss(TAG);
             }
 
             @Override
             public void onCancel(SHARE_MEDIA share_media, int i) {
                 Log.d(TAG, "onCancel " + "授权取消");
+                onHttpUiDismiss(TAG);
             }
         });
+    }
+
+    private void bindPhone(String openid, String name, String iconurl, String gender) {
+        mWeChatOpenid = openid;
+        mWeChatName = name;
+        mWeChatIconurl = iconurl;
+        mWeChatGender = gender.equals("女") ? 1 : 2;
+        mPageTitle.setText(getString(R.string.bind_phone));
+        mLoginSwitchTop.setVisibility(View.GONE);
+        mWeChatLogin.setVisibility(View.GONE);
     }
 
     private void switchLoginMode() {
@@ -381,7 +412,8 @@ public class LoginActivity extends BaseActivity {
     private boolean isAuthCodeLogin() {
         String pageTitle = mPageTitle.getText().toString();
         String authCodeLoginTitle = getString(R.string.auth_code_login);
-        return !TextUtils.isEmpty(pageTitle) && pageTitle.equals(authCodeLoginTitle);
+        String bindPhone = getString(R.string.bind_phone);
+        return !TextUtils.isEmpty(pageTitle) && (pageTitle.equals(authCodeLoginTitle) || pageTitle.equals(bindPhone));
     }
 
     private void login() {
@@ -397,21 +429,39 @@ public class LoginActivity extends BaseActivity {
         mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
 
         if (isAuthCodeLogin()) {
-            Client.authCodeLogin(phoneNumber, authCode).setTag(TAG)
-                    .setCallback(new Callback<Resp<UserInfo>>() {
-                        @Override
-                        public void onFinish() {
-                            super.onFinish();
-                            resetLoginButton();
-                        }
+            if (TextUtils.isEmpty(mWeChatOpenid)) {
+                Client.authCodeLogin(phoneNumber, authCode).setTag(TAG)
+                        .setCallback(new Callback<Resp<UserInfo>>() {
+                            @Override
+                            public void onFinish() {
+                                super.onFinish();
+                                resetLoginButton();
+                            }
 
-                        @Override
-                        protected void onRespSuccess(Resp<UserInfo> resp) {
-                            LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
-                            ToastUtil.show(R.string.login_success);
-                            postLogin();
-                        }
-                    }).fire();
+                            @Override
+                            protected void onRespSuccess(Resp<UserInfo> resp) {
+                                LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
+                                ToastUtil.show(R.string.login_success);
+                                postLogin();
+                            }
+                        }).fire();
+            } else {
+                Client.authCodeLogin(phoneNumber, authCode, mWeChatOpenid, mWeChatName, mWeChatIconurl, mWeChatGender).setTag(TAG)
+                        .setCallback(new Callback<Resp<UserInfo>>() {
+                            @Override
+                            public void onFinish() {
+                                super.onFinish();
+                                resetLoginButton();
+                            }
+
+                            @Override
+                            protected void onRespSuccess(Resp<UserInfo> resp) {
+                                LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
+                                ToastUtil.show(R.string.login_success);
+                                postLogin();
+                            }
+                        }).fire();
+            }
         } else {
             Client.login(phoneNumber, password).setTag(TAG)
                     .setCallback(new Callback<Resp<UserInfo>>() {
@@ -433,6 +483,7 @@ public class LoginActivity extends BaseActivity {
 
     private void postLogin() {
         if (LocalUser.getUser().getUserInfo().isNewUser()) {
+            Preference.get().setShowBindWeChat(true);
             Launcher.with(getActivity(), EvaluationStartActivity.class)
                     .putExtra(ExtraKeys.FIRST_TEST, true)
                     .execute();
@@ -448,6 +499,7 @@ public class LoginActivity extends BaseActivity {
         mLoading.setVisibility(View.GONE);
         mLoading.clearAnimation();
     }
+
 
     private void getAuthCode() {
         String phoneNumber = getPhoneNumber();

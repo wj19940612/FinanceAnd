@@ -88,6 +88,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private boolean mDistributeEvenly;
     private float mPadding; // add by John
+    private TextView[] mTabItems; //add by houcc
 
     private ViewPager mViewPager;
     private ViewPager.OnPageChangeListener mViewPagerPageChangeListener;
@@ -116,6 +117,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
         mTabStrip = new SlidingTabStrip(context);
         addView(mTabStrip, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+
     }
 
     public void setDistributeEvenly(boolean distributeEvenly) {
@@ -254,7 +256,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private void populateTabStrip() {
         final PagerAdapter adapter = mViewPager.getAdapter();
         final OnClickListener tabClickListener = new TabClickListener();
-
+        mTabItems = new TextView[adapter.getCount()];
         for (int i = 0; i < adapter.getCount(); i++) {
             View tabView = null;
             TextView tabTitleView = null;
@@ -283,7 +285,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
             tabTitleView.setText(adapter.getPageTitle(i));
             tabView.setOnClickListener(tabClickListener);
-
+            mTabItems[i] = tabTitleView;
             mTabStrip.addView(tabView);
         }
     }
@@ -316,6 +318,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
             scrollTo(targetScrollX, 0);
         }
+    }
+
+    public TextView[] getTabItems() {
+        return mTabItems;
     }
 
     private class InternalViewPagerListener implements ViewPager.OnPageChangeListener {

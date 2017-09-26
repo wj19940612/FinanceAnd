@@ -164,6 +164,8 @@
     <string name="we_chat_">微信:%1$s</string>
     <string name="copy_success">复制成功</string>
     <string name="install_qq_first">请先安装QQ</string>
+    <string name="my_ingot_">我的元宝: %1$d</string>
+
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
     <string name="head_image">头像</string>
@@ -195,7 +197,14 @@
     <string name="restart_get_location">点击重新获取位置</string>
     <string name="RMB">%1$S元</string>
     <string name="we_chat">微信</string>
-
+    <string name="system">系统</string>
+    <string name="system_">系统(%1$d)</string>
+    <string name="reply_">回复(%1$d)</string>
+    <string name="no_bind">未绑定</string>
+    <string name="bind_phone">绑定手机号</string>
+    <string name="bind_success">绑定成功</string>
+    <string name="bind_wechat_info">绑定微信号,登录更便捷,是否绑定?</string>
+    <string name="bind">绑定</string>
     <!--   消息 -->
     <string name="up_load_more">加载更多</string>
 
@@ -565,7 +574,7 @@
     </string-array>
 
     <string-array name="evaluationLevel">
-        <item>未测</item>
+        <item>测测金融水平</item>
         <item>入门</item>
         <item>初级</item>
         <item>中级</item>

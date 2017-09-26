@@ -54,6 +54,7 @@ public class IconTextRow extends LinearLayout {
     private TextView mTextView;
     private TextView mRowSubTextView;
     private TextView mSubTextView;
+    private ImageView mRightImage;
 
     private Paint mPaint;
     private float mSplitLineHeight;
@@ -181,10 +182,16 @@ public class IconTextRow extends LinearLayout {
         addView(mSubTextView, params);
 
         if (mRightIcon != null) {
-            ImageView rightImage = new ImageView(getContext());
-            rightImage.setImageDrawable(mRightIcon);
-            rightImage.setVisibility(mRightIconVisibility);
-            addView(rightImage);
+            mRightImage = new ImageView(getContext());
+            mRightImage.setImageDrawable(mRightIcon);
+            mRightImage.setVisibility(mRightIconVisibility);
+            addView(mRightImage);
+        }
+    }
+
+    public void setRightIconVisible(boolean visible) {
+        if (mRightImage != null) {
+            mRightImage.setVisibility(visible ? VISIBLE : GONE);
         }
     }
 
@@ -230,5 +237,9 @@ public class IconTextRow extends LinearLayout {
 
     public void setRowSubText(int resid) {
         mRowSubTextView.setText(resid);
+    }
+
+    public void setSubTextSize(float size) {
+        mSubTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
     }
 }

@@ -25,6 +25,16 @@ public class DailyReport {
     private String content;
     private String url;
 
+    public boolean isCollect() {
+        return collect;
+    }
+
+    public void setCollect(boolean collect) {
+        this.collect = collect;
+    }
+
+    private boolean collect;
+
     public String getUrl() {
         return url;
     }

@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.miss.MessagesActivity">
-
-    <com.sbai.finance.view.TitleBar
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:backFeature="true"
-        app:hasBottomSplitLine="true"
-        app:rightText="@string/all_read"
-        app:rightTextColor="@color/unluckyText"
-        app:rightTextSize="15sp"
-        app:rightVisible="true"
-        app:titleText="@string/message_remind"/>
+    android:orientation="vertical">
 
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
@@ -57,7 +42,6 @@
                 android:textSize="@dimen/navigate_size"
                 android:visibility="gone"/>
         </LinearLayout>
-
 
     </com.sbai.finance.view.CustomSwipeRefreshLayout>
 </LinearLayout>

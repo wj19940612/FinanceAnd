@@ -103,9 +103,6 @@
             android:name=".activity.mine.userinfo.ClipHeadImageActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.NewsActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.trade.PredictionRuleActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -129,6 +126,9 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.ImagePreViewActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.NewsActivity"
             android:screenOrientation="portrait"/>
 
         <!-- 我的: 设置 Setting -->
@@ -336,9 +336,6 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.miss.RewardActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.miss.MessagesActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.evaluation.EvaluationStartActivity"

@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.DailyReport;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -139,6 +140,11 @@ public class DailyReportDetailActivity extends BaseActivity {
                 .into(mImage);
         mTitleContent = data.getTitle();
         mShareImgUrl = data.getCoverUrl();
+        if (data.isCollect()) {
+            mCollect.setSelected(true);
+        } else {
+            mCollect.setSelected(false);
+        }
         if (data.isHtml()) {
             mTitleInfo.setVisibility(View.VISIBLE);
             mClick.setText(getString(R.string.read_count, data.getClicks()));
@@ -197,11 +203,20 @@ public class DailyReportDetailActivity extends BaseActivity {
                 break;
             case R.id.collect:
             case R.id.collectArea:
-                if (mCollect.isSelected()){
-                    mCollect.setSelected(false);
-                }else {
-                    mCollect.setSelected(true);
-                }
+                Client.collect(mId).setTag(TAG)
+                        .setIndeterminate(this)
+                        .setCallback(new Callback<Resp<Object>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<Object> resp) {
+                                if (resp.isSuccess()) {
+                                    if (mCollect.isSelected()) {
+                                        mCollect.setSelected(false);
+                                    } else {
+                                        mCollect.setSelected(true);
+                                    }
+                                }
+                            }
+                        }).fire();
                 //// TODO: 2017-09-22 收藏or取消收藏
                 break;
 
