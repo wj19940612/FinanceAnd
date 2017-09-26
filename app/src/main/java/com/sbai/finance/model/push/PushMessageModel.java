@@ -11,6 +11,22 @@ public class PushMessageModel {
     private static final int CLASSIFY_SYS = 0;
     private static final int CLASSIFY_USER = 1;
 
+    // 关注的小姐姐回复问题了
+    public static final int PUSH_TYPE_ATTENTION_MISS_ANSWERED = 10;
+    //日报
+    public static final int PUSH_TYPE_DAILY_REPORT = 11;
+    //小姐姐回复你的问题了
+    public static final int PUSH_TYPE_MISS_ANSWER_YOUR_QUESTION = 12;
+    //训练
+    public static final int PUSH_TYPE_TRAINING = 13;
+    //自习室
+    public static final int PUSH_TYPE_SELF_STUDY_ROOM= 14;
+    //活动
+    public static final int PUSH_TYPE_ACTIVITY= 15;
+    //意见反馈
+    public static final int PUSH_TYPE_FEED_BVACK_REPLY= 16;
+
+
     //日报
     private static final int TYPE_REPORT = 0;
 
@@ -47,14 +63,12 @@ public class PushMessageModel {
         return getClassify() == PushMessageModel.CLASSIFY_SYS && getType() == PushMessageModel.TYPE_REPORT;
     }
 
-    public boolean isBorrowInfo() {
-        return getClassify() == PushMessageModel.CLASSIFY_USER;
-    }
 
     public boolean isBattleMatchSuccess() {
         return getClassify() == 2 && getType() == 1;
     }
 
+    //小姐姐回复你的问题
     public boolean isMissAnswer() {
         return getClassify() == 4 && getType() == 1;
     }

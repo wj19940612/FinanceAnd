@@ -149,6 +149,21 @@ public class PushIntentService extends GTIntentService {
             intent = new Intent(context, QuestionDetailActivity.class);
             intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
         }
+
+        switch (data.getType()) {
+            case PushMessageModel.PUSH_TYPE_ATTENTION_MISS_ANSWERED:
+                break;
+            case PushMessageModel.PUSH_TYPE_ACTIVITY:
+                break;
+            case PushMessageModel.PUSH_TYPE_FEED_BVACK_REPLY:
+                break;
+            case PushMessageModel.PUSH_TYPE_SELF_STUDY_ROOM:
+                break;
+            case PushMessageModel.PUSH_TYPE_TRAINING:
+                break;
+        }
+
+
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 

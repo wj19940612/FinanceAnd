@@ -123,7 +123,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity
-            android:name=".activity.mine.MissMyQuestionAndAnswerActivity"
+            android:name=".activity.mine.MyQuestionAndAnswerActivity"
             android:screenOrientation="portrait"/>
         <!-- 明细 -->
         <!-- 选择相册图片 -->
@@ -425,6 +425,8 @@
             android:name=".activity.GuideActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.mine.MyCollectionActivity">
+        </activity>
+        <activity android:name=".activity.home.AllTrainingListActivity">
         </activity>
     </application>
 

@@ -1,7 +1,5 @@
 package com.sbai.finance.utils;
 
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -36,22 +34,4 @@ public class ViewGroupUtil {
         //params.height最后得到整个ListView完整显示需要的高度
         listView.setLayoutParams(params);
     }
-
-    public static void setRecycleViewFullHeight(RecyclerView recycleView) {
-        RecyclerView.LayoutManager layoutManager = recycleView.getLayoutManager();
-        int totalHeight = 0;
-        if (layoutManager != null) {
-            for (int i = 0; i < layoutManager.getItemCount(); i++) {
-                View childAt = layoutManager.getChildAt(i);
-                childAt.measure(0, 0);
-                totalHeight += childAt.getMeasuredHeight();
-            }
-            Log.d(TAG, "setRecycleViewFullHeight: " + totalHeight);
-            ViewGroup.LayoutParams layoutParams = recycleView.getLayoutParams();
-            layoutParams.height = totalHeight;
-            recycleView.setLayoutParams(layoutParams);
-        }
-
-    }
-
 }

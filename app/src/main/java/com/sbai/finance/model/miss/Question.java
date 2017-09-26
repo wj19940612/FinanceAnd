@@ -56,9 +56,31 @@ public class Question implements Serializable {
     private int soundTime;
     private boolean isPlaying;
 
+    // 我的问答中的数据
+    private String content;        // 问题内容
+    private int dataId;            //问题id
+
     public boolean isQuestionSolved() {
         return getSolve() == 0;
     }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+
+    public int getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(int dataId) {
+        this.dataId = dataId;
+    }
+
 
     public boolean isPlaying() {
         return isPlaying;
@@ -270,6 +292,8 @@ public class Question implements Serializable {
                 ", replyCount=" + replyCount +
                 ", soundTime=" + soundTime +
                 ", isPlaying=" + isPlaying +
+                ", content='" + content + '\'' +
+                ", dataId=" + dataId +
                 '}';
     }
 }

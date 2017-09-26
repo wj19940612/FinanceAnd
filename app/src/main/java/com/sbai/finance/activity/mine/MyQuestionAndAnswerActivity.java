@@ -20,13 +20,13 @@ import butterknife.ButterKnife;
 /**
  * 关于解说  我的问题 和评论
  */
-public class MissMyQuestionAndAnswerActivity extends BaseActivity {
+public class MyQuestionAndAnswerActivity extends BaseActivity {
 
     @BindView(R.id.slidingTabLayout)
     SlidingTabLayout mSlidingTabLayout;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
-    private MineQuestionAndAnswerFragmentAdapter mMineQuestionAndAnswerFragmentAdapter;
+    private MyQuestionAndAnswerFragmentAdapter mMyQuestionAndAnswerFragmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,22 +34,22 @@ public class MissMyQuestionAndAnswerActivity extends BaseActivity {
         setContentView(R.layout.activity_miss_my_question_and_answer);
         ButterKnife.bind(this);
 
-        mMineQuestionAndAnswerFragmentAdapter = new MineQuestionAndAnswerFragmentAdapter(getSupportFragmentManager(), this);
+        mMyQuestionAndAnswerFragmentAdapter = new MyQuestionAndAnswerFragmentAdapter(getSupportFragmentManager(), this);
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mSlidingTabLayout.setSelectedIndicatorPadding(Display.dp2Px(60, getResources()));
         mSlidingTabLayout.setPadding(Display.dp2Px(13, getResources()));
-        mViewPager.setAdapter(mMineQuestionAndAnswerFragmentAdapter);
+        mViewPager.setAdapter(mMyQuestionAndAnswerFragmentAdapter);
         mSlidingTabLayout.setViewPager(mViewPager);
     }
 
 
-    static class MineQuestionAndAnswerFragmentAdapter extends FragmentPagerAdapter {
+    static class MyQuestionAndAnswerFragmentAdapter extends FragmentPagerAdapter {
 
         private FragmentManager mFragmentManager;
         private Context mContext;
 
-        public MineQuestionAndAnswerFragmentAdapter(FragmentManager fm, Context context) {
+        public MyQuestionAndAnswerFragmentAdapter(FragmentManager fm, Context context) {
             super(fm);
             mFragmentManager = fm;
             mContext = context;

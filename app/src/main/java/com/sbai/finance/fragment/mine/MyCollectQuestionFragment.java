@@ -219,7 +219,7 @@ public class MyCollectQuestionFragment extends BaseFragment {
             public void bindDataWithView(MyCollect question, Context context) {
                 if (question == null) return;
 
-                mTime.setText(DateUtil.formatQuestionStyleTime(question.getCreateTime()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(question.getCreateTime()));
 
                 String priseCount = NumberFormatUtils.formatTenThousandNumber(question.getPriseCount());
                 String replyCount = NumberFormatUtils.formatTenThousandNumber(question.getReplyCount());
