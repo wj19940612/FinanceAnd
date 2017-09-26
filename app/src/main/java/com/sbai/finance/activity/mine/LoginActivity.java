@@ -352,6 +352,8 @@ public class LoginActivity extends BaseActivity {
                             public void onSuccess(Resp<UserInfo> userInfoResp) {
                                 if (userInfoResp.isSuccess()) {
                                     LocalUser.getUser().setUserInfo(userInfoResp.getData());
+                                    ToastUtil.show(R.string.login_success);
+                                    postLogin();
                                 } else {
                                     //214 尚未绑定的微信
                                     if (userInfoResp.getCode() == 214 || userInfoResp.getData() == null) {
