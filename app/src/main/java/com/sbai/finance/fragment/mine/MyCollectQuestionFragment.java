@@ -84,7 +84,7 @@ public class MyCollectQuestionFragment extends BaseFragment {
                 MyCollect question = (MyCollect) parent.getAdapter().getItem(position);
                 if (question != null) {
                     Launcher.with(getActivity(), QuestionDetailActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, question.getDataId())
+                            .putExtra(Launcher.EX_PAYLOAD, question.getId())
                             .execute();
                 }
             }
@@ -157,7 +157,7 @@ public class MyCollectQuestionFragment extends BaseFragment {
         }
 
         for (MyCollect result : data) {
-            if (mSet.add(result.getDataId())) {
+            if (mSet.add(result.getId())) {
                 mMyCollectQuestionAdapter.add(result);
             }
         }

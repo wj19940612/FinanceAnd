@@ -14,7 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.miss.Question;
@@ -137,7 +139,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
                 mListEmptyView.setOnGoingViewClickListener(new ListEmptyView.OnGoingViewClickListener() {
                     @Override
                     public void onGoingViewClick() {
-                        // TODO: 2017/9/25 去提问
+
                     }
                 });
                 break;
@@ -148,7 +150,8 @@ public class QuestionOrCommentFragment extends BaseFragment {
                 mListEmptyView.setOnGoingViewClickListener(new ListEmptyView.OnGoingViewClickListener() {
                     @Override
                     public void onGoingViewClick() {
-                        // TODO: 2017/9/25 评论
+                        Launcher.with(getActivity(), MainActivity.class).putExtra(ExtraKeys.MAIN_PAGE_CURRENTITEM, 1).execute();
+                        getActivity().finish();
                     }
                 });
                 break;

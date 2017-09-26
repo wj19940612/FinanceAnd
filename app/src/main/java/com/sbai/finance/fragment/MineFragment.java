@@ -23,7 +23,7 @@ import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.mine.AboutUsActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.MissMineQuestionAndAnswerActivity;
+import com.sbai.finance.activity.mine.MissMyQuestionAndAnswerActivity;
 import com.sbai.finance.activity.mine.MyCollectionActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
@@ -248,7 +248,7 @@ public class MineFragment extends BaseFragment {
 
             case R.id.mineQuestionsAndAnswers:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), MissMineQuestionAndAnswerActivity.class).execute();
+                    Launcher.with(getActivity(), MissMyQuestionAndAnswerActivity.class).execute();
                 } else {
                     openLoginPage();
                 }

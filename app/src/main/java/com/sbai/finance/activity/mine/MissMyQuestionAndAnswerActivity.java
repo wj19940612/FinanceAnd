@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 /**
  * 关于解说  我的问题 和评论
  */
-public class MissMineQuestionAndAnswerActivity extends BaseActivity {
+public class MissMyQuestionAndAnswerActivity extends BaseActivity {
 
     @BindView(R.id.slidingTabLayout)
     SlidingTabLayout mSlidingTabLayout;
@@ -31,7 +31,7 @@ public class MissMineQuestionAndAnswerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_miss_mine_question_and_answer);
+        setContentView(R.layout.activity_miss_my_question_and_answer);
         ButterKnife.bind(this);
 
         mMineQuestionAndAnswerFragmentAdapter = new MineQuestionAndAnswerFragmentAdapter(getSupportFragmentManager(), this);

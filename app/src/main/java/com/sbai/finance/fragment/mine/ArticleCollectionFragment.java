@@ -27,6 +27,7 @@ import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.ListEmptyView;
@@ -117,7 +118,7 @@ public class ArticleCollectionFragment extends BaseFragment {
         }
 
         for (MyCollect result : data) {
-            if (mSet.add(result.getDataId())) {
+            if (mSet.add(result.getId())) {
                 mArticleCollectionAdapter.add(result);
             }
         }
@@ -126,6 +127,8 @@ public class ArticleCollectionFragment extends BaseFragment {
     private void initView() {
         mSet = new HashSet<>();
         initListEmptyView();
+        mList.setPadding((int) Display.dp2Px(14,getResources()),0, (int) Display.dp2Px(14,getResources()),0);
+        mList.setDivider(null);
         mList.setEmptyView(mListEmptyView);
         mArticleCollectionAdapter = new ArticleCollectionAdapter(getActivity());
         mList.setAdapter(mArticleCollectionAdapter);

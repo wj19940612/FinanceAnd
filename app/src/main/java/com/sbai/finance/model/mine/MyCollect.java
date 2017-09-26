@@ -10,14 +10,27 @@ public class MyCollect {
     //收藏类型  1 提问 2 乐米日报
     public static final int COLLECTI_TYPE_QUESTION = 1;
     public static final int COLLECTI_TYPE_ARTICLE = 2;
+    /**
+     * mongoId : 598c7e9e8776e2bc872d2ae2
+     * coverUrl : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1505183304405011072.jpg
+     * createTime : 1502379678203
+     * format : 1
+     * clicks : 503
+     * id : 15
+     * type : 2
+     * title : 产品经理如何深入日常工作好
+     * userId : 130
+     */
 
+    private int id;
+    private int type;
 
     //收藏的文章
     private int clicks;
     private String title;
     private String coverUrl;
     private int format;
-    private int mongoId;      //乐米日报id
+    private String mongoId;      //乐米日报id
 
     //收藏的问题
 
@@ -29,20 +42,12 @@ public class MyCollect {
     private int userId;             //用户id
     private String content;         // 提问内容
 
-    public int getClicks() {
-        return clicks;
+    public String getMongoId() {
+        return mongoId;
     }
 
-    public void setClicks(int clicks) {
-        this.clicks = clicks;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void setMongoId(String mongoId) {
+        this.mongoId = mongoId;
     }
 
     public String getCoverUrl() {
@@ -53,6 +58,14 @@ public class MyCollect {
         this.coverUrl = coverUrl;
     }
 
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
     public int getFormat() {
         return format;
     }
@@ -61,12 +74,52 @@ public class MyCollect {
         this.format = format;
     }
 
-    public int getMongoId() {
-        return mongoId;
+    public int getClicks() {
+        return clicks;
     }
 
-    public void setMongoId(int mongoId) {
-        this.mongoId = mongoId;
+    public void setClicks(int clicks) {
+        this.clicks = clicks;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public int getReplyCount() {
@@ -93,14 +146,6 @@ public class MyCollect {
         this.awardCount = awardCount;
     }
 
-    public long getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
-    }
-
     public int getPriseCount() {
         return priseCount;
     }
@@ -109,30 +154,16 @@ public class MyCollect {
         this.priseCount = priseCount;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     @Override
     public String toString() {
         return "MyCollect{" +
-                "clicks=" + clicks +
+                "id=" + id +
+                ", type=" + type +
+                ", clicks=" + clicks +
                 ", title='" + title + '\'' +
                 ", coverUrl='" + coverUrl + '\'' +
                 ", format=" + format +
-                ", mongoId=" + mongoId +
+                ", mongoId='" + mongoId + '\'' +
                 ", replyCount=" + replyCount +
                 ", dataId=" + dataId +
                 ", awardCount=" + awardCount +
