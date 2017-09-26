@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.DiscoveryFragment;
@@ -20,7 +21,6 @@ import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.BottomTabs;
@@ -59,10 +59,9 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        //从测评结果页打开主页，要特殊处理
-        boolean booleanExtra = intent.getBooleanExtra(Launcher.EX_PAYLOAD, false);
-        if (booleanExtra) {
-            mViewPager.setCurrentItem(0, false);
+        int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENTITEM, 0);
+        if (0 <= currentItem && currentItem < mViewPager.getChildCount()) {
+            mViewPager.setCurrentItem(currentItem);
         }
     }
 
@@ -135,11 +134,11 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         });
     }
 
-
     @Override
-    public void onNoReadNewsNumber(int index, int count) {
+    public void onNoReadNewsNumber(int count) {
         mBottomTabs.setPointNum(count);
     }
+
 
     private static class MainFragmentsAdapter extends FragmentPagerAdapter {
 

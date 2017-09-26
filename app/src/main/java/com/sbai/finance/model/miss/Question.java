@@ -56,6 +56,10 @@ public class Question implements Serializable {
     private int soundTime;
     private boolean isPlaying;
 
+    public boolean isQuestionSolved() {
+        return getSolve() == 0;
+    }
+
     public boolean isPlaying() {
         return isPlaying;
     }

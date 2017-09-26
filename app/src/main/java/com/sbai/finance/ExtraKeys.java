@@ -27,4 +27,7 @@ public interface ExtraKeys {
     String USER_FUND = "user_fund";
 
     String BATTLE = "battle";
+
+    String MAIN_PAGE_CURRENTITEM = "main_page_currentItem";
+
 }

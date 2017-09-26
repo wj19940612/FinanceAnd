@@ -98,6 +98,7 @@ public class DailyReportDetailActivity extends BaseActivity {
     private WebViewClient mWebViewClient;
     private String mFirstContent;
     private String mTitleContent;
+    private DailyReport mDailyReport;
 
 
     public String getRawCookie() {
@@ -129,6 +130,7 @@ public class DailyReportDetailActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<DailyReport>, DailyReport>() {
                     @Override
                     protected void onRespSuccessData(DailyReport data) {
+                        mDailyReport = data;
                         updateDailyReportData(data);
                     }
                 }).fireFree();
@@ -138,6 +140,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         Glide.with(getActivity())
                 .load(data.getCoverUrl())
                 .into(mImage);
+        mCollect.setSelected(data.isCollected());
         mTitleContent = data.getTitle();
         mShareImgUrl = data.getCoverUrl();
         if (data.isCollect()) {
@@ -201,25 +204,6 @@ public class DailyReportDetailActivity extends BaseActivity {
             case R.id.backArea:
                 finish();
                 break;
-            case R.id.collect:
-            case R.id.collectArea:
-                Client.collect(mId).setTag(TAG)
-                        .setIndeterminate(this)
-                        .setCallback(new Callback<Resp<Object>>() {
-                            @Override
-                            protected void onRespSuccess(Resp<Object> resp) {
-                                if (resp.isSuccess()) {
-                                    if (mCollect.isSelected()) {
-                                        mCollect.setSelected(false);
-                                    } else {
-                                        mCollect.setSelected(true);
-                                    }
-                                }
-                            }
-                        }).fire();
-                //// TODO: 2017-09-22 收藏or取消收藏
-                break;
-
             case R.id.share:
             case R.id.shareArea:
                 umengEventCount(UmengCountEventId.REPORT_SHARE);
@@ -256,7 +240,29 @@ public class DailyReportDetailActivity extends BaseActivity {
             case R.id.refreshButton:
                 mWebView.reload();
                 break;
+            case R.id.collect:
+            case R.id.collectArea:
+                if (mDailyReport != null) {
+                    changeCollectionStatus();
+                }
+                break;
         }
+    }
+
+    private void changeCollectionStatus() {
+        Client.changeReportCollectionStatus(mDailyReport.getId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()) {
+                            mCollect.setSelected(!mDailyReport.isCollected());
+                            setResult(RESULT_OK);
+                        }
+                    }
+                })
+                .fire();
     }
 
     protected void initWebView() {

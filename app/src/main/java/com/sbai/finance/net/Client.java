@@ -2569,4 +2569,35 @@ public class Client {
                         .put("page", page)
                         .put("pageSize", 20));
     }
+
+    /**
+     * 请求我的问答 页面 的提问 或者评论
+     */
+    public static API requestMineQuestionOrComment() {
+        return new API("");
+    }
+
+    /**
+     * 我的收藏
+     * /user/user/myCollect.do
+     *
+     * @return
+     */
+    public static API requestMyCollection(int type, int page) {
+        return new API("/user/user/myCollect.do", new ApiParams()
+                .put("pageSize", Client.DEFAULT_PAGE_SIZE)
+                .put("type", type)
+                .put("page", page));
+    }
+
+    /**
+     * /user/dailyReport/collect.do
+     * GET
+     * 乐米日报收藏（wms）
+     *
+     * @return
+     */
+    public static API changeReportCollectionStatus(String id) {
+        return new API(POST, "/user/dailyReport/collect.do", new ApiParams().put("id", id));
+    }
 }

@@ -100,6 +100,9 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void initViews() {
+
+        View view = getLayoutInflater().inflate(R.layout.layout_feed_back_header, null);
+        mListView.addHeaderView(view);
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter.LengthFilter(400);
         mCommentContent.setFilters(filters);

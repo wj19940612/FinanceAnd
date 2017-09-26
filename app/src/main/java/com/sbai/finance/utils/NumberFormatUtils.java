@@ -44,9 +44,10 @@ public class NumberFormatUtils {
 
     /**
      * 格式化 我的问答页面的人数数字显示   超过10000 用 万来表示
-     * 例子
+     * 例子  123456
+     *
      * @param number
-     * @return
+     * @return 12.3万
      */
     public static String formatTenThousandNumber(int number) {
         if (number > 9999) {
