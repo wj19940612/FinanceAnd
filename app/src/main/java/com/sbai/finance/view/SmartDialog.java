@@ -184,7 +184,7 @@ public class SmartDialog {
         mNegativeListener = null;
         mOnCancelListener = null;
         mDismissListener = null;
-        mPositiveTextColor = Color.parseColor("#CD4A47");
+        mPositiveTextColor = Color.parseColor("#55ADFF");
         mNegativeVisible = View.VISIBLE;
 
         mCancelableOnTouchOutside = true;

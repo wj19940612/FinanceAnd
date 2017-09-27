@@ -352,7 +352,7 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
                     mTitle.setText(item.getTitle());
                 }
 
-                mTime.setText(DateUtil.formatQuestionStyleTime(item.getCreateTime()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
 
                 if (item.isTheEarnestMoneyPaySuccess() && item.getData() != null) {
                     mContent.setText(context.getString(R.string.pay_count, FinanceUtil.formatWithScale(item.getData().getMoney()) + " \n" +

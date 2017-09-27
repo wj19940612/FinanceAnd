@@ -347,22 +347,31 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     }
 
     private void logout() {
-        Client.logout()
-                .setTag(TAG)
-                .setCallback(new Callback<Resp<JsonObject>>() {
+        SmartDialog.with(getActivity(),"是否退出")
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.isSuccess()) {
-                            LocalUser.getUser().logout();
-                            CookieManger.getInstance().clearRawCookies();
-                            WsClient.get().close();
-                            sendLogoutSuccessBroadcast();
-                            setResult(RESULT_OK);
-                            finish();
-                        }
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        Client.logout()
+                                .setTag(TAG)
+                                .setCallback(new Callback<Resp<JsonObject>>() {
+                                    @Override
+                                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                                        if (resp.isSuccess()) {
+                                            LocalUser.getUser().logout();
+                                            CookieManger.getInstance().clearRawCookies();
+                                            WsClient.get().close();
+                                            sendLogoutSuccessBroadcast();
+                                            setResult(RESULT_OK);
+                                            finish();
+                                        }
+                                    }
+                                })
+                                .fire();
                     }
                 })
-                .fire();
+                .show();
+
     }
 
     private void sendLogoutSuccessBroadcast() {

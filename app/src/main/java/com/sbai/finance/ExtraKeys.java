@@ -28,6 +28,6 @@ public interface ExtraKeys {
 
     String BATTLE = "battle";
 
-    String MAIN_PAGE_CURRENTITEM = "main_page_currentItem";
-
+    String MAIN_PAGE_CURRENT_ITEM = "main_page_currentItem";
+    String ACTIVITY = "activity";
 }

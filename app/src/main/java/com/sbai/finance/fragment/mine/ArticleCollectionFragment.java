@@ -10,6 +10,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -126,9 +127,15 @@ public class ArticleCollectionFragment extends BaseFragment {
 
     private void initView() {
         mSet = new HashSet<>();
+        View view = new View(getActivity());
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Display.dp2Px(1, getResources()));
+        view.setLayoutParams(params);
+        mList.addFooterView(view);
         initListEmptyView();
-        mList.setPadding((int) Display.dp2Px(14,getResources()),0, (int) Display.dp2Px(14,getResources()),0);
+        mList.setPadding((int) Display.dp2Px(14, getResources()), 0, (int) Display.dp2Px(14, getResources()), 0);
         mList.setDivider(null);
+        mList.setVerticalScrollBarEnabled(false);
+        mList.setHorizontalScrollBarEnabled(false);
         mList.setEmptyView(mListEmptyView);
         mArticleCollectionAdapter = new ArticleCollectionAdapter(getActivity());
         mList.setAdapter(mArticleCollectionAdapter);
