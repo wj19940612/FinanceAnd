@@ -108,12 +108,17 @@ public class StartDialogFragment extends DialogFragment {
                 if (mActivityModel != null) {
                     if (mActivityModel.getLinkType().equalsIgnoreCase(ActivityModel.LINK_TYPE_MODEL)) {
                         Launcher.with(getActivity(), LoginActivity.class).execute();
-                    } else if (mActivityModel.getLinkType().equalsIgnoreCase(ActivityModel.LINK_TYPE_BANNER) &&
-                            !mActivityModel.isH5Style()) {
-                        Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_HTML, mActivityModel.getContent())
-                                .putExtra(WebActivity.EX_TITLE, mActivityModel.getTitle())
-                                .execute();
+                    } else if (mActivityModel.getLinkType().equalsIgnoreCase(ActivityModel.LINK_TYPE_BANNER)) {
+                        if (mActivityModel.isH5Style()) {
+                            Launcher.with(getActivity(), WebActivity.class)
+                                    .putExtra(WebActivity.EX_URL, mActivityModel.getContent())
+                                    .execute();
+                        } else {
+                            Launcher.with(getActivity(), WebActivity.class)
+                                    .putExtra(WebActivity.EX_HTML, mActivityModel.getContent())
+                                    .putExtra(WebActivity.EX_TITLE, mActivityModel.getTitle())
+                                    .execute();
+                        }
                     } else {
                         Launcher.with(getActivity(), WebActivity.class)
                                 .putExtra(WebActivity.EX_URL, mActivityModel.getLink())

@@ -257,10 +257,10 @@ public class DailyReportDetailActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            if(mDailyReport.isCollected()){
+                            if (mDailyReport.isCollected()) {
                                 mCollect.setSelected(false);
                                 mDailyReport.setCollect(0);
-                            }else {
+                            } else {
                                 mCollect.setSelected(true);
                                 mDailyReport.setCollect(1);
                             }
