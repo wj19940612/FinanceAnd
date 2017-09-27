@@ -39,7 +39,7 @@ import butterknife.Unbinder;
  * 上传用户头像
  */
 
-public class UploadUserImageDialogFragment extends BaseDialogFragment {
+public class UploadUserImageDialogFragment extends BottomDialogFragment {
     private static final String TAG = "UploadUserImageDialogFr";
 
 

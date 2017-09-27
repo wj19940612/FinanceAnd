@@ -68,7 +68,7 @@ public class BindBankHintDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
+        setStyle(STYLE_NO_TITLE, R.style.BaseDialogFragment);
         if (getArguments() != null) {
             mContentRes = getArguments().getInt(KEY_CONTENT_RES);
             mTitleResId = getArguments().getInt(KEY_TITLE);

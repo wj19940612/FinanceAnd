@@ -842,4 +842,7 @@
     <string name="not_has_sys_news">暂无系统消息</string>
     <string name="there_show_sys_news">在这里会显示系统的提醒消息</string>
 
+    <!-- 图形验证码输入框 -->
+    <string name="please_input_image_auth_code">请输入图形验证码</string>
+
 </resources>

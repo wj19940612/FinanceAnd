@@ -21,7 +21,7 @@ import butterknife.Unbinder;
  * Created by ${wangJie} on 2017/6/7.
  */
 
-public class ChooseSexDialogFragment extends BaseDialogFragment {
+public class ChooseSexDialogFragment extends BottomDialogFragment {
 
     @BindView(R.id.boy)
     AppCompatTextView mBoy;
@@ -46,7 +46,7 @@ public class ChooseSexDialogFragment extends BaseDialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_fragment_choose_sex_, container, false);
+        View view = inflater.inflate(R.layout.dialog_fragment_choose_sex, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }

@@ -26,7 +26,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by lixiaokuan0819 on 2017/8/3.
  */
 
-public class ReplyDialogFragment extends BaseDialogFragment {
+public class ReplyDialogFragment extends BottomDialogFragment {
 
 	private static final int REPLY = 1001;
 
