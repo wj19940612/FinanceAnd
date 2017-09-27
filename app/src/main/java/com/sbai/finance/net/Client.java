@@ -2581,6 +2581,13 @@ public class Client {
     }
 
     /**
+     * 启动弹窗
+     */
+    public static API getStart() {
+        return new API("/user/start/findAll.do");
+    }
+
+    /**
      * /user/user/myQuestion.do
      * POST
      * 我的问答

@@ -12,12 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
+import android.widget.ImageView;
 
-import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.model.ActivityModel;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,19 +31,29 @@ import butterknife.Unbinder;
  * 用户注册即送300元宝
  */
 
-public class RegisterInviteDialogFragment extends DialogFragment {
-
-
+public class StartDialogFragment extends DialogFragment {
+    public static final String ACTIVITY = "activity";
     @BindView(R.id.dialogDelete)
     AppCompatImageView mDialogDelete;
-    @BindView(R.id.immediatelyRegister)
-    TextView mImmediatelyRegister;
+    @BindView(R.id.button)
+    ImageView mButton;
+    @BindView(R.id.window)
+    ImageView mWindow;
     private Unbinder mBind;
+    private ActivityModel mActivityModel;
+
+    public static StartDialogFragment newInstance(ActivityModel activityModel) {
+        StartDialogFragment startDialogFragment = new StartDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("activity", activityModel);
+        startDialogFragment.setArguments(bundle);
+        return startDialogFragment;
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_fragment_register_invite, container, false);
+        View view = inflater.inflate(R.layout.dialog_fragment_start, container, false);
         mBind = ButterKnife.bind(this, view);
         return view;
     }
@@ -50,6 +62,9 @@ public class RegisterInviteDialogFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.RegisterInviteDialog);
+        if (getArguments() != null) {
+            mActivityModel = getArguments().getParcelable("activity");
+        }
     }
 
     @Override
@@ -61,6 +76,14 @@ public class RegisterInviteDialogFragment extends DialogFragment {
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             window.setLayout((int) (dm.widthPixels * 0.8), WindowManager.LayoutParams.WRAP_CONTENT);
+        }
+        initView();
+    }
+
+    private void initView() {
+        if (mActivityModel != null) {
+            GlideApp.with(getActivity()).load(mActivityModel.getWindowUrl()).into(mWindow);
+            GlideApp.with(getActivity()).load(mActivityModel.getButtonUrl()).into(mButton);
         }
     }
 
@@ -74,17 +97,29 @@ public class RegisterInviteDialogFragment extends DialogFragment {
         mBind.unbind();
     }
 
-    @OnClick({R.id.dialogDelete, R.id.immediatelyRegister})
+    @OnClick({R.id.dialogDelete, R.id.button})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.dialogDelete:
-                Preference.get().setShowRegisterInviteDialog();
                 dismissAllowingStateLoss();
                 break;
-            case R.id.immediatelyRegister:
-                Preference.get().setShowRegisterInviteDialog();
+            case R.id.button:
                 dismissAllowingStateLoss();
-                Launcher.with(getActivity(), LoginActivity.class).execute();
+                if (mActivityModel != null) {
+                    if (mActivityModel.getLinkType().equalsIgnoreCase(ActivityModel.LINK_TYPE_MODEL)) {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    } else if (mActivityModel.getLinkType().equalsIgnoreCase(ActivityModel.LINK_TYPE_BANNER) &&
+                            !mActivityModel.isH5Style()) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_HTML, mActivityModel.getContent())
+                                .putExtra(WebActivity.EX_TITLE, mActivityModel.getTitle())
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_URL, mActivityModel.getLink())
+                                .execute();
+                    }
+                }
                 break;
         }
     }

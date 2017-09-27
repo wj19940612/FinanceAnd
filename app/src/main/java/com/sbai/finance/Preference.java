@@ -11,6 +11,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.model.training.TrainingSubmit;
 import com.sbai.finance.utils.AppInfo;
+import com.sbai.finance.utils.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ public class Preference {
         String FIRST_OPEN_WALLET_PAGE = "first_open_wallet_page";
         String SHOW_REGISTER_INVITE = "show_register_invite";
         String SHOW_BIND_WECHAT = "show_bind_wechat";
+        String FIRST_OPEN_APP = "first_open_app";
     }
 
     private static Preference sInstance;
@@ -276,7 +278,13 @@ public class Preference {
                 && !LocalUser.getUser().isLogin();
     }
 
-    public void setShowRegisterInviteDialog() {
-        apply(Key.SHOW_REGISTER_INVITE, false);
+    public void setTodayFirstOpenAppTime(long time) {
+        apply(Key.FIRST_OPEN_APP, time);
+    }
+
+    public boolean canShowStartPage() {
+        long firstOpenTime = mPrefs.getLong(Key.FIRST_OPEN_APP, 0);
+        long systemTime = System.currentTimeMillis();
+        return firstOpenTime == 0 || !DateUtil.isToday(firstOpenTime, systemTime);
     }
 }
