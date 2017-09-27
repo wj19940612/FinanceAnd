@@ -152,7 +152,6 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
                 .setCallback(new Callback2D<Resp<UserDetailInfo>, UserDetailInfo>() {
                     @Override
                     protected void onRespSuccessData(UserDetailInfo data) {
-                        Log.d(TAG, "onRespSuccessData:  " + data.toString());
                         if (!TextUtils.isEmpty(data.getUserPortrait()) &&
                                 !data.getUserPortrait().equalsIgnoreCase(LocalUser.getUser().getUserInfo().getUserPortrait())) {
                             setResult(RESULT_OK);
@@ -347,31 +346,35 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     }
 
     private void logout() {
-        SmartDialog.with(getActivity(),"是否退出")
+        SmartDialog.with(getActivity(),R.string.is_logout_lemi)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Client.logout()
-                                .setTag(TAG)
-                                .setCallback(new Callback<Resp<JsonObject>>() {
-                                    @Override
-                                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                                        if (resp.isSuccess()) {
-                                            LocalUser.getUser().logout();
-                                            CookieManger.getInstance().clearRawCookies();
-                                            WsClient.get().close();
-                                            sendLogoutSuccessBroadcast();
-                                            setResult(RESULT_OK);
-                                            finish();
-                                        }
-                                    }
-                                })
-                                .fire();
+                        requestLogout();
                     }
                 })
                 .show();
 
+    }
+
+    private void requestLogout() {
+        Client.logout()
+                .setTag(TAG)
+                .setCallback(new Callback<Resp<JsonObject>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<JsonObject> resp) {
+                        if (resp.isSuccess()) {
+                            LocalUser.getUser().logout();
+                            CookieManger.getInstance().clearRawCookies();
+                            WsClient.get().close();
+                            sendLogoutSuccessBroadcast();
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    }
+                })
+                .fire();
     }
 
     private void sendLogoutSuccessBroadcast() {
