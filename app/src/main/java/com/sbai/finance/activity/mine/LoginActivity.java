@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mine;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -7,11 +8,12 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,7 +47,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sbai.finance.R.id.authCode;
-import static com.sbai.finance.R.id.thirdPartyProtocol;
 
 public class LoginActivity extends BaseActivity {
 
@@ -90,9 +91,10 @@ public class LoginActivity extends BaseActivity {
 
     private int mCounter;
     private boolean mFreezeObtainAuthCode;
+    private boolean mIsFirst = true;
     private String mWeChatOpenid;
     private String mWeChatName;
-    private String mWeChatIconurl;
+    private String mWeChatIconUrl;
     private int mWeChatGender;
 
     @Override
@@ -103,16 +105,34 @@ public class LoginActivity extends BaseActivity {
 
         translucentStatusBar();
 
+        if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
+            mPhoneNumber.setText(LocalUser.getUser().getPhone());
+            mAuthCode.requestFocus();
+        } else {
+            mPhoneNumber.requestFocus();
+        }
+        mAuthCode.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (mIsFirst) {
+                    mIsFirst = false;
+                    mAuthCode.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            hideSoftWare();
+                        }
+                    });
+                }
+            }
+        });
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPassword.addTextChangedListener(mValidationWatcher);
-        if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
-            mPhoneNumber.setText(LocalUser.getUser().getPhone());
-        }
 
         initListener();
 
         setKeyboardHelper();
+
     }
 
     private void initListener() {
@@ -193,6 +213,14 @@ public class LoginActivity extends BaseActivity {
         mKeyBoardHelper.setOnKeyBoardStatusChangeListener(onKeyBoardStatusChangeListener);
     }
 
+    private void hideSoftWare() {
+        if (getActivity().getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
+
+    }
+
     private KeyBoardHelper.OnKeyBoardStatusChangeListener onKeyBoardStatusChangeListener = new KeyBoardHelper.OnKeyBoardStatusChangeListener() {
 
         @Override
@@ -258,6 +286,7 @@ public class LoginActivity extends BaseActivity {
         if (!newPhone.equalsIgnoreCase(oldPhone)) {
             mPhoneNumber.setText(newPhone);
             mPhoneNumber.setSelection(newPhone.length());
+        } else {
         }
     }
 
@@ -332,6 +361,10 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void weChatLogin() {
+        if (!UMShareAPI.get(getActivity()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN)) {
+            ToastUtil.show(R.string.you_not_install_weixin);
+            return;
+        }
         onHttpUiShow(TAG);
         UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
             @Override
@@ -386,7 +419,7 @@ public class LoginActivity extends BaseActivity {
     private void bindPhone(String openid, String name, String iconurl, String gender) {
         mWeChatOpenid = openid;
         mWeChatName = name;
-        mWeChatIconurl = iconurl;
+        mWeChatIconUrl = iconurl;
         mWeChatGender = gender.equals("女") ? 1 : 2;
         if (!isAuthCodeLogin()) { // 当前是验证码登录 -> 密码登录
             mLoginSwitchTop.setText(R.string.password_login);
@@ -455,7 +488,7 @@ public class LoginActivity extends BaseActivity {
                             }
                         }).fire();
             } else {
-                Client.authCodeLogin(phoneNumber, authCode, mWeChatOpenid, mWeChatName, mWeChatIconurl, mWeChatGender).setTag(TAG)
+                Client.authCodeLogin(phoneNumber, authCode, mWeChatOpenid, mWeChatName, mWeChatIconUrl, mWeChatGender).setTag(TAG)
                         .setCallback(new Callback<Resp<UserInfo>>() {
                             @Override
                             public void onFinish() {
