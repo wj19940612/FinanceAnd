@@ -96,7 +96,7 @@ public class EvaluationResultActivity extends BaseActivity {
 
         Intent intent = new Intent();
         intent.setClass(this, MainActivity.class);
-        intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENTITEM, 0);
+        intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
         startActivity(intent);
 
         if (LocalUser.getUser().getUserInfo().isNewUser()) {

@@ -355,7 +355,7 @@ public class MissNewsFragment extends BaseFragment implements
                         mReplyContent.setVisibility(View.VISIBLE);
                         break;
                 }
-                mTime.setText(DateUtil.getMissFormatTime(item.getCreateTime()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
                 if (item.isNoRead()) {
                     mRedDot.setVisibility(View.VISIBLE);
                 } else {

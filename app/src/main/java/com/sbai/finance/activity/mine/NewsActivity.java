@@ -35,6 +35,8 @@ public class NewsActivity extends BaseActivity {
 
     private NewsPagesAdapter mNewsPagesAdapter;
     private int pagePosition;
+    private int mMissNoReadCount;
+    private int mSysNoReadCount;
 
     public interface NoReadNewsCallback {
         void noReadNews(int count);
@@ -56,30 +58,16 @@ public class NewsActivity extends BaseActivity {
                     @Override
                     public void noReadNews(int count) {
                         if (mTabLayout.getTabItems().length < 1) return;
-                        if (count == 0) {
-                            mTabLayout.getTabItems()[0].setText(getString(R.string.reply));
-                            mTitleBar.setRightViewEnable(false);
-                            mTitleBar.setRightVisible(false);
-                        } else {
-                            mTabLayout.getTabItems()[0].setText(getString(R.string.reply_, count));
-                            mTitleBar.setRightViewEnable(true);
-                            mTitleBar.setRightVisible(true);
-                        }
+                        mMissNoReadCount = count;
+                        updateTitleBar();
                     }
                 },
                 new NoReadNewsCallback() {
                     @Override
                     public void noReadNews(int count) {
                         if (mTabLayout.getTabItems().length < 2) return;
-                        if (count == 0) {
-                            mTabLayout.getTabItems()[1].setText(getString(R.string.system));
-                            mTitleBar.setRightViewEnable(false);
-                            mTitleBar.setRightVisible(false);
-                        } else {
-                            mTabLayout.getTabItems()[1].setText(getString(R.string.system_, count));
-                            mTitleBar.setRightViewEnable(true);
-                            mTitleBar.setRightVisible(true);
-                        }
+                        mSysNoReadCount = count;
+                        updateTitleBar();
                     }
                 });
         mViewPager.setAdapter(mNewsPagesAdapter);
@@ -97,6 +85,7 @@ public class NewsActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 pagePosition = position;
+                updateTitleBar();
             }
 
             @Override
@@ -128,6 +117,30 @@ public class NewsActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private void updateTitleBar() {
+        if (pagePosition == 0) {
+            if (mMissNoReadCount == 0) {
+                mTabLayout.getTabItems()[0].setText(getString(R.string.reply));
+                mTitleBar.setRightViewEnable(false);
+                mTitleBar.setRightVisible(false);
+            } else {
+                mTabLayout.getTabItems()[0].setText(getString(R.string.reply_, mMissNoReadCount));
+                mTitleBar.setRightViewEnable(true);
+                mTitleBar.setRightVisible(true);
+            }
+        } else if (pagePosition == 1) {
+            if (mSysNoReadCount == 0) {
+                mTabLayout.getTabItems()[1].setText(getString(R.string.system));
+                mTitleBar.setRightViewEnable(false);
+                mTitleBar.setRightVisible(false);
+            } else {
+                mTabLayout.getTabItems()[1].setText(getString(R.string.system_, mSysNoReadCount));
+                mTitleBar.setRightViewEnable(true);
+                mTitleBar.setRightVisible(true);
+            }
+        }
     }
 
     static class NewsPagesAdapter extends FragmentPagerAdapter {
@@ -167,7 +180,7 @@ public class NewsActivity extends BaseActivity {
                     return missNewsFragment;
                 case 1:
                     SysNewsFragment sysNewsFragment = new SysNewsFragment();
-                    sysNewsFragment.setNoReadNewsCallback(mMissNewsCallback);
+                    sysNewsFragment.setNoReadNewsCallback(mSysNewsCallback);
                     return sysNewsFragment;
             }
             return null;

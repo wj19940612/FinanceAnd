@@ -9,6 +9,7 @@ import com.google.gson.JsonSyntaxException;
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
+import com.sbai.finance.BuildConfig;
 import com.sbai.finance.net.API;
 import com.sbai.finance.websocket.callback.OnPushReceiveListener;
 import com.sbai.finance.websocket.callback.WSCallback;
@@ -24,7 +25,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class WsClient implements AbsWsClient {
 
     private static final String TAG = "WebSocket";
-    private static final String URI = "wss://" + API.getDomain() + "/game/ws.do";
+    private static final String HEAD_PROTOCOL= BuildConfig.FLAVOR.equalsIgnoreCase("dev") ? "ws://" : "wss://";
+    private static final String URI = HEAD_PROTOCOL + API.getDomain() + "/game/ws.do";
 
     private static final int TIMEOUT_REQ = 3000;
 

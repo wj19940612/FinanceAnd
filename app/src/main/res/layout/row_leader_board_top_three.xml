@@ -13,6 +13,7 @@
         android:layout_height="60dp"
         android:layout_marginRight="8dp"
         android:scaleType="fitXY"
+        android:clickable="true"
         tools:src="@drawable/ic_default_avatar_big"/>
 
     <LinearLayout

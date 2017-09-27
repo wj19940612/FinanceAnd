@@ -23,7 +23,7 @@ import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.mine.AboutUsActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.MissMyQuestionAndAnswerActivity;
+import com.sbai.finance.activity.mine.MyQuestionAndAnswerActivity;
 import com.sbai.finance.activity.mine.MyCollectionActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
@@ -152,15 +152,14 @@ public class MineFragment extends BaseFragment {
                     protected void onRespSuccessData(ArrayList<NotReadMessageNumberModel> data) {
                         int count = 0;
                         for (NotReadMessageNumberModel notReadMessageNumberData : data) {
-                            if (notReadMessageNumberData.isSystemNews()) {
-                                count = notReadMessageNumberData.getCount();
-                                break;
+                            if (notReadMessageNumberData.isSystemNews() || notReadMessageNumberData.isMissNews()) {
+                                count = count + notReadMessageNumberData.getCount();
                             }
                         }
                         if (count != 0) {
                             mMessage.setSubTextVisible(View.VISIBLE);
                             if (count <= 99) {
-                                mMessage.setSubTextSize(11);
+                                mMessage.setSubTextSize(12);
                                 mMessage.setSubText(String.valueOf(count));
                             } else {
                                 mMessage.setSubTextSize(9);
@@ -280,7 +279,7 @@ public class MineFragment extends BaseFragment {
 
             case R.id.mineQuestionsAndAnswers:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), MissMyQuestionAndAnswerActivity.class).execute();
+                    Launcher.with(getActivity(), MyQuestionAndAnswerActivity.class).execute();
                 } else {
                     openLoginPage();
                 }

@@ -87,7 +87,7 @@ android {
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
 //            buildConfigField('String', 'HOST', '\"192.168.1.7\"')
-            buildConfigField('String', 'HOST', '\"http://devlm.esongbai.abc\"')
+            buildConfigField('String', 'HOST', '\"devlm.esongbai.abc\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 
             manifestPlaceholders = [

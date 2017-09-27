@@ -152,7 +152,6 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
                 .setCallback(new Callback2D<Resp<UserDetailInfo>, UserDetailInfo>() {
                     @Override
                     protected void onRespSuccessData(UserDetailInfo data) {
-                        Log.d(TAG, "onRespSuccessData:  " + data.toString());
                         if (!TextUtils.isEmpty(data.getUserPortrait()) &&
                                 !data.getUserPortrait().equalsIgnoreCase(LocalUser.getUser().getUserInfo().getUserPortrait())) {
                             setResult(RESULT_OK);
@@ -246,6 +245,10 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     }
 
     private void bindWeChat() {
+        if (!UMShareAPI.get(getActivity()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN)) {
+            ToastUtil.show(R.string.you_not_install_weixin);
+            return;
+        }
         onHttpUiShow(TAG);
         UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
             @Override
@@ -347,6 +350,19 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     }
 
     private void logout() {
+        SmartDialog.with(getActivity(),R.string.is_logout_lemi)
+                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        requestLogout();
+                    }
+                })
+                .show();
+
+    }
+
+    private void requestLogout() {
         Client.logout()
                 .setTag(TAG)
                 .setCallback(new Callback<Resp<JsonObject>>() {

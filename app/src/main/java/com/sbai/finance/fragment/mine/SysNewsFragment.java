@@ -185,16 +185,7 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
     }
 
     public void requestBatchReadMessage() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < mSystemNewsAdapter.getCount(); i++) {
-            HistoryNewsModel historyNewsModel = mSystemNewsAdapter.getItem(i);
-            if (historyNewsModel != null && historyNewsModel.isNotRead()) {
-                sb.append(historyNewsModel.getId()).append(",");
-            }
-        }
-        if (sb.toString().length() == 0) return;
-        sb.deleteCharAt(sb.length() - 1);
-        Client.batchRead(sb.toString()).setTag(TAG)
+        Client.batchRead().setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -361,7 +352,7 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
                     mTitle.setText(item.getTitle());
                 }
 
-                mTime.setText(DateUtil.getMissFormatTime(item.getCreateTime()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
 
                 if (item.isTheEarnestMoneyPaySuccess() && item.getData() != null) {
                     mContent.setText(context.getString(R.string.pay_count, FinanceUtil.formatWithScale(item.getData().getMoney()) + " \n" +
