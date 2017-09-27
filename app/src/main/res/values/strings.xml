@@ -170,8 +170,9 @@
 
     <string name="miss_is_answering">小姐姐正在抢答中~</string>
     <string name="question_replay_content"> %1$s人点赞  %2$s人评论 %3$s人打赏</string>
-    <string name="hello">您好, 感谢您使用我们的APP!</string>
-    <string name="send_message_connect">如有意见或建议，请直接反馈，如需当面反馈，可留下联系方式\n客服微信：lemi202</string>
+    <string name="send_message_connect">您好, 感谢您使用我们的APP!
+        \n如有意见或建议，请直接反馈，如需当面反馈，可留下联系方式
+        \n客服微信：%1$s</string>
     <!--修改个人信息-->
     <string name="modify_user_info">修改个人信息</string>
     <string name="head_image">头像</string>
@@ -211,6 +212,7 @@
     <string name="bind_success">绑定成功</string>
     <string name="bind_wechat_info">绑定微信号,登录更便捷,是否绑定?</string>
     <string name="bind">绑定</string>
+    <string name="is_logout_lemi">是否要退出乐米？</string>
     <!--   消息 -->
     <string name="up_load_more">加载更多</string>
 
@@ -708,6 +710,8 @@
     <string name="you_are_not_complete_train">你还没有完成训练</string>
     <string name="start_test_hint">5分钟初步测试下您的金融水平</string>
     <string name="source_and_time">来源: %1$s    %2$s</string>
+    <string name="more_training">更多训练</string>
+    <string name="all_training">所有训练</string>
 
     <!--了解学分-->
     <string name="score_explain_title">乐米学分</string>

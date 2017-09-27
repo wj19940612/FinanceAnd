@@ -23,11 +23,13 @@ import com.igexin.sdk.message.SetTagCmdMessage;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
+import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
@@ -150,14 +152,32 @@ public class PushIntentService extends GTIntentService {
         } else if (data.isMissAnswer()) {
             intent = new Intent(context, QuestionDetailActivity.class);
             intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
-        } else if (data.isStudy()) {
-            intent = new Intent(context, StudyRoomActivity.class);
-        } else if (data.isFeedBackInfo()) {
-            intent = new Intent(context, FeedbackActivity.class);
-            if (data.getData() != null && data.getData().getId() > 0) {
-                intent.putExtra(ExtraKeys.TRAINING, data.getData().getId());
-            }
         }
+
+        switch (data.getType()) {
+            case PushMessageModel.PUSH_TYPE_ATTENTION_MISS_ANSWERED:
+                break;
+            case PushMessageModel.PUSH_TYPE_ACTIVITY:
+                intent = new Intent(context, MainActivity.class);
+                // TODO: 2017/9/26 拼接banner
+                Banner banner = new Banner();
+                intent.putExtra(ExtraKeys.ACTIVITY, banner);
+                break;
+            case PushMessageModel.PUSH_TYPE_FEED_BVACK_REPLY:
+                intent = new Intent(context, FeedbackActivity.class);
+                if (data.getData() != null && data.getData().getId() > 0) {
+                    intent.putExtra(ExtraKeys.TRAINING, data.getData().getId());
+                }
+                break;
+            case PushMessageModel.PUSH_TYPE_SELF_STUDY_ROOM:
+                intent = new Intent(context, StudyRoomActivity.class);
+                break;
+            case PushMessageModel.PUSH_TYPE_TRAINING:
+                intent = new Intent(context, MainActivity.class);
+                break;
+        }
+
+
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 

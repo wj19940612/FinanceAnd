@@ -18,6 +18,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.net.Callback2D;
@@ -29,7 +30,6 @@ import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.ListEmptyView;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -43,9 +43,9 @@ public class QuestionOrCommentFragment extends BaseFragment {
     private static final String QUESTION_TYPE = "question_type";
 
     //我的回答的提问
-    public static final int TYPE_QUESTION = 0;
+    public static final int TYPE_QUESTION = 1;
     //评论
-    public static final int TYPE_COMMENT = 1;
+    public static final int TYPE_COMMENT = 2;
 
     @BindView(android.R.id.list)
     ListView mListView;
@@ -54,7 +54,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
     @BindView(R.id.listEmptyView)
     ListEmptyView mListEmptyView;
 
-    private int mQuestionType;
+    private int mQuestionType = 1;
     private Unbinder mBind;
     private MineQuestionAndAnswerAdapter mMineQuestionAndAnswerAdapter;
     private HashSet<Integer> mSet;
@@ -92,6 +92,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
+        requestMineQuestionOrComment(true);
         mSet = new HashSet<>();
     }
 
@@ -122,7 +123,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
                 Question question = (Question) parent.getAdapter().getItem(position);
                 if (question != null) {
                     Launcher.with(getActivity(), QuestionDetailActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, question.getId())
+                            .putExtra(Launcher.EX_PAYLOAD, question.getDataId())
                             .execute();
                 }
             }
@@ -139,7 +140,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
                 mListEmptyView.setOnGoingViewClickListener(new ListEmptyView.OnGoingViewClickListener() {
                     @Override
                     public void onGoingViewClick() {
-
+                        Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
                     }
                 });
                 break;
@@ -150,7 +151,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
                 mListEmptyView.setOnGoingViewClickListener(new ListEmptyView.OnGoingViewClickListener() {
                     @Override
                     public void onGoingViewClick() {
-                        Launcher.with(getActivity(), MainActivity.class).putExtra(ExtraKeys.MAIN_PAGE_CURRENTITEM, 1).execute();
+                        Launcher.with(getActivity(), MainActivity.class).putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 1).execute();
                         getActivity().finish();
                     }
                 });
@@ -160,29 +161,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
 
 
     private void requestMineQuestionOrComment(final boolean isRefreshing) {
-        // TODO: 2017/9/25 测试数据 
-        ArrayList<Question> questions = new ArrayList<>();
-
-        for (int i = 0; i < 20; i++) {
-            Question question = new Question();
-            question.setCreateTime(System.currentTimeMillis() + i);
-            if (i % 2 == 0) {
-                question.setSolve(0);
-            } else {
-                question.setSolve(i);
-            }
-            question.setId((int) (System.currentTimeMillis() + i));
-            question.setAwardCount(i);
-            question.setReplyCount(i);
-            question.setPriseCount(i);
-            question.setQuestionContext("测试 " + i + "   " + " hahjkdsahkj");
-            questions.add(question);
-
-        }
-        updateQuestionList(questions, isRefreshing);
-
-
-        Client.requestMineQuestionOrComment()
+        Client.requestMineQuestionOrComment(mQuestionType, mPage)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
@@ -211,7 +190,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
         if (isRefreshing) mMineQuestionAndAnswerAdapter.clear();
 
         for (Question result : data) {
-            if (mSet.add(result.getId())) {
+            if (mSet.add(result.getDataId())) {
                 mMineQuestionAndAnswerAdapter.add(result);
             }
         }
@@ -271,7 +250,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
             public void bindDataWithView(Question question, Context context) {
                 if (question == null) return;
 
-                mTime.setText(DateUtil.formatQuestionStyleTime(question.getCreateTime()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(question.getCreateTime()));
                 if (question.isQuestionSolved()) {
                     mContent.setSelected(true);
                     mTitle.setEnabled(true);
@@ -285,7 +264,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
                     mContent.setText(context.getString(R.string.miss_is_answering));
                 }
 
-                mTitle.setText(question.getQuestionContext());
+                mTitle.setText(question.getContent());
             }
         }
     }

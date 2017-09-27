@@ -77,7 +77,7 @@
         <item name="tabTextAppearance">@style/TradeFixedTabText</item>
         <item name="tabMode">fixed</item>
         <item name="tabGravity">fill</item>
-        <item name="tabSelectedTextColor">@color/redPrimary</item>
+        <item name="tabSelectedTextColor">@color/colorPrimary</item>
     </style>
 
     <style name="TradeFixedTabText" parent="TextAppearance.Design.Tab">
@@ -92,7 +92,7 @@
         <item name="tabTextAppearance">@style/BattleTabText</item>
         <item name="tabMode">fixed</item>
         <item name="tabGravity">fill</item>
-        <item name="tabSelectedTextColor">@color/redPrimary</item>
+        <item name="tabSelectedTextColor">@color/colorPrimary</item>
     </style>
 
     <style name="BattleTabText" parent="TextAppearance.Design.Tab">

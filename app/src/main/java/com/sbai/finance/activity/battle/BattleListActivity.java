@@ -579,7 +579,9 @@ public class BattleListActivity extends BaseActivity implements
             case R.id.createBattle:
                 umengEventCount(UmengCountEventId.BATTLE_HALL_CREATE_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), CreateBattleActivity.class)
+
+                    Launcher.with(getActivity(), ChooseFuturesActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, "")
                             .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
                             .execute();
                 } else {

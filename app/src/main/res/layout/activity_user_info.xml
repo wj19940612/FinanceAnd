@@ -169,5 +169,5 @@
         android:background="@drawable/bg_white"
         android:gravity="center"
         android:text="@string/logout"
-        android:textColor="@color/redPrimary"/>
+        android:textColor="@color/colorPrimary"/>
 </LinearLayout>

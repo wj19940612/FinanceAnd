@@ -3,7 +3,6 @@ package com.sbai.finance.activity.mine;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.InputFilter;
@@ -25,12 +24,14 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.JsonObject;
 import com.sbai.finance.ExtraKeys;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.PreviewDialogFragment;
 import com.sbai.finance.fragment.dialog.UploadUserImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.Feedback;
+import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -85,6 +86,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     private FeedbackAdapter mFeedbackAdapter;
     private int mTrainId;
 
+    private boolean firstLoadData = true;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,9 +103,6 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void initViews() {
-
-        View view = getLayoutInflater().inflate(R.layout.layout_feed_back_header, null);
-        mListView.addHeaderView(view);
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter.LengthFilter(400);
         mCommentContent.setFilters(filters);
@@ -167,18 +167,42 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             mPage++;
         }
         updateTitle(data);
+        if (firstLoadData) {
+            //自己创建一个客服对话
+            createServiceTalk(data);
+            firstLoadData = false;
+        }
         mFeedbackAdapter.addFeedbackList(data);
         if (needScrollToLast) {
-            mListView.setSelection(View.FOCUS_DOWN);
-            new Handler() {
-            }
-                    .postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mListView.setSelection(View.FOCUS_DOWN);
-                        }
-                    }, 200);
+            listViewScrollBottom();
+        }else {
+            mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
+            mListView.setStackFromBottom(false);
         }
+    }
+
+    private void createServiceTalk(List<Feedback> data) {
+        Feedback feedback = new Feedback();
+        feedback.setType(1);
+        String weChatConnect = "lemi202";
+        ServiceConnectWay serviceConnectWay = Preference.get().getServiceConnectWay();
+
+        if (serviceConnectWay != null && !TextUtils.isEmpty(serviceConnectWay.getWeixin())) {
+            weChatConnect = serviceConnectWay.getWeixin();
+        }
+        feedback.setContent(getString(R.string.send_message_connect,weChatConnect));
+        feedback.setCreateDate(System.currentTimeMillis());
+        data.add(0, feedback);
+    }
+
+    private void listViewScrollBottom() {
+        mListView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+                mListView.setStackFromBottom(true);
+            }
+        }, 100);
     }
 
     private void updateTitle(List<Feedback> data) {
@@ -364,7 +388,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         }
         Feedback feedback = data.get(0);
         mFeedbackAdapter.addFeedbackItem(feedback);
-        mListView.setSelection(mFeedbackAdapter.getCount() - 1);
+//        mListView.setSelection(mFeedbackAdapter.getCount() - 1);
+        listViewScrollBottom();
         if (contentType == CONTENT_TYPE_TEXT) {
             feedback.setContent(content);
             mCommentContent.setText("");

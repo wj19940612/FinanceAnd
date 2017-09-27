@@ -17,10 +17,12 @@ import com.sbai.finance.fragment.TrainingFragment;
 import com.sbai.finance.fragment.dialog.system.RegisterInviteDialogFragment;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
 import com.sbai.finance.model.AppVersion;
+import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.BottomTabs;
@@ -59,9 +61,27 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENTITEM, 0);
+        int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
         if (0 <= currentItem && currentItem < mViewPager.getChildCount()) {
             mViewPager.setCurrentItem(currentItem);
+        }
+
+        Banner banner = intent.getParcelableExtra(ExtraKeys.ACTIVITY);
+        if (banner != null) {
+            openActivityPage(banner);
+        }
+    }
+
+    private void openActivityPage(Banner banner) {
+        if (banner.isH5Style()) {
+            Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_URL, banner.getContent())
+                    .execute();
+        } else {
+            Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_HTML, banner.getContent())
+                    .putExtra(WebActivity.EX_TITLE, banner.getTitle())
+                    .execute();
         }
     }
 

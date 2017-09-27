@@ -2581,10 +2581,18 @@ public class Client {
     }
 
     /**
-     * 请求我的问答 页面 的提问 或者评论
+     * /user/user/myQuestion.do
+     * POST
+     * 我的问答
+     *
+     * @return
      */
-    public static API requestMineQuestionOrComment() {
-        return new API("");
+    public static API requestMineQuestionOrComment(int type, int page) {
+        return new API("/user/user/myQuestion.do",
+                new ApiParams()
+                        .put("type", type)
+                        .put("page", page)
+                        .put("pageSize", DEFAULT_PAGE_SIZE));
     }
 
     /**
@@ -2609,5 +2617,9 @@ public class Client {
      */
     public static API changeReportCollectionStatus(String id) {
         return new API(POST, "/user/dailyReport/collect.do", new ApiParams().put("id", id));
+    }
+
+    public static API requestTrainCount() {
+        return new API("/train/train/trainCount.do");
     }
 }
