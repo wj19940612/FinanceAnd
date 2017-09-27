@@ -61,7 +61,8 @@
                 android:layout_height="32dp"
                 android:layout_marginTop="40dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -103,16 +104,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:orientation="horizontal"
-                android:visibility="gone">
-
+                android:visibility="visible">
+                <!--android:drawableLeft="@drawable/ic_bounty"-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
                     android:layout_marginLeft="16dp"
-                    android:drawableLeft="@drawable/ic_bounty"
+                    android:drawableLeft="@drawable/ic_create_battle_ingot"
                     android:drawablePadding="6dp"
                     android:gravity="center"
-                    android:text="@string/bounty"
+                    android:text="@string/ingot"
                     android:textColor="@color/unluckyText"
                     android:textSize="15sp"/>
 
