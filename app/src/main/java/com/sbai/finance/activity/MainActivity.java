@@ -14,10 +14,12 @@ import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.TrainingFragment;
-import com.sbai.finance.fragment.dialog.system.RegisterInviteDialogFragment;
+import com.sbai.finance.fragment.dialog.system.StartDialogFragment;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
+import com.sbai.finance.model.ActivityModel;
 import com.sbai.finance.model.AppVersion;
 import com.sbai.finance.model.Banner;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -29,6 +31,8 @@ import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.view.ScrollableViewPager;
 import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.market.MarketSubscriber;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,10 +55,25 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 //        translucentStatusBar();
         checkVersion();
         requestServiceConnectWay();
+        requestStartActivities();
+    }
 
-        if (Preference.get().showRegisterInviteDialog()) {
-            RegisterInviteDialogFragment registerInviteDialogFragment = new RegisterInviteDialogFragment();
-            registerInviteDialogFragment.show(getSupportFragmentManager());
+    private void requestStartActivities() {
+        if (Preference.get().canShowStartPage()) {
+            Preference.get().setTodayFirstOpenAppTime(System.currentTimeMillis());
+            Client.getStart().setTag(TAG)
+                    .setCallback(new Callback2D<Resp<List<ActivityModel>>, List<ActivityModel>>() {
+                        @Override
+                        protected void onRespSuccessData(List<ActivityModel> data) {
+                            if (data.size() > 0) {
+                                if (data.get(0).getLinkType() == ActivityModel.LINK_TYPE_MODEL
+                                        && LocalUser.getUser().isLogin()) {
+                                    return;
+                                }
+                                StartDialogFragment.newInstance(data.get(0)).show(getSupportFragmentManager());
+                            }
+                        }
+                    }).fireFree();
         }
     }
 
