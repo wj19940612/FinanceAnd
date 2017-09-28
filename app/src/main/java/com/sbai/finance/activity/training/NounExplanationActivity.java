@@ -367,6 +367,7 @@ public class NounExplanationActivity extends BaseActivity implements View.OnTouc
                 mDy = event.getRawY() - mDownY;
                 view.setTranslationX(mDx);
                 view.setTranslationY(mDy);
+                view.bringToFront();
                 break;
             case MotionEvent.ACTION_UP:
                 if (starIsInside(view)) {

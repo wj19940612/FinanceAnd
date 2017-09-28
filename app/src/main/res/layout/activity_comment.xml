@@ -5,20 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.miss.CommentActivity">
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
 
-    <com.sbai.finance.view.TitleBar
+    <View
+        android:id="@+id/cancelArea"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:backFeature="true"
-        app:hasBottomSplitLine="true"
-        app:titleText="@string/miss_comment"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"/>
 
     <EditText
         android:id="@+id/questionComment"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:background="@android:color/white"
         android:gravity="top"
         android:hint="@string/publish_your_comment"
@@ -29,31 +29,37 @@
         android:textColorHint="@color/unluckyText"
         android:textSize="15sp"/>
 
-    <TextView
-        android:id="@+id/wordsNumber"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:background="@android:color/white"
-        android:gravity="right"
-        android:paddingBottom="@dimen/common_padding"
-        android:paddingRight="@dimen/common_padding"
-        android:text="0/140"
-        android:textColor="@color/unluckyText"
-        android:textSize="10sp"/>
+        android:background="@android:color/white">
 
-    <TextView
-        android:id="@+id/publish"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginLeft="@dimen/common_padding"
-        android:layout_marginRight="@dimen/common_padding"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/btn_commit_rounded"
-        android:enabled="false"
-        android:gravity="center"
-        android:text="@string/publish"
-        android:textColor="@android:color/white"
-        android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/wordsNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/publish"
+            android:layout_toLeftOf="@+id/publish"
+            android:gravity="right"
+            android:text="0/140"
+            android:textColor="@color/unluckyText"
+            android:textSize="10sp"/>
+
+        <TextView
+            android:id="@+id/publish"
+            android:layout_width="80dp"
+            android:layout_height="38dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/btn_commit_rounded"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="@string/publish"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"/>
+    </RelativeLayout>
+
 
 </LinearLayout>

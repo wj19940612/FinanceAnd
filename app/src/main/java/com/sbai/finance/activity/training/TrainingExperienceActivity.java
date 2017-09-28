@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,11 +109,27 @@ public class TrainingExperienceActivity extends BaseActivity {
 		mHotExperience = (TextView) header.findViewById(R.id.hotExperience);
 		mSpit = header.findViewById(R.id.spit);
 		mHotListView = (MyListView) header.findViewById(R.id.hotListView);
-
 		mHotExperienceListAdapter = new ExperienceListAdapter(this);
 		mHotListView.setAdapter(mHotExperienceListAdapter);
-
 		mLatestListView.addHeaderView(header);
+		mHotExperienceListAdapter.setCallback(new ExperienceListAdapter.Callback() {
+			@Override
+			public void praiseOnClick(final Experience item) {
+				if (LocalUser.getUser().isLogin()) {
+					Client.trainExperiencePraise(item.getId(), item.getIsPraise() == 0 ? 1 : 0)
+							.setCallback(new Callback2D<Resp<TrainingExperiencePraise>, TrainingExperiencePraise>() {
+								@Override
+								protected void onRespSuccessData(TrainingExperiencePraise data) {
+									item.setIsPraise(data.getIsPraise());
+									item.setPraise(data.getPraise());
+									mHotExperienceListAdapter.notifyDataSetChanged();
+								}
+							}).fire();
+				} else {
+					Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQ_LOGIN);
+				}
+			}
+		});
 	}
 
 	private void initHeadView2() {
@@ -152,6 +169,24 @@ public class TrainingExperienceActivity extends BaseActivity {
 	private void initLatestExperienceList() {
 		mLatestExperienceListAdapter = new ExperienceListAdapter(this);
 		mLatestListView.setAdapter(mLatestExperienceListAdapter);
+		mLatestExperienceListAdapter.setCallback(new ExperienceListAdapter.Callback() {
+			@Override
+			public void praiseOnClick(final Experience item) {
+				if (LocalUser.getUser().isLogin()) {
+					Client.trainExperiencePraise(item.getId(), item.getIsPraise() == 0 ? 1 : 0)
+							.setCallback(new Callback2D<Resp<TrainingExperiencePraise>, TrainingExperiencePraise>() {
+								@Override
+								protected void onRespSuccessData(TrainingExperiencePraise data) {
+									item.setIsPraise(data.getIsPraise());
+									item.setPraise(data.getPraise());
+									mLatestExperienceListAdapter.notifyDataSetChanged();
+								}
+							}).fire();
+				} else {
+					Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQ_LOGIN);
+				}
+			}
+		});
 	}
 
 	private void requestIsTrained() {
@@ -294,6 +329,15 @@ public class TrainingExperienceActivity extends BaseActivity {
 	static class ExperienceListAdapter extends ArrayAdapter<Experience> {
 
 		private Context mContext;
+		private Callback mCallback;
+
+		public interface Callback {
+			void praiseOnClick(Experience item);
+		}
+
+		private void setCallback(Callback callback) {
+			mCallback = callback;
+		}
 
 		public ExperienceListAdapter(@NonNull Context context) {
 			super(context, 0);
@@ -303,7 +347,6 @@ public class TrainingExperienceActivity extends BaseActivity {
 		@NonNull
 		@Override
 		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
 			ViewHolder viewHolder;
 			if (convertView == null) {
 				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_train_experience, null);
@@ -312,7 +355,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			viewHolder.bindingData(mContext, getItem(position));
+			viewHolder.bindingData(mContext, getItem(position), mCallback);
 			return convertView;
 		}
 
@@ -321,14 +364,12 @@ public class TrainingExperienceActivity extends BaseActivity {
 			ImageView mAvatar;
 			@BindView(R.id.userName)
 			TextView mUserName;
-			@BindView(R.id.hotArea)
-			LinearLayout mHotArea;
 			@BindView(R.id.experience)
 			TextView mExperience;
 			@BindView(R.id.publishTime)
 			TextView mPublishTime;
-			@BindView(R.id.loveNumber)
-			TextView mLoveNumber;
+			@BindView(R.id.praiseNumber)
+			TextView mPraiseNumber;
 			@BindView(R.id.imageView)
 			ImageView mImageView;
 			@BindView(R.id.star1)
@@ -342,7 +383,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 				ButterKnife.bind(this, view);
 			}
 
-			public void bindingData(final Context context, final Experience item) {
+			public void bindingData(final Context context, final Experience item, final Callback callback) {
 				if (item == null) return;
 
 				if (item.getUserModel() != null) {
@@ -362,39 +403,29 @@ public class TrainingExperienceActivity extends BaseActivity {
 				}
 
 				mExperience.setText(item.getContent());
-				mLoveNumber.setText(StrFormatter.getFormatCount(item.getPraise()));
 
-				if (item.getIsPraise() == 1) {
-					mLoveNumber.setSelected(true);
+				if (item.getPraise() == 0) {
+					mPraiseNumber.setText(R.string.praise);
 				} else {
-					mLoveNumber.setSelected(false);
+					mPraiseNumber.setText(StrFormatter.getFormatCount(item.getPraise()));
 				}
 
-				mLoveNumber.setOnClickListener(new View.OnClickListener() {
+				if (item.getIsPraise() == 1) {
+					mPraiseNumber.setSelected(true);
+				} else {
+					mPraiseNumber.setSelected(false);
+				}
+
+				mPraiseNumber.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if (LocalUser.getUser().isLogin()) {
-							Client.trainExperiencePraise(item.getId(), item.getIsPraise() == 0 ? 1 : 0)
-									.setCallback(new Callback2D<Resp<TrainingExperiencePraise>, TrainingExperiencePraise>() {
-										@Override
-										protected void onRespSuccessData(TrainingExperiencePraise data) {
-											if (data.getIsPraise() == 1) {
-												mLoveNumber.setSelected(true);
-											} else {
-												mLoveNumber.setSelected(false);
-											}
-
-											item.setIsPraise(data.getIsPraise());
-											mLoveNumber.setText(StrFormatter.getFormatCount(data.getPraise()));
-										}
-									}).fire();
-						} else {
-							Launcher.with(context, LoginActivity.class).executeForResult(REQ_LOGIN);
+						if (callback != null) {
+							callback.praiseOnClick(item);
 						}
 					}
 				});
 
-				if (item.getPicture() == null || "".equalsIgnoreCase(item.getPicture())) {
+				if (TextUtils.isEmpty(item.getPicture())) {
 					mImageView.setVisibility(View.GONE);
 				} else {
 					mImageView.setVisibility(View.VISIBLE);

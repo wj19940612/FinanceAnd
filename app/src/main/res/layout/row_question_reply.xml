@@ -7,12 +7,11 @@
               android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/hotArea"
         android:layout_width="wrap_content"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
 
         <ImageView
             android:id="@+id/avatar"
@@ -27,8 +26,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/avatar"
-            android:textColor="@color/primaryText"
-            android:textSize="16sp"
+            android:textColor="@color/luckyText"
+            android:textSize="14sp"
             tools:text="反方向的钟"/>
 
     </RelativeLayout>
@@ -39,51 +38,49 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="54dp"
         android:layout_marginRight="14dp"
-        android:layout_marginTop="8dp"
         android:lineSpacingExtra="6dp"
         android:textColor="@color/primaryText"
-        android:textSize="14sp"
+        android:textSize="15sp"
         tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/replyArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="54dp"
         android:layout_marginRight="14dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/bg_questions"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/replyName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            tools:text="小金"
-            android:textColor="@color/primaryText"
-            android:textSize="12sp"/>
+            android:textColor="@color/luckyText"
+            android:textSize="14sp"
+            tools:text="小金"/>
 
         <TextView
             android:id="@+id/replyContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            tools:text="有没有好的选股方法啊"
+            android:layout_marginTop="4dp"
             android:textColor="@color/luckyText"
-            android:textSize="12sp"/>
+            android:textSize="15sp"
+            tools:text="有没有好的选股方法啊"/>
 
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="54dp"
         android:layout_marginRight="14dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="4dp">
 
         <TextView
             android:id="@+id/publishTime"
@@ -94,10 +91,4 @@
             tools:text="10:00"/>
 
     </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/split"/>
 </LinearLayout>

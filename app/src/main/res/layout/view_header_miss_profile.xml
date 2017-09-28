@@ -191,16 +191,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/background"
-        android:paddingLeft="14dp"
-        android:paddingTop="14dp"
-        android:text="@string/her_answer"
-        android:textColor="@color/luckyText"
-        android:textSize="12sp"/>
-
     <LinearLayout
         android:id="@+id/empty"
         android:gravity="center"

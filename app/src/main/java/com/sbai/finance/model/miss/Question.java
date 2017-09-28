@@ -55,6 +55,7 @@ public class Question implements Serializable {
     private int replyCount;       //回复数
     private int soundTime;
     private boolean isPlaying;
+	private boolean progressIsZero = true;
 
     // 我的问答中的数据
     private String content;        // 问题内容
@@ -81,6 +82,14 @@ public class Question implements Serializable {
         this.dataId = dataId;
     }
 
+
+	public boolean isProgressIsZero() {
+		return progressIsZero;
+	}
+
+	public void setProgressIsZero(boolean progressIsZero) {
+		this.progressIsZero = progressIsZero;
+	}
 
     public boolean isPlaying() {
         return isPlaying;

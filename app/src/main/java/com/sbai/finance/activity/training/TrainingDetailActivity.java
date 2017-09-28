@@ -34,6 +34,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
+import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.ImageListView;
@@ -365,6 +366,9 @@ public class TrainingDetailActivity extends BaseActivity {
             mTitle.setText(training.getTitle());
             mIntroduce.setText(training.getRemark());
             mDifficulty.setText(getString(R.string.train_level, training.getLevel()));
+            mRelatedKnowledge.setText(StrUtil.mergeTextWithColor(getString(R.string.subject_so_difficult)
+                    , "  " + getString(R.string.to_study)
+                    , ContextCompat.getColor(getActivity(), R.color.yellowColor2)));
             mDuration.setText(formatTime(training.getTime(),
                     R.string._seconds,
                     R.string._minutes,

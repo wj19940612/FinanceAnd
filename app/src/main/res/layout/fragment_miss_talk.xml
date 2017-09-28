@@ -16,41 +16,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="姐说"
+            android:text="@string/miss_talk"
             android:textColor="@color/primaryText"
             android:textSize="17sp"/>
 
-        <ImageView
-            android:id="@+id/more"
+        <TextView
+            android:id="@+id/askQuestion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="14dp"
-            android:src="@drawable/ic_miss_more"/>
+            android:drawableLeft="@drawable/ic_ask_her_question_black"
+            android:drawablePadding="3dp"
+            android:text="@string/ask_question"
+            android:textColor="@color/blackPrimary"
+            android:textSize="17sp"/>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="30dp"
-            android:layout_toLeftOf="@+id/more">
-
-            <ImageView
-                android:id="@+id/message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_message"/>
-
-            <ImageView
-                android:id="@+id/redPoint"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/bg_red_point"
-                android:visibility="invisible"/>
-
-        </RelativeLayout>
     </RelativeLayout>
 
     <View

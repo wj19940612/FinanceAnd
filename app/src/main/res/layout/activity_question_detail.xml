@@ -14,7 +14,7 @@
         app:hasBottomSplitLine="true"
         app:rightImage="@drawable/ic_share_black"
         app:rightVisible="true"
-        app:titleText="提问详情"
+        app:titleText="@string/question_detail"
         app:titleTextColor="@color/blackPrimary"/>
 
     <com.sbai.finance.view.CustomSwipeRefreshLayout
@@ -45,7 +45,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/love"
+            android:id="@+id/praise"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -53,18 +53,49 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/loveImage"
+                android:id="@+id/praiseImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_miss_love"/>
+                android:src="@drawable/ic_miss_unpraise"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
-                android:text="@string/love"
-                android:textColor="@color/primaryText"
+                android:text="@string/praise"
+                android:textColor="@color/luckyText"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/split"/>
+
+        <LinearLayout
+            android:id="@+id/collect"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/collectImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_miss_uncollect"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/collect"
+                android:textColor="@color/luckyText"
                 android:textSize="14sp"/>
         </LinearLayout>
 
@@ -94,7 +125,7 @@
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
                 android:text="@string/comment"
-                android:textColor="@color/primaryText"
+                android:textColor="@color/luckyText"
                 android:textSize="14sp"/>
         </LinearLayout>
 
@@ -124,7 +155,7 @@
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
                 android:text="@string/reward"
-                android:textColor="@color/primaryText"
+                android:textColor="@color/luckyText"
                 android:textSize="14sp"/>
 
         </LinearLayout>

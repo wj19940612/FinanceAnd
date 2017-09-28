@@ -2,6 +2,7 @@ package com.sbai.finance.view.training;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,8 +45,8 @@ public class ExperienceView extends LinearLayout {
 	ImageView mImageView;
 	@BindView(R.id.publishTime)
 	TextView mPublishTime;
-	@BindView(R.id.loveNumber)
-	TextView mLoveNumber;
+	@BindView(R.id.praiseNumber)
+	TextView mPraiseNumber;
 
 	public ExperienceView(Context context) {
 		this(context, null, 0);
@@ -86,15 +87,20 @@ public class ExperienceView extends LinearLayout {
 			}
 
 			mExperience.setText(data.getContent());
-			mLoveNumber.setText(StrFormatter.getFormatCount(data.getPraise()));
 
-			if (data.getIsPraise() == 1) {
-				mLoveNumber.setSelected(true);
+			if (data.getPraise() == 0) {
+				mPraiseNumber.setText(R.string.praise);
 			} else {
-				mLoveNumber.setSelected(false);
+				mPraiseNumber.setText(StrFormatter.getFormatCount(data.getPraise()));
 			}
 
-			mLoveNumber.setOnClickListener(new View.OnClickListener() {
+			if (data.getIsPraise() == 1) {
+				mPraiseNumber.setSelected(true);
+			} else {
+				mPraiseNumber.setSelected(false);
+			}
+
+			mPraiseNumber.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					if (LocalUser.getUser().isLogin()) {
@@ -103,12 +109,17 @@ public class ExperienceView extends LinearLayout {
 									@Override
 									protected void onRespSuccessData(TrainingExperiencePraise praise) {
 										if (praise.getIsPraise() == 1) {
-											mLoveNumber.setSelected(true);
+											mPraiseNumber.setSelected(true);
 										} else {
-											mLoveNumber.setSelected(false);
+											mPraiseNumber.setSelected(false);
 										}
 										data.setIsPraise(praise.getIsPraise());
-										mLoveNumber.setText(StrFormatter.getFormatCount(praise.getPraise()));
+
+										if (praise.getPraise() == 0) {
+											mPraiseNumber.setText(R.string.praise);
+										} else {
+											mPraiseNumber.setText(StrFormatter.getFormatCount(praise.getPraise()));
+										}
 									}
 								}).fire();
 
@@ -118,7 +129,7 @@ public class ExperienceView extends LinearLayout {
 				}
 			});
 
-			if (data.getPicture() == null || "".equalsIgnoreCase(data.getPicture())) {
+			if (TextUtils.isEmpty(data.getPicture())) {
 				mImageView.setVisibility(View.GONE);
 			} else {
 				mImageView.setVisibility(View.VISIBLE);

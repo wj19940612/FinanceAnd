@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/background"
+        android:drawableLeft="@drawable/ic_title_hot"
+        android:drawablePadding="4dp"
         android:paddingLeft="14dp"
         android:paddingTop="14dp"
         android:text="@string/hot_question"
@@ -26,6 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/background"
+        android:drawableLeft="@drawable/ic_title_latest"
+        android:drawablePadding="4dp"
         android:paddingLeft="14dp"
         android:paddingTop="14dp"
         android:text="@string/latest_question"
@@ -34,15 +38,15 @@
 
     <LinearLayout
         android:id="@+id/empty"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
             android:layout_marginBottom="100dp"
+            android:layout_marginTop="100dp"
             android:drawablePadding="10dp"
             android:drawableTop="@drawable/img_no_message"
             android:text="@string/ask_miss"/>

@@ -322,10 +322,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"/>
         <activity
-            android:name=".activity.miss.MyQuestionsActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name=".activity.miss.QuestionDetailActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing">
@@ -336,6 +332,7 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.miss.CommentActivity"
+            android:theme="@style/BaseDialogFragment"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
