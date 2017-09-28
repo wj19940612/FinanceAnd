@@ -37,6 +37,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.R.attr.data;
+
 public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     @BindView(R.id.viewPager)
@@ -62,16 +64,14 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         if (Preference.get().canShowStartPage()) {
             Preference.get().setTodayFirstOpenAppTime(System.currentTimeMillis());
             Client.getStart().setTag(TAG)
-                    .setCallback(new Callback2D<Resp<List<ActivityModel>>, List<ActivityModel>>() {
+                    .setCallback(new Callback2D<Resp<ActivityModel>, ActivityModel>() {
                         @Override
-                        protected void onRespSuccessData(List<ActivityModel> data) {
-                            if (data.size() > 0) {
-                                if (data.get(0).getLinkType() == ActivityModel.LINK_TYPE_MODEL
-                                        && LocalUser.getUser().isLogin()) {
-                                    return;
-                                }
-                                StartDialogFragment.newInstance(data.get(0)).show(getSupportFragmentManager());
+                        protected void onRespSuccessData(ActivityModel data) {
+                            if (data.getLinkType() == ActivityModel.LINK_TYPE_MODEL
+                                    && LocalUser.getUser().isLogin()) {
+                                return;
                             }
+                            StartDialogFragment.newInstance(data).show(getSupportFragmentManager());
                         }
                     }).fireFree();
         }
