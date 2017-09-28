@@ -32,8 +32,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static android.R.attr.src;
-
 /**
  * 对战分享好友弹框
  */
@@ -90,7 +88,7 @@ public class BattleShareDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.UpLoadHeadImageDialog);
+        setStyle(STYLE_NO_TITLE, R.style.BaseDialogFragment_Bottom);
     }
 
     @Nullable

@@ -245,6 +245,10 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     }
 
     private void bindWeChat() {
+        if (!UMShareAPI.get(getActivity()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN)) {
+            ToastUtil.show(R.string.you_not_install_weixin);
+            return;
+        }
         onHttpUiShow(TAG);
         UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
             @Override

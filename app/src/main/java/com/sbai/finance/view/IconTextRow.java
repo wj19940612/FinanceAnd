@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.utils.Display;
 
 public class IconTextRow extends LinearLayout {
 
@@ -240,6 +241,6 @@ public class IconTextRow extends LinearLayout {
     }
 
     public void setSubTextSize(float size) {
-        mSubTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        mSubTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(size, getResources()));
     }
 }

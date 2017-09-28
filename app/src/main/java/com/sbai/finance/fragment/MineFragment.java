@@ -159,7 +159,7 @@ public class MineFragment extends BaseFragment {
                         if (count != 0) {
                             mMessage.setSubTextVisible(View.VISIBLE);
                             if (count <= 99) {
-                                mMessage.setSubTextSize(12);
+                                mMessage.setSubTextSize(11);
                                 mMessage.setSubText(String.valueOf(count));
                             } else {
                                 mMessage.setSubTextSize(9);

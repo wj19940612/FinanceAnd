@@ -145,7 +145,7 @@ public class RewardInputSafetyPassDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
+        setStyle(STYLE_NO_TITLE, R.style.BaseDialogFragment);
         if (getArguments() != null) {
             mRechargeMoney = getArguments().getString(KEY_MONEY);
             mRewardMoney = getArguments().getLong(KEY_REWARD);
