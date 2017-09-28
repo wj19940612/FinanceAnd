@@ -28,12 +28,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.DailyReport;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.dialog.ShareDialog;
@@ -242,14 +245,25 @@ public class DailyReportDetailActivity extends BaseActivity {
                 break;
             case R.id.collect:
             case R.id.collectArea:
-                if (mDailyReport != null) {
+                if (LocalUser.getUser().isLogin()) {
                     changeCollectionStatus();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).executeForResult(LoginActivity.REQ_LOGIN);
                 }
                 break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQ_LOGIN) {
+            changeCollectionStatus();
+        }
+    }
+
     private void changeCollectionStatus() {
+        if (mDailyReport == null) return;
         Client.changeReportCollectionStatus(mDailyReport.getId())
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -257,10 +271,10 @@ public class DailyReportDetailActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            if(mDailyReport.isCollected()){
+                            if (mDailyReport.isCollected()) {
                                 mCollect.setSelected(false);
                                 mDailyReport.setCollect(0);
-                            }else {
+                            } else {
                                 mCollect.setSelected(true);
                                 mDailyReport.setCollect(1);
                             }

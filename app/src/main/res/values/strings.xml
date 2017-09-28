@@ -327,8 +327,8 @@
     <string name="share_cancel">取消分享</string>
     <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
     <string name="share_desc">乐米金融，金融小白的第一战!</string>
-    <string name="invite_you_join_future_battle">%1$s邀请你进行一场【美黄金】期货对战，我敢邀，你敢来吗？</string>
-    <string name="future_battle_desc">乐米期货对战，紧张激烈的金融游戏，勇者无所畏惧，还有更多元宝好礼等你领取，快来加入吧！</string>
+    <string name="invite_you_join_future_battle">用户%1$s邀您参与期货对战——我敢邀，你敢来么？</string>
+    <string name="future_battle_desc">紧张激烈的对战游戏，勇者无所畏惧！宝藏等你开启，赶快来应战吧！</string>
     <string name="share_and_get_ingot">登录用户分享即可得10元宝，每日最多可得30元宝</string>
 
     <!--股票排行榜-->

@@ -149,9 +149,9 @@ public class ArticleCollectionFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MyCollect myCollect = (MyCollect) parent.getAdapter().getItem(position);
                 if (myCollect != null) {
-
                     Intent intent = new Intent(getActivity(), DailyReportDetailActivity.class);
-                    intent.putExtra(DailyReportDetailActivity.EX_FORMAT, myCollect.getFormat());
+                    // 乐米日报列表返回的数据没有format  这里的format是1 暂时不传
+//                    intent.putExtra(DailyReportDetailActivity.EX_FORMAT, myCollect.getFormat());
                     intent.putExtra(DailyReportDetailActivity.EX_ID, myCollect.getMongoId());
                     intent.putExtra(DailyReportDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie());
                     startActivityForResult(intent, REQ_CODE_ARTICLE_DETAIL_PAGE);

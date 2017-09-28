@@ -486,12 +486,6 @@ public class TrainingFragment extends BaseFragment {
             return 0;
         }
 
-        //
-//        @Override
-//        public void onBindViewHolder(ViewHolder holder, int position) {
-//            holder.bindDataWithView();
-//        }
-
         @Override
         public int getItemCount() {
             return mMyTrainingRecords != null ? mMyTrainingRecords.size() : 0;

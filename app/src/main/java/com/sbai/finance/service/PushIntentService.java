@@ -20,6 +20,7 @@ import com.igexin.sdk.PushManager;
 import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
+import com.sbai.finance.BuildConfig;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
@@ -33,6 +34,7 @@ import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 
 /**
  * Created by ${wangJie} on 2017/5/3.
@@ -156,6 +158,15 @@ public class PushIntentService extends GTIntentService {
 
         switch (data.getType()) {
             case PushMessageModel.PUSH_TYPE_ATTENTION_MISS_ANSWERED:
+                intent = new Intent(context, QuestionDetailActivity.class);
+                try {
+                    intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
+                } catch (NumberFormatException e) {
+                    Log.d(TAG, "setPendingIntent: " + e.toString());
+                    if (!BuildConfig.IS_PROD) {
+                        ToastUtil.show("web data is error");
+                    }
+                }
                 break;
             case PushMessageModel.PUSH_TYPE_ACTIVITY:
                 intent = new Intent(context, MainActivity.class);
@@ -163,7 +174,7 @@ public class PushIntentService extends GTIntentService {
                 Banner banner = new Banner();
                 intent.putExtra(ExtraKeys.ACTIVITY, banner);
                 break;
-            case PushMessageModel.PUSH_TYPE_FEED_BVACK_REPLY:
+            case PushMessageModel.PUSH_TYPE_FEED_BACK_REPLY:
                 intent = new Intent(context, FeedbackActivity.class);
                 if (data.getData() != null && data.getData().getId() > 0) {
                     intent.putExtra(ExtraKeys.TRAINING, data.getData().getId());
@@ -176,7 +187,6 @@ public class PushIntentService extends GTIntentService {
                 intent = new Intent(context, MainActivity.class);
                 break;
         }
-
 
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }

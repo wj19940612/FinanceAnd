@@ -292,7 +292,7 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
         if (data != null && data.getData() != null) {
             Uri photosUri = data.getData();
             if (photosUri != null) {
-                if (!TextUtils.isEmpty(photosUri.getPath()) && photosUri.getPath().endsWith("jpg")) {
+                if (!TextUtils.isEmpty(photosUri.getPath())) {
                     return photosUri.getPath();
                 } else {
                     ContentResolver contentResolver = getActivity().getContentResolver();
@@ -308,7 +308,6 @@ public class UploadUserImageDialogFragment extends BaseDialogFragment {
                         cursor.close();
                     }
                 }
-                return photosUri.getPath();
             }
         }
         return null;

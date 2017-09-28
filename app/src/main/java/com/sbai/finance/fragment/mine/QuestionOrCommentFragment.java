@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.miss.Question;
@@ -47,6 +46,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
     //评论
     public static final int TYPE_COMMENT = 2;
 
+
     @BindView(android.R.id.list)
     ListView mListView;
     @BindView(R.id.swipeRefreshLayout)
@@ -59,7 +59,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
     private MineQuestionAndAnswerAdapter mMineQuestionAndAnswerAdapter;
     private HashSet<Integer> mSet;
     private int mPage;
-
+    private OnQuestionClickListener mOnQuestionClickListener;
 
     public QuestionOrCommentFragment() {
     }
@@ -70,6 +70,30 @@ public class QuestionOrCommentFragment extends BaseFragment {
         args.putInt(QUESTION_TYPE, type);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void updateClickItem(int clickPosition, Question clickQuestion) {
+        Question item = mMineQuestionAndAnswerAdapter.getItem(clickPosition);
+        if (clickQuestion != null && item != null) {
+            item.setReplyCount(clickQuestion.getReplyCount());
+            item.setAwardCount(clickQuestion.getAwardCount());
+            item.setPriseCount(clickQuestion.getPriseCount());
+            mMineQuestionAndAnswerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public interface OnQuestionClickListener {
+        void onQuestionClick(Question question, int position);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnQuestionClickListener) {
+            mOnQuestionClickListener = (OnQuestionClickListener) context;
+        } else {
+            throw new IllegalStateException(context.toString() + " must implements OnQuestionClickListener");
+        }
     }
 
     @Override
@@ -122,9 +146,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Question question = (Question) parent.getAdapter().getItem(position);
                 if (question != null) {
-                    Launcher.with(getActivity(), QuestionDetailActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, question.getDataId())
-                            .execute();
+                    mOnQuestionClickListener.onQuestionClick(question, position);
                 }
             }
         });
@@ -189,6 +211,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
 
         if (isRefreshing) mMineQuestionAndAnswerAdapter.clear();
 
+
         for (Question result : data) {
             if (mSet.add(result.getDataId())) {
                 mMineQuestionAndAnswerAdapter.add(result);
@@ -204,6 +227,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
+
 
     @Override
     public void onDestroyView() {
