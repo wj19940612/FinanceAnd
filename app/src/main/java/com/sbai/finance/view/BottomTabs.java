@@ -3,6 +3,7 @@ package com.sbai.finance.view;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -53,7 +54,7 @@ public class BottomTabs extends LinearLayout {
 
     private void init() {
         mIcons = new int[]{R.drawable.tab_training, R.drawable.tab_miss, R.drawable.tab_discovery, R.drawable.tab_mine};
-        mTexts = new int[]{R.string.training, R.string.miss_talk, R.string.discovery, R.string.mine};
+        mTexts = new int[]{R.string.training, R.string.miss_talk, R.string.discovery, R.string.me};
 
         setOrientation(HORIZONTAL);
         if (mIcons != null && mTexts != null) {
@@ -62,7 +63,7 @@ public class BottomTabs extends LinearLayout {
         for (int i = 0; i < mLength; i++) {
             LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             params.weight = 1;
-            if (i == 1) {
+            if (i == 3) {
                 addView(createPointTab(i), params);
                 continue;
             }
@@ -94,7 +95,7 @@ public class BottomTabs extends LinearLayout {
     }
 
     public void setPointNum(int num) {
-        RedPointTextView tabTextView = (RedPointTextView) getChildAt(1);
+        RedPointTextView tabTextView = (RedPointTextView) getChildAt(3);
         tabTextView.setNum(num);
     }
 
@@ -129,6 +130,23 @@ public class BottomTabs extends LinearLayout {
     public void setOnTabClickListener(OnTabClickListener listener) {
         mOnTabClickListener = listener;
     }
+
+    public void setTabDrawable(int index, int resid) {
+        if (index < 0 || index >= mLength) return;
+        TextView child = (TextView) getChildAt(index);
+        if (child != null) {
+            child.setCompoundDrawablesWithIntrinsicBounds(null, null, null, ContextCompat.getDrawable(getContext(), resid));
+        }
+    }
+
+    public void setClearTabDrawable(int index) {
+        if (index < 0 || index >= mLength) return;
+        TextView child = (TextView) getChildAt(index);
+        if (child != null) {
+            child.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        }
+    }
+
 
     private void unSelectAll() {
         for (int i = 0; i < getChildCount(); i++) {

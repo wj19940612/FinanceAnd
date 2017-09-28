@@ -7,15 +7,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.TrainingFragment;
-import com.sbai.finance.fragment.dialog.system.RegisterInviteDialogFragment;
+import com.sbai.finance.fragment.dialog.system.StartDialogFragment;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
+import com.sbai.finance.model.ActivityModel;
 import com.sbai.finance.model.AppVersion;
+import com.sbai.finance.model.Banner;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -28,8 +32,12 @@ import com.sbai.finance.view.ScrollableViewPager;
 import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.market.MarketSubscriber;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.R.attr.data;
 
 public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
@@ -46,24 +54,53 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
-//      translucentStatusBar();
+//        translucentStatusBar();
         checkVersion();
         requestServiceConnectWay();
+        requestStartActivities();
+    }
 
-
-        if (Preference.get().showRegisterInviteDialog()) {
-            RegisterInviteDialogFragment registerInviteDialogFragment = new RegisterInviteDialogFragment();
-            registerInviteDialogFragment.show(getSupportFragmentManager());
+    private void requestStartActivities() {
+        if (Preference.get().canShowStartPage()) {
+            Preference.get().setTodayFirstOpenAppTime(System.currentTimeMillis());
+            Client.getStart().setTag(TAG)
+                    .setCallback(new Callback2D<Resp<ActivityModel>, ActivityModel>() {
+                        @Override
+                        protected void onRespSuccessData(ActivityModel data) {
+                            if (data.getLinkType() == ActivityModel.LINK_TYPE_MODEL
+                                    && LocalUser.getUser().isLogin()) {
+                                return;
+                            }
+                            StartDialogFragment.newInstance(data).show(getSupportFragmentManager());
+                        }
+                    }).fireFree();
         }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        //从测评结果页打开主页，要特殊处理
-        boolean booleanExtra = intent.getBooleanExtra(Launcher.EX_PAYLOAD, false);
-        if (booleanExtra) {
-            mViewPager.setCurrentItem(0, false);
+        int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
+        if (0 <= currentItem && currentItem < mViewPager.getChildCount()) {
+            mViewPager.setCurrentItem(currentItem);
+        }
+
+        Banner banner = intent.getParcelableExtra(ExtraKeys.ACTIVITY);
+        if (banner != null) {
+            openActivityPage(banner);
+        }
+    }
+
+    private void openActivityPage(Banner banner) {
+        if (banner.isH5Style()) {
+            Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_URL, banner.getContent())
+                    .execute();
+        } else {
+            Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_HTML, banner.getContent())
+                    .putExtra(WebActivity.EX_TITLE, banner.getTitle())
+                    .execute();
         }
     }
 
@@ -136,11 +173,11 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         });
     }
 
-
     @Override
-    public void onNoReadNewsNumber(int index, int count) {
+    public void onNoReadNewsNumber(int count) {
         mBottomTabs.setPointNum(count);
     }
+
 
     private static class MainFragmentsAdapter extends FragmentPagerAdapter {
 

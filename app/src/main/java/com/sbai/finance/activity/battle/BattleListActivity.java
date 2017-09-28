@@ -263,9 +263,9 @@ public class BattleListActivity extends BaseActivity implements
                 if (item != null) {
                     if (item.getGameStatus() == Battle.GAME_STATUS_END) {
                         Launcher.with(getActivity(), FutureBattleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD_1, item.getId())
-                                .putExtra(Launcher.EX_PAYLOAD_2, item.getBatchCode())
+                                .putExtra(ExtraKeys.BATTLE, item)
                                 .executeForResult(CANCEL_BATTLE);
+
                     } else if (LocalUser.getUser().isLogin()) {
                         if (item.getGameStatus() == Battle.GAME_STATUS_CREATED
                                 && LocalUser.getUser().getUserInfo().getId() != item.getLaunchUser()) {
@@ -294,8 +294,7 @@ public class BattleListActivity extends BaseActivity implements
                             mVersusListAdapter.notifyDataSetChanged();
                         }
                         Launcher.with(getActivity(), FutureBattleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD_1, item.getId())
-                                .putExtra(Launcher.EX_PAYLOAD_2, item.getBatchCode())
+                                .putExtra(ExtraKeys.BATTLE, item)
                                 .executeForResult(CANCEL_BATTLE);
 
                     }
@@ -415,8 +414,7 @@ public class BattleListActivity extends BaseActivity implements
                             mVersusListAdapter.notifyDataSetChanged();
 
                             Launcher.with(getActivity(), FutureBattleActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
-                                    .putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
+                                    .putExtra(ExtraKeys.BATTLE, battle)
                                     .executeForResult(CANCEL_BATTLE);
                         }
                     }
@@ -581,7 +579,9 @@ public class BattleListActivity extends BaseActivity implements
             case R.id.createBattle:
                 umengEventCount(UmengCountEventId.BATTLE_HALL_CREATE_BATTLE);
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), CreateBattleActivity.class)
+
+                    Launcher.with(getActivity(), ChooseFuturesActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, "")
                             .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
                             .execute();
                 } else {
@@ -658,8 +658,7 @@ public class BattleListActivity extends BaseActivity implements
                         if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
                             if (mCurrentBattle != null) {
                                 Launcher.with(getActivity(), FutureBattleActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD_1, mCurrentBattle.getId())
-                                        .putExtra(Launcher.EX_PAYLOAD_2, mCurrentBattle.getBatchCode())
+                                        .putExtra(ExtraKeys.BATTLE, mCurrentBattle)
                                         .execute();
                             }
                         } else if (code == Battle.CODE_NO_ENOUGH_MONEY) {

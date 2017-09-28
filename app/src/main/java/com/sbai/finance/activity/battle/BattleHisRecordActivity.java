@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.battle.Battle;
@@ -74,8 +75,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
                     Launcher.with(getActivity(), FutureBattleActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD_1, item.getId())
-                            .putExtra(Launcher.EX_PAYLOAD_2, item.getBatchCode())
+                            .putExtra(ExtraKeys.BATTLE, item)
                             .execute();
                 }
             }
@@ -90,11 +90,16 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                     protected void onRespSuccessData(FutureVersus data) {
                         updateVersusData(data);
                     }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
+                    }
                 }).fireFree();
     }
 
     private void updateVersusData(FutureVersus futureVersus) {
-        stopRefreshAnimation();
         if (mSet.isEmpty()) {
             mVersusRecordListAdapter.clear();
         }
@@ -181,6 +186,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
+
             private void bindDataWithView(final Battle item, Context context) {
                 mVarietyName.setText(item.getVarietyName());
                 GlideApp.with(context).load(item.getLaunchUserPortrait())

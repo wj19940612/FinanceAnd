@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.mine.CreditApproveActivity">
+    tools:context="com.sbai.finance.activity.mine.userinfo.CreditApproveActivity">
 
 
     <com.sbai.finance.view.TitleBar

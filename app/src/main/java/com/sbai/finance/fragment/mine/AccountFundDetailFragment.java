@@ -131,12 +131,12 @@ public class AccountFundDetailFragment extends BaseFragment {
             case AccountFundDetail.TYPE_INGOT:
                 mFundName.setText(R.string.mine_ingot);
                 mFundCount = fund != null ? fund.getYuanbao() : 0;
-                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparatorAndScale(mFundCount, 0));
+                mFundNumber.setText(FinanceUtil.formatWithScale(mFundCount, 0));
                 break;
             case AccountFundDetail.TYPE_SCORE:
                 mFundName.setText(R.string.mine_score);
                 mFundCount = fund != null ? fund.getCredit() : 0;
-                mFundNumber.setText(FinanceUtil.formatWithThousandsSeparator(mFundCount));
+                mFundNumber.setText(FinanceUtil.removeNeedlessZero(FinanceUtil.formatWithScale(mFundCount)));
                 break;
         }
 

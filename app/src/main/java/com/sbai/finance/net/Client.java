@@ -15,13 +15,19 @@ public class Client {
     private static final int POST = Request.Method.POST;
     public static final int DEFAULT_PAGE_SIZE = 20;
 
-    //h5功能介绍网址  http://var.esongbai.xyz/mobi/user/about/about_details
+    //h5功能介绍网址
     public static final String ABOUT_US_PAGE_URL = API.getHost() + "/lm/introduce.html";
     //h5的用户协议界面网址
-    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/mobi/login/user_protocol?nohead=1";
+    public static final String WEB_USER_PROTOCOL_PAGE_URL = API.getHost() + "/lm/user_protocol.html";
 
+    /**
+     * @deprecated
+     */
     // 期货分享地址
     public static final String SHARE_URL_FUTURE = API.getHost() + "/mobi/future/future_quota?varietyId=%d";
+    /**
+     * @deprecated
+     */
     // 股票分享地址
     public static final String SHARE_URL_STOCK = API.getHost() + "/mobi/stock/stock_quota?varietyType=%s&varietyId=%d";
     // 提问分享地址
@@ -30,6 +36,9 @@ public class Client {
     public static final String SHARE_URL_REPORT = API.getHost() + "/lm/arcelor.html?id=%s";
     // 乐米训练心得分享地址
     public static final String SHARE_URL_TRAIN_EXPERIENCE = API.getHost() + "/lm/train.html?trainId=%d";
+
+    //期货对战分享
+    public static final String SHARE_URL_FUTURE_BATTLE = API.getHost() + "/lm/share.html";
 
 
     public static String getServiceQQ(String serviceQQ) {
@@ -273,6 +282,28 @@ public class Client {
     }
 
     /**
+     * 接口名称 快捷登入(for 微信)
+     *
+     * @param authCode 短信验证码
+     * @param phone    手机
+     *                 deviceId 设备id
+     *                 platform 平台 0-安卓 1-ios
+     * @return
+     */
+    public static API authCodeLogin(String phone, String authCode, String openId, String name, String iconUrl, int sex) {
+        return new API(POST, "/user/registerLogin/quickLogin.do", new ApiParams()
+                .put("phone", phone)
+                .put("msgCode", authCode)
+                .put("deviceId", Preference.get().getPushClientId())
+                .put("platform", 0)
+                .put("channel", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"))
+                .put("openId", openId)
+                .put("name", name)
+                .put("iconUrl", iconUrl)
+                .put("sex", sex));
+    }
+
+    /**
      * 常规登录
      *
      * @param phone
@@ -285,6 +316,31 @@ public class Client {
                 .put("password", password)
                 .put("deviceId", Preference.get().getPushClientId())
                 .put("platform", 0));
+    }
+
+    /**
+     * 微信登录
+     *
+     * @param openId
+     * @return
+     */
+    public static API weChatLogin(String openId) {
+        return new API(POST, "/user/registerLogin/wechatLogin.do", new ApiParams()
+                .put("openId", openId));
+    }
+
+    /**
+     * 绑定微信
+     *
+     * @param openId
+     * @return
+     */
+    public static API bindWeChat(String openId, String name, String iconUrl, int sex) {
+        return new API(POST, "/user/user/boundWechat.do", new ApiParams()
+                .put("openId", openId)
+                .put("name", name)
+                .put("iconUrl", iconUrl)
+                .put("sex", sex));
     }
 
     /**
@@ -1855,7 +1911,7 @@ public class Client {
     }
 
 
-    public static API requsetVarietyPrice(int varietyId) {
+    public static API requestVarietyPrice(int varietyId) {
         return new API("/order/future/query/infoPrice.do", new ApiParams()
                 .put("varietyId", varietyId));
     }
@@ -2027,6 +2083,16 @@ public class Client {
         return new API("/user/dailyReport/findDailyReportList.do", new ApiParams()
                 .put("page", page)
                 .put("pageSize", 20));
+    }
+
+    /**
+     * 日报收藏
+     *
+     * @return
+     */
+    public static API collect(String id) {
+        return new API(POST, "/user/dailyReport/collect.do", new ApiParams()
+                .put("id", id));
     }
 
     /**
@@ -2407,6 +2473,16 @@ public class Client {
     }
 
     /**
+     * 批量读消息
+     * classify  1系统 4 姐说
+     */
+    public static API batchRead() {
+        return new API(POST, "/msg/msg/readAll.do",
+                new ApiParams()
+                        .put("classify", 1));
+    }
+
+    /**
      * 获取训练详情
      *
      * @param trainId
@@ -2502,5 +2578,55 @@ public class Client {
                         .put("activityId", activityId)
                         .put("page", page)
                         .put("pageSize", 20));
+    }
+
+    /**
+     * 启动弹窗
+     */
+    public static API getStart() {
+        return new API("/user/start/findAll.do");
+    }
+
+    /**
+     * /user/user/myQuestion.do
+     * POST
+     * 我的问答
+     *
+     * @return
+     */
+    public static API requestMineQuestionOrComment(int type, int page) {
+        return new API("/user/user/myQuestion.do",
+                new ApiParams()
+                        .put("type", type)
+                        .put("page", page)
+                        .put("pageSize", DEFAULT_PAGE_SIZE));
+    }
+
+    /**
+     * 我的收藏
+     * /user/user/myCollect.do
+     *
+     * @return
+     */
+    public static API requestMyCollection(int type, int page) {
+        return new API("/user/user/myCollect.do", new ApiParams()
+                .put("pageSize", Client.DEFAULT_PAGE_SIZE)
+                .put("type", type)
+                .put("page", page));
+    }
+
+    /**
+     * /user/dailyReport/collect.do
+     * GET
+     * 乐米日报收藏（wms）
+     *
+     * @return
+     */
+    public static API changeReportCollectionStatus(String id) {
+        return new API(POST, "/user/dailyReport/collect.do", new ApiParams().put("id", id));
+    }
+
+    public static API requestTrainCount() {
+        return new API("/train/train/trainCount.do");
     }
 }

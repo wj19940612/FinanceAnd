@@ -12,8 +12,8 @@
         android:layout_centerInParent="true"
         android:layout_marginLeft="@dimen/common_padding"
         android:layout_marginRight="@dimen/common_padding"
-        android:paddingBottom="50dp"
         android:layout_marginTop="5dp"
+        android:paddingBottom="50dp"
         app:cardCornerRadius="8dp">
 
         <ScrollView
@@ -117,8 +117,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="50dp"
+                    android:layout_marginTop="20dp"
                     android:background="@android:color/white"
                     android:orientation="vertical"
                     android:visibility="visible">
@@ -205,6 +205,31 @@
                 android:drawablePadding="@dimen/common_padding"
                 android:gravity="center"
                 android:text="@string/back"
+                android:textColor="@color/blackPrimary"
+                android:textSize="14sp"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/background"/>
+
+        <RelativeLayout
+            android:id="@+id/collectArea"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/collect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/bg_report_collection_status"
+                android:drawablePadding="@dimen/common_padding"
+                android:gravity="center"
+                android:text="@string/collect"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"/>
         </RelativeLayout>

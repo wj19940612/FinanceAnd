@@ -31,6 +31,7 @@
     <application
         android:name=".App"
         android:allowBackup="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -94,25 +95,22 @@
 
         <!-- 我的模块 -->
         <activity
-            android:name=".activity.mine.ModifyUserInfoActivity"
+            android:name=".activity.mine.userinfo.ModifyUserInfoActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.ModifyUserNameActivity"
+            android:name=".activity.mine.userinfo.ModifyUserNameActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.ClipHeadImageActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.mine.NewsActivity"
+            android:name=".activity.mine.userinfo.ClipHeadImageActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.trade.PredictionRuleActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.CreditApproveActivity"
+            android:name=".activity.mine.userinfo.CreditApproveActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.CreditActivity"
+            android:name=".activity.mine.userinfo.CreditActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.setting.LocationActivity"
@@ -122,6 +120,9 @@
             android:name=".activity.mine.FeedbackActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
+        <activity
+            android:name=".activity.mine.MyQuestionAndAnswerActivity"
+            android:screenOrientation="portrait"/>
         <!-- 明细 -->
         <!-- 选择相册图片 -->
         <activity
@@ -129,6 +130,9 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.ImagePreViewActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.NewsActivity"
             android:screenOrientation="portrait"/>
 
         <!-- 我的: 设置 Setting -->
@@ -154,7 +158,7 @@
             android:name=".activity.mine.setting.UpdatePasswordActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.mine.AreaTakePhoneActivity"
+            android:name=".activity.mine.userinfo.AreaTakePhoneActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.mine.AboutUsActivity"
@@ -166,7 +170,6 @@
             android:name=".activity.mine.fund.RechargeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.mine.fund.VirtualProductExchangeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -329,14 +332,11 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.miss.CommentActivity"
-            android:theme="@style/UpLoadHeadImageDialog"
+            android:theme="@style/BaseDialogFragment"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.miss.RewardActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.miss.MessagesActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.evaluation.EvaluationStartActivity"
@@ -357,7 +357,7 @@
         <activity
             android:name=".activity.miss.RewardMissActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/UpLoadHeadImageDialog"/>
+            android:theme="@style/BaseDialogFragment"/>
 
         <!-- 发现 -->
         <activity
@@ -419,6 +419,10 @@
         <activity
             android:name=".activity.GuideActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.mine.MyCollectionActivity">
+        </activity>
+        <activity android:name=".activity.home.AllTrainingListActivity">
+        </activity>
     </application>
 
 </manifest>

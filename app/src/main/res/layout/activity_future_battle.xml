@@ -23,6 +23,7 @@
             android:visibility="gone">
 
             <com.sbai.finance.view.TitleBar
+                android:fitsSystemWindows="true"
                 android:id="@+id/titleBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -156,7 +157,7 @@
                     android:visibility="gone"/>
             </FrameLayout>
 
-            <com.sbai.finance.view.BattleButtons
+            <com.sbai.finance.view.BattleWaitAgainstLayout
                 android:id="@+id/battleButtons"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -170,7 +171,7 @@
                 android:layout_weight="1"
                 android:visibility="gone"/>
 
-            <com.sbai.finance.view.BattleFloatView
+            <com.sbai.finance.view.BattleBottomBothInfoView
                 android:id="@+id/battleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

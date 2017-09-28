@@ -6,6 +6,7 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.sbai.finance.BuildConfig;
 import com.sbai.httplib.ApiCallback;
 import com.sbai.httplib.ApiHeaders;
 import com.sbai.httplib.ApiIndeterminate;
@@ -96,6 +97,9 @@ public class API extends RequestManager {
     public static String getHost() {
         if (TextUtils.isEmpty(mHost)) {
             mHost = HOST;
+        }
+        if (BuildConfig.FLAVOR.equalsIgnoreCase("dev")) {
+            return "http://" + mHost;
         }
         return "https://" + mHost;
     }

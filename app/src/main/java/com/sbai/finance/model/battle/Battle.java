@@ -3,6 +3,8 @@ package com.sbai.finance.model.battle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sbai.finance.model.LocalUser;
+
 /**
  * Created by Administrator on 2017-06-21.
  */
@@ -86,7 +88,7 @@ public class Battle implements Parcelable {
     private int varietyId;             //品种ID
     private String varietyName;
     private String varietyType;
-    private int winResult;
+    private int winResult;            // 0 平手  1 发起者赢  2 应战者赢
     private double launchScore;
     private double againstScore;
     private int againstPraise;
@@ -95,31 +97,65 @@ public class Battle implements Parcelable {
     private double commission;
 
     //点赞
-    private int battleId;
-    private int currentPraise;
-    private int praiseUserId;
+    private int battleId;           //对战记录id
+    private int currentPraise;      //被点赞的用户当前的被赞数
+    private int praiseUserId;       //被点赞的用户ID
 
     //平仓数据
     private double launchUnwindScore;
     private double againstUnwindScore;
 
     //下单和平仓推送数据
-    private String battleBatchCode;
-    private String contractsCode;
+    private String battleBatchCode;   //  批次号码 lXGrHpSk
+    private String contractsCode;     // CL1708  合约代码
     private int contractsId;
-    private String currencyUnit;
-    private int direction;
+    private String currencyUnit;     // 美元 币种单位
+    private int direction;           //买入方向  1 买涨  0买跌
     private int handsNum;
-    private int optLogCount;
-    private double orderMarket;
-    private double orderPrice;
-    private int orderStatus;
-    private long orderTime;
-    private double ratio;
-    private String sign;
+    private int optLogCount;         // 30  订单房间操作次数
+    private double orderMarket;      //44160  下单市值
+    private double orderPrice;       //44.16  下单价格
+    private int orderStatus;         //  订单状态    -1 失败  0 代支付  1 已支付，待持仓  2 持仓中  3 平仓处理中  4 结算完成
+    private long orderTime;          //下单时间
+    private double ratio;            //汇率
+    private String sign;             //$ 币种符号
     private int userId;
-    private double unwindPrice;
-    private long unwindTime;
+    private double unwindPrice;     //44.16  平仓价格
+    private long unwindTime;        //1499777803000  平仓时间
+
+
+    //对战正在发起
+    public boolean isBattleInitiating() {
+        return getGameStatus() == GAME_STATUS_CREATED;
+    }
+
+    //对战开始
+    public boolean isBattleStarted() {
+        return getGameStatus() == GAME_STATUS_STARTED;
+    }
+
+    //对战结束
+    public boolean isBattleOver() {
+        return getGameStatus() == GAME_STATUS_END;
+    }
+
+    public boolean isBattleCancel() {
+        return getGameStatus() == GAME_STATUS_CANCELED;
+    }
+
+    public boolean isIngot() {
+        return getCoinType() == 2;
+    }
+
+    public boolean getBattleResult() {
+        boolean result = false;
+        if (getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
+            result = getWinResult() == 1;
+        } else {
+            result = getWinResult() == 2;
+        }
+        return result;
+    }
 
     public double getUnwindPrice() {
         return unwindPrice;
@@ -249,9 +285,6 @@ public class Battle implements Parcelable {
         this.userId = userId;
     }
 
-    public boolean isBattleOver() {
-        return getGameStatus() == GAME_STATUS_END;
-    }
 
     public double getCommission() {
         return commission;
@@ -532,9 +565,28 @@ public class Battle implements Parcelable {
                 ", againstScore=" + againstScore +
                 ", againstPraise=" + againstPraise +
                 ", launchPraise=" + launchPraise +
+                ", commission=" + commission +
                 ", battleId=" + battleId +
                 ", currentPraise=" + currentPraise +
                 ", praiseUserId=" + praiseUserId +
+                ", launchUnwindScore=" + launchUnwindScore +
+                ", againstUnwindScore=" + againstUnwindScore +
+                ", battleBatchCode='" + battleBatchCode + '\'' +
+                ", contractsCode='" + contractsCode + '\'' +
+                ", contractsId=" + contractsId +
+                ", currencyUnit='" + currencyUnit + '\'' +
+                ", direction=" + direction +
+                ", handsNum=" + handsNum +
+                ", optLogCount=" + optLogCount +
+                ", orderMarket=" + orderMarket +
+                ", orderPrice=" + orderPrice +
+                ", orderStatus=" + orderStatus +
+                ", orderTime=" + orderTime +
+                ", ratio=" + ratio +
+                ", sign='" + sign + '\'' +
+                ", userId=" + userId +
+                ", unwindPrice=" + unwindPrice +
+                ", unwindTime=" + unwindTime +
                 '}';
     }
 

@@ -76,7 +76,7 @@
             android:enabled="true"
             android:gravity="center"
             android:text="@string/get_auth_code"
-            android:textColor="@color/login_get_auth_code_color"/>
+            android:textColor="@color/primary_or_unlucky_text_color"/>
 
     </android.support.v7.widget.LinearLayoutCompat>
 

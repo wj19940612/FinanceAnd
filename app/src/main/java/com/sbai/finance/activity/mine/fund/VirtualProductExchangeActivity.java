@@ -28,7 +28,6 @@ import com.sbai.finance.utils.AliPayHelper;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnItemClickListener;
-import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.SmartDialog;
@@ -234,35 +233,9 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
             } else {
                 umengEventCount(UmengCountEventId.WALLET_EXCHANGE_INTEGRAL);
             }
-            showExchangeConfirmDialog(mSelectVirtualProductInfo);
+            requestUserHasSafetyPassword(mSelectVirtualProductInfo);
         }
 
-    }
-
-    private void showExchangeConfirmDialog(final VirtualProductInfo virtualProductInfo) {
-        // TODO: 2017/9/14 后期要去掉  临近上线 先不改 
-        String msg = virtualProductInfo.isIngot() ?
-                getString(R.string.confirm_use_money_buy_ingot, FinanceUtil.formatWithScale(virtualProductInfo.getFromMoney()), FinanceUtil.formatWithScale(virtualProductInfo.getToMoney(), 0)) :
-                getString(R.string.confirm_use_ingot_buy_integrate, StrFormatter.getFormIngot(virtualProductInfo.getFromMoney()), FinanceUtil.formatWithScale(virtualProductInfo.getToMoney(), 0));
-
-        String title = getString(R.string.confirm_recharge);
-        SmartDialog.with(getActivity(), msg, title)
-                .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        umengEventCount(UmengCountEventId.WALLET_POPUP_WINDOW_CONFIRM);
-                        dialog.dismiss();
-                        requestUserHasSafetyPassword(virtualProductInfo);
-                    }
-                })
-                .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        umengEventCount(UmengCountEventId.WALLET_POPUP_WINDOW_CANCEL);
-                    }
-                })
-                .show();
     }
 
     private void requestUserHasSafetyPassword(final VirtualProductInfo virtualProductInfo) {

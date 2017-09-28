@@ -12,6 +12,23 @@ public class PushMessageModel {
     private static final int CLASSIFY_USER = 1;
 
     //日报
+    public static final int PUSH_TYPE_DAILY_REPORT= 0;
+    //自习室
+    public static final int PUSH_TYPE_SELF_STUDY_ROOM= 2;
+    // 关注的小姐姐回复问题了
+    public static final int PUSH_TYPE_ATTENTION_MISS_ANSWERED = 3;
+    //训练
+    public static final int PUSH_TYPE_TRAINING = 4;
+    //活动
+    public static final int PUSH_TYPE_ACTIVITY= 5;
+    //模块
+    public static final int PUSH_TYPE_MODULE= 6;
+
+
+    //意见反馈
+    public static final int PUSH_TYPE_FEED_BACK_REPLY = 16;
+
+    //日报
     private static final int TYPE_REPORT = 0;
 
 //    "msg":"对战匹配成功,赶紧加入吧！","classify":2,"data":"hall","createTime":1499052945482,"title":"对战匹配成功","type":1
@@ -47,16 +64,22 @@ public class PushMessageModel {
         return getClassify() == PushMessageModel.CLASSIFY_SYS && getType() == PushMessageModel.TYPE_REPORT;
     }
 
-    public boolean isBorrowInfo() {
-        return getClassify() == PushMessageModel.CLASSIFY_USER;
-    }
 
     public boolean isBattleMatchSuccess() {
         return getClassify() == 2 && getType() == 1;
     }
 
+    //小姐姐回复你的问题
     public boolean isMissAnswer() {
         return getClassify() == 4 && getType() == 1;
+    }
+
+    public boolean isStudy() {
+        return getClassify() == 0 && getType() == 2;
+    }
+
+    public boolean isFeedBackInfo() {
+        return getClassify() == 2 && getType() == 2;
     }
 
     public int getClassify() {

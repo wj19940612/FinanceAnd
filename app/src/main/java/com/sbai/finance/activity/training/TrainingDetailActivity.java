@@ -368,7 +368,7 @@ public class TrainingDetailActivity extends BaseActivity {
             mDifficulty.setText(getString(R.string.train_level, training.getLevel()));
             mRelatedKnowledge.setText(StrUtil.mergeTextWithColor(getString(R.string.subject_so_difficult)
                     , "  " + getString(R.string.to_study)
-                    , ContextCompat.getColor(getActivity(), R.color.userEarnFundTextColor)));
+                    , ContextCompat.getColor(getActivity(), R.color.yellowColor2)));
             mDuration.setText(formatTime(training.getTime(),
                     R.string._seconds,
                     R.string._minutes,

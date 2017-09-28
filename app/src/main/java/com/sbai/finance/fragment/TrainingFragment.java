@@ -23,6 +23,7 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
+import com.sbai.finance.activity.home.AllTrainingListActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
@@ -32,6 +33,7 @@ import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.MyTrainingRecord;
 import com.sbai.finance.model.training.Training;
+import com.sbai.finance.model.training.TrainingCount;
 import com.sbai.finance.model.training.TrainingRecord;
 import com.sbai.finance.model.training.UserEachTrainingScoreModel;
 import com.sbai.finance.net.Callback;
@@ -126,10 +128,14 @@ public class TrainingFragment extends BaseFragment {
         mTrainAdapter.setOnTrainClickListener(new TrainAdapter.OnTrainClickListener() {
             @Override
             public void onTrainClick(MyTrainingRecord myTrainingRecord, int position) {
-                if (myTrainingRecord.getTrain() != null) {
-                    Launcher.with(getActivity(), TrainingDetailActivity.class)
-                            .putExtra(ExtraKeys.TRAINING, myTrainingRecord.getTrain())
-                            .execute();
+                if (myTrainingRecord.getType() == MyTrainingRecord.TYPE_HAS_MORE_TRAINING) {
+                    Launcher.with(getActivity(), AllTrainingListActivity.class).execute();
+                } else {
+                    if (myTrainingRecord.getTrain() != null) {
+                        Launcher.with(getActivity(), TrainingDetailActivity.class)
+                                .putExtra(ExtraKeys.TRAINING, myTrainingRecord.getTrain())
+                                .execute();
+                    }
                 }
             }
         });
@@ -204,6 +210,7 @@ public class TrainingFragment extends BaseFragment {
         if (hasTrainingRecord) {
             mTrainAdapter.setIsMineTrained(true);
             mRecommendTrainTitle.setText(R.string.mine_train);
+            requestTrainCount(data);
         } else {
             mTrainAdapter.setIsMineTrained(false);
             mRecommendTrainTitle.setText(R.string.recommend_train);
@@ -227,6 +234,23 @@ public class TrainingFragment extends BaseFragment {
         super.onResume();
         requestUserScore();
         requestMyTrainingList();
+    }
+
+    private void requestTrainCount(final List<MyTrainingRecord> data) {
+        Client.requestTrainCount()
+                .setCallback(new Callback2D<Resp<TrainingCount>, TrainingCount>() {
+                    @Override
+                    protected void onRespSuccessData(TrainingCount trainingCount) {
+                        if (trainingCount != null && trainingCount.getAll() > data.size()) {
+                            MyTrainingRecord myTrainingRecord = new MyTrainingRecord();
+                            myTrainingRecord.setType(MyTrainingRecord.TYPE_HAS_MORE_TRAINING);
+                            data.add(data.size(), myTrainingRecord);
+                            mTrainAdapter.clear();
+                            mTrainAdapter.addAll(data);
+                        }
+                    }
+                })
+                .fire();
     }
 
     private void updateUserScore(UserEachTrainingScoreModel data) {
@@ -401,7 +425,7 @@ public class TrainingFragment extends BaseFragment {
         }
     }
 
-    static class TrainAdapter extends RecyclerView.Adapter<TrainAdapter.ViewHolder> {
+    static class TrainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private OnTrainClickListener mOnTrainClickListener;
 
@@ -434,15 +458,32 @@ public class TrainingFragment extends BaseFragment {
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_train, parent, false);
-            return new ViewHolder(view);
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            if (viewType == MyTrainingRecord.TYPE_HAS_MORE_TRAINING) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_training_has_more, parent, false);
+                return new MoreTrainingViewHolder(view);
+            } else {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_train, parent, false);
+                return new DefaultViewHolder(view);
+            }
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mMyTrainingRecords.get(position),
-                    mContext, mIsMineTrained, mOnTrainClickListener, position);
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof DefaultViewHolder) {
+                ((DefaultViewHolder) holder).bindDataWithView(mMyTrainingRecords.get(position),
+                        mContext, mIsMineTrained, mOnTrainClickListener, position);
+            } else if (holder instanceof MoreTrainingViewHolder) {
+                ((MoreTrainingViewHolder) holder).bindDataWithView(mMyTrainingRecords.get(position), position, mOnTrainClickListener);
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (mMyTrainingRecords.get(position).getType() == MyTrainingRecord.TYPE_HAS_MORE_TRAINING) {
+                return MyTrainingRecord.TYPE_HAS_MORE_TRAINING;
+            }
+            return 0;
         }
 
         @Override
@@ -454,7 +495,7 @@ public class TrainingFragment extends BaseFragment {
             this.mIsMineTrained = isMineTrained;
         }
 
-        static class ViewHolder extends RecyclerView.ViewHolder {
+        static class DefaultViewHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.trainIcon)
             ImageView mTrainIcon;
             @BindView(R.id.trainTitle)
@@ -470,7 +511,7 @@ public class TrainingFragment extends BaseFragment {
             @BindView(R.id.trainCompleteCount)
             TextView mTrainCompleteCount;
 
-            ViewHolder(View view) {
+            DefaultViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
             }
@@ -528,6 +569,27 @@ public class TrainingFragment extends BaseFragment {
                     mTrainTime.setVisibility(View.GONE);
                     mTrainStatus.setText(context.getString(R.string.not_join_train));
                 }
+            }
+        }
+
+        static class MoreTrainingViewHolder extends RecyclerView.ViewHolder {
+            @BindView(R.id.relativeLayout)
+            RelativeLayout mRelativeLayout;
+
+            MoreTrainingViewHolder(View view) {
+                super(view);
+                ButterKnife.bind(this, view);
+            }
+
+            public void bindDataWithView(final MyTrainingRecord myTrainingRecord, final int position, final OnTrainClickListener onTrainClickListener) {
+                mRelativeLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onTrainClickListener != null) {
+                            onTrainClickListener.onTrainClick(myTrainingRecord, position);
+                        }
+                    }
+                });
             }
         }
     }

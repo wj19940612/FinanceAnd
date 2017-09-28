@@ -28,7 +28,7 @@ public class DateUtil {
 
 
     private static final String TODAY = "今日";
-    private static final String YESTODAY = "昨日";
+    private static final String YESTERDAY = "昨日";
 
     public static String format(long time, String toFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(toFormat);
@@ -428,6 +428,31 @@ public class DateUtil {
     }
 
     /**
+     * 一小时内显示多少分钟前
+     * 如果是当天  超过一小时 则显示 18：20;
+     * 如果是本年内的其他时期  12/07;
+     * 跨年  2015/12/07
+     * 涉及页面  姐说首页，提问详情，我的收藏，我的问答，消息
+     *
+     * @param createTime
+     * @return
+     */
+    public static String formatDefaultStyleTime(long createTime) {
+        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+        if (DateUtil.isToday(createTime, systemTime)) {
+            if (systemTime - createTime < 60 * 60 * 1000) {
+                int time = (int) ((systemTime - createTime) / 1000 / 60 );
+                return time + "分钟前";
+            }
+            return DateUtil.format(createTime, "HH:mm");
+        } else if (DateUtil.isInThisYear(createTime)) {
+            return DateUtil.format(createTime, "MM/dd ");
+        } else {
+            return DateUtil.format(createTime, "yyyy/MM/dd ");
+        }
+    }
+
+    /**
      * 获取明细页面的格式化时间
      * 日期显示：
      * 本日记录：今日00:00；
@@ -443,7 +468,7 @@ public class DateUtil {
             return TODAY;
         }
         if (isYesterday(createTime, systemTime)) {
-            return YESTODAY;
+            return YESTERDAY;
         }
         return DateUtil.format(createTime, FORMAT_ONLY_DATE);
     }
@@ -454,7 +479,7 @@ public class DateUtil {
             return TODAY + " " + DateUtil.format(time, FORMAT_HOUR_MINUTE);
         }
         if (isYesterday(time, systemTime)) {
-            return YESTODAY + " " + DateUtil.format(time, FORMAT_HOUR_MINUTE);
+            return YESTERDAY + " " + DateUtil.format(time, FORMAT_HOUR_MINUTE);
         }
         return DateUtil.format(time, FORMAT_DATE_HOUR_MINUTE);
     }
@@ -725,7 +750,6 @@ public class DateUtil {
      */
     public static int getDiffSeconds(long time1, long time2) {
         long diff = time1 - time2;
-        Log.d("TAG", "isLessThanTimeInterval: " + diff);
         return (int) (diff / 1000);
     }
 }

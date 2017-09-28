@@ -79,7 +79,7 @@ public class UpdateVersionDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
+        setStyle(STYLE_NO_TITLE, R.style.BaseDialogFragment);
         if (getArguments() != null) {
             mAppVersion = getArguments().getParcelable(Launcher.EX_PAYLOAD);
             mIsCanceledOnTouchOutside = getArguments().getBoolean(Launcher.EX_PAYLOAD_1, true);

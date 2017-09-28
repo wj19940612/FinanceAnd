@@ -5,7 +5,7 @@ package com.sbai.finance.model;
  */
 
 public class DailyReport {
-    public static final int HTML=1;
+    public static final int HTML = 1;
 
     /**
      * clicks : 0
@@ -24,7 +24,11 @@ public class DailyReport {
     private int format;
     private String content;
     private String url;
+    private int collect;  //0 未收藏  1 已收藏
 
+    public boolean isCollected() {
+        return getCollect() == 1;
+    }
     public String getUrl() {
         return url;
     }
@@ -99,5 +103,13 @@ public class DailyReport {
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
+    }
+
+    public int getCollect() {
+        return collect;
+    }
+
+    public void setCollect(int collect) {
+        this.collect = collect;
     }
 }

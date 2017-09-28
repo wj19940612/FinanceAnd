@@ -64,6 +64,7 @@ public class RewardMissActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reward_miss);
         ButterKnife.bind(this);
+
         initData(getIntent());
         initView();
     }

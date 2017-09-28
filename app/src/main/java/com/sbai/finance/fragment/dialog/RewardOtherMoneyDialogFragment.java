@@ -2,17 +2,11 @@ package com.sbai.finance.fragment.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,7 +14,6 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -32,7 +25,8 @@ import butterknife.Unbinder;
  * 打赏选择其他金额的页面
  */
 
-public class RewardOtherMoneyDialogFragment extends DialogFragment {
+public class RewardOtherMoneyDialogFragment extends CenterDialogFragment {
+
     @BindView(R.id.dialogClose)
     ImageView mDialogClose;
     @BindView(R.id.otherMoneyContent)
@@ -42,6 +36,7 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     Unbinder unbinder;
     @BindView(R.id.warnTip)
     TextView mWarnTip;
+
     private String mContent;
     private OnSelectMoneyCallback mOnSelectMoneyCallback;
     private OnDismissListener mDismissListener;
@@ -74,15 +69,9 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     public static RewardOtherMoneyDialogFragment newInstance(long money) {
         RewardOtherMoneyDialogFragment fragment = new RewardOtherMoneyDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(Launcher.EX_PAYLOAD, money);
+        bundle.putLong("money", money);
         fragment.setArguments(bundle);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.BindBankHintDialog);
     }
 
     @Nullable
@@ -96,18 +85,10 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Window window = getDialog().getWindow();
-        if (window != null) {
-            window.setGravity(Gravity.CENTER);
-            DisplayMetrics dm = new DisplayMetrics();
-            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-            window.setLayout((int) (dm.widthPixels * 0.75), WindowManager.LayoutParams.WRAP_CONTENT);
-        }
-
         mOtherMoneyContent.setInputType(EditorInfo.TYPE_CLASS_PHONE);
         mOtherMoneyContent.addTextChangedListener(mValidationWatcher);
         if (getArguments() != null) {
-            long money = getArguments().getLong(Launcher.EX_PAYLOAD, 0);
+            long money = getArguments().getLong("money", 0);
             if (money > 0) {
                 mOtherMoneyContent.setText(String.valueOf(money));
                 mConfirm.setEnabled(true);
@@ -169,10 +150,6 @@ public class RewardOtherMoneyDialogFragment extends DialogFragment {
         mWarnTip.setText(getString(R.string.most_reward_ten_million_ingot));
         mWarnTip.setVisibility(View.VISIBLE);
         mConfirm.setEnabled(false);
-    }
-
-    public void show(FragmentManager manager) {
-        super.show(manager, getClass().getSimpleName());
     }
 
     @OnClick({R.id.dialogClose, R.id.confirm})

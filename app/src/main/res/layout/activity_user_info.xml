@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.mine.ModifyUserInfoActivity">
+    tools:context="com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity">
 
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
@@ -145,6 +145,18 @@
         app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/weChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_split_height"
+        android:background="@drawable/bg_white"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/we_chat"
+        app:rowTextColor="@color/primaryText"
+        app:subTextColor="@color/unluckyText"
+        app:subTextSize="@dimen/common_default_size"/>
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -157,5 +169,5 @@
         android:background="@drawable/bg_white"
         android:gravity="center"
         android:text="@string/logout"
-        android:textColor="@color/redPrimary"/>
+        android:textColor="@color/colorPrimary"/>
 </LinearLayout>

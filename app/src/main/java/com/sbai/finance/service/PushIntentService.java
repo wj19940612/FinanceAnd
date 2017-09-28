@@ -20,14 +20,21 @@ import com.igexin.sdk.PushManager;
 import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
+import com.sbai.finance.BuildConfig;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
+import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
-import com.sbai.finance.activity.web.EventDetailActivity;
+import com.sbai.finance.activity.studyroom.StudyRoomActivity;
+import com.sbai.finance.model.Banner;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 
 /**
  * Created by ${wangJie} on 2017/5/3.
@@ -138,14 +145,49 @@ public class PushIntentService extends GTIntentService {
         } else if (data.isBattleMatchSuccess()) {
             if (!Preference.get().isForeground() && data.getData() != null) {
                 intent = new Intent(context, FutureBattleActivity.class);
-                intent.putExtra(Launcher.EX_PAYLOAD_1, data.getData().getId());
-                intent.putExtra(Launcher.EX_PAYLOAD_2, data.getData().getBatchCode());
+                Battle battle = new Battle();
+                battle.setId(data.getData().getId());
+                battle.setBatchCode(data.getData().getBatchCode());
+                intent.putExtra(ExtraKeys.BATTLE, battle);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             }
         } else if (data.isMissAnswer()) {
             intent = new Intent(context, QuestionDetailActivity.class);
             intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
         }
+
+        switch (data.getType()) {
+            case PushMessageModel.PUSH_TYPE_ATTENTION_MISS_ANSWERED:
+                intent = new Intent(context, QuestionDetailActivity.class);
+                try {
+                    intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
+                } catch (NumberFormatException e) {
+                    Log.d(TAG, "setPendingIntent: " + e.toString());
+                    if (!BuildConfig.IS_PROD) {
+                        ToastUtil.show("web data is error");
+                    }
+                }
+                break;
+            case PushMessageModel.PUSH_TYPE_ACTIVITY:
+                intent = new Intent(context, MainActivity.class);
+                // TODO: 2017/9/26 拼接banner
+                Banner banner = new Banner();
+                intent.putExtra(ExtraKeys.ACTIVITY, banner);
+                break;
+            case PushMessageModel.PUSH_TYPE_FEED_BACK_REPLY:
+                intent = new Intent(context, FeedbackActivity.class);
+                if (data.getData() != null && data.getData().getId() > 0) {
+                    intent.putExtra(ExtraKeys.TRAINING, data.getData().getId());
+                }
+                break;
+            case PushMessageModel.PUSH_TYPE_SELF_STUDY_ROOM:
+                intent = new Intent(context, StudyRoomActivity.class);
+                break;
+            case PushMessageModel.PUSH_TYPE_TRAINING:
+                intent = new Intent(context, MainActivity.class);
+                break;
+        }
+
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 

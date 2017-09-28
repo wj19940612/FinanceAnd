@@ -21,6 +21,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
+import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.FutureBattleConfig;
 import com.sbai.finance.model.fund.UserFundInfo;
@@ -121,11 +122,27 @@ public class CreateBattleActivity extends BaseActivity {
             }
         });
 
+
+        //临时修改，后期会再次加入积分
+        mBountyArea.setVisibility(View.VISIBLE);
+        if (!mIngotWar.isSelected()) {
+            mBountyAdapter.setChecked(-1);
+            mBountySelected = false;
+        }
+        mIngotWar.setSelected(true);
+        mIntegralWar.setSelected(false);
+        updateIngotConfig();
+        whetherLaunchBattle();
+        mCoinType = 2;
+
+
+
         requestFutureBattleConfig();
     }
 
     private void initData(Intent intent) {
         mUserFundInfo = intent.getParcelableExtra(ExtraKeys.USER_FUND);
+        updateVariety(intent);
     }
 
     private void requestFutureBattleConfig() {
@@ -227,14 +244,19 @@ public class CreateBattleActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_CHOOSE_FUTURES && resultCode == RESULT_OK) {
             if (data != null) {
-                mFutureName = data.getStringExtra(Launcher.EX_PAYLOAD);
-                mContractsCode = data.getStringExtra(Launcher.EX_PAYLOAD_1);
-                mVarietyId = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
-                mChooseFutures.setText(mFutureName);
-                mChooseFutures.setSelected(true);
-                whetherLaunchBattle();
+                updateVariety(data);
             }
         }
+    }
+
+    private void updateVariety(Intent data) {
+        Variety variety = data.getParcelableExtra(ExtraKeys.VARIETY);
+        mFutureName = variety.getVarietyName();
+        mContractsCode = variety.getContractsCode();
+        mVarietyId = variety.getVarietyId();
+        mChooseFutures.setText(mFutureName);
+        mChooseFutures.setSelected(true);
+        whetherLaunchBattle();
     }
 
     static class BountyAdapter extends ArrayAdapter<String> {
@@ -351,8 +373,7 @@ public class CreateBattleActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(Battle battle) {
                         Launcher.with(getActivity(), FutureBattleActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD_1, battle.getId())
-                                .putExtra(Launcher.EX_PAYLOAD_2, battle.getBatchCode())
+                                .putExtra(ExtraKeys.BATTLE, battle)
                                 .execute();
                         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(CREATE_SUCCESS_ACTION));
                         finish();

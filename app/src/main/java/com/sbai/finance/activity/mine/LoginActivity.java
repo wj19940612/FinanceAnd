@@ -1,12 +1,16 @@
 package com.sbai.finance.activity.mine;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.ExtraKeys;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
@@ -31,6 +36,11 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.PasswordEditText;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,8 +76,6 @@ public class LoginActivity extends BaseActivity {
     TextView mPageTitle;
     @BindView(R.id.loginSwitchTop)
     TextView mLoginSwitchTop;
-    @BindView(R.id.loginSwitch)
-    TextView mLoginSwitch;
 
     @BindView(R.id.authCodeArea)
     LinearLayout mAuthCodeArea;
@@ -77,11 +85,17 @@ public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.password)
     PasswordEditText mPassword;
-
+    @BindView(R.id.weChatLogin)
+    TextView mWeChatLogin;
     private KeyBoardHelper mKeyBoardHelper;
 
     private int mCounter;
     private boolean mFreezeObtainAuthCode;
+    private boolean mIsFirst = true;
+    private String mWeChatOpenid;
+    private String mWeChatName;
+    private String mWeChatIconUrl;
+    private int mWeChatGender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,16 +105,34 @@ public class LoginActivity extends BaseActivity {
 
         translucentStatusBar();
 
+        if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
+            mPhoneNumber.setText(LocalUser.getUser().getPhone());
+            mAuthCode.requestFocus();
+        } else {
+            mPhoneNumber.requestFocus();
+        }
+        mAuthCode.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (mIsFirst) {
+                    mIsFirst = false;
+                    mAuthCode.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            hideSoftWare();
+                        }
+                    });
+                }
+            }
+        });
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPassword.addTextChangedListener(mValidationWatcher);
-        if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
-            mPhoneNumber.setText(LocalUser.getUser().getPhone());
-        }
 
         initListener();
 
         setKeyboardHelper();
+
     }
 
     private void initListener() {
@@ -181,16 +213,24 @@ public class LoginActivity extends BaseActivity {
         mKeyBoardHelper.setOnKeyBoardStatusChangeListener(onKeyBoardStatusChangeListener);
     }
 
+    private void hideSoftWare() {
+        if (getActivity().getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
+
+    }
+
     private KeyBoardHelper.OnKeyBoardStatusChangeListener onKeyBoardStatusChangeListener = new KeyBoardHelper.OnKeyBoardStatusChangeListener() {
 
         @Override
         public void OnKeyBoardPop(int keyboardHeight) {
-            mLoginSwitchTop.setVisibility(View.VISIBLE);
+            //    mLoginSwitchTop.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void OnKeyBoardClose(int oldKeyboardHeight) {
-            mLoginSwitchTop.setVisibility(View.GONE);
+            //     mLoginSwitchTop.setVisibility(View.GONE);
         }
     };
 
@@ -246,6 +286,7 @@ public class LoginActivity extends BaseActivity {
         if (!newPhone.equalsIgnoreCase(oldPhone)) {
             mPhoneNumber.setText(newPhone);
             mPhoneNumber.setSelection(newPhone.length());
+        } else {
         }
     }
 
@@ -276,7 +317,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @OnClick({R.id.closePage, R.id.phoneNumberClear, R.id.getAuthCode, R.id.login, R.id.rootView,
-            R.id.loginSwitch, R.id.loginSwitchTop, R.id.register, R.id.forgetPassword})
+            R.id.loginSwitchTop, R.id.register, R.id.forgetPassword, R.id.weChatLogin})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.closePage:
@@ -309,19 +350,92 @@ public class LoginActivity extends BaseActivity {
                         .execute();
                 break;
 
-            case R.id.loginSwitch:
             case R.id.loginSwitchTop:
                 switchLoginMode();
                 break;
+            case R.id.weChatLogin:
+                weChatLogin();
             default:
                 break;
         }
     }
 
+    private void weChatLogin() {
+        if (!UMShareAPI.get(getActivity()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN)) {
+            ToastUtil.show(R.string.you_not_install_weixin);
+            return;
+        }
+        onHttpUiShow(TAG);
+        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
+            @Override
+            public void onStart(SHARE_MEDIA share_media) {
+                Log.d(TAG, "onStart " + "授权开始");
+            }
+
+            @Override
+            public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                onHttpUiDismiss(TAG);
+                final String openid = map.get("openid");//微博没有
+                final String name = map.get("name");
+                final String gender = map.get("gender");
+                final String iconUrl = map.get("iconurl");
+                Client.weChatLogin(openid).setTag(TAG)
+                        .setCallback(new Callback<Resp<UserInfo>>() {
+                            @Override
+                            public void onSuccess(Resp<UserInfo> userInfoResp) {
+                                if (userInfoResp.isSuccess()) {
+                                    LocalUser.getUser().setUserInfo(userInfoResp.getData());
+                                    ToastUtil.show(R.string.login_success);
+                                    postLogin();
+                                } else {
+                                    //214 尚未绑定的微信
+                                    if (userInfoResp.getCode() == 214 || userInfoResp.getData() == null) {
+                                        bindPhone(openid, name, iconUrl, gender);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            protected void onRespSuccess(Resp<UserInfo> resp) {
+                            }
+                        }).fireFree();
+
+            }
+
+            @Override
+            public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                Log.d(TAG, "onError " + "授权失败:" + throwable.getMessage());
+                onHttpUiDismiss(TAG);
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA share_media, int i) {
+                Log.d(TAG, "onCancel " + "授权取消");
+                onHttpUiDismiss(TAG);
+            }
+        });
+    }
+
+    private void bindPhone(String openid, String name, String iconurl, String gender) {
+        mWeChatOpenid = openid;
+        mWeChatName = name;
+        mWeChatIconUrl = iconurl;
+        mWeChatGender = gender.equals("女") ? 1 : 2;
+        if (!isAuthCodeLogin()) { // 当前是验证码登录 -> 密码登录
+            mLoginSwitchTop.setText(R.string.password_login);
+            mAuthCodeArea.setVisibility(View.VISIBLE);
+            mPassword.setVisibility(View.GONE);
+            mPasswordLoginOperations.setVisibility(View.GONE);
+            mPassword.setPassword("");
+        }
+        mPageTitle.setText(getString(R.string.bind_phone));
+        mLoginSwitchTop.setVisibility(View.GONE);
+        mWeChatLogin.setVisibility(View.GONE);
+    }
+
     private void switchLoginMode() {
         if (isAuthCodeLogin()) { // 当前是验证码登录 -> 密码登录
             mPageTitle.setText(R.string.password_login);
-            mLoginSwitch.setText(R.string.auth_code_login);
             mLoginSwitchTop.setText(R.string.auth_code_login);
             mAuthCodeArea.setVisibility(View.GONE);
             mPassword.setVisibility(View.VISIBLE);
@@ -329,7 +443,6 @@ public class LoginActivity extends BaseActivity {
             mAuthCode.setText("");
         } else {
             mPageTitle.setText(R.string.auth_code_login);
-            mLoginSwitch.setText(R.string.password_login);
             mLoginSwitchTop.setText(R.string.password_login);
             mAuthCodeArea.setVisibility(View.VISIBLE);
             mPassword.setVisibility(View.GONE);
@@ -341,7 +454,8 @@ public class LoginActivity extends BaseActivity {
     private boolean isAuthCodeLogin() {
         String pageTitle = mPageTitle.getText().toString();
         String authCodeLoginTitle = getString(R.string.auth_code_login);
-        return !TextUtils.isEmpty(pageTitle) && pageTitle.equals(authCodeLoginTitle);
+        String bindPhone = getString(R.string.bind_phone);
+        return !TextUtils.isEmpty(pageTitle) && (pageTitle.equals(authCodeLoginTitle) || pageTitle.equals(bindPhone));
     }
 
     private void login() {
@@ -357,21 +471,39 @@ public class LoginActivity extends BaseActivity {
         mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
 
         if (isAuthCodeLogin()) {
-            Client.authCodeLogin(phoneNumber, authCode).setTag(TAG)
-                    .setCallback(new Callback<Resp<UserInfo>>() {
-                        @Override
-                        public void onFinish() {
-                            super.onFinish();
-                            resetLoginButton();
-                        }
+            if (TextUtils.isEmpty(mWeChatOpenid)) {
+                Client.authCodeLogin(phoneNumber, authCode).setTag(TAG)
+                        .setCallback(new Callback<Resp<UserInfo>>() {
+                            @Override
+                            public void onFinish() {
+                                super.onFinish();
+                                resetLoginButton();
+                            }
 
-                        @Override
-                        protected void onRespSuccess(Resp<UserInfo> resp) {
-                            LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
-                            ToastUtil.show(R.string.login_success);
-                            postLogin();
-                        }
-                    }).fire();
+                            @Override
+                            protected void onRespSuccess(Resp<UserInfo> resp) {
+                                LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
+                                ToastUtil.show(R.string.login_success);
+                                postLogin();
+                            }
+                        }).fire();
+            } else {
+                Client.authCodeLogin(phoneNumber, authCode, mWeChatOpenid, mWeChatName, mWeChatIconUrl, mWeChatGender).setTag(TAG)
+                        .setCallback(new Callback<Resp<UserInfo>>() {
+                            @Override
+                            public void onFinish() {
+                                super.onFinish();
+                                resetLoginButton();
+                            }
+
+                            @Override
+                            protected void onRespSuccess(Resp<UserInfo> resp) {
+                                LocalUser.getUser().setUserInfo(resp.getData(), phoneNumber);
+                                ToastUtil.show(R.string.login_success);
+                                postLogin();
+                            }
+                        }).fire();
+            }
         } else {
             Client.login(phoneNumber, password).setTag(TAG)
                     .setCallback(new Callback<Resp<UserInfo>>() {
@@ -393,6 +525,7 @@ public class LoginActivity extends BaseActivity {
 
     private void postLogin() {
         if (LocalUser.getUser().getUserInfo().isNewUser()) {
+            Preference.get().setShowBindWeChat(true);
             Launcher.with(getActivity(), EvaluationStartActivity.class)
                     .putExtra(ExtraKeys.FIRST_TEST, true)
                     .execute();
@@ -408,6 +541,7 @@ public class LoginActivity extends BaseActivity {
         mLoading.setVisibility(View.GONE);
         mLoading.clearAnimation();
     }
+
 
     private void getAuthCode() {
         String phoneNumber = getPhoneNumber();

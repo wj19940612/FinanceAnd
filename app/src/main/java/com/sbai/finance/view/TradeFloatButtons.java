@@ -163,7 +163,7 @@ public class TradeFloatButtons extends LinearLayout {
             textView.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
         } else {
             layout.setBackgroundResource(R.drawable.btn_trade_white_primary);
-            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
+            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         }
         layout.addView(textView);
         return layout;

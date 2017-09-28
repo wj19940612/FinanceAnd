@@ -28,11 +28,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.DailyReport;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.dialog.ShareDialog;
@@ -82,6 +86,8 @@ public class DailyReportDetailActivity extends BaseActivity {
     LinearLayout mTitleInfo;
     @BindView(R.id.scrollView)
     ScrollView mScrollView;
+    @BindView(R.id.collect)
+    TextView mCollect;
 
     private boolean mLoadSuccess;
     protected String mPageUrl;
@@ -95,6 +101,7 @@ public class DailyReportDetailActivity extends BaseActivity {
     private WebViewClient mWebViewClient;
     private String mFirstContent;
     private String mTitleContent;
+    private DailyReport mDailyReport;
 
 
     public String getRawCookie() {
@@ -126,6 +133,7 @@ public class DailyReportDetailActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<DailyReport>, DailyReport>() {
                     @Override
                     protected void onRespSuccessData(DailyReport data) {
+                        mDailyReport = data;
                         updateDailyReportData(data);
                     }
                 }).fireFree();
@@ -135,8 +143,14 @@ public class DailyReportDetailActivity extends BaseActivity {
         Glide.with(getActivity())
                 .load(data.getCoverUrl())
                 .into(mImage);
+        mCollect.setSelected(data.isCollected());
         mTitleContent = data.getTitle();
         mShareImgUrl = data.getCoverUrl();
+        if (data.isCollected()) {
+            mCollect.setSelected(true);
+        } else {
+            mCollect.setSelected(false);
+        }
         if (data.isHtml()) {
             mTitleInfo.setVisibility(View.VISIBLE);
             mClick.setText(getString(R.string.read_count, data.getClicks()));
@@ -186,7 +200,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         //   mWebView.onPause();
     }
 
-    @OnClick({R.id.back, R.id.share, R.id.refreshButton, R.id.shareArea, R.id.backArea})
+    @OnClick({R.id.back, R.id.share, R.id.refreshButton, R.id.shareArea, R.id.backArea, R.id.collect, R.id.collectArea})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -229,7 +243,46 @@ public class DailyReportDetailActivity extends BaseActivity {
             case R.id.refreshButton:
                 mWebView.reload();
                 break;
+            case R.id.collect:
+            case R.id.collectArea:
+                if (LocalUser.getUser().isLogin()) {
+                    changeCollectionStatus();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).executeForResult(LoginActivity.REQ_LOGIN);
+                }
+                break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQ_LOGIN) {
+            changeCollectionStatus();
+        }
+    }
+
+    private void changeCollectionStatus() {
+        if (mDailyReport == null) return;
+        Client.changeReportCollectionStatus(mDailyReport.getId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()) {
+                            if (mDailyReport.isCollected()) {
+                                mCollect.setSelected(false);
+                                mDailyReport.setCollect(0);
+                            } else {
+                                mCollect.setSelected(true);
+                                mDailyReport.setCollect(1);
+                            }
+                            setResult(RESULT_OK);
+                        }
+                    }
+                })
+                .fire();
     }
 
     protected void initWebView() {

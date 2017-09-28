@@ -2,9 +2,7 @@ package com.sbai.finance.activity.mine;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.InputFilter;
@@ -26,21 +24,22 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.JsonObject;
 import com.sbai.finance.ExtraKeys;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.dialog.PreviewDialogFragment;
-import com.sbai.finance.fragment.dialog.UploadFeedbackImageDialogFragment;
+import com.sbai.finance.fragment.dialog.UploadUserImageDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.Feedback;
+import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.transform.ThumbTransform;
 import com.sbai.finance.utils.ImageUtils;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.transform.ThumbTransform;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
 
@@ -86,6 +85,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     private List<Feedback> mFeedbackList;
     private FeedbackAdapter mFeedbackAdapter;
     private int mTrainId;
+
+    private boolean firstLoadData = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -166,18 +167,42 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             mPage++;
         }
         updateTitle(data);
+        if (firstLoadData) {
+            //自己创建一个客服对话
+            createServiceTalk(data);
+            firstLoadData = false;
+        }
         mFeedbackAdapter.addFeedbackList(data);
         if (needScrollToLast) {
-            mListView.setSelection(View.FOCUS_DOWN);
-            new Handler() {
-            }
-                    .postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mListView.setSelection(View.FOCUS_DOWN);
-                        }
-                    }, 200);
+            listViewScrollBottom();
+        }else {
+            mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
+            mListView.setStackFromBottom(false);
         }
+    }
+
+    private void createServiceTalk(List<Feedback> data) {
+        Feedback feedback = new Feedback();
+        feedback.setType(1);
+        String weChatConnect = "lemi202";
+        ServiceConnectWay serviceConnectWay = Preference.get().getServiceConnectWay();
+
+        if (serviceConnectWay != null && !TextUtils.isEmpty(serviceConnectWay.getWeixin())) {
+            weChatConnect = serviceConnectWay.getWeixin();
+        }
+        feedback.setContent(getString(R.string.send_message_connect,weChatConnect));
+        feedback.setCreateDate(System.currentTimeMillis());
+        data.add(0, feedback);
+    }
+
+    private void listViewScrollBottom() {
+        mListView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+                mListView.setStackFromBottom(true);
+            }
+        }, 100);
     }
 
     private void updateTitle(List<Feedback> data) {
@@ -213,7 +238,15 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         int topRowVerticalPosition =
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
         if (mLoadMoreEnable) {
-            mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+//            mSwipeRefreshLayout.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
+            if (firstVisibleItem == 0 && topRowVerticalPosition >= 0) {
+                mSwipeRefreshLayout.setEnabled(true);
+            } else {
+                if (!mSwipeRefreshLayout.isRefreshing()) {
+                    mSwipeRefreshLayout.setEnabled(false);
+                }
+            }
+
         }
     }
 
@@ -239,14 +272,13 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void sendPicToCustomer() {
-        UploadFeedbackImageDialogFragment.newInstance()
-                .setOnDismissListener(new UploadFeedbackImageDialogFragment.OnDismissListener() {
+        UploadUserImageDialogFragment.newInstance(UploadUserImageDialogFragment.IMAGE_TYPE_OPEN_CUSTOM_GALLERY)
+                .setOnImagePathListener(new UploadUserImageDialogFragment.OnImagePathListener() {
                     @Override
-                    public void onGetImagePath(String path) {
-                        requestSendFeedbackImage(path);
+                    public void onImagePath(int index, String imagePath) {
+                        requestSendFeedbackImage(imagePath);
                     }
-                })
-                .show(getSupportFragmentManager());
+                }).show(getSupportFragmentManager());
     }
 
     private void requestSendFeedbackImage(final String path) {
@@ -356,7 +388,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         }
         Feedback feedback = data.get(0);
         mFeedbackAdapter.addFeedbackItem(feedback);
-        mListView.setSelection(mFeedbackAdapter.getCount() - 1);
+//        mListView.setSelection(mFeedbackAdapter.getCount() - 1);
+        listViewScrollBottom();
         if (contentType == CONTENT_TYPE_TEXT) {
             feedback.setContent(content);
             mCommentContent.setText("");
@@ -509,23 +542,18 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     mTimestamp.setText(DateUtil.format(DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT), FORMAT_HOUR_MINUTE));
                 }
 
-                mWrapper.removeAllViews();
-                TextView textview = null;
-                ImageView imageview = null;
                 //判断是否图片
                 if (feedback.getContentType() == CONTENT_TYPE_TEXT) {
-                    //create textview and add
-                    textview = createTextview(context);
-                    mWrapper.addView(textview);
-                    textview.setText(feedback.getContent());
+                    mText.setVisibility(View.VISIBLE);
+                    mImage.setVisibility(View.GONE);
+                    mText.setText(feedback.getContent());
                 } else {
-                    //create imageview and add
-                    imageview = createImageview(context);
-                    mWrapper.addView(imageview);
+                    mText.setVisibility(View.GONE);
+                    mImage.setVisibility(View.VISIBLE);
                     GlideApp.with(context).load(feedback.getContent())
                             .transform(new ThumbTransform(context))
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(imageview);
+                            .into(mImage);
                 }
                 if (!TextUtils.isEmpty(feedback.getUserPortrait())) {
                     GlideApp.with(context).load(feedback.getUserPortrait())
@@ -538,8 +566,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                             .placeholder(R.drawable.ic_avatar_feedback)
                             .into(mHeadImage);
                 }
-                if (imageview != null) {
-                    imageview.setOnClickListener(new View.OnClickListener() {
+                if (mImage != null) {
+                    mImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (feedback.getContentType() == CONTENT_TYPE_PICTURE) {
@@ -549,40 +577,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                         }
                     });
                 }
-
-                mHeadImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        Launcher.with(context, UserDataActivity.class)
-//                                .putExtra(Launcher.USER_ID, LocalUser.getUser().getUserInfo().getId()).execute();
-                    }
-                });
-
             }
-
-            private TextView createTextview(Context context) {
-                TextView tv = new TextView(context);
-                tv.setTextColor(Color.WHITE);
-                int spacing = (int) Display.dp2Px(5.0f, context.getResources());
-                tv.setLineSpacing(spacing, 1.2f);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                int margin = (int) Display.dp2Px(10.0f, context.getResources());
-                params.setMargins(0, 0, margin, 0);
-                tv.setLayoutParams(params);
-                return tv;
-            }
-
-            private ImageView createImageview(Context context) {
-                ImageView image = new ImageView(context);
-                image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.CENTER_VERTICAL);
-                int margin = (int) Display.dp2Px(5.0f, context.getResources());
-                params.setMargins(0, 0, margin, 0);
-                image.setLayoutParams(params);
-                return image;
-            }
-
         }
 
         static class CustomerViewHolder {
