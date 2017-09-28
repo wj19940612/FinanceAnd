@@ -208,6 +208,18 @@ public class DateUtil {
         return dateFormat.format(date);
     }
 
+    public static String getFormatYearMonth(long timestamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(FORMAT_YEAR_MONTH);
+        Date date = new Date(timestamp);
+        return dateFormat.format(date);
+    }
+
+    public static String getFormatDay(long timestamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(FORMAT_ONLY_DATE);
+        Date date = new Date(timestamp);
+        return dateFormat.format(date);
+    }
+
     public static String getFormatSpecialSlashNoHour(long timestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(FORMAT_SPECIAL_SLASH_NO_HOUR);
         Date date = new Date(timestamp);

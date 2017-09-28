@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,11 +19,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.google.gson.JsonPrimitive;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -35,7 +31,6 @@ import com.sbai.finance.model.miss.Prise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.miss.RewardInfo;
-import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -75,10 +70,14 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	LinearLayout mCommentArea;
 	@BindView(R.id.swipeRefreshLayout)
 	CustomSwipeRefreshLayout mSwipeRefreshLayout;
-	@BindView(R.id.loveImage)
-	ImageView mLoveImage;
-	@BindView(R.id.love)
-	LinearLayout mLove;
+	@BindView(R.id.praise)
+	LinearLayout mPraise;
+	@BindView(R.id.praiseImage)
+	ImageView mPraiseImage;
+	@BindView(R.id.collect)
+	LinearLayout mCollect;
+	@BindView(R.id.collectImage)
+	ImageView mCollectImage;
 	@BindView(R.id.comment)
 	LinearLayout mComment;
 	@BindView(R.id.reward)
@@ -102,11 +101,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private TextView mAskTime;
 	private TextView mQuestion;
 	private ImageView mMissAvatar;
-	private LinearLayout mVoiceArea;
-	private View mVoiceLevel;
-	private TextView mVoice;
+	private TextView mVoiceTime;
 	private TextView mListenerNumber;
-	private TextView mLoveNumber;
+	private TextView mPraiseNumber;
 	private TextView mRewardNumber;
 	private TextView mCommentNumber;
 	private TextView mNoComment;
@@ -121,7 +118,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		initData(getIntent());
 		initHeaderView();
 		mSet = new HashSet<>();
-		mMediaPlayerManager = new MediaPlayerManager(this);
+		mMediaPlayerManager =  MediaPlayerManager.getInstance(this);
 		mQuestionReplyListAdapter = new QuestionReplyListAdapter(this);
 		mListView.setAdapter(mQuestionReplyListAdapter);
 		mListView.setOnItemClickListener(this);
@@ -199,8 +196,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 				//关掉语音和语音动画
 				mMediaPlayerManager.release();
-				mVoiceLevel.clearAnimation();
-				mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
 				mPlayingID = -1;
 			}
 		});
@@ -222,8 +217,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	protected void onPause() {
 		super.onPause();
 		mMediaPlayerManager.release();
-		mVoiceLevel.clearAnimation();
-		mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
 		mPlayingID = -1;
 	}
 
@@ -245,11 +238,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		mAskTime = (TextView) header.findViewById(R.id.askTime);
 		mQuestion = (TextView) header.findViewById(R.id.question);
 		mMissAvatar = (ImageView) header.findViewById(R.id.missAvatar);
-		mVoiceArea = (LinearLayout) header.findViewById(R.id.voiceArea);
-		mVoiceLevel = header.findViewById(R.id.voiceLevel);
-		mVoice = (TextView) header.findViewById(R.id.voice);
+		mVoiceTime = (TextView) header.findViewById(R.id.voiceTime);
 		mListenerNumber = (TextView) header.findViewById(R.id.listenerNumber);
-		mLoveNumber = (TextView) header.findViewById(R.id.loveNumber);
+		mPraiseNumber = (TextView) header.findViewById(R.id.praiseNumber);
 		mRewardNumber = (TextView) header.findViewById(R.id.rewardNumber);
 		mCommentNumber = (TextView) header.findViewById(R.id.commentNumber);
 		mNoComment = (TextView) header.findViewById(R.id.noComment);
@@ -271,14 +262,14 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(question.getCreateTime()));
 		mQuestion.setText(question.getQuestionContext());
 		mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
-		mLoveNumber.setText(getString(R.string.love_miss, StrFormatter.getFormatCount(question.getPriseCount())));
+		mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(question.getPriseCount())));
 		mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(question.getAwardCount())));
-		mVoice.setText(getString(R.string.voice_time, question.getSoundTime()));
+		mVoiceTime.setText(getString(R.string.voice_time, question.getSoundTime()));
 
 		if (question.getIsPrise() == 0) {
-			mLoveImage.setImageResource(R.drawable.ic_miss_love);
+			mPraiseImage.setImageResource(R.drawable.ic_miss_unpraise);
 		} else {
-			mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
+			mPraiseImage.setImageResource(R.drawable.ic_miss_praise);
 		}
 
 		if (MissVoiceRecorder.isHeard(question.getId())) {
@@ -296,61 +287,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			}
 		});
 
-		mVoiceArea.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (!MissVoiceRecorder.isHeard(question.getId())) {
-					//没听过
-					Client.listen(question.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-						@Override
-						protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-							if (resp.isSuccess()) {
-								mMediaPlayerManager.play(question.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-									@Override
-									public void onCompletion(MediaPlayer mp) {
-										mVoiceLevel.clearAnimation();
-										mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
-										mPlayingID = -1;
-									}
-								});
-
-								mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
-								AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
-								animation.start();
-
-								MissVoiceRecorder.markHeard(question.getId());
-								question.setListenCount(question.getListenCount() + 1);
-								mListenerNumber.setTextColor(ContextCompat.getColor(QuestionDetailActivity.this, R.color.unluckyText));
-								mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
-								mPlayingID = question.getId();
-							}
-						}
-					}).fire();
-				} else {
-					//听过了
-					if (mPlayingID == question.getId()) {
-						mMediaPlayerManager.release();
-						mVoiceLevel.clearAnimation();
-						mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
-						mPlayingID = -1;
-					} else {
-						mMediaPlayerManager.play(question.getAnswerContext(), new MediaPlayer.OnCompletionListener() {
-							@Override
-							public void onCompletion(MediaPlayer mp) {
-								mVoiceLevel.clearAnimation();
-								mVoiceLevel.setBackgroundResource(R.drawable.ic_voice_4);
-								mPlayingID = -1;
-							}
-						});
-
-						mVoiceLevel.setBackgroundResource(R.drawable.bg_play_voice);
-						AnimationDrawable animation = (AnimationDrawable) mVoiceLevel.getBackground();
-						animation.start();
-						mPlayingID = question.getId();
-					}
-				}
-			}
-		});
 	}
 
 	private void requestQuestionReplyList(final boolean isRefresh) {
@@ -421,7 +357,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		}
 	}
 
-	@OnClick({R.id.comment, R.id.reward, R.id.love})
+	@OnClick({R.id.comment, R.id.reward, R.id.praise, R.id.collect})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.comment:
@@ -448,7 +384,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 					}
 				}
 				break;
-			case R.id.love:
+			case R.id.praise:
 				if (mQuestionDetail != null) {
 					if (LocalUser.getUser().isLogin()) {
 						umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
@@ -459,21 +395,23 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 								mPrise = prise;
 								int praiseCount;
 								if (prise.getIsPrise() == 0) {
-									mLoveImage.setImageResource(R.drawable.ic_miss_love);
+									mPraiseImage.setImageResource(R.drawable.ic_miss_unpraise);
 									praiseCount = mQuestionDetail.getPriseCount() - 1;
 									mQuestionDetail.setPriseCount(praiseCount);
 								} else {
-									mLoveImage.setImageResource(R.drawable.ic_miss_love_yellow);
+									mPraiseImage.setImageResource(R.drawable.ic_miss_praise);
 									praiseCount = mQuestionDetail.getPriseCount() + 1;
 									mQuestionDetail.setPriseCount(praiseCount);
 								}
-								mLoveNumber.setText(getString(R.string.love_miss, StrFormatter.getFormatCount(praiseCount)));
+								mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(praiseCount)));
 							}
 						}).fire();
 					} else {
 						Launcher.with(getActivity(), LoginActivity.class).execute();
 					}
 				}
+				break;
+			case R.id.collect:
 				break;
 		}
 	}
@@ -523,8 +461,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			ImageView mAvatar;
 			@BindView(R.id.userName)
 			TextView mUserName;
-			@BindView(R.id.hotArea)
-			RelativeLayout mHotArea;
 			@BindView(R.id.opinionContent)
 			TextView mOpinionContent;
 			@BindView(R.id.replyName)

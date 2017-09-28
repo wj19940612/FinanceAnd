@@ -55,6 +55,15 @@ public class Question implements Serializable {
 	private int replyCount;
 	private int soundTime;
 	private boolean isPlaying;
+	private boolean progressIsZero = true;
+
+	public boolean isProgressIsZero() {
+		return progressIsZero;
+	}
+
+	public void setProgressIsZero(boolean progressIsZero) {
+		this.progressIsZero = progressIsZero;
+	}
 
 	public boolean isPlaying() {
 		return isPlaying;
