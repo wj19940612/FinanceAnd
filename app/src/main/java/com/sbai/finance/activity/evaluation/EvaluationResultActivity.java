@@ -13,7 +13,7 @@ import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.RewardGetActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.levelevaluation.EvaluationResult;
-import com.sbai.finance.utils.NumberFormatUtils;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.leveltest.ScoreView;
 
@@ -61,9 +61,9 @@ public class EvaluationResultActivity extends BaseActivity {
         mScoreView.setData(data);
         setScoreView(data.getLevel());
         mAccuracyHint.setText(getString(R.string.accuracy_ranking,
-                NumberFormatUtils.formatPercentStringEndReplaceZero(data.getAllAccuracy(), 2),
-                NumberFormatUtils.formatPercentString(data.getPassPercent())));
-        mAccuracy.setText(NumberFormatUtils.formatPercentStringEndReplaceZero(data.getAllAccuracy(), 2));
+                FinanceUtil.formatToPercentageReplaceZero(data.getAllAccuracy(), 2),
+                FinanceUtil.formatFloorPercent(data.getPassPercent())));
+        mAccuracy.setText(FinanceUtil.formatToPercentageReplaceZero(data.getAllAccuracy(), 2));
     }
 
     public void setScoreView(int result) {

@@ -16,7 +16,7 @@
         android:clickable="true"
         android:gravity="center"
         android:text="@string/look_big_picture"
-        android:textColor="@color/redPrimary"
+        android:textColor="@color/colorPrimary"
         android:textSize="17sp"
         android:visibility="gone"/>
 
@@ -29,7 +29,7 @@
         android:clickable="true"
         android:gravity="center"
         android:text="@string/take_phone_from_camera"
-        android:textColor="@color/redPrimary"
+        android:textColor="@color/colorPrimary"
         android:textSize="17sp"/>
 
 
@@ -41,7 +41,7 @@
         android:background="@drawable/bg_white"
         android:gravity="center"
         android:text="@string/take_phone_from_phone"
-        android:textColor="@color/redPrimary"
+        android:textColor="@color/colorPrimary"
         android:textSize="17sp"/>
 
     <android.support.v7.widget.AppCompatTextView

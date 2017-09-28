@@ -38,7 +38,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;

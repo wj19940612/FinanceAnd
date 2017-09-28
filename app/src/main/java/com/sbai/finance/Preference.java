@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.model.training.TrainingSubmit;
 import com.sbai.finance.utils.AppInfo;
@@ -21,6 +22,9 @@ public class Preference {
     private static final String SHARED_PREFERENCES_NAME = BuildConfig.FLAVOR + "_prefs";
     //更新引导页 GUIDE_UPDATE_VERSION增加1
     private static final int GUIDE_UPDATE_VERSION = 0;
+
+    //上次打开页面超过当前页面多久提交一次  60*60*1000
+    private static final int UPDATE_OPEN_APP_TIME = 60 * 60 * 1000;
 
     interface Key {
         String FOREGROUND = "foreground";
@@ -45,6 +49,7 @@ public class Preference {
         String SHOW_REGISTER_INVITE = "show_register_invite";
         String SHOW_BIND_WECHAT = "show_bind_wechat";
         String FIRST_OPEN_APP = "first_open_app";
+        String UPDATE_OPEN_APP_TIME = "update_open_app_time";
     }
 
     private static Preference sInstance;
@@ -286,5 +291,15 @@ public class Preference {
         long firstOpenTime = mPrefs.getLong(Key.FIRST_OPEN_APP, 0);
         long systemTime = System.currentTimeMillis();
         return firstOpenTime == 0 || !DateUtil.isToday(firstOpenTime, systemTime);
+    }
+
+    public void setNeedUpdateOpenAppTime(long systemTime) {
+        apply(Key.UPDATE_OPEN_APP_TIME, systemTime);
+    }
+
+    public boolean isNeedUpdateOpenAppTime() {
+        long systemTimestamp = SysTime.getSysTime().getSystemTimestamp();
+        long time = systemTimestamp - mPrefs.getLong(Key.UPDATE_OPEN_APP_TIME, 0);
+        return time > UPDATE_OPEN_APP_TIME;
     }
 }
