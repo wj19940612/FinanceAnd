@@ -32,6 +32,8 @@ public class BaseDialog {
 
     private AppCompatDialog mDialog;
 
+    private DialogInterface.OnDismissListener mOnDismissListener;
+
     private boolean mCancelableOnTouchOutside;
     private boolean mCancelableOnBackPress;
 
@@ -102,6 +104,11 @@ public class BaseDialog {
         return this;
     }
 
+    public BaseDialog setOnDismissListener(DialogInterface.OnDismissListener dismissListener) {
+        this.mOnDismissListener = dismissListener;
+        return this;
+    }
+
     public void show() {
         if (mDialog != null) {
             setupDialog();
@@ -144,6 +151,14 @@ public class BaseDialog {
 
     private void create() {
         mDialog = new AppCompatDialog(mActivity, R.style.DialogTheme_NoTitle);
+        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (mOnDismissListener != null) {
+                    mOnDismissListener.onDismiss(null);
+                }
+            }
+        });
         mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
