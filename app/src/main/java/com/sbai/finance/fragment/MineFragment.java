@@ -387,10 +387,6 @@ public class MineFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == BaseActivity.RESULT_OK) {
             switch (requestCode) {
-                case Launcher.REQ_CODE_LOGIN:
-                    updateUserStatus();
-                    updateUserImage();
-                    break;
                 case REQ_CODE_USER_INFO:
                     updateUserStatus();
                     updateUserImage();

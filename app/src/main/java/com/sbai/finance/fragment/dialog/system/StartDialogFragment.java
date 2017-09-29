@@ -62,7 +62,7 @@ public class StartDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.BaseDialogFragment);
+        setStyle(STYLE_NO_TITLE, R.style.BaseDialog);
         if (getArguments() != null) {
             mActivityModel = getArguments().getParcelable("activity");
         }

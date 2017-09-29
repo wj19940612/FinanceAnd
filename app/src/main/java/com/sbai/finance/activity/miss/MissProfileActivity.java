@@ -25,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -696,7 +697,7 @@ public class MissProfileActivity extends BaseActivity implements
 					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
 						Question question = mHerAnswerAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 								question.setIsPrise(prise.getIsPrise());
 								question.setPriseCount(prise.getPriseCount());
 								mHerAnswerAdapter.notifyDataSetChanged();
@@ -720,7 +721,7 @@ public class MissProfileActivity extends BaseActivity implements
 					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
 						Question question = mHerAnswerAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 								question.setReplyCount(replyCount);
 								mHerAnswerAdapter.notifyDataSetChanged();
 							}
@@ -732,7 +733,7 @@ public class MissProfileActivity extends BaseActivity implements
 					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
 						Question question = mHerAnswerAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 								question.setAwardCount(rewardCount);
 								mHerAnswerAdapter.notifyDataSetChanged();
 							}
@@ -744,7 +745,7 @@ public class MissProfileActivity extends BaseActivity implements
 					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
 						Question question = mHerAnswerAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 								question.setListenCount(listenCount);
 								mHerAnswerAdapter.notifyDataSetChanged();
 							}
