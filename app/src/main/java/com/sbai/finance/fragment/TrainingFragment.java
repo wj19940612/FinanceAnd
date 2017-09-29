@@ -43,7 +43,6 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.glide.GlideApp;
 
@@ -278,7 +277,7 @@ public class TrainingFragment extends BaseFragment {
             startScoreAnimation(mNewScore);
             double rank = data != null ? data.getRank() : 0;
             if (mNewScore > 0) {
-                mScoreProgress.setText(getString(R.string.more_than_number, NumberFormatUtils.formatPercentString(rank)));
+                mScoreProgress.setText(getString(R.string.more_than_number, FinanceUtil.formatFloorPercent(rank)));
             } else {
                 mScoreProgress.setText(R.string.you_are_not_complete_train);
             }

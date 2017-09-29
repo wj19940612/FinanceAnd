@@ -1,5 +1,7 @@
 package com.sbai.finance.net;
 
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.google.gson.Gson;
 import com.sbai.finance.App;
@@ -2626,6 +2628,11 @@ public class Client {
         return new API(POST, "/user/dailyReport/collect.do", new ApiParams().put("id", id));
     }
 
+    /**
+     * 获取训练项目数量
+     *
+     * @return
+     */
     public static API requestTrainCount() {
         return new API("/train/train/trainCount.do");
     }
@@ -2639,7 +2646,28 @@ public class Client {
         return new API(POST, "/explain/question/collect.do", new ApiParams().put("questionId", questionId));
     }
 
+    /**
+     * 获取训练心得总数
+     * @param trainId
+     * @return
+     */
     public static API getExperienceTotalCount(int trainId) {
         return new API("/train/perception/findMoreTrainPerception.do", new ApiParams().put("trainId", trainId));
+
+    }
+
+    /**
+     * /user/registerLogin/sensitizeApp.do
+     * GET
+     * 激活APP
+     *
+     * @return
+     */
+    public static API updatePageOpenTime() {
+        String deviceHardwareId = AppInfo.getDeviceHardwareId(App.getAppContext());
+        Log.d("BaseActivity", "updatePageOpenTime: "+deviceHardwareId);
+        return new API(POST, "/user/registerLogin/sensitizeApp.do",
+                new ApiParams()
+                        .put("deviceId", AppInfo.getDeviceHardwareId(App.getAppContext())));
     }
 }

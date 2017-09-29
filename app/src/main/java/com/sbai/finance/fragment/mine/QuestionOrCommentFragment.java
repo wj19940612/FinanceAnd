@@ -24,8 +24,8 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.ListEmptyView;
 
@@ -278,9 +278,9 @@ public class QuestionOrCommentFragment extends BaseFragment {
                 if (question.isQuestionSolved()) {
                     mContent.setSelected(true);
                     mTitle.setEnabled(true);
-                    String priseCount = NumberFormatUtils.formatTenThousandNumber(question.getPriseCount());
-                    String replyCount = NumberFormatUtils.formatTenThousandNumber(question.getReplyCount());
-                    String awardCount = NumberFormatUtils.formatTenThousandNumber(question.getAwardCount());
+                    String priseCount = FinanceUtil.formatTenThousandNumber(question.getPriseCount());
+                    String replyCount = FinanceUtil.formatTenThousandNumber(question.getReplyCount());
+                    String awardCount = FinanceUtil.formatTenThousandNumber(question.getAwardCount());
                     mContent.setText(context.getString(R.string.question_replay_content, priseCount, replyCount, awardCount));
                 } else {
                     mContent.setSelected(false);

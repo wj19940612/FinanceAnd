@@ -152,12 +152,13 @@ public class PushMessageModel {
         return "PushMessageModel{" +
                 "classify=" + classify +
                 ", createTime=" + createTime +
-                ", dataId=" + dataId +
+                ", dataId='" + dataId + '\'' +
                 ", iconUrl='" + iconUrl + '\'' +
                 ", msg='" + msg + '\'' +
                 ", title='" + title + '\'' +
                 ", type=" + type +
                 ", url='" + url + '\'' +
+                ", data=" + data +
                 '}';
     }
 
@@ -413,6 +414,36 @@ public class PushMessageModel {
 
         public void setAgainstUser(int againstUser) {
             this.againstUser = againstUser;
+        }
+
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "coinType=" + coinType +
+                    ", reward=" + reward +
+                    ", againstPraise=" + againstPraise +
+                    ", gameStatus=" + gameStatus +
+                    ", againstFrom='" + againstFrom + '\'' +
+                    ", batchCode='" + batchCode + '\'' +
+                    ", launchScore=" + launchScore +
+                    ", againstScore=" + againstScore +
+                    ", launchPraise=" + launchPraise +
+                    ", varietyType='" + varietyType + '\'' +
+                    ", againstUserName='" + againstUserName + '\'' +
+                    ", launchUser=" + launchUser +
+                    ", launchUserPortrait='" + launchUserPortrait + '\'' +
+                    ", againstUserPortrait='" + againstUserPortrait + '\'' +
+                    ", bigVarietyType='" + bigVarietyType + '\'' +
+                    ", endline=" + endline +
+                    ", modifyTime=" + modifyTime +
+                    ", createTimeX=" + createTimeX +
+                    ", varietyId=" + varietyId +
+                    ", startTime=" + startTime +
+                    ", id=" + id +
+                    ", varietyName='" + varietyName + '\'' +
+                    ", launchUserName='" + launchUserName + '\'' +
+                    ", againstUser=" + againstUser +
+                    '}';
         }
     }
 }

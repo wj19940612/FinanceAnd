@@ -6,8 +6,6 @@ import android.os.CountDownTimer;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.sbai.finance.R;
-
 import java.io.IOException;
 
 /**
@@ -149,7 +147,7 @@ public class MediaPlayerManager implements MediaPlayer.OnErrorListener, MediaPla
 	}
 
 
-	private void setCountDownTime(final int soundTime, final TextView voiceTime) {
+	/*private void setCountDownTime(final int soundTime, final TextView voiceTime) {
 		mCountDownTimer = new CountDownTimer(soundTime * 1000 + 1000, 1000) {
 
 			@Override
@@ -163,7 +161,7 @@ public class MediaPlayerManager implements MediaPlayer.OnErrorListener, MediaPla
 
 			}
 		}.start();
-	}
+	}*/
 
 	public void pause() {
 		if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
@@ -188,14 +186,14 @@ public class MediaPlayerManager implements MediaPlayer.OnErrorListener, MediaPla
 		}
 	}
 
-	public static int getCurrentDuration() {
+	public  int getCurrentDuration() {
 		if (mMediaPlayer != null) {
 			return mMediaPlayer.getCurrentPosition();
 		}
 		return 0;
 	}
 
-	public static int getDuration() {
+	public  int getDuration() {
 		if (mMediaPlayer != null) {
 			return mMediaPlayer.getDuration();
 		}

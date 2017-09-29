@@ -2,11 +2,18 @@ package com.sbai.finance.model.miss;
 
 import java.io.Serializable;
 
+import static android.R.attr.type;
+
 /**
  * Created by lixiaokuan0819 on 2017/7/30.
  */
 
 public class Question implements Serializable {
+
+    private static final int TYPE_DEFAULT = 0;
+    public static final int TYPE_HORT = 1;
+    public static final int TYPE_LATEST = 2;
+
 
     /**
      * answerContext : blob:http://var.esongbai.xyz/ed0ea7b6-bd51-4ff1-a631-864d01b9f4c8
@@ -55,12 +62,13 @@ public class Question implements Serializable {
     private int replyCount;       //回复数
     private int soundTime;
     private boolean isPlaying;
-	private boolean progressIsZero = true;
     private int collect;
+    private boolean progressIsZero = true;
 
     // 我的问答中的数据
     private String content;        // 问题内容
     private int dataId;            //问题id
+    private int type;                //解说界面自定义的type  0 表示普通的   1 表示出现热门提问标签        2 最新提问
 
     public int getCollect() {
         return collect;
@@ -68,6 +76,14 @@ public class Question implements Serializable {
 
     public void setCollect(int collect) {
         this.collect = collect;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public boolean isQuestionSolved() {
@@ -92,13 +108,13 @@ public class Question implements Serializable {
     }
 
 
-	public boolean isProgressIsZero() {
-		return progressIsZero;
-	}
+    public boolean isProgressIsZero() {
+        return progressIsZero;
+    }
 
-	public void setProgressIsZero(boolean progressIsZero) {
-		this.progressIsZero = progressIsZero;
-	}
+    public void setProgressIsZero(boolean progressIsZero) {
+        this.progressIsZero = progressIsZero;
+    }
 
     public boolean isPlaying() {
         return isPlaying;

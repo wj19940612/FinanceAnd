@@ -29,6 +29,7 @@ public class FinanceUtil {
 
     /**
      * 格式化 String 数据, 并使用‘银行家算法’精确（保留）到小数点后两位
+     *
      * @param value
      * @return
      */
@@ -66,6 +67,12 @@ public class FinanceUtil {
         BigDecimal bigDecimal = multiply(value, 100d);
         return formatWithScale(bigDecimal.doubleValue(), scale) + "%";
     }
+
+    public static String formatToPercentageReplaceZero(double value, int scale) {
+        BigDecimal bigDecimal = multiply(value, 100d);
+        return removeNeedlessZero(formatWithScale(bigDecimal.doubleValue(), scale) + "%");
+    }
+
 
     /**
      * 当数字大于 10,000 或小于 -10,000 时候，添加‘万’单位，并使用‘银行家算法’精确（保留）到小数点后两位
@@ -416,8 +423,60 @@ public class FinanceUtil {
      * @return
      */
     public static String removeNeedlessZero(String number) {
-        return number.replace(".00","");
+        return number.replace(".00", "");
     }
 
+
+    /**
+     * 格式化 我的问答页面的人数数字显示   超过10000 用 万来表示
+     * 例子  123456
+     *
+     * @param number
+     * @return 12.3万
+     */
+    public static String formatTenThousandNumber(int number) {
+        if (number > 9999) {
+            String s = String.valueOf(number);
+            String substring = s.substring(s.length() - 4, s.length() - 3);
+            return number / 10000 + "." + substring + FinanceUtil.UNIT_WANG;
+        }
+        return String.valueOf(number);
+    }
+
+    /**
+     * @param number 0.9956
+     * @return 99%
+     */
+    public static String formatFloorPercent(double number) {
+        int data = 0;
+        if (number < 1) {
+            data = (int) (number * 100);
+        } else {
+            data = (int) number;
+        }
+        return data + "%";
+    }
+
+
+    /**
+     * @param number 0.995   转换为 100%    0.994  转为 99%
+     * @return
+     */
+    public static String formatPercent(double number) {
+        return formatPercent(number, 0, 0);
+    }
+
+    /**
+     * @param number                数字
+     * @param maximumFractionDigits 设置数字小数部分允许的最大位数。
+     * @param minimumFractionDigits 设置数字小数部分允许的最小位数。
+     * @return
+     */
+    public static String formatPercent(double number, int maximumFractionDigits, int minimumFractionDigits) {
+        NumberFormat percentInstance = NumberFormat.getPercentInstance();
+        percentInstance.setMaximumFractionDigits(maximumFractionDigits);
+        percentInstance.setMinimumFractionDigits(minimumFractionDigits);
+        return percentInstance.format(number);
+    }
 
 }
