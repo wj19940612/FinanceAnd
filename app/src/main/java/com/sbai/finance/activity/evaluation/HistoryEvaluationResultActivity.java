@@ -23,8 +23,8 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.NumberFormatUtils;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.util.HashSet;
@@ -172,8 +172,8 @@ public class HistoryEvaluationResultActivity extends BaseActivity implements Ada
                 mTime.setText(DateUtil.format(item.getCreateTime(), DateUtil.DEFAULT_FORMAT, "yyyy-MM-dd"));
                 mGrade.setText(getTestGrade(item.getLevel()));
                 mAccuracy.setText(context.getString(R.string.accuracy_ranking,
-                        NumberFormatUtils.formatPercentStringEndReplaceZero(item.getAllAccuracy(), 2),
-                        NumberFormatUtils.formatPercentString(item.getPassPercent())));
+                        FinanceUtil.formatToPercentageReplaceZero(item.getAllAccuracy(), 2),
+                        FinanceUtil.formatFloorPercent(item.getPassPercent())));
             }
 
 

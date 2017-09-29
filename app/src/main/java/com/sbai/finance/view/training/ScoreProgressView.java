@@ -16,7 +16,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.model.training.TrainAppraiseAndRemark;
 import com.sbai.finance.model.training.UserEachTrainingScoreModel;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.NumberFormatUtils;
 
 import java.util.List;
 
@@ -163,7 +162,7 @@ public class ScoreProgressView extends LinearLayout {
     private void updateTradeGrade(TrainAppraiseAndRemark result) {
         mTradeGradeTextView.setText(getContext().getString(R.string.trade_level,
                 result.getAppraise(),
-                NumberFormatUtils.formatPercentString(mUserEachTrainingScoreModel.getRank())));
+                FinanceUtil.formatFloorPercent(mUserEachTrainingScoreModel.getRank())));
     }
 
 

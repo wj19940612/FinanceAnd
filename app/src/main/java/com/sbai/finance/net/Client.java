@@ -2626,7 +2626,36 @@ public class Client {
         return new API(POST, "/user/dailyReport/collect.do", new ApiParams().put("id", id));
     }
 
+    /**
+     * 获取训练项目数量
+     *
+     * @return
+     */
     public static API requestTrainCount() {
         return new API("/train/train/trainCount.do");
+    }
+
+    /**
+     * /user/registerLogin/sensitizeApp.do
+     * GET
+     * 激活APP
+     *
+     * @return
+     */
+    public static API updatePageOpenTime() {
+        String deviceHardwareId = AppInfo.getDeviceHardwareId(App.getAppContext());
+        return new API(POST, "/user/registerLogin/sensitizeApp.do",
+                new ApiParams()
+                        .put("deviceId", AppInfo.getDeviceHardwareId(App.getAppContext())));
+    }
+
+    /**
+     * push 过来的html 服务端说有长度限制  调用接口去获取banner
+     *
+     * @param id
+     * @return
+     */
+    public static API requestBannerInfo(String id) {
+        return new API("/user/news/findBannerById.do", new ApiParams().put("id", id));
     }
 }

@@ -7,7 +7,6 @@
               android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/hotArea"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="14dp"
@@ -94,19 +93,19 @@
             tools:text="10:00"/>
 
         <TextView
-            android:id="@+id/loveNumber"
+            android:id="@+id/praiseNumber"
             android:layout_width="wrap_content"
             android:layout_height="22dp"
             android:layout_alignParentRight="true"
-            android:background="@drawable/btn_love"
-            android:drawableLeft="@drawable/bg_love"
+            android:background="@drawable/btn_praise"
+            android:drawableLeft="@drawable/bg_praise"
             android:drawablePadding="6dp"
             android:gravity="center"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:textColor="@color/love_text"
+            android:textColor="@color/luckyText"
             android:textSize="10sp"
-            tools:text="8888"/>
+            tools:text="@string/praise"/>
     </RelativeLayout>
 
     <View

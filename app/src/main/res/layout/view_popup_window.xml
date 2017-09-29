@@ -13,7 +13,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
-        android:drawableLeft="@drawable/ic_ask_her_question"
+        android:drawableLeft="@drawable/ic_ask_her_question_white"
         android:drawablePadding="4dp"
         android:gravity="center"
         android:text="向小姐姐提问"

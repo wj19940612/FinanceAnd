@@ -161,9 +161,10 @@ public class Banner implements Serializable {
         this.smallPic = smallPic;
     }
 
+
     @Override
     public String toString() {
-        return "BannerModel{" +
+        return "Banner{" +
                 "summary='" + summary + '\'' +
                 ", content='" + content + '\'' +
                 ", cover='" + cover + '\'' +

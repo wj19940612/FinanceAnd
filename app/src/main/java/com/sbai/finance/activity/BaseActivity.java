@@ -31,6 +31,9 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.API;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.TimerHandler;
@@ -233,6 +236,25 @@ public class BaseActivity extends StatusBarActivity implements
         MobclickAgent.onPageStart(TAG);
         MobclickAgent.onResume(this);
         WsClient.get().setOnPushReceiveListener(mPushReceiveListener);
+        updatePageOpenTime();
+    }
+
+    private void updatePageOpenTime() {
+        if (Preference.get().isNeedUpdateOpenAppTime()) {
+            Client.updatePageOpenTime()
+                    .setTag(TAG)
+                    .setCallback(new Callback<Resp<Object>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<Object> resp) {
+                        }
+
+                        @Override
+                        protected boolean onErrorToast() {
+                            return false;
+                        }
+                    }).fireFree();
+        }
+        Preference.get().setNeedUpdateOpenAppTime(SysTime.getSysTime().getSystemTimestamp());
     }
 
     @Override
