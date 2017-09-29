@@ -2132,7 +2132,7 @@ public class Client {
      * @param questionId
      * @return
      */
-    public static API prise(int questionId) {
+    public static API praise(int questionId) {
         return new API("/explain/question/prise.do", new ApiParams()
                 .put("questionId", questionId));
     }
@@ -2628,5 +2628,18 @@ public class Client {
 
     public static API requestTrainCount() {
         return new API("/train/train/trainCount.do");
+    }
+
+    /**
+     * 收藏问题
+     * @param questionId
+     * @return
+     */
+    public static API collectQuestion(int questionId) {
+        return new API(POST, "/explain/question/collect.do", new ApiParams().put("questionId", questionId));
+    }
+
+    public static API getExperienceTotalCount(int trainId) {
+        return new API("/train/perception/findMoreTrainPerception.do", new ApiParams().put("trainId", trainId));
     }
 }

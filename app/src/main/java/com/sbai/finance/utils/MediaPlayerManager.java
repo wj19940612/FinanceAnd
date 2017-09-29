@@ -1,6 +1,5 @@
 package com.sbai.finance.utils;
 
-import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
@@ -15,65 +14,82 @@ import java.io.IOException;
  * Created by lixiaokuan0819 on 2017/8/2.
  */
 
-public class MediaPlayerManager {
+public class MediaPlayerManager implements MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+
+	private OnCompletionListener mOnCompletionListener;
+
+	interface OnCompletionListener {
+		void onCompletion();
+	}
+
+	public void setOnCompletionListener(OnCompletionListener onCompletionListener) {
+		this.mOnCompletionListener = onCompletionListener;
+	}
 
 	private static MediaPlayerManager mInstance;
-	private  static MediaPlayer mMediaPlayer;
+	private  MediaPlayer mMediaPlayer;
 	private  AudioManager mAudioManager;
 	private boolean mIsPause;
-	private Context mContext;
 	private CountDownTimer mCountDownTimer;
 	private int mSoundTime;
 
-	private MediaPlayerManager(Context context) {
-		mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-		mContext = context;
-	}
-
-	public static MediaPlayerManager getInstance(Context context) {
+	public static MediaPlayerManager getInstance() {
 		if (mInstance == null) {
 			synchronized (MediaPlayerManager.class) {
 				if (mInstance == null) {
-					mInstance = new MediaPlayerManager(context);
+					mInstance = new MediaPlayerManager();
 				}
 			}
 		}
 		return mInstance;
 	}
 
+	public void initAudioManager(AudioManager audioManager) {
+		this.mAudioManager = audioManager;
+	}
 
-	public void play(String url, MediaPlayer.OnCompletionListener onCompletionListener) {
+	private MediaPlayerManager() {
+		mMediaPlayer = new MediaPlayer();
+		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		mMediaPlayer.setOnErrorListener(this);
+		mMediaPlayer.setOnCompletionListener(this);
+	}
+
+	public void play(String url) {
 		try {
-			if (mMediaPlayer == null) {
-				mMediaPlayer = new MediaPlayer();
-				mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-					@Override
-					public boolean onError(MediaPlayer mp, int what, int extra) {
-						mMediaPlayer.reset();
-						return false;
-					}
-				});
-			} else {
+			if ( mMediaPlayer!= null) {
 				mMediaPlayer.reset();
+				mMediaPlayer.setDataSource(url);
+				mMediaPlayer.prepareAsync();
+				mMediaPlayer.setOnPreparedListener(this);
 			}
-
-			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mMediaPlayer.setOnCompletionListener(onCompletionListener);
-			mMediaPlayer.setDataSource(url);
-			mMediaPlayer.prepareAsync();
-			mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-				@Override
-				public void onPrepared(MediaPlayer mp) {
-					int result = mAudioManager.requestAudioFocus(afChangeListener,
-							AudioManager.STREAM_MUSIC,
-							AudioManager.AUDIOFOCUS_GAIN);
-					if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-						mMediaPlayer.start();
-					}
-				}
-			});
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public boolean onError(MediaPlayer mp, int what, int extra) {
+		if (mMediaPlayer != null) {
+			mMediaPlayer.reset();
+		}
+		return false;
+	}
+
+	@Override
+	public void onCompletion(MediaPlayer mp) {
+		if (mOnCompletionListener != null) {
+			mOnCompletionListener.onCompletion();
+		}
+	}
+
+	@Override
+	public void onPrepared(MediaPlayer mp) {
+		int result = mAudioManager.requestAudioFocus(afChangeListener,
+				AudioManager.STREAM_MUSIC,
+				AudioManager.AUDIOFOCUS_GAIN);
+		if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+			mMediaPlayer.start();
 		}
 	}
 

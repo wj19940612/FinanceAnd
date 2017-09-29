@@ -3,11 +3,13 @@ package com.sbai.finance;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 
 import com.sbai.finance.activity.CatchCrashActivity;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Logger;
+import com.sbai.finance.utils.MediaPlayerManager;
 import com.sbai.httplib.CookieManger;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
@@ -23,6 +25,7 @@ public class App extends Application {
         sContext = this;
         API.init(sContext.getCacheDir());
         CookieManger.getInstance().init(sContext.getFilesDir());
+        MediaPlayerManager.getInstance().initAudioManager((AudioManager)sContext.getSystemService(Context.AUDIO_SERVICE));
 
         if (!BuildConfig.IS_PROD) {
             handleUncaughtException();

@@ -27,8 +27,9 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.miss.Prise;
+import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.miss.QuestionCollect;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback2D;
@@ -71,7 +72,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	@BindView(R.id.swipeRefreshLayout)
 	CustomSwipeRefreshLayout mSwipeRefreshLayout;
 	@BindView(R.id.praise)
-	LinearLayout mPraise;
+	LinearLayout mPraiseArea;
 	@BindView(R.id.praiseImage)
 	ImageView mPraiseImage;
 	@BindView(R.id.collect)
@@ -94,7 +95,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private RefreshReceiver mRefreshReceiver;
 	private MediaPlayerManager mMediaPlayerManager;
 	private int mPlayingID;
-	private Prise mPrise;
+	private Praise mPraise;
 	private String mMongoId;
 	private ImageView mAvatar;
 	private TextView mName;
@@ -118,7 +119,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		initData(getIntent());
 		initHeaderView();
 		mSet = new HashSet<>();
-		mMediaPlayerManager =  MediaPlayerManager.getInstance(this);
 		mQuestionReplyListAdapter = new QuestionReplyListAdapter(this);
 		mListView.setAdapter(mQuestionReplyListAdapter);
 		mListView.setOnItemClickListener(this);
@@ -216,7 +216,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mMediaPlayerManager.release();
+		//mMediaPlayerManager.release();
 		mPlayingID = -1;
 	}
 
@@ -270,6 +270,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			mPraiseImage.setImageResource(R.drawable.ic_miss_unpraise);
 		} else {
 			mPraiseImage.setImageResource(R.drawable.ic_miss_praise);
+		}
+
+		if (question.getCollect() == 0) {
+			mCollectImage.setImageResource(R.drawable.ic_miss_uncollect);
+		} else {
+			mCollectImage.setImageResource(R.drawable.ic_miss_collect);
 		}
 
 		if (MissVoiceRecorder.isHeard(question.getId())) {
@@ -357,62 +363,94 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		}
 	}
 
-	@OnClick({R.id.comment, R.id.reward, R.id.praise, R.id.collect})
+	@OnClick({R.id.praise, R.id.collect, R.id.comment, R.id.reward})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
-			case R.id.comment:
-				if (mQuestionDetail != null) {
-					if (LocalUser.getUser().isLogin()) {
-						Launcher.with(getActivity(), CommentActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
-								.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
-								.executeForResult(REQ_COMMENT);
-
-					} else {
-						Intent intent = new Intent(getActivity(), LoginActivity.class);
-						startActivityForResult(intent, REQ_COMMENT_LOGIN);
-					}
-				}
-				break;
-			case R.id.reward:
-				if (mQuestionDetail != null) {
-					if (LocalUser.getUser().isLogin()) {
-						RewardMissActivity.show(getActivity(), mQuestionId, RewardInfo.TYPE_QUESTION);
-					} else {
-						Intent intent = new Intent(getActivity(), LoginActivity.class);
-						startActivityForResult(intent, REQ_REWARD_LOGIN);
-					}
-				}
-				break;
 			case R.id.praise:
-				if (mQuestionDetail != null) {
-					if (LocalUser.getUser().isLogin()) {
-						umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
-						Client.prise(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
-
-							@Override
-							protected void onRespSuccessData(Prise prise) {
-								mPrise = prise;
-								int praiseCount;
-								if (prise.getIsPrise() == 0) {
-									mPraiseImage.setImageResource(R.drawable.ic_miss_unpraise);
-									praiseCount = mQuestionDetail.getPriseCount() - 1;
-									mQuestionDetail.setPriseCount(praiseCount);
-								} else {
-									mPraiseImage.setImageResource(R.drawable.ic_miss_praise);
-									praiseCount = mQuestionDetail.getPriseCount() + 1;
-									mQuestionDetail.setPriseCount(praiseCount);
-								}
-								mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(praiseCount)));
-							}
-						}).fire();
-					} else {
-						Launcher.with(getActivity(), LoginActivity.class).execute();
-					}
-				}
+				praise();
 				break;
 			case R.id.collect:
+				collect();
 				break;
+			case R.id.comment:
+				comment();
+				break;
+			case R.id.reward:
+				reward();
+				break;
+		}
+	}
+
+	private void praise() {
+		if (mQuestionDetail != null) {
+			if (LocalUser.getUser().isLogin()) {
+				umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
+				Client.praise(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<Praise>, Praise>() {
+
+					@Override
+					protected void onRespSuccessData(Praise praise) {
+						mPraise = praise;
+						int praiseCount;
+						if (praise.getIsPrise() == 0) {
+							mPraiseImage.setImageResource(R.drawable.ic_miss_unpraise);
+							praiseCount = mQuestionDetail.getPriseCount() - 1;
+							mQuestionDetail.setPriseCount(praiseCount);
+						} else {
+							mPraiseImage.setImageResource(R.drawable.ic_miss_praise);
+							praiseCount = mQuestionDetail.getPriseCount() + 1;
+							mQuestionDetail.setPriseCount(praiseCount);
+						}
+						mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(praiseCount)));
+					}
+				}).fire();
+			} else {
+				Launcher.with(getActivity(), LoginActivity.class).execute();
+			}
+		}
+	}
+
+	private void collect() {
+		if (mQuestionDetail != null) {
+			if (LocalUser.getUser().isLogin()) {
+				Client.collectQuestion(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<QuestionCollect>, QuestionCollect>() {
+					@Override
+					protected void onRespSuccessData(QuestionCollect questionCollect) {
+						if (questionCollect.getCollect() == 0) {
+							mCollectImage.setImageResource(R.drawable.ic_miss_uncollect);
+						} else {
+							mCollectImage.setImageResource(R.drawable.ic_miss_collect);
+						}
+					}
+				}).fire();
+			} else {
+				Launcher.with(getActivity(), LoginActivity.class).execute();
+			}
+		}
+	}
+
+	private void comment() {
+		if (mQuestionDetail != null) {
+			if (LocalUser.getUser().isLogin()) {
+				Launcher.with(getActivity(), CommentActivity.class)
+						.putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
+						.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
+						.executeForResult(REQ_COMMENT);
+
+			} else {
+				Intent intent = new Intent(getActivity(), LoginActivity.class);
+				startActivityForResult(intent, REQ_COMMENT_LOGIN);
+			}
+		}
+	}
+
+	private void reward() {
+		if (mQuestionDetail != null) {
+			if (LocalUser.getUser().isLogin()) {
+				RewardMissActivity.show(getActivity(), mQuestionId, RewardInfo.TYPE_QUESTION);
+			} else {
+				Intent intent = new Intent(getActivity(), LoginActivity.class);
+				startActivityForResult(intent, REQ_REWARD_LOGIN);
+			}
 		}
 	}
 
@@ -595,7 +633,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		Intent intent = new Intent();
 		if (mQuestionDetail != null) {
 			intent.putExtra(Launcher.QUESTION_ID, mQuestionDetail.getId());
-			intent.putExtra(Launcher.EX_PAYLOAD, mPrise);
+			intent.putExtra(Launcher.EX_PAYLOAD, mPraise);
 			intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getReplyCount());
 			intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionDetail.getAwardCount());
 			intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionDetail.getListenCount());

@@ -37,7 +37,7 @@ import com.sbai.finance.activity.miss.RewardMissActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
-import com.sbai.finance.model.miss.Prise;
+import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback;
@@ -179,12 +179,12 @@ public class MissTalkFragment extends BaseFragment {
 			public void praiseOnClick(final Question item) {
 				if (LocalUser.getUser().isLogin()) {
 					umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
-					Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
+					Client.praise(item.getId()).setCallback(new Callback2D<Resp<Praise>, Praise>() {
 
 						@Override
-						protected void onRespSuccessData(Prise prise) {
-							item.setIsPrise(prise.getIsPrise());
-							item.setPriseCount(prise.getPriseCount());
+						protected void onRespSuccessData(Praise praise) {
+							item.setIsPrise(praise.getIsPrise());
+							item.setPriseCount(praise.getPriseCount());
 							mHotQuestionListAdapter.notifyDataSetChanged();
 						}
 					}).fire();
@@ -313,12 +313,12 @@ public class MissTalkFragment extends BaseFragment {
 			public void praiseOnClick(final Question item) {
 				if (LocalUser.getUser().isLogin()) {
 					umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
-					Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
+					Client.praise(item.getId()).setCallback(new Callback2D<Resp<Praise>, Praise>() {
 
 						@Override
-						protected void onRespSuccessData(Prise prise) {
-							item.setIsPrise(prise.getIsPrise());
-							item.setPriseCount(prise.getPriseCount());
+						protected void onRespSuccessData(Praise praise) {
+							item.setIsPrise(praise.getIsPrise());
+							item.setPriseCount(praise.getPriseCount());
 							mLatestQuestionListAdapter.notifyDataSetChanged();
 						}
 					}).fire();
@@ -358,68 +358,7 @@ public class MissTalkFragment extends BaseFragment {
 			public void voiceOnClick(final Question item, final ImageView playImage,
 			                         final ProgressBar progressBar, final TextView voiceTime) {
 				umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
-				if (!MissVoiceRecorder.isHeard(item.getId())) {
-					//没听过的
-					Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-						@Override
-						protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-							if (resp.isSuccess()) {
-								stopPreviousAnimation();
-								mMediaPlayerManager.play(item.getAnswerContext(), progressBar,
-										voiceTime, new MediaPlayer.OnCompletionListener() {
-											@Override
-											public void onCompletion(MediaPlayer mp) {
-												item.setPlaying(false);
-												mLatestQuestionListAdapter.notifyDataSetChanged();
-												progressBar.setProgress(0);
-												mPlayingID = -1;
-												mIsPause = false;
-											}
-										});
 
-								MissVoiceRecorder.markHeard(item.getId());
-								item.setPlaying(true);
-								item.setListenCount(item.getListenCount() + 1);
-								mLatestQuestionListAdapter.notifyDataSetChanged();
-								mPlayingID = item.getId();
-							}
-						}
-					}).fire();
-				} else {
-					//听过的
-					if (mPlayingID == item.getId()) {
-						if (mIsPause) {
-							mMediaPlayerManager.resume();
-							item.setPlaying(true);
-							mLatestQuestionListAdapter.notifyDataSetChanged();
-							mMediaPlayerManager.setProgressBar(progressBar);
-							mIsPause = false;
-						} else {
-							mMediaPlayerManager.pause();
-							item.setPlaying(false);
-							item.setProgressIsZero(false);
-							mLatestQuestionListAdapter.notifyDataSetChanged();
-							mIsPause = true;
-						}
-					} else {
-						stopPreviousAnimation();
-						mMediaPlayerManager.play(item.getAnswerContext(), progressBar,
-								voiceTime, new MediaPlayer.OnCompletionListener() {
-									@Override
-									public void onCompletion(MediaPlayer mp) {
-										item.setPlaying(false);
-										mLatestQuestionListAdapter.notifyDataSetChanged();
-										progressBar.setProgress(0);
-										mPlayingID = -1;
-										mIsPause = false;
-									}
-								});
-
-						item.setPlaying(true);
-						mLatestQuestionListAdapter.notifyDataSetChanged();
-						mPlayingID = item.getId();
-					}
-				}
 			}
 		});
 	}
@@ -489,7 +428,7 @@ public class MissTalkFragment extends BaseFragment {
 		super.onPause();
 		stopScheduleJob();
 		//锁屏或者在后台运行或者跳转页面时停止播放和动画
-		mMediaPlayerManager.release();
+		//mMediaPlayerManager.release();
 		//stopPreviousAnimation(progressBar);
 
 		mPlayingID = -1;
@@ -886,17 +825,17 @@ public class MissTalkFragment extends BaseFragment {
 
 		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
 			if (data != null) {
-				Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+				Praise praise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
 				int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 				int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
 				int listenCount = data.getIntExtra(Launcher.EX_PAYLOAD_3, -1);
-				if (prise != null) {
+				if (praise != null) {
 					for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
 						Question question = mHotQuestionListAdapter.getItem(i);
 						if (question != null) {
 							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
-								question.setIsPrise(prise.getIsPrise());
-								question.setPriseCount(prise.getPriseCount());
+								question.setIsPrise(praise.getIsPrise());
+								question.setPriseCount(praise.getPriseCount());
 								mHotQuestionListAdapter.notifyDataSetChanged();
 							}
 						}
@@ -906,8 +845,8 @@ public class MissTalkFragment extends BaseFragment {
 						Question question = mLatestQuestionListAdapter.getItem(i);
 						if (question != null) {
 							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
-								question.setIsPrise(prise.getIsPrise());
-								question.setPriseCount(prise.getPriseCount());
+								question.setIsPrise(praise.getIsPrise());
+								question.setPriseCount(praise.getPriseCount());
 								mLatestQuestionListAdapter.notifyDataSetChanged();
 							}
 						}

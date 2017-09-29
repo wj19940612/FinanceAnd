@@ -13,7 +13,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.fragment.mine.QuestionOrCommentFragment;
-import com.sbai.finance.model.miss.Prise;
+import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
@@ -68,11 +68,11 @@ public class MyQuestionAndAnswerActivity extends BaseActivity implements Questio
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQ_CODE_QUESTION_DETAIL:
-                Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+                Praise praise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
                 int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
                 int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
-                if (prise != null) {
-                    mClickQuestion.setPriseCount(prise.getPriseCount());
+                if (praise != null) {
+                    mClickQuestion.setPriseCount(praise.getPriseCount());
                 }
                 mClickQuestion.setReplyCount(replyCount);
                 mClickQuestion.setAwardCount(rewardCount);

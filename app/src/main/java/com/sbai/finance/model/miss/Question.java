@@ -56,10 +56,19 @@ public class Question implements Serializable {
     private int soundTime;
     private boolean isPlaying;
 	private boolean progressIsZero = true;
+    private int collect;
 
     // 我的问答中的数据
     private String content;        // 问题内容
     private int dataId;            //问题id
+
+    public int getCollect() {
+        return collect;
+    }
+
+    public void setCollect(int collect) {
+        this.collect = collect;
+    }
 
     public boolean isQuestionSolved() {
         return getSolve() == 0;
