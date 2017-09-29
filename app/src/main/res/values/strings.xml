@@ -644,7 +644,6 @@
     <string name="latest_finance_hot_from_lemi">来自乐米的每日最新金融热点</string>
 
 
-    <string name="study_room">自习室</string>
     <string name="study_days">已学天数</string>
     <string name="continuous_study">连续学习:</string>
     <string name="longest_continuous_study">最长连续学习:</string>
@@ -700,7 +699,7 @@
     <string name="question_detail">提问详情</string>
 
     <!--首页 训练-->
-    <string name="review_lesson_room">自习室</string>
+    <string name="study_everyday">每日一题</string>
     <string name="recommend_train">推荐训练</string>
     <string name="mine_train">我的训练</string>
     <string name="lemi_score">乐米学分</string>
