@@ -12,21 +12,22 @@ public class PushMessageModel {
     private static final int CLASSIFY_USER = 1;
 
     //日报
-    public static final int PUSH_TYPE_DAILY_REPORT= 0;
+    public static final int PUSH_TYPE_DAILY_REPORT = 0;
     //自习室
-    public static final int PUSH_TYPE_SELF_STUDY_ROOM= 2;
-    // 关注的小姐姐回复问题了
-    public static final int PUSH_TYPE_ATTENTION_MISS_ANSWERED = 3;
+    public static final int PUSH_TYPE_SELF_STUDY_ROOM = 2;
+    // 关注的小姐姐回复问题了  后台推送过来的
+    public static final int PUSH_TYPE_ATTENTION_MISS_ANSWERED_FROM_BACKGROUND = 3;
     //训练
     public static final int PUSH_TYPE_TRAINING = 4;
     //活动
-    public static final int PUSH_TYPE_ACTIVITY= 5;
+    public static final int PUSH_TYPE_ACTIVITY = 5;
     //模块
-    public static final int PUSH_TYPE_MODULE= 6;
-
+    public static final int PUSH_TYPE_MODULE = 6;
 
     //意见反馈
-    public static final int PUSH_TYPE_FEED_BACK_REPLY = 16;
+    public static final int PUSH_TYPE_FEED_BACK_REPLY = 1;
+    //关注的小姐姐回复问题，自动推送
+    public static final int PUSH_TYPE_ATTENTION_MISS_ANSWERED = 8;
 
     //日报
     private static final int TYPE_REPORT = 0;

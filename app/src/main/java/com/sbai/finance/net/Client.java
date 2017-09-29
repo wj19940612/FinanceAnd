@@ -1,7 +1,5 @@
 package com.sbai.finance.net;
 
-import android.util.Log;
-
 import com.android.volley.Request;
 import com.google.gson.Gson;
 import com.sbai.finance.App;
@@ -2646,9 +2644,18 @@ public class Client {
      */
     public static API updatePageOpenTime() {
         String deviceHardwareId = AppInfo.getDeviceHardwareId(App.getAppContext());
-        Log.d("BaseActivity", "updatePageOpenTime: "+deviceHardwareId);
         return new API(POST, "/user/registerLogin/sensitizeApp.do",
                 new ApiParams()
                         .put("deviceId", AppInfo.getDeviceHardwareId(App.getAppContext())));
+    }
+
+    /**
+     * push 过来的html 服务端说有长度限制  调用接口去获取banner
+     *
+     * @param id
+     * @return
+     */
+    public static API requestBannerInfo(String id) {
+        return new API("/user/news/findBannerById.do", new ApiParams().put("id", id));
     }
 }
