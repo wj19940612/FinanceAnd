@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -88,8 +89,13 @@ public class StartDialogFragment extends DialogFragment {
     }
 
     public void show(FragmentManager manager) {
-        this.show(manager, this.getClass().getSimpleName());
+        if (!isAdded()) {
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.add(this, this.getClass().getSimpleName());
+            ft.commitAllowingStateLoss();
+        }
     }
+
 
     @Override
     public void onDestroyView() {

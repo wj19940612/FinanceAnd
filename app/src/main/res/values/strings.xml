@@ -496,7 +496,7 @@
     <string name="match_battle_tip">匹配对战将随机选择赏金在余额范围内的对局。</string>
     <string name="battle_detail">对战详情</string>
     <string name="cancel_match">取消匹配</string>
-    <string name="desc_matching">正在进行匹配，请稍后…</string>
+    <string name="desc_matching">正在匹配, 请稍后…</string>
     <string name="title_matching">正在匹配</string>
     <string name="title_match_success">匹配成功</string>
     <string name="desc_match_success">已有对手\n%1$ds后进入对战</string>

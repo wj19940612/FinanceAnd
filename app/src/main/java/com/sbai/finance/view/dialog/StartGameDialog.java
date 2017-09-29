@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.view.WaveView;
 import com.sbai.glide.GlideApp;
 
 /**
@@ -26,11 +27,12 @@ public class StartGameDialog extends BaseDialog {
 
         View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_fragment_start_match, null);
 
-        TextView title = (TextView) customView.findViewById(R.id.title);
+        TextView title = (TextView) customView.findViewById(R.id.message);
         title.setText(activity.getString(R.string.title_quick_join_battle));
 
-        ImageView mMatchLoading = (ImageView) customView.findViewById(R.id.matchLoading);
+        WaveView mMatchLoading = (WaveView) customView.findViewById(R.id.matchLoading);
         mMatchLoading.setVisibility(View.GONE);
+        mMatchLoading.stop();
 
         ImageView matchHead = (ImageView) customView.findViewById(R.id.matchHead);
 

@@ -119,24 +119,30 @@ public class NewsActivity extends BaseActivity {
         });
     }
 
-    private void updateTitleBar() {
-        if (pagePosition == 0) {
-            if (mMissNoReadCount == 0) {
-                mTabLayout.getTabItems()[0].setText(getString(R.string.reply));
+    private void updateTitleBar () {
+        if (mMissNoReadCount == 0) {
+            mTabLayout.getTabItems()[0].setText(getString(R.string.reply));
+            if (pagePosition == 0) {
                 mTitleBar.setRightViewEnable(false);
                 mTitleBar.setRightVisible(false);
-            } else {
-                mTabLayout.getTabItems()[0].setText(getString(R.string.reply_, mMissNoReadCount));
+            }
+        } else {
+            mTabLayout.getTabItems()[0].setText(getString(R.string.reply_, mMissNoReadCount));
+            if (pagePosition == 0) {
                 mTitleBar.setRightViewEnable(true);
                 mTitleBar.setRightVisible(true);
             }
-        } else if (pagePosition == 1) {
-            if (mSysNoReadCount == 0) {
-                mTabLayout.getTabItems()[1].setText(getString(R.string.system));
+        }
+
+        if (mSysNoReadCount == 0) {
+            mTabLayout.getTabItems()[1].setText(getString(R.string.system));
+            if (pagePosition == 1) {
                 mTitleBar.setRightViewEnable(false);
                 mTitleBar.setRightVisible(false);
-            } else {
-                mTabLayout.getTabItems()[1].setText(getString(R.string.system_, mSysNoReadCount));
+            }
+        } else {
+            mTabLayout.getTabItems()[1].setText(getString(R.string.system_, mSysNoReadCount));
+            if (pagePosition == 1) {
                 mTitleBar.setRightViewEnable(true);
                 mTitleBar.setRightVisible(true);
             }
