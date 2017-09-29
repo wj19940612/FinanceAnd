@@ -2681,4 +2681,14 @@ public class Client {
     public static String getImageAuthCode(String phone) {
         return API.getHost() + "/user/registerLogin/getRegImage.do?userPhone=" + phone;
     }
+
+    /**
+     * push 过来的html 服务端说有长度限制  调用接口去获取banner
+     *
+     * @param id
+     * @return
+     */
+    public static API requestBannerInfo(String id) {
+        return new API("/user/news/findBannerById.do", new ApiParams().put("id", id));
+    }
 }

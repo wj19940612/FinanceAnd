@@ -28,6 +28,7 @@ import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
+import com.sbai.finance.activity.miss.MissProfileActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.model.Banner;
@@ -157,21 +158,21 @@ public class PushIntentService extends GTIntentService {
         }
 
         switch (data.getType()) {
-            case PushMessageModel.PUSH_TYPE_ATTENTION_MISS_ANSWERED:
+            case PushMessageModel.PUSH_TYPE_ATTENTION_MISS_ANSWERED_FROM_BACKGROUND:
                 intent = new Intent(context, QuestionDetailActivity.class);
                 try {
                     intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
                 } catch (NumberFormatException e) {
-                    Log.d(TAG, "setPendingIntent: " + e.toString());
                     if (!BuildConfig.IS_PROD) {
-                        ToastUtil.show("web data is error");
+                        ToastUtil.show("web data is error" + data.getDataId());
                     }
                 }
                 break;
             case PushMessageModel.PUSH_TYPE_ACTIVITY:
                 intent = new Intent(context, MainActivity.class);
-                // TODO: 2017/9/26 拼接banner
                 Banner banner = new Banner();
+                //返回id 去查询banner
+                banner.setId(data.getDataId());
                 intent.putExtra(ExtraKeys.ACTIVITY, banner);
                 break;
             case PushMessageModel.PUSH_TYPE_FEED_BACK_REPLY:
@@ -186,8 +187,24 @@ public class PushIntentService extends GTIntentService {
             case PushMessageModel.PUSH_TYPE_TRAINING:
                 intent = new Intent(context, MainActivity.class);
                 break;
-        }
+            case PushMessageModel.PUSH_TYPE_ATTENTION_MISS_ANSWERED:
+                intent = new Intent(context, MissProfileActivity.class);
+                try {
+                    intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
+                } catch (NumberFormatException e) {
+                    if (!BuildConfig.IS_PROD) {
+                        ToastUtil.show("web data is error" + data.getDataId());
+                    }
+                }
+                break;
+            case PushMessageModel.PUSH_TYPE_MODULE:
+                // 暂时保留，先不处理
+                break;
 
+        }
+        if (intent != null) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
