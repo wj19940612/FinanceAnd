@@ -9,6 +9,8 @@ public class Resp<T> {
     public static final int CODE_REQUEST_AUTH_CODE_OVER_LIMIT = 601;
     public static final int CODE_GET_PROMOTE_CODE_FAILED = 600;
 
+    // 验证码请求过多 需要图片验证码
+    public static final int CODE_IMAGE_AUTH_CODE_REQUIRED = 215;
     // 资金不足
     public static final int CODE_FUND_NOT_ENOUGH = 704;
     // 自选重复添加
@@ -21,7 +23,6 @@ public class Resp<T> {
     public static final int CODE_EXCHANGE_ITEM_IS_MODIFIED = 2205;
     // 安全密码错误
     public static final int CODE_SAFETY_INPUT_ERROR = 2203;
-    public static final int CODE_LIGHTNING_ORDER_INVALID = 703;
 
     private int code;
     private String msg;

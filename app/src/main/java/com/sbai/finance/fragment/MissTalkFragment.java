@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.JsonPrimitive;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.CommentActivity;
@@ -894,7 +895,7 @@ public class MissTalkFragment extends BaseFragment {
 					for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
 						Question question = mHotQuestionListAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 								question.setIsPrise(prise.getIsPrise());
 								question.setPriseCount(prise.getPriseCount());
 								mHotQuestionListAdapter.notifyDataSetChanged();
@@ -905,7 +906,7 @@ public class MissTalkFragment extends BaseFragment {
 					for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
 						Question question = mLatestQuestionListAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 								question.setIsPrise(prise.getIsPrise());
 								question.setPriseCount(prise.getPriseCount());
 								mLatestQuestionListAdapter.notifyDataSetChanged();
@@ -918,7 +919,7 @@ public class MissTalkFragment extends BaseFragment {
 					for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
 						Question question = mHotQuestionListAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 								question.setReplyCount(replyCount);
 								mHotQuestionListAdapter.notifyDataSetChanged();
 							}
@@ -928,7 +929,7 @@ public class MissTalkFragment extends BaseFragment {
 					for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
 						Question question = mLatestQuestionListAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 								question.setReplyCount(replyCount);
 								mLatestQuestionListAdapter.notifyDataSetChanged();
 							}
@@ -940,7 +941,7 @@ public class MissTalkFragment extends BaseFragment {
 					for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
 						Question question = mHotQuestionListAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 								question.setAwardCount(rewardCount);
 								mHotQuestionListAdapter.notifyDataSetChanged();
 							}
@@ -950,7 +951,7 @@ public class MissTalkFragment extends BaseFragment {
 					for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
 						Question question = mLatestQuestionListAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 								question.setAwardCount(rewardCount);
 								mLatestQuestionListAdapter.notifyDataSetChanged();
 							}
@@ -962,7 +963,7 @@ public class MissTalkFragment extends BaseFragment {
 					for (int i = 0; i < mHotQuestionListAdapter.getCount(); i++) {
 						Question question = mHotQuestionListAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 								question.setListenCount(listenCount);
 								mHotQuestionListAdapter.notifyDataSetChanged();
 							}
@@ -972,7 +973,7 @@ public class MissTalkFragment extends BaseFragment {
 					for (int i = 0; i < mLatestQuestionListAdapter.getCount(); i++) {
 						Question question = mLatestQuestionListAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 								question.setListenCount(listenCount);
 								mLatestQuestionListAdapter.notifyDataSetChanged();
 							}

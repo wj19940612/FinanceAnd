@@ -93,8 +93,10 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
         ButterKnife.bind(this);
+
         initData(getIntent());
         initViews();
+
         requestFeedbackList(true);
     }
 

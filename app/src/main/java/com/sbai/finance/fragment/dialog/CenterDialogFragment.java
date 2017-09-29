@@ -18,6 +18,6 @@ public class CenterDialogFragment extends BottomDialogFragment {
     }
 
     protected int getDialogTheme() {
-        return R.style.BaseDialogFragment;
+        return R.style.BaseDialog;
     }
 }

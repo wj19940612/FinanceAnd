@@ -47,7 +47,7 @@ public class AuthorizationLoginDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_TITLE, R.style.BaseDialogFragment_Bottom);
+        setStyle(STYLE_NO_TITLE, R.style.BaseDialog_Bottom);
     }
 
     @Override
