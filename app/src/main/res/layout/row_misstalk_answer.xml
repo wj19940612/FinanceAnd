@@ -6,11 +6,21 @@
               android:background="@android:color/white"
               android:orientation="vertical">
 
-    <View
+    <TextView
+        android:id="@+id/hotQuestion"
         android:layout_width="match_parent"
-        android:layout_height="14dp"
+        android:layout_height="wrap_content"
         android:background="@color/background"
-        android:visibility="visible"/>
+        android:clickable="false"
+        android:drawableLeft="@drawable/ic_title_hot"
+        android:drawablePadding="4dp"
+        android:enabled="false"
+        android:paddingBottom="@dimen/common_padding"
+        android:paddingLeft="14dp"
+        android:paddingTop="@dimen/common_padding"
+        android:text="@string/hot_question"
+        android:textColor="@color/luckyText"
+        android:textSize="12sp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
