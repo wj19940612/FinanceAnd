@@ -2,46 +2,28 @@ package com.sbai.finance.view.dialog;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.IntentFilter;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.sbai.finance.App;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.training.NounExplanationActivity;
-import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.WaveView;
 import com.sbai.glide.GlideApp;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageView;
-
-/**
- * Created by linrongfang on 2017/7/10.
- */
 
 public class StartMatchDialog extends BaseDialog {
 
     public interface OnCancelListener {
         void onCancel();
     }
-
 
     public StartMatchDialog(Activity activity) {
         super(activity);

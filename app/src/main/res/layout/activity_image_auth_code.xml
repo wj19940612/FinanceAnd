@@ -47,7 +47,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:maxLength="6"
-                android:hint="@string/input_image_auth_code_please"
+                android:hint="@string/image_auth_code"
                 android:maxLines="1"
                 android:digits="0123456789qwertyuioplkjhgfdsazxcvbnm"
                 android:textColor="@color/primaryText"

@@ -850,6 +850,6 @@
     <string name="auth_code_error">验证码有误</string>
     <string name="not_clear">看不清？</string>
     <string name="change_auth_code">换一张</string>
-    <string name="input_image_auth_code_please">请输入图形验证码</string>
+    <string name="image_auth_code">图形验证码</string>
 
 </resources>
