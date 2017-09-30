@@ -81,6 +81,14 @@
         <attr name="splitLineColor"/>
     </declare-styleable>
 
+    <declare-styleable name="WaveView">
+        <attr name="initialRadius" format="dimension"/>
+        <attr name="maxRadius" format="dimension"/>
+        <attr name="duration" format="integer"/>
+        <attr name="speed" format="integer"/>
+        <attr name="color" format="color"/>
+    </declare-styleable>
+
     <declare-styleable name="TradeFloatButtons">
         <attr name="hasTradeButton" format="boolean"/>
     </declare-styleable>

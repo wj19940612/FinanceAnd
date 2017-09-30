@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -596,7 +597,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	public void onBackPressed() {
 		Intent intent = new Intent();
 		if (mQuestionDetail != null) {
-			intent.putExtra(Launcher.QUESTION_ID, mQuestionDetail.getId());
+			intent.putExtra(ExtraKeys.QUESTION_ID, mQuestionDetail.getId());
 			intent.putExtra(Launcher.EX_PAYLOAD, mPrise);
 			intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getReplyCount());
 			intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionDetail.getAwardCount());

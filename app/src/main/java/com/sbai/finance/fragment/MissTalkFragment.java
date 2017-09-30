@@ -27,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.JsonPrimitive;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -740,7 +741,7 @@ public class MissTalkFragment extends BaseFragment {
                 for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
                     Question question = mQuestionListAdapter.getItem(i);
                     if (question != null) {
-                        if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+                        if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
                             if (prise != null) {
                                 question.setIsPrise(prise.getIsPrise());
                                 question.setPriseCount(prise.getPriseCount());
@@ -764,7 +765,7 @@ public class MissTalkFragment extends BaseFragment {
                     for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
                         Question question = mQuestionListAdapter.getItem(i);
                         if (question != null) {
-                            if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+                            if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 
                                 mQuestionListAdapter.notifyDataSetChanged();
                             }

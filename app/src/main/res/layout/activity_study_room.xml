@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:hasBottomSplitLine="true"
-        app:titleText="@string/study_room"/>
+        app:titleText="@string/study_everyday"/>
 
     <ScrollView
         android:id="@+id/scrollView"

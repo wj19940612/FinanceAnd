@@ -112,7 +112,7 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="BaseDialogFragment" parent="Theme.AppCompat.Light.Dialog">
+    <style name="BaseDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowIsFloating">true</item>
@@ -124,7 +124,7 @@
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
-    <style name="BaseDialogFragment.Bottom">
+    <style name="BaseDialog.Bottom">
         <item name="android:windowAnimationStyle">@style/BottomDialogAnimation</item>
     </style>
 

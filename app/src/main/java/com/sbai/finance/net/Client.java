@@ -419,8 +419,20 @@ public class Client {
      * @return
      */
     public static API getAuthCode(String phone) {
+        return getAuthCode(phone, null);
+    }
+
+    /**
+     * 接口名称 获取验证码
+     *
+     * @param phone
+     * @param imgCode
+     * @return
+     */
+    public static API getAuthCode(String phone, String imgCode) {
         return new API(POST, "/user/registerLogin/sendMsgCode.do", new ApiParams()
-                .put("phone", phone));
+                .put("phone", phone)
+                .put("imgCode", imgCode));
     }
 
     /**
@@ -1404,15 +1416,27 @@ public class Client {
     }
 
     /**
-     * /user/userAccount/sendMsgCodeForPass.do
-     * POST
-     * 忘记密码发送手机消息 银行卡充值发送验证码
+     * 通过手机号 获取短信验证码
      *
      * @param phone
      * @return
      */
-    public static API sendMsgCodeForPassWordOrBankCardPay(String phone) {
-        return new API(POST, "/user/userAccount/sendMsgCodeForPass.do", new ApiParams().put("phone", phone));
+    public static API getAuthCodeForSecurityPsd(String phone) {
+        return getAuthCodeForSecurityPsd(phone, null);
+    }
+
+    /**
+     * 通过手机号和图片验证码 获取短信验证码
+     *
+     * @param phone
+     * @param imgCode
+     * @return
+     */
+    public static API getAuthCodeForSecurityPsd(String phone, String imgCode) {
+        return new API(POST, "/user/userAccount/sendMsgCodeForPass.do",
+                new ApiParams()
+                        .put("phone", phone)
+                        .put("imgCode", imgCode));
     }
 
     /**
@@ -2646,6 +2670,16 @@ public class Client {
         return new API(POST, "/user/registerLogin/sensitizeApp.do",
                 new ApiParams()
                         .put("deviceId", Preference.get().getPushClientId()));
+    }
+
+    /**
+     * 图片验证码地址
+     *
+     * @param phone
+     * @return
+     */
+    public static String getImageAuthCode(String phone) {
+        return API.getHost() + "/user/registerLogin/getRegImage.do?userPhone=" + phone;
     }
 
     /**
