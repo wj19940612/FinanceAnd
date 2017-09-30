@@ -76,8 +76,9 @@ public class Question implements Serializable {
         this.type = type;
     }
 
+
     public boolean isQuestionSolved() {
-        return getSolve() == 0;
+        return getSolve() == 1;
     }
 
     public String getContent() {

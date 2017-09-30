@@ -62,6 +62,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private static final int REQ_COMMENT_LOGIN = 1002;
 	private static final int REQ_REWARD_LOGIN = 1003;
 
+	public static final int REQ_CODE_QUESTION_DETAIL = 5555;
+
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
 	@BindView(R.id.listView)

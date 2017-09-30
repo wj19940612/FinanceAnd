@@ -177,9 +177,10 @@ public class PushIntentService extends GTIntentService {
                 break;
             case PushMessageModel.PUSH_TYPE_FEED_BACK_REPLY:
                 intent = new Intent(context, FeedbackActivity.class);
-                if (data.getData() != null && data.getData().getId() > 0) {
-                    intent.putExtra(ExtraKeys.TRAINING, data.getData().getId());
-                }
+//                if (data.getData() != null && data.getData().getId() > 0) {
+//                    intent.putExtra(ExtraKeys.TRAINING, data.getData().getId());
+//                }
+                intent.putExtra(ExtraKeys.TRAINING, data.getDataId());
                 break;
             case PushMessageModel.PUSH_TYPE_SELF_STUDY_ROOM:
                 intent = new Intent(context, StudyRoomActivity.class);

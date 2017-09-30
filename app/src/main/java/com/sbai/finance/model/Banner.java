@@ -1,8 +1,10 @@
 package com.sbai.finance.model;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Banner implements Serializable {
+
+public class Banner implements Parcelable {
 
     private static final long serialVersionUID = -7266947195942724446L;
 
@@ -181,4 +183,59 @@ public class Banner implements Serializable {
                 ", smallPic='" + smallPic + '\'' +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.summary);
+        dest.writeString(this.content);
+        dest.writeString(this.cover);
+        dest.writeLong(this.createTime);
+        dest.writeString(this.id);
+        dest.writeInt(this.index);
+        dest.writeString(this.operator);
+        dest.writeInt(this.status);
+        dest.writeString(this.style);
+        dest.writeString(this.title);
+        dest.writeInt(this.type);
+        dest.writeLong(this.updateTime);
+        dest.writeInt(this.clicks);
+        dest.writeString(this.smallPic);
+    }
+
+    public Banner() {
+    }
+
+    protected Banner(Parcel in) {
+        this.summary = in.readString();
+        this.content = in.readString();
+        this.cover = in.readString();
+        this.createTime = in.readLong();
+        this.id = in.readString();
+        this.index = in.readInt();
+        this.operator = in.readString();
+        this.status = in.readInt();
+        this.style = in.readString();
+        this.title = in.readString();
+        this.type = in.readInt();
+        this.updateTime = in.readLong();
+        this.clicks = in.readInt();
+        this.smallPic = in.readString();
+    }
+
+    public static final Creator<Banner> CREATOR = new Creator<Banner>() {
+        @Override
+        public Banner createFromParcel(Parcel source) {
+            return new Banner(source);
+        }
+
+        @Override
+        public Banner[] newArray(int size) {
+            return new Banner[size];
+        }
+    };
 }

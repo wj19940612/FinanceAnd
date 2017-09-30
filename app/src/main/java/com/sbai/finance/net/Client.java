@@ -2643,10 +2643,9 @@ public class Client {
      * @return
      */
     public static API updatePageOpenTime() {
-        String deviceHardwareId = AppInfo.getDeviceHardwareId(App.getAppContext());
         return new API(POST, "/user/registerLogin/sensitizeApp.do",
                 new ApiParams()
-                        .put("deviceId", AppInfo.getDeviceHardwareId(App.getAppContext())));
+                        .put("deviceId", Preference.get().getPushClientId()));
     }
 
     /**

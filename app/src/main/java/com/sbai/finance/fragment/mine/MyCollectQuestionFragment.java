@@ -1,6 +1,7 @@
 package com.sbai.finance.fragment.mine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,10 +17,12 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.MyCollect;
+import com.sbai.finance.model.miss.Prise;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -51,6 +54,7 @@ public class MyCollectQuestionFragment extends BaseFragment {
     private int mPage;
     private HashSet<Integer> mSet;
     private MyCollectQuestionAdapter mMyCollectQuestionAdapter;
+    private MyCollect mClickMyCollect;
 
     public MyCollectQuestionFragment() {
     }
@@ -82,10 +86,11 @@ public class MyCollectQuestionFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MyCollect question = (MyCollect) parent.getAdapter().getItem(position);
-                if (question != null) {
-                    Launcher.with(getActivity(), QuestionDetailActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, question.getId())
-                            .execute();
+                if (question != null && question.isQuestionSolved()) {
+                    mClickMyCollect = question;
+                    Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
+                    intent.putExtra(Launcher.EX_PAYLOAD, question.getDataId());
+                    startActivityForResult(intent, QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL);
                 }
             }
         });
@@ -173,6 +178,23 @@ public class MyCollectQuestionFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == BaseActivity.RESULT_OK && requestCode == QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL) {
+            if(mClickMyCollect!=null){
+                Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+                int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+                int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+                if (prise != null) {
+                    mClickMyCollect.setPriseCount(prise.getPriseCount());
+                }
+                mClickMyCollect.setReplyCount(replyCount);
+                mClickMyCollect.setAwardCount(rewardCount);
+                mMyCollectQuestionAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     @Override
     public void onDestroyView() {
@@ -220,12 +242,21 @@ public class MyCollectQuestionFragment extends BaseFragment {
                 if (question == null) return;
 
                 mTime.setText(DateUtil.formatDefaultStyleTime(question.getCreateTime()));
-
-                String priseCount = FinanceUtil.formatTenThousandNumber(question.getPriseCount());
-                String replyCount = FinanceUtil.formatTenThousandNumber(question.getReplyCount());
-                String awardCount = FinanceUtil.formatTenThousandNumber(question.getAwardCount());
-                mContent.setText(context.getString(R.string.question_replay_content, priseCount, replyCount, awardCount));
                 mTitle.setText(question.getContent());
+                if (question.isQuestionSolved()) {
+                    mContent.setSelected(true);
+                    mTitle.setEnabled(true);
+                    String priseCount = FinanceUtil.formatTenThousandNumber(question.getPriseCount());
+                    String replyCount = FinanceUtil.formatTenThousandNumber(question.getReplyCount());
+                    String awardCount = FinanceUtil.formatTenThousandNumber(question.getAwardCount());
+                    mContent.setText(context.getString(R.string.question_replay_content_award, priseCount, replyCount, awardCount));
+
+                } else {
+                    mContent.setSelected(false);
+                    mTitle.setEnabled(false);
+                    mContent.setText(context.getString(R.string.miss_is_answering));
+                }
+
             }
         }
     }
