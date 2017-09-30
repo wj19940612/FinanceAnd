@@ -169,7 +169,8 @@
     <string name="article">文章</string>
 
     <string name="miss_is_answering">小姐姐正在抢答中~</string>
-    <string name="question_replay_content"> %1$s人点赞  %2$s人评论 %3$s人打赏</string>
+    <string name="question_replay_content_award"> %1$s人点赞  %2$s人评论 %3$s人打赏</string>
+    <string name="question_replay_content"> %1$s人点赞  %2$s人评论</string>
     <string name="send_message_connect">您好, 感谢您使用我们的APP!
         \n如有意见或建议，请直接反馈，如需当面反馈，可留下联系方式
         \n客服微信：%1$s</string>

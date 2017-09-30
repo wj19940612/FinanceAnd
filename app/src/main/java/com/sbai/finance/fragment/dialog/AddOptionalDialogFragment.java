@@ -46,11 +46,11 @@ public class AddOptionalDialogFragment extends BottomDialogFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.stock:
-                Launcher.with(getContext(),SearchOptionalActivity.class).putExtra("type", Variety.VAR_STOCK).execute();
+                Launcher.with(getContext(), SearchOptionalActivity.class).putExtra("type", Variety.VAR_STOCK).execute();
                 dismiss();
                 break;
             case R.id.future:
-                Launcher.with(getContext(),SearchOptionalActivity.class).putExtra("type", Variety.VAR_FUTURE).execute();
+                Launcher.with(getContext(), SearchOptionalActivity.class).putExtra("type", Variety.VAR_FUTURE).execute();
                 dismiss();
                 break;
             case R.id.cancel:

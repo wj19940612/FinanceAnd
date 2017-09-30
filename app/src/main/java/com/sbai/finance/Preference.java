@@ -269,12 +269,12 @@ public class Preference {
         apply(Key.FIRST_OPEN_WALLET_PAGE + account, false);
     }
 
-    public boolean isShowBindWeChat() {
-        return mPrefs.getBoolean(Key.SHOW_BIND_WECHAT, false);
+    public boolean isShowBindWeChat(String account) {
+        return mPrefs.getBoolean(Key.SHOW_BIND_WECHAT + account, true);
     }
 
-    public void setShowBindWeChat(boolean isShow) {
-        apply(Key.SHOW_BIND_WECHAT, isShow);
+    public void setNotShowBindWeChat(String account) {
+        apply(Key.SHOW_BIND_WECHAT + account, false);
     }
 
     public boolean showRegisterInviteDialog() {

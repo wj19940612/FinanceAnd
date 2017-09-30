@@ -108,9 +108,9 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
         if (TextUtils.isEmpty(userInfo.getWxOpenId())) {
             mWeChat.setSubText(getString(R.string.no_bind));
             mWeChat.setRightIconVisible(true);
-            if (Preference.get().isShowBindWeChat()) {
+            if (Preference.get().isShowBindWeChat(userInfo.getUserPhone())) {
                 showBindWeChatDialog();
-                Preference.get().setShowBindWeChat(false);
+                Preference.get().setNotShowBindWeChat(userInfo.getUserPhone());
             }
 
         } else {
@@ -350,7 +350,7 @@ public class ModifyUserInfoActivity extends BaseActivity implements ChooseSexDia
     }
 
     private void logout() {
-        SmartDialog.with(getActivity(),R.string.is_logout_lemi)
+        SmartDialog.with(getActivity(), R.string.is_logout_lemi)
                 .setPositive(R.string.ok, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
