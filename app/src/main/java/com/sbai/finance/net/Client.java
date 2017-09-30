@@ -296,7 +296,7 @@ public class Client {
                 .put("msgCode", authCode)
                 .put("deviceId", Preference.get().getPushClientId())
                 .put("platform", 0)
-                .put("channel", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"))
+                .put("source", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"))
                 .put("openId", openId)
                 .put("name", name)
                 .put("iconUrl", iconUrl)
@@ -326,7 +326,10 @@ public class Client {
      */
     public static API weChatLogin(String openId) {
         return new API(POST, "/user/registerLogin/wechatLogin.do", new ApiParams()
-                .put("openId", openId));
+                .put("openId", openId)
+                .put("deviceId", Preference.get().getPushClientId())
+                .put("platform", 0)
+                .put("source", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL")));
     }
 
     /**
