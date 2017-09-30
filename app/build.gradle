@@ -84,7 +84,7 @@ android {
         dev {
 //            minSdkVersion 21
             versionNameSuffix '-dev'
-            applicationIdSuffix '.dev'
+//            applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
 //            buildConfigField('String', 'HOST', '\"192.168.1.7\"')
             buildConfigField('String', 'HOST', '\"devlm.esongbai.abc\"')
