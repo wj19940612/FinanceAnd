@@ -60,7 +60,6 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
         setContentView(R.layout.activity_daily_report);
         ButterKnife.bind(this);
         initListView();
-        requestDailyList();
     }
 
 
