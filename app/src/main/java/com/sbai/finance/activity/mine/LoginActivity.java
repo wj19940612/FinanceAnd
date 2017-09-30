@@ -440,7 +440,6 @@ public class LoginActivity extends BaseActivity {
         mLogin.setText(R.string.login_ing);
         mLoading.setVisibility(View.VISIBLE);
         mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
-
         if (isAuthCodeLogin()) {
             if (TextUtils.isEmpty(mWeChatOpenid)) {
                 Client.authCodeLogin(phoneNumber, authCode).setTag(TAG)
