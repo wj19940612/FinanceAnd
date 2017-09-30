@@ -495,7 +495,6 @@ public class LoginActivity extends BaseActivity {
 
     private void postLogin() {
         if (LocalUser.getUser().getUserInfo().isNewUser()) {
-            Preference.get().setShowBindWeChat(true);
             Launcher.with(getActivity(), EvaluationStartActivity.class)
                     .putExtra(ExtraKeys.FIRST_TEST, true)
                     .execute();
