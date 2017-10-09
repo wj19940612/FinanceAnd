@@ -10,8 +10,30 @@ import java.io.IOException;
  */
 
 public class MediaPlayerManager {
+
+	public static final int STATUS_STOP = 0;
+	public static final int STATUS_PLAYING = 1;
+	public static final int STATUS_PAUSE = 2;
+
+
+	public static int playingId;//播放id
+	public static String url;//音频
+	public static String portrait;//小姐姐头像
+
+	public static int STATUS;
 	private static MediaPlayer mMediaPlayer;
-	private static boolean mIsPause;
+
+	public static void setPlayingId(int playId) {
+		MediaPlayerManager.playingId = playId;
+	}
+
+	public static void setUrl(String url) {
+		MediaPlayerManager.url = url;
+	}
+
+	public static void setPortrait(String portrait) {
+		MediaPlayerManager.portrait = portrait;
+	}
 
 	/**
 	 * 播放在线音频
@@ -48,20 +70,12 @@ public class MediaPlayerManager {
 	}
 
 	/**
-	 * 是否正在播放
-	 *
-	 * @return
-	 */
-	public static boolean isPlaying() {
-		return mMediaPlayer != null && mMediaPlayer.isPlaying();
-	}
-
-	/**
 	 * 开始播放
 	 */
 	public static void start() {
 		if (mMediaPlayer != null) {
 			mMediaPlayer.start();
+			STATUS = STATUS_PLAYING;
 		}
 	}
 
@@ -69,9 +83,9 @@ public class MediaPlayerManager {
 	 * 暂停播放
 	 */
 	public static void pause() {
-		if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+		if (mMediaPlayer != null && STATUS == STATUS_PLAYING) {
 			mMediaPlayer.pause();
-			mIsPause = true;
+			STATUS = STATUS_PAUSE;
 		}
 	}
 
@@ -79,9 +93,9 @@ public class MediaPlayerManager {
 	 * 继续播放
 	 */
 	public static void resume() {
-		if (mMediaPlayer != null && mIsPause) {
+		if (mMediaPlayer != null && STATUS == STATUS_PAUSE) {
 			mMediaPlayer.start();
-			mIsPause = false;
+			STATUS = STATUS_PLAYING;
 		}
 	}
 
@@ -93,6 +107,7 @@ public class MediaPlayerManager {
 			mMediaPlayer.stop();
 			mMediaPlayer.release();
 			mMediaPlayer = null;
+			STATUS = STATUS_STOP;
 		}
 	}
 
@@ -106,12 +121,6 @@ public class MediaPlayerManager {
 			return mMediaPlayer.getDuration();
 		}
 		return 0;
-	}
-
-	public static void seek(int msec) {
-		if (mMediaPlayer != null) {
-			mMediaPlayer.seekTo(msec);
-		}
 	}
 
 	/**

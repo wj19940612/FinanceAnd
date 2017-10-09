@@ -598,7 +598,7 @@
     <string name="commit">提交</string>
     <string name="words_number">%1$d/140</string>
     <string name="miss_comment">评论</string>
-    <string name="publish_your_comment">你想对小姐姐说~...</string>
+    <string name="publish_your_comment">评论...</string>
     <string name="publish">发布</string>
     <string name="reply">回复</string>
     <string name="reward">打赏</string>
