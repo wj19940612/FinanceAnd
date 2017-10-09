@@ -232,7 +232,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="14dp"
                     android:layout_marginTop="14dp"
-                    android:background="@drawable/bg_white_rounded"
+                    android:background="@drawable/bg_white_rounded_knowledge"
                     android:drawableRight="@drawable/ic_little_right_arrow"
                     android:gravity="center"
                     android:minHeight="44dp"
@@ -254,7 +254,7 @@
                 app:rowTextColor="@color/primaryText"
                 app:splitLineColor="@color/split"
                 app:splitLineLeftPadding="0dp"
-                app:subText="更多"
+                app:subText="@string/more_count"
                 app:subTextColor="@color/unluckyText"
                 app:subTextRightDrawable="@drawable/ic_arrow_more"
                 app:subTextRightMargin="0dp"/>

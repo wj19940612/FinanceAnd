@@ -2,8 +2,6 @@ package com.sbai.finance.model.miss;
 
 import java.io.Serializable;
 
-import static android.R.attr.type;
-
 /**
  * Created by lixiaokuan0819 on 2017/7/30.
  */
@@ -11,7 +9,7 @@ import static android.R.attr.type;
 public class Question implements Serializable {
 
     private static final int TYPE_DEFAULT = 0;
-    public static final int TYPE_HORT = 1;
+    public static final int TYPE_HOT = 1;
     public static final int TYPE_LATEST = 2;
 
 
@@ -61,14 +59,16 @@ public class Question implements Serializable {
     private int appointCustomId;   //提问时指定的小姐姐id
     private int replyCount;       //回复数
     private int soundTime;
-    private boolean isPlaying;
     private int collect;
+    private boolean isPlaying;
+    private boolean isPause;
+    private boolean isCountDown;
     private boolean progressIsZero = true;
 
     // 我的问答中的数据
-    private String content;        // 问题内容
+    private String content;        //问题内容
     private int dataId;            //问题id
-    private int type;                //解说界面自定义的type  0 表示普通的   1 表示出现热门提问标签        2 最新提问
+    private int type;              //解说界面自定义的type  0 表示普通的 1 表示出现热门提问标签 2 最新提问
 
     public int getCollect() {
         return collect;
@@ -107,6 +107,29 @@ public class Question implements Serializable {
         this.dataId = dataId;
     }
 
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
+    }
+
+    public boolean isPause() {
+        return isPause;
+    }
+
+    public void setPause(boolean pause) {
+        isPause = pause;
+    }
+
+    public boolean isCountDown() {
+        return isCountDown;
+    }
+
+    public void setCountDown(boolean countDown) {
+        isCountDown = countDown;
+    }
 
     public boolean isProgressIsZero() {
         return progressIsZero;
@@ -116,13 +139,6 @@ public class Question implements Serializable {
         this.progressIsZero = progressIsZero;
     }
 
-    public boolean isPlaying() {
-        return isPlaying;
-    }
-
-    public void setPlaying(boolean playing) {
-        isPlaying = playing;
-    }
 
     public int getSoundTime() {
         return soundTime;

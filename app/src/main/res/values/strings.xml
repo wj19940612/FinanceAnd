@@ -848,5 +848,6 @@
 
     <!-- 图形验证码输入框 -->
     <string name="please_input_image_auth_code">请输入图形验证码</string>
+    <string name="more_count">更多%1$d条</string>
 
 </resources>
