@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
@@ -82,8 +83,15 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         }
 
         Banner banner = intent.getParcelableExtra(ExtraKeys.ACTIVITY);
+        //banner用接口去查询  如果url用数据 则是h5直接打开连接
         if (banner != null) {
-            requestPushBannerInfo(banner);
+            if (TextUtils.isEmpty(banner.getId())) {
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, banner.getContent())
+                        .execute();
+            } else {
+                requestPushBannerInfo(banner);
+            }
         }
     }
 
@@ -101,7 +109,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     }
 
     private void requestPushBannerInfo(Banner banner) {
-
         Client.requestBannerInfo(banner.getId())
                 .setIndeterminate(this)
                 .setTag(TAG)

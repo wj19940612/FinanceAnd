@@ -169,13 +169,11 @@ public class PushIntentService extends GTIntentService {
                 Banner banner = new Banner();
                 //返回id 去查询banner
                 banner.setId(data.getDataId());
+                banner.setContent(data.getUrl());
                 intent.putExtra(ExtraKeys.ACTIVITY, banner);
                 break;
             case PushMessageModel.PUSH_TYPE_FEED_BACK_REPLY:
                 intent = new Intent(context, FeedbackActivity.class);
-//                if (data.getData() != null && data.getData().getId() > 0) {
-//                    intent.putExtra(ExtraKeys.TRAINING, data.getData().getId());
-//                }
                 intent.putExtra(ExtraKeys.TRAINING, data.getDataId());
                 break;
             case PushMessageModel.PUSH_TYPE_SELF_STUDY_ROOM:
