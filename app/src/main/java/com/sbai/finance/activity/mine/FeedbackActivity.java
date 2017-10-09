@@ -176,10 +176,18 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         }
         mFeedbackAdapter.addFeedbackList(data);
         if (needScrollToLast) {
-            listViewScrollBottom();
-        } else {
-            mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
-            mListView.setStackFromBottom(false);
+//            listViewScrollBottom();
+//        } else {
+//            mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
+//            mListView.setStackFromBottom(false);
+
+            mListView.setSelection(View.FOCUS_DOWN);
+            mListView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mListView.setSelection(View.FOCUS_DOWN);
+                }
+            },200);
         }
     }
 
@@ -390,8 +398,14 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         }
         Feedback feedback = data.get(0);
         mFeedbackAdapter.addFeedbackItem(feedback);
-//        mListView.setSelection(mFeedbackAdapter.getCount() - 1);
-        listViewScrollBottom();
+        mListView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mListView.setSelection(mFeedbackAdapter.getCount()-1);
+            }
+        },220);
+
+//        listViewScrollBottom();
         if (contentType == CONTENT_TYPE_TEXT) {
             feedback.setContent(content);
             mCommentContent.setText("");
@@ -533,7 +547,11 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     if (feedback.getCreateDate() > 0) {
                         mEndLineTime.setText(DateUtil.getFeedbackFormatTime(feedback.getCreateDate()));
                     } else {
-                        mEndLineTime.setText(DateUtil.getFeedbackFormatTime(DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT)));
+                        long time = System.currentTimeMillis();
+                        if (!TextUtils.isEmpty(feedback.getCreateTime())) {
+                            time = DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT);
+                        }
+                        mEndLineTime.setText(DateUtil.getFeedbackFormatTime(time));
                     }
                 } else {
                     mTimeLayout.setVisibility(View.GONE);
@@ -541,7 +559,11 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 if (feedback.getCreateDate() > 0) {
                     mTimestamp.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_HOUR_MINUTE));
                 } else {
-                    mTimestamp.setText(DateUtil.format(DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT), FORMAT_HOUR_MINUTE));
+                    long time = System.currentTimeMillis();
+                    if (!TextUtils.isEmpty(feedback.getCreateTime())) {
+                        time = DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT);
+                    }
+                    mTimestamp.setText(DateUtil.format(time, FORMAT_HOUR_MINUTE));
                 }
 
                 //判断是否图片
@@ -601,10 +623,15 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
             private void bindingData(Feedback feedback, boolean needTitle, Context context) {
                 if (needTitle) {
                     mTimeLayout.setVisibility(View.VISIBLE);
+                    //不是很清楚时间戳为何要用两个。。。。。。。。。。。。。。。。。。。。。。。。。。。。
                     if (feedback.getCreateDate() > 0) {
                         mEndLineTime.setText(DateUtil.getFeedbackFormatTime(feedback.getCreateDate()));
                     } else {
-                        mEndLineTime.setText(DateUtil.getFeedbackFormatTime(DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT)));
+                        long time = System.currentTimeMillis();
+                        if (!TextUtils.isEmpty(feedback.getCreateTime())) {
+                            time = DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT);
+                        }
+                        mEndLineTime.setText(DateUtil.getFeedbackFormatTime(time));
                     }
                 } else {
                     mTimeLayout.setVisibility(View.GONE);
@@ -612,7 +639,11 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                 if (feedback.getCreateDate() > 0) {
                     mTimestamp.setText(DateUtil.format(feedback.getCreateDate(), FORMAT_HOUR_MINUTE));
                 } else {
-                    mTimestamp.setText(DateUtil.format(DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT), FORMAT_HOUR_MINUTE));
+                    long time = System.currentTimeMillis();
+                    if (!TextUtils.isEmpty(feedback.getCreateTime())) {
+                        time = DateUtil.convertString2Long(feedback.getCreateTime(), DateUtil.DEFAULT_FORMAT);
+                    }
+                    mTimestamp.setText(DateUtil.format(time, FORMAT_HOUR_MINUTE));
                 }
                 mText.setText(feedback.getContent());
                 GlideApp.with(context).load(R.drawable.ic_feedback_service)
