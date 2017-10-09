@@ -79,7 +79,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         super.onNewIntent(intent);
         int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
         if (0 <= currentItem && currentItem < mViewPager.getChildCount()) {
-            mViewPager.setCurrentItem(currentItem);
+            mViewPager.setCurrentItem(currentItem,false);
         }
 
         Banner banner = intent.getParcelableExtra(ExtraKeys.ACTIVITY);

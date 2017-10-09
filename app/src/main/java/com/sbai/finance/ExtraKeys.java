@@ -31,7 +31,9 @@ public interface ExtraKeys {
 
     String MAIN_PAGE_CURRENT_ITEM = "main_page_currentItem";
     String ACTIVITY = "activity";
-    String VARIETY="variety";
+    String VARIETY = "variety";
 
     String QUESTION_ID = "question_id";
+
+    String CANCEL_COLLECT = "collect";
 }

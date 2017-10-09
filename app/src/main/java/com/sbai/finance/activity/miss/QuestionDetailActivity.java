@@ -134,6 +134,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private CountDownTimer mCountDownTimer;
     private static AudioManager mAudioManager;
     private boolean mIsPause;
+    private boolean mCancelCollect = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -700,8 +701,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     @Override
                     protected void onRespSuccessData(QuestionCollect questionCollect) {
                         if (questionCollect.getCollect() == 0) {
+                            mCancelCollect = true;
                             mCollectImage.setImageResource(R.drawable.ic_miss_uncollect);
                         } else {
+                            mCancelCollect = false;
                             mCollectImage.setImageResource(R.drawable.ic_miss_collect);
                         }
                     }
@@ -916,6 +919,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     public void onBackPressed() {
         Intent intent = new Intent();
         if (mQuestionDetail != null) {
+            intent.putExtra(ExtraKeys.CANCEL_COLLECT, mCancelCollect);
             intent.putExtra(ExtraKeys.QUESTION_ID, mQuestionDetail.getId());
             intent.putExtra(Launcher.EX_PAYLOAD, mPraise);
             intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getReplyCount());
