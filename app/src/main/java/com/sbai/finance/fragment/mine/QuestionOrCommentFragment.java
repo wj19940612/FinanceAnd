@@ -150,7 +150,9 @@ public class QuestionOrCommentFragment extends BaseFragment {
                 mListEmptyView.setOnGoingViewClickListener(new ListEmptyView.OnGoingViewClickListener() {
                     @Override
                     public void onGoingViewClick() {
-                        Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+                        Intent intent = new Intent();
+                        intent.setClass(getActivity(), SubmitQuestionActivity.class);
+                        startActivityForResult(intent, SubmitQuestionActivity.REQ_CODE_ASK_QUESTION_LIKE_MISS);
                     }
                 });
                 break;
@@ -219,9 +221,16 @@ public class QuestionOrCommentFragment extends BaseFragment {
             switch (requestCode) {
                 case QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL:
                     if (mClickQuestion != null) {
+
+//                        intent.putExtra(Launcher.EX_PAYLOAD, mPrise);
+//                        intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getReplyCount());
+//                        intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionDetail.getAwardCount());
+//                        intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionDetail.getListenCount());
+
+
                         Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-                        int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-                        int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+                        int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, 0);
+                        int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2,0);
                         if (prise != null) {
                             mClickQuestion.setPriseCount(prise.getPriseCount());
                         }
@@ -229,6 +238,11 @@ public class QuestionOrCommentFragment extends BaseFragment {
                         mClickQuestion.setAwardCount(rewardCount);
                         mMineQuestionAndAnswerAdapter.notifyDataSetChanged();
                     }
+                    break;
+                case SubmitQuestionActivity.REQ_CODE_ASK_QUESTION_LIKE_MISS:
+                    mSwipeRefreshLayout.setLoadMoreEnable(true);
+                    mSet.clear();
+                    requestMineQuestionOrComment(true);
                     break;
             }
         }
