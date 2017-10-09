@@ -329,25 +329,23 @@ public class LoginActivity extends WeChatActivity {
         Client.requestWeChatLogin(getWeChatOpenid()).setTag(TAG)
                 .setCallback(new Callback<Resp<UserInfo>>() {
                     @Override
-                    public void onSuccess(Resp<UserInfo> userInfoResp) {
-                        if (userInfoResp.isSuccess()) {
-                            LocalUser.getUser().setUserInfo(userInfoResp.getData());
-                            ToastUtil.show(R.string.login_success);
-                            postLogin();
-                        } else {
-                            if (userInfoResp.getCode() == CODE_NO_BIND_WE_CHAT || userInfoResp.getData() == null) {
-                                bindPhone();
-                            }
-                        }
+                    protected void onRespSuccess(Resp<UserInfo> resp) {
+                        LocalUser.getUser().setUserInfo(resp.getData());
+                        ToastUtil.show(R.string.login_success);
+                        postLogin();
                     }
 
                     @Override
-                    protected void onRespSuccess(Resp<UserInfo> resp) {
+                    protected void onRespFailure(Resp failedResp) {
+                        super.onRespFailure(failedResp);
+                        if (failedResp.getCode() == CODE_NO_BIND_WE_CHAT) {
+                            updateBindPhoneViews();
+                        }
                     }
                 }).fireFree();
     }
 
-    private void bindPhone() {
+    private void updateBindPhoneViews() {
         if (!isAuthCodeLogin()) { // 当前是验证码登录 -> 密码登录
             mLoginSwitchTop.setText(R.string.password_login);
             mAuthCodeArea.setVisibility(View.VISIBLE);
