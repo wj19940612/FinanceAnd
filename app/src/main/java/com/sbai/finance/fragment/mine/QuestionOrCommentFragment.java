@@ -40,9 +40,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.android.volley.Request.Method.HEAD;
-import static com.sbai.finance.activity.miss.QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL;
-
 
 public class QuestionOrCommentFragment extends BaseFragment {
 
@@ -115,9 +112,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mSwipeRefreshLayout.setLoadMoreEnable(true);
-                mSet.clear();
-                requestMineQuestionOrComment(true);
+                refreshData();
             }
         });
         mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
@@ -135,10 +130,17 @@ public class QuestionOrCommentFragment extends BaseFragment {
                     mClickQuestion = question;
                     Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
                     intent.putExtra(Launcher.EX_PAYLOAD, question.getDataId());
-                    startActivityForResult(intent, REQ_CODE_QUESTION_DETAIL);
+                    startActivityForResult(intent, QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL);
                 }
             }
         });
+    }
+
+    private void refreshData() {
+        mPage = 0;
+        mSwipeRefreshLayout.setLoadMoreEnable(true);
+        mSet.clear();
+        requestMineQuestionOrComment(true);
     }
 
     private void initListEmptyView() {
@@ -221,24 +223,22 @@ public class QuestionOrCommentFragment extends BaseFragment {
         if (resultCode == BaseActivity.RESULT_OK) {
             switch (requestCode) {
                 case QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL:
-                    if (mClickQuestion != null) {
+                    //我的提问可以直接刷新数据   评论回调数据不对，刷新服务器数据
+                    if (mQuestionType == TYPE_QUESTION) {
+                        if (mClickQuestion != null) {
+                            Praise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+                            int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, 0);
+                            int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, 0);
 
-//                        intent.putExtra(Launcher.EX_PAYLOAD, mPrise);
-//                        intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getReplyCount());
-//                        intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionDetail.getAwardCount());
-//                        intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionDetail.getListenCount());
-
-
-                        Praise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-                        int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, 0);
-                        int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2,0);
-
-                        if (prise != null) {
-                            mClickQuestion.setPriseCount(prise.getPriseCount());
+                            if (prise != null) {
+                                mClickQuestion.setPriseCount(prise.getPriseCount());
+                            }
+                            mClickQuestion.setReplyCount(replyCount);
+                            mClickQuestion.setAwardCount(rewardCount);
+                            mMineQuestionAndAnswerAdapter.notifyDataSetChanged();
                         }
-                        mClickQuestion.setReplyCount(replyCount);
-                        mClickQuestion.setAwardCount(rewardCount);
-                        mMineQuestionAndAnswerAdapter.notifyDataSetChanged();
+                    } else {
+                        refreshData();
                     }
                     break;
                 case SubmitQuestionActivity.REQ_CODE_ASK_QUESTION_LIKE_MISS:
