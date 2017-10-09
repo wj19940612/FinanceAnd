@@ -177,7 +177,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         mFeedbackAdapter.addFeedbackList(data);
         if (needScrollToLast) {
             listViewScrollBottom();
-        }else {
+        } else {
             mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
             mListView.setStackFromBottom(false);
         }
@@ -192,19 +192,19 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         if (serviceConnectWay != null && !TextUtils.isEmpty(serviceConnectWay.getWeixin())) {
             weChatConnect = serviceConnectWay.getWeixin();
         }
-        feedback.setContent(getString(R.string.send_message_connect,weChatConnect));
+        feedback.setContent(getString(R.string.send_message_connect, weChatConnect));
         feedback.setCreateDate(System.currentTimeMillis());
         data.add(0, feedback);
     }
 
     private void listViewScrollBottom() {
-        mListView.postDelayed(new Runnable() {
+        mListView.post(new Runnable() {
             @Override
             public void run() {
                 mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
                 mListView.setStackFromBottom(true);
             }
-        }, 100);
+        });
     }
 
     private void updateTitle(List<Feedback> data) {

@@ -6,9 +6,11 @@
     android:id="@+id/relativeLayout"
     android:layout_width="150dp"
     android:layout_height="195dp"
+
     android:layout_marginLeft="@dimen/common_padding"
+    android:layerType="none"
     android:layout_marginRight="1dp"
-    android:background="@drawable/bg_white_rounded_eight_radius"
+    android:background="@drawable/bg_has_more_train"
     android:orientation="vertical"
     android:paddingBottom="7.5dp"
     android:paddingLeft="10dp"

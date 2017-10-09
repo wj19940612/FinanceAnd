@@ -42,6 +42,8 @@ import butterknife.ButterKnife;
  */
 public class SubmitQuestionActivity extends BaseActivity {
 
+    public static final int REQ_CODE_ASK_QUESTION_LIKE_MISS = 6818;
+
     @BindView(R.id.questionComment)
     EditText mQuestionComment;
     @BindView(R.id.wordsNumber)
@@ -116,6 +118,7 @@ public class SubmitQuestionActivity extends BaseActivity {
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
                             ToastUtil.show(R.string.question_commit_and_please_wait_miss_answer);
+                            setResult(RESULT_OK);
                             finish();
                         } else {
                             ToastUtil.show(resp.getMsg());
