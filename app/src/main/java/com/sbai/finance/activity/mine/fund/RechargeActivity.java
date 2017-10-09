@@ -46,7 +46,6 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.TitleBar;
-import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -358,7 +357,7 @@ public class RechargeActivity extends BaseActivity {
                 mRechargeCount.setSelection(formatRechargeMoney.length());
             }
             if (!TextUtils.isEmpty(formatRechargeMoney)) {
-                mRecharge.setText(getString(R.string.confirm_payment_money, formatRechargeMoney));
+                mRecharge.setText(getString(R.string.confirm_payment_money, FinanceUtil.formatWithScale(formatRechargeMoney)));
             }
         }
     }
@@ -621,14 +620,17 @@ public class RechargeActivity extends BaseActivity {
                     mCheckboxClick.setChecked(false);
                 }
 
-                mRecharge.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (onPayWayListener != null) {
-                            onPayWayListener.onPayWay(item, position);
+                if (item.isBalanceIsEnough()) {
+                    mRecharge.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (onPayWayListener != null) {
+                                onPayWayListener.onPayWay(item, position);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
             }
 
         }

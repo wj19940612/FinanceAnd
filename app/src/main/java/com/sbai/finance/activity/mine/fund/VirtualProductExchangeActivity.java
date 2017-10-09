@@ -190,6 +190,9 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
 //        if (!nowSelectRechargeWay.isIngotOrBalancePay()) {
 //            historySelectUsableRechargeWay.setBalanceIsEnough(true);
 //        }
+        if (!nowSelectRechargeWay.isBalanceIsEnough()) {
+            return;
+        }
         historySelectUsableRechargeWay.setSelectPayWay(false);
         mRechargeWayAdapter.notifyItemChanged(historySelectPosition, historySelectUsableRechargeWay);
 
