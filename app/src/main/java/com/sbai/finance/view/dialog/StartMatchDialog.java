@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 
+import com.bumptech.glide.GenericTransitionOptions;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.sbai.finance.R;
 import com.sbai.finance.view.WaveView;
@@ -58,13 +61,13 @@ public class StartMatchDialog extends BaseDialog {
                 mMatchLoading.setTag(count + 1);
                 GlideApp.with(activity).load(heads.get(count % 20))
                         .circleCrop()
+                        //if use DataSource.MEMORY_CACHE,the DrawableCrossFadeFactory will not use transition
+                        .skipMemoryCache(true)
                         .transition(DrawableTransitionOptions.withCrossFade(800))
                         .into(matchHead);
                 mHandler.postDelayed(this, 1000);
             }
         }, 0);
-
-        mHandler.sendEmptyMessageDelayed(1000, 0);
 
         mMatchLoading.setStyle(Paint.Style.STROKE);
         mMatchLoading.setInterpolator(new AccelerateInterpolator());
