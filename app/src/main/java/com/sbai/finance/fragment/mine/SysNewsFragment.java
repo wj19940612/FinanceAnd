@@ -287,12 +287,12 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
                         }
                     })
                     .fire();
-        }
-        if (mNoReadCount > 0) {
-            mNoReadCount--;
-        }
-        if (mNoReadNewsCallback != null) {
-            mNoReadNewsCallback.noReadNews(mNoReadCount);
+            if (mNoReadCount > 0) {
+                mNoReadCount--;
+            }
+            if (mNoReadNewsCallback != null) {
+                mNoReadNewsCallback.noReadNews(mNoReadCount);
+            }
         }
     }
 
