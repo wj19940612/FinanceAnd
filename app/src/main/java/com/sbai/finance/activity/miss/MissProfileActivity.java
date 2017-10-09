@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.AnimationDrawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,7 +31,7 @@ import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Attention;
 import com.sbai.finance.model.miss.Miss;
-import com.sbai.finance.model.miss.Prise;
+import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.net.Callback2D;
@@ -111,7 +109,6 @@ public class MissProfileActivity extends BaseActivity implements
 		initData(getIntent());
 		initHeaderView();
 
-		mMediaPlayerManager = MediaPlayerManager.getInstance(this);
 		mSet = new HashSet<>();
 		mHerAnswerList = new ArrayList<>();
 		mHerAnswerAdapter = new HerAnswerAdapter(this);
@@ -130,16 +127,16 @@ public class MissProfileActivity extends BaseActivity implements
 			public void loveOnClick(final Question item) {
 				if (LocalUser.getUser().isLogin()) {
 					umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
-					Client.prise(item.getId()).setCallback(new Callback2D<Resp<Prise>, Prise>() {
+					Client.praise(item.getId()).setCallback(new Callback2D<Resp<Praise>, Praise>() {
 
 						@Override
-						protected void onRespSuccessData(Prise prise) {
-							item.setIsPrise(prise.getIsPrise());
-							item.setPriseCount(prise.getPriseCount());
+						protected void onRespSuccessData(Praise praise) {
+							item.setIsPrise(praise.getIsPrise());
+							item.setPriseCount(praise.getPriseCount());
 							mHerAnswerAdapter.notifyDataSetChanged();
 							int praiseCount;
 							if (mMiss != null) {
-								if (prise.getIsPrise() == 0) {
+								if (praise.getIsPrise() == 0) {
 									praiseCount = mMiss.getTotalPrise() - 1;
 									mMiss.setTotalPrise(praiseCount);
 								} else {
@@ -364,7 +361,7 @@ public class MissProfileActivity extends BaseActivity implements
 		mAttentionNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(miss.getTotalAttention())));
 		mRewardNumber.setText(getString(R.string.count, StrFormatter.getFormatCount(miss.getTotalAward())));
 
-		mVoiceIntroduce.setOnClickListener(new View.OnClickListener() {
+		/*mVoiceIntroduce.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
@@ -402,7 +399,7 @@ public class MissProfileActivity extends BaseActivity implements
 					mMissIntroducePlayingID = miss.getId();
 				}
 			}
-		});
+		});*/
 	}
 
 	@Override
@@ -689,21 +686,21 @@ public class MissProfileActivity extends BaseActivity implements
 
 		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
 			if (data != null) {
-				Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+				Praise praise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
 				int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
 				int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
 				int listenCount = data.getIntExtra(Launcher.EX_PAYLOAD_3, -1);
-				if (prise != null) {
+				if (praise != null) {
 					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
 						Question question = mHerAnswerAdapter.getItem(i);
 						if (question != null) {
 							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
-								question.setIsPrise(prise.getIsPrise());
-								question.setPriseCount(prise.getPriseCount());
+								question.setIsPrise(praise.getIsPrise());
+								question.setPriseCount(praise.getPriseCount());
 								mHerAnswerAdapter.notifyDataSetChanged();
 								int praiseCount;
 								if (mMiss != null) {
-									if (prise.getIsPrise() == 0) {
+									if (praise.getIsPrise() == 0) {
 										praiseCount = mMiss.getTotalPrise() - 1;
 										mMiss.setTotalPrise(praiseCount);
 									} else {

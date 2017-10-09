@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by lixiaokuan0819 on 2017/8/2.
  */
 
-public class Prise implements Parcelable{
+public class Praise implements Parcelable{
 
 	/**
 	 * priseCount : 1
@@ -35,7 +35,7 @@ public class Prise implements Parcelable{
 
 	@Override
 	public String toString() {
-		return "Prise{" +
+		return "Praise{" +
 				"priseCount=" + priseCount +
 				", isPrise=" + isPrise +
 				'}';
@@ -52,23 +52,23 @@ public class Prise implements Parcelable{
 		dest.writeInt(this.isPrise);
 	}
 
-	public Prise() {
+	public Praise() {
 	}
 
-	protected Prise(Parcel in) {
+	protected Praise(Parcel in) {
 		this.priseCount = in.readInt();
 		this.isPrise = in.readInt();
 	}
 
-	public static final Creator<Prise> CREATOR = new Creator<Prise>() {
+	public static final Creator<Praise> CREATOR = new Creator<Praise>() {
 		@Override
-		public Prise createFromParcel(Parcel source) {
-			return new Prise(source);
+		public Praise createFromParcel(Parcel source) {
+			return new Praise(source);
 		}
 
 		@Override
-		public Prise[] newArray(int size) {
-			return new Prise[size];
+		public Praise[] newArray(int size) {
+			return new Praise[size];
 		}
 	};
 }

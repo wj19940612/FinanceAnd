@@ -22,7 +22,7 @@ import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.miss.Prise;
+import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -40,6 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.android.volley.Request.Method.HEAD;
 import static com.sbai.finance.activity.miss.QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL;
 
 
@@ -228,9 +229,10 @@ public class QuestionOrCommentFragment extends BaseFragment {
 //                        intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionDetail.getListenCount());
 
 
-                        Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+                        Praise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
                         int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, 0);
                         int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2,0);
+
                         if (prise != null) {
                             mClickQuestion.setPriseCount(prise.getPriseCount());
                         }

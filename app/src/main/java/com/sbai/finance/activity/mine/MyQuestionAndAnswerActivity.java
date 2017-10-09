@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.mine.QuestionOrCommentFragment;
+
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
@@ -45,7 +46,7 @@ public class MyQuestionAndAnswerActivity extends BaseActivity {
         mViewPager.setAdapter(mMyQuestionAndAnswerFragmentAdapter);
         mSlidingTabLayout.setViewPager(mViewPager);
     }
-
+    
 
     static class MyQuestionAndAnswerFragmentAdapter extends FragmentPagerAdapter {
 

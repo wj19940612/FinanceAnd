@@ -22,7 +22,7 @@ import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.MyCollect;
-import com.sbai.finance.model.miss.Prise;
+import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -183,7 +183,7 @@ public class MyCollectQuestionFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == BaseActivity.RESULT_OK && requestCode == QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL) {
             if(mClickMyCollect!=null){
-                Prise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+                Praise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
                 int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
                 int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
                 if (prise != null) {

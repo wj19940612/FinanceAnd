@@ -755,6 +755,7 @@
     <string name="write_experience">写心得</string>
     <string name="relevant_knowledge">题目好难? 去学一学吧</string>
     <string name="subject_so_difficult">题目好难?</string>
+    <string name="more_count">更多%1$d条</string>
     <string name="to_study">去学一学吧</string>
     <string name="difficulty">难度</string>
     <string name="complete_number">%1$d人已完成</string>
@@ -852,5 +853,6 @@
     <string name="not_clear">看不清？</string>
     <string name="change_auth_code">换一张</string>
     <string name="image_auth_code">图形验证码</string>
+
 
 </resources>

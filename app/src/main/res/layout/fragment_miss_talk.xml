@@ -1,49 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@android:color/white">
+        android:layout_height="wrap_content"
+        app:hasBottomSplitLine="true"
+        app:rightImage="@drawable/ic_ask_her_question_black"
+        app:rightText="@string/ask_question"
+        app:rightTextColor="@color/primaryText"
+        app:rightTextSize="17sp"
+        app:rightVisible="true"
+        app:titleText="@string/miss_talk"
+        app:titleTextColor="@color/primaryText"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/miss_talk"
-            android:textColor="@color/primaryText"
-            android:textSize="17sp"/>
-
-        <TextView
-            android:id="@+id/askQuestion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="14dp"
-            android:drawableLeft="@drawable/ic_ask_her_question_black"
-            android:drawablePadding="3dp"
-            android:text="@string/ask_question"
-            android:textColor="@color/blackPrimary"
-            android:textSize="17sp"/>
-
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/split"/>
-
-    <com.sbai.finance.view.CustomSwipeRefreshLayout
+    <com.sbai.finance.view.VerticalSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleBar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,11 +33,10 @@
             android:orientation="vertical">
 
             <ListView
-                android:id="@+id/LatestListView"
+                android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:divider="@null"
-                android:dividerHeight="@dimen/common_padding"
                 android:visibility="visible"/>
 
             <TextView
@@ -69,7 +49,34 @@
                 android:text="@string/ask_miss"
                 android:visibility="gone"/>
         </LinearLayout>
+    </com.sbai.finance.view.VerticalSwipeRefreshLayout>
 
+    <LinearLayout
+        android:id="@+id/floatWindow"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="14dp"
+        android:layout_marginRight="14dp"
+        android:background="@drawable/bg_float_window"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-    </com.sbai.finance.view.CustomSwipeRefreshLayout>
-</LinearLayout>
+        <ImageView
+            android:id="@+id/missAvatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="4dp"
+            android:src="@drawable/ic_default_avatar"/>
+
+        <ImageView
+            android:id="@+id/VoiceAnimator"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="18dp"/>
+
+    </LinearLayout>
+</RelativeLayout>

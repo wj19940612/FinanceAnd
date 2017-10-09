@@ -46,6 +46,8 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
     private OnScrollStateListener mOnScrollStateListener;
 
+	private OnScrollListener mOnScrollListener;
+
     private TextView mLoadMoreTv;
 
     private int mVisibleItemCount;
@@ -197,6 +199,10 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem,
                          int visibleItemCount, int totalItemCount) {
+	    if (mOnScrollListener != null) {
+		    mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+	    }
+
         int topRowVerticalPosition =
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
 
@@ -232,6 +238,10 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
         mOnScrollStateListener = listener;
     }
 
+	public void setOnScrollListener(OnScrollListener listener) {
+		mOnScrollListener = listener;
+	}
+
     public interface OnLoadMoreListener {
         void onLoadMore();
     }
@@ -239,4 +249,11 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     public interface OnScrollStateListener {
         int scrollStateChange(int scrollState);
     }
+
+	public interface OnScrollListener {
+		void onScroll(AbsListView view, int firstVisibleItem,
+		                      int visibleItemCount, int totalItemCount);
+	}
+
+
 }
