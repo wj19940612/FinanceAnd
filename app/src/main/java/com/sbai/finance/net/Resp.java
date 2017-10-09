@@ -23,6 +23,8 @@ public class Resp<T> {
     public static final int CODE_EXCHANGE_ITEM_IS_MODIFIED = 2205;
     // 安全密码错误
     public static final int CODE_SAFETY_INPUT_ERROR = 2203;
+    //未绑定微信
+    public static final int CODE_NO_BIND_WE_CHAT = 214;
 
     private int code;
     private String msg;

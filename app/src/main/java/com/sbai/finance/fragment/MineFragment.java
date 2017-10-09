@@ -120,6 +120,9 @@ public class MineFragment extends BaseFragment {
         mEvaluationLevel = getResources().getStringArray(R.array.evaluationLevel);
 
         Log.d(TAG, "onActivityCreated: " + "STRING".length());
+        if (LocalUser.getUser().isLogin()) {
+            requestNoReadNewsNumber();
+        }
     }
 
     @Override

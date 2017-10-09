@@ -244,8 +244,8 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
     }
 
     @Override
-    protected void bindSuccess(String openid, String name, String gender, String iconUrl) {
-        Client.bindWeChat(openid, name, iconUrl, gender.equals("女") ? 1 : 2).setTag(TAG)
+    protected void bindSuccess() {
+        Client.requestBindWeChat(getWeChatOpenid(), getWeChatName(), getWeChatIconUrl(), getWeChatGender()).setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {

@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.mine;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.sbai.finance.R;
@@ -16,13 +17,16 @@ import java.util.Map;
  */
 
 public abstract class WeChatActivity extends BaseActivity {
+    private String mWeChatOpenid;
+    private String mWeChatName;
+    private String mWeChatIconUrl;
+    private int mWeChatGender;
 
     public void requestWeChatInfo() {
         if (!UMShareAPI.get(getActivity()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN)) {
             ToastUtil.show(R.string.you_not_install_weixin);
             return;
         }
-        onHttpUiShow(TAG);
         UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
             @Override
             public void onStart(SHARE_MEDIA share_media) {
@@ -31,23 +35,44 @@ public abstract class WeChatActivity extends BaseActivity {
 
             @Override
             public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
-                onHttpUiDismiss(TAG);
-                bindSuccess(map.get("openid"), map.get("name"), map.get("gender"), map.get("iconurl"));
+                mWeChatOpenid = map.get("openid");
+                mWeChatName = map.get("name");
+                mWeChatIconUrl = map.get("iconurl");
+                mWeChatGender = map.get("gender").equals("女") ? 1 : 2;
+                bindSuccess();
             }
 
             @Override
             public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
                 Log.d(TAG, "onError " + "授权失败:" + throwable.getMessage());
-                onHttpUiDismiss(TAG);
             }
 
             @Override
             public void onCancel(SHARE_MEDIA share_media, int i) {
                 Log.d(TAG, "onCancel " + "授权取消");
-                onHttpUiDismiss(TAG);
             }
         });
     }
 
-    protected abstract void bindSuccess(String openid, String name, String gender, String iconUrl);
+    protected abstract void bindSuccess();
+
+    protected boolean isWeChatLogin() {
+        return !TextUtils.isEmpty(mWeChatOpenid);
+    }
+
+    public String getWeChatOpenid() {
+        return mWeChatOpenid;
+    }
+
+    public String getWeChatName() {
+        return mWeChatName;
+    }
+
+    public String getWeChatIconUrl() {
+        return mWeChatIconUrl;
+    }
+
+    public int getWeChatGender() {
+        return mWeChatGender;
+    }
 }
