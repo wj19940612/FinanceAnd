@@ -130,6 +130,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
                     mClickQuestion = question;
                     Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
                     intent.putExtra(Launcher.EX_PAYLOAD, question.getDataId());
+                    intent.putExtra(Launcher.EX_PAYLOAD_1,question.getCommentId());
                     startActivityForResult(intent, QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL);
                 }
             }

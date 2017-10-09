@@ -581,7 +581,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     };
 
     private void requestQuestionReplyList(final boolean isRefresh) {
-        Client.getQuestionReplyList(mType, mQuestionId, mPage, mPageSize, mMongoId != null ? mMongoId : null)
+        Client.getQuestionReplyList(mType, mQuestionId, mPage, mPageSize, mMongoId)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
                     @Override
