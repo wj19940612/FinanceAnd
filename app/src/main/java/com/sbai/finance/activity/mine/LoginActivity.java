@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.mine;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -8,9 +7,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -51,12 +48,11 @@ import static com.sbai.finance.R.id.authCode;
 public class LoginActivity extends BaseActivity {
 
     private static final int REQ_CODE_REGISTER = 888;
+    private static final int REQ_CODE_IMAGE_AUTH_CODE = 889;
+
 
     @BindView(R.id.rootView)
     RelativeLayout mRootView;
-
-    @BindView(R.id.closePage)
-    ImageView mClosePage;
 
     @BindView(R.id.phoneNumber)
     EditText mPhoneNumber;
@@ -91,7 +87,6 @@ public class LoginActivity extends BaseActivity {
 
     private int mCounter;
     private boolean mFreezeObtainAuthCode;
-    private boolean mIsFirst = true;
     private String mWeChatOpenid;
     private String mWeChatName;
     private String mWeChatIconUrl;
@@ -105,29 +100,12 @@ public class LoginActivity extends BaseActivity {
 
         translucentStatusBar();
 
-        if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
-            mPhoneNumber.setText(LocalUser.getUser().getPhone());
-            mAuthCode.requestFocus();
-        } else {
-            mPhoneNumber.requestFocus();
-        }
-        mAuthCode.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (mIsFirst) {
-                    mIsFirst = false;
-                    mAuthCode.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            hideSoftWare();
-                        }
-                    });
-                }
-            }
-        });
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPassword.addTextChangedListener(mValidationWatcher);
+        if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
+            mPhoneNumber.setText(LocalUser.getUser().getPhone());
+        }
 
         initListener();
 
@@ -200,6 +178,10 @@ public class LoginActivity extends BaseActivity {
         if (requestCode == REQ_CODE_REGISTER && resultCode == RESULT_OK) { // 注册成功 发送广播 以及 关闭页面
             postLogin();
         }
+
+        if (requestCode == REQ_CODE_IMAGE_AUTH_CODE && resultCode == RESULT_OK) { // 发送图片验证码去 获取验证码 成功
+            postAuthCodeRequested();
+        }
     }
 
     private void sendLoginSuccessBroadcast() {
@@ -213,24 +195,14 @@ public class LoginActivity extends BaseActivity {
         mKeyBoardHelper.setOnKeyBoardStatusChangeListener(onKeyBoardStatusChangeListener);
     }
 
-    private void hideSoftWare() {
-        if (getActivity().getCurrentFocus() != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-        }
-
-    }
-
     private KeyBoardHelper.OnKeyBoardStatusChangeListener onKeyBoardStatusChangeListener = new KeyBoardHelper.OnKeyBoardStatusChangeListener() {
 
         @Override
         public void OnKeyBoardPop(int keyboardHeight) {
-            //    mLoginSwitchTop.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void OnKeyBoardClose(int oldKeyboardHeight) {
-            //     mLoginSwitchTop.setVisibility(View.GONE);
         }
     };
 
@@ -286,7 +258,6 @@ public class LoginActivity extends BaseActivity {
         if (!newPhone.equalsIgnoreCase(oldPhone)) {
             mPhoneNumber.setText(newPhone);
             mPhoneNumber.setSelection(newPhone.length());
-        } else {
         }
     }
 
@@ -327,7 +298,7 @@ public class LoginActivity extends BaseActivity {
                 mPhoneNumber.setText("");
                 break;
             case R.id.getAuthCode:
-                getAuthCode();
+                requestAuthCode();
                 mPhoneNumberClear.setVisibility(View.INVISIBLE);
                 mAuthCode.requestFocus();
                 break;
@@ -469,7 +440,6 @@ public class LoginActivity extends BaseActivity {
         mLogin.setText(R.string.login_ing);
         mLoading.setVisibility(View.VISIBLE);
         mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
-
         if (isAuthCodeLogin()) {
             if (TextUtils.isEmpty(mWeChatOpenid)) {
                 Client.authCodeLogin(phoneNumber, authCode).setTag(TAG)
@@ -525,7 +495,6 @@ public class LoginActivity extends BaseActivity {
 
     private void postLogin() {
         if (LocalUser.getUser().getUserInfo().isNewUser()) {
-            Preference.get().setShowBindWeChat(true);
             Launcher.with(getActivity(), EvaluationStartActivity.class)
                     .putExtra(ExtraKeys.FIRST_TEST, true)
                     .execute();
@@ -542,23 +511,35 @@ public class LoginActivity extends BaseActivity {
         mLoading.clearAnimation();
     }
 
-
-    private void getAuthCode() {
-        String phoneNumber = getPhoneNumber();
+    private void requestAuthCode() {
+        final String phoneNumber = getPhoneNumber();
         Client.getAuthCode(phoneNumber)
                 .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.isSuccess()) {
-                            mFreezeObtainAuthCode = true;
-                            startScheduleJob(1000);
-                            mCounter = 60;
-                            mGetAuthCode.setEnabled(false);
-                            mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
+                        postAuthCodeRequested();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.CODE_IMAGE_AUTH_CODE_REQUIRED) {
+                            Launcher.with(getActivity(), ImageAuthCodeActivity.class)
+                                    .putExtra(ExtraKeys.PHONE, phoneNumber)
+                                    .executeForResult(REQ_CODE_IMAGE_AUTH_CODE);
+                        } else {
+                            super.onRespFailure(failedResp);
                         }
                     }
                 }).fire();
+    }
+
+    private void postAuthCodeRequested() {
+        mFreezeObtainAuthCode = true;
+        startScheduleJob(1000);
+        mCounter = 60;
+        mGetAuthCode.setEnabled(false);
+        mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
     }
 
     @Override

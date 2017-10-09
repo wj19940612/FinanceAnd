@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment.dialog;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -15,6 +16,14 @@ import com.sbai.finance.R;
  * 底部弹窗基础类
  */
 public class BottomDialogFragment extends DialogFragment {
+
+    protected String TAG;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        TAG = getClass().getSimpleName();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +56,6 @@ public class BottomDialogFragment extends DialogFragment {
     }
 
     protected int getDialogTheme() {
-        return R.style.BaseDialogFragment_Bottom;
+        return R.style.BaseDialog_Bottom;
     }
 }

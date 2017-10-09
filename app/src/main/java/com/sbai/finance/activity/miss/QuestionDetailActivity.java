@@ -75,6 +75,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private static final int REQ_COMMENT_LOGIN = 1002;
 	private static final int REQ_REWARD_LOGIN = 1003;
 
+	public static final int REQ_CODE_QUESTION_DETAIL = 5555;
+
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
 	@BindView(R.id.listView)
@@ -911,7 +913,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	public void onBackPressed() {
 		Intent intent = new Intent();
 		if (mQuestionDetail != null) {
-			intent.putExtra(Launcher.QUESTION_ID, mQuestionDetail.getId());
+			intent.putExtra(ExtraKeys.QUESTION_ID, mQuestionDetail.getId());
 			intent.putExtra(Launcher.EX_PAYLOAD, mPraise);
 			intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getReplyCount());
 			intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionDetail.getAwardCount());

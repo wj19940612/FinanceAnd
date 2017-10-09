@@ -19,6 +19,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.KeyBoardUtils;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -32,6 +33,7 @@ import butterknife.OnClick;
 public class AuthCodeActivity extends BaseActivity {
 
     public static final int PAGE_TYPE_REGISTER = 801;
+    private static final int REQ_CODE_IMAGE_AUTH_CODE = 889;
 
     @BindView(R.id.receivePhone)
     AutofitTextView mReceivePhone;
@@ -92,6 +94,14 @@ public class AuthCodeActivity extends BaseActivity {
         mPassword.removeTextChangedListener(mValidationWatcher);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_IMAGE_AUTH_CODE && resultCode == RESULT_OK) { // 发送图片验证码去 获取验证码 成功
+            postAuthCodeRequested();
+        }
+    }
+
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable editable) {
@@ -123,7 +133,7 @@ public class AuthCodeActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.getAuthCode:
-                getAuthCode();
+                requestAuthCode();
                 break;
             case R.id.complete:
                 doCompleteButtonClick();
@@ -166,20 +176,33 @@ public class AuthCodeActivity extends BaseActivity {
         }
     }
 
-    private void getAuthCode() {
+    private void requestAuthCode() {
         Client.getAuthCode(mPhone)
                 .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.isSuccess()) {
-                            startScheduleJob(1000);
-                            mCounter = 60;
-                            mGetAuthCode.setEnabled(false);
-                            mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
+                        postAuthCodeRequested();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.CODE_IMAGE_AUTH_CODE_REQUIRED) {
+                            Launcher.with(getActivity(), ImageAuthCodeActivity.class)
+                                    .putExtra(ExtraKeys.PHONE, mPhone)
+                                    .executeForResult(REQ_CODE_IMAGE_AUTH_CODE);
+                        } else {
+                            super.onRespFailure(failedResp);
                         }
                     }
                 }).fire();
+    }
+
+    private void postAuthCodeRequested() {
+        startScheduleJob(1000);
+        mCounter = 60;
+        mGetAuthCode.setEnabled(false);
+        mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
     }
 
     @Override

@@ -19,8 +19,8 @@ public class BaseFragment extends Fragment implements
         ApiIndeterminate, TimerHandler.TimerCallback {
 
     private TimerHandler mTimerHandler;
+
     protected String TAG;
-    public static final int REQ_CODE_USERDATA = 1001;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

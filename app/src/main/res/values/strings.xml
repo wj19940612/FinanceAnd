@@ -169,7 +169,8 @@
     <string name="article">文章</string>
 
     <string name="miss_is_answering">小姐姐正在抢答中~</string>
-    <string name="question_replay_content"> %1$s人点赞  %2$s人评论 %3$s人打赏</string>
+    <string name="question_replay_content_award"> %1$s人点赞  %2$s人评论 %3$s人打赏</string>
+    <string name="question_replay_content"> %1$s人点赞  %2$s人评论</string>
     <string name="send_message_connect">您好, 感谢您使用我们的APP!
         \n如有意见或建议，请直接反馈，如需当面反馈，可留下联系方式
         \n客服微信：%1$s</string>
@@ -496,7 +497,7 @@
     <string name="match_battle_tip">匹配对战将随机选择赏金在余额范围内的对局。</string>
     <string name="battle_detail">对战详情</string>
     <string name="cancel_match">取消匹配</string>
-    <string name="desc_matching">正在进行匹配，请稍后…</string>
+    <string name="desc_matching">正在匹配, 请稍后…</string>
     <string name="title_matching">正在匹配</string>
     <string name="title_match_success">匹配成功</string>
     <string name="desc_match_success">已有对手\n%1$ds后进入对战</string>
@@ -644,7 +645,6 @@
     <string name="latest_finance_hot_from_lemi">来自乐米的每日最新金融热点</string>
 
 
-    <string name="study_room">自习室</string>
     <string name="study_days">已学天数</string>
     <string name="continuous_study">连续学习:</string>
     <string name="longest_continuous_study">最长连续学习:</string>
@@ -700,7 +700,7 @@
     <string name="question_detail">提问详情</string>
 
     <!--首页 训练-->
-    <string name="review_lesson_room">自习室</string>
+    <string name="study_everyday">每日一题</string>
     <string name="recommend_train">推荐训练</string>
     <string name="mine_train">我的训练</string>
     <string name="lemi_score">乐米学分</string>
@@ -755,6 +755,7 @@
     <string name="write_experience">写心得</string>
     <string name="relevant_knowledge">题目好难? 去学一学吧</string>
     <string name="subject_so_difficult">题目好难?</string>
+    <string name="more_count">更多%1$d条</string>
     <string name="to_study">去学一学吧</string>
     <string name="difficulty">难度</string>
     <string name="complete_number">%1$d人已完成</string>
@@ -848,6 +849,10 @@
 
     <!-- 图形验证码输入框 -->
     <string name="please_input_image_auth_code">请输入图形验证码</string>
-    <string name="more_count">更多%1$d条</string>
+    <string name="auth_code_error">验证码有误</string>
+    <string name="not_clear">看不清？</string>
+    <string name="change_auth_code">换一张</string>
+    <string name="image_auth_code">图形验证码</string>
+
 
 </resources>

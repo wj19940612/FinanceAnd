@@ -776,6 +776,11 @@ public class FutureBattleActivity extends BaseActivity implements
         }
     }
 
+    @Override
+    protected void showQuickJoinBattleDialog(Battle battle) {
+        super.showQuickJoinBattleDialog(battle);
+    }
+
     private void unSubscribeBattle() {
         if (mCurrentBattle != null && !mCurrentBattle.isBattleOver()) {
             WsClient.get().send(new UnSubscribeBattle(mCurrentBattle.getId()));

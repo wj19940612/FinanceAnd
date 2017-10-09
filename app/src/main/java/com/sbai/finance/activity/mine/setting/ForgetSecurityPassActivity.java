@@ -11,6 +11,7 @@ import android.view.View;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.ImageAuthCodeActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
@@ -28,6 +29,7 @@ import butterknife.OnClick;
 public class ForgetSecurityPassActivity extends BaseActivity {
 
     private static final int REQ_CODE_MODIFY_PASS = 24700;
+    private static final int REQ_CODE_IMAGE_AUTH_CODE = 889;
 
     @BindView(R.id.phoneNumber)
     AppCompatEditText mPhoneNumber;
@@ -39,7 +41,6 @@ public class ForgetSecurityPassActivity extends BaseActivity {
     AppCompatTextView mSubmit;
 
     //获取验证是否开始
-    private boolean mFreezeObtainAuthCode;
     private int mCounter;
 
     @Override
@@ -55,20 +56,14 @@ public class ForgetSecurityPassActivity extends BaseActivity {
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable editable) {
-            boolean enable = checkSignInButtonEnable();
+            boolean enable = checkSubmitButtonEnable();
             if (enable != mSubmit.isEnabled()) {
                 mSubmit.setEnabled(enable);
             }
         }
     };
 
-
-    private boolean checkObtainAuthCodeEnable() {
-        String phone = getPhoneNumber();
-        return (!TextUtils.isEmpty(phone) && phone.length() > 10 && !mFreezeObtainAuthCode);
-    }
-
-    private boolean checkSignInButtonEnable() {
+    private boolean checkSubmitButtonEnable() {
         String phone = getPhoneNumber();
         String authCode = mAuthCode.getText().toString().trim();
         if (TextUtils.isEmpty(phone) || phone.length() < 11) {
@@ -87,7 +82,7 @@ public class ForgetSecurityPassActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.getAuthCode:
-                getAuthCodeForPass();
+                requestAuthCodeForPass();
                 break;
             case R.id.submit:
                 final String phoneNumber = LocalUser.getUser().getPhone();
@@ -115,25 +110,35 @@ public class ForgetSecurityPassActivity extends BaseActivity {
         }
     }
 
-    private void getAuthCodeForPass() {
-        Client.sendMsgCodeForPassWordOrBankCardPay(LocalUser.getUser().getPhone())
+    private void requestAuthCodeForPass() {
+        Client.getAuthCodeForSecurityPsd(LocalUser.getUser().getPhone())
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()) {
-                            mFreezeObtainAuthCode = true;
-                            startScheduleJob(1000);
-                            mCounter = 60;
-                            mGetAuthCode.setEnabled(false);
-                            mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
+                        postAuthCodeRequested();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.CODE_IMAGE_AUTH_CODE_REQUIRED) {
+                            Launcher.with(getActivity(), ImageAuthCodeActivity.class)
+                                    .putExtra(ExtraKeys.PHONE, LocalUser.getUser().getPhone())
+                                    .putExtra(ExtraKeys.PAGE_TYPE, ImageAuthCodeActivity.PAGE_TYPE_FORGET_SECURITY_PSD)
+                                    .executeForResult(REQ_CODE_IMAGE_AUTH_CODE);
                         } else {
-                            ToastUtil.show(resp.getMsg());
+                            super.onRespFailure(failedResp);
                         }
                     }
-                })
-                .fire();
+                }).fire();
         mAuthCode.requestFocus();
+    }
+
+    private void postAuthCodeRequested() {
+        startScheduleJob(1000);
+        mCounter = 60;
+        mGetAuthCode.setEnabled(false);
+        mGetAuthCode.setText(getString(R.string.resend_after_n_seconds, mCounter));
     }
 
     @Override
@@ -147,7 +152,6 @@ public class ForgetSecurityPassActivity extends BaseActivity {
     }
 
     private void restartGetAuthCode() {
-        mFreezeObtainAuthCode = false;
         mGetAuthCode.setEnabled(true);
         mGetAuthCode.setText(R.string.obtain_auth_code_continue);
         stopScheduleJob();
@@ -158,6 +162,11 @@ public class ForgetSecurityPassActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_MODIFY_PASS && resultCode == RESULT_OK) {
             finish();
+        }
+
+        if (requestCode == REQ_CODE_IMAGE_AUTH_CODE && resultCode == RESULT_OK) {
+            // 发送图片验证码去 获取验证码 成功
+            postAuthCodeRequested();
         }
     }
 }

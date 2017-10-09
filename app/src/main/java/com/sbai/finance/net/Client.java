@@ -1,7 +1,5 @@
 package com.sbai.finance.net;
 
-import android.util.Log;
-
 import com.android.volley.Request;
 import com.google.gson.Gson;
 import com.sbai.finance.App;
@@ -298,7 +296,7 @@ public class Client {
                 .put("msgCode", authCode)
                 .put("deviceId", Preference.get().getPushClientId())
                 .put("platform", 0)
-                .put("channel", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"))
+                .put("source", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"))
                 .put("openId", openId)
                 .put("name", name)
                 .put("iconUrl", iconUrl)
@@ -328,7 +326,10 @@ public class Client {
      */
     public static API weChatLogin(String openId) {
         return new API(POST, "/user/registerLogin/wechatLogin.do", new ApiParams()
-                .put("openId", openId));
+                .put("openId", openId)
+                .put("deviceId", Preference.get().getPushClientId())
+                .put("platform", 0)
+                .put("source", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL")));
     }
 
     /**
@@ -421,8 +422,20 @@ public class Client {
      * @return
      */
     public static API getAuthCode(String phone) {
+        return getAuthCode(phone, null);
+    }
+
+    /**
+     * 接口名称 获取验证码
+     *
+     * @param phone
+     * @param imgCode
+     * @return
+     */
+    public static API getAuthCode(String phone, String imgCode) {
         return new API(POST, "/user/registerLogin/sendMsgCode.do", new ApiParams()
-                .put("phone", phone));
+                .put("phone", phone)
+                .put("imgCode", imgCode));
     }
 
     /**
@@ -1406,15 +1419,27 @@ public class Client {
     }
 
     /**
-     * /user/userAccount/sendMsgCodeForPass.do
-     * POST
-     * 忘记密码发送手机消息 银行卡充值发送验证码
+     * 通过手机号 获取短信验证码
      *
      * @param phone
      * @return
      */
-    public static API sendMsgCodeForPassWordOrBankCardPay(String phone) {
-        return new API(POST, "/user/userAccount/sendMsgCodeForPass.do", new ApiParams().put("phone", phone));
+    public static API getAuthCodeForSecurityPsd(String phone) {
+        return getAuthCodeForSecurityPsd(phone, null);
+    }
+
+    /**
+     * 通过手机号和图片验证码 获取短信验证码
+     *
+     * @param phone
+     * @param imgCode
+     * @return
+     */
+    public static API getAuthCodeForSecurityPsd(String phone, String imgCode) {
+        return new API(POST, "/user/userAccount/sendMsgCodeForPass.do",
+                new ApiParams()
+                        .put("phone", phone)
+                        .put("imgCode", imgCode));
     }
 
     /**
@@ -2664,10 +2689,28 @@ public class Client {
      * @return
      */
     public static API updatePageOpenTime() {
-        String deviceHardwareId = AppInfo.getDeviceHardwareId(App.getAppContext());
-        Log.d("BaseActivity", "updatePageOpenTime: "+deviceHardwareId);
         return new API(POST, "/user/registerLogin/sensitizeApp.do",
                 new ApiParams()
-                        .put("deviceId", AppInfo.getDeviceHardwareId(App.getAppContext())));
+                        .put("deviceId", Preference.get().getPushClientId()));
+    }
+
+    /**
+     * 图片验证码地址
+     *
+     * @param phone
+     * @return
+     */
+    public static String getImageAuthCode(String phone) {
+        return API.getHost() + "/user/registerLogin/getRegImage.do?userPhone=" + phone;
+    }
+
+    /**
+     * push 过来的html 服务端说有长度限制  调用接口去获取banner
+     *
+     * @param id
+     * @return
+     */
+    public static API requestBannerInfo(String id) {
+        return new API("/user/news/findBannerById.do", new ApiParams().put("id", id));
     }
 }

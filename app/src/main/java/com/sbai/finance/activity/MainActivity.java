@@ -32,12 +32,8 @@ import com.sbai.finance.view.ScrollableViewPager;
 import com.sbai.finance.websocket.WsClient;
 import com.sbai.finance.websocket.market.MarketSubscriber;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.R.attr.data;
 
 public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
@@ -67,7 +63,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                     .setCallback(new Callback2D<Resp<ActivityModel>, ActivityModel>() {
                         @Override
                         protected void onRespSuccessData(ActivityModel data) {
-                            if (data.getLinkType() == ActivityModel.LINK_TYPE_MODEL
+                            if (data.getLinkType().equalsIgnoreCase(ActivityModel.LINK_TYPE_MODEL)
                                     && LocalUser.getUser().isLogin()) {
                                 return;
                             }
@@ -87,7 +83,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
         Banner banner = intent.getParcelableExtra(ExtraKeys.ACTIVITY);
         if (banner != null) {
-            openActivityPage(banner);
+            requestPushBannerInfo(banner);
         }
     }
 
@@ -102,6 +98,20 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                     .putExtra(WebActivity.EX_TITLE, banner.getTitle())
                     .execute();
         }
+    }
+
+    private void requestPushBannerInfo(Banner banner) {
+
+        Client.requestBannerInfo(banner.getId())
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<Banner>, Banner>() {
+                    @Override
+                    protected void onRespSuccessData(Banner data) {
+                        openActivityPage(data);
+                    }
+                })
+                .fireFree();
     }
 
     private void requestServiceConnectWay() {

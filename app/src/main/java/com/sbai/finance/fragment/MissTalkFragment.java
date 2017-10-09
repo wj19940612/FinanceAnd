@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.CommentActivity;
 import com.sbai.finance.activity.miss.MissProfileActivity;
@@ -68,6 +69,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.AUDIO_SERVICE;
 import static com.sbai.finance.R.id.progressBar;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
@@ -931,7 +933,7 @@ public class MissTalkFragment extends BaseFragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		/*if (requestCode == SUBMIT_QUESTION && resultCode == BaseActivity.RESULT_OK) {
+		if (requestCode == SUBMIT_QUESTION && resultCode == RESULT_OK) {
 			Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
 		}
 
@@ -944,7 +946,7 @@ public class MissTalkFragment extends BaseFragment {
 				for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
 					Question question = mQuestionListAdapter.getItem(i);
 					if (question != null) {
-						if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+						if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 							if (prise != null) {
 								question.setIsPrise(prise.getIsPrise());
 								question.setPriseCount(prise.getPriseCount());
@@ -964,10 +966,11 @@ public class MissTalkFragment extends BaseFragment {
 				}
 
 				if (replyCount != -1) {
+
 					for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
 						Question question = mQuestionListAdapter.getItem(i);
 						if (question != null) {
-							if (question.getId() == data.getIntExtra(Launcher.QUESTION_ID, -1)) {
+							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
 
 								mQuestionListAdapter.notifyDataSetChanged();
 							}
@@ -975,7 +978,7 @@ public class MissTalkFragment extends BaseFragment {
 					}
 				}
 			}
-		}*/
+		}
 	}
 
 	private void registerRefreshReceiver() {
@@ -1018,4 +1021,5 @@ public class MissTalkFragment extends BaseFragment {
 			}
 		}
 	}
+
 }

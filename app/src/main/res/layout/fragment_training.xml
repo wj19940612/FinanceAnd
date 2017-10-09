@@ -155,7 +155,7 @@
                         android:drawablePadding="8dp"
                         android:gravity="center"
                         android:paddingTop="5dp"
-                        android:text="@string/review_lesson_room"
+                        android:text="@string/study_everyday"
                         android:textColor="@color/blackPrimary"/>
                 </LinearLayout>
             </LinearLayout>

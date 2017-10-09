@@ -41,6 +41,21 @@ public class MyCollect {
     private int priseCount;         //点赞数
     private int userId;             //用户id
     private String content;         // 提问内容
+    private int solve;              //是否解决 0 未解决 1 已解决
+
+    //问题是否被解决
+    public boolean isQuestionSolved() {
+        return getSolve()==1;
+    }
+
+
+    public int getSolve() {
+        return solve;
+    }
+
+    public void setSolve(int solve) {
+        this.solve = solve;
+    }
 
     public String getMongoId() {
         return mongoId;
@@ -171,6 +186,7 @@ public class MyCollect {
                 ", priseCount=" + priseCount +
                 ", userId=" + userId +
                 ", content='" + content + '\'' +
+                ", solve=" + solve +
                 '}';
     }
 }

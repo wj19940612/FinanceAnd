@@ -1,6 +1,7 @@
 package com.sbai.finance.fragment.mine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,9 +17,12 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
+import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -36,10 +40,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.sbai.finance.activity.miss.QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL;
+
 
 public class QuestionOrCommentFragment extends BaseFragment {
 
     private static final String QUESTION_TYPE = "question_type";
+
 
     //我的回答的提问
     public static final int TYPE_QUESTION = 1;
@@ -59,7 +66,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
     private MineQuestionAndAnswerAdapter mMineQuestionAndAnswerAdapter;
     private HashSet<Integer> mSet;
     private int mPage;
-    private OnQuestionClickListener mOnQuestionClickListener;
+    private Question mClickQuestion;
 
     public QuestionOrCommentFragment() {
     }
@@ -72,29 +79,6 @@ public class QuestionOrCommentFragment extends BaseFragment {
         return fragment;
     }
 
-    public void updateClickItem(int clickPosition, Question clickQuestion) {
-        Question item = mMineQuestionAndAnswerAdapter.getItem(clickPosition);
-        if (clickQuestion != null && item != null) {
-            item.setReplyCount(clickQuestion.getReplyCount());
-            item.setAwardCount(clickQuestion.getAwardCount());
-            item.setPriseCount(clickQuestion.getPriseCount());
-            mMineQuestionAndAnswerAdapter.notifyDataSetChanged();
-        }
-    }
-
-    public interface OnQuestionClickListener {
-        void onQuestionClick(Question question, int position);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnQuestionClickListener) {
-            mOnQuestionClickListener = (OnQuestionClickListener) context;
-        } else {
-            throw new IllegalStateException(context.toString() + " must implements OnQuestionClickListener");
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,6 +109,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
         mListView.setEmptyView(mListEmptyView);
         mListView.setDivider(null);
         mMineQuestionAndAnswerAdapter = new MineQuestionAndAnswerAdapter(getActivity());
+        mMineQuestionAndAnswerAdapter.setQuestionType(mQuestionType);
         mListView.setAdapter(mMineQuestionAndAnswerAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -145,8 +130,11 @@ public class QuestionOrCommentFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Question question = (Question) parent.getAdapter().getItem(position);
-                if (question != null) {
-                    mOnQuestionClickListener.onQuestionClick(question, position);
+                if (question != null && question.isQuestionSolved()) {
+                    mClickQuestion = question;
+                    Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
+                    intent.putExtra(Launcher.EX_PAYLOAD, question.getDataId());
+                    startActivityForResult(intent, REQ_CODE_QUESTION_DETAIL);
                 }
             }
         });
@@ -211,12 +199,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
 
         if (isRefreshing) mMineQuestionAndAnswerAdapter.clear();
 
-
-        for (Question result : data) {
-            if (mSet.add(result.getDataId())) {
-                mMineQuestionAndAnswerAdapter.add(result);
-            }
-        }
+        mMineQuestionAndAnswerAdapter.addAll(data);
     }
 
     private void stopRefreshAnimation() {
@@ -230,6 +213,28 @@ public class QuestionOrCommentFragment extends BaseFragment {
 
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == BaseActivity.RESULT_OK) {
+            switch (requestCode) {
+                case QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL:
+                    if (mClickQuestion != null) {
+                        Praise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+                        int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+                        int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+                        if (prise != null) {
+                            mClickQuestion.setPriseCount(prise.getPriseCount());
+                        }
+                        mClickQuestion.setReplyCount(replyCount);
+                        mClickQuestion.setAwardCount(rewardCount);
+                        mMineQuestionAndAnswerAdapter.notifyDataSetChanged();
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
@@ -238,6 +243,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
     static class MineQuestionAndAnswerAdapter extends ArrayAdapter<Question> {
 
         private Context mContext;
+        private int mQuestionType;
 
         public MineQuestionAndAnswerAdapter(@NonNull Context context) {
             super(context, 0);
@@ -255,8 +261,12 @@ public class QuestionOrCommentFragment extends BaseFragment {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), mContext);
+            viewHolder.bindDataWithView(getItem(position), mContext, mQuestionType);
             return convertView;
+        }
+
+        public void setQuestionType(int questionType) {
+            mQuestionType = questionType;
         }
 
         static class ViewHolder {
@@ -271,7 +281,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(Question question, Context context) {
+            public void bindDataWithView(Question question, Context context, int questionType) {
                 if (question == null) return;
 
                 mTime.setText(DateUtil.formatDefaultStyleTime(question.getCreateTime()));
@@ -281,7 +291,11 @@ public class QuestionOrCommentFragment extends BaseFragment {
                     String priseCount = FinanceUtil.formatTenThousandNumber(question.getPriseCount());
                     String replyCount = FinanceUtil.formatTenThousandNumber(question.getReplyCount());
                     String awardCount = FinanceUtil.formatTenThousandNumber(question.getAwardCount());
-                    mContent.setText(context.getString(R.string.question_replay_content, priseCount, replyCount, awardCount));
+                    if (questionType == TYPE_QUESTION) {
+                        mContent.setText(context.getString(R.string.question_replay_content_award, priseCount, replyCount, awardCount));
+                    } else {
+                        mContent.setText(context.getString(R.string.question_replay_content, priseCount, replyCount));
+                    }
                 } else {
                     mContent.setSelected(false);
                     mTitle.setEnabled(false);

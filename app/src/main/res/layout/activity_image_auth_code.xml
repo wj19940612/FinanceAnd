@@ -33,34 +33,64 @@
             android:textColor="@color/primaryText"
             android:textSize="15sp"/>
 
-        <EditText
-            android:id="@+id/otherMoneyContent"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="29dp"
-            android:background="@null"
-            android:hint="@string/at_least_ten_ingot"
-            android:maxLines="1"
-            android:textColor="@color/primaryText"
-            android:textColorHint="@color/unluckyText"
-            android:textSize="14sp"/>
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/authCodeInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:maxLength="6"
+                android:hint="@string/image_auth_code"
+                android:maxLines="1"
+                android:digits="0123456789qwertyuioplkjhgfdsazxcvbnm"
+                android:textColor="@color/primaryText"
+                android:textColorHint="@color/unluckyText"
+                android:textSize="14sp"/>
+
+            <ImageView
+                android:id="@+id/imageAuthCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="25dp"
+                android:minWidth="76dp"/>
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_marginTop="@dimen/common_padding"
+            android:layout_marginTop="5dp"
             android:background="@color/split"/>
 
-        <TextView
-            android:id="@+id/warnTip"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:layout_marginTop="4dp"
-            android:textColor="@color/yellowAssist"
-            android:textSize="10sp"
-            android:visibility="invisible"
-            tools:text="超出方法为"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/warnTip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/yellowAssist"
+                android:textSize="10sp"
+                tools:text="@string/auth_code_error"/>
+
+            <TextView
+                android:id="@+id/changeImageAuthCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                tools:text="看不清？换一张"/>
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -80,8 +110,5 @@
                 android:textColor="@android:color/white"
                 android:textSize="15sp"/>
         </RelativeLayout>
-
-
     </LinearLayout>
-
 </RelativeLayout>

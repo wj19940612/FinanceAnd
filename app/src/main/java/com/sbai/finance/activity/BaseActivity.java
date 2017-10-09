@@ -247,6 +247,11 @@ public class BaseActivity extends StatusBarActivity implements
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
                         }
+
+                        @Override
+                        protected boolean onErrorToast() {
+                            return false;
+                        }
                     }).fireFree();
         }
         Preference.get().setNeedUpdateOpenAppTime(SysTime.getSysTime().getSystemTimestamp());

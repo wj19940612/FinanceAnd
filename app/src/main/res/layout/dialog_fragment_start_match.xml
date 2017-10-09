@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical">
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,55 +14,44 @@
         android:background="@drawable/bg_white_rounded"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:minHeight="36dp"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingTop="24dp">
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/title_matching"
-                android:textColor="@color/primaryText"
-                android:textSize="15sp"/>
-        </LinearLayout>
-
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="120dp"
+            android:layout_marginTop="10dp">
 
-            <pl.droidsonroids.gif.GifImageView
+            <com.sbai.finance.view.WaveView
                 android:id="@+id/matchLoading"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:layout_gravity="center"/>
+                android:background="@android:color/white"
+                app:color="#E3E3E3"
+                app:duration="3000"
+                app:initialRadius="30dp"
+                app:maxRadius="60dp"
+                app:speed="1000"/>
 
             <ImageView
                 android:id="@+id/matchHead"
                 android:layout_width="60dp"
-                android:scaleType="centerCrop"
                 android:layout_height="60dp"
-                android:layout_centerInParent="true"/>
-
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop"
+                android:visibility="visible"
+                tools:src="@drawable/ic_default_avatar_big"/>
         </RelativeLayout>
 
         <TextView
             android:id="@+id/message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:background="@android:color/white"
             android:gravity="center_horizontal"
             android:lineSpacingExtra="3dp"
             android:maxLines="3"
-            android:paddingBottom="17dp"
-            android:paddingTop="12dp"
+            android:paddingBottom="9dp"
+            android:paddingTop="2dp"
             android:text="@string/desc_matching"
             android:textColor="@color/unluckyText"
             android:textSize="12sp"/>
@@ -79,5 +69,4 @@
             android:textColor="@color/primaryText"
             android:textSize="15sp"/>
     </LinearLayout>
-
 </LinearLayout>
