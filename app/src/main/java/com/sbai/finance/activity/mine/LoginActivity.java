@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.ExtraKeys;
-import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
@@ -49,7 +48,6 @@ public class LoginActivity extends BaseActivity {
 
     private static final int REQ_CODE_REGISTER = 888;
     private static final int REQ_CODE_IMAGE_AUTH_CODE = 889;
-
 
     @BindView(R.id.rootView)
     RelativeLayout mRootView;
@@ -100,17 +98,18 @@ public class LoginActivity extends BaseActivity {
 
         translucentStatusBar();
 
+        if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
+            mPhoneNumber.setText(LocalUser.getUser().getPhone());
+            formatPhoneNumber();
+            mGetAuthCode.setEnabled(checkObtainAuthCodeEnable());
+        }
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPassword.addTextChangedListener(mValidationWatcher);
-        if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
-            mPhoneNumber.setText(LocalUser.getUser().getPhone());
-        }
 
         initListener();
 
         setKeyboardHelper();
-
     }
 
     private void initListener() {
