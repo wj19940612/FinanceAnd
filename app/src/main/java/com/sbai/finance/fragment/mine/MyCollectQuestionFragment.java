@@ -181,18 +181,29 @@ public class MyCollectQuestionFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == BaseActivity.RESULT_OK && requestCode == QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL) {
-            if(mClickMyCollect!=null){
-                Praise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-                int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-                int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
-                if (prise != null) {
-                    mClickMyCollect.setPriseCount(prise.getPriseCount());
-                }
-                mClickMyCollect.setReplyCount(replyCount);
-                mClickMyCollect.setAwardCount(rewardCount);
-                mMyCollectQuestionAdapter.notifyDataSetChanged();
+        if (resultCode == BaseActivity.RESULT_OK) {
+            switch (requestCode) {
+                case QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL:
+                    if (mClickMyCollect != null) {
+                        Praise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+                        int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+                        int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+                        if (prise != null) {
+                            mClickMyCollect.setPriseCount(prise.getPriseCount());
+                        }
+                        mClickMyCollect.setReplyCount(replyCount);
+                        mClickMyCollect.setAwardCount(rewardCount);
+
+                        boolean collectQuestion = data.getBooleanExtra(ExtraKeys.CANCEL_COLLECT, false);
+
+                        if (collectQuestion) {
+                            mMyCollectQuestionAdapter.remove(mClickMyCollect);
+                        }
+                        mMyCollectQuestionAdapter.notifyDataSetChanged();
+                    }
+                    break;
             }
+
         }
     }
 

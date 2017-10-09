@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -16,9 +15,7 @@ import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.ExtraKeys;
-import com.sbai.finance.Preference;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserInfo;
@@ -33,23 +30,18 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.PasswordEditText;
-import com.umeng.socialize.UMAuthListener;
-import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sbai.finance.R.id.authCode;
+import static com.sbai.finance.net.Resp.CODE_NO_BIND_WE_CHAT;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends WeChatActivity {
 
     private static final int REQ_CODE_REGISTER = 888;
     private static final int REQ_CODE_IMAGE_AUTH_CODE = 889;
-
 
     @BindView(R.id.rootView)
     RelativeLayout mRootView;
@@ -87,10 +79,6 @@ public class LoginActivity extends BaseActivity {
 
     private int mCounter;
     private boolean mFreezeObtainAuthCode;
-    private String mWeChatOpenid;
-    private String mWeChatName;
-    private String mWeChatIconUrl;
-    private int mWeChatGender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,17 +88,18 @@ public class LoginActivity extends BaseActivity {
 
         translucentStatusBar();
 
+        if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
+            mPhoneNumber.setText(LocalUser.getUser().getPhone());
+            formatPhoneNumber();
+            mGetAuthCode.setEnabled(checkObtainAuthCodeEnable());
+        }
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPassword.addTextChangedListener(mValidationWatcher);
-        if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
-            mPhoneNumber.setText(LocalUser.getUser().getPhone());
-        }
 
         initListener();
 
         setKeyboardHelper();
-
     }
 
     private void initListener() {
@@ -332,66 +321,31 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void weChatLogin() {
-        if (!UMShareAPI.get(getActivity()).isInstall(getActivity(), SHARE_MEDIA.WEIXIN)) {
-            ToastUtil.show(R.string.you_not_install_weixin);
-            return;
-        }
-        onHttpUiShow(TAG);
-        UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
-            @Override
-            public void onStart(SHARE_MEDIA share_media) {
-                Log.d(TAG, "onStart " + "授权开始");
-            }
-
-            @Override
-            public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
-                onHttpUiDismiss(TAG);
-                final String openid = map.get("openid");//微博没有
-                final String name = map.get("name");
-                final String gender = map.get("gender");
-                final String iconUrl = map.get("iconurl");
-                Client.weChatLogin(openid).setTag(TAG)
-                        .setCallback(new Callback<Resp<UserInfo>>() {
-                            @Override
-                            public void onSuccess(Resp<UserInfo> userInfoResp) {
-                                if (userInfoResp.isSuccess()) {
-                                    LocalUser.getUser().setUserInfo(userInfoResp.getData());
-                                    ToastUtil.show(R.string.login_success);
-                                    postLogin();
-                                } else {
-                                    //214 尚未绑定的微信
-                                    if (userInfoResp.getCode() == 214 || userInfoResp.getData() == null) {
-                                        bindPhone(openid, name, iconUrl, gender);
-                                    }
-                                }
-                            }
-
-                            @Override
-                            protected void onRespSuccess(Resp<UserInfo> resp) {
-                            }
-                        }).fireFree();
-
-            }
-
-            @Override
-            public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
-                Log.d(TAG, "onError " + "授权失败:" + throwable.getMessage());
-                onHttpUiDismiss(TAG);
-            }
-
-            @Override
-            public void onCancel(SHARE_MEDIA share_media, int i) {
-                Log.d(TAG, "onCancel " + "授权取消");
-                onHttpUiDismiss(TAG);
-            }
-        });
+        requestWeChatInfo();
     }
 
-    private void bindPhone(String openid, String name, String iconurl, String gender) {
-        mWeChatOpenid = openid;
-        mWeChatName = name;
-        mWeChatIconUrl = iconurl;
-        mWeChatGender = gender.equals("女") ? 1 : 2;
+    @Override
+    protected void bindSuccess() {
+        Client.requestWeChatLogin(getWeChatOpenid()).setTag(TAG)
+                .setCallback(new Callback<Resp<UserInfo>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<UserInfo> resp) {
+                        LocalUser.getUser().setUserInfo(resp.getData());
+                        ToastUtil.show(R.string.login_success);
+                        postLogin();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        super.onRespFailure(failedResp);
+                        if (failedResp.getCode() == CODE_NO_BIND_WE_CHAT) {
+                            updateBindPhoneViews();
+                        }
+                    }
+                }).fireFree();
+    }
+
+    private void updateBindPhoneViews() {
         if (!isAuthCodeLogin()) { // 当前是验证码登录 -> 密码登录
             mLoginSwitchTop.setText(R.string.password_login);
             mAuthCodeArea.setVisibility(View.VISIBLE);
@@ -399,6 +353,7 @@ public class LoginActivity extends BaseActivity {
             mPasswordLoginOperations.setVisibility(View.GONE);
             mPassword.setPassword("");
         }
+        mLogin.setText(getString(R.string.ok));
         mPageTitle.setText(getString(R.string.bind_phone));
         mLoginSwitchTop.setVisibility(View.GONE);
         mWeChatLogin.setVisibility(View.GONE);
@@ -441,8 +396,8 @@ public class LoginActivity extends BaseActivity {
         mLoading.setVisibility(View.VISIBLE);
         mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
         if (isAuthCodeLogin()) {
-            if (TextUtils.isEmpty(mWeChatOpenid)) {
-                Client.authCodeLogin(phoneNumber, authCode).setTag(TAG)
+            if (isWeChatLogin()) {
+                Client.authCodeLogin(phoneNumber, authCode, getWeChatOpenid(), getWeChatName(), getWeChatIconUrl(), getWeChatGender()).setTag(TAG)
                         .setCallback(new Callback<Resp<UserInfo>>() {
                             @Override
                             public void onFinish() {
@@ -458,7 +413,7 @@ public class LoginActivity extends BaseActivity {
                             }
                         }).fire();
             } else {
-                Client.authCodeLogin(phoneNumber, authCode, mWeChatOpenid, mWeChatName, mWeChatIconUrl, mWeChatGender).setTag(TAG)
+                Client.authCodeLogin(phoneNumber, authCode).setTag(TAG)
                         .setCallback(new Callback<Resp<UserInfo>>() {
                             @Override
                             public void onFinish() {

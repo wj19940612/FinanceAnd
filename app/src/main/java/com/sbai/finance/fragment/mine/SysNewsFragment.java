@@ -62,7 +62,7 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
     private List<HistoryNewsModel> mHistoryNewsModels;
     private Set<Integer> mSet;
     private int mPage = 0;
-    private int mSize = 15;
+    private int mSize = 20;
     private int mNoReadCount;
     private NewsActivity.NoReadNewsCallback mNoReadNewsCallback;
 
@@ -287,12 +287,12 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
                         }
                     })
                     .fire();
-        }
-        if (mNoReadCount > 0) {
-            mNoReadCount--;
-        }
-        if (mNoReadNewsCallback != null) {
-            mNoReadNewsCallback.noReadNews(mNoReadCount);
+            if (mNoReadCount > 0) {
+                mNoReadCount--;
+            }
+            if (mNoReadNewsCallback != null) {
+                mNoReadNewsCallback.noReadNews(mNoReadCount);
+            }
         }
     }
 

@@ -69,6 +69,16 @@ public class Question implements Serializable {
     private String content;        //问题内容
     private int dataId;            //问题id
     private int type;              //解说界面自定义的type  0 表示普通的 1 表示出现热门提问标签 2 最新提问
+    private String commentId;      //回复的id
+
+
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
+    }
 
     public int getCollect() {
         return collect;
@@ -342,9 +352,16 @@ public class Question implements Serializable {
                 ", appointCustomId=" + appointCustomId +
                 ", replyCount=" + replyCount +
                 ", soundTime=" + soundTime +
+                ", collect=" + collect +
                 ", isPlaying=" + isPlaying +
+                ", isPause=" + isPause +
+                ", isCountDown=" + isCountDown +
+                ", progressIsZero=" + progressIsZero +
                 ", content='" + content + '\'' +
                 ", dataId=" + dataId +
+                ", type=" + type +
+                ", commentId='" + commentId + '\'' +
                 '}';
     }
+
 }

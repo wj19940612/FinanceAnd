@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.mine.wallet.WalletActivity">
+    tools:context="com.sbai.finance.activity.mine.fund.WalletActivity">
 
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"
