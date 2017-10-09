@@ -46,7 +46,7 @@ public class MyQuestionAndAnswerActivity extends BaseActivity {
         mViewPager.setAdapter(mMyQuestionAndAnswerFragmentAdapter);
         mSlidingTabLayout.setViewPager(mViewPager);
     }
-    
+
 
     static class MyQuestionAndAnswerFragmentAdapter extends FragmentPagerAdapter {
 
