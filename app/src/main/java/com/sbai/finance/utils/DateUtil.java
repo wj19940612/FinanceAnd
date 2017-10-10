@@ -441,7 +441,10 @@ public class DateUtil {
         long systemTime = SysTime.getSysTime().getSystemTimestamp();
         if (DateUtil.isToday(createTime, systemTime)) {
             if (systemTime - createTime < 60 * 60 * 1000) {
-                int time = (int) ((systemTime - createTime) / 1000 / 60 );
+                int time = (int) ((systemTime - createTime) / 1000 / 60);
+                if (time < 1) {
+                    return "刚刚";
+                }
                 return time + "分钟前";
             }
             return DateUtil.format(createTime, "HH:mm");

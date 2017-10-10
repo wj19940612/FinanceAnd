@@ -311,7 +311,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
                     if (questionType == TYPE_QUESTION) {
                         mContent.setText(context.getString(R.string.question_replay_content_award, priseCount, replyCount, awardCount));
                     } else {
-                        mContent.setText(context.getString(R.string.question_replay_content, priseCount, replyCount));
+                        mContent.setText(context.getString(R.string.question_replay_content, replyCount));
                     }
                 } else {
                     mContent.setSelected(false);
