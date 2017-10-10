@@ -324,7 +324,7 @@ public class Client {
      * @param openId
      * @return
      */
-    public static API weChatLogin(String openId) {
+    public static API requestWeChatLogin(String openId) {
         return new API(POST, "/user/registerLogin/wechatLogin.do", new ApiParams()
                 .put("openId", openId)
                 .put("deviceId", Preference.get().getPushClientId())
@@ -338,7 +338,7 @@ public class Client {
      * @param openId
      * @return
      */
-    public static API bindWeChat(String openId, String name, String iconUrl, int sex) {
+    public static API requestBindWeChat(String openId, String name, String iconUrl, int sex) {
         return new API(POST, "/user/user/boundWechat.do", new ApiParams()
                 .put("openId", openId)
                 .put("name", name)
@@ -2664,6 +2664,7 @@ public class Client {
 
     /**
      * 收藏问题
+     *
      * @param questionId
      * @return
      */
@@ -2673,6 +2674,7 @@ public class Client {
 
     /**
      * 获取训练心得总数
+     *
      * @param trainId
      * @return
      */

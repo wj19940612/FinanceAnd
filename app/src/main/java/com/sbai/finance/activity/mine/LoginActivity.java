@@ -36,6 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sbai.finance.R.id.authCode;
+import static com.sbai.finance.net.Resp.CODE_NO_BIND_WE_CHAT;
 
 public class LoginActivity extends WeChatActivity {
 
@@ -78,10 +79,6 @@ public class LoginActivity extends WeChatActivity {
 
     private int mCounter;
     private boolean mFreezeObtainAuthCode;
-    private String mWeChatOpenid;
-    private String mWeChatName;
-    private String mWeChatIconUrl;
-    private int mWeChatGender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -328,34 +325,27 @@ public class LoginActivity extends WeChatActivity {
     }
 
     @Override
-    protected void bindSuccess(final String openid, final String name, final String gender, final String iconUrl) {
-        Client.weChatLogin(openid).setTag(TAG)
+    protected void bindSuccess() {
+        Client.requestWeChatLogin(getWeChatOpenid()).setTag(TAG)
                 .setCallback(new Callback<Resp<UserInfo>>() {
                     @Override
-                    public void onSuccess(Resp<UserInfo> userInfoResp) {
-                        if (userInfoResp.isSuccess()) {
-                            LocalUser.getUser().setUserInfo(userInfoResp.getData());
-                            ToastUtil.show(R.string.login_success);
-                            postLogin();
-                        } else {
-                            //214 尚未绑定的微信
-                            if (userInfoResp.getCode() == 214 || userInfoResp.getData() == null) {
-                                bindPhone(openid, name, iconUrl, gender);
-                            }
-                        }
+                    protected void onRespSuccess(Resp<UserInfo> resp) {
+                        LocalUser.getUser().setUserInfo(resp.getData());
+                        ToastUtil.show(R.string.login_success);
+                        postLogin();
                     }
 
                     @Override
-                    protected void onRespSuccess(Resp<UserInfo> resp) {
+                    protected void onRespFailure(Resp failedResp) {
+                        super.onRespFailure(failedResp);
+                        if (failedResp.getCode() == CODE_NO_BIND_WE_CHAT) {
+                            updateBindPhoneViews();
+                        }
                     }
                 }).fireFree();
     }
 
-    private void bindPhone(String openid, String name, String iconurl, String gender) {
-        mWeChatOpenid = openid;
-        mWeChatName = name;
-        mWeChatIconUrl = iconurl;
-        mWeChatGender = gender.equals("女") ? 1 : 2;
+    private void updateBindPhoneViews() {
         if (!isAuthCodeLogin()) { // 当前是验证码登录 -> 密码登录
             mLoginSwitchTop.setText(R.string.password_login);
             mAuthCodeArea.setVisibility(View.VISIBLE);
@@ -406,8 +396,8 @@ public class LoginActivity extends WeChatActivity {
         mLoading.setVisibility(View.VISIBLE);
         mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
         if (isAuthCodeLogin()) {
-            if (TextUtils.isEmpty(mWeChatOpenid)) {
-                Client.authCodeLogin(phoneNumber, authCode).setTag(TAG)
+            if (isWeChatLogin()) {
+                Client.authCodeLogin(phoneNumber, authCode, getWeChatOpenid(), getWeChatName(), getWeChatIconUrl(), getWeChatGender()).setTag(TAG)
                         .setCallback(new Callback<Resp<UserInfo>>() {
                             @Override
                             public void onFinish() {
@@ -423,7 +413,7 @@ public class LoginActivity extends WeChatActivity {
                             }
                         }).fire();
             } else {
-                Client.authCodeLogin(phoneNumber, authCode, mWeChatOpenid, mWeChatName, mWeChatIconUrl, mWeChatGender).setTag(TAG)
+                Client.authCodeLogin(phoneNumber, authCode).setTag(TAG)
                         .setCallback(new Callback<Resp<UserInfo>>() {
                             @Override
                             public void onFinish() {
