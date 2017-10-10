@@ -1,5 +1,7 @@
 package com.sbai.finance.fragment;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -110,8 +112,6 @@ public class MissTalkFragment extends BaseFragment {
 	private View mFootView;
 	Unbinder unbinder;
 	private int mCurrentPosition;
-	private Timer mTimer = new Timer();
-	private TimerTask mTimerTask;
 
 	@Nullable
 	@Override
@@ -209,6 +209,8 @@ public class MissTalkFragment extends BaseFragment {
 					} else {
 						mFloatWindow.setVisibility(View.GONE);
 					}
+				} else {
+					mFloatWindow.setVisibility(View.GONE);
 				}
 			}
 		});
@@ -260,9 +262,7 @@ public class MissTalkFragment extends BaseFragment {
 			}
 
 			@Override
-			public void voiceOnClick(final Question item, final ImageView playImage,
-			                         final ProgressBar progressBar, final TextView soundTime,
-			                         final TextView listenerNumber, final int position) {
+			public void voiceOnClick(final Question item, int position) {
 				umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
 
 				GlideApp.with(getActivity()).load(item.getCustomPortrait())//设置悬浮窗小姐姐头像
@@ -288,29 +288,27 @@ public class MissTalkFragment extends BaseFragment {
 
 				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_STOP) {
 					//结束状态直接开始播放
-					playVoice(item, playImage, progressBar, soundTime, listenerNumber);
+					playVoice(item);
 				} else {
 					if (MediaPlayerManager.playingId == item.getId()) {
 						if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE) {
 							MediaPlayerManager.resume();
-							playImage.setImageResource(R.drawable.ic_pause);
+							mQuestionListAdapter.notifyDataSetChanged();
 						} else {
 							MediaPlayerManager.pause();
-							playImage.setImageResource(R.drawable.ic_play);
+							mQuestionListAdapter.notifyDataSetChanged();
 						}
 					} else {
 						stopPreviousVoice();
 						//关闭上一个语音,开始这个
-						playVoice(item, playImage, progressBar, soundTime, listenerNumber);
+						playVoice(item);
 					}
 				}
 			}
 		});
 	}
 
-	private void playVoice(final Question item, final ImageView playImage,
-	                       final ProgressBar progressBar, final TextView sound, final TextView listenerNumber) {
-
+	private void playVoice(final Question item) {
 		if (!MissVoiceRecorder.isHeard(item.getId())) {
 			//没听过的
 			Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
@@ -319,19 +317,15 @@ public class MissTalkFragment extends BaseFragment {
 					if (resp.isSuccess()) {
 						MissVoiceRecorder.markHeard(item.getId());
 						item.setListenCount(item.getListenCount() + 1);
-						listenerNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
-						listenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
+						mQuestionListAdapter.notifyDataSetChanged();
 					}
 				}
 			}).fire();
 		}
 
-		playImage.post(new Runnable() {
-			@Override
-			public void run() {
-				playImage.setImageResource(R.drawable.ic_pause);
-			}
-		});
+		final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setMessage("正在缓冲...");
+		progressDialog.show();
 
 		MediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnPreparedListener() {
 			@Override
@@ -342,31 +336,28 @@ public class MissTalkFragment extends BaseFragment {
 				if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 					//获取焦点之后开始播放,避免音轨并发
 					MediaPlayerManager.start();
-					setCountDownTime(sound, item.getSoundTime(), progressBar);
+					progressDialog.dismiss();
 					MediaPlayerManager.setPlayingId(item.getId());
 					MediaPlayerManager.setPortrait(item.getCustomPortrait());
+					mQuestionListAdapter.notifyDataSetChanged();
 				}
 			}
 		}, new MediaPlayer.OnCompletionListener() {
 			@Override
 			public void onCompletion(MediaPlayer mp) {
-				playImage.setImageResource(R.drawable.ic_play);
 				mFloatWindow.setVisibility(View.GONE);
 				MediaPlayerManager.release();
-				stopTimerTask();
-				progressBar.setProgress(0);
-				sound.setText(getString(R.string._seconds, item.getSoundTime()));
+				mQuestionListAdapter.notifyDataSetChanged();
 				mAudioManager.abandonAudioFocus(afChangeListener);
 				//播放结束之后发个广播给问题详情页刷新界面
 				sendPlayFinishBroadcast();
-				LocalBroadcastManager.getInstance(getActivity())
-						.sendBroadcast(new Intent(ACTION_PLAY_FINISH));
 			}
 		});
 	}
 
 	private void sendPlayFinishBroadcast() {
-
+		LocalBroadcastManager.getInstance(getActivity())
+				.sendBroadcast(new Intent(ACTION_PLAY_FINISH));
 	}
 
 	public AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
@@ -399,31 +390,8 @@ public class MissTalkFragment extends BaseFragment {
 		}
 	};
 
-	private void setCountDownTime(final TextView sound, final int soundTime, final ProgressBar progressBar) {
-		progressBar.setMax(soundTime * 1000);
-		mTimerTask = new TimerTask() {
-			@Override
-			public void run() {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					getActivity().runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							int position = MediaPlayerManager.getCurrentPosition();
-							int duration = MediaPlayerManager.getDuration();
-							if (duration > 0) {
-								sound.setText(getString(R.string._seconds, (duration - position) / 1000));
-								progressBar.setProgress(position);
-							}
-						}
-					});
-				}
-			}
-		};
-		mTimer.schedule(mTimerTask, 0, 100);
-	}
-
 	public void stopPreviousVoice() {
-		stopTimerTask();
+		MediaPlayerManager.release();
 
 		if (mFloatWindow != null) {
 			mFloatWindow.setVisibility(View.GONE);
@@ -433,17 +401,9 @@ public class MissTalkFragment extends BaseFragment {
 			Question question = mQuestionListAdapter.getItem(i);
 			if (question != null) {
 				if (question.getId() == MediaPlayerManager.playingId) {
-					MediaPlayerManager.playingId = -1;
 					mQuestionListAdapter.notifyDataSetChanged();
 				}
 			}
-		}
-	}
-
-	private void stopTimerTask() {
-		if (mTimerTask != null) {
-			mTimerTask.cancel();
-			mTimerTask = null;
 		}
 	}
 
@@ -681,6 +641,7 @@ public class MissTalkFragment extends BaseFragment {
 
 		private Context mContext;
 		private Callback mCallback;
+		private Activity mActivity;
 
 		public interface Callback {
 			void praiseOnClick(Question item);
@@ -689,9 +650,7 @@ public class MissTalkFragment extends BaseFragment {
 
 			void rewardOnClick(Question item);
 
-			void voiceOnClick(Question item, ImageView playImage, ProgressBar progressBar,
-			                  TextView voiceTime, TextView listenerNumber, int position);
-
+			void voiceOnClick(Question item, int position);
 		}
 
 		private void setCallback(Callback callback) {
@@ -701,6 +660,7 @@ public class MissTalkFragment extends BaseFragment {
 		private QuestionListAdapter(@NonNull Context context) {
 			super(context, 0);
 			this.mContext = context;
+			this.mActivity = (Activity) context;
 		}
 
 		@NonNull
@@ -715,10 +675,9 @@ public class MissTalkFragment extends BaseFragment {
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			viewHolder.bindingData(mContext, getItem(position), mCallback, position);
+			viewHolder.bindingData(mContext, getItem(position), mCallback, position, mActivity);
 			return convertView;
 		}
-
 
 		static class ViewHolder {
 			@BindView(R.id.hotQuestion)
@@ -733,8 +692,8 @@ public class MissTalkFragment extends BaseFragment {
 			TextView mQuestion;
 			@BindView(R.id.missAvatar)
 			ImageView mMissAvatar;
-			@BindView(R.id.voiceTime)
-			TextView mVoiceTime;
+			@BindView(R.id.soundTime)
+			TextView mSoundTime;
 			@BindView(listenerNumber)
 			TextView mListenerNumber;
 			@BindView(R.id.praiseNumber)
@@ -754,8 +713,12 @@ public class MissTalkFragment extends BaseFragment {
 				ButterKnife.bind(this, view);
 			}
 
+			private Timer mTimer = new Timer();
+			private TimerTask mTimerTask;
+
 			public void bindingData(final Context context, final Question item,
-			                        final Callback callback, final int position) {
+			                        final Callback callback, final int position,
+			                        Activity activity) {
 				if (item == null) return;
 
 				if (item.getType() == Question.TYPE_HOT) {
@@ -786,7 +749,6 @@ public class MissTalkFragment extends BaseFragment {
 				mName.setText(item.getUserName());
 				mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(item.getCreateTime()));
 				mQuestion.setText(item.getQuestionContext());
-				mVoiceTime.setText(context.getString(R.string.voice_time, item.getSoundTime()));
 				mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
 				mPraiseNumber.setText(StrFormatter.getFormatCount(item.getPriseCount()));
 				mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
@@ -830,20 +792,20 @@ public class MissTalkFragment extends BaseFragment {
 				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING
 						&& MediaPlayerManager.playingId == item.getId()) {
 					mPlayImage.setImageResource(R.drawable.ic_pause);
-					mProgressBar.setMax(MediaPlayerManager.getDuration());
-					mProgressBar.setProgress(MediaPlayerManager.getCurrentPosition());
-					mVoiceTime.setText(context.getString(R.string._seconds, (MediaPlayerManager.getDuration() - MediaPlayerManager.getCurrentPosition()) / 1000));
+					startCountDownTime(mSoundTime, item.getSoundTime(), mProgressBar, activity);
 				} else if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE
 						&& MediaPlayerManager.playingId == item.getId()) {
 					mPlayImage.setImageResource(R.drawable.ic_play);
-					mProgressBar.setMax(MediaPlayerManager.getDuration());
+					mProgressBar.setMax(item.getSoundTime() * 1000);
 					mProgressBar.setProgress(MediaPlayerManager.getCurrentPosition());
-					mVoiceTime.setText(context.getString(R.string._seconds, (MediaPlayerManager.getDuration() - MediaPlayerManager.getCurrentPosition()) / 1000));
+					mSoundTime.setText(context.getString(R.string._seconds, (item.getSoundTime() * 1000 - MediaPlayerManager.getCurrentPosition()) / 1000));
+					stopCountDownTime();
 				} else {
 					mPlayImage.setImageResource(R.drawable.ic_play);
 					mProgressBar.setMax(0);
 					mProgressBar.setProgress(0);
-					mVoiceTime.setText(context.getString(R.string._seconds, item.getSoundTime()));
+					mSoundTime.setText(context.getString(R.string._seconds, item.getSoundTime()));
+					stopCountDownTime();
 				}
 
 				mPraiseNumber.setOnClickListener(new View.OnClickListener() {
@@ -859,10 +821,38 @@ public class MissTalkFragment extends BaseFragment {
 					@Override
 					public void onClick(View v) {
 						if (callback != null) {
-							callback.voiceOnClick(item, mPlayImage, mProgressBar, mVoiceTime, mListenerNumber, position);
+							callback.voiceOnClick(item, position);
 						}
 					}
 				});
+			}
+
+			private void startCountDownTime(final TextView sound, final int soundTime,
+			                                final ProgressBar progressBar, final Activity activity) {
+				progressBar.setMax(soundTime * 1000);
+				mTimerTask = new TimerTask() {
+					@Override
+					public void run() {
+						activity.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								int position = MediaPlayerManager.getCurrentPosition();
+								sound.setText(activity.getString(R.string._seconds, (soundTime * 1000 - position) / 1000));
+								progressBar.setProgress(position);
+
+							}
+						});
+
+					}
+				};
+				mTimer.schedule(mTimerTask, 0, 100);
+			}
+
+			private void stopCountDownTime() {
+				if (mTimerTask != null) {
+					mTimerTask.cancel();
+					mTimerTask = null;
+				}
 			}
 		}
 	}
