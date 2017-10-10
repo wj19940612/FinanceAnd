@@ -39,6 +39,7 @@ import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.QuestionCollect;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -63,7 +64,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.android.volley.VolleyLog.setTag;
 import static com.sbai.finance.R.id.listenerNumber;
 import static com.sbai.finance.R.id.playImage;
 import static com.sbai.finance.R.id.progressBar;
@@ -136,12 +136,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private Timer mTimer = new Timer();
     private TimerTask mTimerTask;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
         ButterKnife.bind(this);
-
         initData(getIntent());
         mSet = new HashSet<>();
         mAudioManager = (AudioManager) getActivity().getSystemService(AUDIO_SERVICE);
@@ -163,18 +163,20 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                share();
+                requestShareData();
             }
         });
+
     }
 
-    private void share() {
+    private void share(String shareTitle, String shareDescription, String shareUrl,String shareThumbUrl) {
         umengEventCount(UmengCountEventId.MISS_TALK_SHARE);
         ShareDialog.with(getActivity())
                 .setTitle(getString(R.string.share_title))
-                .setShareTitle(getString(R.string.question_share_share_title))
-                .setShareDescription(getString(R.string.question_share_description))
-                .setShareUrl(String.format(SHARE_URL_QUESTION, mQuestionId))
+                .setShareTitle(shareTitle)
+                .setShareDescription(shareDescription)
+                .setShareUrl(shareUrl)
+                .setShareThumbUrl(shareThumbUrl)
                 .hasFeedback(false)
                 .setListener(new ShareDialog.OnShareDialogCallback() {
                     @Override
@@ -199,8 +201,31 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 }).show();
     }
 
+    private void requestShareData() {
+        final String shareTitle = getString(R.string.question_share_share_title);
+        final String shareDescription = getString(R.string.question_share_description);
+        final String shareUrl = String.format(SHARE_URL_QUESTION, mQuestionId);
+        Client.requestShareData(Share.SHARE_CODE_QUESTION_ANSWER)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<Share>, Share>() {
+                    @Override
+                    protected void onRespSuccessData(Share data) {
+                        share(data.getTitle(), data.getContent(), data.getShareLink(),data.getShareLeUrl());
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        share(shareTitle, shareDescription, shareUrl,null);
+                    }
+                })
+                .fireFree();
+
+    }
+
     private void requestQuestionDetail() {
-        Client.getQuestionDetails( mQuestionId).setTag(TAG)
+        Client.getQuestionDetails(mQuestionId).setTag(TAG)
                 .setCallback(new Callback2D<Resp<Question>, Question>() {
                     @Override
                     protected void onRespSuccessData(Question question) {

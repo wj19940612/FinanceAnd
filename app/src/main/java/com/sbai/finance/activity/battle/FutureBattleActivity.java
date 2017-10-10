@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
@@ -28,7 +29,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.fragment.battle.BattleRecordsFragment;
-import com.sbai.finance.fragment.dialog.BattleShareDialogFragment;
+import com.sbai.finance.fragment.dialog.BattleShareDialog;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.battle.Battle;
@@ -37,6 +38,7 @@ import com.sbai.finance.model.battle.TradeOrderClosePosition;
 import com.sbai.finance.model.battle.TradeRecord;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.local.SysTime;
+import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -143,10 +145,6 @@ public class FutureBattleActivity extends BaseActivity implements
     private static final int HANDLER_WHAT_EXIT_ROOM = 200;
     //正在对战的时候  对战多久后关闭
     private static final int HANDLER_WHAT_BATTLE_COUNTDOWN = 300;
-
-
-    private BattleShareDialogFragment mBattleShareDialogFragment;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -513,10 +511,6 @@ public class FutureBattleActivity extends BaseActivity implements
     private void dismissAllDialog() {
         SmartDialog.dismiss(this);
         BaseDialog.dismiss(this);
-
-        if (mBattleShareDialogFragment != null) {
-            mBattleShareDialogFragment.dismissAllowingStateLoss();
-        }
     }
 
 
@@ -1093,16 +1087,34 @@ public class FutureBattleActivity extends BaseActivity implements
     }
 
     private void showInviteDialog() {
-        if (mBattleShareDialogFragment == null) {
-            String shareTitle = getString(R.string.invite_you_join_future_battle,
-                    LocalUser.getUser().getUserInfo().getUserName());
-            String shareDescribe = getString(R.string.future_battle_desc);
-            mBattleShareDialogFragment = BattleShareDialogFragment
-                    .newInstance()
-                    .setShareContent(shareTitle, shareDescribe, mCurrentBattle.getBatchCode());
-        }
-        mBattleShareDialogFragment.show(getSupportFragmentManager());
+        Client.requestShareData(Share.SHARE_CODE_FUTURE_BATTLE)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<Share>, Share>() {
+                    @Override
+                    protected void onRespSuccessData(Share data) {
+                        BattleShareDialog.with(getActivity())
+                                .setShareThumbUrl(data.getShareLeUrl())
+                                .setShareDescription(data.getContent())
+                                .setShareTitle(data.getTitle())
+                                .setShareUrl(data.getShareLink())
+                                .show();
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        BattleShareDialog.with(getActivity())
+                                .setShareDescription(getString(R.string.future_battle_desc))
+                                .setShareTitle(getString(R.string.invite_you_join_future_battle,
+                                        LocalUser.getUser().getUserInfo().getUserName()))
+                                .setShareUrl(Client.SHARE_URL_FUTURE_BATTLE)
+                                .show();
+                    }
+                })
+                .fireFree();
     }
+
 
     @Override
     public void onInviteFriendClick() {

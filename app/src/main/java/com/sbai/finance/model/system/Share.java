@@ -8,15 +8,15 @@ package com.sbai.finance.model.system;
 public class Share {
 
     //活动邀请
-    public static final String SHARE_CODE_ACTIVITIES_TO_INVITE = "exchange_action";
+    public static final String SHARE_CODE_ACTIVITIES_TO_INVITE = "activity01";
     //训练
-    public static final String SHARE_CODE_TRAINING = "train_details";
+    public static final String SHARE_CODE_TRAINING = "train01";
     //问答
-    public static final String SHARE_CODE_QUESTION_ANSWER = "question_details";
+    public static final String SHARE_CODE_QUESTION_ANSWER = "question01";
     //操盘对战
-    public static final String SHARE_CODE_FUTURE_BATTLE = "game_futures";
+    public static final String SHARE_CODE_FUTURE_BATTLE = "game01";
     //乐米日报分享
-    public static final String SHARE_CODE_DAILY_REPORT = "class_article";
+    public static final String SHARE_CODE_DAILY_REPORT = "class01";
 
     /**
      * code : sssssssss1
