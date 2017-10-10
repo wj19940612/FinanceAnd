@@ -2715,4 +2715,16 @@ public class Client {
     public static API requestBannerInfo(String id) {
         return new API("/user/news/findBannerById.do", new ApiParams().put("id", id));
     }
+
+    /**
+     * /user/share/findByCode.do
+     * GET
+     * 前台分享管理查询
+     *
+     * @param code
+     * @return
+     */
+    public static API requestShareData(String code) {
+        return new API("/user/share/findByCode.do",new ApiParams().put("code",code));
+    }
 }

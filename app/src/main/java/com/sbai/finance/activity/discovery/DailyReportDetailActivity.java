@@ -31,6 +31,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -96,13 +97,13 @@ public class DailyReportDetailActivity extends BaseActivity {
     private String mId;
     private int mFormat;
     private String mShareImgUrl;
+    private String mShareUrl;
 
     private BroadcastReceiver mNetworkChangeReceiver;
     private WebViewClient mWebViewClient;
     private String mFirstContent;
     private String mTitleContent;
     private DailyReport mDailyReport;
-
 
     public String getRawCookie() {
         return mRawCookie;
@@ -136,7 +137,28 @@ public class DailyReportDetailActivity extends BaseActivity {
                         mDailyReport = data;
                         updateDailyReportData(data);
                     }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        requestShareData();
+                    }
                 }).fireFree();
+    }
+
+    private void requestShareData() {
+        Client.requestShareData(Share.SHARE_CODE_DAILY_REPORT)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<Share>, Share>() {
+                    @Override
+                    protected void onRespSuccessData(Share data) {
+                        mShareImgUrl = data.getShareLeUrl();
+                        mTitleContent = data.getTitle();
+                        mShareUrl = data.getShareLink();
+                    }
+                })
+                .fireFree();
     }
 
     private void updateDailyReportData(DailyReport data) {
@@ -185,6 +207,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         mRawCookie = intent.getStringExtra(EX_RAW_COOKIE);
         mId = intent.getStringExtra(EX_ID);
         mFormat = intent.getIntExtra(EX_FORMAT, 0);
+        mShareUrl = String.format(Client.SHARE_URL_REPORT, mId);
     }
 
     @Override
@@ -216,7 +239,7 @@ public class DailyReportDetailActivity extends BaseActivity {
                         .setTitle(R.string.share_to)
                         .setShareTitle(mTitleContent)
                         .setShareDescription(mFirstContent)
-                        .setShareUrl(String.format(Client.SHARE_URL_REPORT, mId))
+                        .setShareUrl(mShareUrl)
                         .setListener(new ShareDialog.OnShareDialogCallback() {
                             @Override
                             public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
