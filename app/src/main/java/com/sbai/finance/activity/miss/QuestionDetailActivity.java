@@ -199,7 +199,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	}
 
 	private void requestQuestionDetail() {
-		Client.getQuestionDetails(mQuestionDetail.getId()).setTag(TAG)
+		Client.getQuestionDetails(mQuestionDetail == null ? mQuestionId : mQuestionDetail.getId()).setTag(TAG)
 				.setCallback(new Callback2D<Resp<Question>, Question>() {
 					@Override
 					protected void onRespSuccessData(Question question) {
@@ -322,7 +322,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				@Override
 				public void onClick(View v) {
 					Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-					intent.putExtra(ExtraKeys.QUESTION, question);
+					intent.putExtra(Launcher.EX_PAYLOAD, MediaPlayerManager.playingId);
 					startActivityForResult(intent, REQ_QUESTION_DETAIL);
 					umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
 				}
@@ -428,7 +428,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 					//获取焦点之后开始播放,避免音轨并发
 					MediaPlayerManager.start();
-					setCountDownTime(soundTime, MediaPlayerManager.getDuration(), progressBar);
+					setCountDownTime(soundTime, item.getSoundTime(), progressBar);
 					MediaPlayerManager.setPlayingId(item.getId());
 					MediaPlayerManager.setPortrait(item.getCustomPortrait());
 				}
@@ -515,7 +515,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	}
 
 	private void requestQuestionReplyList(final boolean isRefresh) {
-		Client.getQuestionReplyList(mType, mQuestionDetail.getId(), mPage, mPageSize, mMongoId)
+		Client.getQuestionReplyList(mType, mQuestionDetail == null ? mQuestionId : mQuestionDetail.getId(), mPage, mPageSize, mMongoId)
 				.setTag(TAG)
 				.setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
 					@Override
@@ -849,7 +849,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			}
 
 			if (ACTION_PLAY_FINISH.equalsIgnoreCase(intent.getAction())) {
-				updateQuestionDetail(mQuestionDetail);
+				requestQuestionDetail();
 				mFloatWindow.setVisibility(View.GONE);
 			}
 		}
