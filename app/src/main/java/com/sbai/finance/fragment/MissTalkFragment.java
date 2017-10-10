@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -54,6 +53,7 @@ import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.EmptyRecyclerView;
+import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.VerticalSwipeRefreshLayout;
 import com.sbai.glide.GlideApp;
@@ -92,12 +92,8 @@ public class MissTalkFragment extends BaseFragment {
 	TextView mEmpty;
 	@BindView(R.id.swipeRefreshLayout)
 	VerticalSwipeRefreshLayout mSwipeRefreshLayout;
-	@BindView(R.id.missAvatar)
-	ImageView mMissAvatar;
-	@BindView(R.id.VoiceAnimator)
-	ImageView mVoiceAnimator;
-	@BindView(R.id.floatWindow)
-	LinearLayout mFloatWindow;
+	@BindView(R.id.missFloatWindow)
+    MissFloatWindow mMissFloatWindow;
 
 	private List<Question> mLatestQuestionList;
 	private MissListAdapter mMissListAdapter;
@@ -108,10 +104,11 @@ public class MissTalkFragment extends BaseFragment {
 	private RefreshReceiver mRefreshReceiver;
 	private AudioManager mAudioManager;
 	private View mFootView;
-	Unbinder unbinder;
 	private int mCurrentPosition;
 	private Timer mTimer = new Timer();
 	private TimerTask mTimerTask;
+
+	Unbinder unbinder;
 
 	@Nullable
 	@Override
@@ -124,18 +121,16 @@ public class MissTalkFragment extends BaseFragment {
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mSet = new HashSet<>();
-		mAudioManager = (AudioManager) getActivity().getSystemService(AUDIO_SERVICE);
-		mListView.setEmptyView(mEmpty);
-
 		initTitleBar();
-		initMissLeaderView();
 		initListView();
+		initMissHeaderView();
 
 		requestMissList();
 		requestHotQuestionList(true);
+
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
+
 		mSwipeRefreshLayout.setOnScrollStateListener(new CustomSwipeRefreshLayout.OnScrollStateListener() {
 			@Override
 			public int scrollStateChange(int scrollState) {
@@ -144,6 +139,10 @@ public class MissTalkFragment extends BaseFragment {
 				return 0;
 			}
 		});
+
+		mSet = new HashSet<>();
+		mAudioManager = (AudioManager) getActivity().getSystemService(AUDIO_SERVICE);
+		mListView.setEmptyView(mEmpty);
 	}
 
 	private void initTitleBar() {
@@ -160,7 +159,7 @@ public class MissTalkFragment extends BaseFragment {
 		});
 	}
 
-	private void initMissLeaderView() {
+	private void initMissHeaderView() {
 		LinearLayout header = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.view_header_miss_talk_1, null);
 		EmptyRecyclerView recyclerView = (EmptyRecyclerView) header.findViewById(R.id.recyclerView);
 		TextView emptyView = (TextView) header.findViewById(R.id.missEmpty);
@@ -179,9 +178,7 @@ public class MissTalkFragment extends BaseFragment {
 				}
 			}
 		});
-
 		mListView.addHeaderView(header);
-
 	}
 
 	private void initListView() {
@@ -205,9 +202,9 @@ public class MissTalkFragment extends BaseFragment {
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
 					if (mCurrentPosition < firstVisibleItem || mCurrentPosition > mListView.getLastVisiblePosition()) {
-						mFloatWindow.setVisibility(View.VISIBLE);
+                        mMissFloatWindow.setVisibility(View.VISIBLE);
 					} else {
-						mFloatWindow.setVisibility(View.GONE);
+                        mMissFloatWindow.setVisibility(View.GONE);
 					}
 				}
 			}
@@ -265,18 +262,12 @@ public class MissTalkFragment extends BaseFragment {
 			                         final TextView listenerNumber, final int position) {
 				umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
 
-				GlideApp.with(getActivity()).load(item.getCustomPortrait())//设置悬浮窗小姐姐头像
-						.placeholder(R.drawable.ic_default_avatar)
-						.circleCrop()
-						.into(mMissAvatar);
-
-				mVoiceAnimator.setBackgroundResource(R.drawable.bg_miss_voice_float);
-				AnimationDrawable animation = (AnimationDrawable) mVoiceAnimator.getBackground();
-				animation.start();
-
+                mMissFloatWindow.setMissAvatar(item.getCustomPortrait());
+                mMissFloatWindow.startAnim();
+                
 				mCurrentPosition = position + 1;//拿到当前播放的位置
 
-				mFloatWindow.setOnClickListener(new View.OnClickListener() {
+                mMissFloatWindow.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
@@ -351,7 +342,7 @@ public class MissTalkFragment extends BaseFragment {
 			@Override
 			public void onCompletion(MediaPlayer mp) {
 				playImage.setImageResource(R.drawable.ic_play);
-				mFloatWindow.setVisibility(View.GONE);
+                mMissFloatWindow.setVisibility(View.GONE);
 				MediaPlayerManager.release();
 				stopTimerTask();
 				progressBar.setProgress(0);
@@ -425,8 +416,8 @@ public class MissTalkFragment extends BaseFragment {
 	public void stopPreviousVoice() {
 		stopTimerTask();
 
-		if (mFloatWindow != null) {
-			mFloatWindow.setVisibility(View.GONE);
+		if (mMissFloatWindow!= null) {
+            mMissFloatWindow.setVisibility(View.GONE);
 		}
 
 		for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
@@ -453,7 +444,7 @@ public class MissTalkFragment extends BaseFragment {
 			public void onRefresh() {
 				//下拉刷新时关闭语音播放
 				MediaPlayerManager.release();
-				mFloatWindow.setVisibility(View.GONE);
+                mMissFloatWindow.setVisibility(View.GONE);
 
 				mSet.clear();
 				mCreateTime = null;
@@ -484,12 +475,11 @@ public class MissTalkFragment extends BaseFragment {
 			//不可见时停止播放和动画
 			//stopPreviousAnimation();
 			MediaPlayerManager.release();
-			if (mFloatWindow != null) {
-				mFloatWindow.setVisibility(View.GONE);
+			if (mMissFloatWindow != null) {
+                mMissFloatWindow.setVisibility(View.GONE);
 			}
 		}
 	}
-
 
 	private void requestMissList() {
 		Client.getMissList().setTag(TAG)
@@ -500,7 +490,6 @@ public class MissTalkFragment extends BaseFragment {
 					}
 				}).fireFree();
 	}
-
 
 	private void requestHotQuestionList(final boolean isRefreshing) {
 		Client.getHotQuestionList().setTag(TAG)
@@ -593,7 +582,7 @@ public class MissTalkFragment extends BaseFragment {
 		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshReceiver);
 	}
 
-	@OnClick(R.id.floatWindow)
+	@OnClick(R.id.missFloatWindow)
 	public void onViewClicked() {
 	}
 
@@ -678,7 +667,6 @@ public class MissTalkFragment extends BaseFragment {
 	}
 
 	static class QuestionListAdapter extends ArrayAdapter<Question> {
-
 		private Context mContext;
 		private Callback mCallback;
 
@@ -706,7 +694,6 @@ public class MissTalkFragment extends BaseFragment {
 		@NonNull
 		@Override
 		public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
 			ViewHolder viewHolder;
 			if (convertView == null) {
 				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_misstalk_answer, null);

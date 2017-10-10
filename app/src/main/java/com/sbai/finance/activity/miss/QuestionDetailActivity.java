@@ -102,7 +102,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	ImageView mMissAvatarPlaying;
 	@BindView(R.id.VoiceAnimator)
 	ImageView mVoiceAnimator;
-	@BindView(R.id.floatWindow)
+	@BindView(R.id.missFloatWindow)
 	LinearLayout mFloatWindow;
 
 	private int mQuestionId;
