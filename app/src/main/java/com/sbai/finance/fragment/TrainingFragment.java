@@ -276,7 +276,7 @@ public class TrainingFragment extends BaseFragment {
 
             startScoreAnimation(mNewScore);
             double rank = data != null ? data.getRank() : 0;
-            if (mNewScore > 0) {
+            if (data != null && data.isEvaluated()) {
                 mScoreProgress.setText(getString(R.string.more_than_number, FinanceUtil.formatFloorPercent(rank)));
             } else {
                 mScoreProgress.setText(R.string.you_are_not_complete_train);
