@@ -402,6 +402,17 @@ public class TrainingExperienceActivity extends BaseActivity {
 					mPublishTime.setText("");
 				}
 
+				mAvatar.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Launcher.with(context, LookBigPictureActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, item.getUserModel().getUserPortrait())
+								.putExtra(Launcher.EX_PAYLOAD_2, 0)
+								.execute();
+					}
+
+				});
+
 				mExperience.setText(item.getContent());
 
 				if (item.getPraise() == 0) {

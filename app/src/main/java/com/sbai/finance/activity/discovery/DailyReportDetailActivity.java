@@ -301,7 +301,6 @@ public class DailyReportDetailActivity extends BaseActivity {
                                 mCollect.setSelected(true);
                                 mDailyReport.setCollect(1);
                             }
-                            setResult(RESULT_OK);
                         }
                     }
                 })

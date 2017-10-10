@@ -78,7 +78,7 @@ public class TrainingDetailActivity extends BaseActivity {
 	@BindView(R.id.completeNumber)
 	TextView mCompleteNumber;
 	@BindView(R.id.relatedKnowledge)
-	TextView mRelatedKnowledge;
+	Button mRelatedKnowledge;
 	@BindView(R.id.writeExperience)
 	TextView mWriteExperience;
 	@BindView(R.id.empty)

@@ -9,7 +9,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -57,11 +56,14 @@ import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.android.volley.VolleyLog.setTag;
 import static com.sbai.finance.R.id.listenerNumber;
 import static com.sbai.finance.R.id.playImage;
 import static com.sbai.finance.R.id.progressBar;
@@ -112,9 +114,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private View mFootView;
     private QuestionReplyListAdapter mQuestionReplyListAdapter;
     private Question mQuestionDetail;
-    private Question mPlayingItem;
     private RefreshReceiver mRefreshReceiver;
-    private int mPlayingID;
     private Praise mPraise;
     private String mMongoId;
     private ImageView mAvatar;
@@ -131,10 +131,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private TextView mCommentNumber;
     private TextView mNoComment;
     private ReplyDialogFragment mReplyDialogFragment;
-    private CountDownTimer mCountDownTimer;
     private static AudioManager mAudioManager;
-    private boolean mIsPause;
     private boolean mCancelCollect = false;
+    private Timer mTimer = new Timer();
+    private TimerTask mTimerTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,7 +200,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     }
 
     private void requestQuestionDetail() {
-        Client.getQuestionDetails(mQuestionId).setTag(TAG)
+        Client.getQuestionDetails( mQuestionId).setTag(TAG)
                 .setCallback(new Callback2D<Resp<Question>, Question>() {
                     @Override
                     protected void onRespSuccessData(Question question) {
@@ -224,10 +224,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 mFootView = null;
                 requestQuestionDetail();
                 requestQuestionReplyList(true);
-
-                //关掉语音和语音动画
-                MediaPlayerManager.release();
-                mPlayingID = -1;
             }
         });
 
@@ -244,12 +240,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         });
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //mMediaPlayerManager.release();
-        mPlayingID = -1;
-    }
 
     @Override
     public void onDestroy() {
@@ -259,8 +249,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
     private void initData(Intent intent) {
         mQuestionDetail = (Question) intent.getSerializableExtra(ExtraKeys.QUESTION);
-        mPlayingItem = (Question) intent.getSerializableExtra(ExtraKeys.PLAYING_ITEM);
         mQuestionId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+        if (mQuestionDetail != null) {
+            mQuestionId = mQuestionDetail.getId();
+        }
         mMongoId = intent.getStringExtra(Launcher.EX_PAYLOAD_1);
     }
 
@@ -318,54 +310,44 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
         }
 
-        if (question.isPlaying()) {
-            mPlayImage.setImageResource(R.drawable.ic_pause);
-        } else {
-            mPlayImage.setImageResource(R.drawable.ic_play);
+        if (MediaPlayerManager.playingId != question.getId() && MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
+            mFloatWindow.setVisibility(View.VISIBLE);
+
+            GlideApp.with(getActivity()).load(MediaPlayerManager.portrait)//设置悬浮窗小姐姐头像
+                    .placeholder(R.drawable.ic_default_avatar)
+                    .circleCrop()
+                    .into(mMissAvatarPlaying);
+
+            mVoiceAnimator.setBackgroundResource(R.drawable.bg_miss_voice_float);
+            AnimationDrawable animation = (AnimationDrawable) mVoiceAnimator.getBackground();
+            animation.start();
+
+            mFloatWindow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
+                    intent.putExtra(Launcher.EX_PAYLOAD, MediaPlayerManager.playingId);
+                    startActivityForResult(intent, REQ_QUESTION_DETAIL);
+                    umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
+                }
+            });
         }
 
-        if (question.isProgressIsZero()) {
-            mProgressBar.setMax(0);
-            mProgressBar.setProgress(0);
-        } else {
+        if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING
+                && MediaPlayerManager.playingId == question.getId()) {
+            mPlayImage.setImageResource(R.drawable.ic_pause);
+            setCountDownTime(mVoiceTime, question.getSoundTime(), mProgressBar);
+        } else if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE
+                && MediaPlayerManager.playingId == question.getId()) {
+            mPlayImage.setImageResource(R.drawable.ic_play);
             mProgressBar.setMax(MediaPlayerManager.getDuration());
             mProgressBar.setProgress(MediaPlayerManager.getCurrentPosition());
-            setProgressBar(mProgressBar);
-        }
-
-        if (question.isPause()) {
-            mVoiceTime.setText(getString(R.string.voice_time, (MediaPlayerManager.getDuration() - MediaPlayerManager.getCurrentPosition()) / 1000));
+            mVoiceTime.setText(getString(R.string._seconds, (MediaPlayerManager.getDuration() - MediaPlayerManager.getCurrentPosition()) / 1000));
         } else {
-            mVoiceTime.setText(getString(R.string.voice_time, question.getSoundTime()));
-        }
-
-        if (question.isCountDown()) {
-            setCountDownTime(mVoiceTime, MediaPlayerManager.getDuration() - MediaPlayerManager.getCurrentPosition());
-        }
-
-        if (mPlayingItem != null && mQuestionDetail.getId() != mPlayingItem.getId()) {
-            if (MediaPlayerManager.isPlaying()) {
-                mFloatWindow.setVisibility(View.VISIBLE);
-
-                GlideApp.with(getActivity()).load(mPlayingItem.getCustomPortrait())//设置悬浮窗小姐姐头像
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .circleCrop()
-                        .into(mMissAvatarPlaying);
-
-                mVoiceAnimator.setBackgroundResource(R.drawable.bg_miss_voice_float);
-                AnimationDrawable animation = (AnimationDrawable) mVoiceAnimator.getBackground();
-                animation.start();
-
-                mFloatWindow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-                        intent.putExtra(ExtraKeys.QUESTION, mPlayingItem);
-                        startActivityForResult(intent, REQ_QUESTION_DETAIL);
-                        umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
-                    }
-                });
-            }
+            mPlayImage.setImageResource(R.drawable.ic_play);
+            mProgressBar.setMax(0);
+            mProgressBar.setProgress(0);
+            mVoiceTime.setText(getString(R.string._seconds, question.getSoundTime()));
         }
 
         mMissAvatar.setOnClickListener(new View.OnClickListener() {
@@ -380,205 +362,161 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         mPlayImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mQuestionDetail.isPause()) {
-                    MediaPlayerManager.resume();
-                    setCountDownTime(mVoiceTime, MediaPlayerManager.getDuration() - MediaPlayerManager.getCurrentPosition());
-                    mQuestionDetail.setPlaying(true);
-                    mQuestionDetail.setPause(false);
-                    mPlayImage.setImageResource(R.drawable.ic_pause);
-                    setProgressBar(mProgressBar);
-                }
-
-                if (!MissVoiceRecorder.isHeard(mQuestionDetail.getId())) {
-                    //没听过的
-                    Client.listen(mQuestionDetail.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-                        @Override
-                        protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-                            if (resp.isSuccess()) {
-
-                                MediaPlayerManager.play(mQuestionDetail.getAnswerContext(), new MediaPlayer.OnPreparedListener() {
-                                    @Override
-                                    public void onPrepared(MediaPlayer mp) {
-                                        //准备好了
-                                        int result = mAudioManager.requestAudioFocus(afChangeListener,
-                                                AudioManager.STREAM_MUSIC,
-                                                AudioManager.AUDIOFOCUS_GAIN);
-                                        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                                            //获取焦点之后开始播放,避免音轨并发
-                                            MediaPlayerManager.start();
-                                        }
-                                        MediaPlayerManager.start();
-                                        MissVoiceRecorder.markHeard(mQuestionDetail.getId());
-                                        setProgressBar(mProgressBar);
-                                        setCountDownTime(mVoiceTime, MediaPlayerManager.getDuration());
-                                        mQuestionDetail.setProgressIsZero(false);
-
-                                    }
-                                }, new MediaPlayer.OnCompletionListener() {
-                                    @Override
-                                    public void onCompletion(MediaPlayer mp) {
-                                        //播放结束
-                                        //播放结束
-                                        mQuestionDetail.setPlaying(false);
-                                        mQuestionDetail.setProgressIsZero(true);
-                                        mPlayImage.setImageResource(R.drawable.ic_play);
-                                        mProgressBar.setProgress(0);
-                                        mFloatWindow.setVisibility(View.GONE);
-                                        mPlayingID = -1;
-                                        mIsPause = false;
-                                        stopCountDownTime();
-                                        mVoiceTime.setText(getString(R.string._seconds, mQuestionDetail.getSoundTime()));
-                                        mAudioManager.abandonAudioFocus(afChangeListener);
-                                    }
-                                });
-
-                                mQuestionDetail.setPlaying(true);
-                                mPlayImage.setImageResource(R.drawable.ic_pause);
-                                mQuestionDetail.setListenCount(mQuestionDetail.getListenCount() + 1);
-                                mListenerNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
-                                mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(mQuestionDetail.getListenCount())));
-                                mPlayingID = mQuestionDetail.getId();
-                            }
-                        }
-                    }).fire();
+                if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_STOP) {
+                    //结束状态直接开始播放
+                    playVoice(question, mPlayImage, mProgressBar, mVoiceTime, mListenerNumber);
                 } else {
-                    //听过的
-                    if (mPlayingID == mQuestionDetail.getId()) {
-                        if (mQuestionDetail.isPause()) {
+                    if (MediaPlayerManager.playingId == question.getId()) {
+                        if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE) {
                             MediaPlayerManager.resume();
-                            setCountDownTime(mVoiceTime, MediaPlayerManager.getDuration() - MediaPlayerManager.getCurrentPosition());
-                            mQuestionDetail.setPlaying(true);
-                            mQuestionDetail.setPause(false);
+                            setCountDownTime(mVoiceTime, question.getSoundTime(), mProgressBar);
                             mPlayImage.setImageResource(R.drawable.ic_pause);
-                            setProgressBar(mProgressBar);
                         } else {
-                            stopCountDownTime();
                             MediaPlayerManager.pause();
-                            mQuestionDetail.setPlaying(false);
-                            mQuestionDetail.setProgressIsZero(false);
-                            mQuestionDetail.setPause(true);
                             mPlayImage.setImageResource(R.drawable.ic_play);
                         }
                     } else {
-
-                        MediaPlayerManager.play(mQuestionDetail.getAnswerContext(), new MediaPlayer.OnPreparedListener() {
-                            @Override
-                            public void onPrepared(MediaPlayer mp) {
-                                //准备好了
-                                int result = mAudioManager.requestAudioFocus(afChangeListener,
-                                        AudioManager.STREAM_MUSIC,
-                                        AudioManager.AUDIOFOCUS_GAIN);
-                                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                                    //获取焦点之后开始播放,避免音轨并发
-                                    MediaPlayerManager.start();
-                                    setProgressBar(mProgressBar);
-                                    setCountDownTime(mVoiceTime, MediaPlayerManager.getDuration());
-                                    mQuestionDetail.setProgressIsZero(false);
-                                }
-                            }
-                        }, new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mp) {
-                                //播放结束
-                                mQuestionDetail.setPlaying(false);
-                                mQuestionDetail.setProgressIsZero(true);
-                                mQuestionDetail.setPause(false);
-                                mPlayImage.setImageResource(R.drawable.ic_play);
-                                mProgressBar.setProgress(0);
-                                mFloatWindow.setVisibility(View.GONE);
-                                mPlayingID = -1;
-                                mIsPause = false;
-                                stopCountDownTime();
-                                mVoiceTime.setText(getString(R.string._seconds, mQuestionDetail.getSoundTime()));
-                                mAudioManager.abandonAudioFocus(afChangeListener);
-                            }
-                        });
-                        mQuestionDetail.setPlaying(true);
-                        mPlayImage.setImageResource(R.drawable.ic_pause);
-                        mPlayingID = mQuestionDetail.getId();
+                        stopPreviousVoice();
+                        //关闭上一个语音,开始这个
+                        playVoice(question, mPlayImage, mProgressBar, mVoiceTime, mListenerNumber);
                     }
                 }
             }
         });
     }
 
-    private void stopCountDownTime() {
-        if (mCountDownTimer != null) {
-            mCountDownTimer.cancel();
-            mCountDownTimer = null;
+    public void stopPreviousVoice() {
+        stopTimerTask();
+
+        if (mFloatWindow != null) {
+            mFloatWindow.setVisibility(View.GONE);
+        }
+
+        if (mQuestionDetail.getId() == MediaPlayerManager.playingId) {
+            MediaPlayerManager.playingId = -1;
+            updateQuestionDetail(mQuestionDetail);
         }
     }
 
-    public void setProgressBar(final ProgressBar progressBar) {
-        progressBar.setMax(MediaPlayerManager.getDuration());
-        new Thread(new Runnable() {
+    private void playVoice(final Question item, final ImageView playImage,
+                           final ProgressBar progressBar, final TextView soundTime, final TextView listenerNumber) {
+
+        if (!MissVoiceRecorder.isHeard(item.getId())) {
+            //没听过的
+            Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+                @Override
+                protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+                    if (resp.isSuccess()) {
+                        MissVoiceRecorder.markHeard(item.getId());
+                        item.setListenCount(item.getListenCount() + 1);
+                        listenerNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
+                        listenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
+                    }
+                }
+            }).fire();
+        }
+
+        playImage.post(new Runnable() {
             @Override
             public void run() {
-                try {
-                    while (MediaPlayerManager.isPlaying()) {
-                        progressBar.setProgress(MediaPlayerManager.getCurrentPosition());
-                        try {
-                            // 每100毫秒更新一次位置
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
+                playImage.setImageResource(R.drawable.ic_pause);
+            }
+        });
+
+        MediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                int result = mAudioManager.requestAudioFocus(afChangeListener,
+                        AudioManager.STREAM_MUSIC,
+                        AudioManager.AUDIOFOCUS_GAIN);
+                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    //获取焦点之后开始播放,避免音轨并发
+                    MediaPlayerManager.start();
+                    setCountDownTime(soundTime, item.getSoundTime(), progressBar);
+                    MediaPlayerManager.setPlayingId(item.getId());
+                    MediaPlayerManager.setPortrait(item.getCustomPortrait());
                 }
             }
-        }).start();
+        }, new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                playImage.setImageResource(R.drawable.ic_play);
+                mFloatWindow.setVisibility(View.GONE);
+                MediaPlayerManager.release();
+                stopTimerTask();
+                progressBar.setProgress(0);
+                soundTime.setText(getString(R.string._seconds, item.getSoundTime()));
+                mAudioManager.abandonAudioFocus(afChangeListener);
+            }
+        });
     }
 
-    private void setCountDownTime(final TextView sound, final int soundTime) {
-        mCountDownTimer = new CountDownTimer(soundTime + 1000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                sound.setText(getString(R.string._seconds, millisUntilFinished / 1000 - 1));
-            }
-
-            @Override
-            public void onFinish() {
-                mPlayImage.setImageResource(R.drawable.ic_play);
-                mProgressBar.setProgress(0);
-                mVoiceTime.setText(getString(R.string._seconds, mQuestionDetail.getSoundTime()));
-                if (mFloatWindow != null) {
-                    mFloatWindow.setVisibility(View.GONE);
-                }
-            }
-        }.start();
+    private void stopTimerTask() {
+        if (mTimerTask != null) {
+            mTimerTask.cancel();
+            mTimerTask = null;
+        }
     }
 
     public AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         public void onAudioFocusChange(int focusChange) {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-                if (MediaPlayerManager.isPlaying()) {
+                if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
                     MediaPlayerManager.pause();
                 }
 
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                if (!MediaPlayerManager.isPlaying()) {
+                if (MediaPlayerManager.STATUS != MediaPlayerManager.STATUS_PLAYING) {
                     MediaPlayerManager.start();
                 }
 
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                if (MediaPlayerManager.isPlaying()) {
+                if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
                     MediaPlayerManager.release();
                 }
 
             } else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                if (MediaPlayerManager.isPlaying()) {
+                if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
                     MediaPlayerManager.release();
                 }
 
             } else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
-                if (MediaPlayerManager.isPlaying()) {
+                if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
                     MediaPlayerManager.release();
                 }
             }
         }
     };
+
+    private void setCountDownTime(final TextView sound, final int soundTime, final ProgressBar progressBar) {
+        progressBar.setMax(soundTime * 1000);
+        mTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            int position = MediaPlayerManager.getCurrentPosition();
+                            int duration = MediaPlayerManager.getDuration();
+                            if (duration > 0) {
+                                sound.setText(getString(R.string._seconds, (duration - position) / 1000));
+                                progressBar.setProgress(position);
+                            }
+                        }
+                    });
+                }
+            }
+        };
+        mTimer.schedule(mTimerTask, 0, 100);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //返回上一页是关闭倒计时任务
+        stopTimerTask();
+    }
 
     private void requestQuestionReplyList(final boolean isRefresh) {
         Client.getQuestionReplyList(mType, mQuestionId, mPage, mPageSize, mMongoId)
@@ -876,6 +814,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         filter.addAction(ACTION_REPLY_SUCCESS);
         filter.addAction(ACTION_REWARD_SUCCESS);
         filter.addAction(ACTION_LOGIN_SUCCESS);
+        filter.addAction(ACTION_PLAY_FINISH);
         LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
     }
 
@@ -911,6 +850,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 mFootView = null;
                 requestQuestionDetail();
                 requestQuestionReplyList(true);
+            }
+
+            if (ACTION_PLAY_FINISH.equalsIgnoreCase(intent.getAction())) {
+                requestQuestionDetail();
+                mFloatWindow.setVisibility(View.GONE);
             }
         }
     }
