@@ -488,7 +488,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	};
 
 	private void setCountDownTime(final TextView sound, final int soundTime, final ProgressBar progressBar) {
-		progressBar.setMax(soundTime);
+		progressBar.setMax(soundTime * 1000);
 		mTimerTask = new TimerTask() {
 			@Override
 			public void run() {
@@ -508,6 +508,13 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			}
 		};
 		mTimer.schedule(mTimerTask, 0, 100);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		//返回上一页是关闭倒计时任务
+		stopTimerTask();
 	}
 
 	private void requestQuestionReplyList(final boolean isRefresh) {

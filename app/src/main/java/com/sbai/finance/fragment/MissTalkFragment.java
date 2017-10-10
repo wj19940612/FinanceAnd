@@ -308,7 +308,7 @@ public class MissTalkFragment extends BaseFragment {
 	}
 
 	private void playVoice(final Question item, final ImageView playImage,
-	                       final ProgressBar progressBar, final TextView soundTime, final TextView listenerNumber) {
+	                       final ProgressBar progressBar, final TextView sound, final TextView listenerNumber) {
 
 		if (!MissVoiceRecorder.isHeard(item.getId())) {
 			//没听过的
@@ -341,7 +341,7 @@ public class MissTalkFragment extends BaseFragment {
 				if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 					//获取焦点之后开始播放,避免音轨并发
 					MediaPlayerManager.start();
-					setCountDownTime(soundTime, MediaPlayerManager.getDuration(), progressBar);
+					setCountDownTime(sound, item.getSoundTime(), progressBar);
 					MediaPlayerManager.setPlayingId(item.getId());
 					MediaPlayerManager.setPortrait(item.getCustomPortrait());
 				}
@@ -354,8 +354,9 @@ public class MissTalkFragment extends BaseFragment {
 				MediaPlayerManager.release();
 				stopTimerTask();
 				progressBar.setProgress(0);
-				soundTime.setText(getString(R.string._seconds, item.getSoundTime()));
+				sound.setText(getString(R.string._seconds, item.getSoundTime()));
 				mAudioManager.abandonAudioFocus(afChangeListener);
+				
 			}
 		});
 	}
@@ -391,11 +392,11 @@ public class MissTalkFragment extends BaseFragment {
 	};
 
 	private void setCountDownTime(final TextView sound, final int soundTime, final ProgressBar progressBar) {
-		progressBar.setMax(soundTime);
+		progressBar.setMax(soundTime * 1000);
 		mTimerTask = new TimerTask() {
 			@Override
 			public void run() {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING ) {
+				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
 					getActivity().runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
