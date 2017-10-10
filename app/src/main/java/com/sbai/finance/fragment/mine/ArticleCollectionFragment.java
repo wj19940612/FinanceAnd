@@ -63,11 +63,6 @@ public class ArticleCollectionFragment extends BaseFragment {
     public ArticleCollectionFragment() {
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,7 +82,7 @@ public class ArticleCollectionFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        requestMyArticleCollect();
+        refreshData();
     }
 
     private void requestMyArticleCollect() {
