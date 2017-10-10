@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,6 +48,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MediaPlayerManager;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -210,8 +210,8 @@ public class MissTalkFragment extends BaseFragment {
 			public void onPraiseClick(final Question item) {
 				if (LocalUser.getUser().isLogin()) {
 					umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
-					Client.praise(item.getId()).setCallback(new Callback2D<Resp<Praise>, Praise>() {
 
+					Client.praise(item.getId()).setCallback(new Callback2D<Resp<Praise>, Praise>() {
 						@Override
 						protected void onRespSuccessData(Praise praise) {
 							item.setIsPrise(praise.getIsPrise());
@@ -270,69 +270,92 @@ public class MissTalkFragment extends BaseFragment {
 					}
 				});
 
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_STOP) {
-					//结束状态直接开始播放
-					playVoice(item);
-				} else {
-					if (MediaPlayerManager.playingId == item.getId()) {
-						if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE) {
-							MediaPlayerManager.resume();
-							mQuestionListAdapter.notifyDataSetChanged();
-						} else {
-							MediaPlayerManager.pause();
-							mQuestionListAdapter.notifyDataSetChanged();
-						}
-					} else {
-						stopPreviousVoice();
-						//关闭上一个语音,开始这个
-						playVoice(item);
-					}
-				}
+                toggleQuestionVoice(item);
+
+//				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_STOP) {
+//					//结束状态直接开始播放
+//					playVoice(item);
+//				} else {
+//					if (MediaPlayerManager.playingId == item.getId()) {
+//						if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE) {
+//							MediaPlayerManager.resume();
+//							mQuestionListAdapter.notifyDataSetChanged();
+//						} else {
+//							MediaPlayerManager.pause();
+//							mQuestionListAdapter.notifyDataSetChanged();
+//						}
+//					} else {
+//						stopPreviousVoice();
+//						//关闭上一个语音,开始这个
+//						playVoice(item);
+//					}
+//				}
+
 			}
 		});
 	}
 
-	private void playVoice(final Question item) {
-		if (!MissVoiceRecorder.isHeard(item.getId())) {
-			//没听过的
-			Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-				@Override
-				protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-					if (resp.isSuccess()) {
-						MissVoiceRecorder.markHeard(item.getId());
-						item.setListenCount(item.getListenCount() + 1);
-						mQuestionListAdapter.notifyDataSetChanged();
-					}
-				}
-			}).fire();
-		}
+    private void toggleQuestionVoice(Question item) {
+        if (MissAudioManager.get().isPlaying(item.getAnswerContext())) {
+            MissAudioManager.get().pause();
+            mQuestionListAdapter.notifyDataSetChanged();
+        } else if (MissAudioManager.get().isPaused(item.getAnswerContext())) {
+            MissAudioManager.get().resume();
+            mQuestionListAdapter.notifyDataSetChanged();
+        } else {
+            updateQuestionListenCount(item);
+            MissAudioManager.get().play(item.getAnswerContext());
+            MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
+                @Override
+                public void onCompleted(String url) {
+                    mMissFloatWindow.setVisibility(View.GONE);
+                    sendPlayFinishBroadcast();
+                }
+            });
+            mQuestionListAdapter.notifyDataSetChanged();
+        }
+    }
 
-		MediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnPreparedListener() {
-			@Override
-			public void onPrepared(MediaPlayer mp) {
-				int result = mAudioManager.requestAudioFocus(afChangeListener,
-						AudioManager.STREAM_MUSIC,
-						AudioManager.AUDIOFOCUS_GAIN);
-				if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-					//获取焦点之后开始播放,避免音轨并发
-					MediaPlayerManager.start();
-					MediaPlayerManager.setPlayingId(item.getId());
-					MediaPlayerManager.setPortrait(item.getCustomPortrait());
-					mQuestionListAdapter.notifyDataSetChanged();
-				}
-			}
-		}, new MediaPlayer.OnCompletionListener() {
-			@Override
-			public void onCompletion(MediaPlayer mp) {
-                mMissFloatWindow.setVisibility(View.GONE);
-				MediaPlayerManager.release();
-				mQuestionListAdapter.notifyDataSetChanged();
-				mAudioManager.abandonAudioFocus(afChangeListener);
-				//播放结束之后发个广播给问题详情页刷新界面
-				sendPlayFinishBroadcast();
-			}
-		});
-	}
+    private void updateQuestionListenCount(final Question item) {
+        if (!MissVoiceRecorder.isHeard(item.getId())) {
+            Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+                @Override
+                protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+                    if (resp.isSuccess()) {
+                        MissVoiceRecorder.markHeard(item.getId());
+                        item.setListenCount(item.getListenCount() + 1);
+                    }
+                }
+            }).fire();
+            mQuestionListAdapter.notifyDataSetChanged();
+        }
+    }
+
+//    private void playVoice(final Question item) {
+//		MediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnPreparedListener() {
+//			@Override
+//			public void onPrepared(MediaPlayer mp) {
+//				int result = mAudioManager.requestAudioFocus(afChangeListener,
+//						AudioManager.STREAM_MUSIC,
+//						AudioManager.AUDIOFOCUS_GAIN);
+//				if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+//					//获取焦点之后开始播放,避免音轨并发
+//					MediaPlayerManager.start();
+//					MediaPlayerManager.setPlayingId(item.getId());
+//					MediaPlayerManager.setPortrait(item.getCustomPortrait());
+//					mQuestionListAdapter.notifyDataSetChanged();
+//				}
+//			}
+//		}, new MediaPlayer.OnCompletionListener() {
+//			@Override
+//			public void onCompletion(MediaPlayer mp) {
+//				MediaPlayerManager.release();
+//				mQuestionListAdapter.notifyDataSetChanged();
+//				mAudioManager.abandonAudioFocus(afChangeListener);
+//				//播放结束之后发个广播给问题详情页刷新界面
+//			}
+//		});
+//	}
 
 	private void sendPlayFinishBroadcast() {
 		LocalBroadcastManager.getInstance(getActivity())
@@ -776,24 +799,38 @@ public class MissTalkFragment extends BaseFragment {
 					}
 				});
 
-                if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING
-                        && MediaPlayerManager.playingId == item.getId()) {
+                if (MissAudioManager.get().isPlaying(item.getAnswerContext())) {
                     mPlayImage.setImageResource(R.drawable.ic_pause);
-                    startCountDownTime(mSoundTime, item.getSoundTime(), mProgressBar, activity);
-                } else if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE
-                        && MediaPlayerManager.playingId == item.getId()) {
+                } else if (MissAudioManager.get().isPaused(item.getAnswerContext())) {
                     mPlayImage.setImageResource(R.drawable.ic_play);
-                    mProgressBar.setMax(item.getSoundTime() * 1000);
-                    mProgressBar.setProgress(MediaPlayerManager.getCurrentPosition());
-                    mSoundTime.setText(context.getString(R.string._seconds, (item.getSoundTime() * 1000 - MediaPlayerManager.getCurrentPosition()) / 1000));
-                    stopCountDownTime();
+//                    mProgressBar.setMax(item.getSoundTime() * 1000);
+//                    mProgressBar.setProgress(MediaPlayerManager.getCurrentPosition());
+//                    mSoundTime.setText(context.getString(R.string._seconds, (item.getSoundTime() * 1000 - MediaPlayerManager.getCurrentPosition()) / 1000));
                 } else {
                     mPlayImage.setImageResource(R.drawable.ic_play);
                     mProgressBar.setMax(0);
                     mProgressBar.setProgress(0);
                     mSoundTime.setText(context.getString(R.string._seconds, item.getSoundTime()));
-                    stopCountDownTime();
                 }
+
+//                if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING
+//                        && MediaPlayerManager.playingId == item.getId()) {
+//                    mPlayImage.setImageResource(R.drawable.ic_pause);
+//                    startCountDownTime(mSoundTime, item.getSoundTime(), mProgressBar, activity);
+//                } else if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE
+//                        && MediaPlayerManager.playingId == item.getId()) {
+//                    mPlayImage.setImageResource(R.drawable.ic_play);
+//                    mProgressBar.setMax(item.getSoundTime() * 1000);
+//                    mProgressBar.setProgress(MediaPlayerManager.getCurrentPosition());
+//                    mSoundTime.setText(context.getString(R.string._seconds, (item.getSoundTime() * 1000 - MediaPlayerManager.getCurrentPosition()) / 1000));
+//                    stopCountDownTime();
+//                } else {
+//                    mPlayImage.setImageResource(R.drawable.ic_play);
+//                    mProgressBar.setMax(0);
+//                    mProgressBar.setProgress(0);
+//                    mSoundTime.setText(context.getString(R.string._seconds, item.getSoundTime()));
+//                    stopCountDownTime();
+//                }
 
             }
 

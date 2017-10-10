@@ -14,7 +14,7 @@ public class MissAudioManager {
 
     private static MissAudioManager sMissAudioManager;
 
-    public MissAudioManager get() {
+    public static MissAudioManager get() {
         if (sMissAudioManager == null) {
             sMissAudioManager = new MissAudioManager();
         }
@@ -23,6 +23,7 @@ public class MissAudioManager {
 
     private MyMediaPlayer mMediaPlayer;
     private boolean mPreparing;
+    private boolean mPaused;
     private String mAudioUrl;
     private OnCompletedListener mOnCompletedListener;
 
@@ -30,8 +31,13 @@ public class MissAudioManager {
         mOnCompletedListener = onCompletedListener;
     }
 
+    public String getAudioUrl() {
+        return mAudioUrl;
+    }
+
     public void play(String audioUrl) {
         mAudioUrl = audioUrl;
+        mPaused = false;
 
         if (mPreparing) return;
 
@@ -54,7 +60,7 @@ public class MissAudioManager {
                     if (!mAudioUrl.equals(mMediaPlayer.dataSourcePath)) {
                         mMediaPlayer.reset();
                         initializeAndPrepare(mAudioUrl);
-                    } else { // prepared, keep go
+                    } else { // prepared, start
                         mMediaPlayer.start();
                     }
                 }
@@ -65,7 +71,7 @@ public class MissAudioManager {
                     if (mOnCompletedListener != null) {
                         mOnCompletedListener.onCompleted(mAudioUrl);
                     }
-
+                    stop();
                 }
             });
         }
@@ -90,26 +96,40 @@ public class MissAudioManager {
             mMediaPlayer.stop();
             mMediaPlayer.release();
             mMediaPlayer = null;
+            mAudioUrl = null;
         }
     }
 
     public void pause() { // pause is async
-        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+        if (mMediaPlayer != null && !mPaused) {
             mMediaPlayer.pause();
+            mPaused = true;
         }
     }
 
-    public void resume() {
-        if (mMediaPlayer != null) {
+    public void resume() { // resume is also async
+        if (mMediaPlayer != null && mPaused) {
             mMediaPlayer.start();
+            mPaused = false;
         }
     }
 
-    public boolean isPaused() {
+    public boolean isPaused(String audioUrl) {
         if (mMediaPlayer != null) {
-            return !mMediaPlayer.isPlaying();
+            return audioUrl != null && audioUrl.equals(mAudioUrl) && mPaused;
         }
-        return true;
+        return false;
+    }
+
+    public boolean isPlaying(String audioUrl) {
+        return audioUrl != null && audioUrl.equals(mAudioUrl) && !mPaused;
+    }
+
+    public int getCurrentPosition() {
+        if (mMediaPlayer != null) {
+            return mMediaPlayer.getCurrentPosition();
+        }
+        return 0;
     }
 
     private static class MyMediaPlayer extends MediaPlayer {
