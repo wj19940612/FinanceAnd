@@ -45,16 +45,21 @@ public abstract class WeChatActivity extends BaseActivity {
             @Override
             public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
                 Log.d(TAG, "onError " + "授权失败:" + throwable.getMessage());
+                bindFailure();
             }
 
             @Override
             public void onCancel(SHARE_MEDIA share_media, int i) {
                 Log.d(TAG, "onCancel " + "授权取消");
+                bindFailure();
             }
         });
     }
 
     protected abstract void bindSuccess();
+
+    protected abstract void bindFailure();
+
 
     protected boolean isWeChatLogin() {
         return !TextUtils.isEmpty(mWeChatOpenid);
