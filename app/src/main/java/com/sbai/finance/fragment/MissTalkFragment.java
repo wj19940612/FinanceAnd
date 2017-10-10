@@ -264,7 +264,7 @@ public class MissTalkFragment extends BaseFragment {
 
                 mMissFloatWindow.setMissAvatar(item.getCustomPortrait());
                 mMissFloatWindow.startAnim();
-                
+
 				mCurrentPosition = position + 1;//拿到当前播放的位置
 
                 mMissFloatWindow.setOnClickListener(new View.OnClickListener() {
