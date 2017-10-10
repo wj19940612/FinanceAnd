@@ -105,7 +105,7 @@ public class MissTalkFragment extends BaseFragment {
 	private int mPageSize = 20;
 	private HashSet<Integer> mSet;
 	private RefreshReceiver mRefreshReceiver;
-	private static AudioManager mAudioManager;
+	private AudioManager mAudioManager;
 	private View mFootView;
 	Unbinder unbinder;
 	private int mCurrentPosition;
@@ -244,7 +244,7 @@ public class MissTalkFragment extends BaseFragment {
 					}
 				} else {
 					Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-					intent.putExtra(Launcher.EX_PAYLOAD, item.getId());
+					intent.putExtra(ExtraKeys.QUESTION, item);
 					startActivityForResult(intent, REQ_QUESTION_DETAIL);
 				}
 			}
@@ -581,7 +581,6 @@ public class MissTalkFragment extends BaseFragment {
 	public void onDestroyView() {
 		super.onDestroyView();
 		unbinder.unbind();
-		//MediaPlayerManager.release();
 		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshReceiver);
 	}
 
@@ -837,15 +836,6 @@ public class MissTalkFragment extends BaseFragment {
 					mProgressBar.setProgress(0);
 					mVoiceTime.setText(context.getString(R.string._seconds, item.getSoundTime()));
 				}
-
-				mMissAvatar.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Launcher.with(context, MissProfileActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, item.getAnswerCustomId())
-								.execute();
-					}
-				});
 
 				mPraiseNumber.setOnClickListener(new View.OnClickListener() {
 					@Override

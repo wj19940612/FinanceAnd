@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -34,6 +37,7 @@ import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -52,9 +56,13 @@ import com.sbai.glide.GlideApp;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sbai.finance.R.id.playImage;
 
 /**
  * 小姐姐详细资料页面
@@ -82,7 +90,6 @@ public class MissProfileActivity extends BaseActivity implements
 	private RefreshReceiver mRefreshReceiver;
 	private int mPlayingID = -1;
 	private int mMissIntroducePlayingID = -1;
-	private MediaPlayerManager mMediaPlayerManager;
 
 	private ImageView mAvatar;
 	private TextView mName;
@@ -98,6 +105,9 @@ public class MissProfileActivity extends BaseActivity implements
 	private TextView mAttentionText;
 	private LinearLayout mReward;
 	private LinearLayout mEmpty;
+	private AudioManager mAudioManager;
+	private Timer mTimer = new Timer();
+	private TimerTask mTimerTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -162,28 +172,153 @@ public class MissProfileActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void voiceOnClick(final Question item, final int position, final ProgressBar progressBar) {
-				//播放下一个之前把上一个播放位置的动画停了
-				if (mPlayingID != -1) {
-					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
-						Question question = mHerAnswerAdapter.getItem(i);
-						if (question != null) {
-							if (question.getId() == mPlayingID) {
-								question.setPlaying(false);
-								mHerAnswerAdapter.notifyDataSetChanged();
-							}
+			public void voiceOnClick(final Question item, final int position, final ProgressBar progressBar, TextView soundTime, TextView listenerNumber, ImageView playImage) {
+				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_STOP) {
+					//结束状态直接开始播放
+					playVoice(item, playImage, progressBar, soundTime, listenerNumber);
+				} else {
+					if (MediaPlayerManager.playingId == item.getId()) {
+						if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE) {
+							MediaPlayerManager.resume();
+							playImage.setImageResource(R.drawable.ic_pause);
+						} else {
+							MediaPlayerManager.pause();
+							playImage.setImageResource(R.drawable.ic_play);
 						}
+					} else {
+						stopPreviousVoice();
+						//关闭上一个语音,开始这个
+						playVoice(item, playImage, progressBar, soundTime, listenerNumber);
 					}
-				}
-
-				if (mMissIntroducePlayingID != -1) {
-					mMediaPlayerManager.release();
-					mVoiceLevel.clearAnimation();
-					mVoiceLevel.setBackgroundResource(R.drawable.ic_miss_voice_4);
-					mMissIntroducePlayingID = -1;
 				}
 			}
 		});
+	}
+
+	private void playVoice(final Question item, final ImageView playImage,
+	                       final ProgressBar progressBar, final TextView soundTime, final TextView listenerNumber) {
+
+		if (!MissVoiceRecorder.isHeard(item.getId())) {
+			//没听过的
+			Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
+				@Override
+				protected void onRespSuccess(Resp<JsonPrimitive> resp) {
+					if (resp.isSuccess()) {
+						MissVoiceRecorder.markHeard(item.getId());
+						item.setListenCount(item.getListenCount() + 1);
+						listenerNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
+						listenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
+					}
+				}
+			}).fire();
+		}
+
+		playImage.post(new Runnable() {
+			@Override
+			public void run() {
+				playImage.setImageResource(R.drawable.ic_pause);
+			}
+		});
+
+		MediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnPreparedListener() {
+			@Override
+			public void onPrepared(MediaPlayer mp) {
+				int result = mAudioManager.requestAudioFocus(afChangeListener,
+						AudioManager.STREAM_MUSIC,
+						AudioManager.AUDIOFOCUS_GAIN);
+				if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+					//获取焦点之后开始播放,避免音轨并发
+					MediaPlayerManager.start();
+					setCountDownTime(soundTime, MediaPlayerManager.getDuration(), progressBar);
+					MediaPlayerManager.setPlayingId(item.getId());
+					MediaPlayerManager.setPortrait(item.getCustomPortrait());
+				}
+			}
+		}, new MediaPlayer.OnCompletionListener() {
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				playImage.setImageResource(R.drawable.ic_play);
+				MediaPlayerManager.release();
+				stopTimerTask();
+				progressBar.setProgress(0);
+				soundTime.setText(getString(R.string._seconds, item.getSoundTime()));
+				mAudioManager.abandonAudioFocus(afChangeListener);
+			}
+		});
+	}
+
+	public AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+		public void onAudioFocusChange(int focusChange) {
+			if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
+					MediaPlayerManager.pause();
+				}
+
+			} else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+				if (MediaPlayerManager.STATUS != MediaPlayerManager.STATUS_PLAYING) {
+					MediaPlayerManager.start();
+				}
+
+			} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
+					MediaPlayerManager.release();
+				}
+
+			} else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
+					MediaPlayerManager.release();
+				}
+
+			} else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
+				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
+					MediaPlayerManager.release();
+				}
+			}
+		}
+	};
+
+	private void setCountDownTime(final TextView sound, final int soundTime, final ProgressBar progressBar) {
+		progressBar.setMax(soundTime);
+		mTimerTask = new TimerTask() {
+			@Override
+			public void run() {
+				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING ) {
+					getActivity().runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							int position = MediaPlayerManager.getCurrentPosition();
+							int duration = MediaPlayerManager.getDuration();
+							if (duration > 0) {
+								sound.setText(getString(R.string._seconds, (duration - position) / 1000));
+								progressBar.setProgress(position);
+							}
+						}
+					});
+				}
+			}
+		};
+		mTimer.schedule(mTimerTask, 0, 100);
+	}
+
+	public void stopPreviousVoice() {
+		stopTimerTask();
+
+		for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
+			Question question = mHerAnswerAdapter.getItem(i);
+			if (question != null) {
+				if (question.getId() == MediaPlayerManager.playingId) {
+					MediaPlayerManager.playingId = -1;
+					mHerAnswerAdapter.notifyDataSetChanged();
+				}
+			}
+		}
+	}
+
+	private void stopTimerTask() {
+		if (mTimerTask != null) {
+			mTimerTask.cancel();
+			mTimerTask = null;
+		}
 	}
 
 	private void initData(Intent intent) {
@@ -276,7 +411,7 @@ public class MissProfileActivity extends BaseActivity implements
 	protected void onPause() {
 		super.onPause();
 		//锁屏或者在后台运行或者跳转页面时停止播放和动画
-		mMediaPlayerManager.release();
+
 		if (mPlayingID != -1) {
 			for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
 				Question question = mHerAnswerAdapter.getItem(i);
@@ -291,7 +426,6 @@ public class MissProfileActivity extends BaseActivity implements
 		mPlayingID = -1;
 
 		if (mMissIntroducePlayingID != -1) {
-			mMediaPlayerManager.release();
 			mVoiceLevel.clearAnimation();
 			mVoiceLevel.setBackgroundResource(R.drawable.ic_miss_voice_4);
 			mMissIntroducePlayingID = -1;
@@ -421,8 +555,7 @@ public class MissProfileActivity extends BaseActivity implements
 				requestMissDetail();
 				requestHerAnswerList(true);
 
-				//下拉刷新时关闭语音播放
-				mMediaPlayerManager.release();
+
 				mPlayingID = -1;
 				mVoiceLevel.clearAnimation();
 				mVoiceLevel.setBackgroundResource(R.drawable.ic_miss_voice_4);
@@ -524,7 +657,7 @@ public class MissProfileActivity extends BaseActivity implements
 
 			void rewardOnClick(Question item);
 
-			void voiceOnClick(Question item, int position, ProgressBar progressBar);
+			void voiceOnClick(Question item, int position, ProgressBar progressBar, TextView voiceTime, TextView listenerNumber, ImageView playImage);
 		}
 
 		private Context mContext;
@@ -586,7 +719,7 @@ public class MissProfileActivity extends BaseActivity implements
 			TextView mCommentNumber;
 			@BindView(R.id.ingotNumber)
 			TextView mIngotNumber;
-			@BindView(R.id.playImage)
+			@BindView(playImage)
 			ImageView mPlayImage;
 			@BindView(R.id.progressBar)
 			ProgressBar mProgressBar;
@@ -663,7 +796,7 @@ public class MissProfileActivity extends BaseActivity implements
 					@Override
 					public void onClick(View v) {
 						if (callback != null) {
-							callback.voiceOnClick(item, position, mProgressBar);
+							callback.voiceOnClick(item, position, mProgressBar, mVoiceTime, mListenerNumber, mPlayImage);
 						}
 					}
 				});
