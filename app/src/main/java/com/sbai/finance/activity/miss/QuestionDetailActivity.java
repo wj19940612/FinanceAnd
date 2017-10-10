@@ -223,9 +223,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				mFootView = null;
 				requestQuestionDetail();
 				requestQuestionReplyList(true);
-
-				//关掉语音和语音动画
-				MediaPlayerManager.release();
 			}
 		});
 
@@ -813,6 +810,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		filter.addAction(ACTION_REPLY_SUCCESS);
 		filter.addAction(ACTION_REWARD_SUCCESS);
 		filter.addAction(ACTION_LOGIN_SUCCESS);
+		filter.addAction(ACTION_PLAY_FINISH);
 		LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
 	}
 
@@ -848,6 +846,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				mFootView = null;
 				requestQuestionDetail();
 				requestQuestionReplyList(true);
+			}
+
+			if (ACTION_PLAY_FINISH.equalsIgnoreCase(intent.getAction())) {
+				updateQuestionDetail(mQuestionDetail);
+				mFloatWindow.setVisibility(View.GONE);
 			}
 		}
 	}

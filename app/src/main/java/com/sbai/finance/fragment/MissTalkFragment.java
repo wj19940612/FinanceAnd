@@ -76,6 +76,7 @@ import static com.sbai.finance.R.id.playImage;
 import static com.sbai.finance.R.id.progressBar;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGOUT_SUCCESS;
+import static com.sbai.finance.activity.BaseActivity.ACTION_PLAY_FINISH;
 import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
@@ -356,9 +357,16 @@ public class MissTalkFragment extends BaseFragment {
 				progressBar.setProgress(0);
 				sound.setText(getString(R.string._seconds, item.getSoundTime()));
 				mAudioManager.abandonAudioFocus(afChangeListener);
-				
+				//播放结束之后发个广播给问题详情页刷新界面
+				sendPlayFinishBroadcast();
+				LocalBroadcastManager.getInstance(getActivity())
+						.sendBroadcast(new Intent(ACTION_PLAY_FINISH));
 			}
 		});
+	}
+
+	private void sendPlayFinishBroadcast() {
+
 	}
 
 	public AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
