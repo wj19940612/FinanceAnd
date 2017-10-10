@@ -898,7 +898,7 @@ public class MissTalkFragment extends BaseFragment {
 							if (listenCount != -1) {
 								question.setListenCount(listenCount);
 							}
-							//mQuestionListAdapter.notifyDataSetChanged();
+							mQuestionListAdapter.notifyDataSetChanged();
 						}
 					}
 				}
