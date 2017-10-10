@@ -257,6 +257,11 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
                 }).fireFree();
     }
 
+    @Override
+    protected void bindFailure() {
+        ToastUtil.show(R.string.cancel_bind);
+    }
+
     private void showAgePicker() {
         OptionPicker picker = new OptionPicker(this, mAgeList);
         picker.setCancelTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));

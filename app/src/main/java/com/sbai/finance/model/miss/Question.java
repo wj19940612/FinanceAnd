@@ -58,6 +58,8 @@ public class Question implements Serializable {
     private String userPortrait;   //提问人头像
     private int appointCustomId;   //提问时指定的小姐姐id
     private int replyCount;       //回复数
+
+    // Extras below
     private int soundTime;
     private int collect;
     private boolean isPlaying;

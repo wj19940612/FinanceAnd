@@ -82,7 +82,7 @@
                             android:src="@drawable/ic_play"/>
 
                         <TextView
-                            android:id="@+id/voiceTime"
+                            android:id="@+id/soundTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
@@ -95,7 +95,7 @@
                             android:id="@+id/listenerNumber"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/voiceTime"
+                            android:layout_below="@+id/soundTime"
                             android:layout_marginTop="4dp"
                             android:layout_toRightOf="@+id/playImage"
                             android:textColor="@color/unluckyText"

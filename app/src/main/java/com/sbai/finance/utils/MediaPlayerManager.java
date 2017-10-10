@@ -17,7 +17,6 @@ public class MediaPlayerManager {
 
 
 	public static int playingId;//播放id
-	public static String url;//音频
 	public static String portrait;//小姐姐头像
 
 	public static int STATUS;
@@ -25,10 +24,6 @@ public class MediaPlayerManager {
 
 	public static void setPlayingId(int playId) {
 		MediaPlayerManager.playingId = playId;
-	}
-
-	public static void setUrl(String url) {
-		MediaPlayerManager.url = url;
 	}
 
 	public static void setPortrait(String portrait) {
