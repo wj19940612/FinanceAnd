@@ -267,7 +267,7 @@ public class TrainingFragment extends BaseFragment {
             mNewScore = data != null ? (int) data.getUserTotalScore() : 0;
 
             if (showJoinTestHint) {
-                if (mNewScore > 0) {
+                if (data != null && data.isEvaluated()) {
                     mTestHint.setVisibility(View.GONE);
                 } else {
                     mTestHint.setVisibility(View.VISIBLE);
