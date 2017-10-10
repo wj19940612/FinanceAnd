@@ -24,9 +24,21 @@ public class UserEachTrainingScoreModel implements Parcelable {
      * rank : 0
      */
 
-    private double rank;
+    private double rank;           //百分率
     private List<ScoresBean> scores;
+    private int evaluate;         // 是否测评过  1 测评过 0 没有
 
+    public boolean isEvaluated() {
+        return getEvaluate() == 1;
+    }
+
+    public int getEvaluate() {
+        return evaluate;
+    }
+
+    public void setEvaluate(int evaluate) {
+        this.evaluate = evaluate;
+    }
 
     public double getUserTotalScore() {
         double totalScore = 0;
@@ -177,14 +189,6 @@ public class UserEachTrainingScoreModel implements Parcelable {
         }
     };
 
-    @Override
-    public String toString() {
-        return "UserEachTrainingScoreModel{" +
-                "rank=" + rank +
-                ", scores=" + scores +
-                '}';
-    }
-
     // 计算每一项的分数所占各个总分的比例
     public EvaluationResult getTestResultModel() {
         EvaluationResult evaluationResult = new EvaluationResult();
@@ -220,5 +224,14 @@ public class UserEachTrainingScoreModel implements Parcelable {
             }
         }
         return evaluationResult;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEachTrainingScoreModel{" +
+                "rank=" + rank +
+                ", scores=" + scores +
+                ", evaluate=" + evaluate +
+                '}';
     }
 }
