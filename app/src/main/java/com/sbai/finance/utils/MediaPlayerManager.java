@@ -122,6 +122,7 @@ public class MediaPlayerManager {
 
 	/**
 	 * 获取音频的时长
+	 *
 	 * @return
 	 */
 	public static int getDuration() {
@@ -133,6 +134,7 @@ public class MediaPlayerManager {
 
 	/**
 	 * 获取音频当前播放位置
+	 *
 	 * @return
 	 */
 	public static int getCurrentPosition() {
@@ -144,6 +146,7 @@ public class MediaPlayerManager {
 
 	/**
 	 * 获取音频焦点,防止音轨并发
+	 *
 	 * @return
 	 */
 	private static int requestAudioFocus() {
@@ -165,32 +168,47 @@ public class MediaPlayerManager {
 		}
 	}
 
-	public static AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+	private static AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
 		public void onAudioFocusChange(int focusChange) {
-			if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.pause();
-				}
+			switch (focusChange) {
+				case AudioManager.AUDIOFOCUS_GAIN:
+					//重新获取焦点
+					if (!mMediaPlayer.isPlaying()) {
+						mMediaPlayer.start();
+					}
+					mMediaPlayer.setVolume(1.0f, 1.0f);//还原音量
+					break;
 
-			} else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-				if (MediaPlayerManager.STATUS != MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.start();
-				}
+				case AudioManager.AUDIOFOCUS_LOSS:
+					//长时间失去焦点
+					if (mMediaPlayer.isPlaying()) {
+						mMediaPlayer.stop();
+						mMediaPlayer.release();
+						mMediaPlayer = null;
+					}
+					break;
 
-			} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.release();
-				}
+				case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+					//暂时失去焦点
+					if (mMediaPlayer.isPlaying()) {
+						mMediaPlayer.pause();
+					}
+					break;
 
-			} else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.release();
-				}
+				case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+					//失去焦点，无需停止播放，降低声音即可
+					if (mMediaPlayer.isPlaying()) {
+						mMediaPlayer.setVolume(0.2f, 0.2f);
+					}
+					break;
 
-			} else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.release();
-				}
+				case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
+					//获取焦点失败
+					mMediaPlayer.stop();
+					mMediaPlayer.release();
+					mMediaPlayer = null;
+					break;
+
 			}
 		}
 	};

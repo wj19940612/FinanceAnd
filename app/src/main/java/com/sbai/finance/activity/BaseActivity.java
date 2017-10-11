@@ -53,7 +53,8 @@ public class BaseActivity extends StatusBarActivity implements
 
     public static final String ACTION_TOKEN_EXPIRED = "com.sbai.fin.token_expired";
     public static final String ACTION_LOGIN_SUCCESS = "com.sbai.fin.login_success";
-    public static final String ACTION_PLAY_FINISH = "com.sbai.fin.play_finish";
+    public static final String ACTION_MISS_PLAY_FINISH = "com.sbai.fin.miss_play_finish";
+    public static final String ACTION_QUESTION_DETAIL_PLAY_FINISH = "com.sbai.fin.question_detail_play_finish";
     public static final String ACTION_LOGOUT_SUCCESS = "com.sbai.fin.logout_success";
     public static final String ACTION_REWARD_SUCCESS = "com.sbai.fin.reward_success";
 

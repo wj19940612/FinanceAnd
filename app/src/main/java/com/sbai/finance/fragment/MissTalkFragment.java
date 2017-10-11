@@ -75,7 +75,8 @@ import static com.sbai.finance.R.id.playImage;
 import static com.sbai.finance.R.id.progressBar;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGOUT_SUCCESS;
-import static com.sbai.finance.activity.BaseActivity.ACTION_PLAY_FINISH;
+import static com.sbai.finance.activity.BaseActivity.ACTION_MISS_PLAY_FINISH;
+import static com.sbai.finance.activity.BaseActivity.ACTION_QUESTION_DETAIL_PLAY_FINISH;
 import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
@@ -106,8 +107,8 @@ public class MissTalkFragment extends BaseFragment {
 	private HashSet<Integer> mSet;
 	private RefreshReceiver mRefreshReceiver;
 	private View mFootView;
-	Unbinder unbinder;
 	private int mCurrentPosition;
+	Unbinder unbinder;
 
 	@Nullable
 	@Override
@@ -238,7 +239,7 @@ public class MissTalkFragment extends BaseFragment {
 					}
 				} else {
 					Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-					intent.putExtra(ExtraKeys.QUESTION, item);
+					intent.putExtra(Launcher.EX_PAYLOAD, item.getId());
 					startActivityForResult(intent, REQ_QUESTION_DETAIL);
 				}
 			}
@@ -338,7 +339,7 @@ public class MissTalkFragment extends BaseFragment {
 
 	private void sendPlayFinishBroadcast() {
 		LocalBroadcastManager.getInstance(getActivity())
-				.sendBroadcast(new Intent(ACTION_PLAY_FINISH));
+				.sendBroadcast(new Intent(ACTION_MISS_PLAY_FINISH));
 	}
 
 	public void stopPreviousVoice() {
@@ -348,11 +349,13 @@ public class MissTalkFragment extends BaseFragment {
 			mFloatWindow.setVisibility(View.GONE);
 		}
 
-		for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
-			Question question = mQuestionListAdapter.getItem(i);
-			if (question != null) {
-				if (question.getId() == MediaPlayerManager.playingId) {
-					mQuestionListAdapter.notifyDataSetChanged();
+		if (mQuestionListAdapter != null) {
+			for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
+				Question question = mQuestionListAdapter.getItem(i);
+				if (question != null) {
+					if (question.getId() == MediaPlayerManager.playingId) {
+						mQuestionListAdapter.notifyDataSetChanged();
+					}
 				}
 			}
 		}
@@ -389,12 +392,8 @@ public class MissTalkFragment extends BaseFragment {
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		if (!isVisibleToUser) {
-			//不可见时停止播放和动画
-			//stopPreviousAnimation();
-			MediaPlayerManager.release();
-			if (mFloatWindow != null) {
-				mFloatWindow.setVisibility(View.GONE);
-			}
+			//左右切换时停止播放和动画
+			stopPreviousVoice();
 		}
 	}
 
@@ -499,6 +498,7 @@ public class MissTalkFragment extends BaseFragment {
 		super.onDestroyView();
 		unbinder.unbind();
 		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshReceiver);
+		getActivity().unregisterReceiver(mRefreshReceiver);
 	}
 
 	@OnClick(R.id.floatWindow)
@@ -843,6 +843,7 @@ public class MissTalkFragment extends BaseFragment {
 							if (listenCount != -1) {
 								question.setListenCount(listenCount);
 							}
+
 							mQuestionListAdapter.notifyDataSetChanged();
 						}
 					}
@@ -870,7 +871,11 @@ public class MissTalkFragment extends BaseFragment {
 		filter.addAction(ACTION_REWARD_SUCCESS);
 		filter.addAction(ACTION_LOGIN_SUCCESS);
 		filter.addAction(ACTION_LOGOUT_SUCCESS);
+		filter.addAction(ACTION_QUESTION_DETAIL_PLAY_FINISH);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);//屏幕关闭的广播
+		filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);//后台
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshReceiver, filter);
+		getActivity().registerReceiver(mRefreshReceiver, filter);
 	}
 
 	private class RefreshReceiver extends BroadcastReceiver {
@@ -892,6 +897,18 @@ public class MissTalkFragment extends BaseFragment {
 				}
 			}
 
+			if (ACTION_QUESTION_DETAIL_PLAY_FINISH.equalsIgnoreCase(intent.getAction())) {
+				mQuestionListAdapter.notifyDataSetChanged();
+			}
+
+			if (Intent.ACTION_SCREEN_OFF.equalsIgnoreCase(intent.getAction())) {
+				stopPreviousVoice();
+			}
+
+			if (Intent.ACTION_CLOSE_SYSTEM_DIALOGS.equalsIgnoreCase(intent.getAction())) {
+				stopPreviousVoice();
+			}
+
 			if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())
 					|| ACTION_LOGOUT_SUCCESS.equalsIgnoreCase(intent.getAction())) {
 				mSet.clear();
@@ -903,5 +920,4 @@ public class MissTalkFragment extends BaseFragment {
 			}
 		}
 	}
-
 }
