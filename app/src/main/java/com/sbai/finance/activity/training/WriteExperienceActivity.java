@@ -22,7 +22,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.image.ImageUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -135,7 +135,7 @@ public class WriteExperienceActivity extends BaseActivity {
 
     private void requestWriteExperience() {
         if (mPath != null) {
-            String imageURL = ImageUtils.compressImageToBase64(mPath);
+            String imageURL = ImageUtils.compressImageToBase64(mPath,getActivity());
             Client.uploadPicture(imageURL).setTag(TAG).setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<List<String>>, List<String>>() {
                         @Override

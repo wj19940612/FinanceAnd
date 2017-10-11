@@ -37,7 +37,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.image.ImageUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.transform.ThumbTransform;
 import com.sbai.finance.view.TitleBar;
@@ -294,7 +294,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void requestSendFeedbackImage(final String path) {
-        String content = ImageUtils.compressImageToBase64(path, true);
+        String content = ImageUtils.compressImageToBase64(path,getActivity());
         int contentType = CONTENT_TYPE_PICTURE;
         requestSendFeedback(content, contentType);
     }

@@ -1,4 +1,4 @@
-package com.sbai.finance.utils;
+package com.sbai.finance.utils.image;
 
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +34,7 @@ public class ImageUtils {
     private File mRoot;
 
     private static ImageUtils sImageUtil;
+    private Luban.Builder mBuilder;
 
     private ImageUtils() {
     }
@@ -92,7 +93,7 @@ public class ImageUtils {
         return file;
     }
 
-    public File createFile(File root, String fileName) {
+    private File createFile(File root, String fileName) {
         int lastIndexOfSeparator = fileName.lastIndexOf(File.separator);
         if (lastIndexOfSeparator != -1) {
             String subDir = fileName.substring(0, lastIndexOfSeparator);
@@ -110,6 +111,37 @@ public class ImageUtils {
         } else {
             return new File(root, fileName);
         }
+    }
+
+
+    public static void saveImageToGallery(Context context, Bitmap bmp) {
+        // 首先保存图片
+        File appDir = new File(getRootPath(), "screenShots");
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
+        String fileName = System.currentTimeMillis() + ".png";
+        File file = new File(appDir, fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 其次把文件插入到系统图库
+        try {
+            MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                    file.getAbsolutePath(), fileName, null);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        // 最后通知图库更新
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
     }
 
 
@@ -148,28 +180,59 @@ public class ImageUtils {
         return result;
     }
 
+    public static String compressImageToBase64(String urlPath, Context context) {
+        return bitmapToBase64(compressWithLs(urlPath, context));
+    }
+
     public static String compressImageToBase64(String urlPath) {
         return bitmapToBase64(compressScale(urlPath));
     }
 
-    public static String compressImageToBase64(String urlPath, boolean rotate) {
-        return bitmapToBase64(compressScale(urlPath, true));
+
+    private static Bitmap compressWithLs(String path, Context context) {
+        Luban.Builder builder = Luban.with(context)
+                .load(path)
+                .ignoreBy(100)
+                .setTargetDir(getPath());
+        File file = builder.launchOnly();
+        if (file != null) {
+            return BitmapFactory.decodeFile(file.getPath());
+        }
+        return null;
     }
 
-    public static String compressImageToBase64(Bitmap bitmap) {
-        return bitmapToBase64(compressScale(bitmap));
+    private static String getPath() {
+        String path = Environment.getExternalStorageDirectory() + "/lemi/image/";
+        File file = new File(path);
+        if (file.mkdirs()) {
+            return path;
+        }
+        return path;
     }
 
-    //    public static String compressImageToBase64(String urlPath, float ratio) {
-//        return bitmapToBase64(decodeSampledBitmapFromResource(urlPath, ratio));
+//    private void showResult(List<String> photos, File file) {
+//        int[] originSize = computeSize(photos.get(mAdapter.getItemCount()));
+//        int[] thumbSize = computeSize(file.getAbsolutePath());
+//        String originArg = String.format(Locale.CHINA, "原图参数：%d*%d, %dk", originSize[0], originSize[1], new File(photos.get(mAdapter.getItemCount())).length() >> 10);
+//        String thumbArg = String.format(Locale.CHINA, "压缩后参数：%d*%d, %dk", thumbSize[0], thumbSize[1], file.length() >> 10);
+//
+//        ImageBean imageBean = new ImageBean(originArg, thumbArg, file.getAbsolutePath());
+//        mImageList.add(imageBean);
+//        mAdapter.notifyDataSetChanged();
 //    }
-    public static String compressImageToBase64(String urlPath, float ratio) {
-        return bitmapToBase64(compressScale(urlPath, ratio));
-    }
 
-    public static String imageToBase64(String urlPath) {
+    private int[] computeSize(String srcImg) {
+        int[] size = new int[2];
 
-        return bitmapToBase64(decodeFile(urlPath));
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        options.inSampleSize = 1;
+
+        BitmapFactory.decodeFile(srcImg, options);
+        size[0] = options.outWidth;
+        size[1] = options.outHeight;
+
+        return size;
     }
 
 
@@ -264,112 +327,6 @@ public class ImageUtils {
         // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
         bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
         return reviewPicRotate(bitmap, srcPath);
-//        return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩
-    }
-
-    public static Bitmap compressScale(String srcPath, float ratio) {
-
-        BitmapFactory.Options newOpts = new BitmapFactory.Options();
-        // 开始读入图片，此时把options.inJustDecodeBounds 设回true了
-        newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = decodeFile(srcPath, newOpts);// 此时返回bm为空
-
-        newOpts.inJustDecodeBounds = false;
-        int w = newOpts.outWidth;
-        int h = newOpts.outHeight;
-        // 现在主流手机比较多是800*480分辨率，所以高和宽我们设置为
-        float hh = ratio;// 这里设置高度为800f
-        float ww = ratio * 0.8f;// 这里设置宽度为480f
-        // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
-        int be = 1;// be=1表示不缩放
-        if (w > h && w > ww) {// 如果宽度大的话根据宽度固定大小缩放
-            be = (int) (newOpts.outWidth / ww);
-        } else if (w < h && h > hh) {// 如果高度高的话根据宽度固定大小缩放
-            be = (int) (newOpts.outHeight / hh);
-        }
-        if (be <= 0)
-            be = 1;
-        newOpts.inSampleSize = be;// 设置缩放比例
-        // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
-        bitmap = decodeFile(srcPath, newOpts);
-        return reviewPicRotate(bitmap, srcPath);// 压缩好比例大小后再进行质量压缩
-    }
-
-    public static Bitmap compressScale(String srcPath, boolean rotate) {
-
-        BitmapFactory.Options newOpts = new BitmapFactory.Options();
-        // 开始读入图片，此时把options.inJustDecodeBounds 设回true了
-        newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = decodeFile(srcPath, newOpts);// 此时返回bm为空
-
-        newOpts.inJustDecodeBounds = false;
-        int w = newOpts.outWidth;
-        int h = newOpts.outHeight;
-        float hh = (float) (Display.getScreenHeight() * 0.5);//
-        float ww = (float) (Display.getScreenWidth() * 0.5);//
-        // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
-        int be = 1;// be=1表示不缩放
-        if (w > h && w > ww) {// 如果宽度大的话根据宽度固定大小缩放
-            be = (int) (newOpts.outWidth / ww);
-        } else if (w < h && h > hh) {// 如果高度高的话根据宽度固定大小缩放
-            be = (int) (newOpts.outHeight / hh);
-        }
-        if (be <= 0)
-            be = 1;
-        newOpts.inSampleSize = be;// 设置缩放比例
-        // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
-        bitmap = decodeFile(srcPath, newOpts);
-        return reviewPicRotate(bitmap, srcPath);// 压缩好比例大小后再进行质量压缩
-    }
-
-    /**
-     * 图片按比例大小压缩方法
-     *
-     * @param image （根据Bitmap图片压缩）
-     * @return
-     */
-    public static Bitmap compressScale(Bitmap image) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.WEBP, 100, baos);
-
-        // 判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出
-        if (baos.toByteArray().length / 1024 > 1024) {
-            baos.reset();// 重置baos即清空baos
-            image.compress(Bitmap.CompressFormat.WEBP, 80, baos);// 这里压缩50%，把压缩后的数据存放到baos中
-        }
-        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-        BitmapFactory.Options newOpts = new BitmapFactory.Options();
-        // 开始读入图片，此时把options.inJustDecodeBounds 设回true了
-        newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, newOpts);
-        newOpts.inJustDecodeBounds = false;
-        int w = newOpts.outWidth;
-        int h = newOpts.outHeight;
-        Log.i(TAG, w + "---------------" + h);
-        // 现在主流手机比较多是800*480分辨率，所以高和宽我们设置为
-        // float hh = 800f;// 这里设置高度为800f
-        // float ww = 480f;// 这里设置宽度为480f
-        float hh = 512f;
-        float ww = 512f;
-        // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
-        int be = 1;// be=1表示不缩放
-        if (w > h && w > ww) {// 如果宽度大的话根据宽度固定大小缩放
-            be = (int) (newOpts.outWidth / ww);
-        } else if (w < h && h > hh) { // 如果高度高的话根据高度固定大小缩放
-            be = (int) (newOpts.outHeight / hh);
-        }
-        if (be <= 0)
-            be = 1;
-        newOpts.inSampleSize = be; // 设置缩放比例
-        // newOpts.inPreferredConfig = Config.RGB_565;//降低图片从ARGB888到RGB565
-
-        // 重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
-        isBm = new ByteArrayInputStream(baos.toByteArray());
-        bitmap = BitmapFactory.decodeStream(isBm, null, newOpts);
-
-        return compressImage(bitmap);// 压缩好比例大小后再进行质量压缩
-
-        //return bitmap;
     }
 
     /**
@@ -416,74 +373,6 @@ public class ImageUtils {
             e.printStackTrace();
         }
         return degree;
-    }
-
-    public static Bitmap decodeSampledBitmapFromResource(String urlPath, float ratio) {
-
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        decodeFile(urlPath, options);
-
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, ratio * 0.8f, ratio);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        return compressImage(decodeFile(urlPath, options));
-    }
-
-    public static int calculateInSampleSize(
-            BitmapFactory.Options options, float reqWidth, float reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) > reqHeight
-                    && (halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
-    }
-
-    public static void saveImageToGallery(Context context, Bitmap bmp) {
-        // 首先保存图片
-        File appDir = new File(getRootPath(), "screenShots");
-        if (!appDir.exists()) {
-            appDir.mkdir();
-        }
-        String fileName = System.currentTimeMillis() + ".png";
-        File file = new File(appDir, fileName);
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // 其次把文件插入到系统图库
-        try {
-            MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    file.getAbsolutePath(), fileName, null);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        // 最后通知图库更新
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
     }
 
     private static String getRootPath() {
