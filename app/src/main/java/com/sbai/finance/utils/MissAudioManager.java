@@ -22,9 +22,11 @@ public class MissAudioManager {
     }
 
     private MyMediaPlayer mMediaPlayer;
-    private boolean mPreparing;
+    private volatile boolean mPreparing;
+    private volatile boolean mStopPostPrepared;
     private boolean mPaused;
     private String mAudioUrl;
+    private String mUuid;
     private OnCompletedListener mOnCompletedListener;
 
     public void setOnCompletedListener(OnCompletedListener onCompletedListener) {
@@ -35,9 +37,15 @@ public class MissAudioManager {
         return mAudioUrl;
     }
 
-    public void play(String audioUrl) {
+    private final String uuid(String audioUrl, int id) {
+        return id + "@" + audioUrl;
+    }
+
+    public void play(String audioUrl, int id) {
+        mUuid = uuid(audioUrl, id);
         mAudioUrl = audioUrl;
         mPaused = false;
+        mStopPostPrepared = false;
 
         if (mPreparing) return;
 
@@ -56,7 +64,14 @@ public class MissAudioManager {
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
+                    Log.d("MediaPlayer", "onPrepared: ");
                     mPreparing = false;
+
+                    if (mStopPostPrepared || mPaused) {
+                        stop();
+                        return;
+                    }
+
                     if (!mAudioUrl.equals(mMediaPlayer.dataSourcePath)) {
                         mMediaPlayer.reset();
                         initializeAndPrepare(mAudioUrl);
@@ -92,37 +107,48 @@ public class MissAudioManager {
     }
 
     public void stop() {
+        Log.d("MediaPlayer", "stop: ");
         if (mMediaPlayer != null) {
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-            mAudioUrl = null;
+            if (!mPreparing) {
+                mMediaPlayer.stop();
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+            } else {
+                mStopPostPrepared = true;
+            }
         }
     }
 
     public void pause() { // pause is async
         if (mMediaPlayer != null && !mPaused) {
-            mMediaPlayer.pause();
+            if (!mPreparing) {
+                mMediaPlayer.pause();
+            }
             mPaused = true;
         }
     }
 
     public void resume() { // resume is also async
         if (mMediaPlayer != null && mPaused) {
-            mMediaPlayer.start();
+            if (!mPreparing) {
+                mMediaPlayer.start();
+            }
             mPaused = false;
         }
     }
 
-    public boolean isPaused(String audioUrl) {
+    public boolean isPaused(String audioUrl, int id) {
         if (mMediaPlayer != null) {
-            return audioUrl != null && audioUrl.equals(mAudioUrl) && mPaused;
+            return uuid(audioUrl, id).equals(mUuid) && mPaused;
         }
         return false;
     }
 
-    public boolean isPlaying(String audioUrl) {
-        return audioUrl != null && audioUrl.equals(mAudioUrl) && !mPaused;
+    public boolean isPlaying(String audioUrl, int id) {
+        if (mMediaPlayer != null) {
+            return uuid(audioUrl, id).equals(mUuid) && !mPaused;
+        }
+        return false;
     }
 
     public int getCurrentPosition() {
