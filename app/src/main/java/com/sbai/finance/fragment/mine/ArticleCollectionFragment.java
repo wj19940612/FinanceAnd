@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.discovery.DailyReportActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -207,13 +206,13 @@ public class ArticleCollectionFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == BaseActivity.RESULT_OK) {
-            switch (requestCode) {
-                case REQ_CODE_ARTICLE_DETAIL_PAGE:
-                    refreshData();
-                    break;
-            }
-        }
+//        if (resultCode == BaseActivity.RESULT_OK) {
+//            switch (requestCode) {
+//                case REQ_CODE_ARTICLE_DETAIL_PAGE:
+//                    refreshData();
+//                    break;
+//            }
+//        }
     }
 
     @Override
