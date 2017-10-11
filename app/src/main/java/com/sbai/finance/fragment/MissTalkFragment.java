@@ -362,9 +362,6 @@ public class MissTalkFragment extends BaseFragment {
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				//下拉刷新时关闭语音播放
-				MediaPlayerManager.release();
-				mFloatWindow.setVisibility(View.GONE);
 
 				mSet.clear();
 				mCreateTime = null;

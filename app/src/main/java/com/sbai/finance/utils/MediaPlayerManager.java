@@ -19,11 +19,10 @@ public class MediaPlayerManager {
 	public static final int STATUS_PLAYING = 1;
 	public static final int STATUS_PAUSE = 2;
 
-
+	public static int STATUS;
 	public static int playingId;//播放id
 	public static String portrait;//小姐姐头像
 
-	public static int STATUS;
 	private static MediaPlayer mMediaPlayer;
 	private static AudioManager mAudioManager;
 
@@ -83,22 +82,6 @@ public class MediaPlayerManager {
 		}
 	}
 
-	private static int requestAudioFocus() {
-		if (mAudioManager == null) {
-			mAudioManager = (AudioManager) App.getAppContext().getSystemService(AUDIO_SERVICE);
-		}
-
-		return mAudioManager.requestAudioFocus(afChangeListener,
-				AudioManager.STREAM_MUSIC,
-				AudioManager.AUDIOFOCUS_GAIN);
-	}
-
-	private static void abandonAudioFocus() {
-		if (mAudioManager != null) {
-			mAudioManager.abandonAudioFocus(afChangeListener);
-		}
-	}
-
 	/**
 	 * 暂停播放
 	 */
@@ -139,7 +122,6 @@ public class MediaPlayerManager {
 
 	/**
 	 * 获取音频的时长
-	 *
 	 * @return
 	 */
 	public static int getDuration() {
@@ -151,7 +133,6 @@ public class MediaPlayerManager {
 
 	/**
 	 * 获取音频当前播放位置
-	 *
 	 * @return
 	 */
 	public static int getCurrentPosition() {
@@ -159,6 +140,29 @@ public class MediaPlayerManager {
 			return mMediaPlayer.getCurrentPosition();
 		}
 		return 0;
+	}
+
+	/**
+	 * 获取音频焦点,防止音轨并发
+	 * @return
+	 */
+	private static int requestAudioFocus() {
+		if (mAudioManager == null) {
+			mAudioManager = (AudioManager) App.getAppContext().getSystemService(AUDIO_SERVICE);
+		}
+
+		return mAudioManager.requestAudioFocus(afChangeListener,
+				AudioManager.STREAM_MUSIC,
+				AudioManager.AUDIOFOCUS_GAIN);
+	}
+
+	/**
+	 * 释放焦点
+	 */
+	private static void abandonAudioFocus() {
+		if (mAudioManager != null) {
+			mAudioManager.abandonAudioFocus(afChangeListener);
+		}
 	}
 
 	public static AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
