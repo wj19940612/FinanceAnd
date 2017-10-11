@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -1145,7 +1146,9 @@ public class FutureBattleActivity extends BaseActivity implements
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                     }
-                }).show();
+                })
+                .setGravity(Gravity.CENTER)
+                .show();
     }
 
     private void requestQuickSearchForLaunch(final int machType) {
@@ -1193,7 +1196,9 @@ public class FutureBattleActivity extends BaseActivity implements
                         dialog.dismiss();
                         showMatchDialog();
                     }
-                }).show();
+                })
+                .setGravity(Gravity.CENTER)
+                .show();
     }
 
     @Override
