@@ -214,7 +214,7 @@
     <string name="bind_success">绑定成功</string>
     <string name="bind_wechat_info">绑定微信号,登录更便捷,是否绑定?</string>
     <string name="bind">绑定</string>
-    <string name="is_logout_lemi">是否要退出乐米？</string>
+    <string name="is_logout_lemi">是否要退出登录？</string>
     <!--   消息 -->
     <string name="up_load_more">加载更多</string>
 
