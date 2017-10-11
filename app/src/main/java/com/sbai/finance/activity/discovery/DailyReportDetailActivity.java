@@ -25,12 +25,14 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -96,13 +98,13 @@ public class DailyReportDetailActivity extends BaseActivity {
     private String mId;
     private int mFormat;
     private String mShareImgUrl;
+    private String mShareUrl;
 
     private BroadcastReceiver mNetworkChangeReceiver;
     private WebViewClient mWebViewClient;
     private String mFirstContent;
     private String mTitleContent;
     private DailyReport mDailyReport;
-
 
     public String getRawCookie() {
         return mRawCookie;
@@ -136,7 +138,33 @@ public class DailyReportDetailActivity extends BaseActivity {
                         mDailyReport = data;
                         updateDailyReportData(data);
                     }
+
                 }).fireFree();
+    }
+
+    private void requestShareData() {
+        Client.requestShareData(Share.SHARE_CODE_DAILY_REPORT)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<Share>, Share>() {
+                    @Override
+                    protected void onRespSuccessData(Share data) {
+                        mShareImgUrl = data.getShareLeUrl();
+                        mTitleContent = data.getTitle();
+                        if (!TextUtils.isEmpty(data.getContent())) {
+                            mFirstContent = data.getContent();
+                        }
+                        mShareUrl = data.getShareLink();
+                        share();
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        share();
+                    }
+                })
+                .fireFree();
     }
 
     private void updateDailyReportData(DailyReport data) {
@@ -185,6 +213,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         mRawCookie = intent.getStringExtra(EX_RAW_COOKIE);
         mId = intent.getStringExtra(EX_ID);
         mFormat = intent.getIntExtra(EX_FORMAT, 0);
+        mShareUrl = String.format(Client.SHARE_URL_REPORT, mId);
     }
 
     @Override
@@ -209,36 +238,9 @@ public class DailyReportDetailActivity extends BaseActivity {
                 break;
             case R.id.share:
             case R.id.shareArea:
+
+                requestShareData();
                 umengEventCount(UmengCountEventId.REPORT_SHARE);
-                ShareDialog.with(getActivity())
-                        .hasFeedback(false)
-                        .setShareThumbUrl(mShareImgUrl)
-                        .setTitle(R.string.share_to)
-                        .setShareTitle(mTitleContent)
-                        .setShareDescription(mFirstContent)
-                        .setShareUrl(String.format(Client.SHARE_URL_REPORT, mId))
-                        .setListener(new ShareDialog.OnShareDialogCallback() {
-                            @Override
-                            public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
-                                switch (platform) {
-                                    case SINA_WEIBO:
-                                        umengEventCount(UmengCountEventId.REPORT_SHARE_SINA_WEIBO);
-                                        break;
-                                    case WECHAT_FRIEND:
-                                        umengEventCount(UmengCountEventId.REPORT_SHARE_FRIEND);
-                                        break;
-                                    case WECHAT_CIRCLE:
-                                        umengEventCount(UmengCountEventId.REPORT_SHARE_CIRCLE);
-                                        break;
-                                }
-                            }
-
-                            @Override
-                            public void onFeedbackClick(View view) {
-
-                            }
-                        })
-                        .show();
                 break;
             case R.id.refreshButton:
                 mWebView.reload();
@@ -252,6 +254,38 @@ public class DailyReportDetailActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    private void share() {
+        ShareDialog.with(getActivity())
+                .hasFeedback(false)
+                .setShareThumbUrl(mShareImgUrl)
+                .setTitle(R.string.share_to)
+                .setShareTitle(mTitleContent)
+                .setShareDescription(mFirstContent)
+                .setShareUrl(mShareUrl)
+                .setListener(new ShareDialog.OnShareDialogCallback() {
+                    @Override
+                    public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
+                        switch (platform) {
+                            case SINA_WEIBO:
+                                umengEventCount(UmengCountEventId.REPORT_SHARE_SINA_WEIBO);
+                                break;
+                            case WECHAT_FRIEND:
+                                umengEventCount(UmengCountEventId.REPORT_SHARE_FRIEND);
+                                break;
+                            case WECHAT_CIRCLE:
+                                umengEventCount(UmengCountEventId.REPORT_SHARE_CIRCLE);
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFeedbackClick(View view) {
+
+                    }
+                })
+                .show();
     }
 
     @Override

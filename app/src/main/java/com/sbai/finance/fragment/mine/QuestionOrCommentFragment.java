@@ -17,12 +17,10 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -98,8 +96,13 @@ public class QuestionOrCommentFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
-        requestMineQuestionOrComment(true);
         mSet = new HashSet<>();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshData();
     }
 
     private void initView() {
@@ -221,34 +224,34 @@ public class QuestionOrCommentFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == BaseActivity.RESULT_OK) {
-            switch (requestCode) {
-                case QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL:
-                    //我的提问可以直接刷新数据   评论回调数据不对，刷新服务器数据
-                    if (mQuestionType == TYPE_QUESTION) {
-                        if (mClickQuestion != null) {
-                            Praise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-                            int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, 0);
-                            int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, 0);
-
-                            if (prise != null) {
-                                mClickQuestion.setPriseCount(prise.getPriseCount());
-                            }
-                            mClickQuestion.setReplyCount(replyCount);
-                            mClickQuestion.setAwardCount(rewardCount);
-                            mMineQuestionAndAnswerAdapter.notifyDataSetChanged();
-                        }
-                    } else {
-                        refreshData();
-                    }
-                    break;
-                case SubmitQuestionActivity.REQ_CODE_ASK_QUESTION_LIKE_MISS:
-                    mSwipeRefreshLayout.setLoadMoreEnable(true);
-                    mSet.clear();
-                    requestMineQuestionOrComment(true);
-                    break;
-            }
-        }
+//        if (resultCode == BaseActivity.RESULT_OK) {
+//            switch (requestCode) {
+//                case QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL:
+//                    //我的提问可以直接刷新数据   评论回调数据不对，刷新服务器数据
+//                    if (mQuestionType == TYPE_QUESTION) {
+//                        if (mClickQuestion != null) {
+//                            Praise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+//                            int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, 0);
+//                            int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, 0);
+//
+//                            if (prise != null) {
+//                                mClickQuestion.setPriseCount(prise.getPriseCount());
+//                            }
+//                            mClickQuestion.setReplyCount(replyCount);
+//                            mClickQuestion.setAwardCount(rewardCount);
+//                            mMineQuestionAndAnswerAdapter.notifyDataSetChanged();
+//                        }
+//                    } else {
+//                        refreshData();
+//                    }
+//                    break;
+//                case SubmitQuestionActivity.REQ_CODE_ASK_QUESTION_LIKE_MISS:
+//                    mSwipeRefreshLayout.setLoadMoreEnable(true);
+//                    mSet.clear();
+//                    requestMineQuestionOrComment(true);
+//                    break;
+//            }
+//        }
     }
 
     @Override

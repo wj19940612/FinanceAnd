@@ -17,12 +17,10 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.MyCollect;
-import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -72,9 +70,14 @@ public class MyCollectQuestionFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         initView();
-        requestMyQuestionCollect();
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshData();
+    }
 
     private void initView() {
         mSet = new HashSet<>();
@@ -102,10 +105,7 @@ public class MyCollectQuestionFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mSet.clear();
-                mPage = 0;
-                mSwipeRefreshLayout.setLoadMoreEnable(true);
-                requestMyQuestionCollect();
+                refreshData();
             }
         });
 
@@ -115,6 +115,13 @@ public class MyCollectQuestionFragment extends BaseFragment {
                 requestMyQuestionCollect();
             }
         });
+    }
+
+    private void refreshData() {
+        mSet.clear();
+        mPage = 0;
+        mSwipeRefreshLayout.setLoadMoreEnable(true);
+        requestMyQuestionCollect();
     }
 
     private void initListEmptyView() {
@@ -181,30 +188,30 @@ public class MyCollectQuestionFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == BaseActivity.RESULT_OK) {
-            switch (requestCode) {
-                case QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL:
-                    if (mClickMyCollect != null) {
-                        Praise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-                        int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-                        int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
-                        if (prise != null) {
-                            mClickMyCollect.setPriseCount(prise.getPriseCount());
-                        }
-                        mClickMyCollect.setReplyCount(replyCount);
-                        mClickMyCollect.setAwardCount(rewardCount);
-
-                        boolean collectQuestion = data.getBooleanExtra(ExtraKeys.CANCEL_COLLECT, false);
-
-                        if (collectQuestion) {
-                            mMyCollectQuestionAdapter.remove(mClickMyCollect);
-                        }
-                        mMyCollectQuestionAdapter.notifyDataSetChanged();
-                    }
-                    break;
-            }
-
-        }
+//        if (resultCode == BaseActivity.RESULT_OK) {
+//            switch (requestCode) {
+//                case QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL:
+//                    if (mClickMyCollect != null) {
+//                        Praise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+//                        int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+//                        int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+//                        if (prise != null) {
+//                            mClickMyCollect.setPriseCount(prise.getPriseCount());
+//                        }
+//                        mClickMyCollect.setReplyCount(replyCount);
+//                        mClickMyCollect.setAwardCount(rewardCount);
+//
+//                        boolean collectQuestion = data.getBooleanExtra(ExtraKeys.CANCEL_COLLECT, false);
+//
+//                        if (collectQuestion) {
+//                            mMyCollectQuestionAdapter.remove(mClickMyCollect);
+//                        }
+//                        mMyCollectQuestionAdapter.notifyDataSetChanged();
+//                    }
+//                    break;
+//            }
+//
+//        }
     }
 
     @Override
