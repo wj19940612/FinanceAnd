@@ -124,7 +124,7 @@ public class FutureBattleActivity extends BaseActivity implements
     @BindView(R.id.loadingContent)
     LinearLayout mLoadingContent;
 
-
+    private BattleShareDialog mBattleShareDialog;
     private Battle mCurrentBattle;
     //
     private int mHistoryBattleId;
@@ -512,6 +512,9 @@ public class FutureBattleActivity extends BaseActivity implements
     private void dismissAllDialog() {
         SmartDialog.dismiss(this);
         BaseDialog.dismiss(this);
+        if (mBattleShareDialog != null) {
+            mBattleShareDialog.dismiss();
+        }
     }
 
 
@@ -1092,25 +1095,26 @@ public class FutureBattleActivity extends BaseActivity implements
                 .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<Share>, Share>() {
+
                     @Override
                     protected void onRespSuccessData(Share data) {
-                        BattleShareDialog.with(getActivity())
+                        mBattleShareDialog = BattleShareDialog.with(getActivity())
                                 .setShareThumbUrl(data.getShareLeUrl())
                                 .setShareDescription(data.getContent())
                                 .setShareTitle(data.getTitle())
-                                .setShareUrl(data.getShareLink())
-                                .show();
+                                .setShareUrl(data.getShareLink());
+                        mBattleShareDialog.show();
                     }
 
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
-                        BattleShareDialog.with(getActivity())
+                        mBattleShareDialog = BattleShareDialog.with(getActivity())
                                 .setShareDescription(getString(R.string.future_battle_desc))
                                 .setShareTitle(getString(R.string.invite_you_join_future_battle,
                                         LocalUser.getUser().getUserInfo().getUserName()))
-                                .setShareUrl(Client.SHARE_URL_FUTURE_BATTLE)
-                                .show();
+                                .setShareUrl(Client.SHARE_URL_FUTURE_BATTLE);
+                        mBattleShareDialog.show();
                     }
                 })
                 .fireFree();

@@ -44,7 +44,7 @@ public class BattleShareDialog implements View.OnClickListener {
     public static BattleShareDialog with(Activity activity) {
         BattleShareDialog battleShareDialog = new BattleShareDialog();
         battleShareDialog.mActivity = activity;
-        battleShareDialog.mSmartDialog = SmartDialog.with(activity);
+        battleShareDialog.mSmartDialog = SmartDialog.withSingleMap(activity);
         battleShareDialog.mView = LayoutInflater.from(activity).inflate(R.layout.dialog_fragment_share, null);
         battleShareDialog.mSmartDialog.setCustomView(battleShareDialog.mView).setGravity(Gravity.BOTTOM);
         battleShareDialog.init();
@@ -124,6 +124,12 @@ public class BattleShareDialog implements View.OnClickListener {
                 .setGravity(Gravity.BOTTOM)
                 .setWindowAnim(R.style.BottomDialogAnimation)
                 .show();
+    }
+
+    public void  dismiss(){
+        if(mSmartDialog!=null){
+            mSmartDialog.dismiss();
+        }
     }
 
     private void shareToPlatform(SHARE_MEDIA platform) {
