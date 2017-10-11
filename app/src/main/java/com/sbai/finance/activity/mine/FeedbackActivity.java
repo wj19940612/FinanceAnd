@@ -97,6 +97,9 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         initData(getIntent());
         initViews();
 
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
         requestFeedbackList(true);
     }
 
