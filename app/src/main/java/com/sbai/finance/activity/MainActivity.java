@@ -44,6 +44,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     BottomTabs mBottomTabs;
 
     private MainFragmentsAdapter mMainFragmentsAdapter;
+    private StartDialogFragment mStartDialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                                     && LocalUser.getUser().isLogin()) {
                                 return;
                             }
-                            StartDialogFragment.newInstance(data).show(getSupportFragmentManager());
+                            mStartDialogFragment = StartDialogFragment.newInstance(data);
+                            mStartDialogFragment.show(getSupportFragmentManager());
                         }
                     }).fireFree();
         }
@@ -79,7 +81,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         super.onNewIntent(intent);
         int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
         if (0 <= currentItem && currentItem < mViewPager.getChildCount()) {
-            mViewPager.setCurrentItem(currentItem,false);
+            mViewPager.setCurrentItem(currentItem, false);
         }
 
         Banner banner = intent.getParcelableExtra(ExtraKeys.ACTIVITY);
@@ -149,6 +151,13 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 .fireFree();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mStartDialogFragment != null) {
+            mStartDialogFragment.dismissAllowingStateLoss();
+        }
+    }
 
     @Override
     protected void onDestroy() {

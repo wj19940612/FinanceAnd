@@ -38,7 +38,6 @@ import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.QuestionCollect;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.miss.RewardInfo;
-import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -103,7 +102,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	ImageView mMissAvatarPlaying;
 	@BindView(R.id.VoiceAnimator)
 	ImageView mVoiceAnimator;
-	@BindView(R.id.floatWindow)
+	@BindView(R.id.missFloatWindow)
 	LinearLayout mFloatWindow;
 
 	private int mQuestionId;
@@ -430,8 +429,14 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				stopCountDownTime();
 				progressBar.setProgress(0);
 				soundTime.setText(getString(R.string._seconds, item.getSoundTime()));
+				sendPlayFinishBroadcast();
 			}
 		});
+	}
+
+	private void sendPlayFinishBroadcast() {
+		LocalBroadcastManager.getInstance(getActivity())
+				.sendBroadcast(new Intent(ACTION_QUESTION_DETAIL_PLAY_FINISH));
 	}
 
 	private void stopCountDownTime() {
@@ -765,7 +770,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		filter.addAction(ACTION_REPLY_SUCCESS);
 		filter.addAction(ACTION_REWARD_SUCCESS);
 		filter.addAction(ACTION_LOGIN_SUCCESS);
-		filter.addAction(ACTION_PLAY_FINISH);
+		filter.addAction(ACTION_MISS_PLAY_FINISH);
 		LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
 	}
 
@@ -803,7 +808,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				requestQuestionReplyList(true);
 			}
 
-			if (ACTION_PLAY_FINISH.equalsIgnoreCase(intent.getAction())) {
+			if (ACTION_MISS_PLAY_FINISH.equalsIgnoreCase(intent.getAction())) {
 				requestQuestionDetail();
 				mFloatWindow.setVisibility(View.GONE);
 			}
