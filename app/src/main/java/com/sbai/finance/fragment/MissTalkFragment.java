@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment;
 
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -73,13 +74,13 @@ import static com.sbai.finance.R.id.listenerNumber;
 import static com.sbai.finance.R.id.soundTime;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGOUT_SUCCESS;
-import static com.sbai.finance.activity.BaseActivity.ACTION_PLAY_FINISH;
 import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
 public class MissTalkFragment extends BaseFragment {
 
     private static final int SUBMIT_QUESTION = 1001;
+    private static final String ACTION_PLAY_FINISH = "ACTION_PLAY_FINISH";
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -863,5 +864,4 @@ public class MissTalkFragment extends BaseFragment {
             }
         }
     }
-
 }

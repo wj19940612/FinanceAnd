@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -66,19 +65,6 @@ public class CommentActivity extends BaseActivity {
 			super.onBackPressed();
 		}
 		showCloseDialog();
-	}
-
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent event) {
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-			if (TextUtils.isEmpty(mQuestionComment.getText())) {
-				finish();
-			}
-
-			showCloseDialog();
-			return true;
-		}
-		return super.dispatchKeyEvent(event);
 	}
 
 	@Override

@@ -7,7 +7,7 @@
     android:background="@color/background"
     android:orientation="vertical">
 
-    <com.sbai.finance.view.MissProfileSwipeRefreshLayout
+    <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:divider="@null"/>
 
-    </com.sbai.finance.view.MissProfileSwipeRefreshLayout>
+    </com.sbai.finance.view.CustomSwipeRefreshLayout>
 
     <com.sbai.finance.view.TitleBar
         android:id="@+id/titleBar"

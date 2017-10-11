@@ -130,7 +130,8 @@ public class PushIntentService extends GTIntentService {
         builder.setContentIntent(intent);
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(R.string.app_name, builder.build());
+//        notificationManager.notify(R.string.app_name, builder.build());
+        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
     }
 
     @NonNull

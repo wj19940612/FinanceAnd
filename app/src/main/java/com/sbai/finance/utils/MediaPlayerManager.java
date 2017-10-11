@@ -3,7 +3,11 @@ package com.sbai.finance.utils;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
+import com.sbai.finance.App;
+
 import java.io.IOException;
+
+import static android.content.Context.AUDIO_SERVICE;
 
 /**
  * 音频播放管理类
@@ -15,12 +19,12 @@ public class MediaPlayerManager {
 	public static final int STATUS_PLAYING = 1;
 	public static final int STATUS_PAUSE = 2;
 
-
+	public static int STATUS;
 	public static int playingId;//播放id
 	public static String portrait;//小姐姐头像
 
-	public static int STATUS;
 	private static MediaPlayer mMediaPlayer;
+	private static AudioManager mAudioManager;
 
 	public static void setPlayingId(int playId) {
 		MediaPlayerManager.playingId = playId;
@@ -55,10 +59,10 @@ public class MediaPlayerManager {
 
 		try {
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mMediaPlayer.setOnCompletionListener(onCompletionListener);
 			mMediaPlayer.setDataSource(url);
 			mMediaPlayer.prepareAsync();
 			mMediaPlayer.setOnPreparedListener(onPreparedListener);
+			mMediaPlayer.setOnCompletionListener(onCompletionListener);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -69,7 +73,11 @@ public class MediaPlayerManager {
 	 */
 	public static void start() {
 		if (mMediaPlayer != null) {
-			mMediaPlayer.start();
+			int result = requestAudioFocus();
+			if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+				mMediaPlayer.start();
+			}
+
 			STATUS = STATUS_PLAYING;
 		}
 	}
@@ -80,6 +88,7 @@ public class MediaPlayerManager {
 	public static void pause() {
 		if (mMediaPlayer != null && STATUS == STATUS_PLAYING) {
 			mMediaPlayer.pause();
+			abandonAudioFocus();
 			STATUS = STATUS_PAUSE;
 		}
 	}
@@ -89,7 +98,11 @@ public class MediaPlayerManager {
 	 */
 	public static void resume() {
 		if (mMediaPlayer != null && STATUS == STATUS_PAUSE) {
-			mMediaPlayer.start();
+			int result = requestAudioFocus();
+			if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+				mMediaPlayer.start();
+			}
+
 			STATUS = STATUS_PLAYING;
 		}
 	}
@@ -102,6 +115,7 @@ public class MediaPlayerManager {
 			mMediaPlayer.stop();
 			mMediaPlayer.release();
 			mMediaPlayer = null;
+			abandonAudioFocus();
 			STATUS = STATUS_STOP;
 		}
 	}
@@ -129,4 +143,73 @@ public class MediaPlayerManager {
 		}
 		return 0;
 	}
+
+	/**
+	 * 获取音频焦点,防止音轨并发
+	 *
+	 * @return
+	 */
+	private static int requestAudioFocus() {
+		if (mAudioManager == null) {
+			mAudioManager = (AudioManager) App.getAppContext().getSystemService(AUDIO_SERVICE);
+		}
+
+		return mAudioManager.requestAudioFocus(afChangeListener,
+				AudioManager.STREAM_MUSIC,
+				AudioManager.AUDIOFOCUS_GAIN);
+	}
+
+	/**
+	 * 释放焦点
+	 */
+	private static void abandonAudioFocus() {
+		if (mAudioManager != null) {
+			mAudioManager.abandonAudioFocus(afChangeListener);
+		}
+	}
+
+	private static AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+		public void onAudioFocusChange(int focusChange) {
+			switch (focusChange) {
+				case AudioManager.AUDIOFOCUS_GAIN:
+					//重新获取焦点
+					if (!mMediaPlayer.isPlaying()) {
+						mMediaPlayer.start();
+					}
+					mMediaPlayer.setVolume(1.0f, 1.0f);//还原音量
+					break;
+
+				case AudioManager.AUDIOFOCUS_LOSS:
+					//长时间失去焦点
+					if (mMediaPlayer.isPlaying()) {
+						mMediaPlayer.stop();
+						mMediaPlayer.release();
+						mMediaPlayer = null;
+					}
+					break;
+
+				case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+					//暂时失去焦点
+					if (mMediaPlayer.isPlaying()) {
+						mMediaPlayer.pause();
+					}
+					break;
+
+				case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+					//失去焦点，无需停止播放，降低声音即可
+					if (mMediaPlayer.isPlaying()) {
+						mMediaPlayer.setVolume(0.2f, 0.2f);
+					}
+					break;
+
+				case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
+					//获取焦点失败
+					mMediaPlayer.stop();
+					mMediaPlayer.release();
+					mMediaPlayer = null;
+					break;
+
+			}
+		}
+	};
 }

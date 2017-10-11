@@ -135,6 +135,9 @@ public class StudyRoomActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_room);
         ButterKnife.bind(this);
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
         initStudyView();
         initListView();
         initLoginReceiver();

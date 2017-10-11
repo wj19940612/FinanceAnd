@@ -97,6 +97,9 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         initData(getIntent());
         initViews();
 
+        if (!LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
         requestFeedbackList(true);
     }
 
@@ -176,18 +179,13 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         }
         mFeedbackAdapter.addFeedbackList(data);
         if (needScrollToLast) {
-//            listViewScrollBottom();
-//        } else {
-//            mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
-//            mListView.setStackFromBottom(false);
-
             mListView.setSelection(View.FOCUS_DOWN);
             mListView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     mListView.setSelection(View.FOCUS_DOWN);
                 }
-            },200);
+            }, 240);
         }
     }
 
@@ -206,13 +204,11 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void listViewScrollBottom() {
-        mListView.post(new Runnable() {
-            @Override
-            public void run() {
-                mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-                mListView.setStackFromBottom(true);
-            }
-        });
+        mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        mListView.setStackFromBottom(true);
+
+//        mListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
+//            mListView.setStackFromBottom(false);
     }
 
     private void updateTitle(List<Feedback> data) {
@@ -264,9 +260,15 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.send:
+                if (mFeedbackAdapter.getCount() > 6) {
+                    listViewScrollBottom();
+                }
                 sendFeedbackText();
                 break;
             case R.id.addPic:
+                if (mFeedbackAdapter.getCount() > 6) {
+                    listViewScrollBottom();
+                }
                 sendPicToCustomer();
                 break;
         }
@@ -398,14 +400,13 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
         }
         Feedback feedback = data.get(0);
         mFeedbackAdapter.addFeedbackItem(feedback);
+
         mListView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mListView.setSelection(mFeedbackAdapter.getCount()-1);
+                mListView.setSelection(mFeedbackAdapter.getCount() - 1);
             }
-        },220);
-
-//        listViewScrollBottom();
+        }, 240);
         if (contentType == CONTENT_TYPE_TEXT) {
             feedback.setContent(content);
             mCommentContent.setText("");

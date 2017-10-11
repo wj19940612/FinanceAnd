@@ -1,13 +1,11 @@
 package com.sbai.finance.activity.miss;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -67,6 +65,7 @@ import butterknife.OnClick;
 import static com.sbai.finance.R.id.listenerNumber;
 import static com.sbai.finance.R.id.playImage;
 import static com.sbai.finance.R.id.progressBar;
+import static com.sbai.finance.R.id.soundTime;
 import static com.sbai.finance.activity.miss.ReplyActivity.ACTION_REPLY_SUCCESS;
 import static com.sbai.finance.net.Client.SHARE_URL_QUESTION;
 
@@ -131,7 +130,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private TextView mCommentNumber;
 	private TextView mNoComment;
 	private ReplyDialogFragment mReplyDialogFragment;
-	private static AudioManager mAudioManager;
 	private boolean mCancelCollect = false;
 	private Timer mTimer = new Timer();
 	private TimerTask mTimerTask;
@@ -144,18 +142,14 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 		initData(getIntent());
 		mSet = new HashSet<>();
-		mAudioManager = (AudioManager) getActivity().getSystemService(AUDIO_SERVICE);
+
 		initHeaderView();
 		mQuestionReplyListAdapter = new QuestionReplyListAdapter(this);
 		mListView.setAdapter(mQuestionReplyListAdapter);
 		mListView.setOnItemClickListener(this);
 		mListView.setFocusable(false);
 
-		if (mQuestionDetail != null) {
-			updateQuestionDetail(mQuestionDetail);
-		} else {
-			requestQuestionDetail();
-		}
+		requestQuestionDetail();
 		requestQuestionReplyList(true);
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
@@ -248,11 +242,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	}
 
 	private void initData(Intent intent) {
-		mQuestionDetail = (Question) intent.getSerializableExtra(ExtraKeys.QUESTION);
 		mQuestionId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
-		if (mQuestionDetail != null) {
-			mQuestionId = mQuestionDetail.getId();
-		}
 		mMongoId = intent.getStringExtra(Launcher.EX_PAYLOAD_1);
 	}
 
@@ -265,7 +255,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		mMissAvatar = (ImageView) header.findViewById(R.id.missAvatar);
 		mPlayImage = (ImageView) header.findViewById(playImage);
 		mProgressBar = (ProgressBar) header.findViewById(progressBar);
-		mSoundTime = (TextView) header.findViewById(R.id.soundTime);
+		mSoundTime = (TextView) header.findViewById(soundTime);
 		mListenerNumber = (TextView) header.findViewById(listenerNumber);
 		mPraiseNumber = (TextView) header.findViewById(R.id.praiseNumber);
 		mRewardNumber = (TextView) header.findViewById(R.id.rewardNumber);
@@ -286,7 +276,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				.into(mMissAvatar);
 
 		mName.setText(question.getUserName());
-		mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(question.getCreateTime()));
+		mAskTime.setText(DateUtil.getMissFormatTime(question.getCreateTime()));
 		mQuestion.setText(question.getQuestionContext());
 		mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
 		mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(question.getPriseCount())));
@@ -391,6 +381,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 	public void stopPreviousVoice() {
 		MediaPlayerManager.release();
+		stopCountDownTime();
 		if (mFloatWindow != null) {
 			mFloatWindow.setVisibility(View.GONE);
 		}
@@ -414,25 +405,20 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			}).fire();
 		}
 
-		final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-		progressDialog.setMessage("正在缓冲...");
-		progressDialog.show();
+		playImage.post(new Runnable() {
+			@Override
+			public void run() {
+				playImage.setImageResource(R.drawable.ic_pause);
+			}
+		});
 
 		MediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnPreparedListener() {
 			@Override
 			public void onPrepared(MediaPlayer mp) {
-				int result = mAudioManager.requestAudioFocus(afChangeListener,
-						AudioManager.STREAM_MUSIC,
-						AudioManager.AUDIOFOCUS_GAIN);
-				if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-					//获取焦点之后开始播放,避免音轨并发
-					MediaPlayerManager.start();
-					playImage.setImageResource(R.drawable.ic_pause);
-					progressDialog.dismiss();
-					startCountDownTime(soundTime, item.getSoundTime(), progressBar);
-					MediaPlayerManager.setPlayingId(item.getId());
-					MediaPlayerManager.setPortrait(item.getCustomPortrait());
-				}
+				MediaPlayerManager.start();
+				startCountDownTime(soundTime, item.getSoundTime(), progressBar);
+				MediaPlayerManager.setPlayingId(item.getId());
+				MediaPlayerManager.setPortrait(item.getCustomPortrait());
 			}
 		}, new MediaPlayer.OnCompletionListener() {
 			@Override
@@ -443,9 +429,14 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				stopCountDownTime();
 				progressBar.setProgress(0);
 				soundTime.setText(getString(R.string._seconds, item.getSoundTime()));
-				mAudioManager.abandonAudioFocus(afChangeListener);
+				sendPlayFinishBroadcast();
 			}
 		});
+	}
+
+	private void sendPlayFinishBroadcast() {
+		LocalBroadcastManager.getInstance(getActivity())
+				.sendBroadcast(new Intent(ACTION_QUESTION_DETAIL_PLAY_FINISH));
 	}
 
 	private void stopCountDownTime() {
@@ -455,53 +446,25 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		}
 	}
 
-	public AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-		public void onAudioFocusChange(int focusChange) {
-			if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.pause();
-				}
-
-			} else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-				if (MediaPlayerManager.STATUS != MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.start();
-				}
-
-			} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.release();
-				}
-
-			} else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.release();
-				}
-
-			} else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.release();
-				}
-			}
-		}
-	};
-
 	private void startCountDownTime(final TextView sound, final int soundTime, final ProgressBar progressBar) {
 		progressBar.setMax(soundTime * 1000);
-		mTimerTask = new TimerTask() {
-			@Override
-			public void run() {
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						int position = MediaPlayerManager.getCurrentPosition();
-						sound.setText(getString(R.string._seconds, (soundTime * 1000 - position) / 1000));
-						progressBar.setProgress(position);
-					}
-				});
+		if (mTimerTask == null) {
+			mTimerTask = new TimerTask() {
+				@Override
+				public void run() {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							int position = MediaPlayerManager.getCurrentPosition();
+							sound.setText(getString(R.string._seconds, (soundTime * 1000 - position) / 1000));
+							progressBar.setProgress(position);
+						}
+					});
 
-			}
-		};
-		mTimer.schedule(mTimerTask, 0, 100);
+				}
+			};
+			mTimer.schedule(mTimerTask, 0, 100);
+		}
 	}
 
 	@Override
@@ -807,7 +770,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		filter.addAction(ACTION_REPLY_SUCCESS);
 		filter.addAction(ACTION_REWARD_SUCCESS);
 		filter.addAction(ACTION_LOGIN_SUCCESS);
-		filter.addAction(ACTION_PLAY_FINISH);
+		filter.addAction(ACTION_MISS_PLAY_FINISH);
 		LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
 	}
 
@@ -845,7 +808,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				requestQuestionReplyList(true);
 			}
 
-			if (ACTION_PLAY_FINISH.equalsIgnoreCase(intent.getAction())) {
+			if (ACTION_MISS_PLAY_FINISH.equalsIgnoreCase(intent.getAction())) {
 				requestQuestionDetail();
 				mFloatWindow.setVisibility(View.GONE);
 			}
