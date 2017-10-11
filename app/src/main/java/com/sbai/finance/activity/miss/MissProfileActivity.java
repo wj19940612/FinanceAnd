@@ -1,10 +1,11 @@
 package com.sbai.finance.activity.miss;
 
+import android.animation.ArgbEvaluator;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -49,7 +51,7 @@ import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
-import com.sbai.finance.view.MissProfileSwipeRefreshLayout;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
 
@@ -76,7 +78,7 @@ public class MissProfileActivity extends BaseActivity implements
 	@BindView(R.id.listView)
 	ListView mListView;
 	@BindView(R.id.swipeRefreshLayout)
-	MissProfileSwipeRefreshLayout mSwipeRefreshLayout;
+	CustomSwipeRefreshLayout mSwipeRefreshLayout;
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
 
@@ -88,9 +90,6 @@ public class MissProfileActivity extends BaseActivity implements
 	private List<Question> mHerAnswerList;
 	private Miss mMiss;
 	private RefreshReceiver mRefreshReceiver;
-	private int mPlayingID = -1;
-	private int mMissIntroducePlayingID = -1;
-
 	private ImageView mAvatar;
 	private TextView mName;
 	private TextView mVoice;
@@ -105,9 +104,7 @@ public class MissProfileActivity extends BaseActivity implements
 	private TextView mAttentionText;
 	private LinearLayout mReward;
 	private LinearLayout mEmpty;
-	private AudioManager mAudioManager;
-	private Timer mTimer = new Timer();
-	private TimerTask mTimerTask;
+	private ArgbEvaluator mEvaluator;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,17 +117,39 @@ public class MissProfileActivity extends BaseActivity implements
 		initHeaderView();
 
 		mSet = new HashSet<>();
+		mEvaluator = new ArgbEvaluator();
 		mHerAnswerList = new ArrayList<>();
 		mHerAnswerAdapter = new HerAnswerAdapter(this);
 		mListView.setAdapter(mHerAnswerAdapter);
 		mListView.setOnItemClickListener(this);
-		mSwipeRefreshLayout.setTitleBar(mTitleBar);
 		mSwipeRefreshLayout.setProgressViewEndTarget(false, (int) Display.dp2Px(100, getResources()));
 
 		requestMissDetail();
 		requestHerAnswerList(true);
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
+
+		mSwipeRefreshLayout.setOnScrollListener(new CustomSwipeRefreshLayout.OnScrollListener() {
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				if (mTitleBar != null) {
+					int bgColor = 0X0affffff;
+					float alpha = 0;
+					if (getListScrollY() < 0) {
+						bgColor = 0X0aFFFFFF;
+						alpha = 0;
+					} else if (getListScrollY() > 300) {
+						bgColor = 0XFF55ADFF;
+						alpha = 1;
+					} else {
+						bgColor = (int) mEvaluator.evaluate(getListScrollY() / 300.f, 0X03aFFFFF, 0XFF55ADFF);
+						alpha = getListScrollY() / 300.f;
+					}
+					mTitleBar.setBackgroundColor(bgColor);
+					mTitleBar.setTitleAlpha(alpha);
+				}
+			}
+		});
 
 		mHerAnswerAdapter.setCallback(new HerAnswerAdapter.ItemCallback() {
 			@Override
@@ -158,6 +177,7 @@ public class MissProfileActivity extends BaseActivity implements
 						}
 					}).fire();
 				} else {
+					stopPreviousVoice();
 					Launcher.with(getActivity(), LoginActivity.class).execute();
 				}
 			}
@@ -167,37 +187,38 @@ public class MissProfileActivity extends BaseActivity implements
 				if (LocalUser.getUser().isLogin()) {
 					RewardMissActivity.show(getActivity(), item.getId(), RewardInfo.TYPE_QUESTION);
 				} else {
+					stopPreviousVoice();
 					Launcher.with(getActivity(), LoginActivity.class).execute();
 				}
 			}
 
 			@Override
-			public void voiceOnClick(final Question item, final int position, final ProgressBar progressBar, TextView soundTime, TextView listenerNumber, ImageView playImage) {
+			public void voiceOnClick(final Question item) {
 				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_STOP) {
 					//结束状态直接开始播放
-					playVoice(item, playImage, progressBar, soundTime, listenerNumber);
+					playVoice(item);
 				} else {
 					if (MediaPlayerManager.playingId == item.getId()) {
 						if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE) {
 							MediaPlayerManager.resume();
-							playImage.setImageResource(R.drawable.ic_pause);
+							item.setPlaying(true);
+							mHerAnswerAdapter.notifyDataSetChanged();
 						} else {
 							MediaPlayerManager.pause();
-							playImage.setImageResource(R.drawable.ic_play);
+							item.setPlaying(false);
+							mHerAnswerAdapter.notifyDataSetChanged();
 						}
 					} else {
 						stopPreviousVoice();
 						//关闭上一个语音,开始这个
-						playVoice(item, playImage, progressBar, soundTime, listenerNumber);
+						playVoice(item);
 					}
 				}
 			}
 		});
 	}
 
-	private void playVoice(final Question item, final ImageView playImage,
-	                       final ProgressBar progressBar, final TextView soundTime, final TextView listenerNumber) {
-
+	private void playVoice(final Question item) {
 		if (!MissVoiceRecorder.isHeard(item.getId())) {
 			//没听过的
 			Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
@@ -206,118 +227,44 @@ public class MissProfileActivity extends BaseActivity implements
 					if (resp.isSuccess()) {
 						MissVoiceRecorder.markHeard(item.getId());
 						item.setListenCount(item.getListenCount() + 1);
-						listenerNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
-						listenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
+						mHerAnswerAdapter.notifyDataSetChanged();
 					}
 				}
 			}).fire();
 		}
 
-		playImage.post(new Runnable() {
-			@Override
-			public void run() {
-				playImage.setImageResource(R.drawable.ic_pause);
-			}
-		});
+		item.setPlaying(true);
+		mHerAnswerAdapter.notifyDataSetChanged();
 
 		MediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnPreparedListener() {
 			@Override
 			public void onPrepared(MediaPlayer mp) {
-				int result = mAudioManager.requestAudioFocus(afChangeListener,
-						AudioManager.STREAM_MUSIC,
-						AudioManager.AUDIOFOCUS_GAIN);
-				if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 					//获取焦点之后开始播放,避免音轨并发
 					MediaPlayerManager.start();
-					setCountDownTime(soundTime, MediaPlayerManager.getDuration(), progressBar);
 					MediaPlayerManager.setPlayingId(item.getId());
 					MediaPlayerManager.setPortrait(item.getCustomPortrait());
-				}
+					mHerAnswerAdapter.notifyDataSetChanged();
 			}
 		}, new MediaPlayer.OnCompletionListener() {
 			@Override
 			public void onCompletion(MediaPlayer mp) {
-				playImage.setImageResource(R.drawable.ic_play);
 				MediaPlayerManager.release();
-				stopTimerTask();
-				progressBar.setProgress(0);
-				soundTime.setText(getString(R.string._seconds, item.getSoundTime()));
-				mAudioManager.abandonAudioFocus(afChangeListener);
+				mHerAnswerAdapter.notifyDataSetChanged();
+				//播放结束之后发个广播给问题详情页刷新界面
+				//sendPlayFinishBroadcast();
 			}
 		});
 	}
 
-	public AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-		public void onAudioFocusChange(int focusChange) {
-			if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.pause();
-				}
-
-			} else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-				if (MediaPlayerManager.STATUS != MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.start();
-				}
-
-			} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.release();
-				}
-
-			} else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.release();
-				}
-
-			} else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.release();
-				}
-			}
-		}
-	};
-
-	private void setCountDownTime(final TextView sound, final int soundTime, final ProgressBar progressBar) {
-		progressBar.setMax(soundTime);
-		mTimerTask = new TimerTask() {
-			@Override
-			public void run() {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING ) {
-					getActivity().runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							int position = MediaPlayerManager.getCurrentPosition();
-							int duration = MediaPlayerManager.getDuration();
-							if (duration > 0) {
-								sound.setText(getString(R.string._seconds, (duration - position) / 1000));
-								progressBar.setProgress(position);
-							}
-						}
-					});
-				}
-			}
-		};
-		mTimer.schedule(mTimerTask, 0, 100);
-	}
-
 	public void stopPreviousVoice() {
-		stopTimerTask();
-
+		MediaPlayerManager.release();
 		for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
 			Question question = mHerAnswerAdapter.getItem(i);
 			if (question != null) {
 				if (question.getId() == MediaPlayerManager.playingId) {
-					MediaPlayerManager.playingId = -1;
 					mHerAnswerAdapter.notifyDataSetChanged();
 				}
 			}
-		}
-	}
-
-	private void stopTimerTask() {
-		if (mTimerTask != null) {
-			mTimerTask.cancel();
-			mTimerTask = null;
 		}
 	}
 
@@ -346,6 +293,18 @@ public class MissProfileActivity extends BaseActivity implements
 		mAttention.setOnClickListener(this);
 		mReward.setOnClickListener(this);
 		mListView.addHeaderView(header);
+	}
+
+	public int getListScrollY() {
+		View view = mListView.getChildAt(0);
+
+		if (view == null) {
+			return 0;
+		}
+
+		int firstVisiblePosition = mListView.getFirstVisiblePosition();
+		int top = view.getTop();
+		return -top + firstVisiblePosition * view.getHeight();
 	}
 
 	@Override
@@ -386,6 +345,7 @@ public class MissProfileActivity extends BaseActivity implements
 							}
 						}).fire();
 					} else {
+						stopPreviousVoice();
 						Launcher.with(getActivity(), LoginActivity.class).execute();
 					}
 				} else {
@@ -398,6 +358,7 @@ public class MissProfileActivity extends BaseActivity implements
 						RewardMissActivity.show(getActivity(), mCustomId, RewardInfo.TYPE_MISS);
 					} else {
 						Intent intent = new Intent(getActivity(), LoginActivity.class);
+						stopPreviousVoice();
 						startActivityForResult(intent, REQ_MISS_REWARD_LOGIN);
 					}
 				} else {
@@ -410,26 +371,7 @@ public class MissProfileActivity extends BaseActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		//锁屏或者在后台运行或者跳转页面时停止播放和动画
 
-		if (mPlayingID != -1) {
-			for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
-				Question question = mHerAnswerAdapter.getItem(i);
-				if (question != null) {
-					if (question.getId() == mPlayingID) {
-						question.setPlaying(false);
-						mHerAnswerAdapter.notifyDataSetChanged();
-					}
-				}
-			}
-		}
-		mPlayingID = -1;
-
-		if (mMissIntroducePlayingID != -1) {
-			mVoiceLevel.clearAnimation();
-			mVoiceLevel.setBackgroundResource(R.drawable.ic_miss_voice_4);
-			mMissIntroducePlayingID = -1;
-		}
 	}
 
 	private void requestMissDetail() {
@@ -466,6 +408,7 @@ public class MissProfileActivity extends BaseActivity implements
 							.execute();
 				} else {
 					Intent intent = new Intent(getActivity(), LoginActivity.class);
+					stopPreviousVoice();
 					startActivityForResult(intent, REQ_SUBMIT_QUESTION_LOGIN);
 				}
 			}
@@ -555,15 +498,13 @@ public class MissProfileActivity extends BaseActivity implements
 				requestMissDetail();
 				requestHerAnswerList(true);
 
-
-				mPlayingID = -1;
 				mVoiceLevel.clearAnimation();
 				mVoiceLevel.setBackgroundResource(R.drawable.ic_miss_voice_4);
-				mMissIntroducePlayingID = -1;
+
 			}
 		});
 
-		mSwipeRefreshLayout.setOnLoadMoreListener(new MissProfileSwipeRefreshLayout.OnLoadMoreListener() {
+		mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
 			@Override
 			public void onLoadMore() {
 				mListView.postDelayed(new Runnable() {
@@ -657,15 +598,17 @@ public class MissProfileActivity extends BaseActivity implements
 
 			void rewardOnClick(Question item);
 
-			void voiceOnClick(Question item, int position, ProgressBar progressBar, TextView voiceTime, TextView listenerNumber, ImageView playImage);
+			void voiceOnClick(Question item);
 		}
 
 		private Context mContext;
 		private ItemCallback mCallback;
+		private Activity mActivity;
 
 		private HerAnswerAdapter(@NonNull Context context) {
 			super(context, 0);
 			this.mContext = context;
+			this.mActivity = (Activity) context;
 		}
 
 		public void setCallback(ItemCallback callback) {
@@ -698,7 +641,7 @@ public class MissProfileActivity extends BaseActivity implements
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			viewHolder.bindingData(mContext, getItem(position), position, mCallback, isTheDifferentMonth(position));
+			viewHolder.bindingData(mContext, getItem(position), position, mCallback, isTheDifferentMonth(position), mActivity);
 			return convertView;
 		}
 
@@ -709,8 +652,8 @@ public class MissProfileActivity extends BaseActivity implements
 			TextView mDay;
 			@BindView(R.id.question)
 			TextView mQuestion;
-			@BindView(R.id.voiceTime)
-			TextView mVoiceTime;
+			@BindView(R.id.soundTime)
+			TextView mSoundTime;
 			@BindView(R.id.listenerNumber)
 			TextView mListenerNumber;
 			@BindView(R.id.praiseNumber)
@@ -728,6 +671,9 @@ public class MissProfileActivity extends BaseActivity implements
 				ButterKnife.bind(this, view);
 			}
 
+			private Timer mTimer = new Timer();
+			private TimerTask mTimerTask;
+
 			static class HeaderViewHolder {
 				@BindView(R.id.adsorb_text)
 				TextView mAdsorbText;
@@ -739,7 +685,7 @@ public class MissProfileActivity extends BaseActivity implements
 
 			public void bindingData(final Context context, final Question item,
 			                        final int position, final ItemCallback callback,
-			                        boolean theDifferentMonth) {
+			                        boolean theDifferentMonth, Activity activity) {
 				if (item == null) return;
 
 				if (theDifferentMonth) {
@@ -751,10 +697,8 @@ public class MissProfileActivity extends BaseActivity implements
 
 				mDay.setText(DateUtil.getFormatDay(item.getCreateTime()).substring(0, 2));
 				mQuestion.setText(item.getQuestionContext());
-				mVoiceTime.setText(context.getString(R.string.voice_time, item.getSoundTime()));
+				mSoundTime.setText(context.getString(R.string.voice_time, item.getSoundTime()));
 				mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
-				mPraiseNumber.setText(StrFormatter.getFormatCount(item.getPriseCount()));
-				mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
 				mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
 
 				if (MissVoiceRecorder.isHeard(item.getId())) {
@@ -763,10 +707,44 @@ public class MissProfileActivity extends BaseActivity implements
 					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
 				}
 
+				if (item.getPriseCount() == 0) {
+					mPraiseNumber.setText(context.getString(R.string.praise));
+				} else {
+					mPraiseNumber.setText(StrFormatter.getFormatCount(item.getPriseCount()));
+				}
+
+				if (item.getReplyCount() == 0) {
+					mCommentNumber.setText(context.getString(R.string.comment));
+				} else {
+					mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
+				}
+
 				if (item.getIsPrise() == 0) {
 					mPraiseNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_unpraise, 0, 0, 0);
 				} else {
 					mPraiseNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_praise, 0, 0, 0);
+				}
+
+				if (!item.isPlaying()) {
+					mPlayImage.setImageResource(R.drawable.ic_play);
+				} else {
+					mPlayImage.setImageResource(R.drawable.ic_pause);
+				}
+
+				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING
+						&& MediaPlayerManager.playingId == item.getId()) {
+					startCountDownTime(mSoundTime, item.getSoundTime(), mProgressBar, activity);
+				} else if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE
+						&& MediaPlayerManager.playingId == item.getId()) {
+					mProgressBar.setMax(item.getSoundTime() * 1000);
+					mProgressBar.setProgress(MediaPlayerManager.getCurrentPosition());
+					mSoundTime.setText(context.getString(R.string._seconds, (item.getSoundTime() * 1000 - MediaPlayerManager.getCurrentPosition()) / 1000));
+					stopCountDownTime();
+				} else {
+					mProgressBar.setMax(0);
+					mProgressBar.setProgress(0);
+					mSoundTime.setText(context.getString(R.string._seconds, item.getSoundTime()));
+					stopCountDownTime();
 				}
 
 				mPraiseNumber.setOnClickListener(new View.OnClickListener() {
@@ -777,6 +755,7 @@ public class MissProfileActivity extends BaseActivity implements
 						}
 					}
 				});
+
 				mIngotNumber.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -786,20 +765,44 @@ public class MissProfileActivity extends BaseActivity implements
 					}
 				});
 
-				if (!item.isPlaying()) {
-					mPlayImage.setImageResource(R.drawable.ic_play);
-				} else {
-					mPlayImage.setImageResource(R.drawable.ic_pause);
-				}
-
 				mPlayImage.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						if (callback != null) {
-							callback.voiceOnClick(item, position, mProgressBar, mVoiceTime, mListenerNumber, mPlayImage);
+							callback.voiceOnClick(item);
 						}
 					}
 				});
+			}
+
+			private void startCountDownTime(final TextView sound, final int soundTime,
+			                                final ProgressBar progressBar, final Activity activity) {
+				progressBar.setMax(soundTime * 1000);
+				if (mTimerTask == null) {
+					mTimerTask = new TimerTask() {
+						@Override
+						public void run() {
+							activity.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									int position = MediaPlayerManager.getCurrentPosition();
+									sound.setText(activity.getString(R.string._seconds, (soundTime * 1000 - position) / 1000));
+									progressBar.setProgress(position);
+
+								}
+							});
+
+						}
+					};
+					mTimer.schedule(mTimerTask, 0, 100);
+				}
+			}
+
+			private void stopCountDownTime() {
+				if (mTimerTask != null) {
+					mTimerTask.cancel();
+					mTimerTask = null;
+				}
 			}
 		}
 	}

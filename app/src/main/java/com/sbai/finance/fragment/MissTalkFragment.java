@@ -1,13 +1,11 @@
 package com.sbai.finance.fragment;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -72,7 +70,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.AUDIO_SERVICE;
 import static com.sbai.finance.R.id.listenerNumber;
 import static com.sbai.finance.R.id.playImage;
 import static com.sbai.finance.R.id.progressBar;
@@ -108,7 +105,6 @@ public class MissTalkFragment extends BaseFragment {
 	private int mPageSize = 20;
 	private HashSet<Integer> mSet;
 	private RefreshReceiver mRefreshReceiver;
-	private AudioManager mAudioManager;
 	private View mFootView;
 	Unbinder unbinder;
 	private int mCurrentPosition;
@@ -125,7 +121,6 @@ public class MissTalkFragment extends BaseFragment {
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		mSet = new HashSet<>();
-		mAudioManager = (AudioManager) getActivity().getSystemService(AUDIO_SERVICE);
 		mListView.setEmptyView(mEmpty);
 
 		initTitleBar();
@@ -136,14 +131,6 @@ public class MissTalkFragment extends BaseFragment {
 		requestHotQuestionList(true);
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
-		mSwipeRefreshLayout.setOnScrollStateListener(new CustomSwipeRefreshLayout.OnScrollStateListener() {
-			@Override
-			public int scrollStateChange(int scrollState) {
-				mListView.getFirstVisiblePosition();
-				mListView.getLastVisiblePosition();
-				return 0;
-			}
-		});
 	}
 
 	private void initTitleBar() {
@@ -154,6 +141,7 @@ public class MissTalkFragment extends BaseFragment {
 					Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
 				} else {
 					Intent intent = new Intent(getActivity(), LoginActivity.class);
+					stopPreviousVoice();
 					startActivityForResult(intent, SUBMIT_QUESTION);
 				}
 			}
@@ -174,6 +162,7 @@ public class MissTalkFragment extends BaseFragment {
 			@Override
 			public void onItemClick(Miss item) {
 				if (item != null) {
+					stopPreviousVoice();
 					Launcher.with(getActivity(), MissProfileActivity.class)
 							.putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
 				}
@@ -193,7 +182,7 @@ public class MissTalkFragment extends BaseFragment {
 				Question item = (Question) parent.getItemAtPosition(position);
 				if (item != null) {
 					Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-					intent.putExtra(ExtraKeys.QUESTION, item);
+					intent.putExtra(Launcher.EX_PAYLOAD, item.getId());
 					startActivityForResult(intent, REQ_QUESTION_DETAIL);
 					umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
 				}
@@ -231,6 +220,7 @@ public class MissTalkFragment extends BaseFragment {
 					}).fire();
 				} else {
 					Launcher.with(getActivity(), LoginActivity.class).execute();
+					stopPreviousVoice();
 				}
 			}
 
@@ -244,6 +234,7 @@ public class MissTalkFragment extends BaseFragment {
 						startActivity(intent);
 					} else {
 						Launcher.with(getActivity(), LoginActivity.class).execute();
+						stopPreviousVoice();
 					}
 				} else {
 					Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
@@ -258,6 +249,7 @@ public class MissTalkFragment extends BaseFragment {
 					RewardMissActivity.show(getActivity(), item.getId(), RewardInfo.TYPE_QUESTION);
 				} else {
 					Launcher.with(getActivity(), LoginActivity.class).execute();
+					stopPreviousVoice();
 				}
 			}
 
@@ -280,7 +272,7 @@ public class MissTalkFragment extends BaseFragment {
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-						intent.putExtra(ExtraKeys.QUESTION, item);
+						intent.putExtra(Launcher.EX_PAYLOAD, MediaPlayerManager.playingId);
 						startActivityForResult(intent, REQ_QUESTION_DETAIL);
 						umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
 					}
@@ -323,24 +315,14 @@ public class MissTalkFragment extends BaseFragment {
 			}).fire();
 		}
 
-		final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-		progressDialog.setMessage("正在缓冲...");
-		progressDialog.show();
-
 		MediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnPreparedListener() {
 			@Override
 			public void onPrepared(MediaPlayer mp) {
-				int result = mAudioManager.requestAudioFocus(afChangeListener,
-						AudioManager.STREAM_MUSIC,
-						AudioManager.AUDIOFOCUS_GAIN);
-				if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-					//获取焦点之后开始播放,避免音轨并发
-					MediaPlayerManager.start();
-					progressDialog.dismiss();
-					MediaPlayerManager.setPlayingId(item.getId());
-					MediaPlayerManager.setPortrait(item.getCustomPortrait());
-					mQuestionListAdapter.notifyDataSetChanged();
-				}
+				MediaPlayerManager.start();
+				MediaPlayerManager.setPlayingId(item.getId());
+				MediaPlayerManager.setPortrait(item.getCustomPortrait());
+				mQuestionListAdapter.notifyDataSetChanged();
+
 			}
 		}, new MediaPlayer.OnCompletionListener() {
 			@Override
@@ -348,7 +330,6 @@ public class MissTalkFragment extends BaseFragment {
 				mFloatWindow.setVisibility(View.GONE);
 				MediaPlayerManager.release();
 				mQuestionListAdapter.notifyDataSetChanged();
-				mAudioManager.abandonAudioFocus(afChangeListener);
 				//播放结束之后发个广播给问题详情页刷新界面
 				sendPlayFinishBroadcast();
 			}
@@ -359,36 +340,6 @@ public class MissTalkFragment extends BaseFragment {
 		LocalBroadcastManager.getInstance(getActivity())
 				.sendBroadcast(new Intent(ACTION_PLAY_FINISH));
 	}
-
-	public AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-		public void onAudioFocusChange(int focusChange) {
-			if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.pause();
-				}
-
-			} else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-				if (MediaPlayerManager.STATUS != MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.start();
-				}
-
-			} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.release();
-				}
-
-			} else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.release();
-				}
-
-			} else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
-				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-					MediaPlayerManager.release();
-				}
-			}
-		}
-	};
 
 	public void stopPreviousVoice() {
 		MediaPlayerManager.release();
@@ -747,35 +698,22 @@ public class MissTalkFragment extends BaseFragment {
 						.into(mMissAvatar);
 
 				mName.setText(item.getUserName());
-				mAskTime.setText(DateUtil.getFormatSpecialSlashNoHour(item.getCreateTime()));
+				mAskTime.setText(DateUtil.getMissFormatTime(item.getCreateTime()));
 				mQuestion.setText(item.getQuestionContext());
 				mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
-				mPraiseNumber.setText(StrFormatter.getFormatCount(item.getPriseCount()));
 				mIngotNumber.setText(StrFormatter.getFormatCount(item.getAwardCount()));
+
+				if (item.getPriseCount() == 0) {
+					mPraiseNumber.setText(context.getString(R.string.praise));
+				} else {
+					mPraiseNumber.setText(StrFormatter.getFormatCount(item.getPriseCount()));
+				}
 
 				if (item.getReplyCount() == 0) {
 					mCommentNumber.setText(context.getString(R.string.comment));
 				} else {
 					mCommentNumber.setText(StrFormatter.getFormatCount(item.getReplyCount()));
 				}
-
-				mCommentNumber.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (callback != null) {
-							callback.commentOnClick(item);
-						}
-					}
-				});
-
-				mIngotNumber.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (callback != null) {
-							callback.rewardOnClick(item);
-						}
-					}
-				});
 
 				if (MissVoiceRecorder.isHeard(item.getId())) {
 					mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
@@ -817,6 +755,24 @@ public class MissTalkFragment extends BaseFragment {
 					}
 				});
 
+				mCommentNumber.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (callback != null) {
+							callback.commentOnClick(item);
+						}
+					}
+				});
+
+				mIngotNumber.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (callback != null) {
+							callback.rewardOnClick(item);
+						}
+					}
+				});
+
 				mPlayImage.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -830,22 +786,24 @@ public class MissTalkFragment extends BaseFragment {
 			private void startCountDownTime(final TextView sound, final int soundTime,
 			                                final ProgressBar progressBar, final Activity activity) {
 				progressBar.setMax(soundTime * 1000);
-				mTimerTask = new TimerTask() {
-					@Override
-					public void run() {
-						activity.runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								int position = MediaPlayerManager.getCurrentPosition();
-								sound.setText(activity.getString(R.string._seconds, (soundTime * 1000 - position) / 1000));
-								progressBar.setProgress(position);
+				if (mTimerTask == null) {
+					mTimerTask = new TimerTask() {
+						@Override
+						public void run() {
+							activity.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									int position = MediaPlayerManager.getCurrentPosition();
+									sound.setText(activity.getString(R.string._seconds, (soundTime * 1000 - position) / 1000));
+									progressBar.setProgress(position);
 
-							}
-						});
+								}
+							});
 
-					}
-				};
-				mTimer.schedule(mTimerTask, 0, 100);
+						}
+					};
+					mTimer.schedule(mTimerTask, 0, 100);
+				}
 			}
 
 			private void stopCountDownTime() {
@@ -924,7 +882,6 @@ public class MissTalkFragment extends BaseFragment {
 		public void onReceive(Context context, Intent intent) {
 			if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
 				if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
-
 					for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
 						Question question = mQuestionListAdapter.getItem(i);
 						if (question != null) {
