@@ -24,6 +24,7 @@ import com.sbai.finance.activity.mine.userinfo.CreditApproveActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.HistoryNewsModel;
+import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.net.Callback;
@@ -37,6 +38,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.ListEmptyView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -102,9 +104,11 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
                 mNoReadCount = 0;
                 mHistoryNewsModels = null;
                 mCustomSwipeRefreshLayout.setLoadMoreEnable(true);
+                requestNoReadNewsNumber();
                 requestSystemNewsList();
             }
         });
+        requestNoReadNewsNumber();
         requestSystemNewsList();
     }
 
@@ -112,6 +116,28 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
+    }
+
+    private void requestNoReadNewsNumber() {
+        Client.getNoReadMessageNumber().setTag(TAG)
+                .setCallback(new Callback2D<Resp<ArrayList<NotReadMessageNumberModel>>, ArrayList<NotReadMessageNumberModel>>() {
+                    @Override
+                    protected void onRespSuccessData(ArrayList<NotReadMessageNumberModel> data) {
+                        for (NotReadMessageNumberModel notReadMessageNumberData : data) {
+                            if (notReadMessageNumberData.isSystemNews()) {
+                                mNoReadCount = mNoReadCount + notReadMessageNumberData.getCount();
+                            }
+                        }
+                        if (mNoReadNewsCallback != null) {
+                            mNoReadNewsCallback.noReadNews(mNoReadCount);
+                        }
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
+                    }
+                }).fireFree();
     }
 
     private void requestSystemNewsList() {
@@ -166,13 +192,7 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
         for (HistoryNewsModel data : historyNewsModelList) {
             if (mSet.add(data.getId())) {
                 mSystemNewsAdapter.add(data);
-                if (data.isNotRead()) {
-                    mNoReadCount++;
-                }
             }
-        }
-        if (mNoReadNewsCallback != null) {
-            mNoReadNewsCallback.noReadNews(mNoReadCount);
         }
     }
 

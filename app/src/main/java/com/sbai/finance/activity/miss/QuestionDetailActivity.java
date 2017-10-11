@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.miss;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,9 +66,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.R.id.listenerNumber;
-import static com.sbai.finance.R.id.playImage;
-import static com.sbai.finance.R.id.progressBar;
 import static com.sbai.finance.activity.miss.ReplyActivity.ACTION_REPLY_SUCCESS;
 import static com.sbai.finance.net.Client.SHARE_URL_QUESTION;
 
@@ -124,7 +123,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private ImageView mMissAvatar;
     private ImageView mPlayImage;
     private ProgressBar mProgressBar;
-    private TextView mVoiceTime;
+    private TextView mSoundTime;
     private TextView mListenerNumber;
     private TextView mPraiseNumber;
     private TextView mRewardNumber;
@@ -136,12 +135,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private Timer mTimer = new Timer();
     private TimerTask mTimerTask;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
         ButterKnife.bind(this);
+
         initData(getIntent());
         mSet = new HashSet<>();
         mAudioManager = (AudioManager) getActivity().getSystemService(AUDIO_SERVICE);
@@ -169,7 +168,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
     }
 
-    private void share(String shareTitle, String shareDescription, String shareUrl,String shareThumbUrl) {
+    private void share(String shareTitle, String shareDescription, String shareUrl, String shareThumbUrl) {
         umengEventCount(UmengCountEventId.MISS_TALK_SHARE);
         ShareDialog.with(getActivity())
                 .setTitle(getString(R.string.share_title))
@@ -211,13 +210,13 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 .setCallback(new Callback2D<Resp<Share>, Share>() {
                     @Override
                     protected void onRespSuccessData(Share data) {
-                        share(data.getTitle(), data.getContent(), data.getShareLink(),data.getShareLeUrl());
+                        share(data.getTitle(), data.getContent(), data.getShareLink(), data.getShareLeUrl());
                     }
 
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
-                        share(shareTitle, shareDescription, shareUrl,null);
+                        share(shareTitle, shareDescription, shareUrl, null);
                     }
                 })
                 .fireFree();
@@ -288,10 +287,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         mAskTime = (TextView) header.findViewById(R.id.askTime);
         mQuestion = (TextView) header.findViewById(R.id.question);
         mMissAvatar = (ImageView) header.findViewById(R.id.missAvatar);
-        mPlayImage = (ImageView) header.findViewById(playImage);
-        mProgressBar = (ProgressBar) header.findViewById(progressBar);
-        mVoiceTime = (TextView) header.findViewById(R.id.voiceTime);
-        mListenerNumber = (TextView) header.findViewById(listenerNumber);
+        mPlayImage = (ImageView) header.findViewById(R.id.playImage);
+        mProgressBar = (ProgressBar) header.findViewById(R.id.progressBar);
+        mSoundTime = (TextView) header.findViewById(R.id.soundTime);
+        mListenerNumber = (TextView) header.findViewById(R.id.listenerNumber);
         mPraiseNumber = (TextView) header.findViewById(R.id.praiseNumber);
         mRewardNumber = (TextView) header.findViewById(R.id.rewardNumber);
         mCommentNumber = (TextView) header.findViewById(R.id.commentNumber);
@@ -337,42 +336,25 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
         if (MediaPlayerManager.playingId != question.getId() && MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
             mFloatWindow.setVisibility(View.VISIBLE);
-
-            GlideApp.with(getActivity()).load(MediaPlayerManager.portrait)//设置悬浮窗小姐姐头像
-                    .placeholder(R.drawable.ic_default_avatar)
-                    .circleCrop()
-                    .into(mMissAvatarPlaying);
-
-            mVoiceAnimator.setBackgroundResource(R.drawable.bg_miss_voice_float);
-            AnimationDrawable animation = (AnimationDrawable) mVoiceAnimator.getBackground();
-            animation.start();
-
-            mFloatWindow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-                    intent.putExtra(Launcher.EX_PAYLOAD, MediaPlayerManager.playingId);
-                    startActivityForResult(intent, REQ_QUESTION_DETAIL);
-                    umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
-                }
-            });
+            initFloatWindow();
         }
 
+        //item点进来的三种状态的显示  1 播放中 2 暂停 3 停止或者不是播放中的id
         if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING
                 && MediaPlayerManager.playingId == question.getId()) {
             mPlayImage.setImageResource(R.drawable.ic_pause);
-            setCountDownTime(mVoiceTime, question.getSoundTime(), mProgressBar);
+            startCountDownTime(mSoundTime, question.getSoundTime(), mProgressBar);
         } else if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE
                 && MediaPlayerManager.playingId == question.getId()) {
             mPlayImage.setImageResource(R.drawable.ic_play);
-            mProgressBar.setMax(MediaPlayerManager.getDuration());
+            mProgressBar.setMax(question.getSoundTime() * 1000);
             mProgressBar.setProgress(MediaPlayerManager.getCurrentPosition());
-            mVoiceTime.setText(getString(R.string._seconds, (MediaPlayerManager.getDuration() - MediaPlayerManager.getCurrentPosition()) / 1000));
+            mSoundTime.setText(getString(R.string._seconds, (question.getSoundTime() * 1000 - MediaPlayerManager.getCurrentPosition()) / 1000));
         } else {
             mPlayImage.setImageResource(R.drawable.ic_play);
             mProgressBar.setMax(0);
             mProgressBar.setProgress(0);
-            mVoiceTime.setText(getString(R.string._seconds, question.getSoundTime()));
+            mSoundTime.setText(getString(R.string._seconds, question.getSoundTime()));
         }
 
         mMissAvatar.setOnClickListener(new View.OnClickListener() {
@@ -388,38 +370,53 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             @Override
             public void onClick(View v) {
                 if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_STOP) {
-                    //结束状态直接开始播放
-                    playVoice(question, mPlayImage, mProgressBar, mVoiceTime, mListenerNumber);
+                    playVoice(question, mPlayImage, mProgressBar, mSoundTime, mListenerNumber);
                 } else {
                     if (MediaPlayerManager.playingId == question.getId()) {
                         if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PAUSE) {
                             MediaPlayerManager.resume();
-                            setCountDownTime(mVoiceTime, question.getSoundTime(), mProgressBar);
                             mPlayImage.setImageResource(R.drawable.ic_pause);
+                            startCountDownTime(mSoundTime, question.getSoundTime(), mProgressBar);
                         } else {
                             MediaPlayerManager.pause();
                             mPlayImage.setImageResource(R.drawable.ic_play);
+                            stopCountDownTime();
                         }
                     } else {
                         stopPreviousVoice();
                         //关闭上一个语音,开始这个
-                        playVoice(question, mPlayImage, mProgressBar, mVoiceTime, mListenerNumber);
+                        playVoice(question, mPlayImage, mProgressBar, mSoundTime, mListenerNumber);
                     }
                 }
             }
         });
     }
 
-    public void stopPreviousVoice() {
-        stopTimerTask();
+    private void initFloatWindow() {
+        GlideApp.with(getActivity()).load(MediaPlayerManager.portrait)
+                .placeholder(R.drawable.ic_default_avatar)
+                .circleCrop()
+                .into(mMissAvatarPlaying);
 
+        mVoiceAnimator.setBackgroundResource(R.drawable.bg_miss_voice_float);
+        AnimationDrawable animation = (AnimationDrawable) mVoiceAnimator.getBackground();
+        animation.start();
+
+        mFloatWindow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
+                intent.putExtra(Launcher.EX_PAYLOAD, MediaPlayerManager.playingId);
+                startActivityForResult(intent, REQ_QUESTION_DETAIL);
+                umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
+            }
+        });
+    }
+
+    public void stopPreviousVoice() {
+        MediaPlayerManager.release();
         if (mFloatWindow != null) {
             mFloatWindow.setVisibility(View.GONE);
-        }
-
-        if (mQuestionDetail.getId() == MediaPlayerManager.playingId) {
-            MediaPlayerManager.playingId = -1;
-            updateQuestionDetail(mQuestionDetail);
         }
     }
 
@@ -441,12 +438,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             }).fire();
         }
 
-        playImage.post(new Runnable() {
-            @Override
-            public void run() {
-                playImage.setImageResource(R.drawable.ic_pause);
-            }
-        });
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("正在缓冲...");
+        progressDialog.show();
 
         MediaPlayerManager.play(item.getAnswerContext(), new MediaPlayer.OnPreparedListener() {
             @Override
@@ -457,7 +451,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                     //获取焦点之后开始播放,避免音轨并发
                     MediaPlayerManager.start();
-                    setCountDownTime(soundTime, item.getSoundTime(), progressBar);
+                    playImage.setImageResource(R.drawable.ic_pause);
+                    progressDialog.dismiss();
+                    startCountDownTime(soundTime, item.getSoundTime(), progressBar);
                     MediaPlayerManager.setPlayingId(item.getId());
                     MediaPlayerManager.setPortrait(item.getCustomPortrait());
                 }
@@ -468,7 +464,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 playImage.setImageResource(R.drawable.ic_play);
                 mFloatWindow.setVisibility(View.GONE);
                 MediaPlayerManager.release();
-                stopTimerTask();
+                stopCountDownTime();
                 progressBar.setProgress(0);
                 soundTime.setText(getString(R.string._seconds, item.getSoundTime()));
                 mAudioManager.abandonAudioFocus(afChangeListener);
@@ -476,7 +472,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         });
     }
 
-    private void stopTimerTask() {
+    private void stopCountDownTime() {
         if (mTimerTask != null) {
             mTimerTask.cancel();
             mTimerTask = null;
@@ -513,24 +509,20 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         }
     };
 
-    private void setCountDownTime(final TextView sound, final int soundTime, final ProgressBar progressBar) {
+    private void startCountDownTime(final TextView sound, final int soundTime, final ProgressBar progressBar) {
         progressBar.setMax(soundTime * 1000);
         mTimerTask = new TimerTask() {
             @Override
             public void run() {
-                if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            int position = MediaPlayerManager.getCurrentPosition();
-                            int duration = MediaPlayerManager.getDuration();
-                            if (duration > 0) {
-                                sound.setText(getString(R.string._seconds, (duration - position) / 1000));
-                                progressBar.setProgress(position);
-                            }
-                        }
-                    });
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int position = MediaPlayerManager.getCurrentPosition();
+                        sound.setText(getString(R.string._seconds, (soundTime * 1000 - position) / 1000));
+                        progressBar.setProgress(position);
+                    }
+                });
+
             }
         };
         mTimer.schedule(mTimerTask, 0, 100);
@@ -540,7 +532,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     protected void onPause() {
         super.onPause();
         //返回上一页是关闭倒计时任务
-        stopTimerTask();
+        stopCountDownTime();
     }
 
     private void requestQuestionReplyList(final boolean isRefresh) {

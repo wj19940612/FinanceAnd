@@ -337,12 +337,16 @@ public class LoginActivity extends WeChatActivity {
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
-                        super.onRespFailure(failedResp);
                         if (failedResp.getCode() == CODE_NO_BIND_WE_CHAT) {
                             updateBindPhoneViews();
                         }
                     }
                 }).fireFree();
+    }
+
+    @Override
+    protected void bindFailure() {
+        ToastUtil.show(R.string.cancel_login);
     }
 
     private void updateBindPhoneViews() {
