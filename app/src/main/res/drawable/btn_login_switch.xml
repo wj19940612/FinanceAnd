@@ -9,7 +9,7 @@
 
     <item>
         <shape>
-            <stroke android:color="@color/split" android:width="1dp"/>
+            <stroke android:width="0.5dp" android:color="@color/split"/>
             <solid android:color="@android:color/transparent"/>
             <corners android:radius="100dp"/>
         </shape>
