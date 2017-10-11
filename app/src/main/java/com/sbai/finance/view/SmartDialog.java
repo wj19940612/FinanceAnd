@@ -107,6 +107,12 @@ public class SmartDialog {
         return dialog;
     }
 
+    public static SmartDialog withSingleMap(Activity activity) {
+        SmartDialog dialog = new SmartDialog(activity);
+        dialog.init();
+        return dialog;
+    }
+
     public static SmartDialog with(Activity activity, String msg) {
         SmartDialog dialog = new SmartDialog(activity);
         addMap(activity, dialog);
