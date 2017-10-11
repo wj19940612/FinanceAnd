@@ -3,7 +3,11 @@ package com.sbai.finance.utils;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
+import com.sbai.finance.App;
+
 import java.io.IOException;
+
+import static android.content.Context.AUDIO_SERVICE;
 
 /**
  * 音频播放管理类
@@ -21,6 +25,7 @@ public class MediaPlayerManager {
 
 	public static int STATUS;
 	private static MediaPlayer mMediaPlayer;
+	private static AudioManager mAudioManager;
 
 	public static void setPlayingId(int playId) {
 		MediaPlayerManager.playingId = playId;
@@ -55,10 +60,10 @@ public class MediaPlayerManager {
 
 		try {
 			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mMediaPlayer.setOnCompletionListener(onCompletionListener);
 			mMediaPlayer.setDataSource(url);
 			mMediaPlayer.prepareAsync();
 			mMediaPlayer.setOnPreparedListener(onPreparedListener);
+			mMediaPlayer.setOnCompletionListener(onCompletionListener);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -69,8 +74,28 @@ public class MediaPlayerManager {
 	 */
 	public static void start() {
 		if (mMediaPlayer != null) {
-			mMediaPlayer.start();
+			int result = requestAudioFocus();
+			if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+				mMediaPlayer.start();
+			}
+
 			STATUS = STATUS_PLAYING;
+		}
+	}
+
+	private static int requestAudioFocus() {
+		if (mAudioManager == null) {
+			mAudioManager = (AudioManager) App.getAppContext().getSystemService(AUDIO_SERVICE);
+		}
+
+		return mAudioManager.requestAudioFocus(afChangeListener,
+				AudioManager.STREAM_MUSIC,
+				AudioManager.AUDIOFOCUS_GAIN);
+	}
+
+	private static void abandonAudioFocus() {
+		if (mAudioManager != null) {
+			mAudioManager.abandonAudioFocus(afChangeListener);
 		}
 	}
 
@@ -80,6 +105,7 @@ public class MediaPlayerManager {
 	public static void pause() {
 		if (mMediaPlayer != null && STATUS == STATUS_PLAYING) {
 			mMediaPlayer.pause();
+			abandonAudioFocus();
 			STATUS = STATUS_PAUSE;
 		}
 	}
@@ -89,7 +115,11 @@ public class MediaPlayerManager {
 	 */
 	public static void resume() {
 		if (mMediaPlayer != null && STATUS == STATUS_PAUSE) {
-			mMediaPlayer.start();
+			int result = requestAudioFocus();
+			if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+				mMediaPlayer.start();
+			}
+
 			STATUS = STATUS_PLAYING;
 		}
 	}
@@ -102,6 +132,7 @@ public class MediaPlayerManager {
 			mMediaPlayer.stop();
 			mMediaPlayer.release();
 			mMediaPlayer = null;
+			abandonAudioFocus();
 			STATUS = STATUS_STOP;
 		}
 	}
@@ -129,4 +160,34 @@ public class MediaPlayerManager {
 		}
 		return 0;
 	}
+
+	public static AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+		public void onAudioFocusChange(int focusChange) {
+			if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
+					MediaPlayerManager.pause();
+				}
+
+			} else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+				if (MediaPlayerManager.STATUS != MediaPlayerManager.STATUS_PLAYING) {
+					MediaPlayerManager.start();
+				}
+
+			} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
+					MediaPlayerManager.release();
+				}
+
+			} else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
+					MediaPlayerManager.release();
+				}
+
+			} else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
+				if (MediaPlayerManager.STATUS == MediaPlayerManager.STATUS_PLAYING) {
+					MediaPlayerManager.release();
+				}
+			}
+		}
+	};
 }

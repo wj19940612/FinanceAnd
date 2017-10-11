@@ -86,6 +86,17 @@ public class ExperienceView extends LinearLayout {
 				mPublishTime.setText("");
 			}
 
+			mAvatar.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Launcher.with(getContext(), LookBigPictureActivity.class)
+							.putExtra(Launcher.EX_PAYLOAD, data.getUserModel().getUserPortrait())
+							.putExtra(Launcher.EX_PAYLOAD_2, 0)
+							.execute();
+				}
+
+			});
+
 			mExperience.setText(data.getContent());
 
 			if (data.getPraise() == 0) {
