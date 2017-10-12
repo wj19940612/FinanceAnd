@@ -116,6 +116,7 @@ public class DiscoveryFragment extends BaseFragment {
         if (isVisibleToUser) {
             requestTrainingList();
             requestDailyReportData();
+            requestBannerData();
         }
     }
 
@@ -319,7 +320,7 @@ public class DiscoveryFragment extends BaseFragment {
 
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_discover_train,parent,false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_discover_train, parent, false);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
