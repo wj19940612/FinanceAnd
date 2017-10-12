@@ -755,7 +755,6 @@ public class FutureBattleActivity extends BaseActivity implements
                         if (resp.getContent().isSuccess()) {
                             Resp<Battle> content = resp.getContent();
                             if (content != null && content.getData() != null) {
-                                Log.d(TAG, "网络v: " + content.getData().toString());
                                 updateBattleStatusAndInfo(resp.getContent().getData());
                             }
                         }
@@ -1274,6 +1273,8 @@ public class FutureBattleActivity extends BaseActivity implements
                         if (failedResp.getCode() == GameCode.ORDER_EXISIT) {
                             refreshTradeView();
                             ToastUtil.show(failedResp.getMsg());
+                        } else if (failedResp.getCode() == GameCode.GAME_OVER) {
+                            requestCurrentBattleInfo();
                         }
                     }
                 }).fire();
@@ -1305,6 +1306,8 @@ public class FutureBattleActivity extends BaseActivity implements
                     protected void onRespFailure(Resp failedResp) {
                         if (failedResp.getCode() == GameCode.ORDER_CLOSE) {
                             refreshTradeView();
+                        }else if (failedResp.getCode() == GameCode.GAME_OVER) {
+                            requestCurrentBattleInfo();
                         }
                     }
                 }).fire();
