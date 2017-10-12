@@ -144,7 +144,7 @@
                         android:layout_marginRight="10dp"
                         android:textColor="@color/unluckyText"
                         android:textSize="10sp"
-                        tools:text="@string/praise_people_number"/>
+                        tools:text="@string/praise_number"/>
 
                     <TextView
                         android:id="@+id/rewardNumber"

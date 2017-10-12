@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -60,7 +60,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="54dp"
         android:layout_marginRight="14dp"
-        android:layout_marginTop="8dp"
         android:lineSpacingExtra="6dp"
         android:textColor="@color/primaryText"
         android:textSize="14sp"

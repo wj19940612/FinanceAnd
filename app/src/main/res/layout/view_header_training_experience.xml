@@ -23,6 +23,12 @@
         android:layout_height="0.5dp"
         android:background="@color/split"/>
 
+    <View
+        android:id="@+id/spitWhite"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@android:color/white"/>
+
     <com.sbai.finance.view.MyListView
         android:id="@+id/hotListView"
         android:layout_width="match_parent"
