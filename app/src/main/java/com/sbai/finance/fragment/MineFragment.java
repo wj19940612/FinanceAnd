@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,8 @@ import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.mine.AboutUsActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.MyQuestionAndAnswerActivity;
 import com.sbai.finance.activity.mine.MyCollectionActivity;
+import com.sbai.finance.activity.mine.MyQuestionAndAnswerActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
@@ -55,8 +54,10 @@ import static com.sbai.finance.activity.mine.LoginActivity.ACTION_LOGIN_SUCCESS;
 
 public class MineFragment extends BaseFragment {
 
+    //间隔多少秒刷新一次未读消息
+    private static final int UPDATE_MESSAGE_COUNT_TIME = 1000 * 60;
+
     private static final int REQ_CODE_USER_INFO = 801;
-    private static final int REQ_CODE_MESSAGE = 18;
     private static final int REQ_CODE_LOGIN = 10700;
     //打开钱包页面时需要设置安全密码的请求吗
     public static final int REQ_CODE_OPEN_WALLET_SET_SAFETY_PASSWORD = 7004;
@@ -119,10 +120,6 @@ public class MineFragment extends BaseFragment {
                 .registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.ACTION_LOGIN_SUCCESS));
         mEvaluationLevel = getResources().getStringArray(R.array.evaluationLevel);
 
-        Log.d(TAG, "onActivityCreated: " + "STRING".length());
-        if (LocalUser.getUser().isLogin()) {
-            requestNoReadNewsNumber();
-        }
     }
 
     @Override
@@ -131,20 +128,18 @@ public class MineFragment extends BaseFragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(LoginBroadcastReceiver);
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && isAdded() && LocalUser.getUser().isLogin()) {
-            requestNoReadNewsNumber();
-            requestNoReadFeedbackNumber();
-        }
-    }
 
     @Override
     public void onResume() {
         super.onResume();
         updateUserImage();
         updateUserStatus();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopScheduleJob();
     }
 
     private void requestNoReadNewsNumber() {
@@ -217,6 +212,7 @@ public class MineFragment extends BaseFragment {
         if (LocalUser.getUser().isLogin()) {
             requestNoReadNewsNumber();
             requestNoReadFeedbackNumber();
+            startScheduleJob(UPDATE_MESSAGE_COUNT_TIME);
             requestMyIngotNumber();
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
             int maxLevel = LocalUser.getUser().getUserInfo().getMaxLevel();
@@ -225,6 +221,7 @@ public class MineFragment extends BaseFragment {
             }
             mFinanceEvaluation.setSubText(mEvaluationLevel[maxLevel]);
         } else {
+            stopScheduleJob();
             mUserName.setText(R.string.login);
             mFinanceEvaluation.setSubText("");
             mWallet.setSubText("");
@@ -232,6 +229,13 @@ public class MineFragment extends BaseFragment {
             mFeedback.setSubTextVisible(View.GONE);
             setNoReadNewsCount(0);
         }
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        requestNoReadNewsNumber();
+        requestNoReadFeedbackNumber();
     }
 
     private void setNoReadNewsCount(int count) {
@@ -296,7 +300,7 @@ public class MineFragment extends BaseFragment {
             case R.id.message:
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.ME_NEWS);
-                    startActivityForResult(new Intent(getActivity(), NewsActivity.class), REQ_CODE_MESSAGE);
+                    startActivity(new Intent(getActivity(), NewsActivity.class));
                     setNoReadNewsCount(0);
                 } else {
                     openLoginPage();
@@ -393,9 +397,6 @@ public class MineFragment extends BaseFragment {
                 case REQ_CODE_USER_INFO:
                     updateUserStatus();
                     updateUserImage();
-                    break;
-                case REQ_CODE_MESSAGE:
-                    requestNoReadNewsNumber();
                     break;
                 case REQ_CODE_LOGIN:
                     openLevelStartPage();
