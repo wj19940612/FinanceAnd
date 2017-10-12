@@ -106,11 +106,6 @@ public class ChooseFuturesActivity extends BaseActivity implements ViewPager.OnP
             intent.putExtra(ExtraKeys.VARIETY, variety);
             setResult(RESULT_OK, intent);
         }
-
-//		intent.putExtra(Launcher.EX_PAYLOAD, item.getVarietyName());
-//		intent.putExtra(Launcher.EX_PAYLOAD_1, item.getContractsCode());
-//		intent.putExtra(Launcher.EX_PAYLOAD_2, item.getVarietyId());
-//		getActivity().setResult(RESULT_OK, intent);
         finish();
     }
 

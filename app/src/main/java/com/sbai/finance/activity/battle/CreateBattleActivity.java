@@ -136,7 +136,6 @@ public class CreateBattleActivity extends BaseActivity {
         mCoinType = 2;
 
 
-
         requestFutureBattleConfig();
     }
 
@@ -251,6 +250,7 @@ public class CreateBattleActivity extends BaseActivity {
 
     private void updateVariety(Intent data) {
         Variety variety = data.getParcelableExtra(ExtraKeys.VARIETY);
+        mUserFundInfo = data.getParcelableExtra(ExtraKeys.USER_FUND);
         mFutureName = variety.getVarietyName();
         mContractsCode = variety.getContractsCode();
         mVarietyId = variety.getVarietyId();
@@ -374,6 +374,7 @@ public class CreateBattleActivity extends BaseActivity {
                     protected void onRespSuccessData(Battle battle) {
                         Launcher.with(getActivity(), FutureBattleActivity.class)
                                 .putExtra(ExtraKeys.BATTLE, battle)
+                                .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
                                 .execute();
                         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(CREATE_SUCCESS_ACTION));
                         finish();

@@ -11,6 +11,8 @@ import android.text.TextUtils;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.FeedbackActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
@@ -38,12 +40,15 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
+    private static final int REQ_CODE_FEEDBACK_LOGIN = 23333;
+
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
     @BindView(R.id.bottomTabs)
     BottomTabs mBottomTabs;
 
     private MainFragmentsAdapter mMainFragmentsAdapter;
+    private StartDialogFragment mStartDialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +73,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                                     && LocalUser.getUser().isLogin()) {
                                 return;
                             }
-                            StartDialogFragment.newInstance(data).show(getSupportFragmentManager());
+                            mStartDialogFragment = StartDialogFragment.newInstance(data);
+                            mStartDialogFragment.show(getSupportFragmentManager());
                         }
                     }).fireFree();
         }
@@ -79,7 +85,16 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         super.onNewIntent(intent);
         int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
         if (0 <= currentItem && currentItem < mViewPager.getChildCount()) {
-            mViewPager.setCurrentItem(currentItem,false);
+            mViewPager.setCurrentItem(currentItem, false);
+        }
+
+        boolean ifOpenFeedBackPage = intent.getBooleanExtra(ExtraKeys.PUSH_FEEDBACK, false);
+        if (ifOpenFeedBackPage) {
+            if (LocalUser.getUser().isLogin()) {
+                Launcher.with(getActivity(), FeedbackActivity.class).execute();
+            } else {
+                Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQ_CODE_FEEDBACK_LOGIN);
+            }
         }
 
         Banner banner = intent.getParcelableExtra(ExtraKeys.ACTIVITY);
@@ -149,12 +164,31 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 .fireFree();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mStartDialogFragment != null) {
+            mStartDialogFragment.dismissAllowingStateLoss();
+        }
+    }
 
     @Override
     protected void onDestroy() {
         WsClient.get().close();
         MarketSubscriber.get().disconnect();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQ_CODE_FEEDBACK_LOGIN:
+                    Launcher.with(getActivity(), FeedbackActivity.class).execute();
+                    break;
+            }
+        }
     }
 
     private void initView() {

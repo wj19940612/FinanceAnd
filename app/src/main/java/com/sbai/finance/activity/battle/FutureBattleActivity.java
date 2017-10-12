@@ -37,6 +37,7 @@ import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.TradeOrder;
 import com.sbai.finance.model.battle.TradeOrderClosePosition;
 import com.sbai.finance.model.battle.TradeRecord;
+import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.model.system.Share;
@@ -146,6 +147,7 @@ public class FutureBattleActivity extends BaseActivity implements
     private static final int HANDLER_WHAT_EXIT_ROOM = 200;
     //正在对战的时候  对战多久后关闭
     private static final int HANDLER_WHAT_BATTLE_COUNTDOWN = 300;
+    private UserFundInfo mUserFundInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +156,7 @@ public class FutureBattleActivity extends BaseActivity implements
         ButterKnife.bind(this);
         mCurrentBattle = getIntent().getParcelableExtra(ExtraKeys.BATTLE);
         mHistoryBattleId = mCurrentBattle.getId();
+        mUserFundInfo = getIntent().getParcelableExtra(ExtraKeys.USER_FUND);
         requestLatestBattleInfo();
     }
 
@@ -494,7 +497,10 @@ public class FutureBattleActivity extends BaseActivity implements
                     @Override
                     public void onClick(Dialog dialog) {
                         dismissAllDialog();
-                        Launcher.with(FutureBattleActivity.this, CreateBattleActivity.class).execute();
+                        Launcher.with(getActivity(), ChooseFuturesActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, "")
+                                .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
+                                .execute();
                         finish();
                     }
                 })

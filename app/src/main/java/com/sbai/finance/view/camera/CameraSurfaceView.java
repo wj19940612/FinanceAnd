@@ -14,7 +14,7 @@ import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.image.ImageUtils;
 
 import java.io.File;
 import java.io.IOException;

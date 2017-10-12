@@ -37,7 +37,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.image.ImageUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.transform.ThumbTransform;
 import com.sbai.finance.view.TitleBar;
@@ -260,16 +260,25 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.send:
-                if (mFeedbackAdapter.getCount() > 6) {
-                    listViewScrollBottom();
+                if (LocalUser.getUser().isLogin()) {
+
+                    if (mFeedbackAdapter.getCount() > 6) {
+                        listViewScrollBottom();
+                    }
+                    sendFeedbackText();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
-                sendFeedbackText();
                 break;
             case R.id.addPic:
-                if (mFeedbackAdapter.getCount() > 6) {
-                    listViewScrollBottom();
+                if(LocalUser.getUser().isLogin()){
+                    if (mFeedbackAdapter.getCount() > 6) {
+                        listViewScrollBottom();
+                    }
+                    sendPicToCustomer();
+                }else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
-                sendPicToCustomer();
                 break;
         }
     }
@@ -294,7 +303,7 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void requestSendFeedbackImage(final String path) {
-        String content = ImageUtils.compressImageToBase64(path, true);
+        String content = ImageUtils.compressImageToBase64(path, getActivity());
         int contentType = CONTENT_TYPE_PICTURE;
         requestSendFeedback(content, contentType);
     }

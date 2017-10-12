@@ -30,7 +30,7 @@ import android.widget.ProgressBar;
 import com.sbai.finance.AppJs;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.image.ImageUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.view.TitleBar;

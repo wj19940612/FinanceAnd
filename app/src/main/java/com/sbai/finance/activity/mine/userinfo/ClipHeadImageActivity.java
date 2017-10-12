@@ -16,7 +16,7 @@ import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.ImageUtils;
+import com.sbai.finance.utils.image.ImageUtils;
 import com.sbai.finance.view.clipimage.ClipImageLayout;
 
 import butterknife.BindView;
