@@ -213,15 +213,6 @@ public class ProfitBoardListFragment extends BaseFragment implements
                     .placeholder(R.drawable.ic_default_avatar)
                     .circleCrop()
                     .into(mAvatar);
-            mAvatar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Launcher.with(getActivity(), LookBigPictureActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, LocalUser.getUser().getUserInfo().getUserPortrait())
-                            .putExtra(Launcher.EX_PAYLOAD_2, 0)
-                            .execute();
-                }
-            });
             mUserName.setText(getString(R.string.me));
             if (data.getType().equalsIgnoreCase(LeaderBoardRank.INGOT)
                     || data.getType().equalsIgnoreCase(LeaderBoardRank.PROFIT)) {
