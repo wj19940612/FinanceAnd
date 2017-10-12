@@ -25,14 +25,12 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -142,30 +140,6 @@ public class DailyReportDetailActivity extends BaseActivity {
                 }).fireFree();
     }
 
-    private void requestShareData() {
-        Client.requestShareData(Share.SHARE_CODE_DAILY_REPORT)
-                .setIndeterminate(this)
-                .setTag(TAG)
-                .setCallback(new Callback2D<Resp<Share>, Share>() {
-                    @Override
-                    protected void onRespSuccessData(Share data) {
-                        mShareImgUrl = data.getShareLeUrl();
-                        mTitleContent = data.getTitle();
-                        if (!TextUtils.isEmpty(data.getContent())) {
-                            mFirstContent = data.getContent();
-                        }
-                        mShareUrl = data.getShareLink();
-                        share();
-                    }
-
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        share();
-                    }
-                })
-                .fireFree();
-    }
 
     private void updateDailyReportData(DailyReport data) {
         Glide.with(getActivity())
@@ -239,7 +213,7 @@ public class DailyReportDetailActivity extends BaseActivity {
             case R.id.share:
             case R.id.shareArea:
 
-                requestShareData();
+                share();
                 umengEventCount(UmengCountEventId.REPORT_SHARE);
                 break;
             case R.id.refreshButton:

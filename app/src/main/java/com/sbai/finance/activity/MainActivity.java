@@ -12,6 +12,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.FeedbackActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
@@ -38,6 +39,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
+
+    private static final int REQ_CODE_FEEDBACK_LOGIN = 23333;
 
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
@@ -87,7 +90,11 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
         boolean ifOpenFeedBackPage = intent.getBooleanExtra(ExtraKeys.PUSH_FEEDBACK, false);
         if (ifOpenFeedBackPage) {
-            Launcher.with(getActivity(), FeedbackActivity.class).execute();
+            if (LocalUser.getUser().isLogin()) {
+                Launcher.with(getActivity(), FeedbackActivity.class).execute();
+            } else {
+                Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQ_CODE_FEEDBACK_LOGIN);
+            }
         }
 
         Banner banner = intent.getParcelableExtra(ExtraKeys.ACTIVITY);
@@ -170,6 +177,18 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         WsClient.get().close();
         MarketSubscriber.get().disconnect();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQ_CODE_FEEDBACK_LOGIN:
+                    Launcher.with(getActivity(), FeedbackActivity.class).execute();
+                    break;
+            }
+        }
     }
 
     private void initView() {
