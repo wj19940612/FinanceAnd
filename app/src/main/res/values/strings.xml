@@ -689,8 +689,7 @@
     <string name="comment">评论</string>
     <string name="ask_question">提问</string>
     <string name="voice_time">%1$d秒</string>
-    <string name="love_people_number">%1$s人喜欢</string>
-    <string name="praise_people_number">%1$s人点赞</string>
+    <string name="praise_number">%1$s人点赞</string>
     <string name="count">(%1$s)</string>
     <string name="reply_someBody">回复%1$s :</string>
     <string name="no_miss_reply">还没有小姐姐回答哦~</string>

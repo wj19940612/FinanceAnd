@@ -14,6 +14,7 @@ import com.sbai.finance.activity.miss.ReplyActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissAudioManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,6 +76,7 @@ public class ReplyDialogFragment extends BottomDialogFragment {
 								.execute();
 						dismissAllowingStateLoss();
 					} else {
+						MissAudioManager.get().stop();
 						Intent intent = new Intent(getActivity(), LoginActivity.class);
 						startActivityForResult(intent, REPLY);
 					}

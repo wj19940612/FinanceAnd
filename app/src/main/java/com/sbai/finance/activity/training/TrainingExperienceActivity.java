@@ -67,6 +67,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 	private ExperienceListAdapter mLatestExperienceListAdapter;
 	private TextView mHotExperience;
 	private View mSpit;
+	private View mWhiteSpit;
 	private View mFootView;
 	private MyListView mHotListView;
 	private RefreshReceiver mRefreshReceiver;
@@ -108,6 +109,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 		LinearLayout header = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.view_header_training_experience, null);
 		mHotExperience = (TextView) header.findViewById(R.id.hotExperience);
 		mSpit = header.findViewById(R.id.spit);
+		mWhiteSpit = header.findViewById(R.id.spitWhite);
 		mHotListView = (MyListView) header.findViewById(R.id.hotListView);
 		mHotExperienceListAdapter = new ExperienceListAdapter(this);
 		mHotListView.setAdapter(mHotExperienceListAdapter);
@@ -223,9 +225,11 @@ public class TrainingExperienceActivity extends BaseActivity {
 						protected void onRespSuccessData(List<Experience> experienceList) {
 							if (experienceList.size() == 0) {
 								mSpit.setVisibility(View.GONE);
+								mWhiteSpit.setVisibility(View.GONE);
 								mHotExperience.setVisibility(View.GONE);
 							} else {
 								mSpit.setVisibility(View.VISIBLE);
+								mWhiteSpit.setVisibility(View.VISIBLE);
 								mHotExperience.setVisibility(View.VISIBLE);
 							}
 							updateHotExperienceList(experienceList);
@@ -236,6 +240,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 							super.onFailure(volleyError);
 							stopRefreshAnimation();
 							mSpit.setVisibility(View.GONE);
+							mWhiteSpit.setVisibility(View.GONE);
 							mHotExperience.setVisibility(View.GONE);
 						}
 					}).fire();
