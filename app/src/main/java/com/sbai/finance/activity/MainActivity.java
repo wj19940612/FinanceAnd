@@ -204,6 +204,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
             @Override
             public void onPageSelected(int position) {
                 mBottomTabs.selectTab(position);
+                refreshNotReadMessageCount();
             }
 
             @Override
@@ -222,6 +223,15 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 }
             }
         });
+    }
+
+    private void refreshNotReadMessageCount() {
+        if (LocalUser.getUser().isLogin()) {
+            MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(3);
+            if (mineFragment != null) {
+                mineFragment.refreshNotReadMessageCount();
+            }
+        }
     }
 
     @Override

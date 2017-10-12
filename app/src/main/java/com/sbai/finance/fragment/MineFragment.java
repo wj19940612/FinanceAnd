@@ -129,6 +129,11 @@ public class MineFragment extends BaseFragment {
     }
 
 
+    public void refreshNotReadMessageCount() {
+        requestNoReadNewsNumber();
+        requestNoReadFeedbackNumber();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -210,8 +215,7 @@ public class MineFragment extends BaseFragment {
 
     private void updateUserStatus() {
         if (LocalUser.getUser().isLogin()) {
-            requestNoReadNewsNumber();
-            requestNoReadFeedbackNumber();
+            refreshNotReadMessageCount();
             startScheduleJob(UPDATE_MESSAGE_COUNT_TIME);
             requestMyIngotNumber();
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
@@ -234,8 +238,7 @@ public class MineFragment extends BaseFragment {
     @Override
     public void onTimeUp(int count) {
         super.onTimeUp(count);
-        requestNoReadNewsNumber();
-        requestNoReadFeedbackNumber();
+        refreshNotReadMessageCount();
     }
 
     private void setNoReadNewsCount(int count) {
