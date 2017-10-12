@@ -186,4 +186,26 @@ public class TradeOrder {
         order.setId(battle.getId());
         return order;
     }
+
+    @Override
+    public String toString() {
+        return "TradeOrder{" +
+                "battleBatchCode='" + battleBatchCode + '\'' +
+                ", battleId=" + battleId +
+                ", contractsCode='" + contractsCode + '\'' +
+                ", contractsId=" + contractsId +
+                ", createTime=" + createTime +
+                ", direction=" + direction +
+                ", handsNum=" + handsNum +
+                ", id=" + id +
+                ", modifyTime=" + modifyTime +
+                ", orderPrice=" + orderPrice +
+                ", orderStatus=" + orderStatus +
+                ", orderTime=" + orderTime +
+                ", userId=" + userId +
+                ", varietyId=" + varietyId +
+                ", varietyName='" + varietyName + '\'' +
+                ", varietyType='" + varietyType + '\'' +
+                '}';
+    }
 }
