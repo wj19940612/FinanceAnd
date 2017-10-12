@@ -101,6 +101,7 @@ public class MissTalkFragment extends BaseFragment {
 	private View mFootView;
 	private int mCurrentPosition;
 	private Question mPlayIngItem;
+
 	Unbinder unbinder;
 
 	@Nullable
