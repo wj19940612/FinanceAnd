@@ -36,4 +36,5 @@ public interface ExtraKeys {
     String QUESTION_ID = "question_id";
 
     String CANCEL_COLLECT = "collect";
+    String PUSH_FEEDBACK = "push_feedback";
 }

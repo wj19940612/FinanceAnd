@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.fragment.DiscoveryFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
@@ -82,6 +83,11 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
         if (0 <= currentItem && currentItem < mViewPager.getChildCount()) {
             mViewPager.setCurrentItem(currentItem, false);
+        }
+
+        boolean ifOpenFeedBackPage = intent.getBooleanExtra(ExtraKeys.PUSH_FEEDBACK, false);
+        if (ifOpenFeedBackPage) {
+            Launcher.with(getActivity(), FeedbackActivity.class).execute();
         }
 
         Banner banner = intent.getParcelableExtra(ExtraKeys.ACTIVITY);

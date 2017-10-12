@@ -27,7 +27,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
-import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.miss.MissProfileActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
@@ -174,8 +173,10 @@ public class PushIntentService extends GTIntentService {
                 intent.putExtra(ExtraKeys.ACTIVITY, banner);
                 break;
             case PushMessageModel.PUSH_TYPE_FEED_BACK_REPLY:
-                intent = new Intent(context, FeedbackActivity.class);
+                intent = new Intent(context, MainActivity.class);
                 intent.putExtra(ExtraKeys.TRAINING, data.getDataId());
+                intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 3);
+                intent.putExtra(ExtraKeys.PUSH_FEEDBACK, true);
                 break;
             case PushMessageModel.PUSH_TYPE_SELF_STUDY_ROOM:
                 intent = new Intent(context, StudyRoomActivity.class);
