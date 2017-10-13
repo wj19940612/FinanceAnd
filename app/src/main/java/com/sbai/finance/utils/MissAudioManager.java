@@ -139,14 +139,14 @@ public class MissAudioManager {
 
     public boolean isPaused(String audioUrl, int id) {
         if (mMediaPlayer != null) {
-            return uuid(audioUrl, id).equals(mUuid) && mPaused;
+            return uuid(audioUrl, id).equals(mUuid) && mPaused && !mStopPostPrepared;
         }
         return false;
     }
 
     public boolean isPlaying(String audioUrl, int id) {
         if (mMediaPlayer != null) {
-            return uuid(audioUrl, id).equals(mUuid) && !mPaused;
+            return uuid(audioUrl, id).equals(mUuid) && !mPaused && !mStopPostPrepared;
         }
         return false;
     }
