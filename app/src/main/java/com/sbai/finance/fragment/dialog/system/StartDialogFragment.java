@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
@@ -37,7 +38,7 @@ public class StartDialogFragment extends DialogFragment {
     @BindView(R.id.dialogDelete)
     AppCompatImageView mDialogDelete;
     @BindView(R.id.button)
-    ImageView mButton;
+    TextView mButton;
     @BindView(R.id.window)
     ImageView mWindow;
     private Unbinder mBind;
@@ -84,7 +85,7 @@ public class StartDialogFragment extends DialogFragment {
     private void initView() {
         if (mActivityModel != null) {
             GlideApp.with(getActivity()).load(mActivityModel.getWindowUrl()).into(mWindow);
-            GlideApp.with(getActivity()).load(mActivityModel.getButtonUrl()).into(mButton);
+            mButton.setText(mActivityModel.getButtonUrl());
         }
     }
 

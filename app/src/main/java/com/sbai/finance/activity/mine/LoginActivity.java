@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -96,6 +97,16 @@ public class LoginActivity extends WeChatActivity {
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
         mPassword.addTextChangedListener(mValidationWatcher);
+        mRootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    KeyBoardUtils.closeKeyboard(mRootView);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         initListener();
 
@@ -291,14 +302,11 @@ public class LoginActivity extends WeChatActivity {
                 mPhoneNumberClear.setVisibility(View.INVISIBLE);
                 mAuthCode.requestFocus();
                 break;
+
             case R.id.login:
                 umengEventCount(UmengCountEventId.ME_LOGIN);
                 login();
                 break;
-            case R.id.rootView:
-                KeyBoardUtils.closeKeyboard(mRootView);
-                break;
-
             case R.id.register:
                 Launcher.with(getActivity(), InputPhoneActivity.class)
                         .putExtra(ExtraKeys.PAGE_TYPE, InputPhoneActivity.PAGE_TYPE_REGISTER)
