@@ -235,7 +235,7 @@ public class MissProfileActivity extends BaseActivity implements
 		int firstVisiblePosition = mListView.getFirstVisiblePosition();
 		int lastVisiblePosition = mListView.getLastVisiblePosition();
 		for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
-			if (i == 0) continue; // Skip header
+			if (i == 0 || i - 1 >= mHerAnswerAdapter.getCount()) continue; // Skip header
 			Question question = mHerAnswerAdapter.getItem(i - 1);
 			if (question != null && MissAudioManager.get().isPlaying(question.getAnswerContext(), question.getId())) {
 				View view = mListView.getChildAt(i - firstVisiblePosition);
