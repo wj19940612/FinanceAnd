@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.fund.RechargeActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -44,7 +43,7 @@ import butterknife.Unbinder;
 
 public class AccountFundDetailFragment extends BaseFragment {
 
-    private static final int REQ_CODE_RECHARGE_CRASH = 4920;
+    public static final int REQ_CODE_RECHARGE_CRASH = 49205;
     private static final int REQ_CODE_RECHARGE_INGOOT = 45550;
     private static final int REQ_CODE_RECHARGE_SCORE = 88820;
 
@@ -113,11 +112,15 @@ public class AccountFundDetailFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPage = 0;
-                requestDetailList(true);
+                refreshFundDetail();
             }
         });
         updateUserFund(null);
+    }
+
+    public void refreshFundDetail() {
+        mPage = 0;
+        requestDetailList(true);
     }
 
     public void updateUserFund(UserFundInfo fund) {
@@ -259,29 +262,20 @@ public class AccountFundDetailFragment extends BaseFragment {
                 umengEventCount(UmengCountEventId.WALLET_RECHARGE);
                 Intent intent = new Intent(getActivity(), RechargeActivity.class);
                 intent.putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_CRASH);
-                startActivityForResult(intent, REQ_CODE_RECHARGE_CRASH);
+                getActivity().startActivityForResult(intent, REQ_CODE_RECHARGE_CRASH);
                 break;
             case AccountFundDetail.TYPE_INGOT:
                 Intent ingotIntent = new Intent(getActivity(), VirtualProductExchangeActivity.class);
                 ingotIntent.putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT);
                 ingotIntent.putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0);
-                startActivityForResult(ingotIntent, REQ_CODE_RECHARGE_CRASH);
+                getActivity().startActivityForResult(ingotIntent, REQ_CODE_RECHARGE_CRASH);
                 break;
             case AccountFundDetail.TYPE_SCORE:
                 Intent scoreIntent = new Intent(getActivity(), VirtualProductExchangeActivity.class);
                 scoreIntent.putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_SCORE);
                 scoreIntent.putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? Double.parseDouble(mUserFundInfo.getYuanbao() + "") : 0);
-                startActivityForResult(scoreIntent, REQ_CODE_RECHARGE_CRASH);
+                getActivity().startActivityForResult(scoreIntent, REQ_CODE_RECHARGE_CRASH);
                 break;
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == BaseActivity.RESULT_OK) {
-            mPage = 0;
-            requestDetailList(true);
         }
     }
 

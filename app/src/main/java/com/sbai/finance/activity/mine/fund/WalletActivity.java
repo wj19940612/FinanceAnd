@@ -129,6 +129,7 @@ public class WalletActivity extends BaseActivity {
         }
     }
 
+
     private void requestUserFindInfo() {
         Client.requestUserFundInfo()
                 .setIndeterminate(this)
@@ -251,10 +252,29 @@ public class WalletActivity extends BaseActivity {
                                 .show();
                     }
                     break;
+                case AccountFundDetailFragment.REQ_CODE_RECHARGE_CRASH:
+                    updateUserFundDetail();
+                    break;
             }
         }
     }
 
+    private void updateUserFundDetail() {
+            AccountFundDetailFragment ingotFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(0);
+            if (ingotFragment != null) {
+                ingotFragment.refreshFundDetail();
+            }
+
+            AccountFundDetailFragment accountCrashFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(1);
+            if (accountCrashFragment != null) {
+                accountCrashFragment.refreshFundDetail();
+            }
+
+            AccountFundDetailFragment scoreFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(2);
+            if (scoreFragment != null) {
+                scoreFragment.refreshFundDetail();
+            }
+        }
 
     private static class FundFragmentAdapter extends FragmentPagerAdapter {
 
