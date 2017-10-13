@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.leaderboard.IngotOrSavantLeaderBoardActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.leaderboard.LeaderBoardRank;
@@ -282,13 +281,13 @@ public class ProfitBoardListFragment extends BaseFragment implements
                 mRank.setText("");
                 switch (rank) {
                     case 1:
-                        mRank.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_rank_top_1), null);
+                        mRank.setCompoundDrawablesWithIntrinsicBounds(0, 0,  R.drawable.ic_rank_top_1,0 );
                         break;
                     case 2:
-                        mRank.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_rank_top_2), null);
+                        mRank.setCompoundDrawablesWithIntrinsicBounds(0, 0,  R.drawable.ic_rank_top_2, 0);
                         break;
                     case 3:
-                        mRank.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_rank_top_3), null);
+                        mRank.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_rank_top_3, 0);
                         break;
                 }
             }

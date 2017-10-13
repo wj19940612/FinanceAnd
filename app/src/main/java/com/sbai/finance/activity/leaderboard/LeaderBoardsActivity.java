@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
@@ -83,9 +84,21 @@ public class LeaderBoardsActivity extends BaseActivity {
     }
 
     private void initView() {
-        mIngotBoardArea.setBackground(createDrawable(new int[]{Color.parseColor("#F6D75E"), Color.parseColor("#FDB168")}));
-        mProfitBoardArea.setBackground(createDrawable(new int[]{Color.parseColor("#A485FF"), Color.parseColor("#C05DD8")}));
-        mSavantBoardArea.setBackground(createDrawable(new int[]{Color.parseColor("#64A0FE"), Color.parseColor("#995BF4")}));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mIngotBoardArea.setBackground(createDrawable(new int[]{Color.parseColor("#F6D75E"), Color.parseColor("#FDB168")}));
+        } else {
+            mIngotBoardArea.setBackgroundDrawable(createDrawable(new int[]{Color.parseColor("#F6D75E"), Color.parseColor("#FDB168")}));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mProfitBoardArea.setBackground(createDrawable(new int[]{Color.parseColor("#A485FF"), Color.parseColor("#C05DD8")}));
+        } else {
+            mProfitBoardArea.setBackgroundDrawable(createDrawable(new int[]{Color.parseColor("#A485FF"), Color.parseColor("#C05DD8")}));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mSavantBoardArea.setBackground(createDrawable(new int[]{Color.parseColor("#64A0FE"), Color.parseColor("#995BF4")}));
+        } else {
+            mSavantBoardArea.setBackgroundDrawable(createDrawable(new int[]{Color.parseColor("#64A0FE"), Color.parseColor("#995BF4")}));
+        }
     }
 
     private Drawable createDrawable(int[] colors) {

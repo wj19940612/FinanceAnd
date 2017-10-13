@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -64,8 +65,11 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
     private void getScreenMetrics(Activity context) {
         WindowManager windowManager = context.getWindowManager();
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        windowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
-        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            windowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
+        } else {
+            windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        }
         mScreenWidth = displayMetrics.widthPixels;
         mScreenHeight = displayMetrics.heightPixels;
     }

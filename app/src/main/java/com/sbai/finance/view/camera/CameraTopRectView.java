@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -113,8 +114,11 @@ public class CameraTopRectView extends View {
     private void getScreenMetrics(Activity context) {
         WindowManager windowManager = context.getWindowManager();
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        windowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
-        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            windowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
+        } else {
+            windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        }
         mScreenWidth = displayMetrics.widthPixels;
         mScreenHeight = displayMetrics.heightPixels;
     }
