@@ -267,7 +267,7 @@ public class TrainingFragment extends BaseFragment {
             mNewScore = data != null ? (int) data.getUserTotalScore() : 0;
 
             if (showJoinTestHint) {
-                if (data != null && data.isEvaluated()) {
+                if (data != null && data.isEvaluate()) {
                     mTestHint.setVisibility(View.GONE);
                 } else {
                     mTestHint.setVisibility(View.VISIBLE);
@@ -276,7 +276,7 @@ public class TrainingFragment extends BaseFragment {
 
             startScoreAnimation(mNewScore);
             double rank = data != null ? data.getRank() : 0;
-            if (data != null && data.isEvaluated()) {
+            if (data != null && data.isTrain()) {
                 mScoreProgress.setText(getString(R.string.more_than_number, FinanceUtil.formatFloorPercent(rank)));
             } else {
                 mScoreProgress.setText(R.string.you_are_not_complete_train);

@@ -26,18 +26,23 @@ public class UserEachTrainingScoreModel implements Parcelable {
 
     private double rank;           //百分率
     private List<ScoresBean> scores;
-    private int evaluate;         // 是否测评过  1 测评过 0 没有
+    private boolean evaluate;         // 是否测评过
+    private boolean train;            //是否训练过
 
-    public boolean isEvaluated() {
-        return getEvaluate() == 1;
-    }
-
-    public int getEvaluate() {
+    public boolean isEvaluate() {
         return evaluate;
     }
 
-    public void setEvaluate(int evaluate) {
+    public void setEvaluate(boolean evaluate) {
         this.evaluate = evaluate;
+    }
+
+    public boolean isTrain() {
+        return train;
+    }
+
+    public void setTrain(boolean train) {
+        this.train = train;
     }
 
     public double getUserTotalScore() {
