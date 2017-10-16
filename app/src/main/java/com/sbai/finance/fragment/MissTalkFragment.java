@@ -76,7 +76,7 @@ import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_LOGIN;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
-public class MissTalkFragment extends BaseFragment implements MissAudioManager.IAudioDisplay {
+public class MissTalkFragment extends BaseFragment implements MissAudioManager.OnAudioListener {
 
 	private static final int REQ_COMMENT = 1001;
 
@@ -128,7 +128,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.I
 
 		registerRefreshReceiver();
 
-        MissAudioManager.get().addAudioView(this);
+        MissAudioManager.get().addAudioListener(this);
 	}
 
 	private void initTitleBar() {
@@ -549,7 +549,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.I
 		unbinder.unbind();
 		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshReceiver);
 
-        MissAudioManager.get().removeAudioView(this);
+        MissAudioManager.get().removeAudioListener(this);
 	}
 
     @Override
