@@ -14,7 +14,6 @@ import com.sbai.finance.activity.miss.ReplyActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.MissAudioManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +21,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
+import static com.sbai.finance.activity.BaseActivity.REQ_LOGIN;
 
 /**
  * Created by lixiaokuan0819 on 2017/8/3.
@@ -29,7 +29,18 @@ import static android.app.Activity.RESULT_OK;
 
 public class ReplyDialogFragment extends BottomDialogFragment {
 
-	private static final int REPLY = 1001;
+	public static final int REQ_REPLY = 1001;
+
+	private Callback mCallback;
+
+	public void setCallback(Callback callback) {
+		mCallback = callback;
+	}
+
+	public interface Callback {
+		void onLoginSuccess();
+		void onReplySuccess();
+	}
 
 	@BindView(R.id.replyContent)
 	TextView mReplyContent;
@@ -68,17 +79,18 @@ public class ReplyDialogFragment extends BottomDialogFragment {
 			case R.id.reply:
 				if (mQuestionReply.getUserModel() != null && mQuestionReply != null) {
 					if (LocalUser.getUser().isLogin()) {
-						Launcher.with(getActivity(), ReplyActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, mQuestionReply.getUserModel().getId())
-								.putExtra(Launcher.EX_PAYLOAD_1, mQuestionReply.getDataId())
-								.putExtra(Launcher.EX_PAYLOAD_2, mQuestionReply.getId())
-								.putExtra(Launcher.EX_PAYLOAD_3, mQuestionReply.getUserModel().getUserName())
-								.execute();
-						dismissAllowingStateLoss();
+						Intent intent = new Intent(getActivity(), ReplyActivity.class);
+						intent.putExtra(Launcher.EX_PAYLOAD, mQuestionReply.getUserModel().getId());
+						intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionReply.getDataId());
+						intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionReply.getId());
+						intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionReply.getUserModel().getUserName());
+						startActivityForResult(intent, REQ_REPLY);
 					} else {
-						MissAudioManager.get().stop();
+						if (mCallback != null) {
+							mCallback.onLoginSuccess();
+						}
 						Intent intent = new Intent(getActivity(), LoginActivity.class);
-						startActivityForResult(intent, REPLY);
+						startActivityForResult(intent,REQ_LOGIN);
 					}
 				}
 				break;
@@ -97,16 +109,22 @@ public class ReplyDialogFragment extends BottomDialogFragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == REPLY && resultCode == RESULT_OK) {
+
+		if (requestCode == REQ_LOGIN && resultCode == RESULT_OK) {
 			if (mQuestionReply.getUserModel() != null && mQuestionReply != null) {
-				Launcher.with(getActivity(), ReplyActivity.class)
-						.putExtra(Launcher.EX_PAYLOAD, mQuestionReply.getUserModel().getId())
-						.putExtra(Launcher.EX_PAYLOAD_1, mQuestionReply.getDataId())
-						.putExtra(Launcher.EX_PAYLOAD_2, mQuestionReply.getId())
-						.putExtra(Launcher.EX_PAYLOAD_3, mQuestionReply.getUserModel().getUserName())
-						.execute();
-				dismissAllowingStateLoss();
+				Intent intent = new Intent(getActivity(), ReplyActivity.class);
+				intent.putExtra(Launcher.EX_PAYLOAD, mQuestionReply.getUserModel().getId());
+				intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionReply.getDataId());
+				intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionReply.getId());
+				intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionReply.getUserModel().getUserName());
+				startActivityForResult(intent, REQ_REPLY);
 			}
+		}
+
+
+		if (requestCode == REQ_REPLY && resultCode == RESULT_OK) {
+			mCallback.onReplySuccess();
+			dismissAllowingStateLoss();
 		}
 	}
 

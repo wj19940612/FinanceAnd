@@ -72,11 +72,12 @@ import static com.sbai.finance.R.id.soundTime;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGOUT_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
+import static com.sbai.finance.activity.BaseActivity.REQ_LOGIN;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
 public class MissTalkFragment extends BaseFragment {
 
-	private static final int SUBMIT_QUESTION = 1001;
+	private static final int REQ_COMMENT = 1001;
 
 	@BindView(R.id.titleBar)
 	TitleBar mTitleBar;
@@ -91,6 +92,7 @@ public class MissTalkFragment extends BaseFragment {
 	@BindView(R.id.missFloatWindow)
 	MissFloatWindow mMissFloatWindow;
 
+	private List<Question> mHotQuestionList;
 	private List<Question> mLatestQuestionList;
 	private MissListAdapter mMissListAdapter;
 	private QuestionListAdapter mQuestionListAdapter;
@@ -99,7 +101,6 @@ public class MissTalkFragment extends BaseFragment {
 	private HashSet<Integer> mSet;
 	private RefreshReceiver mRefreshReceiver;
 	private View mFootView;
-	private int mCurrentPosition;
 	private Question mPlayIngItem;
 
 	Unbinder unbinder;
@@ -139,7 +140,7 @@ public class MissTalkFragment extends BaseFragment {
 				} else {
 					stopQuestionVoice();
 					Intent intent = new Intent(getActivity(), LoginActivity.class);
-					startActivityForResult(intent, SUBMIT_QUESTION);
+					startActivityForResult(intent, REQ_LOGIN);
 				}
 			}
 		});
@@ -217,7 +218,7 @@ public class MissTalkFragment extends BaseFragment {
 						Intent intent = new Intent(getActivity(), CommentActivity.class);
 						intent.putExtra(Launcher.EX_PAYLOAD, item.getQuestionUserId());
 						intent.putExtra(Launcher.EX_PAYLOAD_1, item.getId());
-						startActivity(intent);
+						startActivityForResult(intent, REQ_COMMENT);
 					} else {
 						stopQuestionVoice();
 						Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -243,11 +244,7 @@ public class MissTalkFragment extends BaseFragment {
 			public void onPlayClick(final Question item, int position) {
 				umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
 
-				mMissFloatWindow.setMissAvatar(item.getCustomPortrait());
-				mMissFloatWindow.startAnim();
-				mPlayIngItem = item;
-
-				mCurrentPosition = position + 1;//拿到当前播放的位置
+				mPlayIngItem = item;//记录播放的item
 
 				mMissFloatWindow.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -257,23 +254,6 @@ public class MissTalkFragment extends BaseFragment {
 						intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, true);
 						startActivityForResult(intent, REQ_QUESTION_DETAIL);
 						umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
-					}
-				});
-
-				mSwipeRefreshLayout.setOnScrollListener(new CustomSwipeRefreshLayout.OnScrollListener() {
-					@Override
-					public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-						if (MissAudioManager.get().isPlaying(item.getAnswerContext(), item.getId())) {
-							if (mCurrentPosition < firstVisibleItem || mCurrentPosition > mListView.getLastVisiblePosition()) {
-								mMissFloatWindow.setVisibility(View.VISIBLE);
-							} else {
-								mMissFloatWindow.setVisibility(View.GONE);
-								mMissFloatWindow.stopAnim();
-							}
-						} else {
-							mMissFloatWindow.setVisibility(View.GONE);
-							mMissFloatWindow.stopAnim();
-						}
 					}
 				});
 
@@ -351,7 +331,13 @@ public class MissTalkFragment extends BaseFragment {
 
 	public void stopQuestionVoice() {
 		MissAudioManager.get().stop();
-		if(mQuestionListAdapter != null) {
+
+		if (mMissFloatWindow != null) {
+			mMissFloatWindow.setVisibility(View.GONE);
+			mMissFloatWindow.stopAnim();
+		}
+
+		if (mQuestionListAdapter != null) {
 			mQuestionListAdapter.notifyDataSetChanged();
 		}
 	}
@@ -379,6 +365,34 @@ public class MissTalkFragment extends BaseFragment {
 						requestLatestQuestionList(false);
 					}
 				}, 1000);
+			}
+		});
+
+		mSwipeRefreshLayout.setOnScrollListener(new CustomSwipeRefreshLayout.OnScrollListener() {
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				int firstVisiblePosition = mListView.getFirstVisiblePosition();
+				int lastVisiblePosition = mListView.getLastVisiblePosition();
+
+				for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
+					if (i == 0 || i - 1 >= mQuestionListAdapter.getCount()) continue; // Skip header
+					Question question = mQuestionListAdapter.getItem(i - 1);
+					if (question != null && mPlayIngItem != null
+							&& MissAudioManager.get().isPlaying(mPlayIngItem.getAnswerContext(), mPlayIngItem.getId())) {
+						if (question.getId() == mPlayIngItem.getId()) {
+							mMissFloatWindow.setVisibility(View.GONE);
+							mMissFloatWindow.stopAnim();
+							break;
+						} else {
+							mMissFloatWindow.setVisibility(View.VISIBLE);
+							mMissFloatWindow.setMissAvatar(mPlayIngItem.getCustomPortrait());
+							mMissFloatWindow.startAnim();
+						}
+					} else {
+						mMissFloatWindow.setVisibility(View.GONE);
+						mMissFloatWindow.stopAnim();
+					}
+				}
 			}
 		});
 	}
@@ -410,7 +424,7 @@ public class MissTalkFragment extends BaseFragment {
 							Question question = questionList.get(0);
 							question.setType(Question.TYPE_HOT);
 						}
-						updateHotQuestionList(questionList);
+						mHotQuestionList = questionList;
 					}
 
 					@Override
@@ -431,7 +445,7 @@ public class MissTalkFragment extends BaseFragment {
 							question.setType(Question.TYPE_LATEST);
 						}
 						mLatestQuestionList = questionList;
-						updateLatestQuestionList(questionList);
+						updateLatestQuestionList(questionList, isRefreshing);
 					}
 
 					@Override
@@ -462,7 +476,11 @@ public class MissTalkFragment extends BaseFragment {
 		mQuestionListAdapter.addAll(questionList);
 	}
 
-	private void updateLatestQuestionList(List<Question> questionList) {
+	private void updateLatestQuestionList(List<Question> questionList, boolean isRefreshing) {
+		if (isRefreshing) {
+			updateHotQuestionList(mHotQuestionList);
+		}
+
 		if (questionList.size() < mPageSize) {
 			mSwipeRefreshLayout.setLoadMoreEnable(false);
 		} else {
@@ -481,7 +499,6 @@ public class MissTalkFragment extends BaseFragment {
 				mQuestionListAdapter.add(question);
 			}
 		}
-		mQuestionListAdapter.addAll(questionList);
 	}
 
 	@Override
@@ -766,62 +783,59 @@ public class MissTalkFragment extends BaseFragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == SUBMIT_QUESTION && resultCode == RESULT_OK) {
+
+		if (requestCode == REQ_LOGIN && resultCode == RESULT_OK) {
 			Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
 		}
 
-		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
-			//mQuestionListAdapter.notifyDataSetChanged();
+		if (requestCode == REQ_COMMENT && resultCode == RESULT_OK) {
 			if (data != null) {
-				Praise prise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-				int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-				int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
-				int listenCount = data.getIntExtra(Launcher.EX_PAYLOAD_3, -1);
+				int id = data.getIntExtra(ExtraKeys.QUESTION_ID, -1);
 				for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
-					Question question = mQuestionListAdapter.getItem(i);
-					if (question != null) {
-						if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
-							if (prise != null) {
-								question.setIsPrise(prise.getIsPrise());
-								question.setPriseCount(prise.getPriseCount());
-							}
-							if (replyCount != -1) {
-								question.setReplyCount(replyCount);
-							}
-							if (rewardCount != -1) {
-								question.setAwardCount(rewardCount);
-							}
-							if (listenCount != -1) {
-								question.setListenCount(listenCount);
-							}
-							if (MissAudioManager.get().isPlaying(question.getAnswerContext(), question.getId())) {
+					Question item = mQuestionListAdapter.getItem(i);
+					if (item!= null && id == item.getId()) {
+						item.setReplyCount(1);
+						mQuestionListAdapter.notifyDataSetChanged();
+					}
+				}
+			}
+		}
+
+		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
+			if (data != null) {
+				Question question = data.getParcelableExtra(ExtraKeys.QUESTION);
+				if (question != null) {
+					if (MissAudioManager.get().isPlaying(question.getAnswerContext(), question.getId())) {
+						mPlayIngItem = question;
+					}
+
+					for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
+						Question item = mQuestionListAdapter.getItem(i);
+						if (item != null && question.getId() == item.getId()) {
+							item.setIsPrise(question.getIsPrise());
+							item.setPriseCount(question.getPriseCount());
+							item.setReplyCount(question.getReplyCount());
+							item.setAwardCount(question.getAwardCount());
+							item.setListenCount(question.getListenCount());
+						}
+
+						if (item != null) {
+							if (MissAudioManager.get().isPlaying(item.getAnswerContext(), item.getId())) {
 								startScheduleJob(100);
 								MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
 									@Override
 									public void onCompleted(String url) {
 										mMissFloatWindow.setVisibility(View.GONE);
+										mMissFloatWindow.stopAnim();
 										mQuestionListAdapter.notifyDataSetChanged();
 										stopScheduleJob();
 									}
 								});
 							}
-
-							mQuestionListAdapter.notifyDataSetChanged();
 						}
 					}
-				}
 
-				if (replyCount != -1) {
-
-					for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
-						Question question = mQuestionListAdapter.getItem(i);
-						if (question != null) {
-							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
-
-								mQuestionListAdapter.notifyDataSetChanged();
-							}
-						}
-					}
+					mQuestionListAdapter.notifyDataSetChanged();
 				}
 			}
 		}

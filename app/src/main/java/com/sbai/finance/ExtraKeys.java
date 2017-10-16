@@ -13,6 +13,7 @@ public interface ExtraKeys {
 
     String TRAINING = "training";
     String QUESTION = "question";
+    String PRAISE = "praise";
 
     String TRAINING_DETAIL = "training_targets";
     String TRAINING_SUBMIT = "training_submit";

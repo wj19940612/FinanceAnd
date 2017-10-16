@@ -399,24 +399,35 @@ public class TrainingExperienceActivity extends BaseActivity {
 
 					mUserName.setText(item.getUserModel().getUserName());
 					mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
+
+					mAvatar.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Launcher.with(context, LookBigPictureActivity.class)
+									.putExtra(Launcher.EX_PAYLOAD, item.getUserModel().getUserPortrait())
+									.putExtra(Launcher.EX_PAYLOAD_2, 0)
+									.execute();
+						}
+					});
 				} else {
 					GlideApp.with(context).load(R.drawable.ic_default_avatar)
 							.circleCrop()
 							.into(mAvatar);
+
 					mUserName.setText("");
 					mPublishTime.setText("");
+
+					mAvatar.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Launcher.with(context, LookBigPictureActivity.class)
+									.putExtra(Launcher.EX_PAYLOAD, "")
+									.putExtra(Launcher.EX_PAYLOAD_2, 0)
+									.execute();
+						}
+					});
 				}
 
-				mAvatar.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Launcher.with(context, LookBigPictureActivity.class)
-								.putExtra(Launcher.EX_PAYLOAD, item.getUserModel().getUserPortrait())
-								.putExtra(Launcher.EX_PAYLOAD_2, 0)
-								.execute();
-					}
-
-				});
 
 				mExperience.setText(item.getContent());
 
