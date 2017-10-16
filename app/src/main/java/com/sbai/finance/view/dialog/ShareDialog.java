@@ -83,7 +83,6 @@ public class ShareDialog {
                         }
 
                         onSharePlatformClicked(SHARE_PLATFORM.WECHAT_FRIEND);
-                        mSmartDialog.dismiss();
                     } else {
                         ToastUtil.show(R.string.you_not_install_weixin);
                     }
@@ -103,7 +102,6 @@ public class ShareDialog {
                         }
 
                         onSharePlatformClicked(SHARE_PLATFORM.WECHAT_CIRCLE);
-                        mSmartDialog.dismiss();
                     } else {
                         ToastUtil.show(R.string.you_not_install_weixin);
                     }
@@ -118,7 +116,6 @@ public class ShareDialog {
                         }
                         shareToPlatform(SHARE_MEDIA.SINA);
                         onSharePlatformClicked(SHARE_PLATFORM.SINA_WEIBO);
-                        mSmartDialog.dismiss();
                     } else {
                         ToastUtil.show(R.string.you_not_install_weibo);
                     }

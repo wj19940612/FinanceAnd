@@ -78,7 +78,6 @@ public class BattleRuleDialogFragment extends CenterDialogFragment {
         }
     }
 
-
     @OnClick(R.id.dialogDelete)
     public void onViewClicked() {
         dismissAllowingStateLoss();

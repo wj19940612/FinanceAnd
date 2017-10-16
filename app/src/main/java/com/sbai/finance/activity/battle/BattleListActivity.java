@@ -226,10 +226,10 @@ public class BattleListActivity extends BaseActivity implements
                 Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BATTLE).setTag(TAG)
                         .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
                             @Override
-                            protected void onRespSuccessData(ArticleProtocol data) {
+                            protected void onRespSuccessData(final ArticleProtocol data) {
                                 BattleRuleDialogFragment
                                         .newInstance(data.getTitle(), data.getContent())
-                                        .show(getSupportFragmentManager());
+                                        .showAllowingStateLoss(getSupportFragmentManager());
                             }
                         }).fire();
             }

@@ -116,14 +116,14 @@ public class BaseDialog {
             create();
         }
 
-        if (!mActivity.isFinishing()) {
+        if (mActivity != null && !mActivity.isFinishing()) {
             scaleDialogWidth(1);
             mDialog.show();
         }
     }
 
     public void dismiss() {
-        if (mDialog != null && mDialog.isShowing()) {
+        if (mDialog != null && mDialog.isShowing() && !mActivity.isFinishing()) {
             mDialog.dismiss();
         }
         sCurrentDialog = DIALOG_DISMISS;
