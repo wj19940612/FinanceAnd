@@ -4,7 +4,11 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
 
+import com.sbai.finance.App;
+
 import java.io.IOException;
+
+import static android.content.Context.AUDIO_SERVICE;
 
 public class MissAudioManager {
 
@@ -22,15 +26,44 @@ public class MissAudioManager {
     }
 
     private MyMediaPlayer mMediaPlayer;
+    private AudioManager mAudioManager;
+    private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener;
     private volatile boolean mPreparing;
     private volatile boolean mStopPostPrepared;
     private boolean mPaused;
     private String mAudioUrl;
     private String mUuid;
     private OnCompletedListener mOnCompletedListener;
+    private IAudioDisplay mAudioView;
+
+    public MissAudioManager() {
+        mAudioManager = (AudioManager) App.getAppContext().getSystemService(AUDIO_SERVICE);
+        mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+            @Override
+            public void onAudioFocusChange(int focusChange) {
+                switch (focusChange) {
+                    case AudioManager.AUDIOFOCUS_GAIN: // Granted audio focus again
+                        resume();
+                        break;
+                    case AudioManager.AUDIOFOCUS_LOSS: // Permanent loss of audio focus
+                        stop();
+                        break;
+                    case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT: // Short time
+                        pause();
+                        break;
+                    case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK: // Short time, allow mix, just low volume
+                        break;
+                }
+            }
+        };
+    }
 
     public void setOnCompletedListener(OnCompletedListener onCompletedListener) {
         mOnCompletedListener = onCompletedListener;
+    }
+
+    public void setAudioView(IAudioDisplay audioView) {
+        mAudioView = audioView;
     }
 
     public String getAudioUrl() {
@@ -77,6 +110,8 @@ public class MissAudioManager {
                         initializeAndPrepare(mAudioUrl);
                     } else { // prepared, start
                         mMediaPlayer.start();
+                        requestAudioFocus();
+                        onPlay();
                     }
                 }
             });
@@ -93,6 +128,16 @@ public class MissAudioManager {
 
         mMediaPlayer.reset();
         initializeAndPrepare(audioUrl);
+    }
+
+    private void requestAudioFocus() {
+        int requestAudioFocus = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener,
+                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        if (requestAudioFocus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            Log.d("MediaPlayer", "requestAudioFocus: success");
+        } else {
+            Log.d("MediaPlayer", "requestAudioFocus: " + requestAudioFocus);
+        }
     }
 
     private void initializeAndPrepare(String audioUrl) {
@@ -113,40 +158,44 @@ public class MissAudioManager {
                 mMediaPlayer.stop();
                 mMediaPlayer.release();
                 mMediaPlayer = null;
+                mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+                onStop();
             } else {
                 mStopPostPrepared = true;
             }
         }
     }
 
-    public void pause() { // pause is async
+    public void pause() { // onPause is async
         if (mMediaPlayer != null && !mPaused) {
             if (!mPreparing) {
                 mMediaPlayer.pause();
             }
             mPaused = true;
+            onPause();
         }
     }
 
-    public void resume() { // resume is also async
+    public void resume() { // onResume is also async
         if (mMediaPlayer != null && mPaused) {
             if (!mPreparing) {
                 mMediaPlayer.start();
             }
             mPaused = false;
+            onResume();
         }
     }
 
     public boolean isPaused(String audioUrl, int id) {
         if (mMediaPlayer != null) {
-            return uuid(audioUrl, id).equals(mUuid) && mPaused;
+            return uuid(audioUrl, id).equals(mUuid) && mPaused && !mStopPostPrepared;
         }
         return false;
     }
 
     public boolean isPlaying(String audioUrl, int id) {
         if (mMediaPlayer != null) {
-            return uuid(audioUrl, id).equals(mUuid) && !mPaused;
+            return uuid(audioUrl, id).equals(mUuid) && !mPaused && !mStopPostPrepared;
         }
         return false;
     }
@@ -167,6 +216,49 @@ public class MissAudioManager {
                 throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
             super.setDataSource(path);
             dataSourcePath = path;
+        }
+    }
+
+    public interface IAudioDisplay {
+
+        void onStart();
+
+        void onPlay();
+
+        void onPause();
+
+        void onResume();
+
+        void onStop();
+    }
+
+    private void onStart() {
+        if (mAudioView != null) {
+            mAudioView.onStart();
+        }
+    }
+
+    private void onPlay() {
+        if (mAudioView != null) {
+            mAudioView.onPlay();
+        }
+    }
+
+    private void onPause() {
+        if (mAudioView != null) {
+            mAudioView.onPause();
+        }
+    }
+
+    private void onResume() {
+        if (mAudioView != null) {
+            mAudioView.onResume();
+        }
+    }
+
+    private void onStop() {
+        if (mAudioView != null) {
+            mAudioView.onStop();
         }
     }
 }

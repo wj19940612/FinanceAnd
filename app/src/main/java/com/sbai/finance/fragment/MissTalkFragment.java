@@ -102,6 +102,7 @@ public class MissTalkFragment extends BaseFragment {
 	private RefreshReceiver mRefreshReceiver;
 	private View mFootView;
 	private Question mPlayIngItem;
+
 	Unbinder unbinder;
 
 	@Nullable
@@ -292,7 +293,8 @@ public class MissTalkFragment extends BaseFragment {
 		int firstVisiblePosition = mListView.getFirstVisiblePosition();
 		int lastVisiblePosition = mListView.getLastVisiblePosition();
 		for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
-			if (i == 0 || i - 1 >= mQuestionListAdapter.getCount()) continue; // Skip header
+            // Skip header && footer
+            if (i == 0 || i - 1 >= mQuestionListAdapter.getCount() ) continue;
 			Question question = mQuestionListAdapter.getItem(i - 1);
 			if (question != null && MissAudioManager.get().isPlaying(question.getAnswerContext(), question.getId())) {
 				View view = mListView.getChildAt(i - firstVisiblePosition);

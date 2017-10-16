@@ -99,15 +99,17 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
         mCustomSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mSet.clear();
-                mPage = 0;
-                mNoReadCount = 0;
-                mHistoryNewsModels = null;
-                mCustomSwipeRefreshLayout.setLoadMoreEnable(true);
-                requestNoReadNewsNumber();
-                requestSystemNewsList();
+                resetRequest();
             }
         });
+    }
+
+    private void resetRequest() {
+        mSet.clear();
+        mPage = 0;
+        mNoReadCount = 0;
+        mHistoryNewsModels = null;
+        mCustomSwipeRefreshLayout.setLoadMoreEnable(true);
         requestNoReadNewsNumber();
         requestSystemNewsList();
     }
@@ -316,6 +318,11 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        resetRequest();
+    }
 
     class SystemNewsAdapter extends ArrayAdapter<HistoryNewsModel> {
 

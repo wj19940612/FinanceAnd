@@ -74,7 +74,6 @@ public class MissNewsFragment extends BaseFragment implements
         initHeaderView();
         initFooterView();
         initView();
-        requestMessageData();
     }
 
     private void initHeaderView() {
@@ -267,6 +266,13 @@ public class MissNewsFragment extends BaseFragment implements
 
     @Override
     public void onRefresh() {
+        reset();
+        requestMessageData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         reset();
         requestMessageData();
     }

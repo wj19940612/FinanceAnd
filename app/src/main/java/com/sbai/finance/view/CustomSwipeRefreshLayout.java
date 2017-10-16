@@ -254,6 +254,4 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 		void onScroll(AbsListView view, int firstVisibleItem,
 		                      int visibleItemCount, int totalItemCount);
 	}
-
-
 }

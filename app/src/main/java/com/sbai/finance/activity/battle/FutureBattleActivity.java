@@ -382,15 +382,11 @@ public class FutureBattleActivity extends BaseActivity implements
                 showCalculatingView();
             }
         }
-        if (diff < 1) {
-            Log.d(TAG, "showBattleOverCountdownTime: " + diff);
-        }
 
         //5秒没收到结果自动结算
         if (diff <= -5
                 && !mUserIsObserver
                 && !mCurrentBattle.isBattleOver()) {
-            Log.d(TAG, "showBattleOverCountdownTime: " + diff);
             requestCurrentBattleInfo();
         }
         mBattleView.setDeadline(mCurrentBattle.getGameStatus(), diff);
@@ -442,8 +438,6 @@ public class FutureBattleActivity extends BaseActivity implements
         dismissCalculatingView();
         int result;
         String content;
-        Log.d("WebSocket", "showGameOverDialog: " + mCurrentBattle.toString());
-        Log.d("WebSocket", "showGameOverDialog: " + LocalUser.getUser().getUserInfo().getId());
         if (mCurrentBattle.getWinResult() == 0) {
             //平局
             result = BattleResultDialog.GAME_RESULT_DRAW;
@@ -597,7 +591,11 @@ public class FutureBattleActivity extends BaseActivity implements
                 break;
             case PushCode.BATTLE_OVER:
                 //对战结束 一个弹窗
+                Log.d("WebSocket", "原来的: " + mCurrentBattle.toString());
                 if (!mCurrentBattle.isBattleOver()) {
+                    Log.d("WebSocket", "最新的信息: " + battle.toString());
+                    Log.d("WebSocket", "刚开始的id : " + mHistoryBattleId);
+                    Log.d("WebSocket", "是否观察者 : " + mUserIsObserver);
                     if (battle != null
                             && battle.getId() == mHistoryBattleId) {
                         mCurrentBattle = battle;
@@ -757,7 +755,6 @@ public class FutureBattleActivity extends BaseActivity implements
                         if (resp.getContent().isSuccess()) {
                             Resp<Battle> content = resp.getContent();
                             if (content != null && content.getData() != null) {
-                                Log.d(TAG, "网络v: " + content.getData().toString());
                                 updateBattleStatusAndInfo(resp.getContent().getData());
                             }
                         }
@@ -1036,7 +1033,12 @@ public class FutureBattleActivity extends BaseActivity implements
                 .setCallback(new Callback2D<Resp<List<TradeOrder>>, List<TradeOrder>>() {
                     @Override
                     protected void onRespSuccessData(List<TradeOrder> data) {
-                        if (data.isEmpty()) return;
+                        if (data.isEmpty()) {
+                            if (mCurrentBattle.isBattleStarted() && !mUserIsObserver) {
+                                setBattleTradeState(BattleTradeView.STATE_TRADE);
+                            }
+                            return;
+                        }
                         updateCurrentOrder(data);
                     }
                 }).fire();
@@ -1271,6 +1273,8 @@ public class FutureBattleActivity extends BaseActivity implements
                         if (failedResp.getCode() == GameCode.ORDER_EXISIT) {
                             refreshTradeView();
                             ToastUtil.show(failedResp.getMsg());
+                        } else if (failedResp.getCode() == GameCode.GAME_OVER) {
+                            requestCurrentBattleInfo();
                         }
                     }
                 }).fire();
@@ -1302,6 +1306,8 @@ public class FutureBattleActivity extends BaseActivity implements
                     protected void onRespFailure(Resp failedResp) {
                         if (failedResp.getCode() == GameCode.ORDER_CLOSE) {
                             refreshTradeView();
+                        }else if (failedResp.getCode() == GameCode.GAME_OVER) {
+                            requestCurrentBattleInfo();
                         }
                     }
                 }).fire();

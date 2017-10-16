@@ -108,7 +108,6 @@
                     android:textColor="@color/unluckyText"
                     android:textSize="16sp"
                     tools:text="@string/rank"/>
-
             </LinearLayout>
 
             <TextView
@@ -122,7 +121,6 @@
                 android:textColor="@android:color/white"
                 android:visibility="gone"
                 android:text="@string/click_see_your_rank"/>
-
         </RelativeLayout>
     </com.sbai.finance.view.CustomSwipeRefreshLayout>
 

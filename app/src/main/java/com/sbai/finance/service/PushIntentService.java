@@ -130,7 +130,8 @@ public class PushIntentService extends GTIntentService {
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 //        notificationManager.notify(R.string.app_name, builder.build());
-        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+        int notificationId = (int) pushMessageModel.getCreateTime();
+        notificationManager.notify(notificationId, builder.build());
     }
 
     @NonNull
@@ -202,7 +203,7 @@ public class PushIntentService extends GTIntentService {
         if (intent != null) {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        return PendingIntent.getActivity(context, (int) data.getCreateTime(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     private void setTagResult(SetTagCmdMessage setTagCmdMsg) {
