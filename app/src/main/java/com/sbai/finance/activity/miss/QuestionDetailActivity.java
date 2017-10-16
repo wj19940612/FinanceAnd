@@ -26,8 +26,10 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
@@ -213,6 +215,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				mSwipeRefreshLayout.setLoadMoreEnable(true);
 				mListView.removeFooterView(mFootView);
 				mFootView = null;
+				requestQuestionDetail();
 				requestQuestionReplyList(true);
 			}
 		});
@@ -307,11 +310,13 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			mMissFloatWindow.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
+					mMissFloatWindow.setVisibility(View.GONE);
+					mMissFloatWindow.stopAnim();
 					Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
 					intent.putExtra(Launcher.EX_PAYLOAD, mPlayingId);
 					intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, true);
 					startActivityForResult(intent, REQ_QUESTION_DETAIL);
-					umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
 				}
 			});
 
@@ -426,6 +431,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				}
 			}).fire();
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		stopScheduleJob();
 	}
 
 	@Override
@@ -773,6 +784,22 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 						.executeForResult(REQ_COMMENT);
 			}
 		}
+
+		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
+			if (MissAudioManager.get().isPlaying(mPlayingUrl, mPlayingId) && mPlayingId != mQuestionDetail.getId()) {
+				mMissFloatWindow.setVisibility(View.VISIBLE);
+				mMissFloatWindow.setMissAvatar(mPlayingAvatar);
+				mMissFloatWindow.startAnim();
+			}
+
+			MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
+				@Override
+				public void onCompleted(String url) {
+					mMissFloatWindow.setVisibility(View.GONE);
+					mMissFloatWindow.stopAnim();
+				}
+			});
+		}
 	}
 
 	private void registerRefreshReceiver() {
@@ -817,10 +844,18 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			setResult(RESULT_OK, intent);
 		}
 
-		if (!mIsFromMissTalk) {
-			stopQuestionVoice();
-		} else {
+		if (mIsFromMissTalk) {
 			stopScheduleJob();
+		} else {
+			if (!Preference.get().missTalkIsVisible()) {
+				stopQuestionVoice();
+			} else {
+				if (Preference.get().getFirstPageName().equalsIgnoreCase(MainActivity.class.getSimpleName())) {
+					stopScheduleJob();
+				} else {
+					stopQuestionVoice();
+				}
+			}
 		}
 
 		super.onBackPressed();

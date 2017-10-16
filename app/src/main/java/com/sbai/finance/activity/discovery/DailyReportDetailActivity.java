@@ -37,6 +37,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.dialog.ShareDialog;
@@ -188,6 +189,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         mId = intent.getStringExtra(EX_ID);
         mFormat = intent.getIntExtra(EX_FORMAT, 0);
         mShareUrl = String.format(Client.SHARE_URL_REPORT, mId);
+        MissAudioManager.get().stop();
     }
 
     @Override
