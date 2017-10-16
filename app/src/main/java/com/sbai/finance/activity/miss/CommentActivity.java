@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.miss;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -11,11 +12,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -133,6 +136,14 @@ public class CommentActivity extends BaseActivity {
 					@Override
 					public void onClick(Dialog dialog) {
 						dialog.dismiss();
+						mQuestionComment.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								mQuestionComment.setFocusable(true);
+								mQuestionComment.requestFocus();
+								KeyBoardUtils.openKeyBoard(mQuestionComment);
+							}
+						}, 50);
 					}
 				}).show();
 	}
@@ -148,7 +159,9 @@ public class CommentActivity extends BaseActivity {
 					protected void onRespSuccess(Resp<Object> resp) {
 						if (resp.isSuccess()) {
 							ToastUtil.show(R.string.publish_success);
-							setResult(RESULT_OK);
+							Intent intent = new Intent();
+							intent.putExtra(ExtraKeys.QUESTION_ID, mDataId);
+							setResult(RESULT_OK, intent);
 							finish();
 						} else {
 							ToastUtil.show(resp.getMsg());

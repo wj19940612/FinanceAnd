@@ -1,6 +1,7 @@
 package com.sbai.finance.view;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.GridView;
 
@@ -31,6 +32,8 @@ public class HorizontalGridView extends GridView {
         int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
         super.onMeasure(expandSpec, heightMeasureSpec);
         //设置GridView的宽度
-        setMeasuredDimension(childCount * (getColumnWidth() + getHorizontalSpacing()) + rightPadding, childHeight);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            setMeasuredDimension(childCount * (getColumnWidth() + getHorizontalSpacing()) + rightPadding, childHeight);
+        }
     }
 }
