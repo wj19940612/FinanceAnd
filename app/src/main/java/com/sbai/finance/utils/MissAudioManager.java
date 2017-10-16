@@ -53,7 +53,7 @@ public class MissAudioManager {
                         stop();
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT: // Short time
-                        pause();
+                        pauseTransiently();
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK: // Short time, allow mix, just low volume
                         break;
@@ -187,6 +187,17 @@ public class MissAudioManager {
             if (!mPreparing) {
                 mMediaPlayer.pause();
             }
+            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+            mPaused = true;
+            onPause();
+        }
+    }
+
+    private void pauseTransiently() {
+        if (mMediaPlayer != null && !mPaused) {
+            if (!mPreparing) {
+                mMediaPlayer.pause();
+            }
             mPaused = true;
             onPause();
         }
@@ -197,6 +208,7 @@ public class MissAudioManager {
             if (!mPreparing) {
                 mMediaPlayer.start();
             }
+            requestAudioFocus();
             mPaused = false;
             onResume();
         }
