@@ -128,7 +128,6 @@ public class MissTalkFragment extends BaseFragment {
 		registerRefreshReceiver();
 
 		mSet = new HashSet<>();
-		mListView.setEmptyView(mEmpty);
 	}
 
 	private void initTitleBar() {
@@ -190,8 +189,9 @@ public class MissTalkFragment extends BaseFragment {
 				}
 			}
 		});
+        mListView.setEmptyView(mEmpty);
 
-		mQuestionListAdapter.setCallback(new QuestionListAdapter.Callback() {
+        mQuestionListAdapter.setCallback(new QuestionListAdapter.Callback() {
 			@Override
 			public void onPraiseClick(final Question item) {
 				if (LocalUser.getUser().isLogin()) {
