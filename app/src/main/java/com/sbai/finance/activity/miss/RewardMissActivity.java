@@ -142,6 +142,7 @@ public class RewardMissActivity extends BaseActivity {
     private void requestUserFindInfo() {
         umengEventCount(UmengCountEventId.MISS_TALK_REWARD);
         Client.requestUserFundInfo()
+                .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
                     @Override
@@ -159,6 +160,7 @@ public class RewardMissActivity extends BaseActivity {
     private void requestUserHasSafetyPass() {
         Client.getUserHasPassWord()
                 .setTag(TAG)
+                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
                     @Override
                     protected void onRespSuccessData(Boolean data) {
