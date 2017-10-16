@@ -55,12 +55,17 @@ public class EvaluationStartActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (LocalUser.getUser().getUserInfo().isNewUser()) {
-            int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
-            RewardGetActivity.show(getActivity(), reward);
-            LocalUser.getUser().setNewUser(false);
+        try {
+            if (LocalUser.getUser().getUserInfo().isNewUser()) {
+                int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
+                RewardGetActivity.show(getActivity(), reward);
+                LocalUser.getUser().setNewUser(false);
+            }
+            super.onBackPressed();
+        } catch (IllegalStateException e) {
+            finish();
         }
-        super.onBackPressed();
+
     }
 
     private void updateCompleteTestNumber(Long data) {
