@@ -28,7 +28,6 @@
             android:layout_height="match_parent"/>
 
         <com.sbai.finance.view.camera.CameraTopRectView
-            android:id="@+id/cameraTopRectView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </FrameLayout>

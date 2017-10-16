@@ -11,9 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.glide.GlideApp;
 
-public class MissFloatWindow extends LinearLayout {
+public class MissFloatWindow extends LinearLayout implements MissAudioManager.IAudioDisplay {
     private ImageView mMissAvatar;
     private ImageView mAudioAnim;
 
@@ -73,4 +74,28 @@ public class MissFloatWindow extends LinearLayout {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, res.getDisplayMetrics());
     }
 
+    @Override
+    public void onStart() {
+        setVisibility(VISIBLE);
+    }
+
+    @Override
+    public void onPlay() {
+        startAnim();
+    }
+
+    @Override
+    public void onPause() {
+        stopAnim();
+    }
+
+    @Override
+    public void onResume() {
+        startAnim();
+    }
+
+    @Override
+    public void onStop() {
+        setVisibility(GONE);
+    }
 }

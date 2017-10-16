@@ -12,7 +12,6 @@
     <string name="training">训练</string>
     <string name="miss_talk">姐说</string>
     <string name="discovery">发现</string>
-    <string name="mine">我的</string>
 
     <!-- EconomicCircle -->
     <string name="comment_number">评论(%1$d)</string>
@@ -20,9 +19,6 @@
     <string name="no_comment">暂无评论~快来发表您的评论吧</string>
     <string name="share">分享</string>
     <string name="re_location">点击重新获取位置</string>
-    <item name="tag_opinion" type="id">0</item>
-    <item name="tag_borrow_money" type="id">1</item>
-    <item name="tag_futures_battle" type="id">2</item>
 
     <!--Login & Register-->
     <string name="phone_number">手机号</string>
@@ -55,15 +51,10 @@
     <!--Home-->
     <string name="futures">期货</string>
     <string name="stock">股票</string>
-    <string name="forex">外汇</string>
     <string name="optional">自选</string>
     <string name="ranking">排行榜</string>
 
     <!--opinion-->
-    <string name="opinion">观点大神</string>
-    <string name="skilled">擅长类型</string>
-    <string name="accuracy_rate">看盘准确率</string>
-    <string name="no_opinion">现在还没有大神上榜哦!</string>
 
     <!--optional-->
     <string name="add_option">添加自选</string>
@@ -137,20 +128,17 @@
     <string name="bid_3">买3</string>
     <string name="bid_4">买4</string>
     <string name="bid_5">买5</string>
-    <string name="market_detail">明细</string>
 
     <!-- 我的界面 -->
     <string name="attention">关注</string>
     <string name="setting">设置</string>
     <string name="news">消息</string>
     <string name="about_us">关于我们</string>
-    <string name="detail">明细</string>
     <string name="feedback">意见反馈</string>
     <string name="finance_evaluation">金融水平初步测评</string>
     <string name="wallet">钱包</string>
     <string name="my_collection">我的收藏</string>
     <string name="my_question_and_answer">我的问答</string>
-    <string name="now_not_has_news">暂无消息</string>
     <string name="now_not_has_data">暂无数据</string>
     <string name="please_input_here">请在此输入......</string>
     <string name="you_dont_have_trade">你还没有交易过哦</string>
@@ -325,7 +313,6 @@
     <string name="wechat_circle">朋友圈</string>
     <string name="sina_weibo">新浪微博</string>
     <string name="share_succeed">分享成功</string>
-    <string name="share_failed">分享失败</string>
     <string name="share_cancel">取消分享</string>
     <string name="wonderful_viewpoint">这里关于“%1$s”的观点真是太精彩了</string>
     <string name="share_desc">乐米金融，金融小白的第一战!</string>
@@ -356,7 +343,6 @@
     <string name="recharge_hint">5元起充</string>
     <string name="recharge_service">遇到任何问题，请联系客服></string>
     <string name="next">下一步</string>
-    <string name="money_from">%1$s(%2$s)</string>
     <string name="mine_crash">我的现金(元)</string>
     <string name="mine_score">我的积分</string>
     <string name="mine_ingot">我的元宝</string>
@@ -368,7 +354,6 @@
     <string name="balance_not_enough">余额不足</string>
     <string name="number_ingot">%1$s元宝</string>
     <string name="number_score">%1$s积分</string>
-    <string name="yuan">元</string>
 
     <!--银行卡绑定-->
     <string name="bind_bank_card_warn">持卡人必须与账号信息一致,信息不做其他用途</string>
@@ -390,8 +375,6 @@
     <string name="integral">积分</string>
     <string name="ingot">元宝</string>
     <string name="cash">现金</string>
-    <string name="score">积分</string>
-    <string name="bounty">赏金</string>
     <string name="versusing">对战中</string>
     <string name="versus_end">已结束</string>
     <string name="tie">平局</string>
@@ -449,26 +432,9 @@
     <string name="minus_int">-%1$d</string>
     <!--  聚宝盆  -->
     <string name="exchange_rule">规则</string>
-    <string name="exchange_ingot">购买元宝</string>
-    <string name="ingot_detail">元宝明细</string>
-    <string name="integrate_detail">积分明细</string>
-    <string name="exchange_integrate">兑换积分</string>
     <string name="ingot_number">%1$s  元宝</string>
     <string name="integrate_number">%1$s  积分</string>
-    <string name="check_details">查看明细></string>
-    <string name="old_price">原价: ￥%1$s</string>
-    <string name="old_price_exchange_integrate">原价: %1$s元宝</string>
-    <string name="exchange">兑换</string>
-    <string name="buy">购买</string>
-    <string name="confirm_use_ingot_buy_integrate">确认使用%1$s元宝兑换%2$s积分?</string>
-    <string name="confirm_use_money_buy_ingot">确认使用%1$s元购买%2$s元宝?</string>
-    <string name="earnings">收入</string>
-    <string name="extend">支出</string>
     <string name="go_recharge">去充值</string>
-    <string name="exchange_fail">兑换失败</string>
-    <string name="buy_fail">购买失败</string>
-    <string name="ingot_is_not_enough">元宝余额不足，请充值或降低兑换数量</string>
-    <string name="money_is_not_enough">现金余额不足，请充值或降低购买数量</string>
     <string name="is_not_set_safety_pass">为了您的账户安全，请设置安全密码</string>
     <string name="full_text">...全文</string>
     <string name="go_to_set">去设置</string>
@@ -499,7 +465,6 @@
     <string name="battle_detail">对战详情</string>
     <string name="cancel_match">取消匹配</string>
     <string name="desc_matching">正在匹配, 请稍后…</string>
-    <string name="title_matching">正在匹配</string>
     <string name="title_match_success">匹配成功</string>
     <string name="desc_match_success">已有对手\n%1$ds后进入对战</string>
     <string name="cancel_battle">取消对战</string>
@@ -554,8 +519,6 @@
     <string name="version">v%1$s</string>
     <string name="is_already_latest_version">已经是最新版本了</string>
 
-    <string name="immediately_register">立即注册</string>
-
 
     <string name="number_ge">%1$s个</string>
 
@@ -598,13 +561,10 @@
     <string name="choose_miss_answer">选择心仪的小姐姐来回答：</string>
     <string name="commit">提交</string>
     <string name="words_number">%1$d/140</string>
-    <string name="miss_comment">评论</string>
     <string name="publish_your_comment">评论...</string>
     <string name="publish">发布</string>
     <string name="reply">回复</string>
     <string name="reward">打赏</string>
-    <string name="message_remind">消息提醒</string>
-    <string name="message_remind_count">消息提醒(%1$d)</string>
     <string name="reply_your_comment">回复了你的评论</string>
     <string name="comment_your_question">评论了你的提问</string>
     <string name="answer_your_question">解答了你的提问</string>
@@ -642,7 +602,6 @@
     <string name="day">%1$d天</string>
     <string name="level">L%1$d</string>
     <string name="share_to">分享至</string>
-    <string name="share_to_wechat">分享到微信</string>
     <string name="latest_finance_hot_from_lemi">来自乐米的每日最新金融热点</string>
 
 
@@ -677,12 +636,9 @@
     <string name="every_week_re_calculate">每周日24:00重新计算</string>
 
     <!--miss_talk-->
-    <string name="her_answer">她的回答</string>
     <string name="hot_question">热门提问</string>
     <string name="latest_question">最新提问</string>
-    <string name="ask_her_question">向她提问</string>
     <string name="listener_number">%1$s人听过</string>
-    <string name="my_question">我的提问</string>
     <string name="praise_miss">%1$s人点赞</string>
     <string name="reward_miss">%1$s人打赏</string>
     <string name="reply_name">%1$s:</string>
@@ -692,11 +648,8 @@
     <string name="praise_number">%1$s人点赞</string>
     <string name="count">(%1$s)</string>
     <string name="reply_someBody">回复%1$s :</string>
-    <string name="no_miss_reply">还没有小姐姐回答哦~</string>
     <string name="no_miss_now">现在还没有小姐姐哦</string>
     <string name="no_miss_introduce">小姐姐还没有写简介</string>
-    <string name="no_question">你还没提问过哦</string>
-    <string name="ask_question_to_miss">向小姐姐提问</string>
     <string name="question_detail">提问详情</string>
 
     <!--首页 训练-->
@@ -760,7 +713,6 @@
     <string name="difficulty">难度</string>
     <string name="complete_number">%1$d人已完成</string>
     <string name="train_level">L%1$d</string>
-    <string name="share_success">分享成功</string>
     <string name="share_title">登录用户分享就得10元宝,每日最多30元宝</string>
     <string name="train_share_share_title">大家都在用乐米进行%1$s，你还不快来加入我们?</string>
     <string name="train_share_description">快来和我一起进行最有趣的金融训练课程，乐米金融，金融小白的第一站</string>
@@ -817,10 +769,6 @@
     <string name="accuracy_to_">准确率达到%1$s</string>
     <string name="accuracy_">准确率：%1$s</string>
 
-    <string name="exchange_record">兑换记录</string>
-    <string name="no_exchange_skin_record">暂无兑换记录</string>
-    <string name="image_saved_please_open_wechat_to_share">图片已保存。请打开微信，从相册中\n选择图片进行分享</string>
-
 
     <!-- 我的问答-->
     <string name="you_not_has_question">你还未提问</string>
@@ -850,8 +798,6 @@
     <!-- 图形验证码输入框 -->
     <string name="please_input_image_auth_code">请输入图形验证码</string>
     <string name="auth_code_error">验证码有误</string>
-    <string name="not_clear">看不清？</string>
-    <string name="change_auth_code">换一张</string>
     <string name="image_auth_code">图形验证码</string>
 
 

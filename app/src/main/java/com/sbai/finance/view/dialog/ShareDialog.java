@@ -74,7 +74,11 @@ public class ShareDialog {
                         if (mShareImageOnly) {
                             shareImageToPlatform(SHARE_MEDIA.WEIXIN);
                         } else {
-                            mShareUrl += "&userFrom=friend";
+                            if (mShareUrl.contains("?")) {
+                                mShareUrl += "&userFrom=friend";
+                            } else {
+                                mShareUrl += "?userFrom=friend";
+                            }
                             shareToPlatform(SHARE_MEDIA.WEIXIN);
                         }
 
@@ -90,7 +94,11 @@ public class ShareDialog {
                         if (mShareImageOnly) {
                             shareImageToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
                         } else {
-                            mShareUrl += "&userFrom=friend";
+                            if (mShareUrl.contains("?")) {
+                                mShareUrl += "&userFrom=friend";
+                            } else {
+                                mShareUrl += "?userFrom=friend";
+                            }
                             shareToPlatform(SHARE_MEDIA.WEIXIN_CIRCLE);
                         }
 
@@ -103,7 +111,11 @@ public class ShareDialog {
                     break;
                 case R.id.sinaWeibo:
                     if (UMShareAPI.get(mActivity).isInstall(mActivity, SHARE_MEDIA.SINA)) {
-                        mShareUrl += "&userFrom=weibo";
+                        if (mShareUrl.contains("?")) {
+                            mShareUrl += "&userFrom=weibo";
+                        } else {
+                            mShareUrl += "?userFrom=weibo";
+                        }
                         shareToPlatform(SHARE_MEDIA.SINA);
                         onSharePlatformClicked(SHARE_PLATFORM.SINA_WEIBO);
                         mSmartDialog.dismiss();
@@ -183,7 +195,7 @@ public class ShareDialog {
 
         @Override
         public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-         //   ToastUtil.show(R.string.share_failed);
+            //   ToastUtil.show(R.string.share_failed);
             ToastUtil.show(throwable.getMessage());
         }
 
