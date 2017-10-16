@@ -228,6 +228,8 @@ public class TrainingCountDownActivity extends BaseActivity {
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
-        mGifFromResource.recycle();
+        if (mGifFromResource != null) {
+            mGifFromResource.recycle();
+        }
     }
 }

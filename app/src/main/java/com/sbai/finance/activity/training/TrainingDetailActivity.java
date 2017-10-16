@@ -53,8 +53,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.R.id.trainingExperience;
-
 
 public class TrainingDetailActivity extends BaseActivity {
 
@@ -90,7 +88,7 @@ public class TrainingDetailActivity extends BaseActivity {
     ExperienceView mExperience1;
     @BindView(R.id.experience2)
     ExperienceView mExperience2;
-    @BindView(trainingExperience)
+    @BindView(R.id.trainingExperience)
     IconTextRow mTrainingExperience;
     @BindView(R.id.background)
     LinearLayout mBackground;
@@ -224,31 +222,33 @@ public class TrainingDetailActivity extends BaseActivity {
     }
 
     private void initBackground() {
-        switch (mTraining.getType()) {
-            case Training.TYPE_THEORY:
-                mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
-                mBackground.setBackgroundResource(R.drawable.bg_training_detail_theory);
-                mExtraBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
-                mStartTraining.setBackgroundResource(R.drawable.bg_train_theory);
-                break;
-            case Training.TYPE_TECHNOLOGY:
-                mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.violetTechnologyTraining));
-                mBackground.setBackgroundResource(R.drawable.bg_training_detail_technology);
-                mExtraBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.violetTechnologyTraining));
-                mStartTraining.setBackgroundResource(R.drawable.bg_train_technology);
-                break;
-            case Training.TYPE_FUNDAMENTAL:
-                mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.yellowFundamentalTraining));
-                mBackground.setBackgroundResource(R.drawable.bg_training_detail_fundamental);
-                mExtraBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.yellowFundamentalTraining));
-                mStartTraining.setBackgroundResource(R.drawable.bg_train_fundamentals);
-                break;
-            case Training.TYPE_COMPREHENSIVE:
-                mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blueComprehensiveTraining));
-                mBackground.setBackgroundResource(R.drawable.bg_training_detail_comprehensive);
-                mExtraBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blueComprehensiveTraining));
-                mStartTraining.setBackgroundResource(R.drawable.bg_train_comprehensive);
-                break;
+        if (mTraining != null) {
+            switch (mTraining.getType()) {
+                case Training.TYPE_THEORY:
+                    mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
+                    mBackground.setBackgroundResource(R.drawable.bg_training_detail_theory);
+                    mExtraBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.redTheoryTraining));
+                    mStartTraining.setBackgroundResource(R.drawable.bg_train_theory);
+                    break;
+                case Training.TYPE_TECHNOLOGY:
+                    mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.violetTechnologyTraining));
+                    mBackground.setBackgroundResource(R.drawable.bg_training_detail_technology);
+                    mExtraBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.violetTechnologyTraining));
+                    mStartTraining.setBackgroundResource(R.drawable.bg_train_technology);
+                    break;
+                case Training.TYPE_FUNDAMENTAL:
+                    mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.yellowFundamentalTraining));
+                    mBackground.setBackgroundResource(R.drawable.bg_training_detail_fundamental);
+                    mExtraBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.yellowFundamentalTraining));
+                    mStartTraining.setBackgroundResource(R.drawable.bg_train_fundamentals);
+                    break;
+                case Training.TYPE_COMPREHENSIVE:
+                    mTitleBar.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blueComprehensiveTraining));
+                    mBackground.setBackgroundResource(R.drawable.bg_training_detail_comprehensive);
+                    mExtraBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blueComprehensiveTraining));
+                    mStartTraining.setBackgroundResource(R.drawable.bg_train_comprehensive);
+                    break;
+            }
         }
     }
 
@@ -391,9 +391,8 @@ public class TrainingDetailActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.relatedKnowledge,
-            trainingExperience, R.id.writeExperience,
-            R.id.startTraining})
+    @OnClick({R.id.relatedKnowledge, R.id.trainingExperience,
+            R.id.writeExperience, R.id.startTraining})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.relatedKnowledge:
@@ -403,7 +402,7 @@ public class TrainingDetailActivity extends BaseActivity {
                             .execute();
                 }
                 break;
-            case trainingExperience:
+            case R.id.trainingExperience:
                 Launcher.with(getActivity(), TrainingExperienceActivity.class)
                         .putExtra(ExtraKeys.TRAINING, mTraining)
                         .executeForResult(REQ_TRAIN_EXPERIENCE);
@@ -521,20 +520,20 @@ public class TrainingDetailActivity extends BaseActivity {
                     .setCallback(new Callback2D<Resp<Share>, Share>() {
                         @Override
                         protected void onRespSuccessData(Share data) {
-                            share(data.getTitle(), data.getContent(), data.getShareLink(),data.getShareLeUrl());
+                            share(data.getTitle(), data.getContent(), data.getShareLink(), data.getShareLeUrl());
                         }
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
                             super.onFailure(volleyError);
-                            share(shareTitle, shareDescription, shareUrl,null);
+                            share(shareTitle, shareDescription, shareUrl, null);
                         }
                     })
                     .fireFree();
         }
     }
 
-    private void share(String shareTitle, String shareDescription, String shareUrl,String shareThumbUrl) {
+    private void share(String shareTitle, String shareDescription, String shareUrl, String shareThumbUrl) {
         ShareDialog.with(getActivity())
                 .setTitle(getString(R.string.share_title))
                 .setShareTitle(shareTitle)
