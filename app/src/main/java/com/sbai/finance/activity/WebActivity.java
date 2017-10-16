@@ -138,15 +138,21 @@ public class WebActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (!TextUtils.isEmpty(mRootUrl) && mRootUrl.equalsIgnoreCase(mPageUrl)) {
-            super.onBackPressed();
+        //java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+        try {
+            if (!TextUtils.isEmpty(mRootUrl) && mRootUrl.equalsIgnoreCase(mPageUrl)) {
+                super.onBackPressed();
 
-        } else if (mWebView.canGoBack()) {
-            mWebView.goBack();
+            } else if (mWebView.canGoBack()) {
+                mWebView.goBack();
 
-        } else {
-            super.onBackPressed();
+            } else {
+                super.onBackPressed();
+            }
+        } catch (IllegalStateException e) {
+            finish();
         }
+
     }
 
 
@@ -330,9 +336,9 @@ public class WebActivity extends BaseActivity {
 
         @Override
         public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, SslError sslError) {
-            if(sslError.getPrimaryError() == android.net.http.SslError.SSL_INVALID ){// 个别6.0 7.0手机ssl校验过程遇到了bug
+            if (sslError.getPrimaryError() == android.net.http.SslError.SSL_INVALID) {// 个别6.0 7.0手机ssl校验过程遇到了bug
                 sslErrorHandler.proceed();
-            }else{
+            } else {
                 sslErrorHandler.cancel();
             }
         }

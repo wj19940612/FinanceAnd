@@ -7,6 +7,10 @@ import android.util.Log;
 import com.sbai.finance.App;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static android.content.Context.AUDIO_SERVICE;
 
@@ -34,7 +38,7 @@ public class MissAudioManager {
     private String mAudioUrl;
     private String mUuid;
     private OnCompletedListener mOnCompletedListener;
-    private IAudioDisplay mAudioView;
+    private List<WeakReference<IAudioDisplay>> mAudioViewList;
 
     public MissAudioManager() {
         mAudioManager = (AudioManager) App.getAppContext().getSystemService(AUDIO_SERVICE);
@@ -49,21 +53,32 @@ public class MissAudioManager {
                         stop();
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT: // Short time
-                        pause();
+                        pauseTransiently();
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK: // Short time, allow mix, just low volume
                         break;
                 }
             }
         };
+        mAudioViewList = new ArrayList<>();
     }
 
     public void setOnCompletedListener(OnCompletedListener onCompletedListener) {
         mOnCompletedListener = onCompletedListener;
     }
 
-    public void setAudioView(IAudioDisplay audioView) {
-        mAudioView = audioView;
+    public void addAudioView(IAudioDisplay display) {
+        mAudioViewList.add(new WeakReference<>(display));
+    }
+
+    public void removeAudioView(IAudioDisplay display) {
+        Iterator iterator = mAudioViewList.iterator();
+        while (iterator.hasNext()) {
+            WeakReference reference = (WeakReference) iterator.next();
+            if (reference.get() == display) {
+                iterator.remove();
+            }
+        }
     }
 
     public String getAudioUrl() {
@@ -79,6 +94,7 @@ public class MissAudioManager {
         mAudioUrl = audioUrl;
         mPaused = false;
         mStopPostPrepared = false;
+        onStart();
 
         if (mPreparing) return;
 
@@ -171,6 +187,17 @@ public class MissAudioManager {
             if (!mPreparing) {
                 mMediaPlayer.pause();
             }
+            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+            mPaused = true;
+            onPause();
+        }
+    }
+
+    private void pauseTransiently() {
+        if (mMediaPlayer != null && !mPaused) {
+            if (!mPreparing) {
+                mMediaPlayer.pause();
+            }
             mPaused = true;
             onPause();
         }
@@ -181,6 +208,7 @@ public class MissAudioManager {
             if (!mPreparing) {
                 mMediaPlayer.start();
             }
+            requestAudioFocus();
             mPaused = false;
             onResume();
         }
@@ -221,44 +249,54 @@ public class MissAudioManager {
 
     public interface IAudioDisplay {
 
-        void onStart();
+        void onAudioStart();
 
-        void onPlay();
+        void onAudioPlay();
 
-        void onPause();
+        void onAudioPause();
 
-        void onResume();
+        void onAudioResume();
 
-        void onStop();
+        void onAudioStop();
     }
 
     private void onStart() {
-        if (mAudioView != null) {
-            mAudioView.onStart();
+        for (WeakReference<IAudioDisplay> reference : mAudioViewList) {
+            if (reference.get() != null) {
+                reference.get().onAudioStart();
+            }
         }
     }
 
     private void onPlay() {
-        if (mAudioView != null) {
-            mAudioView.onPlay();
+        for (WeakReference<IAudioDisplay> reference : mAudioViewList) {
+            if (reference.get() != null) {
+                reference.get().onAudioPlay();
+            }
         }
     }
 
     private void onPause() {
-        if (mAudioView != null) {
-            mAudioView.onPause();
+        for (WeakReference<IAudioDisplay> reference : mAudioViewList) {
+            if (reference.get() != null) {
+                reference.get().onAudioPause();
+            }
         }
     }
 
     private void onResume() {
-        if (mAudioView != null) {
-            mAudioView.onResume();
+        for (WeakReference<IAudioDisplay> reference : mAudioViewList) {
+            if (reference.get() != null) {
+                reference.get().onAudioResume();
+            }
         }
     }
 
     private void onStop() {
-        if (mAudioView != null) {
-            mAudioView.onStop();
+        for (WeakReference<IAudioDisplay> reference : mAudioViewList) {
+            if (reference.get() != null) {
+                reference.get().onAudioStop();
+            }
         }
     }
 }

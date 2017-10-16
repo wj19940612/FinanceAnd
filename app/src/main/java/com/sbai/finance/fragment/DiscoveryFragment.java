@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -363,16 +364,32 @@ public class DiscoveryFragment extends BaseFragment {
                 mGrade.setText(context.getString(R.string.level, item.getTrain().getLevel()));
                 switch (item.getTrain().getType()) {
                     case Training.TYPE_THEORY:
-                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FFB269"), Color.parseColor("#FB857A")}, context));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            mContent.setBackground(createDrawable(new int[]{Color.parseColor("#FFB269"), Color.parseColor("#FB857A")}, context));
+                        } else {
+                            mContent.setBackgroundDrawable(createDrawable(new int[]{Color.parseColor("#FFB269"), Color.parseColor("#FB857A")}, context));
+                        }
                         break;
                     case Training.TYPE_TECHNOLOGY:
-                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#A485FF"), Color.parseColor("#C05DD8")}, context));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            mContent.setBackground(createDrawable(new int[]{Color.parseColor("#A485FF"), Color.parseColor("#C05DD8")}, context));
+                        } else {
+                            mContent.setBackgroundDrawable(createDrawable(new int[]{Color.parseColor("#A485FF"), Color.parseColor("#C05DD8")}, context));
+                        }
                         break;
                     case Training.TYPE_FUNDAMENTAL:
-                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#EEA259"), Color.parseColor("#FDD35E")}, context));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            mContent.setBackground(createDrawable(new int[]{Color.parseColor("#EEA259"), Color.parseColor("#FDD35E")}, context));
+                        } else {
+                            mContent.setBackgroundDrawable(createDrawable(new int[]{Color.parseColor("#EEA259"), Color.parseColor("#FDD35E")}, context));
+                        }
                         break;
                     case Training.TYPE_COMPREHENSIVE:
-                        mContent.setBackground(createDrawable(new int[]{Color.parseColor("#64A0FE"), Color.parseColor("#995BF4")}, context));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            mContent.setBackground(createDrawable(new int[]{Color.parseColor("#64A0FE"), Color.parseColor("#995BF4")}, context));
+                        } else {
+                            mContent.setBackgroundDrawable(createDrawable(new int[]{Color.parseColor("#64A0FE"), Color.parseColor("#995BF4")}, context));
+                        }
                         break;
                 }
             }

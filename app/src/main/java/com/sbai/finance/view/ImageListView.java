@@ -1,7 +1,6 @@
 package com.sbai.finance.view;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -80,19 +79,19 @@ public class ImageListView extends RelativeLayout {
         switch (index) {
             case 0:
                 if (hasBackground) {
-                    image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar));
+                    image.setBackgroundResource(R.drawable.bg_avatar);
                 }
                 break;
             case 1:
-                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar));
+                image.setBackgroundResource(R.drawable.bg_avatar);
                 params.setMargins(0, 0, mMarginRights[0], 0);
                 break;
             case 2:
-                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar));
+                image.setBackgroundResource(R.drawable.bg_avatar);
                 params.setMargins(0, 0, mMarginRights[1], 0);
                 break;
             case 3:
-                image.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_avatar));
+                image.setBackgroundResource(R.drawable.bg_avatar);
                 params.setMargins(0, 0, mMarginRights[2], 0);
                 break;
         }

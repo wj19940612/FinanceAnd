@@ -128,9 +128,6 @@ public class MissTalkFragment extends BaseFragment {
 		initSwipeRefreshLayout();
 
 		registerRefreshReceiver();
-
-		mSet = new HashSet<>();
-		mListView.setEmptyView(mEmpty);
 	}
 
 	private void initTitleBar() {
@@ -172,6 +169,8 @@ public class MissTalkFragment extends BaseFragment {
 	}
 
 	private void initListView() {
+		mSet = new HashSet<>();
+		mListView.setEmptyView(mEmpty);
 		mQuestionListAdapter = new QuestionListAdapter(getActivity());
 		mListView.setAdapter(mQuestionListAdapter);
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

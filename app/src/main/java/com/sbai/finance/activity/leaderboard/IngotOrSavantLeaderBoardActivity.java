@@ -273,13 +273,13 @@ public class IngotOrSavantLeaderBoardActivity extends BaseActivity implements
                 mRank.setText("");
                 switch (rank) {
                     case 1:
-                        mRank.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_rank_top_1), null);
+                        mRank.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_rank_top_1, 0);
                         break;
                     case 2:
-                        mRank.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_rank_top_2), null);
+                        mRank.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_rank_top_2, 0);
                         break;
                     case 3:
-                        mRank.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(getActivity(), R.drawable.ic_rank_top_3), null);
+                        mRank.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_rank_top_3, 0);
                         break;
                 }
             }

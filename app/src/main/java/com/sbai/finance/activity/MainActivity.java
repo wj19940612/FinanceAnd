@@ -1,5 +1,6 @@
 package com.sbai.finance.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 
+import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
@@ -59,7 +61,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 //        translucentStatusBar();
         checkVersion();
         requestServiceConnectWay();
-        requestStartActivities();
     }
 
     private void requestStartActivities() {
@@ -154,11 +155,24 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 .setCallback(new Callback2D<Resp<AppVersion>, AppVersion>() {
                     @Override
                     protected void onRespSuccessData(AppVersion data) {
-                        if (data.isForceUpdate()) {
-                            UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
-                        } else if (data.isNeedUpdate()) {
-                            UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate()).show(getSupportFragmentManager());
+                        if (data.isForceUpdate() || data.isNeedUpdate()) {
+                            UpdateVersionDialogFragment.newInstance(data, data.isForceUpdate())
+                                    .setOnDismissListener(new UpdateVersionDialogFragment.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss() {
+                                             requestStartActivities();
+                                        }
+                                    })
+                                    .show(getSupportFragmentManager());
+                        }else {
+                            requestStartActivities();
                         }
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                        requestStartActivities();
                     }
                 })
                 .fireFree();

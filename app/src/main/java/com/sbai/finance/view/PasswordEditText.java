@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
@@ -151,7 +152,11 @@ public class PasswordEditText extends LinearLayout {
         EditText editText = new EditText(getContext());
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         editText.setFilters(new InputFilter[]{new PasswordInputFilter(), new InputFilter.LengthFilter(mMaxCharNum)});
-        editText.setBackground(null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            editText.setBackground(null);
+        } else {
+            editText.setBackgroundDrawable(null);
+        }
         editText.setPadding(0, padding, 0, padding);
         editText.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryText));
         editText.setTextSize(15);

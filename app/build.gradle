@@ -82,7 +82,7 @@ android {
     productFlavors {
 
         dev {
-            minSdkVersion 21
+//            minSdkVersion 21
             versionNameSuffix '-dev'
 //            applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
@@ -100,7 +100,7 @@ android {
         }
 
         alpha {
-//            applicationId "com.sbai.finance.alpha"
+            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-Alpha'
             versionCode 115
             versionName "1.2.1016"
