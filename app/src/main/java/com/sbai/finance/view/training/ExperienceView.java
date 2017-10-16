@@ -78,12 +78,33 @@ public class ExperienceView extends LinearLayout {
 
 				mUserName.setText(data.getUserModel().getUserName());
 				mPublishTime.setText(DateUtil.getMissFormatTime(data.getCreateDate()));
+
+				mAvatar.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Launcher.with(getContext(), LookBigPictureActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, data.getUserModel().getUserPortrait())
+								.putExtra(Launcher.EX_PAYLOAD_2, 0)
+								.execute();
+					}
+				});
 			} else {
 				GlideApp.with(getContext()).load(R.drawable.ic_default_avatar)
 						.circleCrop()
 						.into(mAvatar);
+
 				mUserName.setText("");
 				mPublishTime.setText("");
+
+				mAvatar.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Launcher.with(getContext(), LookBigPictureActivity.class)
+								.putExtra(Launcher.EX_PAYLOAD, "")
+								.putExtra(Launcher.EX_PAYLOAD_2, 0)
+								.execute();
+					}
+				});
 			}
 
 			mAvatar.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +115,6 @@ public class ExperienceView extends LinearLayout {
 							.putExtra(Launcher.EX_PAYLOAD_2, 0)
 							.execute();
 				}
-
 			});
 
 			mExperience.setText(data.getContent());

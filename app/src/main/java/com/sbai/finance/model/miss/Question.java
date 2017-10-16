@@ -1,17 +1,12 @@
 package com.sbai.finance.model.miss;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-/**
- * Created by lixiaokuan0819 on 2017/7/30.
- */
+public class Question implements Parcelable{
 
-public class Question implements Serializable {
-
-    private static final int TYPE_DEFAULT = 0;
     public static final int TYPE_HOT = 1;
     public static final int TYPE_LATEST = 2;
-
 
     /**
      * answerContext : blob:http://var.esongbai.xyz/ed0ea7b6-bd51-4ff1-a631-864d01b9f4c8
@@ -57,47 +52,15 @@ public class Question implements Serializable {
     private String userName;
     private String userPortrait;   //提问人头像
     private int appointCustomId;   //提问时指定的小姐姐id
-    private int replyCount;       //回复数
-
-    // Extras below
-    private int soundTime;
-    private int collect;
-    private boolean isPlaying;
-    private boolean isPause;
-    private boolean isCountDown;
-    private boolean progressIsZero = true;
+    private int replyCount;        //回复数
+    private int soundTime;         //语音播放时间
+    private int collect;           //是否收藏 0 未收藏 1已收藏
 
     // 我的问答中的数据
     private String content;        //问题内容
     private int dataId;            //问题id
     private int type;              //解说界面自定义的type  0 表示普通的 1 表示出现热门提问标签 2 最新提问
     private String commentId;      //回复的id
-
-
-    public String getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(String commentId) {
-        this.commentId = commentId;
-    }
-
-    public int getCollect() {
-        return collect;
-    }
-
-    public void setCollect(int collect) {
-        this.collect = collect;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
 
     public boolean isQuestionSolved() {
         return getSolve() == 1;
@@ -111,7 +74,6 @@ public class Question implements Serializable {
         this.content = content;
     }
 
-
     public int getDataId() {
         return dataId;
     }
@@ -120,45 +82,20 @@ public class Question implements Serializable {
         this.dataId = dataId;
     }
 
-    public boolean isPlaying() {
-        return isPlaying;
+    public int getType() {
+        return type;
     }
 
-    public void setPlaying(boolean playing) {
-        isPlaying = playing;
+    public void setType(int type) {
+        this.type = type;
     }
 
-    public boolean isPause() {
-        return isPause;
+    public String getCommentId() {
+        return commentId;
     }
 
-    public void setPause(boolean pause) {
-        isPause = pause;
-    }
-
-    public boolean isCountDown() {
-        return isCountDown;
-    }
-
-    public void setCountDown(boolean countDown) {
-        isCountDown = countDown;
-    }
-
-    public boolean isProgressIsZero() {
-        return progressIsZero;
-    }
-
-    public void setProgressIsZero(boolean progressIsZero) {
-        this.progressIsZero = progressIsZero;
-    }
-
-
-    public int getSoundTime() {
-        return soundTime;
-    }
-
-    public void setSoundTime(int soundTime) {
-        this.soundTime = soundTime;
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
     }
 
     public String getAnswerContext() {
@@ -329,6 +266,22 @@ public class Question implements Serializable {
         this.replyCount = replyCount;
     }
 
+    public int getSoundTime() {
+        return soundTime;
+    }
+
+    public void setSoundTime(int soundTime) {
+        this.soundTime = soundTime;
+    }
+
+    public int getCollect() {
+        return collect;
+    }
+
+    public void setCollect(int collect) {
+        this.collect = collect;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -355,10 +308,6 @@ public class Question implements Serializable {
                 ", replyCount=" + replyCount +
                 ", soundTime=" + soundTime +
                 ", collect=" + collect +
-                ", isPlaying=" + isPlaying +
-                ", isPause=" + isPause +
-                ", isCountDown=" + isCountDown +
-                ", progressIsZero=" + progressIsZero +
                 ", content='" + content + '\'' +
                 ", dataId=" + dataId +
                 ", type=" + type +
@@ -366,4 +315,84 @@ public class Question implements Serializable {
                 '}';
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.answerContext);
+        dest.writeInt(this.answerCustomId);
+        dest.writeInt(this.askSavant);
+        dest.writeInt(this.awardCount);
+        dest.writeInt(this.awardMoney);
+        dest.writeLong(this.createTime);
+        dest.writeString(this.customPortrait);
+        dest.writeInt(this.id);
+        dest.writeInt(this.isPrise);
+        dest.writeInt(this.listenCount);
+        dest.writeInt(this.priseCount);
+        dest.writeString(this.questionContext);
+        dest.writeInt(this.questionUserId);
+        dest.writeLong(this.replyTime);
+        dest.writeInt(this.show);
+        dest.writeInt(this.solve);
+        dest.writeLong(this.updateTime);
+        dest.writeString(this.userName);
+        dest.writeString(this.userPortrait);
+        dest.writeInt(this.appointCustomId);
+        dest.writeInt(this.replyCount);
+        dest.writeInt(this.soundTime);
+        dest.writeInt(this.collect);
+        dest.writeString(this.content);
+        dest.writeInt(this.dataId);
+        dest.writeInt(this.type);
+        dest.writeString(this.commentId);
+    }
+
+    public Question() {
+    }
+
+    protected Question(Parcel in) {
+        this.answerContext = in.readString();
+        this.answerCustomId = in.readInt();
+        this.askSavant = in.readInt();
+        this.awardCount = in.readInt();
+        this.awardMoney = in.readInt();
+        this.createTime = in.readLong();
+        this.customPortrait = in.readString();
+        this.id = in.readInt();
+        this.isPrise = in.readInt();
+        this.listenCount = in.readInt();
+        this.priseCount = in.readInt();
+        this.questionContext = in.readString();
+        this.questionUserId = in.readInt();
+        this.replyTime = in.readLong();
+        this.show = in.readInt();
+        this.solve = in.readInt();
+        this.updateTime = in.readLong();
+        this.userName = in.readString();
+        this.userPortrait = in.readString();
+        this.appointCustomId = in.readInt();
+        this.replyCount = in.readInt();
+        this.soundTime = in.readInt();
+        this.collect = in.readInt();
+        this.content = in.readString();
+        this.dataId = in.readInt();
+        this.type = in.readInt();
+        this.commentId = in.readString();
+    }
+
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel source) {
+            return new Question(source);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
 }

@@ -794,68 +794,32 @@ public class MissProfileActivity extends BaseActivity implements
 
 		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
 			if (data != null) {
-				Praise praise = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-				int replyCount = data.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-				int rewardCount = data.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
-				int listenCount = data.getIntExtra(Launcher.EX_PAYLOAD_3, -1);
-				if (praise != null) {
+				Question question = data.getParcelableExtra(ExtraKeys.QUESTION);
+				Praise praise = data.getParcelableExtra(ExtraKeys.PRAISE);
+				if (question!= null) {
 					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
-						Question question = mHerAnswerAdapter.getItem(i);
-						if (question != null) {
-							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
-								question.setIsPrise(praise.getIsPrise());
-								question.setPriseCount(praise.getPriseCount());
-								mHerAnswerAdapter.notifyDataSetChanged();
-								int praiseCount;
+						Question item = mHerAnswerAdapter.getItem(i);
+						if (item != null && question.getId() == item.getId()) {
+							item.setIsPrise(question.getIsPrise());
+							item.setPriseCount(question.getPriseCount());
+							item.setReplyCount(question.getReplyCount());
+							item.setAwardCount(question.getAwardCount());
+							item.setListenCount(question.getListenCount());
+
+							if (praise != null) {
 								if (mMiss != null) {
-									if (praise.getIsPrise() == 0) {
-										praiseCount = mMiss.getTotalPrise() - 1;
-										mMiss.setTotalPrise(praiseCount);
+									if (question.getIsPrise() == 0) {
+										mMiss.setTotalPrise(mMiss.getTotalPrise() - 1);
 									} else {
-										praiseCount = mMiss.getTotalPrise() + 1;
-										mMiss.setTotalPrise(praiseCount);
+										mMiss.setTotalPrise(mMiss.getTotalPrise() + 1);
 									}
-									mPraiseNumber.setText(getString(R.string.praise_number, StrFormatter.getFormatCount(praiseCount)));
+									mPraiseNumber.setText(getString(R.string.praise_number, StrFormatter.getFormatCount(mMiss.getTotalPrise())));
 								}
 							}
 						}
 					}
-				}
 
-				if (replyCount != -1) {
-					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
-						Question question = mHerAnswerAdapter.getItem(i);
-						if (question != null) {
-							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
-								question.setReplyCount(replyCount);
-								mHerAnswerAdapter.notifyDataSetChanged();
-							}
-						}
-					}
-				}
-
-				if (rewardCount != -1) {
-					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
-						Question question = mHerAnswerAdapter.getItem(i);
-						if (question != null) {
-							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
-								question.setAwardCount(rewardCount);
-								mHerAnswerAdapter.notifyDataSetChanged();
-							}
-						}
-					}
-				}
-
-				if (listenCount != -1) {
-					for (int i = 0; i < mHerAnswerAdapter.getCount(); i++) {
-						Question question = mHerAnswerAdapter.getItem(i);
-						if (question != null) {
-							if (question.getId() == data.getIntExtra(ExtraKeys.QUESTION_ID, -1)) {
-								question.setListenCount(listenCount);
-								mHerAnswerAdapter.notifyDataSetChanged();
-							}
-						}
-					}
+					mHerAnswerAdapter.notifyDataSetChanged();
 				}
 			}
 		}
