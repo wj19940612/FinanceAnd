@@ -76,7 +76,7 @@ import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_LOGIN;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
-public class MissTalkFragment extends BaseFragment {
+public class MissTalkFragment extends BaseFragment implements MissAudioManager.IAudioDisplay {
 
 	private static final int REQ_COMMENT = 1001;
 
@@ -127,6 +127,8 @@ public class MissTalkFragment extends BaseFragment {
 		initSwipeRefreshLayout();
 
 		registerRefreshReceiver();
+
+        MissAudioManager.get().addAudioView(this);
 	}
 
 	private void initTitleBar() {
@@ -546,7 +548,34 @@ public class MissTalkFragment extends BaseFragment {
 		super.onDestroyView();
 		unbinder.unbind();
 		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshReceiver);
+
+        MissAudioManager.get().removeAudioView(this);
 	}
+
+    @Override
+    public void onAudioStart() {
+        Log.d(TAG, "onAudioStart: ");
+    }
+
+    @Override
+    public void onAudioPlay() {
+        Log.d(TAG, "onAudioPlay: ");
+    }
+
+    @Override
+    public void onAudioPause() {
+        Log.d(TAG, "onAudioPause: ");
+    }
+
+    @Override
+    public void onAudioResume() {
+        Log.d(TAG, "onAudioResume: ");
+    }
+
+    @Override
+    public void onAudioStop() {
+        Log.d(TAG, "onAudioStop: ");
+    }
 
     public static class MissListAdapter extends RecyclerView.Adapter<MissListAdapter.ViewHolder> {
 
