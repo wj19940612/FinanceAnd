@@ -63,7 +63,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
@@ -323,7 +322,7 @@ public class MissTalkFragment extends BaseFragment {
 		}
 	}
 
-	@Override
+    @Override
 	public void onPause() {
 		super.onPause();
 		stopScheduleJob();
@@ -508,11 +507,7 @@ public class MissTalkFragment extends BaseFragment {
 		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshReceiver);
 	}
 
-	@OnClick(R.id.missFloatWindow)
-	public void onViewClicked() {
-	}
-
-	public static class MissListAdapter extends RecyclerView.Adapter<MissListAdapter.ViewHolder> {
+    public static class MissListAdapter extends RecyclerView.Adapter<MissListAdapter.ViewHolder> {
 
 		private OnItemClickListener mOnItemClickListener;
 
