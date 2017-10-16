@@ -58,6 +58,11 @@ public class UpdateVersionDialogFragment extends DialogFragment {
     private Unbinder mBind;
     private AppVersion mAppVersion;
     private boolean mIsCanceledOnTouchOutside;
+    private OnDismissListener mOnDismissListener;
+
+    public interface OnDismissListener {
+        void onDismiss();
+    }
 
 
     private BroadcastReceiver mDownloadBroadcastReceiver = new BroadcastReceiver() {
@@ -124,6 +129,14 @@ public class UpdateVersionDialogFragment extends DialogFragment {
                 return false;
             }
         });
+        if (mOnDismissListener != null) {
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    mOnDismissListener.onDismiss();
+                }
+            });
+        }
         mDialogDelete.setVisibility(mIsCanceledOnTouchOutside ? View.GONE : View.VISIBLE);
     }
 
@@ -132,6 +145,11 @@ public class UpdateVersionDialogFragment extends DialogFragment {
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(this, this.getClass().getSimpleName());
         ft.commitAllowingStateLoss();
+    }
+
+    public UpdateVersionDialogFragment setOnDismissListener(OnDismissListener dismissListener) {
+        mOnDismissListener = dismissListener;
+        return this;
     }
 
     private boolean isStoragePermissionGranted() {
