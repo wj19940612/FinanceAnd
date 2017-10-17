@@ -3,7 +3,9 @@ package com.sbai.finance.model.miss;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Question implements Parcelable{
+import com.sbai.finance.utils.MissAudioManager;
+
+public class Question implements Parcelable, MissAudioManager.IAudio{
 
     public static final int TYPE_HOT = 1;
     public static final int TYPE_LATEST = 2;
@@ -395,4 +397,14 @@ public class Question implements Parcelable{
             return new Question[size];
         }
     };
+
+    @Override
+    public int getAudioId() {
+        return id;
+    }
+
+    @Override
+    public String getAudioUrl() {
+        return answerContext;
+    }
 }

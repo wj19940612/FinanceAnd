@@ -103,13 +103,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	MissFloatWindow mMissFloatWindow;
 
 	private int mQuestionId;
-	private int mPlayingId;
-	private String mPlayingUrl;
-	private String mPlayingAvatar;
 	private boolean mIsFromMissTalk;
+
 	private int mType = 1;
 	private int mPageSize = 20;
 	private int mPage = 0;
+
 	private HashSet<String> mSet;
 	private View mFootView;
 	private QuestionReplyListAdapter mQuestionReplyListAdapter;
@@ -246,9 +245,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	private void initData(Intent intent) {
 		mQuestionId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
 		mMongoId = intent.getStringExtra(Launcher.EX_PAYLOAD_1);
-		mPlayingId = intent.getIntExtra(ExtraKeys.PLAYING_ID, -1);
-		mPlayingUrl = intent.getStringExtra(ExtraKeys.PLAYING_URL);
-		mPlayingAvatar = intent.getStringExtra(ExtraKeys.PLAYING_AVATAR);
 		mIsFromMissTalk = intent.getBooleanExtra(ExtraKeys.IS_FROM_MISS_TALK, false);
 	}
 
@@ -306,19 +302,20 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
 		}
 
-		if (MissAudioManager.get().isPlaying(MissAudioManager.get().getAudioUrl(), MissAudioManager.get().getId())
-				&& !question.getAnswerContext().equalsIgnoreCase(MissAudioManager.get().getAudioUrl())) {
+		Question playingQuestion = (Question) MissAudioManager.get().getAudio();
+		if (MissAudioManager.get().isStarted(playingQuestion) && question.getId() != playingQuestion.getId()) {
 			mMissFloatWindow.setVisibility(View.VISIBLE);
-			mMissFloatWindow.setMissAvatar(mPlayingAvatar);
+			mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
 			mMissFloatWindow.startAnim();
 			mMissFloatWindow.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
+
 					mMissFloatWindow.setVisibility(View.GONE);
 					mMissFloatWindow.stopAnim();
+
 					Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-					intent.putExtra(Launcher.EX_PAYLOAD, MissAudioManager.get().getId());
 					intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, true);
 					startActivityForResult(intent, REQ_QUESTION_DETAIL);
 				}
@@ -334,7 +331,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		}
 
 		mProgressBar.setMax(question.getSoundTime() * 1000);
-		if (MissAudioManager.get().isPlaying(question.getAnswerContext(), question.getId())) {
+		if (MissAudioManager.get().isStarted(question)) {
 			startScheduleJob(100);
 			MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
 				@Override
@@ -343,7 +340,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 					stopScheduleJob();
 				}
 			});
-		} else if (MissAudioManager.get().isPaused(question.getAnswerContext(), question.getId())) {
+		} else if (MissAudioManager.get().isPaused(question)) {
 			setStatusPause(question);
 		} else {
 			setStatusStop(question);
@@ -378,18 +375,18 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	}
 
 	private void toggleQuestionVoice(final Question question) {
-		if (MissAudioManager.get().isPlaying(question.getAnswerContext(), question.getId())) {
+		if (MissAudioManager.get().isStarted(question)) {
 			MissAudioManager.get().pause();
 			setStatusPause(question);
 			stopScheduleJob();
-		} else if (MissAudioManager.get().isPaused(question.getAnswerContext(), question.getId())) {
+		} else if (MissAudioManager.get().isPaused(question)) {
 			MissAudioManager.get().resume();
 			startScheduleJob(100);
 		} else {
 			mMissFloatWindow.setVisibility(View.GONE);
 			mMissFloatWindow.stopAnim();
 			updateQuestionListenCount(question);
-			MissAudioManager.get().play(question.getAnswerContext(), question.getId());
+			MissAudioManager.get().play(question);
 			startScheduleJob(100);
 			MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
 				@Override
@@ -795,9 +792,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		}
 
 		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
-			if (MissAudioManager.get().isPlaying(mPlayingUrl, mPlayingId) && mPlayingId != mQuestionDetail.getId()) {
+            Question playQuestion = (Question) MissAudioManager.get().getAudio();
+			if (MissAudioManager.get().isStarted(playQuestion) && playQuestion.getId() != mQuestionDetail.getId()) {
 				mMissFloatWindow.setVisibility(View.VISIBLE);
-				mMissFloatWindow.setMissAvatar(mPlayingAvatar);
+				mMissFloatWindow.setMissAvatar(playQuestion.getCustomPortrait());
 				mMissFloatWindow.startAnim();
 			}
 

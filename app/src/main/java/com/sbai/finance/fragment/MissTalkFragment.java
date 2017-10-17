@@ -101,7 +101,6 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 	private HashSet<Integer> mSet;
 	private RefreshReceiver mRefreshReceiver;
 	private View mFootView;
-	private Question mPlayIngItem;
 
 	Unbinder unbinder;
 
@@ -125,6 +124,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
+
         MissAudioManager.get().addAudioListener(this);
 	}
 
@@ -178,13 +178,9 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 				if (item != null) {
 					Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
 					intent.putExtra(Launcher.EX_PAYLOAD, item.getId());
-					if (mPlayIngItem != null) {
-						intent.putExtra(ExtraKeys.PLAYING_ID, mPlayIngItem.getId());
-						intent.putExtra(ExtraKeys.PLAYING_URL, mPlayIngItem.getAnswerContext());
-						intent.putExtra(ExtraKeys.PLAYING_AVATAR, mPlayIngItem.getCustomPortrait());
-					}
 					intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, true);
 					startActivityForResult(intent, REQ_QUESTION_DETAIL);
+
 					umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
 				}
 			}
@@ -242,24 +238,24 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 			@Override
 			public void onPlayClick(final Question item, int position) {
 				umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
-				mPlayIngItem = item;//记录播放的item
+
 				toggleQuestionVoice(item);
 			}
 		});
 	}
 
 	private void toggleQuestionVoice(Question item) {
-		if (MissAudioManager.get().isPlaying(item.getAnswerContext(), item.getId())) {
+		if (MissAudioManager.get().isStarted(item)) {
 			MissAudioManager.get().pause();
 			mQuestionListAdapter.notifyDataSetChanged();
 			stopScheduleJob();
-		} else if (MissAudioManager.get().isPaused(item.getAnswerContext(), item.getId())) {
+		} else if (MissAudioManager.get().isPaused(item)) {
 			MissAudioManager.get().resume();
 			mQuestionListAdapter.notifyDataSetChanged();
 			startScheduleJob(100);
 		} else {
 			updateQuestionListenCount(item);
-			MissAudioManager.get().play(item.getAnswerContext(), item.getId());
+			MissAudioManager.get().play(item);
 			mQuestionListAdapter.notifyDataSetChanged();
 			MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
 				@Override
@@ -282,7 +278,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 			// Skip header && footer
 			if (i == 0 || i - 1 >= mQuestionListAdapter.getCount()) continue;
 			Question question = mQuestionListAdapter.getItem(i - 1);
-			if (question != null && MissAudioManager.get().isPlaying(question.getAnswerContext(), question.getId())) {
+			if (question != null && MissAudioManager.get().isStarted(question)) {
 				View view = mListView.getChildAt(i - firstVisiblePosition);
 				ImageView playImage = (ImageView) view.findViewById(R.id.playImage);
 				TextView soundTime = (TextView) view.findViewById(R.id.soundTime);
@@ -365,7 +361,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 				for (int i = 0; i <= mQuestionListAdapter.getCount(); i++) {
 					if (i == 0 || i - 1 >= mQuestionListAdapter.getCount()) continue;
 					Question question = mQuestionListAdapter.getItem(i - 1);
-					if (question != null && MissAudioManager.get().isPlaying(question.getAnswerContext(), question.getId())) {
+					if (question != null && MissAudioManager.get().isStarted(question)) {
 						if (i < firstVisiblePosition || i > lastVisiblePosition) {
 							mMissFloatWindow.setVisibility(View.VISIBLE);
 							mMissFloatWindow.setMissAvatar(question.getCustomPortrait());
@@ -385,7 +381,6 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-						intent.putExtra(Launcher.EX_PAYLOAD, mPlayIngItem.getId());
 						intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, true);
 						startActivityForResult(intent, REQ_QUESTION_DETAIL);
 						umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
@@ -403,7 +398,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 		for (int i = 0; i <= mQuestionListAdapter.getCount(); i++) {
 			if (i == 0 || i - 1 >= mQuestionListAdapter.getCount()) continue;
 			Question question = mQuestionListAdapter.getItem(i - 1);
-			if (question != null && MissAudioManager.get().isPlaying(question.getAnswerContext(), question.getId())) {
+			if (question != null && MissAudioManager.get().isStarted(question)) {
 				startScheduleJob(100);
 				MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
 					@Override
@@ -575,6 +570,11 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 	public void onAudioStop() {
 		mQuestionListAdapter.notifyDataSetChanged();
 	}
+
+    @Override
+    public void onAudioError() {
+        
+    }
 
     public static class MissListAdapter extends RecyclerView.Adapter<MissListAdapter.ViewHolder> {
 
@@ -825,12 +825,12 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 				});
 
 				mProgressBar.setMax(item.getSoundTime() * 1000);
-				if (MissAudioManager.get().isPlaying(item.getAnswerContext(), item.getId())) {
+				if (MissAudioManager.get().isStarted(item)) {
 					mPlayImage.setImageResource(R.drawable.ic_pause);
 					int pastTime = MissAudioManager.get().getCurrentPosition();
 					mSoundTime.setText(context.getString(R.string._seconds, (item.getSoundTime() * 1000 - pastTime) / 1000));
 					mProgressBar.setProgress(pastTime);
-				} else if (MissAudioManager.get().isPaused(item.getAnswerContext(), item.getId())) {
+				} else if (MissAudioManager.get().isPaused(item)) {
 					mPlayImage.setImageResource(R.drawable.ic_play);
 					int pastTime = MissAudioManager.get().getCurrentPosition();
 					mSoundTime.setText(context.getString(R.string._seconds, (item.getSoundTime() * 1000 - pastTime) / 1000));
@@ -869,10 +869,6 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 			if (data != null) {
 				Question question = data.getParcelableExtra(ExtraKeys.QUESTION);
 				if (question != null) {
-					if (MissAudioManager.get().isPlaying(question.getAnswerContext(), question.getId())) {
-						mPlayIngItem = question;
-					}
-
 					for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
 						Question item = mQuestionListAdapter.getItem(i);
 						if (item != null && question.getId() == item.getId()) {
@@ -884,7 +880,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 						}
 
 						if (item != null) {
-							if (MissAudioManager.get().isPlaying(item.getAnswerContext(), item.getId())) {
+							if (MissAudioManager.get().isStarted(item)) {
 								startScheduleJob(100);
 								MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
 									@Override

@@ -292,20 +292,22 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
         if (data != null && data.getData() != null) {
             Uri photosUri = data.getData();
             if (photosUri != null) {
-                if (!TextUtils.isEmpty(photosUri.getPath())) {
-                    return photosUri.getPath();
+                ContentResolver contentResolver = getActivity().getContentResolver();
+                Cursor cursor = contentResolver.query(photosUri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
+                if (cursor != null) {
+                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    cursor.moveToFirst();
+                    //最后根据索引值获取图片路径
+                    String path = cursor.getString(column_index);
+                    if (!TextUtils.isEmpty(path)) {
+                        return path;
+                    }
+                    cursor.close();
                 } else {
-                    ContentResolver contentResolver = getActivity().getContentResolver();
-                    Cursor cursor = contentResolver.query(photosUri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
-                    if (cursor != null) {
-                        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                        cursor.moveToFirst();
-                        //最后根据索引值获取图片路径
-                        String path = cursor.getString(column_index);
-                        if (!TextUtils.isEmpty(path)) {
-                            return path;
-                        }
-                        cursor.close();
+                    if (!TextUtils.isEmpty(photosUri.getPath())) {
+                        return photosUri.getPath();
+                    } else {
+                        return photosUri.toString();
                     }
                 }
             }
