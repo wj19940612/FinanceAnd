@@ -803,25 +803,9 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
                             item.setReplyCount(question.getReplyCount());
                             item.setAwardCount(question.getAwardCount());
                             item.setListenCount(question.getListenCount());
-                        }
-
-                        if (item != null) {
-                            if (MissAudioManager.get().isStarted(item)) {
-                                startScheduleJob(100);
-                                MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
-                                    @Override
-                                    public void onCompleted(String url) {
-                                        mMissFloatWindow.setVisibility(View.GONE);
-                                        mMissFloatWindow.stopAnim();
-                                        mQuestionListAdapter.notifyDataSetChanged();
-                                        stopScheduleJob();
-                                    }
-                                });
-                            }
+                            mQuestionListAdapter.notifyDataSetChanged();
                         }
                     }
-
-                    mQuestionListAdapter.notifyDataSetChanged();
                 }
             }
         }
