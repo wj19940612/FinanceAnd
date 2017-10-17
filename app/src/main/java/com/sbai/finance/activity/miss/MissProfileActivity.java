@@ -201,18 +201,18 @@ public class MissProfileActivity extends BaseActivity implements
 	}
 
 	private void toggleQuestionVoice(Question item) {
-		if (MissAudioManager.get().isPlaying(item.getAnswerContext(), item.getId())) {
+		if (MissAudioManager.get().isPlaying(item)) {
 			MissAudioManager.get().pause();
 			mHerAnswerAdapter.notifyDataSetChanged();
 			stopScheduleJob();
-		} else if (MissAudioManager.get().isPaused(item.getAnswerContext(), item.getId())) {
+		} else if (MissAudioManager.get().isPaused(item)) {
 			MissAudioManager.get().resume();
 			mHerAnswerAdapter.notifyDataSetChanged();
 			startScheduleJob(100);
 		} else {
 			stopAnim();
 			updateQuestionListenCount(item);
-			MissAudioManager.get().play(item.getAnswerContext(), item.getId());
+			MissAudioManager.get().play(item);
 			mHerAnswerAdapter.notifyDataSetChanged();
 			MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
 				@Override
@@ -238,7 +238,7 @@ public class MissProfileActivity extends BaseActivity implements
 		for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
 			if (i == 0 || i - 1 >= mHerAnswerAdapter.getCount()) continue; // Skip header
 			Question question = mHerAnswerAdapter.getItem(i - 1);
-			if (question != null && MissAudioManager.get().isPlaying(question.getAnswerContext(), question.getId())) {
+			if (question != null && MissAudioManager.get().isPlaying(question)) {
 				View view = mListView.getChildAt(i - firstVisiblePosition);
 				TextView soundTime = (TextView) view.findViewById(R.id.soundTime);
 				ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -268,7 +268,7 @@ public class MissProfileActivity extends BaseActivity implements
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (mMiss != null && MissAudioManager.get().isPlaying(mMiss.getBriefingSound(), mMiss.getId())) {
+		if (mMiss != null && MissAudioManager.get().isPlaying(mMiss)) {
 			MissAudioManager.get().stop();
 			stopAnim();
 		}
@@ -460,11 +460,11 @@ public class MissProfileActivity extends BaseActivity implements
 	}
 
 	private void toggleMissVoiceIntroduce(Miss miss) {
-		if (MissAudioManager.get().isPlaying(miss.getBriefingSound(), miss.getId())) {
+		if (MissAudioManager.get().isPlaying(miss)) {
 			MissAudioManager.get().stop();
 			stopAnim();
 		} else {
-			MissAudioManager.get().play(miss.getBriefingSound(), miss.getId());
+			MissAudioManager.get().play(miss);
 			mHerAnswerAdapter.notifyDataSetChanged();
 			startAnim();
 		}
@@ -734,12 +734,12 @@ public class MissProfileActivity extends BaseActivity implements
 				}
 
 				mProgressBar.setMax(item.getSoundTime() * 1000);
-				if (MissAudioManager.get().isPlaying(item.getAnswerContext(), item.getId())) {
+				if (MissAudioManager.get().isPlaying(item)) {
 					mPlayImage.setImageResource(R.drawable.ic_pause);
 					int pastTime = MissAudioManager.get().getCurrentPosition();
 					mSoundTime.setText(context.getString(R.string._seconds, (item.getSoundTime() * 1000 - pastTime) / 1000));
 					mProgressBar.setProgress(pastTime);
-				} else if (MissAudioManager.get().isPaused(item.getAnswerContext(), item.getId())) {
+				} else if (MissAudioManager.get().isPaused(item)) {
 					mPlayImage.setImageResource(R.drawable.ic_play);
 					int pastTime = MissAudioManager.get().getCurrentPosition();
 					mSoundTime.setText(context.getString(R.string._seconds, (item.getSoundTime() * 1000 - pastTime) / 1000));

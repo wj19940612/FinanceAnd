@@ -35,9 +35,8 @@ public class MissAudioManager {
     private volatile boolean mPreparing;
     private volatile boolean mStopPostPrepared;
     private boolean mPaused;
-    private String mAudioUrl;
-    private int mId;
     private String mUuid;
+    private IAudio mAudio;
     private OnCompletedListener mOnCompletedListener;
     private List<WeakReference<OnAudioListener>> mAudioViewList;
 
@@ -82,22 +81,17 @@ public class MissAudioManager {
         }
     }
 
-    public String getAudioUrl() {
-        return mAudioUrl;
+    public IAudio getAudio() {
+        return mAudio;
     }
 
-    public int getId() {
-        return mId;
+    private final String uuid(IAudio audio) {
+        return audio.getAudioId() + "@" + audio.getAudioUrl();
     }
 
-    private final String uuid(String audioUrl, int id) {
-        return id + "@" + audioUrl;
-    }
-
-    public void play(String audioUrl, int id) {
-        mUuid = uuid(audioUrl, id);
-        mAudioUrl = audioUrl;
-        mId = id;
+    public void play(IAudio audio) {
+        mUuid = uuid(audio);
+        mAudio = audio;
         mPaused = false;
         mStopPostPrepared = false;
         onStart();
@@ -127,9 +121,9 @@ public class MissAudioManager {
                         return;
                     }
 
-                    if (!mAudioUrl.equals(mMediaPlayer.dataSourcePath)) {
+                    if (!mAudio.getAudioUrl().equals(mMediaPlayer.dataSourcePath)) {
                         mMediaPlayer.reset();
-                        initializeAndPrepare(mAudioUrl);
+                        initializeAndPrepare(mAudio.getAudioUrl());
                     } else { // prepared, start
                         mMediaPlayer.start();
                         requestAudioFocus();
@@ -141,7 +135,7 @@ public class MissAudioManager {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     if (mOnCompletedListener != null) {
-                        mOnCompletedListener.onCompleted(mAudioUrl);
+                        mOnCompletedListener.onCompleted(mAudio.getAudioUrl());
                     }
                     stop();
                 }
@@ -149,7 +143,7 @@ public class MissAudioManager {
         }
 
         mMediaPlayer.reset();
-        initializeAndPrepare(audioUrl);
+        initializeAndPrepare(mAudio.getAudioUrl());
     }
 
     private void requestAudioFocus() {
@@ -220,16 +214,16 @@ public class MissAudioManager {
         }
     }
 
-    public boolean isPaused(String audioUrl, int id) {
+    public boolean isPaused(IAudio audio) {
         if (mMediaPlayer != null) {
-            return uuid(audioUrl, id).equals(mUuid) && mPaused && !mStopPostPrepared;
+            return uuid(audio).equals(mUuid) && mPaused && !mStopPostPrepared;
         }
         return false;
     }
 
-    public boolean isPlaying(String audioUrl, int id) {
+    public boolean isPlaying(IAudio audio) {
         if (mMediaPlayer != null) {
-            return uuid(audioUrl, id).equals(mUuid) && !mPaused && !mStopPostPrepared;
+            return uuid(audio).equals(mUuid) && !mPaused && !mStopPostPrepared;
         }
         return false;
     }
@@ -251,6 +245,13 @@ public class MissAudioManager {
             super.setDataSource(path);
             dataSourcePath = path;
         }
+    }
+
+    public interface IAudio {
+
+        int getAudioId();
+
+        String getAudioUrl();
     }
 
     public interface OnAudioListener {
