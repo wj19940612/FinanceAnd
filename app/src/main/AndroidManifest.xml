@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.sbai.finance"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.sbai.finance">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -84,8 +84,8 @@
         <!-- Login & Register -->
         <activity
             android:name=".activity.mine.LoginActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/PageBottomEnter"/>
         <activity
             android:name=".activity.mine.InputPhoneActivity"
@@ -424,11 +424,12 @@
         <activity
             android:name=".activity.GuideActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.mine.MyCollectionActivity">
-        </activity>
-        <activity android:name=".activity.home.AllTrainingListActivity">
-        </activity>
-
+        <activity
+            android:name=".activity.mine.MyCollectionActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.AllTrainingListActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

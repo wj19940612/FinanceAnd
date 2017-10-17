@@ -40,6 +40,7 @@ import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.QuestionCollect;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -72,7 +73,7 @@ import static com.sbai.finance.net.Client.SHARE_URL_QUESTION;
 
 
 public class QuestionDetailActivity extends BaseActivity implements AdapterView.OnItemClickListener {
-
+    
 	private static final int REQ_COMMENT = 1001;
 	private static final int REQ_COMMENT_LOGIN = 1002;
 	private static final int REQ_REWARD_LOGIN = 1003;

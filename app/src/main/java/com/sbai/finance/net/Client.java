@@ -296,7 +296,7 @@ public class Client {
                 .put("msgCode", authCode)
                 .put("deviceId", Preference.get().getPushClientId())
                 .put("platform", 0)
-                .put("source", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"))
+                .put("channel", AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"))
                 .put("openId", openId)
                 .put("name", name)
                 .put("iconUrl", iconUrl)
@@ -2725,6 +2725,6 @@ public class Client {
      * @return
      */
     public static API requestShareData(String code) {
-        return new API("/user/share/findByCode.do",new ApiParams().put("code",code));
+        return new API("/user/share/findByCode.do", new ApiParams().put("code", code));
     }
 }
