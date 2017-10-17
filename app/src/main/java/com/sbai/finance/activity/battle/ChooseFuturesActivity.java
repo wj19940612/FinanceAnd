@@ -16,6 +16,8 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.battle.ChooseFuturesFragment;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.fund.UserFundInfo;
+import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
@@ -37,7 +39,7 @@ public class ChooseFuturesActivity extends BaseActivity implements ViewPager.OnP
     private FuturePagesAdapter mFuturePagesAdapter;
     private int pagePosition;
     private String mContractsCode;
-    private Parcelable mUserFund;
+    private UserFundInfo mUserFund;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
