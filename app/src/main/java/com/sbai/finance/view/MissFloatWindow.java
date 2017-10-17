@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import com.sbai.finance.R;
 import com.sbai.glide.GlideApp;
 
-public class MissFloatWindow extends LinearLayout {
+public class MissFloatWindow extends LinearLayout  {
     private ImageView mMissAvatar;
     private ImageView mAudioAnim;
 

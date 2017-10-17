@@ -65,7 +65,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
@@ -77,7 +76,7 @@ import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_LOGIN;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
-public class MissTalkFragment extends BaseFragment implements MissAudioManager.IAudioDisplay{
+public class MissTalkFragment extends BaseFragment implements MissAudioManager.OnAudioListener {
 
 	private static final int REQ_COMMENT = 1001;
 
@@ -126,9 +125,8 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.I
 		requestHotQuestionList(true);
 
 		initSwipeRefreshLayout();
-
 		registerRefreshReceiver();
-		MissAudioManager.get().addAudioView(this);
+        MissAudioManager.get().addAudioListener(this);
 	}
 
 	private void initTitleBar() {
@@ -314,7 +312,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.I
 		}
 	}
 
-	@Override
+    @Override
 	public void onPause() {
 		super.onPause();
 		stopScheduleJob();
@@ -548,11 +546,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.I
 		super.onDestroyView();
 		unbinder.unbind();
 		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshReceiver);
-		MissAudioManager.get().removeAudioView(this);
-	}
-
-	@OnClick(R.id.missFloatWindow)
-	public void onViewClicked() {
+        MissAudioManager.get().removeAudioListener(this);
 	}
 
 	@Override
@@ -580,7 +574,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.I
 		mQuestionListAdapter.notifyDataSetChanged();
 	}
 
-	public static class MissListAdapter extends RecyclerView.Adapter<MissListAdapter.ViewHolder> {
+    public static class MissListAdapter extends RecyclerView.Adapter<MissListAdapter.ViewHolder> {
 
 		private OnItemClickListener mOnItemClickListener;
 

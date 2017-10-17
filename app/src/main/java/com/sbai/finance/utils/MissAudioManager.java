@@ -39,7 +39,7 @@ public class MissAudioManager {
     private int mId;
     private String mUuid;
     private OnCompletedListener mOnCompletedListener;
-    private List<WeakReference<IAudioDisplay>> mAudioViewList;
+    private List<WeakReference<OnAudioListener>> mAudioViewList;
 
     public MissAudioManager() {
         mAudioManager = (AudioManager) App.getAppContext().getSystemService(AUDIO_SERVICE);
@@ -68,15 +68,15 @@ public class MissAudioManager {
         mOnCompletedListener = onCompletedListener;
     }
 
-    public void addAudioView(IAudioDisplay display) {
-        mAudioViewList.add(new WeakReference<>(display));
+    public void addAudioListener(OnAudioListener listener) {
+        mAudioViewList.add(new WeakReference<>(listener));
     }
 
-    public void removeAudioView(IAudioDisplay display) {
+    public void removeAudioListener(OnAudioListener listener) {
         Iterator iterator = mAudioViewList.iterator();
         while (iterator.hasNext()) {
             WeakReference reference = (WeakReference) iterator.next();
-            if (reference.get() == display) {
+            if (reference.get() == listener) {
                 iterator.remove();
             }
         }
@@ -253,7 +253,7 @@ public class MissAudioManager {
         }
     }
 
-    public interface IAudioDisplay {
+    public interface OnAudioListener {
 
         void onAudioStart();
 
@@ -267,7 +267,7 @@ public class MissAudioManager {
     }
 
     private void onStart() {
-        for (WeakReference<IAudioDisplay> reference : mAudioViewList) {
+        for (WeakReference<OnAudioListener> reference : mAudioViewList) {
             if (reference.get() != null) {
                 reference.get().onAudioStart();
             }
@@ -275,7 +275,7 @@ public class MissAudioManager {
     }
 
     private void onPlay() {
-        for (WeakReference<IAudioDisplay> reference : mAudioViewList) {
+        for (WeakReference<OnAudioListener> reference : mAudioViewList) {
             if (reference.get() != null) {
                 reference.get().onAudioPlay();
             }
@@ -283,7 +283,7 @@ public class MissAudioManager {
     }
 
     private void onPause() {
-        for (WeakReference<IAudioDisplay> reference : mAudioViewList) {
+        for (WeakReference<OnAudioListener> reference : mAudioViewList) {
             if (reference.get() != null) {
                 reference.get().onAudioPause();
             }
@@ -291,7 +291,7 @@ public class MissAudioManager {
     }
 
     private void onResume() {
-        for (WeakReference<IAudioDisplay> reference : mAudioViewList) {
+        for (WeakReference<OnAudioListener> reference : mAudioViewList) {
             if (reference.get() != null) {
                 reference.get().onAudioResume();
             }
@@ -299,7 +299,7 @@ public class MissAudioManager {
     }
 
     private void onStop() {
-        for (WeakReference<IAudioDisplay> reference : mAudioViewList) {
+        for (WeakReference<OnAudioListener> reference : mAudioViewList) {
             if (reference.get() != null) {
                 reference.get().onAudioStop();
             }
