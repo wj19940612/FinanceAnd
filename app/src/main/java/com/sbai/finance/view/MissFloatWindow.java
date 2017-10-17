@@ -72,5 +72,4 @@ public class MissFloatWindow extends LinearLayout {
     public float dp2Px(float value, Resources res) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, res.getDisplayMetrics());
     }
-    
 }

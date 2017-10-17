@@ -36,6 +36,7 @@ public class MissAudioManager {
     private volatile boolean mStopPostPrepared;
     private boolean mPaused;
     private String mAudioUrl;
+    private int mId;
     private String mUuid;
     private OnCompletedListener mOnCompletedListener;
     private List<WeakReference<IAudioDisplay>> mAudioViewList;
@@ -85,6 +86,10 @@ public class MissAudioManager {
         return mAudioUrl;
     }
 
+    public int getId() {
+        return mId;
+    }
+
     private final String uuid(String audioUrl, int id) {
         return id + "@" + audioUrl;
     }
@@ -92,6 +97,7 @@ public class MissAudioManager {
     public void play(String audioUrl, int id) {
         mUuid = uuid(audioUrl, id);
         mAudioUrl = audioUrl;
+        mId = id;
         mPaused = false;
         mStopPostPrepared = false;
         onStart();

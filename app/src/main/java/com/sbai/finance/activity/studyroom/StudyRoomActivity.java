@@ -38,6 +38,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.SerializeObjectUtil;
@@ -144,6 +145,7 @@ public class StudyRoomActivity extends BaseActivity {
             mCanRegain = true;
             loadFromCache();
         }
+        MissAudioManager.get().stop();
     }
 
     private void loadFromCache() {

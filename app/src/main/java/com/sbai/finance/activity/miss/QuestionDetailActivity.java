@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.miss;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,8 +26,8 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.JsonPrimitive;
+import com.sbai.finance.App;
 import com.sbai.finance.ExtraKeys;
-import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
@@ -57,6 +58,7 @@ import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Stack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -303,7 +305,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
 		}
 
-		if (MissAudioManager.get().isPlaying(mPlayingUrl, mPlayingId) && mPlayingId != question.getId()) {
+		if (MissAudioManager.get().isPlaying(MissAudioManager.get().getAudioUrl(), MissAudioManager.get().getId())
+				&& !question.getAnswerContext().equalsIgnoreCase(MissAudioManager.get().getAudioUrl())) {
 			mMissFloatWindow.setVisibility(View.VISIBLE);
 			mMissFloatWindow.setMissAvatar(mPlayingAvatar);
 			mMissFloatWindow.startAnim();
@@ -314,7 +317,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 					mMissFloatWindow.setVisibility(View.GONE);
 					mMissFloatWindow.stopAnim();
 					Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-					intent.putExtra(Launcher.EX_PAYLOAD, mPlayingId);
+					intent.putExtra(Launcher.EX_PAYLOAD, MissAudioManager.get().getId());
 					intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, true);
 					startActivityForResult(intent, REQ_QUESTION_DETAIL);
 				}
@@ -847,15 +850,19 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		if (mIsFromMissTalk) {
 			stopScheduleJob();
 		} else {
-			if (!Preference.get().missTalkIsVisible()) {
-				stopQuestionVoice();
-			} else {
-				if (Preference.get().getFirstPageName().equalsIgnoreCase(MainActivity.class.getSimpleName())) {
-					stopScheduleJob();
-				} else {
+			Stack<Activity> activityStack = App.getActivityStack();
+			activityStack.pop();
+			Activity activity = activityStack.peek();
+			if (activity instanceof MainActivity) {
+				if (((MainActivity) activity).isMissTalkFragment()) {
 					stopQuestionVoice();
+				} else {
+					stopScheduleJob();
 				}
+			} else {
+				stopQuestionVoice();
 			}
+			activityStack.push(this);
 		}
 
 		super.onBackPressed();

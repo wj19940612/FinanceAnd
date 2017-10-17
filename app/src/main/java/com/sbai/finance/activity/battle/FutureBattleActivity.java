@@ -48,6 +48,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -158,6 +159,7 @@ public class FutureBattleActivity extends BaseActivity implements
         mHistoryBattleId = mCurrentBattle.getId();
         mUserFundInfo = getIntent().getParcelableExtra(ExtraKeys.USER_FUND);
         requestLatestBattleInfo();
+        MissAudioManager.get().stop();
     }
 
     private void requestLatestBattleInfo() {
