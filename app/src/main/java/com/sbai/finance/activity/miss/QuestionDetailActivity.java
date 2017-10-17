@@ -385,7 +385,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			mMissFloatWindow.setVisibility(View.GONE);
 			mMissFloatWindow.stopAnim();
 			updateQuestionListenCount(question);
-			MissAudioManager.get().play(question);
+			MissAudioManager.get().start(question);
 			startScheduleJob(100);
 			MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
 				@Override

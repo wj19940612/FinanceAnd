@@ -89,7 +89,7 @@ public class MissAudioManager {
         return audio.getAudioId() + "@" + audio.getAudioUrl();
     }
 
-    public void play(IAudio audio) {
+    public void start(IAudio audio) {
         mUuid = uuid(audio);
         mAudio = audio;
         mPaused = false;
