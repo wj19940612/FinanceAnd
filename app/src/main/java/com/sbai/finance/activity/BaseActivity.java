@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ScrollView;
 
+import com.sbai.finance.App;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
@@ -34,6 +35,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
@@ -128,6 +130,7 @@ public class BaseActivity extends StatusBarActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TAG = this.getClass().getSimpleName();
+        App.registerActivity(this);
         mRequestProgress = new RequestProgress(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
@@ -181,6 +184,7 @@ public class BaseActivity extends StatusBarActivity implements
                         public void onClick(Dialog dialog) {
                             dialog.dismiss();
                             Log.d(TAG, "onClick: " + battle.toString());
+                            MissAudioManager.get().stop();
                             Launcher.with(getActivity(), FutureBattleActivity.class)
                                     .putExtra(ExtraKeys.BATTLE, battle)
                                     .execute();
@@ -274,6 +278,7 @@ public class BaseActivity extends StatusBarActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        App.unregisterActivity(this);
         API.cancel(TAG);
         WsClient.get().cancel(TAG);
 

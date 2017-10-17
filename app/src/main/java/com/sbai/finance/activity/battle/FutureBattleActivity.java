@@ -48,6 +48,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
@@ -162,6 +163,8 @@ public class FutureBattleActivity extends BaseActivity implements
         mUserFundInfo = getIntent().getParcelableExtra(ExtraKeys.USER_FUND);
         mNetworkReceiver = new NetworkReceiver();
         requestLatestBattleInfo();
+
+        MissAudioManager.get().stop();
     }
 
     private void requestLatestBattleInfo() {

@@ -125,9 +125,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 		requestHotQuestionList(true);
 
 		initSwipeRefreshLayout();
-
 		registerRefreshReceiver();
-
         MissAudioManager.get().addAudioListener(this);
 	}
 
@@ -548,34 +546,33 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 		super.onDestroyView();
 		unbinder.unbind();
 		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshReceiver);
-
         MissAudioManager.get().removeAudioListener(this);
 	}
 
-    @Override
-    public void onAudioStart() {
-        Log.d(TAG, "onAudioStart: ");
-    }
+	@Override
+	public void onAudioStart() {
 
-    @Override
-    public void onAudioPlay() {
-        Log.d(TAG, "onAudioPlay: ");
-    }
+	}
 
-    @Override
-    public void onAudioPause() {
-        Log.d(TAG, "onAudioPause: ");
-    }
+	@Override
+	public void onAudioPlay() {
 
-    @Override
-    public void onAudioResume() {
-        Log.d(TAG, "onAudioResume: ");
-    }
+	}
 
-    @Override
-    public void onAudioStop() {
-        Log.d(TAG, "onAudioStop: ");
-    }
+	@Override
+	public void onAudioPause() {
+
+	}
+
+	@Override
+	public void onAudioResume() {
+
+	}
+
+	@Override
+	public void onAudioStop() {
+		mQuestionListAdapter.notifyDataSetChanged();
+	}
 
     public static class MissListAdapter extends RecyclerView.Adapter<MissListAdapter.ViewHolder> {
 
