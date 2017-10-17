@@ -124,6 +124,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         initView();
         initWebView();
         requestDailyReportDetail();
+        MissAudioManager.get().stop();
         umengEventCount(UmengCountEventId.REPORT_VIEW_DETAIL);
     }
 
@@ -189,7 +190,6 @@ public class DailyReportDetailActivity extends BaseActivity {
         mId = intent.getStringExtra(EX_ID);
         mFormat = intent.getIntExtra(EX_FORMAT, 0);
         mShareUrl = String.format(Client.SHARE_URL_REPORT, mId);
-        MissAudioManager.get().stop();
     }
 
     @Override

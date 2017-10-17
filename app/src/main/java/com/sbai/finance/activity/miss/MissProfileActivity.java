@@ -126,6 +126,7 @@ public class MissProfileActivity extends BaseActivity implements
 		requestHerAnswerList(true);
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
+		MissAudioManager.get().stop();
 
 		mSwipeRefreshLayout.setOnScrollListener(new CustomSwipeRefreshLayout.OnScrollListener() {
 			@Override
