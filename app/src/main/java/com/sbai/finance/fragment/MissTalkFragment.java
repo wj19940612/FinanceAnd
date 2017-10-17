@@ -14,7 +14,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -433,15 +432,17 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 	}
 
 	@Override
+	public void onStop() {
+		super.onStop();
+		if(!Preference.get().isForeground()) {
+			stopQuestionVoice();
+		}
+	}
+
+	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		if (!isVisibleToUser) {
-			//四个item左右切换时,停止语音
 			stopQuestionVoice();
-			Preference.get().setMissTalkIsVisible(false);
-			Log.d("xxx", Preference.get().missTalkIsVisible() + "");
-		} else {
-			Preference.get().setMissTalkIsVisible(true);
-			Log.d("xxx", Preference.get().missTalkIsVisible() + "");
 		}
 	}
 
@@ -546,6 +547,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 		super.onDestroyView();
 		unbinder.unbind();
 		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshReceiver);
+		getActivity().unregisterReceiver(mRefreshReceiver);
         MissAudioManager.get().removeAudioListener(this);
 	}
 
@@ -910,6 +912,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 		filter.addAction(ACTION_LOGIN_SUCCESS);
 		filter.addAction(ACTION_LOGOUT_SUCCESS);
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshReceiver, filter);
+		getActivity().registerReceiver(mRefreshReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 	}
 
 	private class RefreshReceiver extends BroadcastReceiver {
@@ -940,6 +943,10 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 				mFootView = null;
 				requestMissList();
 				requestHotQuestionList(true);
+			}
+
+			if (Intent.ACTION_SCREEN_OFF.equalsIgnoreCase(intent.getAction())) {
+				stopQuestionVoice();
 			}
 		}
 	}

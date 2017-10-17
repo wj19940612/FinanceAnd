@@ -240,6 +240,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	public void onDestroy() {
 		super.onDestroy();
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
+		getActivity().unregisterReceiver(mRefreshReceiver);
 	}
 
 	private void initData(Intent intent) {
@@ -444,15 +445,20 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 	@Override
 	public void onTimeUp(int count) {
-		setStatusPlay(mQuestionDetail);
+		if (mQuestionDetail != null) {
+			setStatusPlay(mQuestionDetail);
+		}
 	}
 
 	public void stopQuestionVoice() {
 		MissAudioManager.get().stop();
-		setStatusStop(mQuestionDetail);
 		stopScheduleJob();
 		mMissFloatWindow.setVisibility(View.GONE);
 		mMissFloatWindow.stopAnim();
+
+		if (mQuestionDetail != null) {
+			setStatusStop(mQuestionDetail);
+		}
 	}
 
 	private void requestQuestionReplyList(final boolean isRefresh) {
@@ -811,6 +817,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		filter.addAction(ACTION_REWARD_SUCCESS);
 		filter.addAction(ACTION_LOGIN_SUCCESS);
 		LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
+		registerReceiver(mRefreshReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 	}
 
 	private class RefreshReceiver extends BroadcastReceiver {
@@ -834,6 +841,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				mFootView = null;
 				requestQuestionReplyList(true);
 			}
+
+			if (Intent.ACTION_SCREEN_OFF.equalsIgnoreCase(intent.getAction())) {
+				stopQuestionVoice();
+			}
 		}
 	}
 
@@ -850,14 +861,15 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		if (mIsFromMissTalk) {
 			stopScheduleJob();
 		} else {
+			//处理推送语音播放
 			Stack<Activity> activityStack = App.getActivityStack();
 			activityStack.pop();
 			Activity activity = activityStack.peek();
 			if (activity instanceof MainActivity) {
 				if (((MainActivity) activity).isMissTalkFragment()) {
-					stopQuestionVoice();
-				} else {
 					stopScheduleJob();
+				} else {
+					stopQuestionVoice();
 				}
 			} else {
 				stopQuestionVoice();

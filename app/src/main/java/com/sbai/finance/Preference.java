@@ -50,8 +50,6 @@ public class Preference {
         String SHOW_BIND_WECHAT = "show_bind_wechat";
         String FIRST_OPEN_APP = "first_open_app";
         String UPDATE_OPEN_APP_TIME = "update_open_app_time";
-        String MISS_TALK_IS_VISIBLE = "miss_talk_is_visible";
-        String CLASS_NAME = "class_name";
     }
 
     private static Preference sInstance;
@@ -303,21 +301,5 @@ public class Preference {
         long systemTimestamp = SysTime.getSysTime().getSystemTimestamp();
         long time = systemTimestamp - mPrefs.getLong(Key.UPDATE_OPEN_APP_TIME, 0);
         return time > UPDATE_OPEN_APP_TIME;
-    }
-
-    public void  setMissTalkIsVisible(boolean isVisible) {
-        apply(Key.MISS_TALK_IS_VISIBLE, isVisible);
-    }
-
-    public boolean missTalkIsVisible() {
-        return mPrefs.getBoolean(Key.MISS_TALK_IS_VISIBLE, false);
-    }
-
-    public void setFirstPageName(String name) {
-        apply(Key.CLASS_NAME , name);
-    }
-
-    public String getFirstPageName() {
-        return mPrefs.getString(Key.CLASS_NAME, "");
     }
 }

@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -67,7 +68,7 @@ import static com.sbai.finance.R.id.playImage;
  * 小姐姐详细资料页面
  */
 public class MissProfileActivity extends BaseActivity implements
-		AdapterView.OnItemClickListener, View.OnClickListener {
+		AdapterView.OnItemClickListener, View.OnClickListener, MissAudioManager.OnAudioListener {
 
 	private static final int REQ_SUBMIT_QUESTION_LOGIN = 1001;
 	private static final int REQ_MISS_REWARD_LOGIN = 1002;
@@ -127,6 +128,7 @@ public class MissProfileActivity extends BaseActivity implements
 		initSwipeRefreshLayout();
 		registerRefreshReceiver();
 		MissAudioManager.get().stop();
+		MissAudioManager.get().addAudioListener(this);
 
 		mSwipeRefreshLayout.setOnScrollListener(new CustomSwipeRefreshLayout.OnScrollListener() {
 			@Override
@@ -176,7 +178,7 @@ public class MissProfileActivity extends BaseActivity implements
 						}
 					}).fire();
 				} else {
-					stopQuestionVoice();
+					stopVoice();
 					Launcher.with(getActivity(), LoginActivity.class).execute();
 				}
 			}
@@ -186,7 +188,7 @@ public class MissProfileActivity extends BaseActivity implements
 				if (LocalUser.getUser().isLogin()) {
 					RewardMissActivity.show(getActivity(), item.getId(), RewardInfo.TYPE_QUESTION);
 				} else {
-					stopQuestionVoice();
+					stopVoice();
 					Launcher.with(getActivity(), LoginActivity.class).execute();
 				}
 			}
@@ -268,20 +270,26 @@ public class MissProfileActivity extends BaseActivity implements
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (mMiss != null && MissAudioManager.get().isPlaying(mMiss.getBriefingSound(), mMiss.getId())) {
-			MissAudioManager.get().stop();
-			stopAnim();
-		}
 		stopScheduleJob();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (!Preference.get().isForeground()) {
+			stopVoice();
+		}
 	}
 
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		stopQuestionVoice();
+		stopVoice();
 	}
 
-	public void stopQuestionVoice() {
+	public void stopVoice() {
+		stopAnim();
+		stopScheduleJob();
 		MissAudioManager.get().stop();
 		mHerAnswerAdapter.notifyDataSetChanged();
 	}
@@ -363,7 +371,7 @@ public class MissProfileActivity extends BaseActivity implements
 							}
 						}).fire();
 					} else {
-						stopQuestionVoice();
+						stopVoice();
 						Launcher.with(getActivity(), LoginActivity.class).execute();
 					}
 				} else {
@@ -375,7 +383,7 @@ public class MissProfileActivity extends BaseActivity implements
 					if (LocalUser.getUser().isLogin()) {
 						RewardMissActivity.show(getActivity(), mCustomId, RewardInfo.TYPE_MISS);
 					} else {
-						stopQuestionVoice();
+						stopVoice();
 						Intent intent = new Intent(getActivity(), LoginActivity.class);
 						startActivityForResult(intent, REQ_MISS_REWARD_LOGIN);
 					}
@@ -421,7 +429,7 @@ public class MissProfileActivity extends BaseActivity implements
 							.putExtra(Launcher.EX_PAYLOAD, mCustomId)
 							.execute();
 				} else {
-					stopQuestionVoice();
+					stopVoice();
 					Intent intent = new Intent(getActivity(), LoginActivity.class);
 					startActivityForResult(intent, REQ_SUBMIT_QUESTION_LOGIN);
 				}
@@ -481,7 +489,6 @@ public class MissProfileActivity extends BaseActivity implements
 		mVoiceLevel.setBackgroundResource(R.drawable.ic_miss_voice_4);
 	}
 
-
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Question item = (Question) parent.getItemAtPosition(position);
@@ -498,6 +505,11 @@ public class MissProfileActivity extends BaseActivity implements
 						.putExtra(Launcher.EX_PAYLOAD, item.getId())
 						.executeForResult(REQ_QUESTION_DETAIL);
 			}
+		}
+
+		if (mMiss != null && MissAudioManager.get().isPlaying(mMiss.getBriefingSound(), mMiss.getId())) {
+			MissAudioManager.get().stop();
+			stopAnim();
 		}
 	}
 
@@ -598,6 +610,32 @@ public class MissProfileActivity extends BaseActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
+		unregisterReceiver(mRefreshReceiver);
+	}
+
+	@Override
+	public void onAudioStart() {
+
+	}
+
+	@Override
+	public void onAudioPlay() {
+
+	}
+
+	@Override
+	public void onAudioPause() {
+
+	}
+
+	@Override
+	public void onAudioResume() {
+
+	}
+
+	@Override
+	public void onAudioStop() {
+		stopVoice();
 	}
 
 	static class HerAnswerAdapter extends ArrayAdapter<Question> {
@@ -832,6 +870,7 @@ public class MissProfileActivity extends BaseActivity implements
 		filter.addAction(ACTION_REWARD_SUCCESS);
 		filter.addAction(ACTION_LOGIN_SUCCESS);
 		LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
+		registerReceiver(mRefreshReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 	}
 
 	private class RefreshReceiver extends BroadcastReceiver {
@@ -874,6 +913,10 @@ public class MissProfileActivity extends BaseActivity implements
 				mCreateTime = null;
 				requestMissDetail();
 				requestHerAnswerList(true);
+			}
+
+			if (Intent.ACTION_SCREEN_OFF.equalsIgnoreCase(intent.getAction())) {
+				stopVoice();
 			}
 		}
 	}

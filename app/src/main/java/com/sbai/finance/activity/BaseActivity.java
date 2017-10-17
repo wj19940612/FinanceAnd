@@ -23,7 +23,6 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.FutureBattleActivity;
-import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.training.JudgeTrainingActivity;
 import com.sbai.finance.activity.training.KlineTrainActivity;
 import com.sbai.finance.activity.training.NounExplanationActivity;
@@ -142,11 +141,6 @@ public class BaseActivity extends StatusBarActivity implements
         SysTime.getSysTime().sync();
 
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
-        if(this instanceof QuestionDetailActivity){
-
-        }else {
-            Preference.get().setFirstPageName(this.getClass().getSimpleName());
-        }
     }
 
 //    protected void onLoginSuccess(Context context, Intent intent) {
@@ -288,7 +282,6 @@ public class BaseActivity extends StatusBarActivity implements
         mRequestProgress.dismissAll();
 
         stopScheduleJob();
-        Preference.get().setFirstPageName(null);
     }
 
     protected FragmentActivity getActivity() {
