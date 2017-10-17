@@ -160,6 +160,7 @@ public class FutureBattleActivity extends BaseActivity implements
         mCurrentBattle = getIntent().getParcelableExtra(ExtraKeys.BATTLE);
         mHistoryBattleId = mCurrentBattle.getId();
         mUserFundInfo = getIntent().getParcelableExtra(ExtraKeys.USER_FUND);
+        mNetworkReceiver = new NetworkReceiver();
         requestLatestBattleInfo();
     }
 
