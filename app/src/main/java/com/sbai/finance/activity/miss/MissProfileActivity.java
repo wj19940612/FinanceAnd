@@ -201,7 +201,7 @@ public class MissProfileActivity extends BaseActivity implements
 	}
 
 	private void toggleQuestionVoice(Question item) {
-		if (MissAudioManager.get().isPlaying(item)) {
+		if (MissAudioManager.get().isStarted(item)) {
 			MissAudioManager.get().pause();
 			mHerAnswerAdapter.notifyDataSetChanged();
 			stopScheduleJob();
@@ -238,7 +238,7 @@ public class MissProfileActivity extends BaseActivity implements
 		for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
 			if (i == 0 || i - 1 >= mHerAnswerAdapter.getCount()) continue; // Skip header
 			Question question = mHerAnswerAdapter.getItem(i - 1);
-			if (question != null && MissAudioManager.get().isPlaying(question)) {
+			if (question != null && MissAudioManager.get().isStarted(question)) {
 				View view = mListView.getChildAt(i - firstVisiblePosition);
 				TextView soundTime = (TextView) view.findViewById(R.id.soundTime);
 				ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -268,7 +268,7 @@ public class MissProfileActivity extends BaseActivity implements
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (mMiss != null && MissAudioManager.get().isPlaying(mMiss)) {
+		if (mMiss != null && MissAudioManager.get().isStarted(mMiss)) {
 			MissAudioManager.get().stop();
 			stopAnim();
 		}
@@ -460,7 +460,7 @@ public class MissProfileActivity extends BaseActivity implements
 	}
 
 	private void toggleMissVoiceIntroduce(Miss miss) {
-		if (MissAudioManager.get().isPlaying(miss)) {
+		if (MissAudioManager.get().isStarted(miss)) {
 			MissAudioManager.get().stop();
 			stopAnim();
 		} else {
@@ -734,7 +734,7 @@ public class MissProfileActivity extends BaseActivity implements
 				}
 
 				mProgressBar.setMax(item.getSoundTime() * 1000);
-				if (MissAudioManager.get().isPlaying(item)) {
+				if (MissAudioManager.get().isStarted(item)) {
 					mPlayImage.setImageResource(R.drawable.ic_pause);
 					int pastTime = MissAudioManager.get().getCurrentPosition();
 					mSoundTime.setText(context.getString(R.string._seconds, (item.getSoundTime() * 1000 - pastTime) / 1000));

@@ -106,6 +106,7 @@ public class MissAudioManager {
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
                     Log.d("MediaPlayer", "onError: " + what + ", extra: " + extra);
+                    onErrorOccur();
                     mp.reset();
                     return false;
                 }
@@ -221,7 +222,7 @@ public class MissAudioManager {
         return false;
     }
 
-    public boolean isPlaying(IAudio audio) {
+    public boolean isStarted(IAudio audio) {
         if (mMediaPlayer != null) {
             return uuid(audio).equals(mUuid) && !mPaused && !mStopPostPrepared;
         }
@@ -265,6 +266,8 @@ public class MissAudioManager {
         void onAudioResume();
 
         void onAudioStop();
+
+        void onAudioError();
     }
 
     private void onStart() {
@@ -303,6 +306,14 @@ public class MissAudioManager {
         for (WeakReference<OnAudioListener> reference : mAudioViewList) {
             if (reference.get() != null) {
                 reference.get().onAudioStop();
+            }
+        }
+    }
+
+    private void onErrorOccur() {
+        for (WeakReference<OnAudioListener> reference : mAudioViewList) {
+            if (reference.get() != null) {
+                reference.get().onAudioError();
             }
         }
     }

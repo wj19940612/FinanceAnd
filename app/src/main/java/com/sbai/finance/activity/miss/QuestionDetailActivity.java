@@ -40,7 +40,6 @@ import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.QuestionCollect;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.miss.RewardInfo;
-import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -73,7 +72,7 @@ import static com.sbai.finance.net.Client.SHARE_URL_QUESTION;
 
 
 public class QuestionDetailActivity extends BaseActivity implements AdapterView.OnItemClickListener {
-    
+
 	private static final int REQ_COMMENT = 1001;
 	private static final int REQ_COMMENT_LOGIN = 1002;
 	private static final int REQ_REWARD_LOGIN = 1003;
@@ -303,7 +302,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		}
 
 		Question playingQuestion = (Question) MissAudioManager.get().getAudio();
-		if (MissAudioManager.get().isPlaying(playingQuestion) && question.getId() != playingQuestion.getId()) {
+		if (MissAudioManager.get().isStarted(playingQuestion) && question.getId() != playingQuestion.getId()) {
 			mMissFloatWindow.setVisibility(View.VISIBLE);
 			mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
 			mMissFloatWindow.startAnim();
@@ -331,7 +330,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		}
 
 		mProgressBar.setMax(question.getSoundTime() * 1000);
-		if (MissAudioManager.get().isPlaying(question)) {
+		if (MissAudioManager.get().isStarted(question)) {
 			startScheduleJob(100);
 			MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
 				@Override
@@ -375,7 +374,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	}
 
 	private void toggleQuestionVoice(final Question question) {
-		if (MissAudioManager.get().isPlaying(question)) {
+		if (MissAudioManager.get().isStarted(question)) {
 			MissAudioManager.get().pause();
 			setStatusPause(question);
 			stopScheduleJob();
@@ -788,7 +787,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 		if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
             Question playQuestion = (Question) MissAudioManager.get().getAudio();
-			if (MissAudioManager.get().isPlaying(playQuestion) && playQuestion.getId() != mQuestionDetail.getId()) {
+			if (MissAudioManager.get().isStarted(playQuestion) && playQuestion.getId() != mQuestionDetail.getId()) {
 				mMissFloatWindow.setVisibility(View.VISIBLE);
 				mMissFloatWindow.setMissAvatar(playQuestion.getCustomPortrait());
 				mMissFloatWindow.startAnim();
