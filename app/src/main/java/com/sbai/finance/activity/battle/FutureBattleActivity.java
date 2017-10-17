@@ -48,6 +48,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -148,6 +149,8 @@ public class FutureBattleActivity extends BaseActivity implements
     //正在对战的时候  对战多久后关闭
     private static final int HANDLER_WHAT_BATTLE_COUNTDOWN = 300;
     private UserFundInfo mUserFundInfo;
+
+    private NetworkReceiver mNetworkReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1326,26 +1329,6 @@ public class FutureBattleActivity extends BaseActivity implements
     }
 
     @Override
-    protected void onNetworkAvailable(boolean available) {
-        super.onNetworkAvailable(available);
-        if (available) {
-            subscribeFutureData();
-            subscribeBattle();
-
-            if (mCurrentBattle != null) {
-                if (!mCurrentBattle.isBattleOver()) {
-                    webSocketRequestBattleInfo();
-                }
-
-                //正在快速匹配的要检测快速匹配结果
-                if (StartMatchDialog.getCurrentDialog() == BaseDialog.DIALOG_START_MATCH) {
-                    requestFastMatchResult();
-                }
-            }
-        }
-    }
-
-    @Override
     protected void onPostResume() {
         super.onPostResume();
         subscribeFutureData();
@@ -1362,7 +1345,7 @@ public class FutureBattleActivity extends BaseActivity implements
             }
         }
 
-        registerNetworkStatus();
+        Network.registerNetworkChangeReceiver(this, mNetworkReceiver);
     }
 
     @Override
@@ -1371,7 +1354,29 @@ public class FutureBattleActivity extends BaseActivity implements
         unSubscribeFutureData();
         unSubscribeBattle();
 
-        unregisterNetworkStatus();
+        Network.unregisterNetworkChangeReceiver(this, mNetworkReceiver);
+    }
+
+    private class NetworkReceiver extends Network.NetworkChangeReceiver {
+
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                subscribeFutureData();
+                subscribeBattle();
+
+                if (mCurrentBattle != null) {
+                    if (!mCurrentBattle.isBattleOver()) {
+                        webSocketRequestBattleInfo();
+                    }
+
+                    //正在快速匹配的要检测快速匹配结果
+                    if (StartMatchDialog.getCurrentDialog() == BaseDialog.DIALOG_START_MATCH) {
+                        requestFastMatchResult();
+                    }
+                }
+            }
+        }
     }
 
     @Override

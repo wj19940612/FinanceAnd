@@ -20,7 +20,7 @@ public class Network {
 
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-        return networkInfo != null && networkInfo.isConnectedOrConnecting();
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     public static void registerNetworkChangeReceiver(Activity activity, BroadcastReceiver receiver) {
@@ -67,7 +67,7 @@ public class Network {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-        if (networkInfo == null) {
+        if (networkInfo == null || !networkInfo.isConnected()) {
             return availableNetwork;
         }
 

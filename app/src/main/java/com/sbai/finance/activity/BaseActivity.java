@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -340,34 +338,5 @@ public class BaseActivity extends StatusBarActivity implements
             e.printStackTrace();
             return value;
         }
-    }
-
-    protected void registerNetworkStatus() {
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(mBroadcastReceiver, filter);
-    }
-
-    protected void unregisterNetworkStatus() {
-        unregisterReceiver(mBroadcastReceiver);
-    }
-
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
-                ConnectivityManager connectivityManager =
-                        (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo info = connectivityManager.getActiveNetworkInfo();
-                if (info != null && info.isAvailable()) {
-                    onNetworkAvailable(true);
-                } else {
-                    onNetworkAvailable(false);
-                }
-            }
-        }
-    };
-
-    protected void onNetworkAvailable(boolean available) {
-
     }
 }
