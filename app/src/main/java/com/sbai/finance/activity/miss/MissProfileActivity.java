@@ -263,16 +263,6 @@ public class MissProfileActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onPause() {
-		super.onPause();
-		if (mMiss != null && MissAudioManager.get().isStarted(mMiss)) {
-			MissAudioManager.get().stop();
-			stopAnim();
-		}
-		stopScheduleJob();
-	}
-
-	@Override
 	protected void onStop() {
 		super.onStop();
 		if (!Preference.get().isForeground()) {

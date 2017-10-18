@@ -87,6 +87,7 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     }
 
+
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
@@ -102,6 +103,13 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     public void cameraClose() {
         mCamera.stopPreview();//停止预览
+        mCamera.setPreviewCallback(null);
+        mCamera.cancelAutoFocus();
+        try {
+            mCamera.setPreviewDisplay(null);
+        } catch (IOException e) {
+            Log.d(TAG, "cameraClose: " + e.toString());
+        }
         mCamera.release();//释放相机资源
         mCamera = null;
         mHolder.removeCallback(this);
