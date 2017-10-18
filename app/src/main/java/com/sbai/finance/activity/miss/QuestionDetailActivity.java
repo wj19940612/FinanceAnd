@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.miss;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,12 +25,10 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.JsonPrimitive;
-import com.sbai.finance.App;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
@@ -59,7 +56,6 @@ import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Stack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -659,9 +655,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 	@Override
 	public void onAudioPause() {
-		if (mQuestionDetail != null) {
-			setStatusPause(mQuestionDetail);
-		}
+		mMissFloatWindow.setVisibility(View.GONE);
+		mMissFloatWindow.stopAnim();
 	}
 
 	@Override
@@ -865,20 +860,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		if (mIsFromMissTalk) {
 			stopScheduleJob();
 		} else {
-			//处理推送语音播放
-			Stack<Activity> activityStack = App.getActivityStack();
-			activityStack.pop();
-			Activity activity = activityStack.peek();
-			if (activity instanceof MainActivity) {
-				if (!((MainActivity) activity).isMissTalkFragment()) {
-					stopScheduleJob();
-				} else {
-					stopQuestionVoice();
-				}
-			} else {
-				stopQuestionVoice();
-			}
-			activityStack.push(this);
+			stopQuestionVoice();
 		}
 
 		super.onBackPressed();

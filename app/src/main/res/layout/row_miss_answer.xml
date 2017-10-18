@@ -101,8 +101,8 @@
         android:layout_marginLeft="100dp"
         android:layout_marginRight="14dp"
         android:layout_marginTop="8dp"
-        android:maxHeight="2dp"
-        android:minHeight="2dp"
+        android:maxHeight="1dp"
+        android:minHeight="1dp"
         android:progressDrawable="@drawable/bg_voice_progressbar"/>
 
     <LinearLayout
