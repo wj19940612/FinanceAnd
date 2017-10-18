@@ -271,7 +271,6 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 
 	@Override
 	public void onTimeUp(int count) {
-		Log.d(TAG, "onTimeUp: ");
 		int firstVisiblePosition = mListView.getFirstVisiblePosition();
 		int lastVisiblePosition = mListView.getLastVisiblePosition();
 		boolean visibleItemsStarted = false;
@@ -452,7 +451,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 	@Override
 	public void onStop() {
 		super.onStop();
-		if (!Preference.get().isForeground()) {
+        if (!Preference.get().isForeground()) {
 			MissAudioManager.get().stop();
 		}
 	}
@@ -463,7 +462,6 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 		unbinder.unbind();
 		MissAudioManager.get().removeAudioListener(this);
 		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshReceiver);
-		getActivity().unregisterReceiver(mRefreshReceiver);
 	}
 
 	@Override
@@ -828,7 +826,6 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 							}
 						}
 					}
-
 					mQuestionListAdapter.notifyDataSetChanged();
 				}
 			}
@@ -842,7 +839,6 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 		filter.addAction(ACTION_LOGIN_SUCCESS);
 		filter.addAction(ACTION_LOGOUT_SUCCESS);
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshReceiver, filter);
-		getActivity().registerReceiver(mRefreshReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
 	}
 
 	private class RefreshReceiver extends BroadcastReceiver {
@@ -863,10 +859,6 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 						}
 					}
 				}
-			}
-
-			if (Intent.ACTION_SCREEN_OFF.equalsIgnoreCase(intent.getAction())) {
-				MissAudioManager.get().stop();
 			}
 
 			if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())
