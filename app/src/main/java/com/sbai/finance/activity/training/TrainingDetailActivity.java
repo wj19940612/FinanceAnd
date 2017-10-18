@@ -520,6 +520,7 @@ public class TrainingDetailActivity extends BaseActivity {
                     .setCallback(new Callback2D<Resp<Share>, Share>() {
                         @Override
                         protected void onRespSuccessData(Share data) {
+                            data.setShareLink(data.getShareLink().concat("?trainId=" + mTraining.getId()));
                             share(data.getTitle(), data.getContent(), data.getShareLink(), data.getShareLeUrl());
                         }
 

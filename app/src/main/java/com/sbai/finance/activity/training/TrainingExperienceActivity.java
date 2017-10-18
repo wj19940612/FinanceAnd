@@ -398,7 +398,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 							.into(mAvatar);
 
 					mUserName.setText(item.getUserModel().getUserName());
-					mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
+					mPublishTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateDate()));
 
 					mAvatar.setOnClickListener(new View.OnClickListener() {
 						@Override

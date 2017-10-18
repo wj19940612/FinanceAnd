@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.miss;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.JsonPrimitive;
+import com.sbai.finance.App;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
@@ -38,6 +40,7 @@ import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.QuestionCollect;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -276,7 +279,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				.into(mMissAvatar);
 
 		mName.setText(question.getUserName());
-		mAskTime.setText(DateUtil.getMissFormatTime(question.getCreateTime()));
+		mAskTime.setText(DateUtil.formatDefaultStyleTime(question.getCreateTime()));
 		mQuestion.setText(question.getQuestionContext());
 		mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
 		mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(question.getPriseCount())));
@@ -757,7 +760,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 					});
 				}
 
-				mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
+				mPublishTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateDate()));
 				mOpinionContent.setText(item.getContent());
 
 				if (item.getReplys() != null) {
