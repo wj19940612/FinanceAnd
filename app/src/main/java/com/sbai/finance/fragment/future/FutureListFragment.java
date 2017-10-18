@@ -41,6 +41,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static android.R.attr.data;
+
 
 public class FutureListFragment extends BaseFragment implements AbsListView.OnScrollListener,
         SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
@@ -93,9 +95,11 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
         mSet = new HashSet<>();
         initView();
     }
-    public void scrollToTop(){
+
+    public void scrollToTop() {
         mListView.smoothScrollToPosition(0);
     }
+
     private void initView() {
         mFutureListAdapter = new FutureListAdapter(getActivity());
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -151,6 +155,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                         if (childView != null) {
                             TextView lastPrice = (TextView) childView.findViewById(R.id.lastPrice);
                             TextView rate = (TextView) childView.findViewById(R.id.rate);
+                            if (data.getPreSetPrice() == 0) return;
                             double priceChange = FinanceUtil.subtraction(data.getLastPrice(), data.getPreSetPrice())
                                     .divide(new BigDecimal(data.getPreSetPrice()), 4, RoundingMode.HALF_EVEN)
                                     .multiply(new BigDecimal(100)).doubleValue();
@@ -173,11 +178,11 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
     private void updateFutureData(List<Variety> varietyList) {
         stopRefreshAnimation();
-        if (mSet.isEmpty()){
-           mFutureListAdapter.clear();
+        if (mSet.isEmpty()) {
+            mFutureListAdapter.clear();
         }
-        for (Variety variety:varietyList){
-            if (mSet.add(variety.getContractsCode())){
+        for (Variety variety : varietyList) {
+            if (mSet.add(variety.getContractsCode())) {
                 mFutureListAdapter.add(variety);
             }
         }
@@ -303,6 +308,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
 
                 FutureData futureData = map.get(item.getContractsCode());
                 if (futureData != null) {
+                    if (futureData.getPreSetPrice() == 0) return;
                     double priceChange = FinanceUtil.subtraction(futureData.getLastPrice(), futureData.getPreSetPrice())
                             .divide(new BigDecimal(futureData.getPreSetPrice()), 4, RoundingMode.HALF_EVEN)
                             .multiply(new BigDecimal(100)).doubleValue();
