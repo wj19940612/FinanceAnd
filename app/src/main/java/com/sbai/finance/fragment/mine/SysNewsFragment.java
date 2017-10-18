@@ -318,12 +318,6 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        resetRequest();
-    }
-
     class SystemNewsAdapter extends ArrayAdapter<HistoryNewsModel> {
 
         private Context mContext;
