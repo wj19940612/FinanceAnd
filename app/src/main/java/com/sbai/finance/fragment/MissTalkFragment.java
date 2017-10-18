@@ -451,6 +451,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 	@Override
 	public void onStop() {
 		super.onStop();
+        Log.d("MISS", "onStop: " + getClass().getSimpleName() + " " + Preference.get().isForeground());
         if (!Preference.get().isForeground()) {
 			MissAudioManager.get().stop();
 		}
@@ -466,6 +467,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 
 	@Override
 	public void onAudioStart() {
+        mQuestionListAdapter.notifyDataSetChanged();
 		MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
 		if (audio instanceof Question) {
 			mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
