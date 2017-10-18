@@ -77,7 +77,7 @@ public class ExperienceView extends LinearLayout {
 						.into(mAvatar);
 
 				mUserName.setText(data.getUserModel().getUserName());
-				mPublishTime.setText(DateUtil.getMissFormatTime(data.getCreateDate()));
+				mPublishTime.setText(DateUtil.formatDefaultStyleTime(data.getCreateDate()));
 
 				mAvatar.setOnClickListener(new View.OnClickListener() {
 					@Override

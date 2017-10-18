@@ -689,7 +689,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 						.into(mMissAvatar);
 
 				mName.setText(item.getUserName());
-				mAskTime.setText(DateUtil.getMissFormatTime(item.getCreateTime()));
+				mAskTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
 				mQuestion.setText(item.getQuestionContext());
 				mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
 

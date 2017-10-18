@@ -308,7 +308,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 .into(mMissAvatar);
 
         mName.setText(question.getUserName());
-        mAskTime.setText(DateUtil.getMissFormatTime(question.getCreateTime()));
+        mAskTime.setText(DateUtil.formatDefaultStyleTime(question.getCreateTime()));
         mQuestion.setText(question.getQuestionContext());
         mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
         mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(question.getPriseCount())));
@@ -790,7 +790,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     });
                 }
 
-                mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
+                mPublishTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateDate()));
                 mOpinionContent.setText(item.getContent());
 
                 if (item.getReplys() != null) {

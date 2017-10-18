@@ -365,32 +365,33 @@ public class DateUtil {
         return DateUtil.format(createTime, DateUtil.FORMAT_NOT_HOUR);
     }
 
+
     /**
-     * 格式化时间  一分钟之内显示刚刚
+     * 1 分钟内显示 刚刚
      * 一小时内显示多少分钟前
-     * 一小时后显示几点几分 06:24
-     * 超过零点显示几月几日 07/07
-     * 不是今年  则 2015/12/18
+     * 如果是当天  超过一小时 则显示 18：20;
+     * 如果是本年内的其他时期  12/07;
+     * 跨年  2015/12/07
+     * 涉及页面  姐说首页，提问详情，我的收藏，我的问答，消息
      *
      * @param createTime
      * @return
      */
-    public static String getMissFormatTime(long createTime) {
-        long systemTime = System.currentTimeMillis();
-        if (DateUtil.isInThisYear(createTime)) {
-            if (DateUtil.isToday(createTime, systemTime)) {
-                if (systemTime - createTime < 60 * 1000) {
+    public static String formatDefaultStyleTime(long createTime) {
+        long systemTime = SysTime.getSysTime().getSystemTimestamp();
+        if (DateUtil.isToday(createTime, systemTime)) {
+            if (systemTime - createTime < 60 * 60 * 1000) {
+                int time = (int) ((systemTime - createTime) / 1000 / 60);
+                if (time < 1) {
                     return "刚刚";
-                } else if (systemTime - createTime < 60 * 60 * 1000) {
-                    return ((systemTime - createTime) / (60 * 1000) + "分钟前");
-                } else {
-                    return DateUtil.format(createTime, "HH:mm");
                 }
-            } else {
-                return DateUtil.format(createTime, "MM/dd");
+                return time + "分钟前";
             }
+            return DateUtil.format(createTime, "HH:mm");
+        } else if (DateUtil.isInThisYear(createTime)) {
+            return DateUtil.format(createTime, "MM/dd ");
         } else {
-            return DateUtil.format(createTime, DateUtil.FORMAT_SPECIAL_SLASH_NO_HOUR);
+            return DateUtil.format(createTime, "yyyy/MM/dd ");
         }
     }
 
@@ -427,33 +428,6 @@ public class DateUtil {
         }
     }
 
-    /**
-     * 一小时内显示多少分钟前
-     * 如果是当天  超过一小时 则显示 18：20;
-     * 如果是本年内的其他时期  12/07;
-     * 跨年  2015/12/07
-     * 涉及页面  姐说首页，提问详情，我的收藏，我的问答，消息
-     *
-     * @param createTime
-     * @return
-     */
-    public static String formatDefaultStyleTime(long createTime) {
-        long systemTime = SysTime.getSysTime().getSystemTimestamp();
-        if (DateUtil.isToday(createTime, systemTime)) {
-            if (systemTime - createTime < 60 * 60 * 1000) {
-                int time = (int) ((systemTime - createTime) / 1000 / 60);
-                if (time < 1) {
-                    return "刚刚";
-                }
-                return time + "分钟前";
-            }
-            return DateUtil.format(createTime, "HH:mm");
-        } else if (DateUtil.isInThisYear(createTime)) {
-            return DateUtil.format(createTime, "MM/dd ");
-        } else {
-            return DateUtil.format(createTime, "yyyy/MM/dd ");
-        }
-    }
 
     /**
      * 获取明细页面的格式化时间
