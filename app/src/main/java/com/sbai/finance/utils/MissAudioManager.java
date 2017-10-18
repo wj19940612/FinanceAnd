@@ -108,6 +108,10 @@ public class MissAudioManager {
                     Log.d("MediaPlayer", "onError: " + what + ", extra: " + extra);
                     onErrorOccur();
                     mp.reset();
+                    if (mPreparing) {
+                        mPreparing = false;
+                    }
+                    stop();
                     return false;
                 }
             });

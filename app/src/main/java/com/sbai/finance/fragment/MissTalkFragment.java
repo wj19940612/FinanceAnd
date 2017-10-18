@@ -50,6 +50,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.MissFloatWindow;
@@ -509,7 +510,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 
 	@Override
 	public void onAudioError() {
-
+        ToastUtil.show(R.string.play_failure);
 	}
 
 	public static class MissListAdapter extends RecyclerView.Adapter<MissListAdapter.ViewHolder> {

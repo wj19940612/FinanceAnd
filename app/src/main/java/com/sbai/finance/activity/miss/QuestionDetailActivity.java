@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.miss;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +25,6 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.gson.JsonPrimitive;
-import com.sbai.finance.App;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
@@ -50,6 +48,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.MissFloatWindow;
@@ -723,7 +722,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
     @Override
     public void onAudioError() {
-
+        ToastUtil.show(R.string.play_failure);
     }
 
     static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
