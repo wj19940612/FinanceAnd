@@ -16,6 +16,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SafetyPasswordEditText;
@@ -253,5 +254,11 @@ public class UpdateSecurityPassActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mSecurityPassword.removeTextChangedListener(mValidationWatcher);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        KeyBoardUtils.closeKeyboard(mSecurityPassword);
     }
 }

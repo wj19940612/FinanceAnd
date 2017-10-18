@@ -362,7 +362,8 @@
         <activity
             android:name=".activity.miss.RewardMissActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseDialog.Bottom"/>
+            android:theme="@style/BaseDialog.Bottom"
+            android:windowSoftInputMode="adjustPan"/>
 
         <!-- 发现 -->
         <activity
