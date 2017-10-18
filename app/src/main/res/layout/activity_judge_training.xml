@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -92,17 +93,19 @@
                     android:padding="0.5dp"
                     android:src="@drawable/ic_default_avatar"/>
 
-                <TextView
+                <com.sbai.finance.view.autofit.AutofitTextView
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:ellipsize="end"
+                    android:gravity="center_vertical"
                     android:maxLines="1"
                     android:maxWidth="55dp"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
-                    tools:text="耶路撒冷"/>
+                    app:minTextSize="8sp"
+                    tools:text="耶路撒耶路撒冷耶路撒耶路撒冷"/>
 
                 <TextView
                     android:layout_width="wrap_content"

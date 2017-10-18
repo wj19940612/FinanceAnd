@@ -31,7 +31,6 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
@@ -41,6 +40,7 @@ import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.QuestionCollect;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -59,7 +59,6 @@ import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Stack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -280,7 +279,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 				.into(mMissAvatar);
 
 		mName.setText(question.getUserName());
-		mAskTime.setText(DateUtil.getMissFormatTime(question.getCreateTime()));
+		mAskTime.setText(DateUtil.formatDefaultStyleTime(question.getCreateTime()));
 		mQuestion.setText(question.getQuestionContext());
 		mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
 		mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(question.getPriseCount())));
@@ -659,9 +658,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 	@Override
 	public void onAudioPause() {
-		if (mQuestionDetail != null) {
-			setStatusPause(mQuestionDetail);
-		}
+		mMissFloatWindow.setVisibility(View.GONE);
+		mMissFloatWindow.stopAnim();
 	}
 
 	@Override
@@ -762,7 +760,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 					});
 				}
 
-				mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
+				mPublishTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateDate()));
 				mOpinionContent.setText(item.getContent());
 
 				if (item.getReplys() != null) {
@@ -865,20 +863,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 		if (mIsFromMissTalk) {
 			stopScheduleJob();
 		} else {
-			//处理推送语音播放
-			Stack<Activity> activityStack = App.getActivityStack();
-			activityStack.pop();
-			Activity activity = activityStack.peek();
-			if (activity instanceof MainActivity) {
-				if (!((MainActivity) activity).isMissTalkFragment()) {
-					stopScheduleJob();
-				} else {
-					stopQuestionVoice();
-				}
-			} else {
-				stopQuestionVoice();
-			}
-			activityStack.push(this);
+			stopQuestionVoice();
 		}
 
 		super.onBackPressed();

@@ -62,7 +62,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.android.volley.Request.Method.HEAD;
 import static com.sbai.finance.R.id.playImage;
 
 /**
@@ -222,17 +221,12 @@ public class MissProfileActivity extends BaseActivity implements
 				public void onCompleted(String url) {
 					mHerAnswerAdapter.notifyDataSetChanged();
 					stopScheduleJob();
-					//结束了通知问题详情页刷新页面
-					sendPlayFinishBroadcast();
 				}
 			});
 			startScheduleJob(100);
 		}
 	}
 
-	private void sendPlayFinishBroadcast() {
-
-	}
 
 	@Override
 	public void onTimeUp(int count) {

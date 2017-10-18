@@ -1,10 +1,8 @@
 package com.sbai.finance;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
 import com.sbai.finance.activity.CatchCrashActivity;
 import com.sbai.finance.net.API;
@@ -15,20 +13,15 @@ import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 
-import java.util.Stack;
-
-public class App extends Application implements Application.ActivityLifecycleCallbacks {
+public class App extends Application {
 
 	private static Context sContext;
-	public static Stack<Activity> sActivityStack;
-	private int mCount = 0;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		sContext = this;
 		API.init(sContext.getCacheDir());
-		registerActivityLifecycleCallbacks(this);
 		CookieManger.getInstance().init(sContext.getFilesDir());
 
 		if (!BuildConfig.IS_PROD) {
@@ -63,69 +56,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
 		return sContext;
 	}
 
-	public static Stack<Activity> getActivityStack() {
-		return sActivityStack;
-	}
-
-	public static void registerActivity(Activity activity) {
-		if (sActivityStack == null) {
-			synchronized (App.class) {
-				if (sActivityStack == null) {
-					sActivityStack = new Stack<>();
-				}
-			}
-		}
-		sActivityStack.push(activity);
-	}
-
-	public static void unregisterActivity(Activity activity) {
-		if (sActivityStack != null) {
-			sActivityStack.remove(activity);
-		}
-	}
-
 	static {
 		// 注意：以下全为正式的 appId & secret
 		PlatformConfig.setWeixin("wxf53be05ac695d994", "aab33a762834f9f0722190a67aefcef0");
 		PlatformConfig.setSinaWeibo("522354160", "af7a654293ada586a62534ac9fd03845", "");
-	}
-
-	@Override
-	public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-		mCount++;
-	}
-
-	@Override
-	public void onActivityStarted(Activity activity) {
-
-	}
-
-	@Override
-	public void onActivityResumed(Activity activity) {
-
-	}
-
-	@Override
-	public void onActivityPaused(Activity activity) {
-
-	}
-
-	@Override
-	public void onActivityStopped(Activity activity) {
-		mCount--;
-	}
-
-	@Override
-	public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-	}
-
-	@Override
-	public void onActivityDestroyed(Activity activity) {
-
-	}
-
-	public int getCount() {
-		return mCount;
 	}
 }
