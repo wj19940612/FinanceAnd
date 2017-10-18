@@ -10,9 +10,6 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 
-import com.bumptech.glide.GenericTransitionOptions;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.sbai.finance.R;
 import com.sbai.finance.view.WaveView;
@@ -48,6 +45,7 @@ public class StartMatchDialog extends BaseDialog {
         final ImageView matchHead = (ImageView) customView.findViewById(R.id.matchHead);
         final List<Integer> heads = getHeads();
         final Handler mHandler = new Handler(Looper.getMainLooper());
+        if (activity != null && activity.isFinishing()) return;
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {

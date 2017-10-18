@@ -27,6 +27,7 @@ import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -260,6 +261,7 @@ public class ArticleCollectionFragment extends BaseFragment {
             public void bindDataWithView(MyCollect item, Context context) {
                 Glide.with(context).load(item.getCoverUrl()).into(mImage);
                 mClick.setText(context.getString(R.string.read_count, item.getClicks()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
                 mTitle.setText(item.getTitle());
             }
         }

@@ -223,7 +223,7 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
             public void bindDataWithView(DailyReport item, Context context) {
                 Glide.with(context).load(item.getCoverUrl()).into(mImage);
                 mClick.setText(context.getString(R.string.read_count, item.getClicks()));
-                mTime.setText(DateUtil.getMissFormatTime(item.getCreateTime()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
                 mTitle.setText(item.getTitle());
             }
         }

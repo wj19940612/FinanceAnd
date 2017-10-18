@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ScrollView;
 
-import com.sbai.finance.App;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
@@ -129,7 +128,6 @@ public class BaseActivity extends StatusBarActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TAG = this.getClass().getSimpleName();
-        App.registerActivity(this);
         mRequestProgress = new RequestProgress(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
@@ -276,7 +274,6 @@ public class BaseActivity extends StatusBarActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        App.unregisterActivity(this);
         API.cancel(TAG);
         WsClient.get().cancel(TAG);
 

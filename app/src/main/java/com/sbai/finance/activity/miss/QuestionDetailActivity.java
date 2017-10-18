@@ -31,7 +31,6 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
@@ -60,7 +59,6 @@ import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Stack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -132,7 +130,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private TextView mCommentNumber;
     private TextView mNoComment;
     private ReplyDialogFragment mReplyDialogFragment;
-    private boolean mCancelCollect = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -312,7 +309,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 .into(mMissAvatar);
 
         mName.setText(mQuestionDetail.getUserName());
-        mAskTime.setText(DateUtil.getMissFormatTime(mQuestionDetail.getCreateTime()));
+        mAskTime.setText(DateUtil.formatDefaultStyleTime(mQuestionDetail.getCreateTime()));
         mQuestion.setText(mQuestionDetail.getQuestionContext());
         mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(mQuestionDetail.getListenCount())));
         mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(mQuestionDetail.getPriseCount())));
@@ -582,10 +579,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     @Override
                     protected void onRespSuccessData(QuestionCollect questionCollect) {
                         if (questionCollect.getCollect() == 0) {
-                            mCancelCollect = true;
                             mCollectImage.setImageResource(R.drawable.ic_miss_uncollect);
                         } else {
-                            mCancelCollect = false;
                             mCollectImage.setImageResource(R.drawable.ic_miss_collect);
                         }
                     }
@@ -814,7 +809,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     });
                 }
 
-                mPublishTime.setText(DateUtil.getMissFormatTime(item.getCreateDate()));
+                mPublishTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateDate()));
                 mOpinionContent.setText(item.getContent());
 
                 if (item.getReplys() != null) {
@@ -908,7 +903,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     public void onBackPressed() {
         Intent intent = new Intent();
         if (mQuestionDetail != null) {
-            intent.putExtra(ExtraKeys.CANCEL_COLLECT, mCancelCollect);
             intent.putExtra(ExtraKeys.QUESTION, mQuestionDetail);
             intent.putExtra(ExtraKeys.PRAISE, mPraise);
             setResult(RESULT_OK, intent);
@@ -917,20 +911,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         if (mIsFromMissTalk) {
             stopScheduleJob();
         } else {
-            //处理推送语音播放
-            Stack<Activity> activityStack = App.getActivityStack();
-            activityStack.pop();
-            Activity activity = activityStack.peek();
-            if (activity instanceof MainActivity) {
-                if (!((MainActivity) activity).isMissTalkFragment()) {
-                    stopScheduleJob();
-                } else {
-                    stopQuestionVoice();
-                }
-            } else {
-                stopQuestionVoice();
-            }
-            activityStack.push(this);
+            stopQuestionVoice();
         }
 
         super.onBackPressed();

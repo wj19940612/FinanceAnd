@@ -36,8 +36,6 @@ public interface ExtraKeys {
 
     String QUESTION_ID = "question_id";
 
-    String CANCEL_COLLECT = "collect";
-
     String PLAYING_ID = "playing_id";
     String PLAYING_URL= "playing_url";
     String PLAYING_AVATAR = "playing_avatar";
