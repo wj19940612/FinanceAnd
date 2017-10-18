@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.sbai.finance.activity.CatchCrashActivity;
 import com.sbai.finance.net.API;
@@ -16,17 +17,18 @@ import com.umeng.socialize.UMShareAPI;
 
 import java.util.Stack;
 
-public class App extends Application {
-
-	public static Stack<Activity> sActivityStack;
+public class App extends Application implements Application.ActivityLifecycleCallbacks {
 
 	private static Context sContext;
+	public static Stack<Activity> sActivityStack;
+	private int mCount = 0;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		sContext = this;
 		API.init(sContext.getCacheDir());
+		registerActivityLifecycleCallbacks(this);
 		CookieManger.getInstance().init(sContext.getFilesDir());
 
 		if (!BuildConfig.IS_PROD) {
@@ -86,5 +88,44 @@ public class App extends Application {
 		// 注意：以下全为正式的 appId & secret
 		PlatformConfig.setWeixin("wxf53be05ac695d994", "aab33a762834f9f0722190a67aefcef0");
 		PlatformConfig.setSinaWeibo("522354160", "af7a654293ada586a62534ac9fd03845", "");
+	}
+
+	@Override
+	public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+		mCount++;
+	}
+
+	@Override
+	public void onActivityStarted(Activity activity) {
+
+	}
+
+	@Override
+	public void onActivityResumed(Activity activity) {
+
+	}
+
+	@Override
+	public void onActivityPaused(Activity activity) {
+
+	}
+
+	@Override
+	public void onActivityStopped(Activity activity) {
+		mCount--;
+	}
+
+	@Override
+	public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+	}
+
+	@Override
+	public void onActivityDestroyed(Activity activity) {
+
+	}
+
+	public int getCount() {
+		return mCount;
 	}
 }
