@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class WsClient implements AbsWsClient {
 
     private static final String TAG = "WebSocket";
-    private static final String HEAD_PROTOCOL= BuildConfig.FLAVOR.equalsIgnoreCase("dev") ? "ws://" : "wss://";
+    private static final String HEAD_PROTOCOL = BuildConfig.FLAVOR.equalsIgnoreCase("dev") ? "ws://" : "wss://";
     private static final String URI = HEAD_PROTOCOL + API.getDomain() + "/game/ws.do";
 
     private static final int TIMEOUT_REQ = 3000;
@@ -224,13 +224,17 @@ public class WsClient implements AbsWsClient {
 
     @Override
     public void onOpen() {
-        Log.d(TAG, "onOpen: " + mWebSocket.toString());
+        if (mWebSocket != null) {
+            Log.d(TAG, "onOpen: " + mWebSocket.toString());
+        }
         register();
     }
 
     @Override
     public void onClose() {
-        Log.d(TAG, "onClose: " + mWebSocket.toString());
+        if (mWebSocket != null) {
+            Log.d(TAG, "onClose: " + mWebSocket.toString());
+        }
         mStatus = Status.UNREGISTERED;
         if (!mNormalClosed) { // if close automatically or by accident, reconnect
             Log.d(TAG, "onClose: reconnect");

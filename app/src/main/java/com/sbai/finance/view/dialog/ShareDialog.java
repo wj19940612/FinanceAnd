@@ -84,7 +84,14 @@ public class ShareDialog {
 
                         onSharePlatformClicked(SHARE_PLATFORM.WECHAT_FRIEND);
                     } else {
-                        ToastUtil.show(R.string.you_not_install_weixin);
+                        if (mActivity != null) {
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtil.show(R.string.you_not_install_weixin);
+                                }
+                            });
+                        }
                     }
                     mSmartDialog.dismiss();
                     break;
@@ -103,7 +110,19 @@ public class ShareDialog {
 
                         onSharePlatformClicked(SHARE_PLATFORM.WECHAT_CIRCLE);
                     } else {
-                        ToastUtil.show(R.string.you_not_install_weixin);
+                        //  CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.
+                        // 	at android.widget.Toast.setText(Toast.java:291)
+                        //  at com.sbai.finance.utils.ToastUtil.show(ToastUtil.java:31)
+                        //  at com.sbai.finance.utils.ToastUtil.show(ToastUtil.java:15)
+                        //  at com.sbai.finance.view.dialog.ShareDialog$ShareButtonClickListener.onClick(ShareDialog.java:111)
+                        if (mActivity != null) {
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtil.show(R.string.you_not_install_weixin);
+                                }
+                            });
+                        }
                     }
                     mSmartDialog.dismiss();
                     break;
@@ -117,7 +136,15 @@ public class ShareDialog {
                         shareToPlatform(SHARE_MEDIA.SINA);
                         onSharePlatformClicked(SHARE_PLATFORM.SINA_WEIBO);
                     } else {
-                        ToastUtil.show(R.string.you_not_install_weibo);
+                        if (mActivity != null) {
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtil.show(R.string.you_not_install_weibo);
+                                }
+                            });
+
+                        }
                     }
                     mSmartDialog.dismiss();
                     break;
