@@ -128,7 +128,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 								}
 							}).fire();
 				} else {
-					Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQ_LOGIN);
+					Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQ_CODE_LOGIN);
 				}
 			}
 		});
@@ -185,7 +185,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 								}
 							}).fire();
 				} else {
-					Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQ_LOGIN);
+					Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQ_CODE_LOGIN);
 				}
 			}
 		});
@@ -504,7 +504,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 			mLatestListView.setSelection(1);
 		}
 
-		if (requestCode == REQ_LOGIN && resultCode == RESULT_OK) {
+		if (requestCode == REQ_CODE_LOGIN && resultCode == RESULT_OK) {
 			requestIsTrained();
 		}
 	}

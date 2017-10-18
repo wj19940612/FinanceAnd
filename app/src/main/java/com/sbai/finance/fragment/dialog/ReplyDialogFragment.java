@@ -21,7 +21,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
-import static com.sbai.finance.activity.BaseActivity.REQ_LOGIN;
+import static com.sbai.finance.activity.BaseActivity.REQ_CODE_LOGIN;
 
 /**
  * Created by lixiaokuan0819 on 2017/8/3.
@@ -90,7 +90,7 @@ public class ReplyDialogFragment extends BottomDialogFragment {
 							mCallback.onLoginSuccess();
 						}
 						Intent intent = new Intent(getActivity(), LoginActivity.class);
-						startActivityForResult(intent,REQ_LOGIN);
+						startActivityForResult(intent, REQ_CODE_LOGIN);
 					}
 				}
 				break;
@@ -110,7 +110,7 @@ public class ReplyDialogFragment extends BottomDialogFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == REQ_LOGIN && resultCode == RESULT_OK) {
+		if (requestCode == REQ_CODE_LOGIN && resultCode == RESULT_OK) {
 			if (mQuestionReply.getUserModel() != null && mQuestionReply != null) {
 				Intent intent = new Intent(getActivity(), ReplyActivity.class);
 				intent.putExtra(Launcher.EX_PAYLOAD, mQuestionReply.getUserModel().getId());

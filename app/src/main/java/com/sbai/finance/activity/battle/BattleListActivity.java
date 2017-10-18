@@ -294,6 +294,7 @@ public class BattleListActivity extends BaseActivity implements
                             mVersusListAdapter.notifyDataSetChanged();
                         }
                         Launcher.with(getActivity(), FutureBattleActivity.class)
+                                .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
                                 .putExtra(ExtraKeys.BATTLE, item)
                                 .executeForResult(CANCEL_BATTLE);
 

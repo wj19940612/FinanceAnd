@@ -373,7 +373,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 			mMissFloatWindow.setVisibility(View.GONE);
 			mMissFloatWindow.stopAnim();
 			updateQuestionListenCount(question);
-			MissAudioManager.get().play(question);
+			MissAudioManager.get().start(question);
 			startScheduleJob(100);
 			MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
 				@Override
@@ -393,7 +393,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 	}
 
 	private void setStatusPause(Question question) {
-		mMissFloatWindow.setVisibility(View.VISIBLE);
+		mMissFloatWindow.setVisibility(View.GONE);
 		mMissFloatWindow.stopAnim();
 		mPlayImage.setImageResource(R.drawable.ic_play);
 		int pastTime = MissAudioManager.get().getCurrentPosition();
@@ -659,9 +659,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
 	@Override
 	public void onAudioPause() {
-		/*if (mQuestionDetail != null) {
+		if (mQuestionDetail != null) {
 			setStatusPause(mQuestionDetail);
-		}*/
+		}
 	}
 
 	@Override

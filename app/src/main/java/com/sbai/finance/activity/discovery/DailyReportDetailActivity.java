@@ -226,7 +226,7 @@ public class DailyReportDetailActivity extends BaseActivity {
                 if (LocalUser.getUser().isLogin()) {
                     changeCollectionStatus();
                 } else {
-                    Launcher.with(getActivity(), LoginActivity.class).executeForResult(LoginActivity.REQ_LOGIN);
+                    Launcher.with(getActivity(), LoginActivity.class).executeForResult(LoginActivity.REQ_CODE_LOGIN);
                 }
                 break;
         }
@@ -267,7 +267,7 @@ public class DailyReportDetailActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == REQ_LOGIN) {
+        if (resultCode == RESULT_OK && requestCode == REQ_CODE_LOGIN) {
             changeCollectionStatus();
         }
     }

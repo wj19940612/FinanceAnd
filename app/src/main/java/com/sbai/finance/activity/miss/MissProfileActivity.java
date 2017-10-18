@@ -215,7 +215,7 @@ public class MissProfileActivity extends BaseActivity implements
 		} else {
 			stopAnim();
 			updateQuestionListenCount(item);
-			MissAudioManager.get().play(item);
+			MissAudioManager.get().start(item);
 			mHerAnswerAdapter.notifyDataSetChanged();
 			MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
 				@Override
@@ -477,7 +477,7 @@ public class MissProfileActivity extends BaseActivity implements
 			MissAudioManager.get().stop();
 			stopAnim();
 		} else {
-			MissAudioManager.get().play(miss);
+			MissAudioManager.get().start(miss);
 			mHerAnswerAdapter.notifyDataSetChanged();
 			startAnim();
 		}
