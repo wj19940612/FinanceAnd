@@ -9,7 +9,7 @@ android {
         applicationId "com.sbai.finance"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 42
+        versionCode 43
         versionName "2.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -82,9 +82,9 @@ android {
     productFlavors {
 
         dev {
-//            minSdkVersion 21
+            minSdkVersion 21
             versionNameSuffix '-dev'
-//            applicationIdSuffix '.dev'
+            applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
 //            buildConfigField('String', 'HOST', '\"192.168.1.7\"')
             buildConfigField('String', 'HOST', '\"devlm.esongbai.abc\"')
@@ -100,7 +100,7 @@ android {
         }
 
         alpha {
-//            applicationId "com.sbai.finance.alpha"
+            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-Alpha'
             versionCode 120
             versionName "1.2.1019"
