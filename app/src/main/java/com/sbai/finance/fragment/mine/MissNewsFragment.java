@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -325,6 +326,11 @@ public class MissNewsFragment extends BaseFragment implements
                 if (item.getSourceUser() != null) {
                     if (item.getType() == MissMessage.TYPE_MISS_ANSWER) {
                         if (!TextUtils.isEmpty(item.getSourceUser().getName())) {
+                            if (item.getSourceUser().getName().length() == 8) {
+                                mUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(13, context.getResources()));
+                            } else {
+                                mUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(14, context.getResources()));
+                            }
                             if (item.getSourceUser().getName().length() > 8) {
                                 item.getSourceUser().setName(item.getSourceUser().getName().substring(0, 8) + "...");
                             }
@@ -338,6 +344,11 @@ public class MissNewsFragment extends BaseFragment implements
 
                     } else {
                         if (!TextUtils.isEmpty(item.getSourceUser().getUserName())) {
+                            if (item.getSourceUser().getUserName().length() == 8) {
+                                mUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(13, context.getResources()));
+                            } else {
+                                mUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(14, context.getResources()));
+                            }
                             if (item.getSourceUser().getUserName().length() > 8) {
                                 item.getSourceUser().setUserName(item.getSourceUser().getUserName().substring(0, 8) + "...");
                             }

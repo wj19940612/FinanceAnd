@@ -2106,10 +2106,10 @@ public class Client {
      * @param page
      * @return
      */
-    public static API getDailyReportList(int page) {
+    public static API getDailyReportList(int page,int pageSize) {
         return new API("/user/dailyReport/findDailyReportList.do", new ApiParams()
                 .put("page", page)
-                .put("pageSize", 20));
+                .put("pageSize", pageSize));
     }
 
     /**

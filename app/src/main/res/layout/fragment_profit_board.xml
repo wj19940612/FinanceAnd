@@ -73,6 +73,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginRight="24dp"
+                    android:clickable="true"
                     tools:src="@drawable/ic_default_avatar"/>
 
                 <LinearLayout

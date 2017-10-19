@@ -97,7 +97,7 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
     }
 
     private void requestDailyListForUpdate() {
-        Client.getDailyReportList(mPageNo).setTag(TAG).setIndeterminate(this)
+        Client.getDailyReportList(0, (mPageNo + 1) * mPageSize).setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<DailyReport>>, List<DailyReport>>() {
                     @Override
                     protected void onRespSuccessData(List<DailyReport> data) {
@@ -137,7 +137,7 @@ public class DailyReportActivity extends BaseActivity implements CustomSwipeRefr
     }
 
     private void requestDailyList() {
-        Client.getDailyReportList(mPageNo).setTag(TAG).setIndeterminate(this)
+        Client.getDailyReportList(mPageNo, mPageSize).setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<DailyReport>>, List<DailyReport>>() {
                     @Override
                     protected void onRespSuccessData(List<DailyReport> data) {
