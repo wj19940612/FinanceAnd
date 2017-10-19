@@ -659,6 +659,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             Question playingQuestion = (Question) MissAudioManager.get().getAudio();
             if (playingQuestion.getId() == mQuestionId) {
                 setPlayingState();
+                mMissFloatWindow.setVisibility(View.GONE);
             } else {
                 mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
                 mMissFloatWindow.setVisibility(View.VISIBLE);
