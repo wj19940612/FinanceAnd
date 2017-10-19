@@ -566,6 +566,7 @@ public class TrainingDetailActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_TRAIN_EXPERIENCE && resultCode == RESULT_OK) {
+            requestExperienceCount();
             requestHotExperienceList();
         }
     }
