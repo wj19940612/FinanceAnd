@@ -12,6 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:hasBottomSplitLine="true"
+        app:rightText="活动入口"
+        app:rightTextColor="@android:color/holo_red_light"
+        app:rightVisible="true"
         app:titleText="@string/discovery"/>
 
     <ScrollView

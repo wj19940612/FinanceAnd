@@ -184,6 +184,14 @@ public class DiscoveryFragment extends BaseFragment {
         requestTrainingList();
         requestDailyReportData();
         requestBannerData();
+
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, "https://lemi.ailemi.com/lm/video/index.html").execute();
+            }
+        });
     }
 
     private void requestBannerData() {

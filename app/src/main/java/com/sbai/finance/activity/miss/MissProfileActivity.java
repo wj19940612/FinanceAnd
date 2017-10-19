@@ -629,7 +629,7 @@ public class MissProfileActivity extends BaseActivity implements
 
 	@Override
 	public void onAudioError() {
-
+		ToastUtil.show(R.string.play_failure);
 	}
 
 	static class HerAnswerAdapter extends ArrayAdapter<Question> {

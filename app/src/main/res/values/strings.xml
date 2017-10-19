@@ -585,6 +585,7 @@
     <string name="publish_success">发布成功</string>
     <string name="ignot_not_enough">元宝不足</string>
     <string name="praise">赞</string>
+    <string name="play_failure">播放失败</string>
 
     <!--discovery-->
     <string name="daily">乐米日报</string>
