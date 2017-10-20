@@ -149,6 +149,11 @@ public class FutureBattleActivity extends BaseActivity implements
     private static final int HANDLER_WHAT_EXIT_ROOM = 200;
     //正在对战的时候  对战多久后关闭
     private static final int HANDLER_WHAT_BATTLE_COUNTDOWN = 300;
+    //超过5秒没有收到对战结果
+    private static final int HANDLER_WHAT_MORE_THAN_FIVE_SECOND_NOT_RECEIVE_BATTLE_RESULT = 400;
+    //如果对战倒计时结束5秒没有接到对战结果，再次查询
+    private static final int TIME_OUT_REVEIVE_BATTLE_RESULT = 5 * 1000;
+
     private UserFundInfo mUserFundInfo;
 
     private NetworkReceiver mNetworkReceiver;
@@ -372,6 +377,9 @@ public class FutureBattleActivity extends BaseActivity implements
                     updateRoomExistsTime();
                     this.sendEmptyMessageDelayed(HANDLER_WHAT_EXIT_ROOM, TimerHandler.DEFAULT_INTERVAL_TIME);
                     break;
+                case HANDLER_WHAT_MORE_THAN_FIVE_SECOND_NOT_RECEIVE_BATTLE_RESULT:
+                    requestCurrentBattleInfo();
+                    break;
             }
         }
     };
@@ -388,13 +396,6 @@ public class FutureBattleActivity extends BaseActivity implements
             } else {
                 showCalculatingView();
             }
-        }
-
-        //5秒没收到结果自动结算
-        if (diff <= -5
-                && !mUserIsObserver
-                && !mCurrentBattle.isBattleOver()) {
-            requestCurrentBattleInfo();
         }
         mBattleView.setDeadline(mCurrentBattle.getGameStatus(), diff);
     }
@@ -535,6 +536,7 @@ public class FutureBattleActivity extends BaseActivity implements
         if (!mCurrentBattle.isBattleOver()) {
             mLoadingContent.setVisibility(View.VISIBLE);
             mLoading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.loading));
+            mHandler.sendEmptyMessageAtTime(HANDLER_WHAT_MORE_THAN_FIVE_SECOND_NOT_RECEIVE_BATTLE_RESULT, TIME_OUT_REVEIVE_BATTLE_RESULT);
         }
     }
 
@@ -598,11 +600,7 @@ public class FutureBattleActivity extends BaseActivity implements
                 break;
             case PushCode.BATTLE_OVER:
                 //对战结束 一个弹窗
-                Log.d("WebSocket", "原来的: " + mCurrentBattle.toString());
                 if (!mCurrentBattle.isBattleOver()) {
-                    Log.d("WebSocket", "最新的信息: " + battle.toString());
-                    Log.d("WebSocket", "刚开始的id : " + mHistoryBattleId);
-                    Log.d("WebSocket", "是否观察者 : " + mUserIsObserver);
                     if (battle != null
                             && battle.getId() == mHistoryBattleId) {
                         mCurrentBattle = battle;
@@ -1313,7 +1311,7 @@ public class FutureBattleActivity extends BaseActivity implements
                     protected void onRespFailure(Resp failedResp) {
                         if (failedResp.getCode() == GameCode.ORDER_CLOSE) {
                             refreshTradeView();
-                        }else if (failedResp.getCode() == GameCode.GAME_OVER) {
+                        } else if (failedResp.getCode() == GameCode.GAME_OVER) {
                             requestCurrentBattleInfo();
                         }
                     }
