@@ -9,8 +9,8 @@ android {
         applicationId "com.sbai.finance"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 44
-        versionName "2.0.3"
+        versionCode 45
+        versionName "2.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField('String', 'HOST', '\"lemi.ailemi.com\"')
