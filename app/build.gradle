@@ -9,8 +9,8 @@ android {
         applicationId "com.sbai.finance"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 41
-        versionName "2.0.1"
+        versionCode 44
+        versionName "2.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField('String', 'HOST', '\"lemi.ailemi.com\"')
@@ -82,9 +82,9 @@ android {
     productFlavors {
 
         dev {
-//            minSdkVersion 21
+            minSdkVersion 21
             versionNameSuffix '-dev'
-//            applicationIdSuffix '.dev'
+            applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
 //            buildConfigField('String', 'HOST', '\"192.168.1.7\"')
             buildConfigField('String', 'HOST', '\"devlm.esongbai.abc\"')
@@ -100,10 +100,10 @@ android {
         }
 
         alpha {
-//            applicationId "com.sbai.finance.alpha"
+            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-Alpha'
             versionCode 120
-            versionName "1.2.1018"
+            versionName "1.2.1019"
             buildConfigField('String', 'HOST', '\"testlemi.ailemi.com\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 

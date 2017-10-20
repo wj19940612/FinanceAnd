@@ -6,7 +6,9 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.sbai.finance.App;
 import com.sbai.finance.BuildConfig;
+import com.sbai.finance.utils.AppInfo;
 import com.sbai.httplib.ApiCallback;
 import com.sbai.httplib.ApiHeaders;
 import com.sbai.httplib.ApiIndeterminate;
@@ -142,6 +144,9 @@ public class API extends RequestManager {
         if (!TextUtils.isEmpty(cookies)) {
             headers.put("Cookie", cookies);
         }
+        headers.put("lemi-version", AppInfo.getVersionName(App.getAppContext()))
+                .put("lemi-device", AppInfo.getDeviceHardwareId(App.getAppContext()))
+                .put("lemi-channel", "android:" + AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"));
 
         Type type;
         if (mCallback != null) {

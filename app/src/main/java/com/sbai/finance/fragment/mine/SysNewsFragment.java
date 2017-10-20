@@ -80,6 +80,8 @@ public class SysNewsFragment extends BaseFragment implements AdapterView.OnItemC
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
+        requestNoReadNewsNumber();
+        requestSystemNewsList();
     }
 
     private void initView() {

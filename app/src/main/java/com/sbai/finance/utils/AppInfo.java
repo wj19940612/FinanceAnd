@@ -74,6 +74,12 @@ public class AppInfo {
         return result;
     }
 
+    /**
+     * @deprecated
+     *
+     * @param context
+     * @return
+     */
     public static String getDeviceInfo(Context context) {
         try {
             org.json.JSONObject json = new org.json.JSONObject();

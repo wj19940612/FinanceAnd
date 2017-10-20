@@ -63,8 +63,8 @@ public class ImageAuthCodeActivity extends DialogBaseActivity {
 
     private void requestImageAuthCode() {
         GlideApp.with(getActivity()).load(Client.getImageAuthCode(mPhone))
-                .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(mImageAuthCode);
     }
 
