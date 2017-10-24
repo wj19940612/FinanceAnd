@@ -125,6 +125,16 @@ android {
         vivo {}
         oppo {}
         others {}
+        baiduapk1 {}
+        baiduapk2 {}
+        baiduapk3 {}
+        baiduapk4 {}
+        baiduapk5 {}
+        baiduapk6 {}
+        baiduapk7 {}
+        baiduapk8 {}
+        baiduapk9 {}
+        baiduapk10 {}
     }
 
     productFlavors.all { flavor ->
