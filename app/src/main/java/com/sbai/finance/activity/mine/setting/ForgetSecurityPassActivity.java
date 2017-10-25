@@ -111,7 +111,7 @@ public class ForgetSecurityPassActivity extends BaseActivity {
     }
 
     private void requestAuthCodeForPass() {
-        Client.getAuthCodeForSecurityPsd(LocalUser.getUser().getPhone())
+        Client.getAuthCode(LocalUser.getUser().getPhone())
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
