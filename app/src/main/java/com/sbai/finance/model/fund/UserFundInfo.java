@@ -3,11 +3,14 @@ package com.sbai.finance.model.fund;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by ${wangJie} on 2017/6/16.
- * 用户资金信息
- */
+import com.sbai.finance.net.Client;
 
+/**
+ * Modified by john on 25/10/2017
+ *
+ * {@link Client#requestUserFundInfo()} 用户资金信息
+ *
+ */
 public class UserFundInfo implements Parcelable {
 
 
@@ -17,12 +20,9 @@ public class UserFundInfo implements Parcelable {
      * credit : 0
      * userId : 130
      */
-    //现金
-    private double money;
-    //元宝
-    private double yuanbao;
-    //积分
-    private double credit;
+    private double money; // 现金
+    private double yuanbao; // 元宝
+    private double credit; // 积分
     private int userId;
 
     public double getMoney() {
