@@ -1419,30 +1419,6 @@ public class Client {
     }
 
     /**
-     * 通过手机号 获取短信验证码
-     *
-     * @param phone
-     * @return
-     */
-    public static API getAuthCodeForSecurityPsd(String phone) {
-        return getAuthCodeForSecurityPsd(phone, null);
-    }
-
-    /**
-     * 通过手机号和图片验证码 获取短信验证码
-     *
-     * @param phone
-     * @param imgCode
-     * @return
-     */
-    public static API getAuthCodeForSecurityPsd(String phone, String imgCode) {
-        return new API(POST, "/user/userAccount/sendMsgCodeForPass.do",
-                new ApiParams()
-                        .put("phone", phone)
-                        .put("imgCode", imgCode));
-    }
-
-    /**
      * /user/userAccount/forgetPassword.do
      * POST
      * 忘记密码（wms）

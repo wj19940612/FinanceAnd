@@ -9,8 +9,8 @@ android {
         applicationId "com.sbai.finance"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 44
-        versionName "2.0.3"
+        versionCode 45
+        versionName "2.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField('String', 'HOST', '\"lemi.ailemi.com\"')
@@ -125,6 +125,16 @@ android {
         vivo {}
         oppo {}
         others {}
+        baiduapk1 {}
+        baiduapk2 {}
+        baiduapk3 {}
+        baiduapk4 {}
+        baiduapk5 {}
+        baiduapk6 {}
+        baiduapk7 {}
+        baiduapk8 {}
+        baiduapk9 {}
+        baiduapk10 {}
     }
 
     productFlavors.all { flavor ->
