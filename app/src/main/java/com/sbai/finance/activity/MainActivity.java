@@ -15,6 +15,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.DiscoveryFragment;
+import com.sbai.finance.fragment.HomePageFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.TrainingFragment;
@@ -270,7 +271,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new TrainingFragment();
+                    return new HomePageFragment();
                 case 1:
                     return new MissTalkFragment();
                 case 2:
