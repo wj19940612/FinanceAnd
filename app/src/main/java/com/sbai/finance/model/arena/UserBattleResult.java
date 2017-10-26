@@ -18,19 +18,11 @@ public class UserBattleResult {
 
     private int battleCount; // 对战场次
 
-    private String arenaIcon;
 
     public boolean userIsJoinArena() {
         return getStatus() == JOIN_ARENA_STATUS_JOINED;
     }
 
-    public String getArenaIcon() {
-        return "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1508933335479&di=4b7e020fac079462206c0a629fa7b91f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2F8c1001e93901213fe293621f5ee736d12e2e9554.jpg";
-    }
-
-    public void setArenaIcon(String arenaIcon) {
-        this.arenaIcon = arenaIcon;
-    }
 
     public int getStatus() {
         return status;
@@ -48,8 +40,8 @@ public class UserBattleResult {
         this.ranking = ranking;
     }
 
-    public double getProfit() {
-        return profit;
+    public long getProfit() {
+        return (long) profit;
     }
 
     public void setProfit(double profit) {

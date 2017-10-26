@@ -21,8 +21,7 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -116,12 +115,6 @@
                             android:textSize="9sp"
                             tools:text="活动时间:2017.11.15-2017.11.20"/>
 
-                        <ImageView
-                            android:id="@+id/awardIcon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            tools:src="@mipmap/ic_launcher"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"

@@ -63,8 +63,6 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
     TextView mAward;
     @BindView(R.id.activityTime2)
     TextView mActivityTime2;
-    @BindView(R.id.awardIcon)
-    ImageView mAwardIcon;
     @BindView(R.id.ranking)
     TextView mRanking;
     @BindView(R.id.myProfit)
@@ -110,6 +108,17 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                         protected void onRespSuccessData(UserBattleResult data) {
                             updateUserBattleResult(data);
                         }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            super.onFailure(volleyError);
+                            UserBattleResult userBattleResult = new UserBattleResult();
+                            userBattleResult.setStatus(1);
+                            userBattleResult.setRanking(2000);
+                            userBattleResult.setBattleCount(3000);
+                            userBattleResult.setProfit(8454654.66);
+                            updateUserBattleResult(userBattleResult);
+                        }
                     })
                     .fireFree();
         } else {
@@ -123,22 +132,18 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
             mJoinGameLL.setVisibility(View.GONE);
             mGameInfoRl.setVisibility(View.VISIBLE);
 
-            GlideApp.with(getActivity())
-                    .load(data.getArenaIcon())
-                    .into(mAwardIcon);
-
             SpannableString ranking = StrUtil.mergeTextWithRatioColor(String.valueOf(data.getRanking()),
-                    getString(R.string.ranking_now),
+                    "\n"+getString(R.string.ranking_now),
                     0.8f, ContextCompat.getColor(getActivity(), R.color.split));
             mRanking.setText(ranking);
 
             SpannableString myProfit = StrUtil.mergeTextWithRatioColor(getString(R.string.my_profit_count, data.getProfit()),
-                    getString(R.string.my_profit),
+                   "\n"+ getString(R.string.my_profit),
                     0.8f, ContextCompat.getColor(getActivity(), R.color.split));
             mMyProfit.setText(myProfit);
 
             SpannableString battleCount = StrUtil.mergeTextWithRatioColor(String.valueOf(data.getBattleCount()),
-                    getString(R.string.battle_count),
+                    "\n"+getString(R.string.battle_count),
                     0.8f, Color.WHITE);
             mGameCount.setText(battleCount);
 
