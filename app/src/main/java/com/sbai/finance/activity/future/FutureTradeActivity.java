@@ -1,17 +1,12 @@
 package com.sbai.finance.activity.future;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -28,7 +23,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.dialog.TradeOptionDialogFragment;
-import com.sbai.finance.fragment.trade.IntroduceFragment;
+import com.sbai.finance.model.FutureIntroduce;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
@@ -39,9 +34,9 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -49,7 +44,6 @@ import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
-import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.finance.websocket.market.DataReceiveListener;
 import com.sbai.finance.websocket.market.MarketSubscriber;
 import com.umeng.socialize.UMShareAPI;
@@ -95,21 +89,37 @@ public class FutureTradeActivity extends BaseActivity {
     @BindView(R.id.tradeFloatButtons)
     TradeFloatButtons mTradeFloatButtons;
 
-    @BindView(R.id.slidingTab)
-    SlidingTabLayout mSlidingTab;
-    @BindView(R.id.viewPager)
-    ViewPager mViewPager;
-
     @BindView(R.id.chartArea)
     LinearLayout mChartArea;
     @BindView(R.id.lastPrice)
     TextView mLastPrice;
 
-    private SubPageAdapter mSubPageAdapter;
+    @BindView(R.id.tradeCategory)
+    TextView mTradeCategory;
+    @BindView(R.id.tradeCode)
+    TextView mTradeCode;
+    @BindView(R.id.tradeTimeSummerWinter)
+    TextView mTradeTimeSummerWinter;
+    @BindView(R.id.holdingTime)
+    TextView mHoldingTime;
+    @BindView(R.id.tradeUnit)
+    TextView mTradeUnit;
+    @BindView(R.id.quoteUnit)
+    TextView mQuoteUnit;
+    @BindView(R.id.lowestMargin)
+    TextView mLowestMargin;
+    @BindView(R.id.tradeType)
+    TextView mTradeType;
+    @BindView(R.id.tradeSystem)
+    TextView mTradeSystem;
+    @BindView(R.id.deliveryTime)
+    TextView mDeliveryTime;
+    @BindView(R.id.dailyPriceMaximumVolatilityLimit)
+    TextView mDailyPriceMaximumVolatilityLimit;
+
     private Variety mVariety;
     private Prediction mPrediction;
     private FutureData mFutureData;
-    private int mPagePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +131,6 @@ public class FutureTradeActivity extends BaseActivity {
 
         initTabLayout();
         initChartViews();
-        initSlidingTab();
         initFloatBar();
         initTitleBar();
 
@@ -139,6 +148,8 @@ public class FutureTradeActivity extends BaseActivity {
 
         requestTrendDataAndSet();
 
+        requestVarietyTradeIntroduce();
+
         requestTradeButtonVisible();
     }
 
@@ -150,6 +161,36 @@ public class FutureTradeActivity extends BaseActivity {
                         updateTradeStatus(data);
                     }
                 }).fireFree();
+    }
+
+    private void requestVarietyTradeIntroduce() {
+        Client.getVarietyTradeIntroduce(mVariety.getVarietyId())
+                .setTag(TAG).setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<FutureIntroduce>, FutureIntroduce>() {
+                    @Override
+                    protected void onRespSuccessData(FutureIntroduce data) {
+                        updateFutureIntroduce(data);
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
+                    }
+                }).fireFree();
+    }
+
+    private void updateFutureIntroduce(FutureIntroduce data) {
+        mTradeCategory.setText(StrFormatter.getFormatText(data.getVarietyName()));
+        mTradeCode.setText(StrFormatter.getFormatText(String.valueOf(data.getVarietyType())));
+        mTradeTimeSummerWinter.setText(StrFormatter.getFormatText(data.getTradeTime()));
+        mHoldingTime.setText(StrFormatter.getFormatText(data.getOpsitionTime()));
+        mTradeUnit.setText(StrFormatter.getFormatText(data.getTradeUnit()));
+        mQuoteUnit.setText(StrFormatter.getFormatText(data.getReportPriceUnit()));
+        mLowestMargin.setText(StrFormatter.getFormatText(data.getLowestMargin()));
+        mTradeType.setText(StrFormatter.getFormatText(data.getTradeType()));
+        mTradeSystem.setText(StrFormatter.getFormatText(data.getTradeRegime()));
+        mDeliveryTime.setText(StrFormatter.getFormatText(data.getDeliveryTime()));
+        mDailyPriceMaximumVolatilityLimit.setText(StrFormatter.getFormatText(data.getEverydayPriceMaxFluctuateLimit()));
     }
 
     private void updateTradeStatus(FutureTradeStatus data) {
@@ -261,19 +302,6 @@ public class FutureTradeActivity extends BaseActivity {
                         return true;
                     }
                 }).fireFree();
-    }
-
-    private void initSlidingTab() {
-        mViewPager.setOffscreenPageLimit(1);
-        mSubPageAdapter = new SubPageAdapter(getSupportFragmentManager(), getActivity());
-        mViewPager.setAdapter(mSubPageAdapter);
-        mViewPager.addOnPageChangeListener(mSubPageChangeListener);
-
-        mSlidingTab.setDistributeEvenly(true);
-        mSlidingTab.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-        mSlidingTab.setSelectedIndicatorPadding((int) Display.dp2Px(60, getResources()));
-        mSlidingTab.setPadding(Display.dp2Px(12, getResources()));
-        mSlidingTab.setViewPager(mViewPager);
     }
 
     private void initFloatBar() {
@@ -411,72 +439,6 @@ public class FutureTradeActivity extends BaseActivity {
         intent.putExtra(Launcher.EX_PAYLOAD_1, isAddOptional);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);
     }
-
-
-    private IntroduceFragment getIntroduceFragment() {
-        Fragment fragment = mSubPageAdapter.getFragment(1);
-        if (fragment instanceof IntroduceFragment) {
-            return (IntroduceFragment) (fragment);
-        }
-        return null;
-    }
-
-    private class SubPageAdapter extends FragmentPagerAdapter {
-
-        FragmentManager mFragmentManager;
-        Context mContext;
-
-        public SubPageAdapter(FragmentManager fm, Context context) {
-            super(fm);
-            mFragmentManager = fm;
-            mContext = context;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return mContext.getString(R.string.introduce);
-            }
-            return super.getPageTitle(position);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return IntroduceFragment.newInstance(mVariety);
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return 1;
-        }
-
-        public Fragment getFragment(int position) {
-            return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
-        }
-    }
-
-    private ViewPager.OnPageChangeListener mSubPageChangeListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            mPagePosition = position;
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    };
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
@@ -641,17 +603,7 @@ public class FutureTradeActivity extends BaseActivity {
 //                        .show(getSupportFragmentManager());
 //            }
 //        });
-        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment fragment = mSubPageAdapter.getFragment(mPagePosition);
-                if (fragment != null) {
-                    if (fragment instanceof IntroduceFragment) {
-                        ((IntroduceFragment) fragment).scrollToTop();
-                    }
-                }
-            }
-        });
+
         updateTitleBar(null);
     }
 
