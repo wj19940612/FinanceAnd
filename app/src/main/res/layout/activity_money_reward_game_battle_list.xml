@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.battle.MoneyRewardGameBattleListActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_white"
+        app:customView="@layout/layout_money_reward_game_battle_list_title"
+        app:rightImage="@drawable/ic_share"
+        app:rightVisible="true"/>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll|snap">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@android:color/white"
+                    android:orientation="vertical"
+                    app:layout_collapseMode="parallax">
+
+                    <LinearLayout
+                        android:id="@+id/joinGameLL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/arenaTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="@dimen/common_padding"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            tools:text="操 盘 对 战 P K 赛\n奖金过万等你来战"/>
+
+                        <TextView
+                            android:id="@+id/activityTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="3dp"
+                            android:textColor="@color/split"
+                            android:textSize="9sp"
+                            tools:text="活动时间:2017.11.15-2017.11.20"/>
+
+                        <android.support.v7.widget.AppCompatButton
+                            android:id="@+id/enterForACompetition"
+                            android:layout_width="120dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/btn_reward_other_money_rounded"
+                            android:text="@string/enter_for_a_competition"
+                            android:textColor="@android:color/white"/>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/gameInfoRl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/common_padding"
+                        android:paddingLeft="@dimen/common_padding"
+                        android:paddingTop="@dimen/common_padding"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/predictGain"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/predict_gain"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:id="@+id/award"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/predictGain"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/yellowAssist"
+                            tools:text="@string/award"/>
+
+                        <TextView
+                            android:id="@+id/activityTime2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/award"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="3dp"
+                            android:textColor="@color/split"
+                            android:textSize="9sp"
+                            tools:text="活动时间:2017.11.15-2017.11.20"/>
+
+                        <ImageView
+                            android:id="@+id/awardIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            tools:src="@mipmap/ic_launcher"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginRight="@dimen/common_padding"
+                            android:background="@drawable/bg_translucence_rounded"
+                            android:gravity="center_vertical"
+                            android:minHeight="60dp"
+                            android:padding="@dimen/common_padding">
+
+                            <TextView
+                                android:id="@+id/ranking"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:gravity="center"
+                                android:textColor="@android:color/white"
+                                tools:text="12\n当前排名"/>
+
+                            <TextView
+                                android:id="@+id/myProfit"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/yellowAssist"
+                                tools:text="+2026\n我的盈利"/>
+
+                            <TextView
+                                android:id="@+id/gameCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="135\n对战场次>"
+                                android:textColor="@android:color/white"/>
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+            <com.sbai.finance.view.slidingTab.SlidingTabLayout
+                android:id="@+id/slidingTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/a"/>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    </android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

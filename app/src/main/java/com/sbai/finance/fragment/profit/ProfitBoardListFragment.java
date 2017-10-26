@@ -281,13 +281,13 @@ public class ProfitBoardListFragment extends BaseFragment implements
                 mRank.setText("");
                 switch (rank) {
                     case 1:
-                        mRank.setCompoundDrawablesWithIntrinsicBounds(0, 0,  R.drawable.ic_rank_top_1,0 );
+                        mRank.setCompoundDrawablesWithIntrinsicBounds(0, 0,  R.drawable.ic_rank_first,0 );
                         break;
                     case 2:
-                        mRank.setCompoundDrawablesWithIntrinsicBounds(0, 0,  R.drawable.ic_rank_top_2, 0);
+                        mRank.setCompoundDrawablesWithIntrinsicBounds(0, 0,  R.drawable.ic_rank_second, 0);
                         break;
                     case 3:
-                        mRank.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_rank_top_3, 0);
+                        mRank.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_rank_third, 0);
                         break;
                 }
             }

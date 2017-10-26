@@ -12,6 +12,8 @@
     <string name="training">训练</string>
     <string name="miss_talk">姐说</string>
     <string name="discovery">发现</string>
+    <string name="arena">竞技场</string>
+
 
     <!-- EconomicCircle -->
     <string name="comment_number">评论(%1$d)</string>
@@ -801,4 +803,25 @@
     <string name="auth_code_error">验证码有误</string>
     <string name="image_auth_code">图形验证码</string>
     <string name="change_image_auth_code">看不清？换一张</string>
+
+    <!--游戏-->
+    <string name="money_reward_game">赏金赛</string>
+    <string name="ordinary_battle">普通场</string>
+
+    <!--竞技场-->
+    <string name="activity_rule">活动规则</string>
+    <string name="enter_for_a_competition">报名参赛</string>
+    <string name="predict_gain">预计可获得奖品：</string>
+    <string name="award">王者荣耀皮肤</string>
+    <string name="activity_time">活动时间：%1$s- %2$s</string>
+    <string name="ranking_now">当前排名</string>
+    <string name="my_profit">我的盈利</string>
+    <string name="my_profit_count">+%1$d</string>
+    <string name="battle_count">对战场次></string>
+    <string name="not_login">未登录</string>
+    <string name="ingot_">元宝：%1$s</string>
+    <string name="ranking_">排名</string>
+    <string name="profit">盈利</string>
+    <string name="predict_award">预计奖品</string>
+    <string name="arena_count">对战场次</string>
 </resources>

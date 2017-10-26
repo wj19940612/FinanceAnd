@@ -3,6 +3,7 @@
 
     <dimen name="common_radius">3dp</dimen>
     <dimen name="eight_radius">8dp</dimen>
+    <dimen name="sixteen_radius">16dp</dimen>
     <dimen name="common_height">44dp</dimen>
 
     <dimen name="common_padding">14dp</dimen>
@@ -18,5 +19,6 @@
     <dimen name="common_eight_radius">4dp</dimen>
     <dimen name="common_default_size">15sp</dimen>
     <dimen name="hundred_radius">100dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 </resources>

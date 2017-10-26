@@ -224,7 +224,7 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                             reward = item.getReward() + context.getString(R.string.cash);
                             break;
                         case Battle.COIN_TYPE_SCORE:
-                            reward = StrFormatter.getFormIntegrate(item.getReward()-item.getCommission()) + context.getString(R.string.integral);
+                            reward = StrFormatter.formIntegrateNumber(item.getReward()-item.getCommission()) + context.getString(R.string.integral);
                             break;
                     }
                 }else{

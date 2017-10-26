@@ -15,6 +15,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.DiscoveryFragment;
+import com.sbai.finance.fragment.GameFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.TrainingFragment;
@@ -159,11 +160,11 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                                     .setOnDismissListener(new UpdateVersionDialogFragment.OnDismissListener() {
                                         @Override
                                         public void onDismiss() {
-                                             requestStartActivities();
+                                            requestStartActivities();
                                         }
                                     })
                                     .show(getSupportFragmentManager());
-                        }else {
+                        } else {
                             requestStartActivities();
                         }
                     }
@@ -272,18 +273,20 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 case 0:
                     return new TrainingFragment();
                 case 1:
-                    return new MissTalkFragment();
+                    return new GameFragment();
                 case 2:
-                    return new DiscoveryFragment();
+                    return new MissTalkFragment();
                 case 3:
                     return new MineFragment();
+                case 4:
+                    return new DiscoveryFragment();
             }
             return null;
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
 
         public Fragment getFragment(int position) {

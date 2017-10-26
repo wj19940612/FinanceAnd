@@ -42,5 +42,6 @@
 - 评测：Evaluation
 - 学分：Credit
 - 成绩：Grade
+- 竞技场: Arena
 
 

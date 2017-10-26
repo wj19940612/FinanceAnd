@@ -25,6 +25,7 @@ public class DateUtil {
     public static final String FORMAT_SPECIAL_SLASH_NO_HOUR = "yyyy/MM/dd";
     public static final String FORMAT_HOUR_MINUTE = "HH:mm";
     public static final String FORMAT_DATE_HOUR_MINUTE = "dd日 HH:mm";
+    public static final String FORMAT_DATE_ARENA= "yyyy.MM.dd";
 
 
     private static final String TODAY = "今日";

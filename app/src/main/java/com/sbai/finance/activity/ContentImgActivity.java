@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.economiccircle;
+package com.sbai.finance.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.view.HackyViewPager;
 import com.sbai.glide.GlideApp;
 

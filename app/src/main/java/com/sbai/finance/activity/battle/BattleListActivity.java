@@ -539,8 +539,8 @@ public class BattleListActivity extends BaseActivity implements
 
     private void updateUserFund(UserFundInfo data) {
         if (data == null) return;
-        mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
-        mIngot.setText(getString(R.string.number_ge, StrFormatter.getFormIngot(data.getYuanbao())));
+        mIntegral.setText(StrFormatter.formIntegrateNumber(data.getCredit()));
+        mIngot.setText(getString(R.string.number_ge, StrFormatter.formIngotNumber(data.getYuanbao())));
     }
 
     private void updateAvatar() {
@@ -896,16 +896,10 @@ public class BattleListActivity extends BaseActivity implements
     }
 
 
-    static class VersusListAdapter extends ArrayAdapter<Battle> {
-        interface Callback {
-            void onClick(Battle item);
-        }
+    public static class VersusListAdapter extends ArrayAdapter<Battle> {
 
-        private Callback mCallback;
-
-        public void setCallback(Callback callback) {
-            mCallback = callback;
-        }
+        private static final int BATTLE_STATUS_OVER = 0;
+        private static final int BATTLE_STATUS_PROCEED = 1;
 
         public VersusListAdapter(@NonNull Context context) {
             super(context, 0);
@@ -916,14 +910,31 @@ public class BattleListActivity extends BaseActivity implements
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_future_versus, parent, false);
+                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_future_versus_proceed, parent, false);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), getContext(), mCallback);
+            viewHolder.bindDataWithView(getItem(position), getContext());
             return convertView;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            Battle battle = getItem(position);
+            if (battle != null) {
+                if (battle.isBattleOver()) {
+                    return BATTLE_STATUS_PROCEED;
+                }
+                return BATTLE_STATUS_OVER;
+            }
+            return super.getItemViewType(position);
         }
 
         static class ViewHolder {
@@ -950,7 +961,7 @@ public class BattleListActivity extends BaseActivity implements
                 ButterKnife.bind(this, view);
             }
 
-            private void bindDataWithView(final Battle item, Context context, final Callback callback) {
+            private void bindDataWithView(final Battle item, Context context) {
                 mVarietyName.setText(item.getVarietyName());
                 GlideApp.with(context).load(item.getLaunchUserPortrait())
                         .load(item.getLaunchUserPortrait())

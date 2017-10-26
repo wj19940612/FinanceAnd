@@ -2106,7 +2106,7 @@ public class Client {
      * @param page
      * @return
      */
-    public static API getDailyReportList(int page,int pageSize) {
+    public static API getDailyReportList(int page, int pageSize) {
         return new API("/user/dailyReport/findDailyReportList.do", new ApiParams()
                 .put("page", page)
                 .put("pageSize", pageSize));
@@ -2726,5 +2726,20 @@ public class Client {
      */
     public static API requestShareData(String code) {
         return new API("/user/share/findByCode.do", new ApiParams().put("code", code));
+    }
+
+    // TODO: 2017/10/25 请求竞技场对战信息
+    public static API requestArenaInfo() {
+        return new API("");
+    }
+
+    // TODO: 2017/10/25   
+    public static API requestUserJoinArenaInfo() {
+        return new API("");
+    }
+
+    // TODO: 2017/10/26  
+    public static API requestArenaAwardRankingData() {
+        return new API("");
     }
 }

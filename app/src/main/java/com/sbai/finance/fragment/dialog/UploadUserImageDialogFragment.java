@@ -19,7 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.economiccircle.ContentImgActivity;
+import com.sbai.finance.activity.ContentImgActivity;
 import com.sbai.finance.activity.mine.ImageSelectActivity;
 import com.sbai.finance.activity.mine.userinfo.AreaTakePhoneActivity;
 import com.sbai.finance.activity.mine.userinfo.ClipHeadImageActivity;
