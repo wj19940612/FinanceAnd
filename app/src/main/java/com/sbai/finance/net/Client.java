@@ -2718,4 +2718,9 @@ public class Client {
     public static API requestArenaAwardRankingData() {
         return new API("");
     }
+
+    // TODO: 2017/10/26 参赛
+    public static API enterForACompetition() {
+        return new API("");
+    }
 }

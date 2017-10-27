@@ -114,6 +114,7 @@ public class RechargeActivity extends BaseActivity {
         initData();
         initView();
         requestUsablePlatformList();
+        requestUserFund();
     }
 
     private void initData() {

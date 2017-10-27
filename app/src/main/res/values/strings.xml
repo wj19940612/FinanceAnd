@@ -824,4 +824,10 @@
     <string name="profit">盈利</string>
     <string name="predict_award">预计奖品</string>
     <string name="arena_count">对战场次</string>
+    <string name="enter_arena_condition">报名需支付%1$s元宝作为参赛费\n是否继续报名</string>
+    <string name="to_sign_up">继续报名</string>
+    <string name="me_need_consider">我再想想</string>
+    <string name="activity_is_over">活动已结束</string>
+    <string name="immediately_recharge">立即充值</string>
+    <string name="invite_friend">邀请好友</string>
 </resources>

@@ -2,18 +2,17 @@ package com.sbai.finance.fragment.battle;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -38,12 +37,12 @@ import butterknife.Unbinder;
 public class BattleRankingFragment extends BaseFragment {
 
 
-    @BindView(android.R.id.list)
-    ListView mListView;
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
     @BindView(R.id.customSwipeRefreshLayout)
     LinearLayout mCustomSwipeRefreshLayout;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
     private Unbinder mBind;
     private ArenaAwardRankingAdapter mArenaAwardRankingAdapter;
 
@@ -62,9 +61,10 @@ public class BattleRankingFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.header_battle_ranking_lisr, null);
-        mListView.addHeaderView(headerView);
-        mArenaAwardRankingAdapter = new ArenaAwardRankingAdapter(getActivity());
-        mListView.setAdapter(mArenaAwardRankingAdapter);
+//        mListView.addHeaderView(headerView);
+        mArenaAwardRankingAdapter = new ArenaAwardRankingAdapter(new ArrayList<ArenaAwardRanking>(),getActivity());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(mArenaAwardRankingAdapter);
     }
 
     @Override
@@ -117,29 +117,43 @@ public class BattleRankingFragment extends BaseFragment {
         }
     }
 
-    static class ArenaAwardRankingAdapter extends ArrayAdapter<ArenaAwardRanking> {
+    static class ArenaAwardRankingAdapter extends RecyclerView.Adapter<ArenaAwardRankingAdapter.ViewHolder> {
 
-        public ArenaAwardRankingAdapter(@NonNull Context context) {
-            super(context, 0);
+        private List<ArenaAwardRanking> mArenaAwardRankingList;
+        private Context mContext;
+
+        public ArenaAwardRankingAdapter(List<ArenaAwardRanking> arenaAwardRankingListRanking, Context context) {
+            mArenaAwardRankingList = arenaAwardRankingListRanking;
+            mContext = context;
         }
 
-        @NonNull
         @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_arena_award_ranking, parent, false);
-                viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            viewHolder.bindDataWithView(getItem(position), parent.getContext(), position);
-            return convertView;
-
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_arena_award_ranking, parent, false);
+            return new ViewHolder(view);
         }
 
-        static class ViewHolder {
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bindDataWithView(mArenaAwardRankingList.get(position), position, mContext);
+        }
+
+        public void clear() {
+            mArenaAwardRankingList.clear();
+            notifyDataSetChanged();
+        }
+
+        public void addAll(List<ArenaAwardRanking> arenaAwardRankingList) {
+            mArenaAwardRankingList.addAll(arenaAwardRankingList);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getItemCount() {
+            return mArenaAwardRankingList != null ? mArenaAwardRankingList.size() : 0;
+        }
+
+        static class ViewHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.ranking)
             TextView mRanking;
             @BindView(R.id.avatar)
@@ -154,10 +168,12 @@ public class BattleRankingFragment extends BaseFragment {
             LinearLayout mArenaAwardLL;
 
             ViewHolder(View view) {
+                super(view);
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(ArenaAwardRanking item, Context context, int position) {
+            public void bindDataWithView(ArenaAwardRanking item, int position, Context context) {
+                if (item == null) return;
                 if (item.getRanking() < 4) {
                     switch (item.getRanking()) {
                         case 1:
@@ -200,6 +216,5 @@ public class BattleRankingFragment extends BaseFragment {
                 mAward.setText(item.getAward());
             }
         }
-
     }
 }

@@ -8,11 +8,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/a"
+    android:background="@color/bgArenaRankingTab"
     tools:context="com.sbai.finance.fragment.battle.BattleListFragment">
 
-    <ListView
-        android:id="@android:id/list"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/common_padding"

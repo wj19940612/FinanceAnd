@@ -68,7 +68,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="20dp"
-            android:drawableLeft="@drawable/ic_versus_pup"
+            android:drawableLeft="@drawable/ic_future_battle_recharge"
             android:drawablePadding="5dp"
             android:gravity="center"
             android:text="@string/recharge"

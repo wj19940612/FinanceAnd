@@ -3,7 +3,6 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="48dp"
-              android:background="@color/blackPrimary"
               android:gravity="center_vertical"
               android:orientation="horizontal">
 
@@ -15,14 +14,19 @@
         android:minWidth="180dp"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/avatar"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:layout_marginRight="14dp"
-            android:clickable="true"
-            android:src="@drawable/ic_default_avatar"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="14dp"
+                android:clickable="true"
+                android:src="@drawable/ic_default_avatar"/>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/ingot"
@@ -44,12 +48,12 @@
             android:layout_gravity="center"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="@dimen/common_padding"
-            android:drawableLeft="@drawable/ic_versus_pup"
+            android:drawableLeft="@drawable/ic_future_battle_recharge"
             android:drawablePadding="5dp"
             android:gravity="center"
             android:text="@string/recharge"
             android:textColor="@color/yellowAssist"
-            android:textSize="14sp"/>
+            android:textSize="12sp"/>
     </LinearLayout>
 
     <TextView

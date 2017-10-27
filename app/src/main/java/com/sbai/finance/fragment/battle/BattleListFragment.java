@@ -3,11 +3,11 @@ package com.sbai.finance.fragment.battle;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.BattleListActivity;
@@ -28,12 +28,13 @@ import butterknife.Unbinder;
 
 public class BattleListFragment extends BaseFragment {
     private static final String BATTLE_TYPE = "column-count";
-    @BindView(android.R.id.list)
-    ListView mListView;
+
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
     @BindView(R.id.customSwipeRefreshLayout)
     LinearLayout mCustomSwipeRefreshLayout;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
 
 
     private Set<Integer> mSet;
@@ -66,7 +67,7 @@ public class BattleListFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         mSet = new HashSet<>();
         mVersusListAdapter = new BattleListActivity.VersusListAdapter(getActivity());
-        mListView.setAdapter(mVersusListAdapter);
+//        mListView.setAdapter(mVersusListAdapter);
     }
 
     @Override

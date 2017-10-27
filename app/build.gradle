@@ -61,13 +61,13 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
 
-    android.applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def file = output.outputFile
-            def newFileName = file.name.replace(".apk", "-${variant.versionName}.apk")
-            output.outputFile = new File(file.parent, newFileName)
-        }
-    }
+//    android.applicationVariants.all { variant ->
+//        variant.outputs.each { output ->
+//            def file = output.outputFile
+//            def newFileName = file.name.replace(".apk", "-${variant.versionName}.apk")
+//            output.outputFile = new File(file.parent, newFileName)
+//        }
+//    }
 
     aaptOptions {
         cruncherEnabled true // !!set true when package release apk
@@ -117,24 +117,24 @@ android {
         }
 
         // channel use default (prod) configuration
-        tencent {}
-        m360 {}
-        xiaomi {}
-        baidu {}
-        huawei {}
-        vivo {}
-        oppo {}
-        others {}
-        baiduapk1 {}
-        baiduapk2 {}
-        baiduapk3 {}
-        baiduapk4 {}
-        baiduapk5 {}
-        baiduapk6 {}
-        baiduapk7 {}
-        baiduapk8 {}
-        baiduapk9 {}
-        baiduapk10 {}
+//        tencent {}
+//        m360 {}
+//        xiaomi {}
+//        baidu {}
+//        huawei {}
+//        vivo {}
+//        oppo {}
+//        others {}
+//        baiduapk1 {}
+//        baiduapk2 {}
+//        baiduapk3 {}
+//        baiduapk4 {}
+//        baiduapk5 {}
+//        baiduapk6 {}
+//        baiduapk7 {}
+//        baiduapk8 {}
+//        baiduapk9 {}
+//        baiduapk10 {}
     }
 
     productFlavors.all { flavor ->

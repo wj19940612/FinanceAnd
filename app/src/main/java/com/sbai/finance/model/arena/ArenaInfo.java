@@ -10,6 +10,15 @@ public class ArenaInfo {
     private long startTime;
     private long endTime;
     private String reward;
+    private double entryFees; //报名费
+
+    public double getEntryFees() {
+        return entryFees;
+    }
+
+    public void setEntryFees(double entryFees) {
+        this.entryFees = entryFees;
+    }
 
     public String getTitle() {
         return title;

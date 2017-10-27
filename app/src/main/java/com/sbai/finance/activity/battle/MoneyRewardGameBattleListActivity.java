@@ -1,7 +1,9 @@
 package com.sbai.finance.activity.battle;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.fragment.battle.BattleListFragment;
 import com.sbai.finance.fragment.battle.BattleRankingFragment;
@@ -27,6 +30,7 @@ import com.sbai.finance.model.arena.ArenaInfo;
 import com.sbai.finance.model.arena.UserBattleResult;
 import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -35,13 +39,18 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.R.id.enterForACompetition;
 
 
 public class MoneyRewardGameBattleListActivity extends BaseActivity implements View.OnClickListener {
@@ -50,7 +59,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.arenaTitle)
-    TextView mArenaTitle;
+    ImageView mArenaTitle;
     @BindView(R.id.activityTime)
     TextView mActivityTime;
     @BindView(R.id.enterForACompetition)
@@ -73,11 +82,14 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
     RelativeLayout mGameInfoRl;
     @BindView(R.id.slidingTabLayout)
     SlidingTabLayout mTabLayout;
+    @BindView(R.id.appBarLayout)
+    AppBarLayout mAppBarLayout;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
     private MoneyRewardGameBattleFragmentAdapter mMoneyRewardGameBattleFragmentAdapter;
     private UserFundInfo mUserFundInfo;
     private TextView mIngot;
+    private ArenaInfo mArenaInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,18 +145,18 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
             mGameInfoRl.setVisibility(View.VISIBLE);
 
             SpannableString ranking = StrUtil.mergeTextWithRatioColor(String.valueOf(data.getRanking()),
-                    "\n"+getString(R.string.ranking_now),
-                    0.8f, ContextCompat.getColor(getActivity(), R.color.split));
+                    "\n" + getString(R.string.ranking_now),
+                    0.6f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
             mRanking.setText(ranking);
 
             SpannableString myProfit = StrUtil.mergeTextWithRatioColor(getString(R.string.my_profit_count, data.getProfit()),
-                   "\n"+ getString(R.string.my_profit),
-                    0.8f, ContextCompat.getColor(getActivity(), R.color.split));
+                    "\n" + getString(R.string.my_profit),
+                    0.6f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
             mMyProfit.setText(myProfit);
 
             SpannableString battleCount = StrUtil.mergeTextWithRatioColor(String.valueOf(data.getBattleCount()),
-                    "\n"+getString(R.string.battle_count),
-                    0.8f, Color.WHITE);
+                    "\n" + getString(R.string.battle_count),
+                    0.6f, Color.WHITE);
             mGameCount.setText(battleCount);
 
         } else {
@@ -161,6 +173,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                 .setCallback(new Callback2D<Resp<ArenaInfo>, ArenaInfo>() {
                     @Override
                     protected void onRespSuccessData(ArenaInfo data) {
+                        mArenaInfo = data;
                         updateArenaInfo(data);
                     }
 
@@ -198,7 +211,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
 
     private void updateArenaInfo(ArenaInfo data) {
         if (data == null) return;
-        mArenaTitle.setText(data.getTitle());
+//        mArenaTitle.setText(data.getTitle());
         String activityTime = getString(R.string.activity_time,
                 DateUtil.format(data.getStartTime(), DateUtil.FORMAT_DATE_ARENA),
                 DateUtil.format(data.getEndTime(), DateUtil.FORMAT_DATE_ARENA));
@@ -231,8 +244,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 2017/10/25 分享
-
+                share();
             }
         });
         if (LocalUser.getUser().isLogin()) {
@@ -249,11 +261,18 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
         activityRule.setOnClickListener(this);
     }
 
+    public void share() {
+        // TODO: 2017/10/26 分享
+        ShareDialog.with(getActivity())
+                .hasWeiBo(true)
+                .show();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.recharge:
-                Launcher.with(getActivity(),VirtualProductExchangeActivity.class)
+                Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
                         .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
                         .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0)
                         .execute();
@@ -265,16 +284,85 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
         }
     }
 
-    @OnClick({R.id.enterForACompetition, R.id.gameCount})
+    @OnClick({enterForACompetition, R.id.gameCount})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.enterForACompetition:
+            case enterForACompetition:
+                if (LocalUser.getUser().isLogin()) {
+                    showEnterForACompetitionConditionDialog();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
             case R.id.gameCount:
+
                 break;
         }
     }
 
+    private void showEnterForACompetitionConditionDialog() {
+        double entryFees = mArenaInfo != null ? mArenaInfo.getEntryFees() : 0;
+        SmartDialog.with(getActivity(), getString(R.string.enter_arena_condition, String.valueOf(entryFees)))
+                .setPositive(R.string.to_sign_up, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        enterForACompetition();
+                    }
+                })
+                .setNegative(R.string.me_need_consider, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void enterForACompetition() {
+        Client.enterForACompetition()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        requestUserArenaInfo();
+                        ToastUtil.show(resp.getMsg());
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        super.onRespFailure(failedResp);
+                        if (failedResp.isInsufficientFund()) {
+                            showInsufficientFundDialog();
+                        } else if (failedResp.getCode() == Resp.CODE_ACTIVITY_IS_OVER) {
+                            ToastUtil.show(R.string.activity_is_over);
+                        }
+                    }
+                })
+                .fireFree();
+    }
+
+    private void showInsufficientFundDialog() {
+        SmartDialog.with(getActivity())
+                .setNegative(R.string.immediately_recharge, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
+                                .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
+                                .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0)
+                                .execute();
+                    }
+                })
+                .setPositive(R.string.invite_friend, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        share();
+                    }
+                }).show();
+    }
 
     static class MoneyRewardGameBattleFragmentAdapter extends FragmentPagerAdapter {
 
