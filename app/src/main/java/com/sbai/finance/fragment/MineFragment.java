@@ -193,16 +193,11 @@ public class MineFragment extends BaseFragment {
                 }).fireFree();
     }
 
-    private void requestMyIngotNumber() {
-        Client.requestUserFundInfo()
-                .setTag(TAG)
-                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
-                    @Override
-                    protected void onRespSuccessData(UserFundInfo data) {
-                        mWallet.setSubText(getString(R.string.my_ingot_, data.getYuanbao()));
-                    }
-                })
-                .fireFree();
+
+    public void updateIngotNumber(UserFundInfo userFundInfo) {
+        if(userFundInfo!=null){
+            mWallet.setSubText(getString(R.string.my_ingot_, userFundInfo.getYuanbao()));
+        }
     }
 
     private void updateNoReadFeedbackCount(int count) {
@@ -217,7 +212,6 @@ public class MineFragment extends BaseFragment {
         if (LocalUser.getUser().isLogin()) {
             refreshNotReadMessageCount();
             startScheduleJob(UPDATE_MESSAGE_COUNT_TIME);
-            requestMyIngotNumber();
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
             int maxLevel = LocalUser.getUser().getUserInfo().getMaxLevel();
             if (maxLevel > 5) {

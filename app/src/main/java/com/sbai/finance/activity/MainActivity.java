@@ -14,8 +14,8 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.fragment.ArenaFragment;
 import com.sbai.finance.fragment.DiscoveryFragment;
-import com.sbai.finance.fragment.GameFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.TrainingFragment;
@@ -25,6 +25,7 @@ import com.sbai.finance.model.ActivityModel;
 import com.sbai.finance.model.AppVersion;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -179,6 +180,34 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     }
 
     @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (LocalUser.getUser().isLogin()) {
+            requestUserFund();
+        }
+    }
+
+    private void requestUserFund() {
+        Client.requestUserFundInfo()
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
+                    @Override
+                    protected void onRespSuccessData(UserFundInfo data) {
+                        ArenaFragment arenaFragment = (ArenaFragment) mMainFragmentsAdapter.getFragment(1);
+                        if (arenaFragment != null) {
+                            arenaFragment.updateIngotNumber(data);
+                        }
+
+                        MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(3);
+                        if (mineFragment != null) {
+                            mineFragment.updateIngotNumber(data);
+                        }
+                    }
+                })
+                .fireFree();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         if (mStartDialogFragment != null) {
@@ -273,7 +302,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 case 0:
                     return new TrainingFragment();
                 case 1:
-                    return new GameFragment();
+                    return new ArenaFragment();
                 case 2:
                     return new MissTalkFragment();
                 case 3:

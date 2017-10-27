@@ -4,12 +4,14 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.view.View;
 import android.widget.ImageView;
@@ -86,6 +88,10 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
     AppBarLayout mAppBarLayout;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
+    @BindView(R.id.toolBar)
+    Toolbar mToolBar;
+    @BindView(R.id.collapsingToolbarLayout)
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
     private MoneyRewardGameBattleFragmentAdapter mMoneyRewardGameBattleFragmentAdapter;
     private UserFundInfo mUserFundInfo;
     private TextView mIngot;
@@ -221,6 +227,9 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
     }
 
     private void initView() {
+
+        setSupportActionBar(mToolBar);
+
         mMoneyRewardGameBattleFragmentAdapter = new MoneyRewardGameBattleFragmentAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMoneyRewardGameBattleFragmentAdapter);
         mTabLayout.setDistributeEvenly(true);
