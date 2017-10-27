@@ -25,6 +25,7 @@
     <color name="warningText">#CD4A47</color>
     <color name="opinionText">#5F6166</color>
     <color name="whiteHintText">#FDFDFD</color>
+    <color name="blueScoreText">#6595C2</color>
 
     <color name="unluckyText">#999</color>
     <color name="luckyText">#666</color>
