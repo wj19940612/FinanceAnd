@@ -801,4 +801,6 @@
     <string name="auth_code_error">验证码有误</string>
     <string name="image_auth_code">图形验证码</string>
     <string name="change_image_auth_code">看不清？换一张</string>
+    <!-- 首页 -->
+    <string name="look_my_rank">查看我的排名</string>
 </resources>

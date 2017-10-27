@@ -609,6 +609,15 @@ public class Client {
     }
 
     /**
+     * 获取首页的 banner
+     * @param bannerType 展示类型 0 banner 1 运营位
+     * @return
+     */
+    public static API getHomeBannerData(int bannerType) {
+        return new API(POST, "/user/news/findBannerList.do",new ApiParams().put("showType",bannerType));
+    }
+
+    /**
      * 获取首页礼物活动
      *
      * @return
@@ -2412,6 +2421,15 @@ public class Client {
                         .put("type", type)
                         .put("timeType", timeType));
     }
+
+    /**
+     * 乐米分排行三个榜首
+     */
+    public static API getleaderBoardThree() {
+        return new API("/user/radio/getTopForRank.do");
+    }
+
+
 
     /**
      * 获取热门心得列表

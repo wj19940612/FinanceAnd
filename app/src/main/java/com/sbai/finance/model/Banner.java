@@ -40,6 +40,12 @@ public class Banner implements Parcelable {
     private String title;
     private int type;
     private long updateTime;
+    private int recommend;//是否前台推荐
+    private int scope;//适用范围
+    private int showType;//banner展示类型
+    private int showcase;//banner展示位
+    private String subTitle;//副标题
+    private int userCount;//参与人数
 
     //gift 独有的
     private int clicks; //点击次数
@@ -163,6 +169,53 @@ public class Banner implements Parcelable {
         this.smallPic = smallPic;
     }
 
+    public int getRecommend() {
+        return recommend;
+    }
+
+    public void setRecommend(int recommend) {
+        this.recommend = recommend;
+    }
+
+    public int getScope() {
+        return scope;
+    }
+
+    public void setScope(int scope) {
+        this.scope = scope;
+    }
+
+    public int getShowType() {
+        return showType;
+    }
+
+    public void setShowType(int showType) {
+        this.showType = showType;
+    }
+
+    public int getShowcase() {
+        return showcase;
+    }
+
+    public void setShowcase(int showcase) {
+        this.showcase = showcase;
+    }
+
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
+    public int getUserCount() {
+        return userCount;
+    }
+
+    public void setUserCount(int userCount) {
+        this.userCount = userCount;
+    }
 
     @Override
     public String toString() {
@@ -184,6 +237,9 @@ public class Banner implements Parcelable {
                 '}';
     }
 
+    public Banner() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -203,11 +259,14 @@ public class Banner implements Parcelable {
         dest.writeString(this.title);
         dest.writeInt(this.type);
         dest.writeLong(this.updateTime);
+        dest.writeInt(this.recommend);
+        dest.writeInt(this.scope);
+        dest.writeInt(this.showType);
+        dest.writeInt(this.showcase);
+        dest.writeString(this.subTitle);
+        dest.writeInt(this.userCount);
         dest.writeInt(this.clicks);
         dest.writeString(this.smallPic);
-    }
-
-    public Banner() {
     }
 
     protected Banner(Parcel in) {
@@ -223,6 +282,12 @@ public class Banner implements Parcelable {
         this.title = in.readString();
         this.type = in.readInt();
         this.updateTime = in.readLong();
+        this.recommend = in.readInt();
+        this.scope = in.readInt();
+        this.showType = in.readInt();
+        this.showcase = in.readInt();
+        this.subTitle = in.readString();
+        this.userCount = in.readInt();
         this.clicks = in.readInt();
         this.smallPic = in.readString();
     }

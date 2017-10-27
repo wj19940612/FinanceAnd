@@ -9,13 +9,25 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.model.Banner;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.leaderboard.LeaderBoardRank;
+import com.sbai.finance.model.leaderboard.LeaderThreeRank;
 import com.sbai.finance.model.stock.StockData;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.BusinessBanner;
+import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.HomeTitleView;
+import com.sbai.finance.view.LeaderBoardView;
 import com.sbai.finance.websocket.market.DataReceiveListener;
 import com.sbai.finance.websocket.market.MarketSubscribe;
 import com.sbai.finance.websocket.market.MarketSubscriber;
@@ -27,14 +39,26 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.sbai.finance.model.leaderboard.LeaderThreeRank.INGOT;
+import static com.sbai.finance.model.leaderboard.LeaderThreeRank.PROFIT;
+import static com.sbai.finance.model.leaderboard.LeaderThreeRank.SAVANT;
+
 /**
  * Created by Administrator on 2017\10\26 0026.
  */
 
 public class HomePageFragment extends BaseFragment {
+    public static final int BANNER_TYPE_BANNER = 0;
+    public static final int BANNER_TYPE_BUSINESS_BANNER = 1;
     Unbinder unbinder;
     @BindView(R.id.homeTitleView)
     HomeTitleView mHomeTitleView;
+    @BindView(R.id.banner)
+    HomeBanner mBanner;
+    @BindView(R.id.businessBanner)
+    BusinessBanner mBusinessBanner;
+    @BindView(R.id.leaderBoardView)
+    LeaderBoardView mLeaderBoardView;
 
     @Nullable
     @Override
@@ -47,7 +71,7 @@ public class HomePageFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        startScheduleJob(5*1000);
+        startScheduleJob(5 * 1000);
         MarketSubscriber.get().subscribeAll();
         MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
     }
@@ -56,6 +80,7 @@ public class HomePageFragment extends BaseFragment {
     public void onTimeUp(int count) {
         super.onTimeUp(count);
         requestStockIndexData();
+        mBanner.nextAdvertisement();
     }
 
     @Override
@@ -96,6 +121,64 @@ public class HomePageFragment extends BaseFragment {
         });
         mHomeTitleView.clickIndexButton(HomeTitleView.BUTTON_HUSHEN);
         requestStockIndexData();
+
+        mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
+            @Override
+            public void onBannerClick(Banner information) {
+                if (information.isH5Style()) {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_URL, information.getContent())
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_HTML, information.getContent())
+                            .putExtra(WebActivity.EX_TITLE, information.getTitle())
+                            .execute();
+                }
+            }
+        });
+        mBusinessBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
+            @Override
+            public void onBannerClick(Banner information) {
+                if (information.isH5Style()) {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_URL, information.getContent())
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_HTML, information.getContent())
+                            .putExtra(WebActivity.EX_TITLE, information.getTitle())
+                            .execute();
+                }
+            }
+        });
+        mLeaderBoardView.setLookRankListener(new LeaderBoardView.LookRankListener() {
+            @Override
+            public void lookRank(String rankType) {
+                if (rankType.equals(INGOT)) {
+
+                } else if (rankType.equals(PROFIT)) {
+
+                } else if (rankType.equals(SAVANT)) {
+
+                }
+            }
+        });
+        mLeaderBoardView.setMobaiListener(new LeaderBoardView.MobaiListener() {
+            @Override
+            public void mobai(String rankType, LeaderThreeRank item) {
+                if (item.getUser() != null) {
+                    if (LocalUser.getUser().isLogin()) {
+                        requestWorship(rankType, item.getUser().getId());
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
+                }
+            }
+        });
+        requestBannerData();
+        requestBusniessBannerData();
+        requestLeaderBoardData();
     }
 
     private void requestStockIndexData() {
@@ -109,7 +192,7 @@ public class HomePageFragment extends BaseFragment {
                 }).fire();
     }
 
-    private void requestStockIndexMarketData(List<Variety> data){
+    private void requestStockIndexMarketData(List<Variety> data) {
         if (data == null || data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
         for (Variety variety : data) {
@@ -174,6 +257,51 @@ public class HomePageFragment extends BaseFragment {
         }
 //        requestFutureMarketData(futures);
         requestStockIndexMarketData(stocks);
+    }
+
+    private void requestBannerData() {
+        Client.getHomeBannerData(BANNER_TYPE_BANNER).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Banner>>, List<Banner>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Banner> data) {
+                        mBanner.setHomeAdvertisement(data);
+                    }
+                }).fireFree();
+    }
+
+    private void requestBusniessBannerData() {
+        Client.getHomeBannerData(BANNER_TYPE_BUSINESS_BANNER).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Banner>>, List<Banner>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Banner> data) {
+                        mBusinessBanner.setBusinessBannerData(data);
+                    }
+                }).fireFree();
+    }
+
+    private void requestLeaderBoardData() {
+        Client.getleaderBoardThree().setTag("zzzzzzz")
+                .setCallback(new Callback2D<Resp<List<LeaderThreeRank>>,List<LeaderThreeRank>>() {
+                    @Override
+                    protected void onRespSuccessData(List<LeaderThreeRank> data) {
+                        mLeaderBoardView.updateLeaderBoardData(data);
+                    }
+                }).fireFree();
+    }
+
+    private void requestWorship(String type, int id) {
+        Client.worship(id, type, null).setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()) {
+                            requestLeaderBoardData();
+                        } else {
+                            ToastUtil.show(resp.getMsg());
+                        }
+                    }
+                }).fireFree();
     }
 
     @Override

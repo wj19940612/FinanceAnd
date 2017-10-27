@@ -27,6 +27,7 @@
     <color name="whiteHintText">#FDFDFD</color>
     <color name="blackIndexText">#222222</color>
     <color name="tipText">#999999</color>
+    <color name="banner_number">#FF8B00</color>
 
     <color name="unluckyText">#999</color>
     <color name="luckyText">#666</color>
