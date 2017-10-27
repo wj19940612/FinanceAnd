@@ -56,7 +56,7 @@
             android:layout_width="72dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="9dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/bg_arena_future_knowledge"
             android:gravity="right"
             android:paddingBottom="3dp"
@@ -67,6 +67,7 @@
             android:textSize="12sp"/>
 
         <ImageView
+            android:layout_marginTop="3dp"
             android:id="@+id/iconArenaKnowledge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

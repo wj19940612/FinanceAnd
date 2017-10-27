@@ -50,7 +50,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.activity.mine.LoginActivity.ACTION_LOGIN_SUCCESS;
 
 public class MineFragment extends BaseFragment {
 
@@ -90,7 +89,7 @@ public class MineFragment extends BaseFragment {
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equalsIgnoreCase(ACTION_LOGIN_SUCCESS)) {
+            if (LoginActivity.ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
                 updateUserImage();
                 updateUserStatus();
             }
@@ -195,7 +194,7 @@ public class MineFragment extends BaseFragment {
 
 
     public void updateIngotNumber(UserFundInfo userFundInfo) {
-        if(userFundInfo!=null){
+        if (userFundInfo != null) {
             mWallet.setSubText(getString(R.string.my_ingot_, userFundInfo.getYuanbao()));
         }
     }
