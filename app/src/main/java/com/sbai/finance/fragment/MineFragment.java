@@ -29,13 +29,18 @@ import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
+import com.sbai.finance.activity.training.CreditIntroduceActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
+import com.sbai.finance.model.mine.UserIdentityCardInfo;
+import com.sbai.finance.model.mine.UserInfo;
+import com.sbai.finance.model.training.UserEachTrainingScoreModel;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -85,6 +90,16 @@ public class MineFragment extends BaseFragment {
     IconTextRow mMineQuestionsAndAnswers;
     @BindView(R.id.mineCollection)
     IconTextRow mMineCollection;
+    @BindView(R.id.authenticationImage)
+    ImageView mAuthenticationImage;
+    @BindView(R.id.score)
+    TextView mScore;
+    @BindView(R.id.scoreProgress)
+    TextView mScoreProgress;
+    @BindView(R.id.lemiScoreArea)
+    LinearLayout mLemiScoreArea;
+
+    private UserEachTrainingScoreModel mUserEachTrainingScoreModel;
 
     private BroadcastReceiver LoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -138,12 +153,88 @@ public class MineFragment extends BaseFragment {
         super.onResume();
         updateUserImage();
         updateUserStatus();
+        requestUserScore();
+        requestUserCreditApproveStatus();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         stopScheduleJob();
+    }
+
+    private void requestUserScore() {
+        if (LocalUser.getUser().isLogin()) {
+            Client.requestUserScore()
+                    .setTag(TAG)
+                    .setCallback(new Callback2D<Resp<UserEachTrainingScoreModel>, UserEachTrainingScoreModel>() {
+                        @Override
+                        protected void onRespSuccessData(UserEachTrainingScoreModel data) {
+                            mUserEachTrainingScoreModel = data;
+                            updateUserScore(data);
+                        }
+                    })
+                    .fire();
+        } else {
+            updateUserScore(null);
+        }
+    }
+
+    private void updateUserScore(UserEachTrainingScoreModel data) {
+        if (LocalUser.getUser().isLogin()) {
+            if (data.isTrain()) {
+                mScore.setVisibility(View.VISIBLE);
+                mScore.setText(String.valueOf((int) data.getUserTotalScore()));
+                mScoreProgress.setText(getString(R.string._more_than_number, FinanceUtil.formatFloorPercent(data.getRank())));
+            } else {
+                mScore.setVisibility(View.VISIBLE);
+                mScore.setText(String.valueOf(0));
+                mScoreProgress.setText(R.string._you_are_not_complete_train);
+            }
+        } else {
+            mScore.setVisibility(View.GONE);
+            mScoreProgress.setText(getString(R.string.click_to_view));
+        }
+    }
+
+    private void requestUserCreditApproveStatus() {
+        if (LocalUser.getUser().isLogin()) {
+            mAuthenticationImage.setVisibility(View.VISIBLE);
+            mAuthenticationImage.setImageResource(R.drawable.ic_no_real_name);
+            Client.getUserCreditApproveStatus()
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>() {
+                        @Override
+                        protected void onRespSuccessData(UserIdentityCardInfo data) {
+                            if (data.getStatus() != null) {
+                                updateUserCreditStatus(data.getStatus());
+                            }
+                        }
+
+                        @Override
+                        protected boolean onErrorToast() {
+                            return false;
+                        }
+                    })
+                    .fireFree();
+        } else {
+            mAuthenticationImage.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateUserCreditStatus(Integer status) {
+        switch (status) {
+            case UserInfo.CREDIT_IS_ALREADY_APPROVE:
+                mAuthenticationImage.setImageResource(R.drawable.ic_real_name);
+                break;
+            case UserInfo.CREDIT_IS_APPROVE_ING:
+                mAuthenticationImage.setImageResource(R.drawable.ic_in_review);
+                break;
+            default:
+                mAuthenticationImage.setImageResource(R.drawable.ic_no_real_name);
+                break;
+        }
     }
 
     private void requestNoReadNewsNumber() {
@@ -253,7 +344,7 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.userInfoArea, R.id.wallet, R.id.mineQuestionsAndAnswers, R.id.mineCollection,
+    @OnClick({R.id.userInfoArea, R.id.lemiScoreArea, R.id.wallet, R.id.mineQuestionsAndAnswers, R.id.mineCollection,
             R.id.message, R.id.feedback, R.id.financeEvaluation, R.id.setting, R.id.aboutUs})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -261,6 +352,19 @@ public class MineFragment extends BaseFragment {
                 umengEventCount(UmengCountEventId.ME_AVATAR);
                 if (LocalUser.getUser().isLogin()) {
                     startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
+                } else {
+                    openLoginPage();
+                }
+                break;
+
+            case R.id.lemiScoreArea:
+                if (LocalUser.getUser().isLogin()) {
+                    if (mUserEachTrainingScoreModel != null) {
+                        umengEventCount(UmengCountEventId.TRAINING_KNOW_CREDITS);
+                        Launcher.with(getActivity(), CreditIntroduceActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, mUserEachTrainingScoreModel)
+                                .execute();
+                    }
                 } else {
                     openLoginPage();
                 }
