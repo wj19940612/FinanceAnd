@@ -202,6 +202,7 @@ public class MineFragment extends BaseFragment {
 	private void requestUserCreditApproveStatus() {
 		if (LocalUser.getUser().isLogin()) {
 			mAuthenticationImage.setVisibility(View.VISIBLE);
+			mAuthenticationImage.setImageResource(R.drawable.ic_no_real_name);
 			Client.getUserCreditApproveStatus()
 					.setTag(TAG)
 					.setIndeterminate(this)
