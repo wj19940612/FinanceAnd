@@ -14,8 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.battle.MoneyRewardGameBattleListActivity;
+import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.utils.Launcher;
@@ -110,12 +112,16 @@ public class ArenaFragment extends BaseFragment {
     }
 
 
-    @OnClick({R.id.textArenaKnowledge, R.id.iconArenaKnowledge, R.id.moneyRewardArena, R.id.generalBattleBanner})
+    @OnClick({R.id.textArenaKnowledge, R.id.iconArenaKnowledge, R.id.moneyRewardArena,
+            R.id.generalBattleBanner, R.id.nameAndIngot})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.textArenaKnowledge:
             case R.id.iconArenaKnowledge:
-                // TODO: 2017/10/27 知识点
+                // TODO: 2017/10/27 相关知识点页面链接
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, "")
+                        .execute();
                 break;
             case R.id.moneyRewardArena:
                 Launcher.with(getActivity(), MoneyRewardGameBattleListActivity.class).execute();
@@ -123,6 +129,10 @@ public class ArenaFragment extends BaseFragment {
             case R.id.generalBattleBanner:
                 Launcher.with(getActivity(), BattleListActivity.class).execute();
                 break;
+            case R.id.nameAndIngot:
+                Launcher.with(getActivity(), WalletActivity.class).execute();
+                break;
+
         }
     }
 

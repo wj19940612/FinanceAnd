@@ -60,9 +60,7 @@ public class BattleRankingFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.header_battle_ranking_lisr, null);
-//        mListView.addHeaderView(headerView);
-        mArenaAwardRankingAdapter = new ArenaAwardRankingAdapter(new ArrayList<ArenaAwardRanking>(),getActivity());
+        mArenaAwardRankingAdapter = new ArenaAwardRankingAdapter(new ArrayList<ArenaAwardRanking>(), getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mArenaAwardRankingAdapter);
     }
@@ -154,6 +152,8 @@ public class BattleRankingFragment extends BaseFragment {
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
+            @BindView(R.id.headerLl)
+            LinearLayout mHeaderLl;
             @BindView(R.id.ranking)
             TextView mRanking;
             @BindView(R.id.avatar)
@@ -164,6 +164,8 @@ public class BattleRankingFragment extends BaseFragment {
             TextView mBattleCount;
             @BindView(R.id.award)
             TextView mAward;
+            @BindView(R.id.rankingLL)
+            LinearLayout mRankingLL;
             @BindView(R.id.arenaAwardLL)
             LinearLayout mArenaAwardLL;
 
@@ -173,6 +175,11 @@ public class BattleRankingFragment extends BaseFragment {
             }
 
             public void bindDataWithView(ArenaAwardRanking item, int position, Context context) {
+                if (position == 0) {
+                    mHeaderLl.setVisibility(View.VISIBLE);
+                } else {
+                    mHeaderLl.setVisibility(View.GONE);
+                }
                 if (item == null) return;
                 if (item.getRanking() < 4) {
                     switch (item.getRanking()) {
@@ -194,12 +201,12 @@ public class BattleRankingFragment extends BaseFragment {
 
 
                 if (position == 0) {
-                    mArenaAwardLL.setBackgroundResource(R.drawable.bg_arena_award_ranking_first);
+                    mRankingLL.setBackgroundResource(R.drawable.bg_arena_award_ranking_first);
                 } else {
                     if (position % 2 == 0) {
-                        mArenaAwardLL.setBackgroundColor(ContextCompat.getColor(context, R.color.bgArenaRanking));
+                        mRankingLL.setBackgroundColor(ContextCompat.getColor(context, R.color.bgArenaRanking));
                     } else {
-                        mArenaAwardLL.setBackgroundColor(ContextCompat.getColor(context, R.color.creditEndColor));
+                        mRankingLL.setBackgroundColor(ContextCompat.getColor(context, R.color.bgArenaRankingSecondColor));
                     }
                 }
 
@@ -208,8 +215,8 @@ public class BattleRankingFragment extends BaseFragment {
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop()
                         .into(mAvatar);
-                SpannableString spannableString = StrUtil.mergeTextWithColor(item.getName(),
-                        "\n+" + StrFormatter.formIngotNumber(item.getProfit()),
+                SpannableString spannableString = StrUtil.mergeTextWithRatioColor(item.getName(),
+                        "\n+" + StrFormatter.formIngotNumber(item.getProfit()),1.4f,
                         ContextCompat.getColor(context, R.color.yellowAssist));
                 mNameAndProfit.setText(spannableString);
                 mBattleCount.setText(String.valueOf(item.getBattleCount()));

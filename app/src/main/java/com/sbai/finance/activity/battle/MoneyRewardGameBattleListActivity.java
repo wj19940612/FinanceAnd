@@ -52,7 +52,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.R.id.enterForACompetition;
 
 
 public class MoneyRewardGameBattleListActivity extends BaseActivity implements View.OnClickListener {
@@ -131,7 +130,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                         public void onFailure(VolleyError volleyError) {
                             super.onFailure(volleyError);
                             UserBattleResult userBattleResult = new UserBattleResult();
-                            userBattleResult.setStatus(1);
+                            userBattleResult.setStatus(0);
                             userBattleResult.setRanking(2000);
                             userBattleResult.setBattleCount(3000);
                             userBattleResult.setProfit(8454654.66);
@@ -293,10 +292,10 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
         }
     }
 
-    @OnClick({enterForACompetition, R.id.gameCount})
+    @OnClick({R.id.enterForACompetition, R.id.gameCount})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case enterForACompetition:
+            case R.id.enterForACompetition:
                 if (LocalUser.getUser().isLogin()) {
                     showEnterForACompetitionConditionDialog();
                 } else {

@@ -58,5 +58,7 @@
     <color name="bgArenaRanking">#564F68</color>
     <color name="bgArenaRankingTab">#252429</color>
     <color name="arenaBackground">#171718</color>
+    <color name="bgArenaRankingSecondColor">#534C63</color>
+    <color name="arenaRankingTitleTextColor">#8A839E</color>
 
 </resources>

@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="com.sbai.finance.activity.battle.MoneyRewardGameBattleListActivity">
 
 
@@ -21,20 +21,19 @@
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsingToolbarLayout"
-                android:fitsSystemWindows="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_future_reward"
                 app:contentScrim="@color/bgArenaRankingTab"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-
                 <LinearLayout
-                    android:layout_marginTop="54dp"
                     android:layout_width="match_parent"
                     android:layout_height="214dp"
                     android:layout_below="@+id/titleBar"
+                    android:layout_marginTop="54dp"
                     android:orientation="vertical"
+                    android:visibility="visible"
                     app:layout_collapseMode="parallax">
 
                     <LinearLayout
@@ -42,9 +41,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <ImageView
+                            android:layout_marginTop="54dp"
                             android:id="@+id/arenaTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -75,14 +75,14 @@
                         android:id="@+id/gameInfoRl"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/common_padding"
-                        android:paddingRight="@dimen/common_padding"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/predictGain"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/common_padding"
+                            android:layout_marginRight="@dimen/common_padding"
                             android:layout_marginTop="67dp"
                             android:text="@string/predict_gain"
                             android:textColor="@android:color/white"
@@ -93,6 +93,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/predictGain"
+                            android:layout_marginLeft="@dimen/common_padding"
+                            android:layout_marginRight="@dimen/common_padding"
                             android:layout_marginTop="8dp"
                             android:textColor="@color/yellowAssist"
                             android:textSize="16sp"
@@ -104,27 +106,30 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/award"
                             android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="@dimen/common_padding"
+                            android:layout_marginRight="@dimen/common_padding"
                             android:layout_marginTop="@dimen/common_padding"
                             android:textColor="@color/split"
                             tools:text="活动时间:2017.11.15-2017.11.20"/>
 
 
                         <LinearLayout
-                            android:paddingTop="11dp"
-                            android:paddingBottom="11dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentBottom="true"
+                            android:layout_marginLeft="@dimen/common_padding"
                             android:layout_marginRight="@dimen/common_padding"
                             android:background="@drawable/bg_white_stroke_line"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:paddingBottom="11dp"
+                            android:paddingTop="11dp">
 
                             <TextView
                                 android:id="@+id/ranking"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/common_padding"
                                 android:gravity="center"
+                                android:paddingLeft="@dimen/common_padding"
                                 android:textColor="@android:color/white"
                                 android:textSize="20sp"
                                 tools:text="12\n当前排名"/>
@@ -154,7 +159,6 @@
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolBar"
-                    android:fitsSystemWindows="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_collapseMode="pin">
@@ -167,11 +171,11 @@
                         app:backFeature="true"
                         app:backIcon="@drawable/ic_tb_back_white"
                         app:customView="@layout/layout_money_reward_game_battle_list_title"
+                        app:layout_collapseMode="pin"
+                        app:leftViewLeftPadding="0dp"
                         app:rightImage="@drawable/ic_share"
                         app:rightVisible="true"/>
-
                 </android.support.v7.widget.Toolbar>
-
             </android.support.design.widget.CollapsingToolbarLayout>
 
             <com.sbai.finance.view.slidingTab.SlidingTabLayout
