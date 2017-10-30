@@ -3,6 +3,7 @@ package com.sbai.finance.view;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -128,8 +129,8 @@ public class LeaderBoardView extends LinearLayout {
                 mobaiBtn = mCenterMobaiBtn;
                 headView = mCenterHead;
             } else if (dataBean.getType().equals(SAVANT)) {
-                mobaiBtn = mCenterMobaiBtn;
-                headView = mCenterHead;
+                mobaiBtn = mRightMobaiBtn;
+                headView = mRightHead;
             }
             GlideApp.with(mContext)
                     .load(dataBean.getUser().getUserPortrait())
@@ -137,18 +138,21 @@ public class LeaderBoardView extends LinearLayout {
                     .circleCrop()
                     .into(headView);
             if (dataBean.isWorship()) {
-                mobaiBtn.setEnabled(true);
-            } else {
                 mobaiBtn.setEnabled(false);
+            } else {
+                mobaiBtn.setEnabled(true);
             }
             final ImageView finalMobaiBtn = mobaiBtn;
-            mobaiBtn.setOnClickListener(new OnClickListener() {
+            finalMobaiBtn.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.e("zzz LeaderBoardView","click mobai");
                     if (LocalUser.getUser().isLogin() && Network.isNetworkAvailable()) {
                         finalMobaiBtn.setEnabled(false);
                     }
-                    mMobaiRankListener.mobai(INGOT, dataBean);
+                    if(mMobaiRankListener!=null) {
+                        mMobaiRankListener.mobai(dataBean.getType(), dataBean);
+                    }
                 }
             });
         }

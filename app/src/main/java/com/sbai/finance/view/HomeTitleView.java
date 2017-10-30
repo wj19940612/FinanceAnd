@@ -40,6 +40,8 @@ public class HomeTitleView extends RelativeLayout {
     public static final int SELECT_CENTER = 2;
     public static final int SELECT_RIGHT = 3;
 
+    @BindView(R.id.verticalScrollText)
+    VerticalScrollTextView mVerticalScrollTextView;
     @BindView(R.id.indexRL)
     RelativeLayout mIndexRL;
     @BindView(R.id.greetingTitle)

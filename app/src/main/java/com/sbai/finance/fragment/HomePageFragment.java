@@ -12,6 +12,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.Banner;
+import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
@@ -27,7 +28,9 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.BusinessBanner;
 import com.sbai.finance.view.HomeBanner;
 import com.sbai.finance.view.HomeTitleView;
+import com.sbai.finance.view.ImportantNewsView;
 import com.sbai.finance.view.LeaderBoardView;
+import com.sbai.finance.view.SevenHourNewsView;
 import com.sbai.finance.websocket.market.DataReceiveListener;
 import com.sbai.finance.websocket.market.MarketSubscribe;
 import com.sbai.finance.websocket.market.MarketSubscriber;
@@ -59,6 +62,11 @@ public class HomePageFragment extends BaseFragment {
     BusinessBanner mBusinessBanner;
     @BindView(R.id.leaderBoardView)
     LeaderBoardView mLeaderBoardView;
+    @BindView(R.id.sevenHourNewsView)
+    SevenHourNewsView mSevenHourNewsView;
+    @BindView(R.id.importantNewsView)
+    ImportantNewsView mImportantNewsView;
+
 
     @Nullable
     @Override
@@ -169,6 +177,7 @@ public class HomePageFragment extends BaseFragment {
             public void mobai(String rankType, LeaderThreeRank item) {
                 if (item.getUser() != null) {
                     if (LocalUser.getUser().isLogin()) {
+                        Log.e("zzz Home","click mobai");
                         requestWorship(rankType, item.getUser().getId());
                     } else {
                         Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -179,6 +188,8 @@ public class HomePageFragment extends BaseFragment {
         requestBannerData();
         requestBusniessBannerData();
         requestLeaderBoardData();
+        request7NewsData();
+        requestImportantNewsData();
     }
 
     private void requestStockIndexData() {
@@ -280,13 +291,33 @@ public class HomePageFragment extends BaseFragment {
     }
 
     private void requestLeaderBoardData() {
-        Client.getleaderBoardThree().setTag("zzzzzzz")
+        Client.getleaderBoardThree().setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<LeaderThreeRank>>,List<LeaderThreeRank>>() {
                     @Override
                     protected void onRespSuccessData(List<LeaderThreeRank> data) {
                         mLeaderBoardView.updateLeaderBoardData(data);
                     }
                 }).fireFree();
+    }
+
+    private void request7NewsData(){
+        int type = 1;//1为资讯
+        Client.getDailyReport(type).setTag(TAG).setCallback(new Callback2D<Resp<List<DailyReport>>,List<DailyReport>>() {
+            @Override
+            protected void onRespSuccessData(List<DailyReport> data) {
+                mSevenHourNewsView.setTextNews(data);
+            }
+        }).fireFree();
+    }
+
+    private void requestImportantNewsData(){
+        int type = 2;//2为要闻
+        Client.getDailyReport(type).setTag(TAG).setCallback(new Callback2D<Resp<List<DailyReport>>,List<DailyReport>>() {
+            @Override
+            protected void onRespSuccessData(List<DailyReport> data) {
+                mImportantNewsView.setImportantNews(data);
+            }
+        }).fireFree();
     }
 
     private void requestWorship(String type, int id) {

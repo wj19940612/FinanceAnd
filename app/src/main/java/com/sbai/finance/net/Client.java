@@ -2105,8 +2105,8 @@ public class Client {
      *
      * @return
      */
-    public static API getDailyReport() {
-        return new API("/user/dailyReport/findRecencyReport.do");
+    public static API getDailyReport(int type) {
+        return new API("/user/dailyReport/findRecencyReport.do",new ApiParams().put("type",type));
     }
 
     /**
@@ -2428,8 +2428,6 @@ public class Client {
     public static API getleaderBoardThree() {
         return new API("/user/radio/getTopForRank.do");
     }
-
-
 
     /**
      * 获取热门心得列表

@@ -69,17 +69,9 @@
                     android:text="@string/look_my_rank"
                     android:textColor="@color/tipText"
                     android:textSize="10sp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_toRightOf="@id/leftTipTxt"
-                    android:text=">"
-                    android:textColor="@color/tipText"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
+                    android:includeFontPadding="false"
+                    android:drawableRight="@drawable/ic_little_right_arrow"
+                    android:drawablePadding="3dp"
                     />
             </RelativeLayout>
         </RelativeLayout>
@@ -152,17 +144,9 @@
                     android:text="@string/look_my_rank"
                     android:textColor="@color/tipText"
                     android:textSize="10sp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_toRightOf="@id/centerTipTxt"
-                    android:text=">"
-                    android:textColor="@color/tipText"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
+                    android:includeFontPadding="false"
+                    android:drawableRight="@drawable/ic_little_right_arrow"
+                    android:drawablePadding="3dp"
                     />
             </RelativeLayout>
         </RelativeLayout>
@@ -235,17 +219,9 @@
                     android:text="@string/look_my_rank"
                     android:textColor="@color/tipText"
                     android:textSize="10sp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_toRightOf="@id/rightTipTxt"
-                    android:text=">"
-                    android:textColor="@color/tipText"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
+                    android:includeFontPadding="false"
+                    android:drawableRight="@drawable/ic_little_right_arrow"
+                    android:drawablePadding="3dp"
                     />
             </RelativeLayout>
         </RelativeLayout>

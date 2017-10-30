@@ -45,6 +45,14 @@
             android:src="@drawable/home_icon_horn"
             />
 
+        <com.sbai.finance.view.VerticalScrollTextView
+            android:id="@+id/verticalScrollText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            />
+
         <TextView
             android:id="@+id/broadcastText"
             android:layout_width="match_parent"
@@ -54,6 +62,7 @@
             android:text="王者荣耀上线啦"
             android:textColor="@color/white"
             android:textSize="14sp"
+            android:visibility="gone"
             />
     </LinearLayout>
 

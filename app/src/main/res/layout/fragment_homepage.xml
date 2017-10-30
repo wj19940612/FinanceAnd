@@ -42,5 +42,24 @@
             android:orientation="horizontal"
             />
 
+        <com.sbai.finance.view.SevenHourNewsView
+            android:id="@+id/sevenHourNewsView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/leaderBoardView"
+            android:layout_marginTop="14dp"
+            android:paddingBottom="10dp"
+            android:background="@color/white"
+            />
+
+        <com.sbai.finance.view.ImportantNewsView
+            android:id="@+id/importantNewsView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sevenHourNewsView"
+            android:layout_marginTop="14dp"
+            android:background="@color/white"
+            />
+
     </RelativeLayout>
 </ScrollView>
