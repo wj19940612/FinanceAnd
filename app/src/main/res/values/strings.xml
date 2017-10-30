@@ -53,6 +53,10 @@
     <string name="stock">股票</string>
     <string name="optional">自选</string>
     <string name="ranking">排行榜</string>
+    <string name="ShangShen">沪深</string>
+    <string name="all_day_news">7x24小时</string>
+    <string name="focus_news">要闻</string>
+    <string name="week_">星期%1$s</string>
 
     <!--opinion-->
 
@@ -93,7 +97,7 @@
     <string name="highest">最高</string>
     <string name="lowest">最低</string>
     <string name="publish_point">发表观点</string>
-    <string name="add_optional">+ 自选</string>
+    <string name="add_optional">加入自选</string>
     <string name="delete_optional">取消自选</string>
     <string name="whether_to_cancel_optional">是否要取消自选</string>
     <string name="add_option_succeed">添加自选成功</string>
@@ -801,4 +805,6 @@
     <string name="auth_code_error">验证码有误</string>
     <string name="image_auth_code">图形验证码</string>
     <string name="change_image_auth_code">看不清？换一张</string>
+
+    <string name="broadcast">广播</string>
 </resources>

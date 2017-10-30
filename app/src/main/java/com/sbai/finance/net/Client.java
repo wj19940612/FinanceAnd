@@ -2097,7 +2097,8 @@ public class Client {
      * @return
      */
     public static API getDailyReport() {
-        return new API("/user/dailyReport/findRecencyReport.do");
+        return new API("/user/dailyReport/findRecencyReport.do", new ApiParams()
+                .put("type", 0));
     }
 
     /**
@@ -2106,10 +2107,43 @@ public class Client {
      * @param page
      * @return
      */
-    public static API getDailyReportList(int page,int pageSize) {
+    public static API getDailyReportList(int page, int pageSize) {
         return new API("/user/dailyReport/findDailyReportList.do", new ApiParams()
                 .put("page", page)
-                .put("pageSize", pageSize));
+                .put("pageSize", pageSize)
+                .put("type", 0));
+    }
+
+    /**
+     * 资讯+要闻+日报
+     *
+     * @param type 1资讯 2 要闻
+     */
+    public static API getNewsList(int type, int page) {
+        return new API("/user/dailyReport/findDailyReportList.do", new ApiParams()
+                .put("page", page)
+                .put("pageSize", 20)
+                .put("type", type));
+    }
+
+    /**
+     * 资讯+要闻+日报
+     *
+     * @param type 1资讯 2 要闻
+     */
+    public static API getLastNewsList(int type, long time) {
+        return new API("/user/dailyReport/refresh.do", new ApiParams()
+                .put("type", type)
+                .put("time", time));
+    }
+
+    /**
+     * 公告
+     *
+     * @return
+     */
+    public static API getBroadcast() {
+        return new API("/user/radio/findRadio.do");
     }
 
     /**
@@ -2117,6 +2151,7 @@ public class Client {
      *
      * @return
      */
+
     public static API collect(String id) {
         return new API(POST, "/user/dailyReport/collect.do", new ApiParams()
                 .put("id", id));

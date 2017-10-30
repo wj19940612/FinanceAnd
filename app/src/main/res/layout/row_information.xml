@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_all_day_news_date"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/bg_white"
+        android:gravity="center_vertical"
+        android:minHeight="30dp"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="28dp">
+
+            <RelativeLayout
+                android:layout_width="6dp"
+                android:layout_height="18dp"
+                android:layout_alignParentBottom="true">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:background="@drawable/bg_gray_circular"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:background="#D8D8D8"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:textColor="@color/primaryText"
+                android:textSize="14sp"
+                tool:text="14:22"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:padding="@dimen/common_padding"
+            android:textSize="14sp"
+            tool:text="【深交所：将研究创新监管和服务质量，提高上市公司质量】深交所：将研究创新监管和服务质量，提高上市公司质量深交所：将研究创新监管和服究创新监管和究..."/>
+
+    </LinearLayout>
+</LinearLayout>

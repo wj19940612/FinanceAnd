@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tool="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/split"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#c9c9ce">
+
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/bg_search_stock"
+            android:drawableLeft="@drawable/ic_search"
+            android:drawablePadding="5dp"
+            android:hint="@string/stock_optional_hint"
+            android:padding="5dp"
+            android:textColorHint="@color/unluckyText"
+            android:textSize="@dimen/list_title_size"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:id="@+id/shangHai"
+            style="@style/MarketDataStock"
+            android:background="@drawable/bg_white"
+            tool:text="上证\n24396.26\n+50.59 +12.00%"/>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/split"/>
+
+        <TextView
+            android:id="@+id/shenZhen"
+            style="@style/MarketDataStock"
+            android:background="@drawable/bg_white"
+            tool:text="上证\n24396.26\n+50.59 +12.00%"/>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/split"/>
+
+        <TextView
+            android:id="@+id/board"
+            style="@style/MarketDataStock"
+            android:background="@drawable/bg_white"
+            tool:text="上证\n24396.26\n+50.59 +12.00%"/>
+    </LinearLayout>
+
+    <include layout="@layout/layout_variety_header"/>
+
+    <com.sbai.finance.view.CustomSwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:drawablePadding="16dp"
+                android:drawableTop="@drawable/img_no_message"
+                android:gravity="center_horizontal"
+                android:paddingTop="100dp"
+                android:text="暂无行情数据"
+                android:textColor="@color/assistText"
+                android:textSize="@dimen/list_title_size"
+                android:visibility="gone"/>
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:headerDividersEnabled="true"
+                android:scrollbars="none"
+                android:visibility="visible"/>
+        </LinearLayout>
+    </com.sbai.finance.view.CustomSwipeRefreshLayout>
+</LinearLayout>

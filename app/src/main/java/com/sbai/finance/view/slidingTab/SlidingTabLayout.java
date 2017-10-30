@@ -17,6 +17,7 @@
 package com.sbai.finance.view.slidingTab;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.ColorInt;
@@ -58,6 +59,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private static final String TAG = "SlidingTabLayout";
     private int mTabTextViewColoor;
+    private ColorStateList mTabColor;
 
     /**
      * Allows complete control over the colors drawn in the tab layout. Set with
@@ -117,7 +119,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
         mTabStrip = new SlidingTabStrip(context);
         addView(mTabStrip, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-
     }
 
     public void setDistributeEvenly(boolean distributeEvenly) {
@@ -155,6 +156,16 @@ public class SlidingTabLayout extends HorizontalScrollView {
      */
     public void setSelectedIndicatorPadding(float padding) {
         mTabStrip.setSelectedIndicatorPadding(padding);
+    }
+
+    /**
+     * Set the indicator's height
+     * Add by houcc
+     *
+     * @param height
+     */
+    public void setSelectedIndicatorHeight(int height) {
+        mTabStrip.setSelectedIndicatorHeigh(height);
     }
 
     /**
@@ -210,6 +221,16 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     public void setTabViewTextColor(@ColorInt int textColor) {
         mTabTextViewColoor = textColor;
+    }
+
+    public void setTabViewTextColor(ColorStateList textColor) {
+        int tabStripChildCount = mTabStrip.getChildCount();
+        for (int i = 0; i < tabStripChildCount; i++) {
+            TextView tabView = (TextView) mTabStrip.getChildAt(i);
+            if (tabView != null) {
+                tabView.setTextColor(textColor);
+            }
+        }
     }
 
     public void setHasBottomBorder(boolean hasBottomBorder) {
@@ -322,6 +343,20 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     public TextView[] getTabItems() {
         return mTabItems;
+    }
+
+    public SlidingTabStrip getTabStrip() {
+        return mTabStrip;
+    }
+
+    public void setTabViewTextSize(int size) {
+        int tabStripChildCount = mTabStrip.getChildCount();
+        for (int i = 0; i < tabStripChildCount; i++) {
+            TextView tabView = (TextView) mTabStrip.getChildAt(i);
+            if (tabView != null) {
+                tabView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+            }
+        }
     }
 
     private class InternalViewPagerListener implements ViewPager.OnPageChangeListener {

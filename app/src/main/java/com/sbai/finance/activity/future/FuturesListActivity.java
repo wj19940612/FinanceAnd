@@ -72,7 +72,7 @@ public class FuturesListActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                pagePosition=position;
+                pagePosition = position;
             }
 
             @Override
@@ -90,6 +90,7 @@ public class FuturesListActivity extends BaseActivity {
             }
         });
     }
+
     static class FuturePagesAdapter extends FragmentPagerAdapter {
 
         private Context mContext;
