@@ -237,8 +237,6 @@ public class BaseActivity extends StatusBarActivity implements
         MobclickAgent.onResume(this);
         WsClient.get().setOnPushReceiveListener(mPushReceiveListener);
         updatePageOpenTime();
-
-        Log.d("MISS", "onPostResume: "+ getClass().getSimpleName() + " " + Preference.get().isForeground());
     }
 
     private void updatePageOpenTime() {
@@ -267,8 +265,6 @@ public class BaseActivity extends StatusBarActivity implements
         MobclickAgent.onPageEnd(TAG);
         MobclickAgent.onPause(this);
         WsClient.get().removePushReceiveListener(mPushReceiveListener);
-
-        Log.d("MISS", "onPause: "+ getClass().getSimpleName() + " " + Preference.get().isForeground());
     }
 
     @Override

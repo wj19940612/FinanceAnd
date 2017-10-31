@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity">
+    android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
@@ -66,7 +65,6 @@
         app:subTextColor="@color/unluckyText"
         app:subTextSize="@dimen/common_default_size"/>
 
-
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/sex"
         android:layout_width="match_parent"
@@ -80,7 +78,6 @@
         app:splitLineColor="@color/split"
         app:subTextColor="@color/unluckyText"/>
 
-
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/age"
         android:layout_width="match_parent"
@@ -90,17 +87,14 @@
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/age"
         app:rowTextColor="@color/primaryText"
-
         app:splitLineColor="@color/split"
         app:subTextColor="@color/unluckyText"/>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_white"
         android:gravity="center_vertical"
-
         android:minHeight="50dp"
         android:paddingBottom="12dp"
         android:paddingLeft="16dp"
@@ -131,18 +125,38 @@
             tools:ignore="ContentDescription"/>
     </LinearLayout>
 
-
-    <com.sbai.finance.view.IconTextRow
-        android:id="@+id/credit"
+    <LinearLayout
+        android:id="@+id/authentication"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_split_height"
+        android:layout_height="44dp"
+        android:layout_marginTop="@dimen/common_margin"
         android:background="@drawable/bg_white"
-        app:rightIcon="@drawable/ic_arrow_right_tint"
-        app:rowText="@string/credit"
-        app:rowTextColor="@color/primaryText"
-        app:subTextColor="@color/unluckyText"
-        app:subTextSize="@dimen/common_default_size"/>
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/real_name_authentication"
+            android:textColor="@color/primaryText"
+            android:textSize="@dimen/common_default_size"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/authenticationImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            app:srcCompat="@drawable/ic_no_real_name"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_arrow_right_tint"/>
+    </LinearLayout>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/weChat"

@@ -111,7 +111,7 @@ public class ForgetSecurityPassActivity extends BaseActivity {
     }
 
     private void requestAuthCodeForPass() {
-        Client.getAuthCodeForSecurityPsd(LocalUser.getUser().getPhone())
+        Client.getAuthCode(LocalUser.getUser().getPhone())
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -124,7 +124,6 @@ public class ForgetSecurityPassActivity extends BaseActivity {
                         if (failedResp.getCode() == Resp.CODE_IMAGE_AUTH_CODE_REQUIRED) {
                             Launcher.with(getActivity(), ImageAuthCodeActivity.class)
                                     .putExtra(ExtraKeys.PHONE, LocalUser.getUser().getPhone())
-                                    .putExtra(ExtraKeys.PAGE_TYPE, ImageAuthCodeActivity.PAGE_TYPE_FORGET_SECURITY_PSD)
                                     .executeForResult(REQ_CODE_IMAGE_AUTH_CODE);
                         } else {
                             super.onRespFailure(failedResp);
