@@ -114,6 +114,7 @@ public class RechargeActivity extends BaseActivity {
         initData();
         initView();
         requestUsablePlatformList();
+        requestUserFund();
     }
 
     private void initData() {
@@ -289,7 +290,7 @@ public class RechargeActivity extends BaseActivity {
 
 
     private void handleUserPayPlatform(List<UsableRechargeWay> usableRechargeWayList) {
-        if (!usableRechargeWayList.isEmpty()) {
+        if (usableRechargeWayList != null && !usableRechargeWayList.isEmpty()) {
             if (mOtherRechargeWay == null || !mOtherRechargeWay.isSelectPayWay()) {
                 mUserSelectRechargeWay = usableRechargeWayList.get(0);
                 mUserSelectRechargeWay.setSelectPayWay(true);

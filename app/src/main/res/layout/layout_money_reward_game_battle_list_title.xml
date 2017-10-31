@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="48dp"
+              android:gravity="center_vertical"
+              android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="180dp"
+        android:layout_height="32dp"
+        android:layout_marginLeft="32dp"
+        android:background="@drawable/bg_future_versus_list"
+        android:minWidth="180dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="14dp"
+                android:clickable="true"
+                android:src="@drawable/ic_default_avatar"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/ingot"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="14dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            tools:text="元宝：200"/>
+
+        <TextView
+            android:id="@+id/recharge"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="@dimen/common_padding"
+            android:drawableLeft="@drawable/ic_future_battle_recharge"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="@string/recharge"
+            android:textColor="@color/yellowAssist"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/activityRule"
+        android:layout_width="76dp"
+        android:layout_height="32dp"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:background="@drawable/bg_future_versus_list"
+        android:gravity="center"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding"
+        android:text="@string/activity_rule"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"/>
+</LinearLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/customSwipeRefreshLayout"
+    android:name="com.sbai.finance.fragment.battle.BattleListFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/bgArenaRankingTab"
+    tools:context="com.sbai.finance.fragment.battle.BattleListFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginRight="@dimen/common_padding"
+        android:divider="@null"
+        android:scrollbars="none"
+        android:visibility="visible"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_gravity="center"
+        android:id="@android:id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="10dp"
+        android:gravity="center_horizontal"
+        android:drawableTop="@drawable/img_no_message"
+        android:visibility="gone"
+        tools:text="@string/now_not_has_data"/>
+</LinearLayout>

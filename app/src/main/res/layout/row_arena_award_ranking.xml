@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/arenaAwardLL"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@android:color/transparent"
+              android:gravity="center_vertical"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/headerLl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_arena_ranking_title"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="@dimen/common_padding"
+            android:gravity="center"
+            android:text="@string/ranking_"
+            android:textColor="@color/arenaRankingTitleTextColor"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:layout_width="127dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/profit"
+            android:textColor="@color/arenaRankingTitleTextColor"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/arena_count"
+            android:textColor="@color/arenaRankingTitleTextColor"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:text="@string/predict_award"
+            android:textColor="@color/arenaRankingTitleTextColor"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rankingLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bgArenaRanking"
+        android:gravity="center_vertical"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/ranking"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:gravity="center"
+            android:minWidth="20dp"
+            tools:drawableLeft="@drawable/ic_rank_first"
+            tools:text="4"/>
+
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_width="133dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                tools:src="@drawable/ic_default_avatar"/>
+
+            <TextView
+                android:id="@+id/nameAndProfit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:textColor="@color/arenaRankingTitleTextColor"
+                android:textSize="10sp"
+                tools:text="用户2016\n+6064"/>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/battleCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            tools:text="2016"/>
+
+        <TextView
+            android:id="@+id/award"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            tools:text="IPhoneX"/>
+    </LinearLayout>
+
+</LinearLayout>

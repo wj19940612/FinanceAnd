@@ -35,6 +35,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BattleHisRecordActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+
+
+    public static final int BATTLE_HISTORY_RECORD_TYPE_GENERAL = 0;
+    public static final int BATTLE_HISTORY_RECORD_TYPE_ARENA = 1;
+
     @BindView(R.id.title)
     TitleBar mTitleBar;
     @BindView(R.id.listView)
@@ -47,19 +52,18 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
     private Long mLocation;
     private HashSet<Integer> mSet;
 
+    private int mBattleType;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_record_his);
         ButterKnife.bind(this);
+        mBattleType = getIntent().getIntExtra(ExtraKeys.BATTLE_HISTORY, BATTLE_HISTORY_RECORD_TYPE_GENERAL);
         initView();
         requestVersusData();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     private void initView() {
         mSet = new HashSet<>();
@@ -80,7 +84,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                 }
             }
         });
-        scrollToTop(mTitleBar, mListView);
+
     }
 
     private void requestVersusData() {

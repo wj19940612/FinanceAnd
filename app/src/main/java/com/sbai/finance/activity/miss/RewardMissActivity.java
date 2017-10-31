@@ -23,8 +23,6 @@ import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.KeyBoardHelper;
-import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -222,7 +220,7 @@ public class RewardMissActivity extends BaseActivity {
     private void showInputSafetyPassDialog() {
         mRewardArea.setVisibility(View.INVISIBLE);
         long rewardMoney = mRewardMoneyContent.getSelectedMoney();
-        String content = getString(R.string.ingot_number, StrFormatter.getFormIngot(rewardMoney));
+        String content = getString(R.string.ingot_number, StrFormatter.formIngotNumber(rewardMoney));
         RewardInputSafetyPassDialogFragment.newInstance(mId,
                 content, getString(R.string.reward), rewardMoney, mType)
                 .setOnSelectMoneyCallback(new RewardInputSafetyPassDialogFragment.RewardResultCallback() {

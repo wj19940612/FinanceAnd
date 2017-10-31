@@ -382,7 +382,7 @@ public class CreateBattleActivity extends BaseActivity {
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
-                        if (failedResp.getCode() == 2201) {
+                        if (failedResp.isInsufficientFund()) {
                             SmartDialog.with(getActivity(), getString(R.string.balance_is_not_enough))
                                     .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
                                         @Override

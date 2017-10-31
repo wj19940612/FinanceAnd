@@ -79,6 +79,7 @@
         <attr name="backIcon" format="reference"/>
         <attr name="hasBottomSplitLine"/>
         <attr name="splitLineColor"/>
+        <attr name="leftViewLeftPadding" format="dimension|reference"/>
     </declare-styleable>
 
     <declare-styleable name="WaveView">

@@ -112,7 +112,7 @@ public class StrFormatter {
      * @param money
      * @return
      */
-    public static String getFormIngot(double money) {
+    public static String formIngotNumber(double money) {
         String number = String.valueOf((long) money);
         if (money >= 10000.00) {
             int length = number.length();
@@ -127,7 +127,7 @@ public class StrFormatter {
      * @param money
      * @return
      */
-    public static String getFormIntegrate(double money) {
+    public static String formIntegrateNumber(double money) {
         String number = String.valueOf((long) money);
         if (money >= 10000.00) {
             int length = number.length();

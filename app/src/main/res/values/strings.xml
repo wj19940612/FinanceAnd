@@ -12,6 +12,8 @@
     <string name="training">训练</string>
     <string name="miss_talk">姐说</string>
     <string name="discovery">发现</string>
+    <string name="arena">竞技场</string>
+
 
     <!-- EconomicCircle -->
     <string name="comment_number">评论(%1$d)</string>
@@ -442,7 +444,7 @@
     <!--future versus-->
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>
-    <string name="versus_record">期货对战-战绩</string>
+    <string name="versus_record">%1$s-战绩</string>
     <string name="battle_his_record">历史对战</string>
     <string name="battle_his_record_launch">历史对战></string>
     <string name="go_battle">前往对战</string>
@@ -805,4 +807,39 @@
     <string name="auth_code_error">验证码有误</string>
     <string name="image_auth_code">图形验证码</string>
     <string name="change_image_auth_code">看不清？换一张</string>
+
+    <!--游戏-->
+    <string name="money_reward_game">赏金赛</string>
+    <string name="ordinary_battle">普通场</string>
+
+    <!--竞技场-->
+    <string name="activity_rule">活动规则</string>
+    <string name="enter_for_a_competition">报名参赛</string>
+    <string name="predict_gain">预计可获得奖品：</string>
+    <string name="award">王者荣耀皮肤</string>
+    <string name="activity_time">活动时间：%1$s- %2$s</string>
+    <string name="ranking_now">当前排名</string>
+    <string name="my_profit">我的盈利</string>
+    <string name="my_profit_count">+%1$d</string>
+    <string name="battle_count">对战场次></string>
+    <string name="not_login">未登录</string>
+    <string name="ingot_">元宝：%1$s</string>
+    <string name="ranking_">排名</string>
+    <string name="profit">盈利</string>
+    <string name="predict_award">预计奖品</string>
+    <string name="arena_count">对战场次</string>
+    <string name="enter_arena_condition">报名需支付%1$s元宝作为参赛费\n是否继续报名</string>
+    <string name="to_sign_up">继续报名</string>
+    <string name="me_need_consider">我再想想</string>
+    <string name="activity_is_over">活动已结束</string>
+    <string name="immediately_recharge">立即充值</string>
+    <string name="invite_friend">邀请好友</string>
+    <string name="knowledge_point">知识点</string>
+    <string name="battle_reward_">%1$d%2$s</string>
+    <string name="future_type_reward">%1$s  %2$s</string>
+    <string name="my_battle_result">我的战绩</string>
+    <string name="battle_result">对战结果</string>
+    <string name="against_user">对战者</string>
+    <string name="win_rate">胜率：%1$s</string>
+    <string name="battle_count_profit">对局总数：%1$d场  元宝结算: %2$s个</string>
 </resources>
