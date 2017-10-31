@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+
+    <View
+        android:id="@+id/topLine"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/splitLineColor"
+        />
+
+    <LinearLayout
+        android:id="@+id/bannerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_below="@id/topLine"
+        android:orientation="horizontal"
+        >
+
+        <RelativeLayout
+            android:id="@+id/leftRL"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            >
+
+            <TextView
+                android:id="@+id/leftTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="22dp"
+                android:gravity="center"
+                android:textColor="@color/blackIndexText"
+                android:textSize="16sp"
+                />
+
+            <TextView
+                android:id="@+id/leftSubTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/leftTitle"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/tipText"
+                android:textSize="16sp"
+                />
+
+            <ImageView
+                android:id="@+id/leftImage"
+                android:layout_width="148dp"
+                android:layout_height="78dp"
+                android:layout_below="@id/leftSubTitle"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="11dp"
+                android:scaleType="centerCrop"
+                />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/splitLineColor"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+
+            <RelativeLayout
+                android:id="@+id/topRightRL"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+
+                <TextView
+                    android:id="@+id/topRightTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="22dp"
+                    android:gravity="center"
+                    android:textColor="@color/blackIndexText"
+                    android:textSize="16sp"
+                    />
+
+                <TextView
+                    android:id="@+id/topRightSubTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/topRightTitle"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="3dp"
+                    android:textColor="@color/tipText"
+                    android:textSize="16sp"
+                    />
+
+                <ImageView
+                    android:id="@+id/topRightImg"
+                    android:layout_width="35dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/splitLineColor"
+                />
+
+            <RelativeLayout
+                android:id="@+id/bottomRightRL"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+
+                <TextView
+                    android:id="@+id/bottomRightTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="22dp"
+                    android:gravity="center"
+                    android:textColor="@color/blackIndexText"
+                    android:textSize="16sp"
+                    />
+
+                <TextView
+                    android:id="@+id/bottomRightSubTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bottomRightTitle"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="3dp"
+                    android:textColor="@color/tipText"
+                    android:textSize="16sp"
+                    />
+
+                <ImageView
+                    android:id="@+id/bottomRightImg"
+                    android:layout_width="35dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/bannerLayout"
+        android:background="@color/splitLineColor"
+        />
+
+</merge>

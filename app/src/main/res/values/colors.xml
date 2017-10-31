@@ -25,6 +25,10 @@
     <color name="warningText">#CD4A47</color>
     <color name="opinionText">#5F6166</color>
     <color name="whiteHintText">#FDFDFD</color>
+    <color name="blackIndexText">#222222</color>
+    <color name="tipText">#999999</color>
+    <color name="banner_number">#FF8B00</color>
+    <color name="news_content">#5c5c5c</color>
     <color name="blueScoreText">#6595C2</color>
 
     <color name="unluckyText">#999</color>
@@ -53,5 +57,8 @@
     <color name="redTheoryCountDown">#E44B58</color>
     <color name="violetTechnologyCountDown">#6843C4</color>
     <color name="yellowFundamentalCountDown">#F9B727</color>
+
+    <!-- line color -->
+    <color name="splitLineColor">#dddddd</color>
 
 </resources>

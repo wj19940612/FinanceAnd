@@ -228,7 +228,7 @@ public class DiscoveryFragment extends BaseFragment {
     }
 
     private void requestDailyReportData() {
-        Client.getDailyReport().setTag(TAG)
+        Client.getDailyReport(1).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<DailyReport>>, List<DailyReport>>() {
                     @Override
                     protected void onRespSuccessData(List<DailyReport> data) {
