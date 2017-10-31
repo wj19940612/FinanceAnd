@@ -133,6 +133,7 @@
     <string name="attention">关注</string>
     <string name="setting">设置</string>
     <string name="news">消息</string>
+    <string name="click_to_view">点击查查</string>
     <string name="about_us">关于我们</string>
     <string name="feedback">意见反馈</string>
     <string name="finance_evaluation">金融水平初步测评</string>
@@ -658,12 +659,15 @@
     <string name="recommend_train">推荐训练</string>
     <string name="mine_train">我的训练</string>
     <string name="lemi_score">乐米学分</string>
+    <string name="lemi_score_">乐米学分:</string>
     <string name="look_detail">查看详情</string>
     <string name="login_look_detail">登录查看我的乐米学分</string>
     <string name="to_login">去登录</string>
     <string name="more_than_number">超过了%1$s的用户</string>
+    <string name="_more_than_number">, 超过了%1$s的用户</string>
     <string name="not_join_train">还未进行训练</string>
     <string name="you_are_not_complete_train">你还没有完成训练</string>
+    <string name="_you_are_not_complete_train">, 你还没有完成训练</string>
     <string name="start_test_hint">5分钟初步测试下您的金融水平</string>
     <string name="source_and_time">来源: %1$s    %2$s</string>
     <string name="more_training">更多训练</string>

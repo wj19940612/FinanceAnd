@@ -14,7 +14,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -453,7 +452,6 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 	@Override
 	public void onStop() {
 		super.onStop();
-        Log.d("MISS", "onStop: " + getClass().getSimpleName() + " " + Preference.get().isForeground());
         if (!Preference.get().isForeground()) {
 			MissAudioManager.get().stop();
 		}
