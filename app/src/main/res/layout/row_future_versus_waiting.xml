@@ -11,7 +11,6 @@
               android:paddingRight="@dimen/common_padding">
 
     <LinearLayout
-        android:id="@+id/rootLL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_row_battle_list"
@@ -63,44 +62,35 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
             android:layout_weight="10"
             android:gravity="center"
             android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="21dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="7dp"
+                android:src="@drawable/ic_versus_vs"/>
 
             <TextView
                 android:id="@+id/varietyName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:gravity="center_horizontal"
                 android:textColor="@color/white"
-                android:textSize="12sp"
+                android:textSize="16sp"
                 android:visibility="visible"
-                tools:text="没原油"/>
+                tools:text="美原油 200元宝"/>
 
-            <com.sbai.finance.view.BattleProgress
-                android:id="@+id/progress"
-                android:layout_width="match_parent"
-                android:layout_height="14dp"
-                android:layout_marginTop="10dp"
-                app:leftLabelColor="@android:color/white"
-                app:leftLabelSize="10sp"
-                app:leftPadding="5dp"
-                app:max="100"
-                app:progress="50"
-                app:progressDrawable="@drawable/bg_battle_progress"
-                app:rightLabelColor="@android:color/white"
-                app:rightLabelSize="10sp"
-                app:rightPadding="5dp"
-                app:secondaryProgress="100"/>
 
             <TextView
                 android:id="@+id/depositAndTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:gravity="bottom|center"
+                android:gravity="center"
                 android:textColor="#9c9c9c"
                 android:textSize="10sp"
                 tools:text="32分钟"/>

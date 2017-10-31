@@ -37,9 +37,11 @@ public interface ExtraKeys {
     String QUESTION_ID = "question_id";
 
     String PLAYING_ID = "playing_id";
-    String PLAYING_URL= "playing_url";
+    String PLAYING_URL = "playing_url";
     String PLAYING_AVATAR = "playing_avatar";
     String IS_FROM_MISS_TALK = "is_from_miss_talk";
 
     String PUSH_FEEDBACK = "push_feedback";
+
+    String BATTLE_HISTORY = "battle_history";
 }

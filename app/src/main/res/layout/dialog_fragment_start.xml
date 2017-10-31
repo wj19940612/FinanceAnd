@@ -36,8 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="260dp"
                 android:layout_gravity="center_vertical"
-                android:scaleType="centerCrop"
-                android:src="@drawable/bg_register_invite"/>
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/button"

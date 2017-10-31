@@ -1,7 +1,10 @@
 package com.sbai.finance.model.arena;
 
+import com.sbai.finance.net.Client;
+
 /**
  * Created by ${wangJie} on 2017/10/26.
+ {@link Client# /activity/activity/getRank.do}
  */
 
 public class ArenaAwardRanking {

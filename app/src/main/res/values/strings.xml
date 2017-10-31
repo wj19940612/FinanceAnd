@@ -444,7 +444,7 @@
     <!--future versus-->
     <string name="see_record">查看战绩</string>
     <string name="versus_rule">决斗规则></string>
-    <string name="versus_record">期货对战-战绩</string>
+    <string name="versus_record">%1$s-战绩</string>
     <string name="battle_his_record">历史对战</string>
     <string name="battle_his_record_launch">历史对战></string>
     <string name="go_battle">前往对战</string>
@@ -835,4 +835,11 @@
     <string name="immediately_recharge">立即充值</string>
     <string name="invite_friend">邀请好友</string>
     <string name="knowledge_point">知识点</string>
+    <string name="battle_reward_">%1$d%2$s</string>
+    <string name="future_type_reward">%1$s  %2$s</string>
+    <string name="my_battle_result">我的战绩</string>
+    <string name="battle_result">对战结果</string>
+    <string name="against_user">对战者</string>
+    <string name="win_rate">胜率：%1$s</string>
+    <string name="battle_count_profit">对局总数：%1$d场  元宝结算: %2$s个</string>
 </resources>

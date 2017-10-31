@@ -39,7 +39,8 @@ public class Client {
 
     //期货对战分享
     public static final String SHARE_URL_FUTURE_BATTLE = API.getHost() + "/lm/share.html";
-
+    // 竞技场banner和 竞技场活动规则跳转链接
+    public static final String ARENA_RULE = API.getHost() + "/lm/futurespk/index.html ";
 
     public static String getServiceQQ(String serviceQQ) {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
@@ -1630,7 +1631,7 @@ public class Client {
     public static API getVersusGaming(Long location) {
         return new API("/game/battle/selectBattleGaming.do", new ApiParams()
                 .put("location", location)
-                .put("pageSize", 15));
+                .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
 
     /**
@@ -1642,7 +1643,7 @@ public class Client {
     public static API getMyVersusRecord(Long location) {
         return new API("/game/battle/myBattleGamed.do", new ApiParams()
                 .put("location", location)
-                .put("pageSize", 15));
+                .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
 
     /**
@@ -1654,7 +1655,7 @@ public class Client {
     public static API getBattleHisRecord(Long location) {
         return new API("/game/battle/allBattleGamed.do", new ApiParams()
                 .put("location", location)
-                .put("pageSize", 15));
+                .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
 
     /**
@@ -2704,23 +2705,106 @@ public class Client {
         return new API("/user/share/findByCode.do", new ApiParams().put("code", code));
     }
 
-    // TODO: 2017/10/25 请求竞技场对战信息
-    public static API requestArenaInfo() {
-        return new API("");
+    /**
+     * /activity/activity/findActivityDetail.do
+     * GET
+     * 获取活动的信息（hlei）
+     *
+     * @param activityCode
+     * @return
+     */
+    public static API requestArenaInfo(String activityCode) {
+        return new API("/activity/activity/findActivityDetail.do",
+                new ApiParams().put("activityCode", activityCode));
     }
 
-    // TODO: 2017/10/25   
-    public static API requestUserJoinArenaInfo() {
-        return new API("");
+    /**
+     * /activity/activity/getRank.do
+     * GET
+     * 活动排行（hlei）
+     *
+     * @param activityCode
+     * @return
+     */
+    public static API requestArenaAwardRankingData(String activityCode) {
+        return new API("/activity/activity/getRank.do",
+                new ApiParams().put("activityCode", activityCode));
     }
 
-    // TODO: 2017/10/26  
-    public static API requestArenaAwardRankingData() {
-        return new API("");
+    /**
+     * activity/activity/registerForActivity.do
+     * GET
+     * 活动报名（hlei）
+     *
+     * @param activityCode
+     * @return
+     */
+    public static API enterForACompetition(String activityCode) {
+        return new API("/activity/activity/registerForActivity.do",
+                new ApiParams().put("activityCode", activityCode));
     }
 
-    // TODO: 2017/10/26 参赛
-    public static API enterForACompetition() {
-        return new API("");
+    /**
+     * /activity/activity/activityApplyPassed.do
+     * GET
+     * 是否报名活动（hlei）
+     *
+     * @param activityCode 活动code
+     */
+    public static API requestUserJoinArenaActivityStatus(String activityCode) {
+        return new API("/activity/activity/activityApplyPassed.do",
+                new ApiParams().put("activityCode", activityCode));
+    }
+
+    /**
+     * activity/prize/whatCanExchange.do
+     * GET
+     * 活动中本人能兑换什么（hlei）
+     *
+     * @param activityCode
+     */
+    public static API requestArenaActivityExchangeAward(String activityCode) {
+        return new API("activity/prize/whatCanExchange.do",
+                new ApiParams().put("activityCode", activityCode));
+    }
+
+    /**
+     * /game/acti/currBattle.do
+     * POST
+     * 当前对战
+     *
+     * @return
+     */
+    public static API requestUserArenaNowBattle() {
+        return new API(POST, "/game/acti/currBattle.do");
+    }
+
+    /**
+     * /game/acti/list.do
+     * POST
+     * 对战列表
+     *
+     * @param locationTime
+     * @return
+     */
+    public static API requestArenaBattleListData(Long locationTime) {
+        return new API(POST, "/game/acti/list.do",
+                new ApiParams()
+                        .put("location", locationTime)
+                        .put("pageSize", Client.DEFAULT_PAGE_SIZE));
+    }
+
+    /**
+     * /activity/activity/getMyScore.do
+     * GET
+     * 个人活动得分（hlei）
+     *
+     * @param activityCode
+     * @return
+     */
+    public static API requestUserActivityScore(String activityCode) {
+        return new API("/activity/activity/getMyScore.do",
+                new ApiParams()
+                        .put("activityCode", activityCode));
     }
 }

@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.arena.ArenaAwardRanking;
+import com.sbai.finance.model.arena.ArenaInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -45,6 +46,9 @@ public class BattleRankingFragment extends BaseFragment {
     RecyclerView mRecyclerView;
     private Unbinder mBind;
     private ArenaAwardRankingAdapter mArenaAwardRankingAdapter;
+    private ArrayList<ArenaAwardRanking> mArenaAwardRankingArrayList;
+
+    private boolean mHasMoreData;
 
     public BattleRankingFragment() {
     }
@@ -60,7 +64,12 @@ public class BattleRankingFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mArenaAwardRankingAdapter = new ArenaAwardRankingAdapter(new ArrayList<ArenaAwardRanking>(), getActivity());
+        mArenaAwardRankingArrayList = new ArrayList<>();
+        initView();
+    }
+
+    private void initView() {
+        mArenaAwardRankingAdapter = new ArenaAwardRankingAdapter(mArenaAwardRankingArrayList, getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mArenaAwardRankingAdapter);
     }
@@ -78,7 +87,7 @@ public class BattleRankingFragment extends BaseFragment {
     }
 
     private void requestArenaAwardRankingData() {
-        Client.requestArenaAwardRankingData()
+        Client.requestArenaAwardRankingData(ArenaInfo.DEFAULT_ACTIVITY_CODE)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<ArenaAwardRanking>>, List<ArenaAwardRanking>>() {
                     @Override
@@ -89,7 +98,6 @@ public class BattleRankingFragment extends BaseFragment {
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
-                        // TODO: 2017/10/26  测试数据
                         List<ArenaAwardRanking> arenaAwardRankings = new ArrayList<ArenaAwardRanking>();
                         for (int i = 0; i < 30; i++) {
                             ArenaAwardRanking arenaAwardRanking = new ArenaAwardRanking();
@@ -107,6 +115,7 @@ public class BattleRankingFragment extends BaseFragment {
                 })
                 .fireFree();
     }
+
 
     private void updateAwardRankingList(List<ArenaAwardRanking> data) {
         if (data != null) {
@@ -216,7 +225,7 @@ public class BattleRankingFragment extends BaseFragment {
                         .circleCrop()
                         .into(mAvatar);
                 SpannableString spannableString = StrUtil.mergeTextWithRatioColor(item.getName(),
-                        "\n+" + StrFormatter.formIngotNumber(item.getProfit()),1.4f,
+                        "\n+" + StrFormatter.formIngotNumber(item.getProfit()), 1.4f,
                         ContextCompat.getColor(context, R.color.yellowAssist));
                 mNameAndProfit.setText(spannableString);
                 mBattleCount.setText(String.valueOf(item.getBattleCount()));

@@ -13,7 +13,7 @@ public class Resp<T> {
     public static final int CODE_IMAGE_AUTH_CODE_REQUIRED = 215;
     // 自选重复添加
     public static final int CODE_REPEAT_ADD = 701;
-    // 打赏或者充值元宝不够
+    // 打赏或者充值或者参加竞赛  元宝不够
     public static final int CODE_EXCHANGE_FUND_IS_NOT_ENOUGH = 2201;
     // 兑换项目不存在
     public static final int CODE_EXCHANGE_ITEM_IS_GONE = 2204;
@@ -23,8 +23,7 @@ public class Resp<T> {
     public static final int CODE_SAFETY_INPUT_ERROR = 2203;
     //未绑定微信
     public static final int CODE_NO_BIND_WE_CHAT = 214;
-    // TODO: 2017/10/26 活动已经结束
-    public static final int CODE_ACTIVITY_IS_OVER = 8390;
+
 
     private int code;
     private String msg;

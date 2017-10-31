@@ -19,17 +19,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.fragment.battle.BattleListFragment;
 import com.sbai.finance.fragment.battle.BattleRankingFragment;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.arena.ArenaActivityAwardInfo;
 import com.sbai.finance.model.arena.ArenaInfo;
-import com.sbai.finance.model.arena.UserBattleResult;
+import com.sbai.finance.model.arena.UserActivityScore;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.net.Callback;
@@ -51,7 +53,6 @@ import com.sbai.glide.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 
 
 public class MoneyRewardGameBattleListActivity extends BaseActivity implements View.OnClickListener {
@@ -91,6 +92,8 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
     Toolbar mToolBar;
     @BindView(R.id.collapsingToolbarLayout)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @BindView(R.id.quickMatch)
+    TextView mQuickMatch;
     private MoneyRewardGameBattleFragmentAdapter mMoneyRewardGameBattleFragmentAdapter;
     private UserFundInfo mUserFundInfo;
     private TextView mIngot;
@@ -110,69 +113,111 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
     protected void onPostResume() {
         super.onPostResume();
         requestGameInfo();
-        requestUserArenaInfo();
-        requestUserFundInfo();
-    }
-
-
-    private void requestUserArenaInfo() {
         if (LocalUser.getUser().isLogin()) {
-            Client.requestUserJoinArenaInfo()
-                    .setTag(TAG)
-                    .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<UserBattleResult>, UserBattleResult>() {
-                        @Override
-                        protected void onRespSuccessData(UserBattleResult data) {
-                            updateUserBattleResult(data);
-                        }
-
-                        @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
-                            UserBattleResult userBattleResult = new UserBattleResult();
-                            userBattleResult.setStatus(0);
-                            userBattleResult.setRanking(2000);
-                            userBattleResult.setBattleCount(3000);
-                            userBattleResult.setProfit(8454654.66);
-                            updateUserBattleResult(userBattleResult);
-                        }
-                    })
-                    .fireFree();
+            requestUserJoinArenaActivityStatus();
+            requestUserFundInfo();
+            requestArenaActivityExchangeAward();
+            requestUserNowBattle();
         } else {
-            mJoinGameLL.setVisibility(View.VISIBLE);
-            mGameInfoRl.setVisibility(View.GONE);
+            updateUserJoinArenaStatus(false);
         }
     }
 
-    private void updateUserBattleResult(UserBattleResult data) {
-        if (data.userIsJoinArena()) {
+    private void requestUserNowBattle() {
+        Client.requestUserArenaNowBattle()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Battle>, Battle>() {
+                    @Override
+                    protected void onRespSuccessData(Battle data) {
+                        //当前对战
+                    }
+                })
+                .fireFree();
+    }
+
+    private void requestArenaActivityExchangeAward() {
+        Client.requestArenaActivityExchangeAward(ArenaInfo.DEFAULT_ACTIVITY_CODE)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<ArenaActivityAwardInfo>, ArenaActivityAwardInfo>() {
+                    @Override
+                    protected void onRespSuccessData(ArenaActivityAwardInfo data) {
+                        mAward.setText(data.getPrizeName());
+                    }
+                })
+                .setTag(TAG)
+                .fireFree();
+    }
+
+    private void requestUserJoinArenaActivityStatus() {
+        Client.requestUserJoinArenaActivityStatus(ArenaInfo.DEFAULT_ACTIVITY_CODE)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                    @Override
+                    protected void onRespSuccessData(Boolean data) {
+                        updateUserJoinArenaStatus(data);
+                    }
+                })
+                .fireFree();
+    }
+
+    private void updateUserJoinArenaStatus(Boolean data) {
+        if (data) {
+            requestUserActivityScore();
             mJoinGameLL.setVisibility(View.GONE);
             mGameInfoRl.setVisibility(View.VISIBLE);
 
-            SpannableString ranking = StrUtil.mergeTextWithRatioColor(String.valueOf(data.getRanking()),
-                    "\n" + getString(R.string.ranking_now),
-                    0.6f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
-            mRanking.setText(ranking);
-
-            SpannableString myProfit = StrUtil.mergeTextWithRatioColor(getString(R.string.my_profit_count, data.getProfit()),
-                    "\n" + getString(R.string.my_profit),
-                    0.6f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
-            mMyProfit.setText(myProfit);
-
-            SpannableString battleCount = StrUtil.mergeTextWithRatioColor(String.valueOf(data.getBattleCount()),
-                    "\n" + getString(R.string.battle_count),
-                    0.6f, Color.WHITE);
-            mGameCount.setText(battleCount);
-
+            mGameCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Launcher.with(getActivity(), BattleRecordResultListActivity.class)
+                            .putExtra(ExtraKeys.BATTLE_HISTORY, BattleHisRecordActivity.BATTLE_HISTORY_RECORD_TYPE_ARENA)
+                            .execute();
+                }
+            });
+            //快速匹配出现
+            // TODO: 2017/10/30 需要确认下
+            mQuickMatch.setVisibility(View.VISIBLE);
         } else {
             mJoinGameLL.setVisibility(View.VISIBLE);
             mGameInfoRl.setVisibility(View.GONE);
+            mQuickMatch.setVisibility(View.GONE);
         }
     }
 
+    private void requestUserActivityScore() {
+        Client.requestUserActivityScore(ArenaInfo.DEFAULT_ACTIVITY_CODE)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<UserActivityScore>, UserActivityScore>() {
+                    @Override
+                    protected void onRespSuccessData(UserActivityScore data) {
+                        updateUserActivityScore(data);
+                    }
+                })
+                .fireFree();
+    }
+
+
+    private void updateUserActivityScore(UserActivityScore data) {
+        SpannableString ranking = StrUtil.mergeTextWithRatioColor(String.valueOf(data.getRank()),
+                "\n" + getString(R.string.ranking_now),
+                0.6f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
+        mRanking.setText(ranking);
+
+        SpannableString myProfit = StrUtil.mergeTextWithRatioColor(getString(R.string.my_profit_count, data.getScore()),
+                "\n" + getString(R.string.my_profit),
+                0.6f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
+        mMyProfit.setText(myProfit);
+
+        SpannableString battleCount = StrUtil.mergeTextWithRatioColor(String.valueOf(data.getCount()),
+                "\n" + getString(R.string.battle_count),
+                0.6f, Color.WHITE);
+        mGameCount.setText(battleCount);
+    }
+
     private void requestGameInfo() {
-        // TODO: 2017/10/25 请求游戏的信息
-        Client.requestArenaInfo()
+        Client.requestArenaInfo(ArenaInfo.DEFAULT_ACTIVITY_CODE)
                 .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<ArenaInfo>, ArenaInfo>() {
@@ -182,17 +227,6 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                         updateArenaInfo(data);
                     }
 
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        // TODO: 2017/10/25 模拟数据
-                        ArenaInfo arenaInfo = new ArenaInfo();
-                        arenaInfo.setTitle("操 盘 对 战 P K 赛\n奖金过万 等你来战");
-                        arenaInfo.setReward("王者荣耀皮肤");
-                        arenaInfo.setStartTime(System.currentTimeMillis());
-                        arenaInfo.setEndTime(System.currentTimeMillis());
-                        updateArenaInfo(arenaInfo);
-                    }
                 }).fireFree();
     }
 
@@ -216,27 +250,23 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
 
     private void updateArenaInfo(ArenaInfo data) {
         if (data == null) return;
-//        mArenaTitle.setText(data.getTitle());
         String activityTime = getString(R.string.activity_time,
-                DateUtil.format(data.getStartTime(), DateUtil.FORMAT_DATE_ARENA),
-                DateUtil.format(data.getEndTime(), DateUtil.FORMAT_DATE_ARENA));
+                DateUtil.format(data.getStartDate(), DateUtil.FORMAT_DATE_ARENA),
+                DateUtil.format(data.getEndDate(), DateUtil.FORMAT_DATE_ARENA));
         mActivityTime.setText(activityTime);
         mActivityTime2.setText(activityTime);
-        mAward.setText(data.getReward());
     }
 
     private void initView() {
-
         setSupportActionBar(mToolBar);
-
         mMoneyRewardGameBattleFragmentAdapter = new MoneyRewardGameBattleFragmentAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMoneyRewardGameBattleFragmentAdapter);
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(60, getResources()));
         mTabLayout.setPadding(Display.dp2Px(12, getResources()));
-//        mTabLayout.setTabViewTextColor(Color.WHITE);
         mTabLayout.setSelectedIndicatorColors(Color.WHITE);
+        mTabLayout.setCustomTabView(R.layout.layout_arena_tablayout, R.id.tabText);
         mTabLayout.setHasBottomBorder(false);
         mTabLayout.setViewPager(mViewPager);
 
@@ -286,13 +316,14 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                         .execute();
                 break;
             case R.id.activityRule:
-                // TODO: 2017/10/25  h5的规则页面
-
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, Client.ARENA_RULE)
+                        .execute();
                 break;
         }
     }
 
-    @OnClick({R.id.enterForACompetition, R.id.gameCount})
+    @OnClick({R.id.enterForACompetition, R.id.gameCount, R.id.quickMatch})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.enterForACompetition:
@@ -305,11 +336,20 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
             case R.id.gameCount:
 
                 break;
+            case R.id.quickMatch:
+                matchArena();
+                break;
         }
     }
 
+    private void matchArena() {
+
+    }
+
     private void showEnterForACompetitionConditionDialog() {
-        double entryFees = mArenaInfo != null ? mArenaInfo.getEntryFees() : 0;
+//        double entryFees = mArenaInfo != null ? mArenaInfo.getEntryFees() : 0;
+        // TODO: 2017/10/30 接口请求
+        double entryFees = 0;
         SmartDialog.with(getActivity(), getString(R.string.enter_arena_condition, String.valueOf(entryFees)))
                 .setPositive(R.string.to_sign_up, new SmartDialog.OnClickListener() {
                     @Override
@@ -328,13 +368,13 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
     }
 
     private void enterForACompetition() {
-        Client.enterForACompetition()
+        Client.enterForACompetition(ArenaInfo.DEFAULT_ACTIVITY_CODE)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        requestUserArenaInfo();
+                        requestUserJoinArenaActivityStatus();
                         ToastUtil.show(resp.getMsg());
                     }
 
@@ -343,9 +383,8 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                         super.onRespFailure(failedResp);
                         if (failedResp.isInsufficientFund()) {
                             showInsufficientFundDialog();
-                        } else if (failedResp.getCode() == Resp.CODE_ACTIVITY_IS_OVER) {
-                            ToastUtil.show(R.string.activity_is_over);
                         }
+                        ToastUtil.show(failedResp.getMsg());
                     }
                 })
                 .fireFree();
@@ -371,6 +410,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                     }
                 }).show();
     }
+
 
     static class MoneyRewardGameBattleFragmentAdapter extends FragmentPagerAdapter {
 

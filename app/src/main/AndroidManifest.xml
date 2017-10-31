@@ -205,9 +205,6 @@
             android:name=".activity.home.SearchOptionalActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.home.TopicActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.future.FutureTradeActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -281,7 +278,7 @@
             android:name=".activity.battle.BattleListActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.battle.BattleRecordListActivity"
+            android:name=".activity.battle.BattleRecordResultListActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.battle.CreateBattleActivity"
