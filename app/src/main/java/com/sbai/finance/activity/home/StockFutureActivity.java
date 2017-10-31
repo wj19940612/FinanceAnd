@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
@@ -11,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.future.FutureListsFragment;
@@ -32,14 +34,20 @@ public class StockFutureActivity extends BaseActivity {
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
     private PagerAdapter mPagerAdapter;
+    private int mPage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_future);
         ButterKnife.bind(this);
+        initData(getIntent());
         initViewPager();
         initTabView();
+    }
+
+    private void initData(Intent intent) {
+        mPage = intent.getIntExtra(ExtraKeys.PAGE_INDEX, -1);
     }
 
     private void initViewPager() {
@@ -54,11 +62,14 @@ public class StockFutureActivity extends BaseActivity {
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mTabLayout.setTabLeftAndRightMargin((int) Display.dp2Px(80, getResources()));
-        mTabLayout.setPadding(Display. dp2Px(15, getResources()));
+        mTabLayout.setPadding(Display.dp2Px(15, getResources()));
         mTabLayout.setSelectedIndicatorHeight(3);
         mTabLayout.setViewPager(mViewPager);
         mTabLayout.setTabViewTextSize(16);
         mTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.sliding_tab_text));
+        if (mPage > 0) {
+            mTabLayout.setTabIndex(mPage);
+        }
     }
 
     static class PagerAdapter extends FragmentPagerAdapter {

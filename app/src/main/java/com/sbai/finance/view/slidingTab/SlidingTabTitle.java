@@ -69,4 +69,10 @@ public class SlidingTabTitle extends SlidingTabLayout {
             params.setMargins(margin, 0, margin, 0);
         }
     }
+
+    public void setTabIndex(int index) {
+        if (index < getTabStrip().getChildCount()) {
+            getTabStrip().getChildAt(index).performClick();
+        }
+    }
 }

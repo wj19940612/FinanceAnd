@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.leaderboard;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.leaderboard.IngotOrSavantBoardLeaderBoardFragment;
@@ -30,14 +32,20 @@ public class LeaderBoardsListActivity extends BaseActivity {
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
     private PagerAdapter mPagerAdapter;
+    private int mPage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboards_list);
         ButterKnife.bind(this);
+        initData(getIntent());
         initViewPager();
         initTabView();
+    }
+
+    private void initData(Intent intent) {
+        mPage = intent.getIntExtra(ExtraKeys.PAGE_INDEX, -1);
     }
 
     private void initViewPager() {
@@ -56,6 +64,9 @@ public class LeaderBoardsListActivity extends BaseActivity {
         mTabLayout.setViewPager(mViewPager);
         mTabLayout.setTabViewTextSize(16);
         mTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.sliding_tab_text));
+        if (mPage > 0) {
+            mTabLayout.setTabIndex(mPage);
+        }
     }
 
 
