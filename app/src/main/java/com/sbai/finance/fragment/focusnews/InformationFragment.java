@@ -1,6 +1,7 @@
 package com.sbai.finance.fragment.focusnews;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -109,6 +110,7 @@ public class InformationFragment extends BaseFragment {
 
     private void initRecyclerView() {
         mWeekArea.setSelected(true);
+        mDate.setTextColor(Color.parseColor("#2B71FF"));
         mInformationAdapter = new InformationAdapter(getActivity());
         mRecyclerView.setAdapter(mInformationAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -337,7 +339,6 @@ public class InformationFragment extends BaseFragment {
                 } else {
                     mDateArea.setVisibility(View.GONE);
                 }
-                mDate.setTextColor(ContextCompat.getColor(mContext, R.color.luckyText));
                 mTime.setText(DateUtil.format(item.getCreateTime(), FORMAT_HOUR_MINUTE));
                 if (TextUtils.isEmpty(item.getTitle())) {
                     mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
