@@ -45,7 +45,26 @@ public class ImportantNewsView extends RelativeLayout {
     TextView mTitle3;
     @BindView(R.id.time3)
     TextView mTime3;
+    @BindView(R.id.rl1)
+    RelativeLayout mRL1;
+    @BindView(R.id.rl2)
+    RelativeLayout mRL2;
+    @BindView(R.id.rl3)
+    RelativeLayout mRL3;
+
     private Context mContext;
+
+    private OnImportantNewsClickListener mOnImportantNewsClickListener;
+
+    public void setOnImportantNewsClickListener(OnImportantNewsClickListener onImportantNewsClickListener) {
+        mOnImportantNewsClickListener = onImportantNewsClickListener;
+    }
+
+    public interface OnImportantNewsClickListener {
+        public void onItemClick(DailyReport dailyReport);
+
+        public void onMoreClick();
+    }
 
     public ImportantNewsView(Context context) {
         this(context, null);
@@ -66,8 +85,7 @@ public class ImportantNewsView extends RelativeLayout {
         ButterKnife.bind(this);
     }
 
-
-    @OnClick({R.id.rl1, R.id.rl2, R.id.rl3})
+    @OnClick({R.id.rl1, R.id.rl2, R.id.rl3, R.id.moreBtn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl1:
@@ -75,6 +93,11 @@ public class ImportantNewsView extends RelativeLayout {
             case R.id.rl2:
                 break;
             case R.id.rl3:
+                break;
+            case R.id.moreBtn:
+                if(mOnImportantNewsClickListener!=null){
+                    mOnImportantNewsClickListener.onMoreClick();
+                }
                 break;
         }
     }
@@ -93,25 +116,29 @@ public class ImportantNewsView extends RelativeLayout {
         }
     }
 
-    private void setOneNews(DailyReport dailyReport, int index) {
+    private void setOneNews(final DailyReport dailyReport, int index) {
         TextView timeView = null;
         ImageView imgView = null;
         TextView titleView = null;
+        RelativeLayout rl = null;
         switch (index) {
             case 0:
                 timeView = mTime1;
                 imgView = mImgView1;
                 titleView = mTitle1;
+                rl = mRL1;
                 break;
             case 1:
                 timeView = mTime2;
                 imgView = mImgView2;
                 titleView = mTitle2;
+                rl = mRL2;
                 break;
             case 2:
                 timeView = mTime3;
                 imgView = mImgView3;
                 titleView = mTitle3;
+                rl = mRL3;
                 break;
         }
         if (!TextUtils.isEmpty(dailyReport.getCoverUrl())) {
@@ -125,5 +152,13 @@ public class ImportantNewsView extends RelativeLayout {
 
         titleView.setText(dailyReport.getTitle());
         timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
+        rl.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mOnImportantNewsClickListener!=null){
+                    mOnImportantNewsClickListener.onItemClick(dailyReport);
+                }
+            }
+        });
     }
 }

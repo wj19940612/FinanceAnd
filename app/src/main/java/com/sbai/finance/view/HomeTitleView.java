@@ -3,6 +3,7 @@ package com.sbai.finance.view;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.model.Dictum;
+import com.sbai.finance.model.NoticeRadio;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.stock.StockData;
@@ -92,14 +95,45 @@ public class HomeTitleView extends RelativeLayout {
     TextView mfutureBtn;
     @BindView(R.id.selectBtn)
     TextView mselectBtn;
+    @BindView(R.id.lookAllBtn)
+    RelativeLayout mLookAllBtn;
 
 
     private Context mContext;
     private int oldButton;
-    private IndexClickListener mIndexClickListener;
+    private Map<String, FutureData> futureDataMap = new HashMap<String, FutureData>();
 
-    //instrumentId
-    private Map<String,FutureData> futureDataMap = new HashMap<String,FutureData>();
+    private OnDictumClickListener mOnDictumClickListener;
+
+    public void setOnDictumClickListener(OnDictumClickListener onDictumClickListener) {
+        mOnDictumClickListener = onDictumClickListener;
+    }
+
+    public interface OnDictumClickListener {
+        public void onDictumClick(Dictum dictum);
+    }
+
+    public void setOnBroadcastListener(VerticalScrollTextView.OnItemClickListener onBroadcastListener) {
+        mVerticalScrollTextView.setOnItemClickListener(onBroadcastListener);
+    }
+
+    public interface OnLookAllClickListener {
+        public void onLookAll();
+
+        public void onSelectClick();
+
+        public void Practice();
+
+        public void daySubjuect();
+    }
+
+    private OnLookAllClickListener mOnLookAllClickListener;
+
+    public void setOnLookAllClickListener(OnLookAllClickListener onLookAllClickListener) {
+        mOnLookAllClickListener = onLookAllClickListener;
+    }
+
+    private IndexClickListener mIndexClickListener;
 
     public interface IndexClickListener {
         public void onStockClick();
@@ -107,6 +141,10 @@ public class HomeTitleView extends RelativeLayout {
         public void onFutureClick();
 
         public void onSelectClick();
+    }
+
+    public void setIndexClickListener(IndexClickListener indexClickListener) {
+        mIndexClickListener = indexClickListener;
     }
 
 
@@ -129,13 +167,9 @@ public class HomeTitleView extends RelativeLayout {
         ButterKnife.bind(this);
     }
 
-    public void putNewFutureData(FutureData futureData){
-        futureDataMap.put(futureData.getInstrumentId(),futureData);
+    public void putNewFutureData(FutureData futureData) {
+        futureDataMap.put(futureData.getInstrumentId(), futureData);
         updateFutureOrSelectData();
-    }
-
-    public void setIndexClickListener(IndexClickListener indexClickListener) {
-        mIndexClickListener = indexClickListener;
     }
 
     //问候title
@@ -143,40 +177,67 @@ public class HomeTitleView extends RelativeLayout {
         mGreetingTitle.setText(greetingTitle);
     }
 
-    //广播内容 无广播显示投资名言
-    private void setBroadcastContent(boolean needIcon, String broadcastContent) {
-        mBroadcastIcon.setVisibility(needIcon ? VISIBLE : GONE);
-        mBroadcastText.setText(broadcastContent);
+    //广播内容
+    public void setBroadcastContent(List<NoticeRadio> noticeRadios) {
+        mBroadcastIcon.setVisibility(View.VISIBLE);
+        mBroadcastText.setVisibility(View.GONE);
+        mVerticalScrollTextView.setNoticeRadios(noticeRadios);
+        mVerticalScrollTextView.startAutoScroll();
     }
 
-    @OnClick({R.id.stockBtn, R.id.futureBtn, R.id.selectBtn})
+    //设置名言
+    public void setDictum(final List<Dictum> dictums) {
+        mBroadcastIcon.setVisibility(View.GONE);
+        mVerticalScrollTextView.setVisibility(View.GONE);
+        mBroadcastText.setVisibility(View.VISIBLE);
+        if (dictums != null && dictums.get(0) != null && !TextUtils.isEmpty(dictums.get(0).getContent())) {
+            mBroadcastText.setText(dictums.get(0).getContent());
+            mBroadcastText.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnDictumClickListener != null) {
+                        mOnDictumClickListener.onDictumClick(dictums.get(0));
+                    }
+                }
+            });
+        }
+    }
+
+    @OnClick({R.id.stockBtn, R.id.futureBtn, R.id.selectBtn,R.id.centerSelectRL,R.id.leftSelectRL,R.id.rightSelectRL})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.stockBtn:
-                if(oldButton == BUTTON_HUSHEN){
+                if (oldButton == BUTTON_HUSHEN) {
                     return;
                 }
                 clickIndexButton(BUTTON_HUSHEN);
-                if(mIndexClickListener!=null){
+                if (mIndexClickListener != null) {
                     mIndexClickListener.onStockClick();
                 }
                 break;
             case R.id.futureBtn:
-                if(oldButton == BUTTON_QIHUO){
+                if (oldButton == BUTTON_QIHUO) {
                     return;
                 }
                 clickIndexButton(BUTTON_QIHUO);
-                if(mIndexClickListener!=null){
+                if (mIndexClickListener != null) {
                     mIndexClickListener.onFutureClick();
                 }
                 break;
             case R.id.selectBtn:
-                if(oldButton == BUTTON_ZIXUAN){
+                if (oldButton == BUTTON_ZIXUAN) {
                     return;
                 }
                 clickIndexButton(BUTTON_ZIXUAN);
-                if(mIndexClickListener!=null){
+                if (mIndexClickListener != null) {
                     mIndexClickListener.onSelectClick();
+                }
+                break;
+            case R.id.leftSelectRL:
+            case R.id.centerSelectRL:
+            case R.id.rightSelectRL:
+                if(mOnLookAllClickListener!=null){
+                    mOnLookAllClickListener.onSelectClick();
                 }
                 break;
         }
@@ -224,7 +285,7 @@ public class HomeTitleView extends RelativeLayout {
 
     //数据有了，更新股票UI,这里只有股票的代码，没行情
     public void updateStockIndexData(List<Variety> data) {
-        if(oldButton != BUTTON_HUSHEN){
+        if (oldButton != BUTTON_HUSHEN) {
             return;
         }
         switch (data.size()) {
@@ -325,7 +386,7 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     public void updateFutureMarketData() {
-        if(futureDataMap.size() == 0){
+        if (futureDataMap.size() == 0) {
             return;
         }
         // 2.判断涨跌

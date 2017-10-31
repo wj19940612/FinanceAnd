@@ -51,6 +51,12 @@ public class BusinessBanner extends RelativeLayout {
     TextView mBottomRightSubTitle;
     @BindView(R.id.bottomRightImg)
     ImageView mBottomRightImg;
+    @BindView(R.id.leftRL)
+    RelativeLayout mLeftRL;
+    @BindView(R.id.topRightRL)
+    RelativeLayout mtopRightRL;
+    @BindView(R.id.bottomRightRL)
+    RelativeLayout mbottomRightRL;
 
     private Context mContext;
 
@@ -86,7 +92,7 @@ public class BusinessBanner extends RelativeLayout {
 
 
     public void setBusinessBannerData(List<Banner> data) {
-        if(data.size()<1){
+        if (data.size() < 1) {
             return;
         }
         final Banner leftBanner = data.get(0);
@@ -94,7 +100,7 @@ public class BusinessBanner extends RelativeLayout {
         setSubTitle(leftBanner, LEFT_LOCATION);
         setImage(leftBanner, LEFT_LOCATION);
 
-        if(data.size()<2){
+        if (data.size() < 2) {
             return;
         }
         final Banner topRightBanner = data.get(0);
@@ -102,7 +108,7 @@ public class BusinessBanner extends RelativeLayout {
         setSubTitle(topRightBanner, TOP_RIGHT_LOCATION);
         setImage(topRightBanner, TOP_RIGHT_LOCATION);
 
-        if(data.size() < 3) {
+        if (data.size() < 3) {
             return;
         }
         final Banner bottomRightBanner = data.get(0);
@@ -162,39 +168,41 @@ public class BusinessBanner extends RelativeLayout {
         } else {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(subTitle.substring(0, userCountLocation));
-            stringBuilder.append(banner.getUserCount());
-            stringBuilder.append("人");
+            stringBuilder.append(banner.getMontageData());
             stringBuilder.append(subTitle.substring(userCountLocation + USER_COUNT_LOCATION_SIGN.length(), subTitle.length()));
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuilder);
             ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.banner_number));
-            spannableStringBuilder.setSpan(foregroundColorSpan, userCountLocation, userCountLocation + 1 + String.valueOf(userCountLocation + banner.getUserCount()).length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+            spannableStringBuilder.setSpan(foregroundColorSpan, userCountLocation, userCountLocation +  banner.getMontageData().length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
             textView.setText(spannableStringBuilder);
         }
     }
 
     private void setImage(final Banner banner, int location) {
+        RelativeLayout rl;
         ImageView imageView;
         switch (location) {
             case LEFT_LOCATION:
                 imageView = mLeftImage;
+                rl = mLeftRL;
                 break;
             case TOP_RIGHT_LOCATION:
                 imageView = mTopRightImg;
+                rl = mtopRightRL;
                 break;
             case BOTTOM_RIGHT_LOCATION:
                 imageView = mBottomRightImg;
+                rl = mbottomRightRL;
                 break;
             default:
                 imageView = mLeftImage;
+                rl = mLeftRL;
                 break;
         }
         if (!TextUtils.isEmpty(banner.getCover())) {
             Glide.with(mContext).load(banner.getCover()).into(imageView);
-        } else {
-            Glide.with(mContext).load("https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1509009226687099462.jpg").into(mLeftImage);
         }
-        imageView.setOnClickListener(new OnClickListener() {
+        rl.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mOnViewClickListener != null) {

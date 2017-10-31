@@ -2743,4 +2743,12 @@ public class Client {
     public static API requestShareData(String code) {
         return new API("/user/share/findByCode.do", new ApiParams().put("code", code));
     }
+
+    public static API requestRadioData(){
+        return new API("/user/radio/findRadio.do");
+    }
+
+    public static API requestfindDictumData(){
+        return new API("/user/radio/findDictum.do");
+    }
 }

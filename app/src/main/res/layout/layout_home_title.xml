@@ -57,9 +57,7 @@
             android:id="@+id/broadcastText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
             android:gravity="center_vertical"
-            android:text="王者荣耀上线啦"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:visibility="gone"
@@ -110,6 +108,7 @@
             />
 
         <RelativeLayout
+            android:id="@+id/lookAllBtn"
             android:layout_width="match_parent"
             android:layout_height="29dp"
             android:layout_alignParentBottom="true"
@@ -488,7 +487,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/home_icon_subject"
+                android:src="@drawable/home_icon_explain"
                 />
         </RelativeLayout>
 

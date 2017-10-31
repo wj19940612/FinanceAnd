@@ -20,6 +20,7 @@
         >
 
         <RelativeLayout
+            android:id="@+id/leftRL"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -73,6 +74,7 @@
             >
 
             <RelativeLayout
+                android:id="@+id/topRightRL"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -118,6 +120,7 @@
                 />
 
             <RelativeLayout
+                android:id="@+id/bottomRightRL"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"

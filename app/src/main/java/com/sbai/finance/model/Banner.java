@@ -46,6 +46,7 @@ public class Banner implements Parcelable {
     private int showcase;//banner展示位
     private String subTitle;//副标题
     private int userCount;//参与人数
+    private String montageData;//活动关键字
 
     //gift 独有的
     private int clicks; //点击次数
@@ -217,6 +218,14 @@ public class Banner implements Parcelable {
         this.userCount = userCount;
     }
 
+    public String getMontageData() {
+        return montageData;
+    }
+
+    public void setMontageData(String montageData) {
+        this.montageData = montageData;
+    }
+
     @Override
     public String toString() {
         return "Banner{" +
@@ -265,6 +274,7 @@ public class Banner implements Parcelable {
         dest.writeInt(this.showcase);
         dest.writeString(this.subTitle);
         dest.writeInt(this.userCount);
+        dest.writeString(this.montageData);
         dest.writeInt(this.clicks);
         dest.writeString(this.smallPic);
     }
@@ -288,6 +298,7 @@ public class Banner implements Parcelable {
         this.showcase = in.readInt();
         this.subTitle = in.readString();
         this.userCount = in.readInt();
+        this.montageData = in.readString();
         this.clicks = in.readInt();
         this.smallPic = in.readString();
     }

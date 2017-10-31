@@ -146,7 +146,6 @@ public class LeaderBoardView extends LinearLayout {
             finalMobaiBtn.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("zzz LeaderBoardView","click mobai");
                     if (LocalUser.getUser().isLogin() && Network.isNetworkAvailable()) {
                         finalMobaiBtn.setEnabled(false);
                     }

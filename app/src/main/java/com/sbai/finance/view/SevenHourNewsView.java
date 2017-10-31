@@ -51,11 +51,20 @@ public class SevenHourNewsView extends RelativeLayout {
     private int minHeight;
     private boolean nowAdding;
     private boolean canBeAdd;
+    private boolean canAnimate;
 
     private List<DailyReport> mLeaveReports;
     private List<DailyReport> mDailyReports;
     private ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener;
     private List<TextViewState> mTextViewStates;
+
+    private OnMoreBtnClickListener mOnMoreBtnClickListener;
+    public interface OnMoreBtnClickListener{
+        public void onMoreClick();
+    }
+    public void setOnMoreBtnClickListener(OnMoreBtnClickListener onMoreBtnClickListener){
+        mOnMoreBtnClickListener = onMoreBtnClickListener;
+    }
 
     public class TextViewState {
         public TextView textView;
@@ -89,6 +98,7 @@ public class SevenHourNewsView extends RelativeLayout {
         minHeight = (int) Display.dp2Px(MIN_HEIGHT, getResources());
         mLeaveReports = new ArrayList<DailyReport>();
         mTextViewStates = new ArrayList<TextViewState>();
+        canAnimate = true;
     }
 
     public void setTextNews(List<DailyReport> data) {
@@ -152,20 +162,20 @@ public class SevenHourNewsView extends RelativeLayout {
 
     private TextView getAddTextView(DailyReport dailyReport) {
         final TextView textView = new TextView(mContext);
-        String title = dailyReport.getTitle();
-        String content = dailyReport.getContent();
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title+content);
+        String title = dailyReport.getTitle() == null ? "" : dailyReport.getTitle();
+        String content = dailyReport.getContent() == null ? "" : dailyReport.getContent();
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title + content);
         ForegroundColorSpan bigColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.blackIndexText));
-        spannableStringBuilder.setSpan(bigColorSpan, 0, title.length()-1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        spannableStringBuilder.setSpan(bigColorSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
         AbsoluteSizeSpan bigSizeSpan = new AbsoluteSizeSpan(((int) Display.sp2Px(TEXT_BIG_SP, getResources())));
-        spannableStringBuilder.setSpan(bigSizeSpan, 0, 10, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        spannableStringBuilder.setSpan(bigSizeSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
         ForegroundColorSpan smallColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.news_content));
-        spannableStringBuilder.setSpan(smallColorSpan, title.length(), content.length() - 1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        spannableStringBuilder.setSpan(smallColorSpan, title.length(), title.length() + content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
         AbsoluteSizeSpan smallSizeSpan = new AbsoluteSizeSpan(((int) Display.sp2Px(TEXT_SMALL_SP, getResources())));
-        spannableStringBuilder.setSpan(smallSizeSpan, title.length(), content.length() - 1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        spannableStringBuilder.setSpan(smallSizeSpan, title.length(), title.length() + content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
         LayoutParams textParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         textParams.addRule(BELOW, R.id.iconView);
@@ -213,6 +223,9 @@ public class SevenHourNewsView extends RelativeLayout {
     }
 
     private void animateTextView(final TextViewState textViewState) {
+        if(!canAnimate){
+            return;
+        }
         if (!textViewState.hasGetLinesHeight) {
             textViewState.linesHeight = textViewState.textView.getMeasuredHeight();
             textViewState.hasGetLinesHeight = true;
@@ -248,6 +261,7 @@ public class SevenHourNewsView extends RelativeLayout {
                     textViewState.textView.setMaxLines(TEXT_MAX_LINES);
                     textViewState.textView.setEllipsize(TextUtils.TruncateAt.END);
                 }
+                canAnimate = true;
             }
 
             @Override
@@ -261,6 +275,7 @@ public class SevenHourNewsView extends RelativeLayout {
             }
         });
         valueAnimator.setDuration(TEXT_ANIMATE_DURATION);
+        canAnimate = false;
         valueAnimator.start();
     }
 
