@@ -115,7 +115,7 @@ public class BroadcastListActivity extends BaseActivity {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_broadcast, null);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_broadcast, parent, false);
             return new ViewHolder(view);
         }
 
@@ -160,8 +160,8 @@ public class BroadcastListActivity extends BaseActivity {
                                         .execute();
                             } else {
                                 Launcher.with(getActivity(), WebActivity.class)
-                                        .putExtra(WebActivity.EX_URL, broadcast.getContent())
-                                        .putExtra(WebActivity.EX_HTML, broadcast.getTitle())
+                                        .putExtra(WebActivity.EX_TITLE, broadcast.getTitle())
+                                        .putExtra(WebActivity.EX_HTML, broadcast.getContent())
                                         .execute();
                             }
                         }

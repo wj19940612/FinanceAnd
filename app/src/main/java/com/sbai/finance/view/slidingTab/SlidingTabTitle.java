@@ -70,7 +70,7 @@ public class SlidingTabTitle extends SlidingTabLayout {
         }
     }
 
-    public void setTabIndex(int index) {
+    public void setTabIndex(final int index) {
         if (index < getTabStrip().getChildCount()) {
             getTabStrip().getChildAt(index).performClick();
         }

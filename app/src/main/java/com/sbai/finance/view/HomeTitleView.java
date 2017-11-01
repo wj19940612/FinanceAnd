@@ -105,6 +105,10 @@ public class HomeTitleView extends RelativeLayout {
 
     private OnDictumClickListener mOnDictumClickListener;
 
+    public int getOldButton() {
+        return oldButton;
+    }
+
     public void setOnDictumClickListener(OnDictumClickListener onDictumClickListener) {
         mOnDictumClickListener = onDictumClickListener;
     }

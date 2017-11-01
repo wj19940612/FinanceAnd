@@ -2082,9 +2082,9 @@ public class Client {
      *
      * @return
      */
-    public static API getDailyReport() {
+    public static API getDailyReport(int type) {
         return new API("/user/dailyReport/findRecencyReport.do", new ApiParams()
-                .put("type", 0));
+                .put("type", type));
     }
 
     /**

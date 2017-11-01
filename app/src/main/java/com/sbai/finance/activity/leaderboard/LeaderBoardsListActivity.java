@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
@@ -58,7 +60,7 @@ public class LeaderBoardsListActivity extends BaseActivity {
     private void initTabView() {
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-        mTabLayout.setTabLeftAndRightMargin((int) Display.dp2Px(80, getResources()));
+        mTabLayout.setTabLeftAndRightMargin((int) Display.dp2Px(60, getResources()));
         mTabLayout.setPadding(Display.dp2Px(15, getResources()));
         mTabLayout.setSelectedIndicatorHeight(3);
         mTabLayout.setViewPager(mViewPager);

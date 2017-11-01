@@ -188,6 +188,8 @@ public class InformationFragment extends BaseFragment {
             if (isRefresh) {
                 mInformationAdapter.clear();
                 mLastTime = newsList.get(0).getCreateTime();
+                mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(mLastTime)));
+                mDate.setText(String.valueOf(DateUtil.getDayOfMonth(mLastTime)));
             }
             if (newsList.size() < Client.DEFAULT_PAGE_SIZE) {
                 mLoadMore = false;

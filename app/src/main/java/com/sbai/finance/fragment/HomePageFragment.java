@@ -10,10 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
+import com.sbai.finance.activity.home.AllTrainingListActivity;
+import com.sbai.finance.activity.home.BroadcastListActivity;
+import com.sbai.finance.activity.home.InformationAndFocusNewsActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
+import com.sbai.finance.activity.home.StockFutureActivity;
+import com.sbai.finance.activity.leaderboard.LeaderBoardsListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.Dictum;
@@ -40,6 +48,7 @@ import com.sbai.finance.view.VerticalScrollTextView;
 import com.sbai.finance.websocket.market.DataReceiveListener;
 import com.sbai.finance.websocket.market.MarketSubscribe;
 import com.sbai.finance.websocket.market.MarketSubscriber;
+import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,11 +107,11 @@ public class HomePageFragment extends BaseFragment {
         MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
     }
 
-    private void startAllSchedule(){
-        scheduleHandler.sendEmptyMessageDelayed(HANDLER_STOCK,TIME_HANDLER_STOCK);
-        scheduleHandler.sendEmptyMessageDelayed(HANDLER_BANNER,TIME_HANDLER_BANNER);
-        scheduleHandler.sendEmptyMessageDelayed(HANDLER_BUSNESSBANNER,TIME_HANDLER_BUSNESSBANNER);
-        scheduleHandler.sendEmptyMessageDelayed(HANDLER_DAILY_REPORT,TIME_HANDLER_DAILY_REPORT);
+    private void startAllSchedule() {
+        scheduleHandler.sendEmptyMessageDelayed(HANDLER_STOCK, TIME_HANDLER_STOCK);
+        scheduleHandler.sendEmptyMessageDelayed(HANDLER_BANNER, TIME_HANDLER_BANNER);
+        scheduleHandler.sendEmptyMessageDelayed(HANDLER_BUSNESSBANNER, TIME_HANDLER_BUSNESSBANNER);
+        scheduleHandler.sendEmptyMessageDelayed(HANDLER_DAILY_REPORT, TIME_HANDLER_DAILY_REPORT);
     }
 
     @Override
@@ -113,7 +122,7 @@ public class HomePageFragment extends BaseFragment {
         MarketSubscriber.get().unSubscribeAll();
     }
 
-    private void stopAllSchedule(){
+    private void stopAllSchedule() {
         scheduleHandler.removeCallbacksAndMessages(null);
     }
 
@@ -123,7 +132,7 @@ public class HomePageFragment extends BaseFragment {
             switch (msg.what) {
                 case HANDLER_STOCK:
                     requestStockIndexData();
-                    scheduleHandler.sendEmptyMessageDelayed(HANDLER_STOCK,TIME_HANDLER_STOCK);
+                    scheduleHandler.sendEmptyMessageDelayed(HANDLER_STOCK, TIME_HANDLER_STOCK);
                     break;
                 case HANDLER_BANNER:
                     mBanner.nextAdvertisement();
@@ -154,13 +163,14 @@ public class HomePageFragment extends BaseFragment {
         mHomeTitleView.setOnBroadcastListener(new VerticalScrollTextView.OnItemClickListener() {
             @Override
             public void onItemClick(NoticeRadio noticeRadio) {
-                //点击广播
+                Launcher.with(getActivity(), BroadcastListActivity.class).execute();
             }
         });
         mHomeTitleView.setOnDictumClickListener(new HomeTitleView.OnDictumClickListener() {
             @Override
             public void onDictumClick(Dictum dictum) {
                 //点击名言
+
             }
         });
         mHomeTitleView.setIndexClickListener(new HomeTitleView.IndexClickListener() {
@@ -183,6 +193,10 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onLookAll() {
                 //查看更多
+                int pageIndex = mHomeTitleView.getOldButton() - 1;
+                Launcher.with(getActivity(), StockFutureActivity.class)
+                        .putExtra(ExtraKeys.PAGE_INDEX, pageIndex)
+                        .execute();
             }
 
             @Override
@@ -190,7 +204,9 @@ public class HomePageFragment extends BaseFragment {
                 //自选点击
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.DISCOVERY_SELF_OPTIONAL);
-                    Launcher.with(getActivity(), OptionalActivity.class).execute();
+                    Launcher.with(getActivity(), StockFutureActivity.class)
+                            .putExtra(ExtraKeys.PAGE_INDEX, 2)
+                            .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -198,12 +214,12 @@ public class HomePageFragment extends BaseFragment {
 
             @Override
             public void Practice() {
-                //点击练一练
+                Launcher.with(getActivity(), AllTrainingListActivity.class).execute();
             }
 
             @Override
             public void daySubjuect() {
-                //点击一日一题
+                Launcher.with(getActivity(), StudyRoomActivity.class).execute();
             }
         });
         mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
@@ -239,14 +255,18 @@ public class HomePageFragment extends BaseFragment {
         mLeaderBoardView.setLookRankListener(new LeaderBoardView.LookRankListener() {
             @Override
             public void lookRank(String rankType) {
+                int pageIndex = 0;
                 //查看我的排名
                 if (rankType.equals(INGOT)) {
-
+                    pageIndex = 0;
                 } else if (rankType.equals(PROFIT)) {
-
+                    pageIndex = 1;
                 } else if (rankType.equals(SAVANT)) {
-
+                    pageIndex = 2;
                 }
+                Launcher.with(getActivity(), LeaderBoardsListActivity.class)
+                        .putExtra(ExtraKeys.PAGE_INDEX, pageIndex)
+                        .execute();
             }
         });
         mLeaderBoardView.setMobaiListener(new LeaderBoardView.MobaiListener() {
@@ -265,18 +285,24 @@ public class HomePageFragment extends BaseFragment {
         mSevenHourNewsView.setOnMoreBtnClickListener(new SevenHourNewsView.OnMoreBtnClickListener() {
             @Override
             public void onMoreClick() {
-                //7*24新闻查看更多
+                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class).execute();
             }
         });
         mImportantNewsView.setOnImportantNewsClickListener(new ImportantNewsView.OnImportantNewsClickListener() {
             @Override
             public void onItemClick(DailyReport dailyReport) {
-                //要闻点击item
+                Launcher.with(getActivity(), DailyReportDetailActivity.class)
+                        .putExtra(DailyReportDetailActivity.EX_FORMAT, dailyReport.getFormat())
+                        .putExtra(DailyReportDetailActivity.EX_ID, dailyReport.getId())
+                        .putExtra(DailyReportDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                        .execute();
             }
 
             @Override
             public void onMoreClick() {
-                //要闻更多
+                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class)
+                        .putExtra(ExtraKeys.PAGE_INDEX, 1)
+                        .execute();
             }
         });
         mHomeTitleView.clickIndexButton(HomeTitleView.BUTTON_HUSHEN);

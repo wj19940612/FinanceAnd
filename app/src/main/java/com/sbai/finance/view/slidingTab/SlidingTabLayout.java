@@ -59,7 +59,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private static final String TAG = "SlidingTabLayout";
     private int mTabTextViewColoor;
-    private ColorStateList mTabColor;
 
     /**
      * Allows complete control over the colors drawn in the tab layout. Set with

@@ -812,4 +812,5 @@
     <string name="broadcast">广播</string>
     <!-- 首页 -->
     <string name="look_my_rank">查看我的排名</string>
+    <string name="please_retry">请重试</string>
 </resources>

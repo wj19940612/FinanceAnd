@@ -118,6 +118,7 @@ public class FocusNewsFragment extends BaseFragment implements
                 .setCallback(new Callback2D<Resp<List<DailyReport>>, List<DailyReport>>() {
                     @Override
                     protected void onRespSuccessData(List<DailyReport> data) {
+                        if (data.isEmpty()) return;
                         updateAllDayNewsList(data);
                     }
                 }).fireFree();

@@ -39,7 +39,7 @@
                 android:drawableTop="@drawable/img_no_message"
                 android:gravity="center_horizontal"
                 android:paddingTop="150dp"
-                android:text="@string/you_dont_have_trade"
+                android:text="@string/please_retry"
                 android:visibility="gone"/>
         </LinearLayout>
 
