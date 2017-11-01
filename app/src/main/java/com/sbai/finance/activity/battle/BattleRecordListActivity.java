@@ -186,19 +186,19 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
             }
 
             private void bindDataWithView(final Battle item, Context context) {
-                    GlideApp.with(context)
-                            .load(item.getLaunchUserPortrait())
-                            .placeholder(R.drawable.ic_default_avatar)
-                            .circleCrop()
-                            .into(mMyAvatar);
-                    GlideApp.with(context)
-                            .load(item.getAgainstUserPortrait())
-                            .placeholder(R.drawable.ic_default_avatar)
-                            .circleCrop()
-                            .into(mAgainstAvatar);
-                    mMyName.setText(item.getLaunchUserName());
-                    mAgainstName.setText(item.getAgainstUserName());
-                String reward="" ;
+                GlideApp.with(context)
+                        .load(item.getLaunchUserPortrait())
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .circleCrop()
+                        .into(mMyAvatar);
+                GlideApp.with(context)
+                        .load(item.getAgainstUserPortrait())
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .circleCrop()
+                        .into(mAgainstAvatar);
+                mMyName.setText(item.getLaunchUserName());
+                mAgainstName.setText(item.getAgainstUserName());
+                String reward = "";
                 if (item.getWinResult() == Battle.WIN_RESULT_TIE) {
                     switch (item.getCoinType()) {
                         case Battle.COIN_TYPE_INGOT:
@@ -212,22 +212,22 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                             break;
                     }
 
-                }else if ((LocalUser.getUser().getUserInfo().getId() == item.getLaunchUser()
+                } else if ((LocalUser.getUser().getUserInfo().getId() == item.getLaunchUser()
                         && item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN)
-                        ||(LocalUser.getUser().getUserInfo().getId() == item.getAgainstUser()
+                        || (LocalUser.getUser().getUserInfo().getId() == item.getAgainstUser()
                         && item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN)) {
                     switch (item.getCoinType()) {
                         case Battle.COIN_TYPE_INGOT:
-                            reward = Math.round(item.getReward()-item.getCommission()) + context.getString(R.string.ingot);
+                            reward = Math.round(item.getReward() - item.getCommission()) + context.getString(R.string.ingot);
                             break;
                         case Battle.COIN_TYPE_CASH:
                             reward = item.getReward() + context.getString(R.string.cash);
                             break;
                         case Battle.COIN_TYPE_SCORE:
-                            reward = StrFormatter.getFormIntegrate(item.getReward()-item.getCommission()) + context.getString(R.string.integral);
+                            reward = StrFormatter.getFormIntegrate(item.getReward() - item.getCommission()) + context.getString(R.string.integral);
                             break;
                     }
-                }else{
+                } else {
                     switch (item.getCoinType()) {
                         case Battle.COIN_TYPE_INGOT:
                             reward = item.getReward() + context.getString(R.string.ingot);

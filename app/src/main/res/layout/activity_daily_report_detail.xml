@@ -36,8 +36,10 @@
                     android:orientation="vertical">
 
                     <RelativeLayout
+                        android:id="@+id/imageArea"
                         android:layout_width="match_parent"
-                        android:layout_height="214dp">
+                        android:layout_height="214dp"
+                        android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/image"
@@ -104,13 +106,6 @@
                             android:textColor="@color/blackPrimary"
                             android:textSize="12sp"
                             tools:text="来源: 若愚"/>
-
-                        <View
-                            android:layout_width="80dp"
-                            android:layout_height="6dp"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
-                            android:background="@color/colorPrimary"/>
                     </LinearLayout>
                 </LinearLayout>
 

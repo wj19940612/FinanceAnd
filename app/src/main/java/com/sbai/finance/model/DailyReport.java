@@ -5,6 +5,8 @@ package com.sbai.finance.model;
  */
 
 public class DailyReport {
+    public static final int INFORMATION = 1;
+    public static final int NEWS = 2;
     public static final int HTML = 1;
 
     /**
@@ -30,6 +32,7 @@ public class DailyReport {
     public boolean isCollected() {
         return getCollect() == 1;
     }
+
     public String getUrl() {
         return url;
     }

@@ -4,15 +4,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.home.OptionalActivity;
+import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
+import com.sbai.finance.activity.home.BroadcastListActivity;
+import com.sbai.finance.activity.home.InformationAndFocusNewsActivity;
+import com.sbai.finance.activity.home.StockFutureActivity;
+import com.sbai.finance.activity.leaderboard.LeaderBoardsListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.DailyReport;
@@ -41,6 +45,7 @@ import com.sbai.finance.view.VerticalScrollTextView;
 import com.sbai.finance.websocket.market.DataReceiveListener;
 import com.sbai.finance.websocket.market.MarketSubscribe;
 import com.sbai.finance.websocket.market.MarketSubscriber;
+import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,13 +164,14 @@ public class HomePageFragment extends BaseFragment {
         mHomeTitleView.setOnBroadcastListener(new VerticalScrollTextView.OnItemClickListener() {
             @Override
             public void onItemClick(NoticeRadio noticeRadio) {
-                //点击广播
+                Launcher.with(getActivity(), BroadcastListActivity.class).execute();
             }
         });
         mHomeTitleView.setOnDictumClickListener(new HomeTitleView.OnDictumClickListener() {
             @Override
             public void onDictumClick(Dictum dictum) {
                 //点击名言
+
             }
         });
         mHomeTitleView.setIndexClickListener(new HomeTitleView.IndexClickListener() {
@@ -188,6 +194,10 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onLookAll() {
                 //查看更多
+                int pageIndex = mHomeTitleView.getOldButton() - 1;
+                Launcher.with(getActivity(), StockFutureActivity.class)
+                        .putExtra(ExtraKeys.PAGE_INDEX, pageIndex)
+                        .execute();
             }
 
             @Override
@@ -195,13 +205,16 @@ public class HomePageFragment extends BaseFragment {
                 //自选点击
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.DISCOVERY_SELF_OPTIONAL);
-                    Launcher.with(getActivity(), OptionalActivity.class).execute();
+                    Launcher.with(getActivity(), StockFutureActivity.class)
+                            .putExtra(ExtraKeys.PAGE_INDEX, 2)
+                            .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
 
             @Override
+
             public void onPractice() {
                 //点击练一练
             }
@@ -209,11 +222,13 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onDaySubjuect() {
                 //点击一日一题
-            }
-        });
-        mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
-            @Override
-            public void onBannerClick(Banner information) {
+                }
+            });
+        mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener()
+
+            {
+                @Override
+                public void onBannerClick (Banner information){
                 if (information.isH5Style()) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, information.getContent())
@@ -225,10 +240,12 @@ public class HomePageFragment extends BaseFragment {
                             .execute();
                 }
             }
-        });
-        mBusinessBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener() {
-            @Override
-            public void onBannerClick(Banner information) {
+            });
+        mBusinessBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener()
+
+            {
+                @Override
+                public void onBannerClick (Banner information){
                 if (information.isH5Style()) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, information.getContent())
@@ -240,23 +257,31 @@ public class HomePageFragment extends BaseFragment {
                             .execute();
                 }
             }
-        });
-        mLeaderBoardView.setLookRankListener(new LeaderBoardView.LookRankListener() {
-            @Override
-            public void lookRank(String rankType) {
+            });
+        mLeaderBoardView.setLookRankListener(new LeaderBoardView.LookRankListener()
+
+            {
+                @Override
+                public void lookRank (String rankType){
+                int pageIndex = 0;
                 //查看我的排名
                 if (rankType.equals(INGOT)) {
-
+                    pageIndex = 0;
                 } else if (rankType.equals(PROFIT)) {
-
+                    pageIndex = 1;
                 } else if (rankType.equals(SAVANT)) {
-
+                    pageIndex = 2;
                 }
+                Launcher.with(getActivity(), LeaderBoardsListActivity.class)
+                        .putExtra(ExtraKeys.PAGE_INDEX, pageIndex)
+                        .execute();
             }
-        });
-        mLeaderBoardView.setMobaiListener(new LeaderBoardView.MobaiListener() {
-            @Override
-            public void mobai(String rankType, LeaderThreeRank item) {
+            });
+        mLeaderBoardView.setMobaiListener(new LeaderBoardView.MobaiListener()
+
+            {
+                @Override
+                public void mobai (String rankType, LeaderThreeRank item){
                 if (item.getUser() != null) {
                     if (LocalUser.getUser().isLogin()) {
                         requestWorship(rankType, item.getUser().getId());
@@ -265,34 +290,52 @@ public class HomePageFragment extends BaseFragment {
                     }
                 }
             }
-        });
-        mSevenHourNewsView.setOnMoreBtnClickListener(new SevenHourNewsView.OnMoreBtnClickListener() {
-            @Override
-            public void onMoreClick() {
-                //7*24新闻查看更多
+            });
+        mSevenHourNewsView.setOnMoreBtnClickListener(new SevenHourNewsView.OnMoreBtnClickListener()
+
+            {
+                @Override
+                public void onMoreClick () {
+                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class).execute();
             }
-        });
-        mImportantNewsView.setOnImportantNewsClickListener(new ImportantNewsView.OnImportantNewsClickListener() {
-            @Override
-            public void onItemClick(DailyReport dailyReport) {
-                //要闻点击item
+            });
+        mImportantNewsView.setOnImportantNewsClickListener(new ImportantNewsView.OnImportantNewsClickListener()
+
+            {
+                @Override
+                public void onItemClick (DailyReport dailyReport){
+                Launcher.with(getActivity(), DailyReportDetailActivity.class)
+                        .putExtra(DailyReportDetailActivity.EX_FORMAT, dailyReport.getFormat())
+                        .putExtra(DailyReportDetailActivity.EX_ID, dailyReport.getId())
+                        .putExtra(DailyReportDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+                        .execute();
             }
 
-            @Override
-            public void onMoreClick() {
-                //要闻更多
+                @Override
+                public void onMoreClick () {
+                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class)
+                        .putExtra(ExtraKeys.PAGE_INDEX, 1)
+                        .execute();
             }
-        });
-        requestGreetings();
+            });
+
+            requestGreetings();
         mHomeTitleView.clickIndexButton(HomeTitleView.BUTTON_HUSHEN);
-        requestStockIndexData();
-        requestRadioData();
-        requestBannerData();
-        requestBusniessBannerData();
-        requestLeaderBoardData();
-        request7NewsData();
-        requestImportantNewsData();
-    }
+
+            requestStockIndexData();
+
+            requestRadioData();
+
+            requestBannerData();
+
+            requestBusniessBannerData();
+
+            requestLeaderBoardData();
+
+            request7NewsData();
+
+            requestImportantNewsData();
+        }
 
     private void requestStockIndexData() {
         Client.getStockIndexVariety().setTag(TAG)
@@ -380,11 +423,11 @@ public class HomePageFragment extends BaseFragment {
         requestStockIndexMarketData(stocks);
     }
 
-    private void requestGreetings(){
+    private void requestGreetings() {
         Client.requestGreeting().setTag(TAG).setCallback(new Callback2D<Resp<Greeting>, Greeting>() {
             @Override
             protected void onRespSuccessData(Greeting data) {
-                    mHomeTitleView.setGreetingTitle(data);
+                mHomeTitleView.setGreetingTitle(data);
             }
         }).fireFree();
     }

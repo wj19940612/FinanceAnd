@@ -430,6 +430,19 @@
         <activity
             android:name=".activity.home.AllTrainingListActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.BroadcastListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.StockFutureActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leaderboard.LeaderBoardsListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.InformationAndFocusNewsActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

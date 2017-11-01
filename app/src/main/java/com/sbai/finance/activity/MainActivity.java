@@ -160,11 +160,11 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                                     .setOnDismissListener(new UpdateVersionDialogFragment.OnDismissListener() {
                                         @Override
                                         public void onDismiss() {
-                                             requestStartActivities();
+                                            requestStartActivities();
                                         }
                                     })
                                     .show(getSupportFragmentManager());
-                        }else {
+                        } else {
                             requestStartActivities();
                         }
                     }
