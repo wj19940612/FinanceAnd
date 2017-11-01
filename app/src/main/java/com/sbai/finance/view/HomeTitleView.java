@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.Dictum;
+import com.sbai.finance.model.Greeting;
 import com.sbai.finance.model.NoticeRadio;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
@@ -122,9 +123,9 @@ public class HomeTitleView extends RelativeLayout {
 
         public void onSelectClick();
 
-        public void Practice();
+        public void onPractice();
 
-        public void daySubjuect();
+        public void onDaySubjuect();
     }
 
     private OnLookAllClickListener mOnLookAllClickListener;
@@ -147,6 +148,9 @@ public class HomeTitleView extends RelativeLayout {
         mIndexClickListener = indexClickListener;
     }
 
+    public int getOldButton() {
+        return oldButton;
+    }
 
     public HomeTitleView(Context context) {
         this(context, null);
@@ -173,8 +177,16 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     //问候title
-    private void setGreetingTitle(String greetingTitle) {
-        mGreetingTitle.setText(greetingTitle);
+    public void setGreetingTitle(Greeting greetingTitle) {
+        if (greetingTitle == null) {
+            mGreetingTitle.setText(R.string.app_name);
+            return;
+        }
+        if (!TextUtils.isEmpty(greetingTitle.getGreetings())) {
+            mGreetingTitle.setText(greetingTitle.getGreetings());
+        } else {
+            mGreetingTitle.setText(R.string.app_name);
+        }
     }
 
     //广播内容
@@ -203,7 +215,7 @@ public class HomeTitleView extends RelativeLayout {
         }
     }
 
-    @OnClick({R.id.stockBtn, R.id.futureBtn, R.id.selectBtn,R.id.centerSelectRL,R.id.leftSelectRL,R.id.rightSelectRL})
+    @OnClick({R.id.stockBtn, R.id.futureBtn, R.id.selectBtn, R.id.centerSelectRL, R.id.leftSelectRL, R.id.rightSelectRL, R.id.lookAllBtn, R.id.practiceBtn, R.id.writeTopicBtn})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.stockBtn:
@@ -236,8 +248,23 @@ public class HomeTitleView extends RelativeLayout {
             case R.id.leftSelectRL:
             case R.id.centerSelectRL:
             case R.id.rightSelectRL:
-                if(mOnLookAllClickListener!=null){
+                if (mOnLookAllClickListener != null) {
                     mOnLookAllClickListener.onSelectClick();
+                }
+                break;
+            case R.id.lookAllBtn:
+                if (mOnLookAllClickListener != null) {
+                    mOnLookAllClickListener.onLookAll();
+                }
+                break;
+            case R.id.practiceBtn:
+                if (mOnLookAllClickListener != null) {
+                    mOnLookAllClickListener.onPractice();
+                }
+                break;
+            case R.id.writeTopicBtn:
+                if (mOnLookAllClickListener != null) {
+                    mOnLookAllClickListener.onDaySubjuect();
                 }
                 break;
         }
@@ -248,6 +275,7 @@ public class HomeTitleView extends RelativeLayout {
         if (oldButton == buttonIndex) {
             return;
         }
+        oldButton = buttonIndex;
         switch (buttonIndex) {
             case BUTTON_HUSHEN:
                 mIndexRL.setBackgroundDrawable(getResources().getDrawable(R.drawable.home_select_open_one));
@@ -262,7 +290,6 @@ public class HomeTitleView extends RelativeLayout {
                 initSelectUI();
                 break;
         }
-        oldButton = buttonIndex;
     }
 
     //数据有更新，根据按钮处于哪一块选择更新的UI
@@ -285,9 +312,7 @@ public class HomeTitleView extends RelativeLayout {
 
     //数据有了，更新股票UI,这里只有股票的代码，没行情
     public void updateStockIndexData(List<Variety> data) {
-        if (oldButton != BUTTON_HUSHEN) {
-            return;
-        }
+        Log.e("zxx", "updateStockIndexData size" + data.size());
         switch (data.size()) {
             case 0:
                 return;
@@ -316,6 +341,7 @@ public class HomeTitleView extends RelativeLayout {
 
     //更新股票行情
     public void updateStockIndexMarketData(List<StockData> data) {
+        Log.e("zxx", "updateStockIndexMarketData " + data.size());
         // 2.判断涨跌
         int redColor = ContextCompat.getColor(mContext, R.color.redPrimary);
         int greenColor = ContextCompat.getColor(mContext, R.color.greenAssist);
@@ -466,7 +492,7 @@ public class HomeTitleView extends RelativeLayout {
             mCenterIndex.setTag(data.get(1));
             mCenterIndex.setText(data.get(1).getVarietyName());
             setIndexViewVisible(SELECT_RIGHT, true);
-            mLeftSelectRL.setVisibility(View.GONE);
+            mRightSelectRL.setVisibility(View.GONE);
             mRightIndex.setTag(data.get(2));
             mRightIndex.setText(data.get(2).getVarietyName());
         }
@@ -481,20 +507,34 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     private void initStockOrFutureUI(int button) {
-        setIndexViewVisible(BUTTON_HUSHEN, true);
-        setIndexViewVisible(BUTTON_QIHUO, true);
-        setIndexViewVisible(BUTTON_ZIXUAN, true);
+        setIndexViewVisible(SELECT_LEFT, true);
+        setIndexViewVisible(SELECT_CENTER, true);
+        setIndexViewVisible(SELECT_RIGHT, true);
+        revertIndexUI();
         mLeftSelectRL.setVisibility(View.GONE);
         mCenterSelectRL.setVisibility(View.GONE);
         mRightSelectRL.setVisibility(View.GONE);
-        int redColor = ContextCompat.getColor(mContext, R.color.redPrimary);
-        int greenColor = ContextCompat.getColor(mContext, R.color.greenAssist);
+        mLeftIndex.setTag(null);
+        mCenterIndex.setTag(null);
+        mRightIndex.setTag(null);
+    }
+
+    private void initSelectUI() {
+        setIndexViewVisible(SELECT_LEFT, false);
+        setIndexViewVisible(SELECT_CENTER, false);
+        setIndexViewVisible(SELECT_RIGHT, false);
+        revertIndexUI();
+        mLeftSelectRL.setVisibility(View.VISIBLE);
+        mCenterSelectRL.setVisibility(View.VISIBLE);
+        mRightSelectRL.setVisibility(View.VISIBLE);
+        mLeftIndex.setTag(null);
+        mCenterIndex.setTag(null);
+        mRightIndex.setTag(null);
+    }
+
+    private void revertIndexUI() {
         int greyColor = ContextCompat.getColor(mContext, R.color.unluckyText);
-        if (button == BUTTON_HUSHEN) {
-            mLeftIndex.setText(R.string.ShangHaiStockExchange);
-        } else if (button == BUTTON_QIHUO) {
-            mLeftIndex.setText("--");
-        }
+        mLeftIndex.setText("--");
         mLeftIndexValue.setTextColor(greyColor);
         mLeftIndexValue.setText("--");
         mLeftLeftIndexPer.setTextColor(greyColor);
@@ -503,11 +543,8 @@ public class HomeTitleView extends RelativeLayout {
         mLeftLeftIndexPer.setText("--");
         mLeftRightIndexPer.setTextColor(greyColor);
         mLeftRightIndexPer.setText("--");
-        if (button == BUTTON_HUSHEN) {
-            mCenterIndex.setText(R.string.ShenzhenStockExchange);
-        } else if (button == BUTTON_QIHUO) {
-            mCenterIndex.setText("--");
-        }
+
+        mCenterIndex.setText("--");
         mCenterIndexValue.setTextColor(greyColor);
         mCenterIndexValue.setText("--");
         mCenterLeftIndexPer.setTextColor(greyColor);
@@ -516,11 +553,8 @@ public class HomeTitleView extends RelativeLayout {
         mCenterLeftIndexPer.setText("--");
         mCenterRightIndexPer.setTextColor(greyColor);
         mCenterRightIndexPer.setText("--");
-        if (button == BUTTON_HUSHEN) {
-            mRightIndex.setText(R.string.GrowthEnterpriseMarket);
-        } else if (button == BUTTON_QIHUO) {
-            mRightIndex.setText("--");
-        }
+
+        mRightIndex.setText("--");
         mRightIndexValue.setTextColor(greyColor);
         mRightIndexValue.setText("--");
         mRightLeftIndexPer.setTextColor(greyColor);
@@ -529,15 +563,6 @@ public class HomeTitleView extends RelativeLayout {
         mRightLeftIndexPer.setText("--");
         mRightRightIndexPer.setTextColor(greyColor);
         mRightRightIndexPer.setText("--");
-    }
-
-    private void initSelectUI() {
-        setIndexViewVisible(BUTTON_HUSHEN, false);
-        setIndexViewVisible(BUTTON_QIHUO, false);
-        setIndexViewVisible(BUTTON_ZIXUAN, false);
-        mLeftSelectRL.setVisibility(View.VISIBLE);
-        mCenterSelectRL.setVisibility(View.VISIBLE);
-        mRightSelectRL.setVisibility(View.VISIBLE);
     }
 
     private void setIndexViewVisible(int locationIndexVisible, boolean isVisible) {

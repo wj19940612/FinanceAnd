@@ -3,15 +3,12 @@ package com.sbai.finance.view;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -25,12 +22,11 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2017\10\30 0030.
@@ -45,6 +41,8 @@ public class SevenHourNewsView extends RelativeLayout {
     public static final int TEXT_ANIMATE_DURATION = 300;
     @BindView(R.id.contentLL)
     LinearLayout mContentLL;
+    @BindView(R.id.moreBtn)
+    TextView mMoreBtn;
 
     private Context mContext;
     private LayoutInflater mInflater;
@@ -59,10 +57,12 @@ public class SevenHourNewsView extends RelativeLayout {
     private List<TextViewState> mTextViewStates;
 
     private OnMoreBtnClickListener mOnMoreBtnClickListener;
-    public interface OnMoreBtnClickListener{
+
+    public interface OnMoreBtnClickListener {
         public void onMoreClick();
     }
-    public void setOnMoreBtnClickListener(OnMoreBtnClickListener onMoreBtnClickListener){
+
+    public void setOnMoreBtnClickListener(OnMoreBtnClickListener onMoreBtnClickListener) {
         mOnMoreBtnClickListener = onMoreBtnClickListener;
     }
 
@@ -99,6 +99,17 @@ public class SevenHourNewsView extends RelativeLayout {
         mLeaveReports = new ArrayList<DailyReport>();
         mTextViewStates = new ArrayList<TextViewState>();
         canAnimate = true;
+    }
+
+    @OnClick(R.id.moreBtn)
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.moreBtn:
+                if (mOnMoreBtnClickListener != null) {
+                    mOnMoreBtnClickListener.onMoreClick();
+                }
+                break;
+        }
     }
 
     public void setTextNews(List<DailyReport> data) {
@@ -223,7 +234,7 @@ public class SevenHourNewsView extends RelativeLayout {
     }
 
     private void animateTextView(final TextViewState textViewState) {
-        if(!canAnimate){
+        if (!canAnimate) {
             return;
         }
         if (!textViewState.hasGetLinesHeight) {

@@ -60,6 +60,8 @@
                 android:layout_below="@id/leftHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="57dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 >
 
                 <TextView
@@ -135,6 +137,8 @@
                 android:layout_below="@id/centerHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="57dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 >
 
                 <TextView
@@ -210,6 +214,8 @@
                 android:layout_below="@id/rightHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="57dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 >
 
                 <TextView

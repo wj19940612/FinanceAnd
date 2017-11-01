@@ -2727,4 +2727,8 @@ public class Client {
     public static API requestfindDictumData(){
         return new API("/user/radio/findDictum.do");
     }
+
+    public static API requestGreeting(){
+        return new API("/user/dictionary/findDictionaryForJson.do?type=greetings");
+    }
 }

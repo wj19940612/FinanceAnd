@@ -17,6 +17,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.Dictum;
+import com.sbai.finance.model.Greeting;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.NoticeRadio;
 import com.sbai.finance.model.Variety;
@@ -98,11 +99,11 @@ public class HomePageFragment extends BaseFragment {
         MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
     }
 
-    private void startAllSchedule(){
-        scheduleHandler.sendEmptyMessageDelayed(HANDLER_STOCK,TIME_HANDLER_STOCK);
-        scheduleHandler.sendEmptyMessageDelayed(HANDLER_BANNER,TIME_HANDLER_BANNER);
-        scheduleHandler.sendEmptyMessageDelayed(HANDLER_BUSNESSBANNER,TIME_HANDLER_BUSNESSBANNER);
-        scheduleHandler.sendEmptyMessageDelayed(HANDLER_DAILY_REPORT,TIME_HANDLER_DAILY_REPORT);
+    private void startAllSchedule() {
+        mScheduleHandler.sendEmptyMessageDelayed(HANDLER_STOCK, TIME_HANDLER_STOCK);
+        mScheduleHandler.sendEmptyMessageDelayed(HANDLER_BANNER, TIME_HANDLER_BANNER);
+        mScheduleHandler.sendEmptyMessageDelayed(HANDLER_BUSNESSBANNER, TIME_HANDLER_BUSNESSBANNER);
+        mScheduleHandler.sendEmptyMessageDelayed(HANDLER_DAILY_REPORT, TIME_HANDLER_DAILY_REPORT);
     }
 
     @Override
@@ -113,17 +114,21 @@ public class HomePageFragment extends BaseFragment {
         MarketSubscriber.get().unSubscribeAll();
     }
 
-    private void stopAllSchedule(){
-        scheduleHandler.removeCallbacksAndMessages(null);
+    private void stopAllSchedule() {
+        mScheduleHandler.removeCallbacksAndMessages(null);
     }
 
-    private Handler scheduleHandler = new Handler() {
+    private Handler mScheduleHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HANDLER_STOCK:
-                    requestStockIndexData();
-                    scheduleHandler.sendEmptyMessageDelayed(HANDLER_STOCK,TIME_HANDLER_STOCK);
+                    if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_HUSHEN) {
+                        requestStockIndexData();
+                    } else if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_ZIXUAN) {
+                        requestOptionalData();
+                    }
+                    mScheduleHandler.sendEmptyMessageDelayed(HANDLER_STOCK, TIME_HANDLER_STOCK);
                     break;
                 case HANDLER_BANNER:
                     mBanner.nextAdvertisement();
@@ -197,12 +202,12 @@ public class HomePageFragment extends BaseFragment {
             }
 
             @Override
-            public void Practice() {
+            public void onPractice() {
                 //点击练一练
             }
 
             @Override
-            public void daySubjuect() {
+            public void onDaySubjuect() {
                 //点击一日一题
             }
         });
@@ -254,7 +259,6 @@ public class HomePageFragment extends BaseFragment {
             public void mobai(String rankType, LeaderThreeRank item) {
                 if (item.getUser() != null) {
                     if (LocalUser.getUser().isLogin()) {
-                        Log.e("zzz Home", "click mobai");
                         requestWorship(rankType, item.getUser().getId());
                     } else {
                         Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -279,6 +283,7 @@ public class HomePageFragment extends BaseFragment {
                 //要闻更多
             }
         });
+        requestGreetings();
         mHomeTitleView.clickIndexButton(HomeTitleView.BUTTON_HUSHEN);
         requestStockIndexData();
         requestRadioData();
@@ -373,6 +378,15 @@ public class HomePageFragment extends BaseFragment {
         }
 //        requestFutureMarketData(futures);
         requestStockIndexMarketData(stocks);
+    }
+
+    private void requestGreetings(){
+        Client.requestGreeting().setTag(TAG).setCallback(new Callback2D<Resp<Greeting>, Greeting>() {
+            @Override
+            protected void onRespSuccessData(Greeting data) {
+                    mHomeTitleView.setGreetingTitle(data);
+            }
+        }).fireFree();
     }
 
     private void requestRadioData() {
