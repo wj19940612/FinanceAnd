@@ -350,11 +350,7 @@ public class IngotOrSavantBoardLeaderBoardFragment extends BaseFragment implemen
 
         @Override
         public int getItemViewType(int position) {
-            if (position == 0 || position == 1 || position == 2) {
-                return 0;
-            } else {
-                return 1;
-            }
+            return position < 3 ? 0 : 1;
         }
 
         @Override
