@@ -106,6 +106,10 @@ public class HomeTitleView extends RelativeLayout {
 
     private OnDictumClickListener mOnDictumClickListener;
 
+    public int getOldButton() {
+        return oldButton;
+    }
+
     public void setOnDictumClickListener(OnDictumClickListener onDictumClickListener) {
         mOnDictumClickListener = onDictumClickListener;
     }
@@ -146,10 +150,6 @@ public class HomeTitleView extends RelativeLayout {
 
     public void setIndexClickListener(IndexClickListener indexClickListener) {
         mIndexClickListener = indexClickListener;
-    }
-
-    public int getOldButton() {
-        return oldButton;
     }
 
     public HomeTitleView(Context context) {
