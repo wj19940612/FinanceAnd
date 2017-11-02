@@ -151,7 +151,7 @@ public class ImportantNewsView extends RelativeLayout {
         }
 
         titleView.setText(dailyReport.getTitle());
-        timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
+        timeView.setText(DateUtil.getFormatTime(dailyReport.getCreateTime()));
         rl.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

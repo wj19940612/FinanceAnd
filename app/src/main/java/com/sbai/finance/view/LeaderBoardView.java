@@ -3,21 +3,23 @@ package com.sbai.finance.view;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.leaderboard.LeaderBoardRank;
 import com.sbai.finance.model.leaderboard.LeaderThreeRank;
 import com.sbai.finance.utils.Network;
 import com.sbai.glide.GlideApp;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +52,18 @@ public class LeaderBoardView extends LinearLayout {
     ImageView mRightMobaiBtn;
     @BindView(R.id.rightLookRankBtn)
     RelativeLayout mRightLookRankBtn;
+    @BindView(R.id.leftGoneText)
+    TextView mLeftGoneText;
+    @BindView(R.id.centerGoneText)
+    TextView mCenterGoneText;
+    @BindView(R.id.rightGoneText)
+    TextView mRightGoneText;
+    @BindView(R.id.leftTopIcon)
+    ImageView mLeftTopIcon;
+    @BindView(R.id.centerTopIcon)
+    ImageView mCenterTopIcon;
+    @BindView(R.id.rightTopIcon)
+    ImageView mRightTopIcon;
 
     private Context mContext;
 
@@ -119,18 +133,29 @@ public class LeaderBoardView extends LinearLayout {
         if (data == null) {
             return;
         }
+        Map<String, LeaderThreeRank> haveDataMap = new HashMap<String, LeaderThreeRank>();
+        haveDataMap.put(INGOT, null);
+        haveDataMap.put(PROFIT, null);
+        haveDataMap.put(SAVANT, null);
         ImageView mobaiBtn = null;
         ImageView headView = null;
+        TextView goneView = null;
         for (final LeaderThreeRank dataBean : data) {
             if (dataBean.getType().equals(INGOT)) {
                 mobaiBtn = mLeftMobaiBtn;
                 headView = mLeftHead;
+                goneView = mLeftGoneText;
+                haveDataMap.put(INGOT, dataBean);
             } else if (dataBean.getType().equals(PROFIT)) {
                 mobaiBtn = mCenterMobaiBtn;
                 headView = mCenterHead;
+                goneView = mCenterGoneText;
+                haveDataMap.put(PROFIT, dataBean);
             } else if (dataBean.getType().equals(SAVANT)) {
                 mobaiBtn = mRightMobaiBtn;
                 headView = mRightHead;
+                goneView = mRightGoneText;
+                haveDataMap.put(SAVANT, dataBean);
             }
             GlideApp.with(mContext)
                     .load(dataBean.getUser().getUserPortrait())
@@ -149,11 +174,44 @@ public class LeaderBoardView extends LinearLayout {
                     if (LocalUser.getUser().isLogin() && Network.isNetworkAvailable()) {
                         finalMobaiBtn.setEnabled(false);
                     }
-                    if(mMobaiRankListener!=null) {
+                    if (mMobaiRankListener != null) {
                         mMobaiRankListener.mobai(dataBean.getType(), dataBean);
                     }
                 }
             });
+        }
+
+        //不存在的榜首作空显示处理
+        ImageView topIcon = null;
+        String type;
+        LeaderThreeRank leaderThreeRank;
+        Iterator<Map.Entry<String, LeaderThreeRank>> it = haveDataMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, LeaderThreeRank> entry = it.next();
+            type = entry.getKey();
+            leaderThreeRank = entry.getValue();
+            if (leaderThreeRank == null) {
+                if (type.equals(INGOT)) {
+                    mobaiBtn = mLeftMobaiBtn;
+                    headView = mLeftHead;
+                    goneView = mLeftGoneText;
+                    topIcon = mLeftTopIcon;
+                } else if (type.equals(PROFIT)) {
+                    mobaiBtn = mCenterMobaiBtn;
+                    headView = mCenterHead;
+                    goneView = mCenterGoneText;
+                    topIcon = mCenterTopIcon;
+                } else if (type.equals(SAVANT)) {
+                    mobaiBtn = mRightMobaiBtn;
+                    headView = mRightHead;
+                    goneView = mRightGoneText;
+                    topIcon = mRightTopIcon;
+                }
+                mobaiBtn.setVisibility(View.INVISIBLE);
+                headView.setVisibility(View.INVISIBLE);
+                topIcon.setVisibility(View.INVISIBLE);
+                goneView.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

@@ -94,6 +94,7 @@ public class HomePageFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        getIndexData();
         startAllSchedule();
         MarketSubscriber.get().subscribeAll();
         MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
@@ -123,11 +124,7 @@ public class HomePageFragment extends BaseFragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HANDLER_STOCK:
-                    if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_HUSHEN) {
-                        requestStockIndexData();
-                    } else if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_ZIXUAN) {
-                        requestOptionalData();
-                    }
+                    getIndexData();
                     mScheduleHandler.sendEmptyMessageDelayed(HANDLER_STOCK, TIME_HANDLER_STOCK);
                     break;
                 case HANDLER_BANNER:
@@ -285,13 +282,21 @@ public class HomePageFragment extends BaseFragment {
         });
         requestGreetings();
         mHomeTitleView.clickIndexButton(HomeTitleView.BUTTON_HUSHEN);
-        requestStockIndexData();
+//        requestStockIndexData();
         requestRadioData();
         requestBannerData();
         requestBusniessBannerData();
         requestLeaderBoardData();
         request7NewsData();
         requestImportantNewsData();
+    }
+
+    private void getIndexData() {
+        if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_HUSHEN) {
+            requestStockIndexData();
+        } else if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_ZIXUAN) {
+            requestOptionalData();
+        }
     }
 
     private void requestStockIndexData() {
@@ -380,11 +385,11 @@ public class HomePageFragment extends BaseFragment {
         requestStockIndexMarketData(stocks);
     }
 
-    private void requestGreetings(){
+    private void requestGreetings() {
         Client.requestGreeting().setTag(TAG).setCallback(new Callback2D<Resp<Greeting>, Greeting>() {
             @Override
             protected void onRespSuccessData(Greeting data) {
-                    mHomeTitleView.setGreetingTitle(data);
+                mHomeTitleView.setGreetingTitle(data);
             }
         }).fireFree();
     }

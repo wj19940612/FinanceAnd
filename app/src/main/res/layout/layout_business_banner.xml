@@ -8,7 +8,7 @@
         android:id="@+id/topLine"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/splitLineColor"
+        android:background="@color/bannerSplitColor"
         />
 
     <LinearLayout
@@ -63,7 +63,7 @@
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-            android:background="@color/splitLineColor"
+            android:background="@color/bannerSplitColor"
             />
 
         <LinearLayout
@@ -116,7 +116,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/splitLineColor"
+                android:background="@color/bannerSplitColor"
                 />
 
             <RelativeLayout

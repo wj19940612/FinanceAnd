@@ -3,6 +3,7 @@ package com.sbai.finance.view;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -160,7 +161,7 @@ public class SevenHourNewsView extends RelativeLayout {
         if (canBeAdd && !nowAdding) {
             TextView textView = getAddTextView(dailyReport);
             TextView timeView = (TextView) contentItemView.findViewById(R.id.timeView);
-            timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
+            timeView.setText(DateUtil.getFormatTime(dailyReport.getCreateTime()));
             contentItemView.addView(textView);
             mContentLL.addView(contentItemView);
             if (isFromList) {
@@ -174,7 +175,7 @@ public class SevenHourNewsView extends RelativeLayout {
     private TextView getAddTextView(DailyReport dailyReport) {
         final TextView textView = new TextView(mContext);
         String title = dailyReport.getTitle() == null ? "" : dailyReport.getTitle();
-        String content = dailyReport.getContent() == null ? "" : dailyReport.getContent();
+        String content = dailyReport.getContent() == null ? "" : Html.fromHtml(dailyReport.getContent()).toString().trim();
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title + content);
         ForegroundColorSpan bigColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.blackIndexText));
         spannableStringBuilder.setSpan(bigColorSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -188,7 +189,7 @@ public class SevenHourNewsView extends RelativeLayout {
         AbsoluteSizeSpan smallSizeSpan = new AbsoluteSizeSpan(((int) Display.sp2Px(TEXT_SMALL_SP, getResources())));
         spannableStringBuilder.setSpan(smallSizeSpan, title.length(), title.length() + content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
-        LayoutParams textParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams textParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         textParams.addRule(BELOW, R.id.iconView);
         textParams.setMargins((int) Display.dp2Px(TEXT_PADDING_DP, getResources()), 0, (int) Display.dp2Px(TEXT_PADDING_DP, getResources()), 0);
         textView.setLayoutParams(textParams);

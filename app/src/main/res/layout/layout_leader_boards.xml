@@ -25,6 +25,18 @@
                 android:src="@drawable/home_rank_tycoon"
                 />
 
+            <TextView
+                android:id="@+id/leftGoneText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/leftIcon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="38dp"
+                android:text="暂无用户数据"
+                android:textColor="@color/tipText"
+                android:textSize="12sp"
+                />
+
             <ImageView
                 android:id="@+id/leftHead"
                 android:layout_width="54dp"
@@ -32,6 +44,7 @@
                 android:layout_below="@id/leftIcon"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="4dp"
+                android:visibility="invisible"
                 />
 
             <ImageView
@@ -41,6 +54,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="92dp"
                 android:src="@drawable/ic_rank_top_1"
+                android:visibility="invisible"
                 />
 
             <ImageView
@@ -51,6 +65,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
                 android:background="@drawable/btn_mobai"
+                android:visibility="invisible"
                 />
 
             <RelativeLayout
@@ -60,20 +75,20 @@
                 android:layout_below="@id/leftHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="57dp"
-                android:paddingTop="5dp"
                 android:paddingBottom="5dp"
+                android:paddingTop="5dp"
                 >
 
                 <TextView
                     android:id="@+id/leftTipTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawablePadding="3dp"
+                    android:drawableRight="@drawable/ic_little_right_arrow"
+                    android:includeFontPadding="false"
                     android:text="@string/look_my_rank"
                     android:textColor="@color/tipText"
                     android:textSize="10sp"
-                    android:includeFontPadding="false"
-                    android:drawableRight="@drawable/ic_little_right_arrow"
-                    android:drawablePadding="3dp"
                     />
             </RelativeLayout>
         </RelativeLayout>
@@ -102,6 +117,18 @@
                 android:src="@drawable/home_rank_money"
                 />
 
+            <TextView
+                android:id="@+id/centerGoneText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/centerIcon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="38dp"
+                android:text="暂无用户数据"
+                android:textColor="@color/tipText"
+                android:textSize="12sp"
+                />
+
             <ImageView
                 android:id="@+id/centerHead"
                 android:layout_width="54dp"
@@ -109,6 +136,7 @@
                 android:layout_below="@id/centerIcon"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="4dp"
+                android:visibility="invisible"
                 />
 
             <ImageView
@@ -118,6 +146,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="92dp"
                 android:src="@drawable/ic_rank_top_1"
+                android:visibility="invisible"
                 />
 
             <ImageView
@@ -128,6 +157,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
                 android:background="@drawable/btn_mobai"
+                android:visibility="invisible"
                 />
 
             <RelativeLayout
@@ -137,20 +167,20 @@
                 android:layout_below="@id/centerHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="57dp"
-                android:paddingTop="5dp"
                 android:paddingBottom="5dp"
+                android:paddingTop="5dp"
                 >
 
                 <TextView
                     android:id="@+id/centerTipTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawablePadding="3dp"
+                    android:drawableRight="@drawable/ic_little_right_arrow"
+                    android:includeFontPadding="false"
                     android:text="@string/look_my_rank"
                     android:textColor="@color/tipText"
                     android:textSize="10sp"
-                    android:includeFontPadding="false"
-                    android:drawableRight="@drawable/ic_little_right_arrow"
-                    android:drawablePadding="3dp"
                     />
             </RelativeLayout>
         </RelativeLayout>
@@ -179,6 +209,18 @@
                 android:src="@drawable/home_rank_student"
                 />
 
+            <TextView
+                android:id="@+id/rightGoneText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rightIcon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="38dp"
+                android:text="暂无用户数据"
+                android:textColor="@color/tipText"
+                android:textSize="12sp"
+                />
+
             <ImageView
                 android:id="@+id/rightHead"
                 android:layout_width="54dp"
@@ -186,6 +228,7 @@
                 android:layout_below="@id/rightIcon"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="4dp"
+                android:visibility="invisible"
                 />
 
             <ImageView
@@ -195,6 +238,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="92dp"
                 android:src="@drawable/ic_rank_top_1"
+                android:visibility="invisible"
                 />
 
             <ImageView
@@ -205,6 +249,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
                 android:background="@drawable/btn_mobai"
+                android:visibility="invisible"
                 />
 
             <RelativeLayout
@@ -214,20 +259,20 @@
                 android:layout_below="@id/rightHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="57dp"
-                android:paddingTop="5dp"
                 android:paddingBottom="5dp"
+                android:paddingTop="5dp"
                 >
 
                 <TextView
                     android:id="@+id/rightTipTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawablePadding="3dp"
+                    android:drawableRight="@drawable/ic_little_right_arrow"
+                    android:includeFontPadding="false"
                     android:text="@string/look_my_rank"
                     android:textColor="@color/tipText"
                     android:textSize="10sp"
-                    android:includeFontPadding="false"
-                    android:drawableRight="@drawable/ic_little_right_arrow"
-                    android:drawablePadding="3dp"
                     />
             </RelativeLayout>
         </RelativeLayout>

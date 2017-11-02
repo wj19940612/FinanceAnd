@@ -310,9 +310,16 @@ public class HomeTitleView extends RelativeLayout {
         }
     }
 
-    //数据有了，更新股票UI,这里只有股票的代码，没行情
+    private void updateSelectStockMarketData(List<StockData> result) {
+        updateStockIndexMarketData(result);
+    }
+
+    private void updateSelectFutureMarketData() {
+        updateFutureMarketData();
+    }
+
+    //更新股票名称
     public void updateStockIndexData(List<Variety> data) {
-        Log.e("zxx", "updateStockIndexData size" + data.size());
         switch (data.size()) {
             case 0:
                 return;
@@ -339,55 +346,6 @@ public class HomeTitleView extends RelativeLayout {
         }
     }
 
-    //更新股票行情
-    public void updateStockIndexMarketData(List<StockData> data) {
-        Log.e("zxx", "updateStockIndexMarketData " + data.size());
-        // 2.判断涨跌
-        int redColor = ContextCompat.getColor(mContext, R.color.redPrimary);
-        int greenColor = ContextCompat.getColor(mContext, R.color.greenAssist);
-        int greyColor = ContextCompat.getColor(mContext, R.color.unluckyText);
-        int color;
-        Variety variety;
-        for (StockData stockData : data) {
-            String rateChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
-            String ratePrice = stockData.getUpDropPrice();
-            if (rateChange.startsWith("-")) {
-                color = greenColor;
-            } else {
-                color = redColor;
-                rateChange = "+" + rateChange;
-                ratePrice = "+" + ratePrice;
-            }
-            variety = (Variety) mLeftIndex.getTag();
-            if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK) && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
-                mLeftIndexValue.setTextColor(color);
-                mLeftIndexValue.setText(stockData.getLastPrice());
-                mLeftLeftIndexPer.setText(ratePrice);
-                mLeftRightIndexPer.setText(rateChange);
-                mLeftLeftIndexPer.setTextColor(color);
-                mLeftRightIndexPer.setTextColor(color);
-            }
-            variety = (Variety) mRightIndex.getTag();
-            if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK) && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
-                mRightIndexValue.setTextColor(color);
-                mRightIndexValue.setText(stockData.getLastPrice());
-                mRightLeftIndexPer.setText(ratePrice);
-                mRightRightIndexPer.setText(rateChange);
-                mRightLeftIndexPer.setTextColor(color);
-                mRightRightIndexPer.setTextColor(color);
-            }
-            variety = (Variety) mCenterIndex.getTag();
-            if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK) && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
-                mCenterIndexValue.setTextColor(color);
-                mCenterIndexValue.setText(stockData.getLastPrice());
-                mCenterLeftIndexPer.setText(ratePrice);
-                mCenterRightIndexPer.setText(rateChange);
-                mCenterLeftIndexPer.setTextColor(color);
-                mCenterRightIndexPer.setTextColor(color);
-            }
-        }
-    }
-
     //更新期货名称
     public void updateFutureData(List<Variety> data) {
         if (data == null || data.size() == 0) {
@@ -409,6 +367,77 @@ public class HomeTitleView extends RelativeLayout {
             mRightIndex.setText(data.get(2).getVarietyName());
         }
         updateFutureMarketData();
+    }
+
+    //更新股票行情
+    public void updateStockIndexMarketData(List<StockData> data) {
+        Variety variety;
+        for (StockData stockData : data) {
+            variety = (Variety) mLeftIndex.getTag();
+            if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK) && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
+                updateIndexDataToUI(SELECT_LEFT, stockData);
+            }
+            variety = (Variety) mCenterIndex.getTag();
+            if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK) && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
+                updateIndexDataToUI(SELECT_CENTER, stockData);
+            }
+            variety = (Variety) mRightIndex.getTag();
+            if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK) && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
+                updateIndexDataToUI(SELECT_RIGHT, stockData);
+            }
+
+        }
+    }
+
+    private void updateIndexDataToUI(int selectRange, StockData data) {
+        TextView indexValue = null;
+        TextView leftIndexPer = null;
+        TextView rightIndexPer = null;
+        switch (selectRange) {
+            case SELECT_LEFT:
+                indexValue = mLeftIndexValue;
+                leftIndexPer = mLeftLeftIndexPer;
+                rightIndexPer = mLeftRightIndexPer;
+                break;
+            case SELECT_CENTER:
+                indexValue = mCenterIndexValue;
+                leftIndexPer = mCenterLeftIndexPer;
+                rightIndexPer = mCenterRightIndexPer;
+                break;
+            case SELECT_RIGHT:
+                indexValue = mRightIndexValue;
+                leftIndexPer = mRightLeftIndexPer;
+                rightIndexPer = mRightRightIndexPer;
+                break;
+        }
+        int redColor = ContextCompat.getColor(mContext, R.color.redPrimary);
+        int greenColor = ContextCompat.getColor(mContext, R.color.greenAssist);
+        int greyColor = ContextCompat.getColor(mContext, R.color.unluckyText);
+        int color;
+        String rateChange = FinanceUtil.formatToPercentage(data.getUpDropSpeed());
+        String ratePrice = data.getUpDropPrice();
+        if (rateChange.startsWith("-")) {
+            color = greenColor;
+        } else {
+            color = redColor;
+            rateChange = "+" + rateChange;
+            ratePrice = "+" + ratePrice;
+        }
+        if (data.isDelist()) {
+            indexValue.setText("停牌");
+            indexValue.setTextColor(greyColor);
+            leftIndexPer.setText(ratePrice);
+            rightIndexPer.setText(rateChange);
+            leftIndexPer.setTextColor(greyColor);
+            rightIndexPer.setTextColor(greyColor);
+        } else {
+            indexValue.setTextColor(color);
+            indexValue.setText(data.getLastPrice());
+            leftIndexPer.setText(ratePrice);
+            rightIndexPer.setText(rateChange);
+            leftIndexPer.setTextColor(color);
+            rightIndexPer.setTextColor(color);
+        }
     }
 
     public void updateFutureMarketData() {
@@ -496,14 +525,6 @@ public class HomeTitleView extends RelativeLayout {
             mRightIndex.setTag(data.get(2));
             mRightIndex.setText(data.get(2).getVarietyName());
         }
-    }
-
-    private void updateSelectStockMarketData(List<StockData> result) {
-        updateStockIndexMarketData(result);
-    }
-
-    private void updateSelectFutureMarketData() {
-        updateFutureMarketData();
     }
 
     private void initStockOrFutureUI(int button) {
