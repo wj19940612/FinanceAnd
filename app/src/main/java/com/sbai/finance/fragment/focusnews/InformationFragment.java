@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -345,10 +346,10 @@ public class InformationFragment extends BaseFragment {
                 if (TextUtils.isEmpty(item.getTitle())) {
                     mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                     mContent.setTextColor(ContextCompat.getColor(context, R.color.luckyText));
-                    mContent.setText(item.getContent());
+                    mContent.setText(Html.fromHtml(item.getContent().toString().trim()));
                 } else {
                     mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                    mContent.setText(StrUtil.mergeTextWithRatioColorBold(item.getTitle(), item.getContent(), 0.86f,
+                    mContent.setText(StrUtil.mergeTextWithRatioColorBold(item.getTitle(), Html.fromHtml(item.getContent()).toString().trim(), 0.86f,
                             ContextCompat.getColor(context, R.color.primaryText), ContextCompat.getColor(context, R.color.luckyText)));
                 }
                 mContent.setMaxLines(3);
