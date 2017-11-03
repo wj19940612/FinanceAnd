@@ -191,10 +191,18 @@ public class HomeTitleView extends RelativeLayout {
 
     //广播内容
     public void setBroadcastContent(List<NoticeRadio> noticeRadios) {
-        mBroadcastIcon.setVisibility(View.VISIBLE);
-        mBroadcastText.setVisibility(View.GONE);
-        mVerticalScrollTextView.setNoticeRadios(noticeRadios);
-        mVerticalScrollTextView.startAutoScroll();
+        if (noticeRadios != null && noticeRadios.size() > 1) {
+            mBroadcastIcon.setVisibility(View.VISIBLE);
+            mBroadcastText.setVisibility(View.GONE);
+            mVerticalScrollTextView.setVisibility(View.VISIBLE);
+            mVerticalScrollTextView.setNoticeRadios(noticeRadios);
+            mVerticalScrollTextView.startAutoScroll();
+        } else {
+            mVerticalScrollTextView.setVisibility(View.GONE);
+            mBroadcastIcon.setVisibility(View.VISIBLE);
+            mBroadcastText.setVisibility(View.VISIBLE);
+            mBroadcastText.setText(noticeRadios.get(0).getContent());
+        }
     }
 
     //设置名言

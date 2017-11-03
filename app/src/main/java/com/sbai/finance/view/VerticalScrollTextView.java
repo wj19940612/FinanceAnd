@@ -108,6 +108,7 @@ public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher
      * 开始滚动
      */
     public void startAutoScroll() {
+        handler.removeMessages(FLAG_START_AUTO_SCROLL);
         handler.sendEmptyMessage(FLAG_START_AUTO_SCROLL);
     }
 
