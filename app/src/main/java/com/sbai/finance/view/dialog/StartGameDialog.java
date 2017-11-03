@@ -12,16 +12,21 @@ import com.sbai.finance.view.WaveView;
 import com.sbai.glide.GlideApp;
 
 /**
- * Created by linrongfang on 2017/7/10.
+ * Modified by john on 31/10/2017
+ * <p>
+ * 开始对战的倒数两秒弹窗
  */
-
 public class StartGameDialog extends BaseDialog {
+
+    public interface OnDismissListener {
+        void onDismiss();
+    }
 
     public StartGameDialog(Activity activity) {
         super(activity);
     }
 
-    public static void get(Activity activity, String url) {
+    public static void get(Activity activity, String url, OnDismissListener onDismissListener) {
 
         setCurrentDialog(DIALOG_START_GAME);
 
@@ -53,10 +58,10 @@ public class StartGameDialog extends BaseDialog {
                 .setCustomView(customView)
                 .show();
 
-        startCountDown(message, activity);
+        startCountDown(message, activity, onDismissListener);
     }
 
-    private static void startCountDown(final TextView message, final Activity activity) {
+    private static void startCountDown(final TextView message, final Activity activity, final OnDismissListener onDismissListener) {
         CountDownTimer timer = new CountDownTimer(4000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -68,6 +73,9 @@ public class StartGameDialog extends BaseDialog {
             @Override
             public void onFinish() {
                 dismiss(activity);
+                if (onDismissListener != null) {
+                    onDismissListener.onDismiss();
+                }
             }
         };
         timer.start();

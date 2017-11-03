@@ -262,7 +262,7 @@ public class BattleListActivity extends BaseActivity implements
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
                     if (item.getGameStatus() == Battle.GAME_STATUS_END) {
-                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                        Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(ExtraKeys.BATTLE, item)
                                 .executeForResult(CANCEL_BATTLE);
 
@@ -293,7 +293,7 @@ public class BattleListActivity extends BaseActivity implements
                             item.setEndTime(data.getEndTime());
                             mVersusListAdapter.notifyDataSetChanged();
                         }
-                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                        Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
                                 .putExtra(ExtraKeys.BATTLE, item)
                                 .executeForResult(CANCEL_BATTLE);
@@ -414,7 +414,7 @@ public class BattleListActivity extends BaseActivity implements
                             data.setAgainstUserName(battle.getAgainstUserName());
                             mVersusListAdapter.notifyDataSetChanged();
 
-                            Launcher.with(getActivity(), FutureBattleActivity.class)
+                            Launcher.with(getActivity(), BattleActivity.class)
                                     .putExtra(ExtraKeys.BATTLE, battle)
                                     .executeForResult(CANCEL_BATTLE);
                         }
@@ -658,7 +658,7 @@ public class BattleListActivity extends BaseActivity implements
                         dialog.dismiss();
                         if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
                             if (mCurrentBattle != null) {
-                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                Launcher.with(getActivity(), BattleActivity.class)
                                         .putExtra(ExtraKeys.BATTLE, mCurrentBattle)
                                         .execute();
                             }
@@ -977,7 +977,7 @@ public class BattleListActivity extends BaseActivity implements
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         mAgainstAvatar.setImageDrawable(null);
-                        mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
+                        mAgainstAvatar.setImageResource(R.drawable.btn_join_battle);
                         mAgainstAvatar.setClickable(false);
                         mAgainstName.setText(context.getString(R.string.join_versus));
                         mProgress.showScoreProgress(0, 0, true);
@@ -1005,7 +1005,7 @@ public class BattleListActivity extends BaseActivity implements
                         if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                        } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
+                        } else if (item.getWinResult() == Battle.WIN_RESULT_OWNER_WIN) {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
                         } else {

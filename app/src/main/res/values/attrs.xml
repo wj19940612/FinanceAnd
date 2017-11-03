@@ -28,6 +28,7 @@
         <attr name="maxCharNum" format="integer"/>
     </declare-styleable>
 
+    <!--带图标和文字的行控件-->
     <declare-styleable name="IconTextRow">
         <attr name="leftIcon" format="reference"/>
         <attr name="rightIcon" format="reference"/>
@@ -62,6 +63,7 @@
         <attr name="splitLineLeftPadding" format="dimension"/>
     </declare-styleable>
 
+    <!--每个页面都会添加的 TitleBar-->
     <declare-styleable name="TitleBar">
         <attr name="titleText" format="reference|string"/>
         <attr name="titleTextSize" format="dimension"/>
@@ -81,6 +83,7 @@
         <attr name="splitLineColor"/>
     </declare-styleable>
 
+    <!--圆形的海浪波纹控件-->
     <declare-styleable name="WaveView">
         <attr name="initialRadius" format="dimension"/>
         <attr name="maxRadius" format="dimension"/>
@@ -89,6 +92,7 @@
         <attr name="color" format="color"/>
     </declare-styleable>
 
+    <!--期货股票悬浮交易按钮控件-->
     <declare-styleable name="TradeFloatButtons">
         <attr name="hasTradeButton" format="boolean"/>
     </declare-styleable>
@@ -132,6 +136,7 @@
         <attr name="trimLines" format="integer"/>
     </declare-styleable>
 
+    <!--固定宽度自动缩小的 TextView 控件-->
     <declare-styleable name="AutofitTextView">
         <!-- Minimum size of the text. -->
         <attr name="minTextSize" format="dimension"/>
@@ -144,24 +149,10 @@
         <attr name="maxViewWidth" format="dimension"/>
     </declare-styleable>
 
+    <!--对战战绩对比条-->
     <declare-styleable name="BattleProgress">
-        <attr name="progressDrawable" format="reference|color"/>
-        <attr name="orientation">
-            <enum name="horizontal" value="0"/>
-            <enum name="vertical" value="1"/>
-        </attr>
-        <attr name="rightPadding" format="dimension"/>
-        <attr name="leftPadding" format="dimension"/>
-        <attr name="max" format="integer"/>
-        <attr name="progress" format="integer"/>
-        <attr name="secondaryProgress" format="integer"/>
-        <attr name="rightLabelColor" format="color|reference"/>
-        <attr name="rightLabelSize" format="dimension"/>
-        <attr name="rightLabel" format="reference|string"/>
-        <attr name="leftLabelColor" format="color|reference"/>
-        <attr name="leftLabelSize" format="dimension"/>
-        <attr name="leftLabel" format="reference|string"/>
-
+        <attr name="android:textSize"/>
+        <attr name="enable" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="EditWithWordLimitView">
@@ -217,6 +208,7 @@
         <attr name="hasSplitLine" format="boolean"/>
         <attr name="isUseDefaultProgressDrawable" format="boolean"/>
     </declare-styleable>
+
     <!--菱形的背景色-->
     <declare-styleable name="DiamondView">
         <attr name="backgroundColor" format="color|reference"/>

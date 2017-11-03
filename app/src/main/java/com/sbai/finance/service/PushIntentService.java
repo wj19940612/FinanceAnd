@@ -25,7 +25,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.activity.battle.FutureBattleActivity;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
 import com.sbai.finance.activity.miss.MissProfileActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
@@ -142,7 +142,7 @@ public class PushIntentService extends GTIntentService {
             intent.putExtra(DailyReportDetailActivity.EX_ID, data.getDataId());
         } else if (data.isBattleMatchSuccess()) {
             if (!Preference.get().isForeground() && data.getData() != null) {
-                intent = new Intent(context, FutureBattleActivity.class);
+                intent = new Intent(context, BattleActivity.class);
                 Battle battle = new Battle();
                 battle.setId(data.getData().getId());
                 battle.setBatchCode(data.getData().getBatchCode());

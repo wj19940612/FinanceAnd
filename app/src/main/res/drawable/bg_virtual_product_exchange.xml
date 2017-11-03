@@ -3,7 +3,7 @@
 
     <item android:state_selected="true">
         <shape>
-            <solid android:color="@color/rechargeSelectProduct"/>
+            <solid android:color="@color/yellowAssist"/>
         </shape>
     </item>
 

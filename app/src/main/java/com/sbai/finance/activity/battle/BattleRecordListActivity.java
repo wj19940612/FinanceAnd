@@ -76,7 +76,7 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
-                    Launcher.with(getActivity(), FutureBattleActivity.class)
+                    Launcher.with(getActivity(), BattleActivity.class)
                             .putExtra(ExtraKeys.BATTLE, item)
                             .execute();
                 }
@@ -213,7 +213,7 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                     }
 
                 }else if ((LocalUser.getUser().getUserInfo().getId() == item.getLaunchUser()
-                        && item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN)
+                        && item.getWinResult() == Battle.WIN_RESULT_OWNER_WIN)
                         ||(LocalUser.getUser().getUserInfo().getId() == item.getAgainstUser()
                         && item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN)) {
                     switch (item.getCoinType()) {
@@ -241,7 +241,7 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                     }
                 }
                 if (LocalUser.getUser().getUserInfo().getId() == item.getLaunchUser()) {
-                    if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
+                    if (item.getWinResult() == Battle.WIN_RESULT_OWNER_WIN) {
                         mVersusResultImg.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_versus_victory));
                         mVersusResult.setTextColor(ContextCompat.getColor(context, R.color.redAssist));
                         mVersusResult.setText(context.getString(R.string.wing));
@@ -269,7 +269,7 @@ public class BattleRecordListActivity extends BaseActivity implements CustomSwip
                         mVersusVarietyAndProfit.setTextColor(ContextCompat.getColor(context, R.color.redAssist));
                         mVersusVarietyAndProfit.setText(item.getVarietyName() + "  +" + reward);
 
-                    } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
+                    } else if (item.getWinResult() == Battle.WIN_RESULT_OWNER_WIN) {
                         mVersusResultImg.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_versus_failure));
                         mVersusResult.setTextColor(ContextCompat.getColor(context, R.color.white));
                         mVersusResult.setText(context.getString(R.string.failure));

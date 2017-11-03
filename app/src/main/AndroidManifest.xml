@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.sbai.finance">
+<manifest package="com.sbai.finance"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -32,8 +32,8 @@
         android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -128,7 +128,6 @@
         <activity
             android:name=".activity.mine.MyQuestionAndAnswerActivity"
             android:screenOrientation="portrait"/>
-        <!-- 明细 -->
         <!-- 选择相册图片 -->
         <activity
             android:name=".activity.mine.ImageSelectActivity"
@@ -136,6 +135,7 @@
         <activity
             android:name=".activity.mine.ImagePreViewActivity"
             android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activity.mine.NewsActivity"
             android:screenOrientation="portrait"/>
@@ -274,7 +274,7 @@
 
         <!-- 期货大战 -->
         <activity
-            android:name=".activity.battle.FutureBattleActivity"
+            android:name=".activity.battle.BattleActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.battle.BattleListActivity"

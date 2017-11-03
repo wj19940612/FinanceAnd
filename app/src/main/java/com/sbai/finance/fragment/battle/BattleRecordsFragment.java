@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import com.sbai.finance.App;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.TradeRecord;
@@ -16,7 +17,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.view.BattleBottomBothInfoView;
-import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
 
@@ -41,7 +41,7 @@ public class BattleRecordsFragment extends BaseFragment {
 
     Unbinder unbinder;
 
-    BattleTradeView.BattleTradeAdapter mBattleTradeAdapter;
+    BattleActivity.OrderRecordListAdapter mBattleTradeAdapter;
 
     private Battle mBattle;
 
@@ -77,7 +77,7 @@ public class BattleRecordsFragment extends BaseFragment {
 
     private void initViews() {
         scrollToTop(mTitleBar, mListView);
-        mBattleTradeAdapter = new BattleTradeView.BattleTradeAdapter(getContext());
+        mBattleTradeAdapter = new BattleActivity.OrderRecordListAdapter(getContext());
         mListView.setAdapter(mBattleTradeAdapter);
         mBattleView.setMode(BattleBottomBothInfoView.Mode.MINE)
                 .initWithModel(mBattle)
@@ -89,7 +89,7 @@ public class BattleRecordsFragment extends BaseFragment {
     }
 
     private void requestOrderHistory() {
-        Client.getOrderHistory(mBattle.getId())
+        Client.getTradeOperationRecords(mBattle.getId())
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<TradeRecord>>, List<TradeRecord>>() {
                     @Override
@@ -101,7 +101,7 @@ public class BattleRecordsFragment extends BaseFragment {
     }
 
     private void updateTradeHistory(List<TradeRecord> resp) {
-        mBattleTradeAdapter.setUserId(mBattle.getLaunchUser(), mBattle.getAgainstUser());
+        mBattleTradeAdapter.setOwnerId(mBattle.getLaunchUser());
         mBattleTradeAdapter.setRecordList(resp);
         mListView.setSelection(View.FOCUS_DOWN);
     }

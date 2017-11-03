@@ -7,12 +7,14 @@ import java.util.List;
  */
 
 public class FutureVersus {
-    public static final int HAS_MORE=0;
+    public static final int HAS_MORE = 0;
     private int end;
     private List<Battle> list;
-    public boolean hasMore(){
-        return end==HAS_MORE;
+
+    public boolean hasMore() {
+        return end == HAS_MORE;
     }
+
     public int getEnd() {
         return end;
     }

@@ -281,7 +281,7 @@ public class BattleBottomBothInfoView extends RelativeLayout implements View.OnC
         if (gameStatus == 3 || endTime < 0) {
             mDeadline.setText(getContext().getString(R.string.end));
         } else if (gameStatus == 2) {
-            mDeadline.setText(getContext().getString(R.string.remaining_time, DateUtil.getCountdownTime(endTime, 0)));
+            mDeadline.setText(getContext().getString(R.string.remaining_time_x, DateUtil.getCountdownTime(endTime, 0)));
         } else if (gameStatus == 1) {
             mDeadline.setText(DateUtil.getMinutes(endTime));
         }
@@ -300,8 +300,8 @@ public class BattleBottomBothInfoView extends RelativeLayout implements View.OnC
             //自己发起的对战
             mMyPerspective.setVisibility(VISIBLE);
             mUserPerspective.setVisibility(GONE);
-            mMyPraise.setText(getContext().getString(R.string.support, String.valueOf(myPraiseCount)));
-            mUserPraise.setText(getContext().getString(R.string.support, String.valueOf(fighterPraiseNumber)));
+            mMyPraise.setText(getContext().getString(R.string._support, String.valueOf(myPraiseCount)));
+            mUserPraise.setText(getContext().getString(R.string._support, String.valueOf(fighterPraiseNumber)));
         } else {
             //默认参观者模式
             mMyPerspective.setVisibility(GONE);

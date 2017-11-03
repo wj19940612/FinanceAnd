@@ -82,7 +82,7 @@ public class WsClient implements AbsWsClient {
         send(new WSMessage(SocketCode.CODE_CMD, WSCmd, callback));
     }
 
-    public void setOnPushReceiveListener(OnPushReceiveListener onPushReceiveListener) {
+    public void addOnPushReceiveListener(OnPushReceiveListener onPushReceiveListener) {
         if (mOnPushReceiveListeners == null) {
             mOnPushReceiveListeners = new ArrayList<>();
         }

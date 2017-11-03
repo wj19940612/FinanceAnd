@@ -1,22 +1,23 @@
 package com.sbai.finance.model.battle;
 
-import com.sbai.finance.model.Variety;
-
-import static com.sbai.finance.websocket.PushCode.ORDER_CREATED;
+import com.sbai.finance.net.Client;
 
 /**
- * Created by linrongfang on 2017/6/23.
+ * Modified by john on 31/10/2017
+ * <p>
+ * APIs: {@link Client#getTradeOperationRecords(int)}
+ * <p>
+ * 对战交易操作记录
  */
-
 public class TradeRecord {
 
-    public static final int DIRECTION_UP = 1;
-    public static final int DIRECTION_DOWN = 0;
+    public static final int DIRECTION_LONG = 1;
+    public static final int DIRECTION_SHORT = 0;
 
-    public static final int STATUS_TAKE_MORE_POSITION = 1;
-    public static final int STATUS_TAKE_SHORT_POSITION = 2;
-    public static final int STATUS_TAKE_MORE_CLOSE_POSITION = 3;
-    public static final int STATUS_TAKE_SHOET_CLOSE_POSITION = 4;
+    public static final int OPT_STATUS_OPEN_POSITION_LONG = 1; // 买涨建仓
+    public static final int OPT_STATUS_OPEN_POSITION_SHORT = 2; // 买跌建仓
+    public static final int OPT_STATUS_CLOSE_POSITION_LONG = 3; // 买涨平仓
+    public static final int OPT_STATUS_CLOSE_POSITION_SHORT = 4; // 买跌平仓
 
     private int handsNum;
     private double optPrice;
@@ -100,38 +101,38 @@ public class TradeRecord {
         this.varietyType = varietyType;
     }
 
-    public static TradeRecord getRecord(Battle battle, Variety variety,int type) {
+    public static TradeRecord getRecord(Battle battle) {
         TradeRecord record = new TradeRecord();
-        record.setContractsCode(battle.getContractsCode());
-        record.setHandsNum(battle.getHandsNum());
-        record.setMarketPoint(variety.getPriceScale());
-        record.setUserId(battle.getUserId());
-        record.setVarietyName(battle.getVarietyName());
-        record.setVarietyType(battle.getVarietyType());
-        if (type == ORDER_CREATED) {
-            record.setOptPrice(battle.getOrderPrice());
-            record.setOptTime(battle.getOrderTime());
-        }else {
-            record.setOptPrice(battle.getUnwindPrice());
-            record.setOptTime(battle.getUnwindTime());
+        record.handsNum = battle.getHandsNum();
+        record.userId = battle.getUserId();
+        record.contractsCode = battle.getContractsCode();
+        record.varietyName = battle.getVarietyName();
+        record.varietyType = battle.getVarietyType();
+        record.marketPoint = battle.getMarketPoint();
+
+        if (battle.getUnwindType() > 0) { // 平仓
+            record.optPrice =  battle.getUnwindPrice();
+            record.optTime = battle.getUnwindTime();
+        } else {
+            record.optPrice = battle.getOrderPrice();
+            record.optTime = battle.getOrderTime();
         }
+
         int orderStatus = 0;
-        if (battle.getDirection() == 1) {
-            //买涨
-            if (battle.getOrderStatus() == 2) {
-                orderStatus = 1;
-            } else if (battle.getOrderStatus() == 4) {
-                orderStatus = 3;
+        if (battle.getDirection() == DIRECTION_LONG) { //买涨
+            if (battle.getOrderStatus() == TradeOrder.ORDER_STATUS_HOLDING) {
+                orderStatus = OPT_STATUS_OPEN_POSITION_LONG;
+            } else if (battle.getOrderStatus() == TradeOrder.ORDER_STATUS_CLOSED) {
+                orderStatus = OPT_STATUS_CLOSE_POSITION_LONG;
             }
-        } else if (battle.getDirection() == 0) {
-            //买跌
-            if (battle.getOrderStatus() == 2) {
-                orderStatus = 2;
-            } else if (battle.getOrderStatus() == 4) {
-                orderStatus = 4;
+        } else if (battle.getDirection() == DIRECTION_SHORT) { //买跌
+            if (battle.getOrderStatus() == TradeOrder.ORDER_STATUS_HOLDING) {
+                orderStatus = OPT_STATUS_OPEN_POSITION_SHORT;
+            } else if (battle.getOrderStatus() == TradeOrder.ORDER_STATUS_CLOSED) {
+                orderStatus = OPT_STATUS_CLOSE_POSITION_SHORT;
             }
         }
-        record.setOptStatus(orderStatus);
+        record.optStatus = orderStatus;
         return record;
     }
 }

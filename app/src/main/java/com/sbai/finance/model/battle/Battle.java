@@ -3,12 +3,17 @@ package com.sbai.finance.model.battle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.net.Client;
 
 /**
- * Created by Administrator on 2017-06-21.
+ * Modified by john on 31/10/2017
+ *
+ * APIs:
+ * {@link Client#requestBannerInfo(String)} 获取对战信息
+ *
+ * {@link Client#getMyVersusRecord(Long)} 获取对战记录
+ *
  */
-
 public class Battle implements Parcelable {
 
     //1现金 2元宝 3积分
@@ -24,7 +29,7 @@ public class Battle implements Parcelable {
 
     //0平手 1发起者赢 2应战者赢
     public static final int WIN_RESULT_TIE = 0;
-    public static final int WIN_RESULT_CREATOR_WIN = 1;
+    public static final int WIN_RESULT_OWNER_WIN = 1;
     public static final int WIN_RESULT_CHALLENGER_WIN = 2;
 
     // 1房主快速匹配  2应战者快速匹配
@@ -44,89 +49,196 @@ public class Battle implements Parcelable {
     public static final int CODE_AGAINST_FAST_MATCH_TIMEOUT = 4642;
     public static final int CODE_CREATE_FAST_MATCH_TIMEOUT = 4641;
 
-    /**
-     * againstFrom : 经济圈
-     * againstUser : 286
-     * againstUserName : 朱哥哥
-     * againstUserPortrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1497320196633.png
-     * batchCode : 2017062015
-     * coinType : 2
-     * createTime : 1497944006000
-     * endTime : 1497943999000
-     * endline : 600
-     * gameStatus : 2
-     * id : 1
-     * launchUser : 132
-     * launchUserName : 12*3
-     * launchUserPortrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1495699927906.png
-     * modifyTime : 1497944102000
-     * reward : 300
-     * startTime : 1497943387000
-     * varietyId : 101
-     * varietyName : 美黄金
-     * varietyType : cn
-     * winResult : 1
+    /** 对战信息数据结构
+     *
+     * "againstFrom":"1",
+     "againstPraise":27,
+     "againstScore":0,
+     "againstUnwindScore":0,
+     "againstUser":141,
+     "againstUserName":"思想有多远",
+     "againstUserPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494407270799.png",
+     "batchCode":"e2tmM42b",
+     "bigVarietyType":"future",
+     "coinType":2,
+     "createTime":1498640841000,
+     "endline":600,
+     "gameStatus":2,
+     "id":184,
+     "launchPraise":7,
+     "launchScore":0,
+     "launchUnwindScore":0,
+     "launchUser":124,
+     "launchUserName":"用户2972",
+     "launchUserPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1497510090054.png",
+     "loginUser":217,
+     "modifyTime":1498640890000,
+     "reward":300,
+     "startTime":1498640891000,
+     "varietyId":1,
+     "varietyName":"美原油",
+     "varietyType":"CL"
      */
-
     private String againstFrom;   //应战者来源
+    private int againstPraise;
+    private double againstScore;
+    private double againstUnwindScore; // 平仓数据 // TODO: 31/10/2017 fix cm
     private int againstUser;      //应战者ID
     private String againstUserName; //应战者用户名
     private String againstUserPortrait;  //应战者头像
+
     private String batchCode;    //房间代码
+    private String bigVarietyType;
     private int coinType;        //1 现金 2元宝 3积分
     private long createTime;     //创建时间
-    private long endTime;
+    private long endTime;         // TODO: 31/10/2017 unknown fix cm
     private int endline;         // 游戏存在时常 对战时间，单位秒
     private int gameStatus;
     private int id;
+
+    private int launchPraise;
+    private double launchScore;       // 持仓状态下包含了实时的盈亏 值 >= launchUnwindScore
+    private double launchUnwindScore; // 平仓之后当前累计盈亏
     private int launchUser;            //发起人ID
     private String launchUserName;     //发起人名字
     private String launchUserPortrait; //发起人头像
+
+    //private int loginUser;
     private long modifyTime;           //修改时间
     private int reward;                //赏金
     private long startTime;            //游戏开始时间
     private int varietyId;             //品种ID
     private String varietyName;
     private String varietyType;
-    private int winResult;            // 0 平手  1 发起者赢  2 应战者赢
-    private double launchScore;
-    private double againstScore;
-    private int againstPraise;
-    private int launchPraise;
-    //手续费
-    private double commission;
+    /* 以上属性为 查询 Battle 信息获取到的属性 */
 
-    //点赞
+
+    private int winResult;             // 0 平手  1 发起者赢  2 应战者赢
+    private double commission;         // 平台收取手续费
+    /* 以上属性为 对战记录里面 Battle 新增加 的属性 */
+
+
     private int battleId;           //对战记录id
     private int currentPraise;      //被点赞的用户当前的被赞数
     private int praiseUserId;       //被点赞的用户ID
+    /* 以上为点赞 Push#Content#Data 数据机构 */
 
-    //平仓数据
-    private double launchUnwindScore;
-    private double againstUnwindScore;
 
-    //下单和平仓推送数据
+    /** 创建订单的推送 数据
+     *
+     * "battleBatchCode":"ibYUtouN",
+     "battleId":807,
+     "contractsCode":"CL1708",
+     "contractsId":120,
+     "currencyUnit":"美元",
+     "direction":1,
+     "handsNum":1,
+     "id":2934,
+     "marketPoint":2,
+     "optLogCount":40,
+     "orderMarket":45780,
+     "orderPrice":45.78,
+     "orderStatus":2,
+     "orderTime":1499842365903,
+     "ratio":7.5,
+     "sign":"$",
+     "userId":800184,
+     "varietyId":1,
+     "varietyName":"美原油",
+     "varietyType":"CL"
+     */
+    //下单 推送 属性
     private String battleBatchCode;   //  批次号码 lXGrHpSk
+    // private int battleId;         // 点赞数据已加
     private String contractsCode;     // CL1708  合约代码
     private int contractsId;
     private String currencyUnit;     // 美元 币种单位
     private int direction;           //买入方向  1 买涨  0买跌
     private int handsNum;
+    // private int id;                // 上面数据已加
+    private int marketPoint;         //	行情小数位数
     private int optLogCount;         // 30  订单房间操作次数
-    private double orderMarket;      //44160  下单市值
-    private double orderPrice;       //44.16  下单价格
-    private int orderStatus;         //  订单状态    -1 失败  0 代支付  1 已支付，待持仓  2 持仓中  3 平仓处理中  4 结算完成
-    private long orderTime;          //下单时间
-    private double ratio;            //汇率
-    private String sign;             //$ 币种符号
+    private double orderMarket;      // 44160  下单市值
+    private double orderPrice;       // 44.16  下单价格
+    private int orderStatus;         // 订单状态    -1 失败  0 代支付  1 已支付，待持仓  2 持仓中  3 平仓处理中  4 结算完成
+    private long orderTime;          // 下单时间
+    private double ratio;            // 汇率
+    private String sign;             // $ 币种符号
     private int userId;
-    private double unwindPrice;     //44.16  平仓价格
-    private long unwindTime;        //1499777803000  平仓时间
+    // private int varietyId;
+    // private String varietyName;
+    // private String varietyType; // 这 3 对战数据里面有
 
+    // 平仓 新加 推送属性
+    private double unwindMarket;
+    private double unwindPrice;     // 44.16  平仓价格
+    private long unwindTime;        // 1499777803000  平仓时间
+    private int unwindType;         // 1 用户平仓 2 超时平仓
+    private double winOrLoss;       // 用户盈亏
+    /** 平仓的推送 数据
+     * "battleBatchCode":"ibYUtouN",
+     "battleId":807,
+     "contractsCode":"CL1708",
+     "contractsId":120,
+     "createTime":1499841976000,
+     "currencyUnit":"美元",
+     "direction":1,
+     "handsNum":1,
+     "id":2923,
+     "marketPoint":2,
+     "modifyTime":1499842155000,
+     "optLogCount":33,
+     "orderMarket":45850,
+     "orderPrice":45.85,
+     "orderStatus":4,
+     "orderTime":1499841976000,
+     "ratio":7.5,
+     "sign":"$",
+     "unwindMarket":45810,
+     "unwindPrice":45.81,
+     "unwindTime":1499842155000,
+     "unwindType":1,
+     "userId":800184,
+     "varietyId":1,
+     "varietyName":"美原油",
+     "varietyType":"CL",
+     "winOrLoss":-40
+     */
+
+    /* 订单数据结构
+    * private String battleBatchCode;
+    private int battleId;
+    private String contractsCode;
+    private int contractsId;
+    private long createTime;
+    private int direction;
+    private int handsNum;
+    private int id;
+    private long modifyTime;
+    private double orderPrice;
+    private int orderStatus;
+    private long orderTime;
+    private int userId;
+    private int varietyId;
+    private String varietyName;
+    private String varietyType;
+    * */
+
+    /* 交易记录数据结构
+    private int handsNum;
+    private double optPrice;
+    private int optStatus;
+    private long optTime;
+    private int userId;
+    private String contractsCode;
+    private String varietyName;
+    private String varietyType;
+    private int marketPoint;
+    */
 
     //对战正在发起
-    public boolean isBattleInitiating() {
-        return getGameStatus() == GAME_STATUS_CREATED;
+    public boolean isBattleCreated() {
+        return gameStatus == GAME_STATUS_CREATED;
     }
 
     //对战开始
@@ -139,38 +251,20 @@ public class Battle implements Parcelable {
         return getGameStatus() == GAME_STATUS_END;
     }
 
-    public boolean isBattleCancel() {
+    public boolean isBattleCanceled() {
         return getGameStatus() == GAME_STATUS_CANCELED;
-    }
-
-    public boolean isIngot() {
-        return getCoinType() == 2;
-    }
-
-    public boolean getBattleResult() {
-        boolean result = false;
-        if (getLaunchUser() == LocalUser.getUser().getUserInfo().getId()) {
-            result = getWinResult() == 1;
-        } else {
-            result = getWinResult() == 2;
-        }
-        return result;
     }
 
     public double getUnwindPrice() {
         return unwindPrice;
     }
 
-    public void setUnwindPrice(double unwindPrice) {
-        this.unwindPrice = unwindPrice;
-    }
-
     public long getUnwindTime() {
         return unwindTime;
     }
 
-    public void setUnwindTime(long unwindTime) {
-        this.unwindTime = unwindTime;
+    public int getUnwindType() {
+        return unwindType;
     }
 
     public String getBattleBatchCode() {
@@ -219,6 +313,10 @@ public class Battle implements Parcelable {
 
     public void setHandsNum(int handsNum) {
         this.handsNum = handsNum;
+    }
+
+    public int getMarketPoint() {
+        return marketPoint;
     }
 
     public int getOptLogCount() {
@@ -534,23 +632,27 @@ public class Battle implements Parcelable {
         this.againstUnwindScore = againstUnwindScore;
     }
 
-    public Battle() {
-    }
-
     @Override
     public String toString() {
         return "Battle{" +
                 "againstFrom='" + againstFrom + '\'' +
+                ", againstPraise=" + againstPraise +
+                ", againstScore=" + againstScore +
+                ", againstUnwindScore=" + againstUnwindScore +
                 ", againstUser=" + againstUser +
                 ", againstUserName='" + againstUserName + '\'' +
                 ", againstUserPortrait='" + againstUserPortrait + '\'' +
                 ", batchCode='" + batchCode + '\'' +
+                ", bigVarietyType='" + bigVarietyType + '\'' +
                 ", coinType=" + coinType +
                 ", createTime=" + createTime +
                 ", endTime=" + endTime +
                 ", endline=" + endline +
                 ", gameStatus=" + gameStatus +
                 ", id=" + id +
+                ", launchPraise=" + launchPraise +
+                ", launchScore=" + launchScore +
+                ", launchUnwindScore=" + launchUnwindScore +
                 ", launchUser=" + launchUser +
                 ", launchUserName='" + launchUserName + '\'' +
                 ", launchUserPortrait='" + launchUserPortrait + '\'' +
@@ -561,22 +663,17 @@ public class Battle implements Parcelable {
                 ", varietyName='" + varietyName + '\'' +
                 ", varietyType='" + varietyType + '\'' +
                 ", winResult=" + winResult +
-                ", launchScore=" + launchScore +
-                ", againstScore=" + againstScore +
-                ", againstPraise=" + againstPraise +
-                ", launchPraise=" + launchPraise +
                 ", commission=" + commission +
                 ", battleId=" + battleId +
                 ", currentPraise=" + currentPraise +
                 ", praiseUserId=" + praiseUserId +
-                ", launchUnwindScore=" + launchUnwindScore +
-                ", againstUnwindScore=" + againstUnwindScore +
                 ", battleBatchCode='" + battleBatchCode + '\'' +
                 ", contractsCode='" + contractsCode + '\'' +
                 ", contractsId=" + contractsId +
                 ", currencyUnit='" + currencyUnit + '\'' +
                 ", direction=" + direction +
                 ", handsNum=" + handsNum +
+                ", marketPoint=" + marketPoint +
                 ", optLogCount=" + optLogCount +
                 ", orderMarket=" + orderMarket +
                 ", orderPrice=" + orderPrice +
@@ -585,8 +682,11 @@ public class Battle implements Parcelable {
                 ", ratio=" + ratio +
                 ", sign='" + sign + '\'' +
                 ", userId=" + userId +
+                ", unwindMarket=" + unwindMarket +
                 ", unwindPrice=" + unwindPrice +
                 ", unwindTime=" + unwindTime +
+                ", unwindType=" + unwindType +
+                ", winOrLoss=" + winOrLoss +
                 '}';
     }
 
@@ -598,16 +698,23 @@ public class Battle implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.againstFrom);
+        dest.writeInt(this.againstPraise);
+        dest.writeDouble(this.againstScore);
+        dest.writeDouble(this.againstUnwindScore);
         dest.writeInt(this.againstUser);
         dest.writeString(this.againstUserName);
         dest.writeString(this.againstUserPortrait);
         dest.writeString(this.batchCode);
+        dest.writeString(this.bigVarietyType);
         dest.writeInt(this.coinType);
         dest.writeLong(this.createTime);
         dest.writeLong(this.endTime);
         dest.writeInt(this.endline);
         dest.writeInt(this.gameStatus);
         dest.writeInt(this.id);
+        dest.writeInt(this.launchPraise);
+        dest.writeDouble(this.launchScore);
+        dest.writeDouble(this.launchUnwindScore);
         dest.writeInt(this.launchUser);
         dest.writeString(this.launchUserName);
         dest.writeString(this.launchUserPortrait);
@@ -618,22 +725,17 @@ public class Battle implements Parcelable {
         dest.writeString(this.varietyName);
         dest.writeString(this.varietyType);
         dest.writeInt(this.winResult);
-        dest.writeDouble(this.launchScore);
-        dest.writeDouble(this.againstScore);
-        dest.writeInt(this.againstPraise);
-        dest.writeInt(this.launchPraise);
         dest.writeDouble(this.commission);
         dest.writeInt(this.battleId);
         dest.writeInt(this.currentPraise);
         dest.writeInt(this.praiseUserId);
-        dest.writeDouble(this.launchUnwindScore);
-        dest.writeDouble(this.againstUnwindScore);
         dest.writeString(this.battleBatchCode);
         dest.writeString(this.contractsCode);
         dest.writeInt(this.contractsId);
         dest.writeString(this.currencyUnit);
         dest.writeInt(this.direction);
         dest.writeInt(this.handsNum);
+        dest.writeInt(this.marketPoint);
         dest.writeInt(this.optLogCount);
         dest.writeDouble(this.orderMarket);
         dest.writeDouble(this.orderPrice);
@@ -642,22 +744,35 @@ public class Battle implements Parcelable {
         dest.writeDouble(this.ratio);
         dest.writeString(this.sign);
         dest.writeInt(this.userId);
+        dest.writeDouble(this.unwindMarket);
         dest.writeDouble(this.unwindPrice);
         dest.writeLong(this.unwindTime);
+        dest.writeInt(this.unwindType);
+        dest.writeDouble(this.winOrLoss);
+    }
+
+    public Battle() {
     }
 
     protected Battle(Parcel in) {
         this.againstFrom = in.readString();
+        this.againstPraise = in.readInt();
+        this.againstScore = in.readDouble();
+        this.againstUnwindScore = in.readDouble();
         this.againstUser = in.readInt();
         this.againstUserName = in.readString();
         this.againstUserPortrait = in.readString();
         this.batchCode = in.readString();
+        this.bigVarietyType = in.readString();
         this.coinType = in.readInt();
         this.createTime = in.readLong();
         this.endTime = in.readLong();
         this.endline = in.readInt();
         this.gameStatus = in.readInt();
         this.id = in.readInt();
+        this.launchPraise = in.readInt();
+        this.launchScore = in.readDouble();
+        this.launchUnwindScore = in.readDouble();
         this.launchUser = in.readInt();
         this.launchUserName = in.readString();
         this.launchUserPortrait = in.readString();
@@ -668,22 +783,17 @@ public class Battle implements Parcelable {
         this.varietyName = in.readString();
         this.varietyType = in.readString();
         this.winResult = in.readInt();
-        this.launchScore = in.readDouble();
-        this.againstScore = in.readDouble();
-        this.againstPraise = in.readInt();
-        this.launchPraise = in.readInt();
         this.commission = in.readDouble();
         this.battleId = in.readInt();
         this.currentPraise = in.readInt();
         this.praiseUserId = in.readInt();
-        this.launchUnwindScore = in.readDouble();
-        this.againstUnwindScore = in.readDouble();
         this.battleBatchCode = in.readString();
         this.contractsCode = in.readString();
         this.contractsId = in.readInt();
         this.currencyUnit = in.readString();
         this.direction = in.readInt();
         this.handsNum = in.readInt();
+        this.marketPoint = in.readInt();
         this.optLogCount = in.readInt();
         this.orderMarket = in.readDouble();
         this.orderPrice = in.readDouble();
@@ -692,11 +802,14 @@ public class Battle implements Parcelable {
         this.ratio = in.readDouble();
         this.sign = in.readString();
         this.userId = in.readInt();
+        this.unwindMarket = in.readDouble();
         this.unwindPrice = in.readDouble();
         this.unwindTime = in.readLong();
+        this.unwindType = in.readInt();
+        this.winOrLoss = in.readDouble();
     }
 
-    public static final Creator<Battle> CREATOR = new Creator<Battle>() {
+    public static final Parcelable.Creator<Battle> CREATOR = new Parcelable.Creator<Battle>() {
         @Override
         public Battle createFromParcel(Parcel source) {
             return new Battle(source);
