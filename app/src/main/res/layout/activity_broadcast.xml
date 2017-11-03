@@ -38,6 +38,7 @@
                 android:drawableTop="@drawable/img_no_message"
                 android:gravity="center_horizontal"
                 android:paddingTop="100dp"
+                android:text="@string/now_not_has_data"
                 android:visibility="gone"/>
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
