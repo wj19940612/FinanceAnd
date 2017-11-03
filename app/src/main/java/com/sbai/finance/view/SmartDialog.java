@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -37,6 +38,7 @@ public class SmartDialog {
     private AppCompatImageView mIcon;
     private AppCompatDialog mDialog;
     private Activity mActivity;
+    private ImageView mDialogDelete;
 
     private String mIconUrl;
     private int mIconResId;
@@ -61,12 +63,15 @@ public class SmartDialog {
     private OnDismissListener mDismissListener;
     private int mPositiveTextColor;
     private int mNegativeVisible;
+    private int mPositiveVisible;
     private float mWidthScale;
     private float mHeightScale;
     private int mGravity;
     private int mWindowAnim;
 
+    private boolean mDialogDeleteShow = false;
     private boolean mCancelableOnTouchOutside;
+
 
     public interface OnClickListener {
         void onClick(Dialog dialog);
@@ -192,6 +197,7 @@ public class SmartDialog {
         mDismissListener = null;
         mPositiveTextColor = Color.parseColor("#55ADFF");
         mNegativeVisible = View.VISIBLE;
+        mPositiveVisible = View.VISIBLE;
 
         mCancelableOnTouchOutside = true;
         mCustomView = null;
@@ -228,6 +234,11 @@ public class SmartDialog {
 
     public SmartDialog setPositive(int textId) {
         mPositiveId = textId;
+        return this;
+    }
+
+    public SmartDialog setPositiveVisable(int positiveVisible) {
+        mPositiveVisible = positiveVisible;
         return this;
     }
 
@@ -344,6 +355,11 @@ public class SmartDialog {
         return this;
     }
 
+    public SmartDialog setDialogDeleteShow(boolean dialogDeleteShow) {
+        mDialogDeleteShow = dialogDeleteShow;
+        return this;
+    }
+
     public void show() {
         if (mDialog != null) { // single dialog
             setupDialog();
@@ -394,14 +410,20 @@ public class SmartDialog {
         mNegative = (TextView) mDialogView.findViewById(R.id.negative);
         mPosition = (TextView) mDialogView.findViewById(R.id.position);
         mIcon = (AppCompatImageView) mDialogView.findViewById(R.id.dialogIcon);
-
+        mDialogDelete = (ImageView) mDialogView.findViewById(R.id.dialogDelete);
         setupDialog();
     }
 
     private void setupDialog() {
         mDialog.setCanceledOnTouchOutside(mCancelableOnTouchOutside);
         mDialog.setCancelable(mCancelableOnTouchOutside);
-
+        mDialogDelete.setVisibility(mDialogDeleteShow ? View.VISIBLE : View.GONE);
+        mDialogDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDialog.dismiss();
+            }
+        });
         if (mCustomView != null) {
             mDialog.setContentView(mCustomView);
         } else {

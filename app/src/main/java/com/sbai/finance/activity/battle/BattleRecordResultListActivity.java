@@ -26,6 +26,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
@@ -103,19 +104,36 @@ public class BattleRecordResultListActivity extends BaseActivity implements Cust
     }
 
     private void requestVersusData() {
-        Client.getMyVersusRecord(mLocation).setTag(TAG)
-                .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
-                    @Override
-                    protected void onRespSuccessData(FutureVersus data) {
-                        updateVersusData(data);
-                    }
+        if (mBattleType == BATTLE_HISTORY_RECORD_TYPE_GENERAL) {
+            Client.getMyVersusRecord(mLocation).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
+                        @Override
+                        protected void onRespSuccessData(FutureVersus data) {
+                            updateVersusData(data);
+                        }
 
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        stopRefreshAnimation();
-                    }
-                }).fireFree();
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            stopRefreshAnimation();
+                        }
+                    }).fireFree();
+        } else {
+            Client.requestUserArenaBattleResult(mLocation).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
+                        @Override
+                        protected void onRespSuccessData(FutureVersus data) {
+                            updateVersusData(data);
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            stopRefreshAnimation();
+                        }
+                    }).fireFree();
+        }
+
     }
 
     private void updateVersusData(FutureVersus futureVersus) {
@@ -139,7 +157,10 @@ public class BattleRecordResultListActivity extends BaseActivity implements Cust
     private void updateUserBattleResult(FutureVersus futureVersus) {
         if (futureVersus != null) {
             mSuccessRate.setText(getString(R.string.win_rate, futureVersus.getBattleWinRate()));
-            mBattleCountAndIngot.setText(getString(R.string.battle_count_profit, futureVersus.getTotalCount(), futureVersus.getProfit()));
+            mBattleCountAndIngot.setText(
+                    getString(R.string.battle_count_profit,
+                            StrFormatter.formIngotNumber(futureVersus.getTotalCount()),
+                            String.valueOf(futureVersus.getGold())));
         }
     }
 
@@ -212,7 +233,6 @@ public class BattleRecordResultListActivity extends BaseActivity implements Cust
 
                 boolean isHomeOwner = LocalUser.getUser().getUserInfo().getId() == item.getLaunchUser();
 
-
                 String againstUserPortrait = isHomeOwner ? item.getAgainstUserPortrait() : item.getLaunchUserPortrait();
                 String againstUserName = isHomeOwner ? item.getAgainstUserName() : item.getLaunchUserName();
                 GlideApp.with(context)
@@ -221,13 +241,14 @@ public class BattleRecordResultListActivity extends BaseActivity implements Cust
                         .circleCrop()
                         .into(mAgainstAvatar);
                 mAgainstName.setText(againstUserName);
+                mVersusVariety.setText(item.getVarietyName());
                 String result;
                 String profit = "";
 
                 if (position % 2 == 0) {
-                    mRootLL.setBackgroundColor(ContextCompat.getColor(context, R.color.bgArenaRanking));
-                } else {
                     mRootLL.setBackgroundColor(ContextCompat.getColor(context, R.color.bgArenaRankingSecondColor));
+                } else {
+                    mRootLL.setBackgroundColor(ContextCompat.getColor(context, R.color.bgArenaRanking));
                 }
                 if (item.getWinResult() == Battle.WIN_RESULT_TIE) {
                     result = context.getString(R.string.tie);
@@ -243,20 +264,9 @@ public class BattleRecordResultListActivity extends BaseActivity implements Cust
                         result = context.getString(R.string.failure);
                         profit = context.getString(R.string.minus_int, item.getReward());
                     }
-
-
-//                    switch (item.getCoinType()) {
-//                        case Battle.COIN_TYPE_INGOT:
-//                            reward = Math.round(item.getReward() - item.getCommission()) + context.getString(R.string.ingot);
-//                            break;
-//                        case Battle.COIN_TYPE_CASH:
-//                            reward = item.getReward() + context.getString(R.string.cash);
-//                            break;
-//                        case Battle.COIN_TYPE_SCORE:
-//                            reward = StrFormatter.formIntegrateNumber(item.getReward() - item.getCommission()) + context.getString(R.string.integral);
-//                            break;
-//
-//                    }
+                    if (item.isScore()) {
+                        profit = context.getString(R.string.arena_score, profit);
+                    }
                 }
 
                 mProfit.setText(profit);

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.battle.MoneyRewardGameBattleListActivity">
+    tools:context="com.sbai.finance.activity.arena.MoneyRewardGameBattleListActivity">
 
 
     <android.support.design.widget.CoordinatorLayout
@@ -29,7 +29,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="214dp"
+                    android:layout_height="220dp"
                     android:layout_below="@+id/titleBar"
                     android:layout_marginTop="54dp"
                     android:orientation="vertical"
@@ -41,7 +41,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/arenaTitle"
@@ -75,15 +75,17 @@
                         android:id="@+id/gameInfoRl"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone">
+                        android:layout_marginTop="51dp"
+                        android:visibility="visible">
 
                         <TextView
                             android:id="@+id/predictGain"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
                             android:layout_marginLeft="@dimen/common_padding"
                             android:layout_marginRight="@dimen/common_padding"
-                            android:layout_marginTop="67dp"
+                            android:layout_marginTop="16dp"
                             android:text="@string/predict_gain"
                             android:textColor="@android:color/white"
                             android:textSize="16sp"/>
@@ -95,10 +97,23 @@
                             android:layout_below="@+id/predictGain"
                             android:layout_marginLeft="@dimen/common_padding"
                             android:layout_marginRight="@dimen/common_padding"
-                            android:layout_marginTop="8dp"
+                            android:minWidth="96dp"
                             android:textColor="@color/yellowAssist"
                             android:textSize="16sp"
                             tools:text="@string/award"/>
+
+                        <TextView
+                            android:id="@+id/exchangeDetail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/predictGain"
+                            android:layout_toRightOf="@+id/award"
+                            android:paddingLeft="9dp"
+                            android:paddingRight="10dp"
+                            android:text="@string/exchange_details"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:visibility="gone"/>
 
                         <TextView
                             android:id="@+id/activityTime2"
@@ -106,12 +121,20 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/award"
                             android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="8dp"
                             android:layout_marginLeft="@dimen/common_padding"
                             android:layout_marginRight="@dimen/common_padding"
                             android:layout_marginTop="@dimen/common_padding"
                             android:textColor="@color/split"
                             tools:text="活动时间:2017.11.15-2017.11.20"/>
 
+                        <ImageView
+                            android:id="@+id/gift"
+                            android:layout_width="72dp"
+                            android:layout_height="73dp"
+                            android:layout_toRightOf="@+id/award"
+                            android:src="@drawable/bg_future_reward_gift"
+                            android:visibility="gone"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -195,12 +218,12 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <TextView
-        android:visibility="gone"
         android:id="@+id/quickMatch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="17dp"
-        android:background="@drawable/btn_battle_matching"/>
+        android:background="@drawable/btn_battle_matching"
+        android:visibility="gone"/>
 </RelativeLayout>

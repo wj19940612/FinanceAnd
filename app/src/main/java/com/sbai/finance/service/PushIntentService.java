@@ -155,7 +155,7 @@ public class PushIntentService extends GTIntentService {
         }
 
         switch (data.getType()) {
-            case PushMessageModel.PUSH_TYPE_ATTENTION_MISS_ANSWERED_FROM_BACKGROUND:
+            case PushMessageModel.QUESTION_DETAIL:
                 intent = new Intent(context, QuestionDetailActivity.class);
                 try {
                     intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
@@ -165,7 +165,7 @@ public class PushIntentService extends GTIntentService {
                     }
                 }
                 break;
-            case PushMessageModel.PUSH_TYPE_ACTIVITY:
+            case PushMessageModel.ACTIVITY:
                 intent = new Intent(context, MainActivity.class);
                 Banner banner = new Banner();
                 //返回id 去查询banner
@@ -173,19 +173,19 @@ public class PushIntentService extends GTIntentService {
                 banner.setContent(data.getUrl());
                 intent.putExtra(ExtraKeys.ACTIVITY, banner);
                 break;
-            case PushMessageModel.PUSH_TYPE_FEED_BACK_REPLY:
+            case PushMessageModel.FEED_BACK_REPLY:
                 intent = new Intent(context, MainActivity.class);
                 intent.putExtra(ExtraKeys.TRAINING, data.getDataId());
                 intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 3);
                 intent.putExtra(ExtraKeys.PUSH_FEEDBACK, true);
                 break;
-            case PushMessageModel.PUSH_TYPE_SELF_STUDY_ROOM:
+            case PushMessageModel.SELF_STUDY_ROOM:
                 intent = new Intent(context, StudyRoomActivity.class);
                 break;
-            case PushMessageModel.PUSH_TYPE_TRAINING:
+            case PushMessageModel.TRAINING:
                 intent = new Intent(context, MainActivity.class);
                 break;
-            case PushMessageModel.PUSH_TYPE_ATTENTION_MISS_ANSWERED:
+            case PushMessageModel.MISS_MESSAGE:
                 intent = new Intent(context, MissProfileActivity.class);
                 try {
                     intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
@@ -195,7 +195,7 @@ public class PushIntentService extends GTIntentService {
                     }
                 }
                 break;
-            case PushMessageModel.PUSH_TYPE_MODULE:
+            case PushMessageModel.MODULE:
                 // 暂时保留，先不处理
                 break;
 

@@ -88,19 +88,35 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
     }
 
     private void requestVersusData() {
-        Client.getBattleHisRecord(mLocation).setTag(TAG)
-                .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
-                    @Override
-                    protected void onRespSuccessData(FutureVersus data) {
-                        updateVersusData(data);
-                    }
+        if (mBattleType == BATTLE_HISTORY_RECORD_TYPE_GENERAL) {
+            Client.getBattleHisRecord(mLocation).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
+                        @Override
+                        protected void onRespSuccessData(FutureVersus data) {
+                            updateVersusData(data);
+                        }
 
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        stopRefreshAnimation();
-                    }
-                }).fireFree();
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            stopRefreshAnimation();
+                        }
+                    }).fireFree();
+        } else {
+            Client.requestArenaAllBattleHistory(mLocation).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
+                        @Override
+                        protected void onRespSuccessData(FutureVersus data) {
+                            updateVersusData(data);
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            stopRefreshAnimation();
+                        }
+                    }).fireFree();
+        }
     }
 
     private void updateVersusData(FutureVersus futureVersus) {

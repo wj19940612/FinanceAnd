@@ -18,7 +18,7 @@ public class UserActivityScore {
 
     private int rank;   //排行
     private int score;  //盈利（得分）
-    private int count;  //总场次
+    private int totalCount;  //总场次
 
     public int getRank() {
         return rank;
@@ -36,12 +36,12 @@ public class UserActivityScore {
         this.score = score;
     }
 
-    public int getCount() {
-        return count;
+    public int getTotalCount() {
+        return totalCount;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class UserActivityScore {
         return "UserActivityScore{" +
                 "rank=" + rank +
                 ", score=" + score +
-                ", count=" + count +
+                ", totalCount=" + totalCount +
                 '}';
     }
 }

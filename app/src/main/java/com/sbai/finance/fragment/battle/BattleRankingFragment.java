@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +17,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.sbai.finance.BuildConfig;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.arena.ArenaActivityAndUserStatus;
+import com.sbai.finance.model.arena.ArenaAwardExchangeRule;
 import com.sbai.finance.model.arena.ArenaAwardRanking;
 import com.sbai.finance.model.arena.ArenaInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
@@ -40,15 +44,12 @@ public class BattleRankingFragment extends BaseFragment {
 
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
-    @BindView(R.id.customSwipeRefreshLayout)
-    LinearLayout mCustomSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     private Unbinder mBind;
     private ArenaAwardRankingAdapter mArenaAwardRankingAdapter;
     private ArrayList<ArenaAwardRanking> mArenaAwardRankingArrayList;
 
-    private boolean mHasMoreData;
 
     public BattleRankingFragment() {
     }
@@ -56,7 +57,7 @@ public class BattleRankingFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_battle_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_arena_battle_ranking, container, false);
         mBind = ButterKnife.bind(this, view);
         return view;
     }
@@ -78,6 +79,39 @@ public class BattleRankingFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         requestArenaAwardRankingData();
+        // TODO: 2017/11/3 模拟数据
+//        ArrayList<ArenaAwardRanking> arenaAwardRankings = new ArrayList<>();
+//        for (int i = 1; i < 31; i++) {
+//            ArenaAwardRanking arenaAwardRanking = new ArenaAwardRanking();
+//            arenaAwardRanking.setRank(i);
+//            arenaAwardRanking.setUserName("溺水的鱼 " + i);
+//            arenaAwardRanking.setUserPortrait("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3352433622,2935084950&fm=173&s=D00065BC440277ED42B0195E0300E0B2&w=400&h=387&img.JPEG");
+//            arenaAwardRankings.add(arenaAwardRanking);
+//        }
+//
+//        ArrayList<ArenaAwardExchangeRule> arenaAwardExchangeRules = new ArrayList<>();
+//        for (int i = 0; i < 10; i++) {
+//            ArenaAwardExchangeRule awardExchangeRule = new ArenaAwardExchangeRule();
+//            if (i == 0) {
+//                awardExchangeRule.setType(ArenaAwardExchangeRule.AWARD_EXCHANGE_RULE_TTPE_RANK);
+//                awardExchangeRule.setPrizeName("鱼");
+//                awardExchangeRule.setScore("1-10");
+//            }
+//            if (i == 3) {
+//                awardExchangeRule.setType(ArenaAwardExchangeRule.AWARD_EXCHANGE_RULE_TTPE_RANK);
+//                awardExchangeRule.setPrizeName("就卡萨会尽快恢复到");
+//                awardExchangeRule.setScore("11-20");
+//            }
+//
+//            if (i == 7) {
+//                awardExchangeRule.setType(ArenaAwardExchangeRule.AWARD_EXCHANGE_RULE_TTPE_RANK);
+//                awardExchangeRule.setPrizeName("小黄段子");
+//                awardExchangeRule.setScore("21-30");
+//            }
+//            arenaAwardExchangeRules.add(awardExchangeRule);
+//        }
+//
+//        processAward(arenaAwardRankings, arenaAwardExchangeRules);
     }
 
     @Override
@@ -92,36 +126,80 @@ public class BattleRankingFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<List<ArenaAwardRanking>>, List<ArenaAwardRanking>>() {
                     @Override
                     protected void onRespSuccessData(List<ArenaAwardRanking> data) {
-                        updateAwardRankingList(data);
+                        if (data != null) {
+                            requestAwardExchangeRule(data);
+                        }
+//                        // TODO: 2017/11/1 模拟数据
+//                        List<ArenaAwardRanking> arenaAwardRankings = new ArrayList<ArenaAwardRanking>();
+//                        for (int i = 0; i < 30; i++) {
+//                            ArenaAwardRanking arenaAwardRanking = new ArenaAwardRanking();
+//                            arenaAwardRanking.setRank(i + 1);
+//                            arenaAwardRanking.setUserPortrait("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3352433622,2935084950&fm=173&s=D00065BC440277ED42B0195E0300E0B2&w=400&h=387&img.JPEG");
+//                            arenaAwardRanking.setPrizeName(" 小米\n max5 ");
+//                            arenaAwardRanking.setTotalCount(i * i);
+//                            arenaAwardRanking.setUserName(" 溺水的鱼 " + i + " " + i + "" + i + " 号");
+//                            arenaAwardRanking.setScore(i * i * i * i * 10);
+//                            arenaAwardRankings.add(arenaAwardRanking);
+//                        }
+//                        updateAwardRankingList(arenaAwardRankings);
                     }
 
                     @Override
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
-                        List<ArenaAwardRanking> arenaAwardRankings = new ArrayList<ArenaAwardRanking>();
-                        for (int i = 0; i < 30; i++) {
-                            ArenaAwardRanking arenaAwardRanking = new ArenaAwardRanking();
-                            arenaAwardRanking.setRanking(i + 1);
-                            arenaAwardRanking.setAvatar("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3352433622,2935084950&fm=173&s=D00065BC440277ED42B0195E0300E0B2&w=400&h=387&img.JPEG");
-                            arenaAwardRanking.setAward(" 小米\n max5 ");
-                            arenaAwardRanking.setBattleCount(i * i);
-                            arenaAwardRanking.setName(" 溺水的鱼 " + i + " " + i + "" + i + " 号");
-                            arenaAwardRanking.setProfit(i * i * i * i * 10);
-                            arenaAwardRanking.setBattleCount(i * i * i * i * i * 100);
-                            arenaAwardRankings.add(arenaAwardRanking);
-                        }
-                        updateAwardRankingList(arenaAwardRankings);
+
                     }
                 })
                 .fireFree();
     }
 
 
-    private void updateAwardRankingList(List<ArenaAwardRanking> data) {
-        if (data != null) {
-            mArenaAwardRankingAdapter.clear();
-            mArenaAwardRankingAdapter.addAll(data);
+    private void requestAwardExchangeRule(final List<ArenaAwardRanking> arenaAwardRankingList) {
+        Client.requesrAwardExchangeRule(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<ArenaAwardExchangeRule>>, List<ArenaAwardExchangeRule>>() {
+                    @Override
+                    protected void onRespSuccessData(List<ArenaAwardExchangeRule> data) {
+                        if (!data.isEmpty()) {
+                            processAward(arenaAwardRankingList, data);
+                        }
+                    }
+                })
+                .fireFree();
+    }
+
+    private void processAward(List<ArenaAwardRanking> arenaAwardRankingList, List<ArenaAwardExchangeRule> data) {
+        int endPosition = -1;
+        int firstPosition = -1;
+        for (ArenaAwardExchangeRule awardExchangeRule : data) {
+            if (awardExchangeRule.isRanking()) {
+                String score = awardExchangeRule.getScore();
+                if (!TextUtils.isEmpty(score)) {
+                    String[] split = score.split("-");
+                    try {
+                        if (split.length == 2) {
+                            firstPosition = Integer.valueOf(split[0]);
+                            endPosition = Integer.valueOf(split[1]);
+                        }
+
+                        if (endPosition != -1 && firstPosition != -1) {
+                            for (int i = firstPosition-1; i < endPosition; i++) {
+                                ArenaAwardRanking arenaAwardRanking = arenaAwardRankingList.get(i);
+                                arenaAwardRanking.setPrizeName(awardExchangeRule.getPrizeName());
+                            }
+                        }
+                    } catch (NumberFormatException e) {
+                        if (BuildConfig.DEBUG) {
+                            ToastUtil.show("服务端排行榜数据有问题");
+                        }
+                    }
+                }
+            }
         }
+
+        mArenaAwardRankingAdapter.clear();
+        mArenaAwardRankingAdapter.addAll(arenaAwardRankingList);
     }
 
     static class ArenaAwardRankingAdapter extends RecyclerView.Adapter<ArenaAwardRankingAdapter.ViewHolder> {
@@ -190,8 +268,8 @@ public class BattleRankingFragment extends BaseFragment {
                     mHeaderLl.setVisibility(View.GONE);
                 }
                 if (item == null) return;
-                if (item.getRanking() < 4) {
-                    switch (item.getRanking()) {
+                if (item.getRank() < 4) {
+                    switch (item.getRank()) {
                         case 1:
                             mRanking.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_rank_first, 0);
                             break;
@@ -205,7 +283,7 @@ public class BattleRankingFragment extends BaseFragment {
                     mRanking.setText("");
                 } else {
                     mRanking.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                    mRanking.setText(String.valueOf(item.getRanking()));
+                    mRanking.setText(String.valueOf(item.getRank()));
                 }
 
 
@@ -220,16 +298,16 @@ public class BattleRankingFragment extends BaseFragment {
                 }
 
                 GlideApp.with(context)
-                        .load(item.getAvatar())
+                        .load(item.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop()
                         .into(mAvatar);
-                SpannableString spannableString = StrUtil.mergeTextWithRatioColor(item.getName(),
-                        "\n+" + StrFormatter.formIngotNumber(item.getProfit()), 1.4f,
+                SpannableString spannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
+                        "\n+" + String.valueOf(item.getScore()), 1.4f,
                         ContextCompat.getColor(context, R.color.yellowAssist));
                 mNameAndProfit.setText(spannableString);
-                mBattleCount.setText(String.valueOf(item.getBattleCount()));
-                mAward.setText(item.getAward());
+                mBattleCount.setText(String.valueOf(item.getTotalCount()));
+                mAward.setText(item.getPrizeName());
             }
         }
     }

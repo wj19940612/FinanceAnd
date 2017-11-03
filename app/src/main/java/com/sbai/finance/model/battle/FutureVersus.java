@@ -31,14 +31,7 @@ public class FutureVersus {
             return FinanceUtil.formatFloorPercent(0);
         }
         double winRate = FinanceUtil.divide(getWinCount(), getTotalCount(), 5).doubleValue();
-        return FinanceUtil.formatToPercentageReplaceZero(winRate, 2);
-    }
-
-    public String getProfit() {
-        if (getGold() < 0) {
-            return "-" + getGold();
-        }
-        return "+" + getGold();
+        return FinanceUtil.formatFloorPercent(winRate, 2);
     }
 
 

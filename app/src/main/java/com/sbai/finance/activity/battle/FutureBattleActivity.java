@@ -1172,6 +1172,7 @@ public class FutureBattleActivity extends BaseActivity implements
         WsClient.get().send(new QuickMatchLauncher(machType, mCurrentBattle.getId()), new WSCallback<WSMessage<Resp>>() {
             @Override
             public void onResponse(WSMessage<Resp> respWSMessage) {
+
                 if (machType == QuickMatchLauncher.TYPE_QUICK_MATCH) {
                     showMatchDialog();
                 }

@@ -10,14 +10,9 @@ package com.sbai.finance.model.arena;
 public class ArenaInfo {
 
 
-    public static final String DEFAULT_ACTIVITY_CODE = "future_game";
+    public static final String DEFAULT_ACTIVITY_CODE = "stocktrade01";
 
-
-    private static final int ARENA_ACTIVITY_STATUS_NOT_STARTED = 0;
-    private static final int ARENA_ACTIVITY_STATUS_SIGN_UP = 1;
-    private static final int ARENA_ACTIVITY_STATUS_UNDERWAY = 2;
-    private static final int ARENA_ACTIVITY_STATUS_EXCHANGEING = 3;
-    private static final int ARENA_ACTIVITY_STATUS_OVER = 4;
+    private static final int ACTIVITY_OVER = 1;
 
     /**
      * activityCode : future_game
@@ -40,10 +35,10 @@ public class ArenaInfo {
     private String activityCode;  //活动code
     private String activityDesc;  //活动描述
     private String activityName;  //活动名称
-    private int activityStatus;   //活动状态   '当前活动状态是否可用(0：待开始，1：活动报名，2：活动中，3，兑奖中，4：活动结束)'
+    private int activityStatus;   //活动状态   '当前活动状态是否可用(1：待开始，2：活动中，3 活动结束）'
     private long createTime;      //创建时间
     private int dayLimit;         //该活动完成任务的单日限制'
-    private int deleted;          //是否删除
+    private int deleted;          //是否删除    0 没有删除  1 删除
     private long endDate;         //活动结束时间
     private int id;
     private int limit;            //该活动的任务总限制
@@ -52,6 +47,11 @@ public class ArenaInfo {
     private long modifyTime;      //修改地址
     private String pushContext;   //推送的文案
     private long startDate;       // 活动开始时间
+
+
+    public boolean isArenaActivityOver() {
+        return getDeleted() == ACTIVITY_OVER;
+    }
 
     public String getActivityCode() {
         return activityCode;

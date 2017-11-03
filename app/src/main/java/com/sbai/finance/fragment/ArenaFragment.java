@@ -15,13 +15,19 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.arena.MoneyRewardGameBattleListActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
-import com.sbai.finance.activity.battle.MoneyRewardGameBattleListActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.arena.ArenaActivityAndUserStatus;
+import com.sbai.finance.model.arena.ArenaInfo;
 import com.sbai.finance.model.fund.UserFundInfo;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
@@ -70,9 +76,25 @@ public class ArenaFragment extends BaseFragment {
         updateUserStatus();
     }
 
+    private void updateArenaActivityStatus() {
+        Client.requestArenaInfo(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<ArenaInfo>, ArenaInfo>() {
+                    @Override
+                    protected void onRespSuccessData(ArenaInfo data) {
+                        if (!data.isArenaActivityOver()) {
+                            Launcher.with(getActivity(), MoneyRewardGameBattleListActivity.class).execute();
+                        } else {
+                            ToastUtil.show("活动未开启");
+                        }
+                    }
+                })
+                .fireFree();
+    }
+
     private void updateUserStatus() {
         updateUserAvatar();
-
     }
 
     private void updateUserAvatar() {
@@ -118,13 +140,12 @@ public class ArenaFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.textArenaKnowledge:
             case R.id.iconArenaKnowledge:
-                // TODO: 2017/10/27 相关知识点页面链接
                 Launcher.with(getActivity(), WebActivity.class)
-                        .putExtra(WebActivity.EX_URL, "")
+                        .putExtra(WebActivity.EX_URL, Client.ARENA_KNOWLEDGE)
                         .execute();
                 break;
             case R.id.moneyRewardArena:
-                Launcher.with(getActivity(), MoneyRewardGameBattleListActivity.class).execute();
+                updateArenaActivityStatus();
                 break;
             case R.id.generalBattleBanner:
                 Launcher.with(getActivity(), BattleListActivity.class).execute();

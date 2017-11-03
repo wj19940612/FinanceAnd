@@ -42,6 +42,10 @@ public class Client {
     // 竞技场banner和 竞技场活动规则跳转链接
     public static final String ARENA_RULE = API.getHost() + "/lm/futurespk/index.html ";
 
+    // 竞技场知识点
+    public static final String ARENA_KNOWLEDGE = API.getHost() + "/lm/futurespk/point.html";
+
+
     public static String getServiceQQ(String serviceQQ) {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
 //            return "mqqwpa://im/chat?chat_type=wpa&uin=" + serviceQQ + "&version=1";
@@ -1647,7 +1651,7 @@ public class Client {
     }
 
     /**
-     * 所有对战历史
+     * 期货对战所有对战历史
      *
      * @param location
      * @return
@@ -2706,12 +2710,10 @@ public class Client {
     }
 
     /**
-     * /activity/activity/findActivityDetail.do
+     * @param activityCode
+     * @return /activity/activity/findActivityDetail.do
      * GET
      * 获取活动的信息（hlei）
-     *
-     * @param activityCode
-     * @return
      */
     public static API requestArenaInfo(String activityCode) {
         return new API("/activity/activity/findActivityDetail.do",
@@ -2745,11 +2747,10 @@ public class Client {
     }
 
     /**
-     * /activity/activity/activityApplyPassed.do
+     * @param activityCode 活动code
+     * @deprecated /activity/activity/activityApplyPassed.do
      * GET
      * 是否报名活动（hlei）
-     *
-     * @param activityCode 活动code
      */
     public static API requestUserJoinArenaActivityStatus(String activityCode) {
         return new API("/activity/activity/activityApplyPassed.do",
@@ -2757,14 +2758,12 @@ public class Client {
     }
 
     /**
-     * activity/prize/whatCanExchange.do
-     * GET
-     * 活动中本人能兑换什么（hlei）
-     *
-     * @param activityCode
+     * @param activityCode activity/prize/whatCanExchange.do
+     *                     GET
+     *                     活动中本人能兑换什么（hlei）
      */
     public static API requestArenaActivityExchangeAward(String activityCode) {
-        return new API("activity/prize/whatCanExchange.do",
+        return new API("/activity/prize/whatCanExchange.do",
                 new ApiParams().put("activityCode", activityCode));
     }
 
@@ -2795,16 +2794,138 @@ public class Client {
     }
 
     /**
-     * /activity/activity/getMyScore.do
-     * GET
-     * 个人活动得分（hlei）
-     *
      * @param activityCode
      * @return
+     * @deprecated /activity/activity/getMyScore.do
+     * GET
+     * 个人活动得分（hlei）
      */
     public static API requestUserActivityScore(String activityCode) {
         return new API("/activity/activity/getMyScore.do",
                 new ApiParams()
                         .put("activityCode", activityCode));
+    }
+
+    /**
+     * /game/acti/myHistoryList.do
+     * GET
+     * 我的对战历史（yhj）
+     *
+     * @param location
+     * @return
+     */
+    public static API requestUserArenaBattleResult(Long location) {
+        return new API("/game/acti/myHistoryList.do",
+                new ApiParams()
+                        .put("location", location)
+                        .put("pageSize", Client.DEFAULT_PAGE_SIZE));
+    }
+
+    /**
+     * 竞技场 全部对战
+     *
+     * @param location
+     * @return
+     */
+    public static API requestArenaAllBattleHistory(Long location) {
+        return new API("/game/acti/historyList.do", new ApiParams()
+                .put("location", location)
+                .put("pageSize", Client.DEFAULT_PAGE_SIZE));
+    }
+
+    /**
+     * /activity/activity/findApplyRule.do
+     * GET
+     * 活动的报名规则（hlei）
+     *
+     * @param activityCode
+     * @return
+     */
+    public static API requestArenaApplyRule(String activityCode) {
+        return new API("/activity/activity/findApplyRule.do",
+                new ApiParams().put("activityCode", activityCode));
+    }
+
+    /**
+     * activity/activity/getActivityScore.do
+     * GET
+     * 获取活动个人情况（hlei）
+     * 可以代替  /activity/prize/whatCanExchange.do
+     * /activity/activity/getMyScore.do
+     * /activity/activity/findActivityDetail.do
+     * /activity/activity/activityApplyPassed.do
+     *
+     * @param activityCode
+     * @return
+     */
+    public static API requestArenaActivityAndUserStatus(String activityCode) {
+        return new API("/activity/activity/getActivityScore.do",
+                new ApiParams().put("activityCode", activityCode));
+    }
+
+    /**
+     * /activity/prize/exchangedPrizeList.do
+     * GET
+     * 用户兑换奖品申请表（hlei）
+     *
+     * @param activityCode
+     * @return
+     */
+    public static API requestUserExchangeAwardInfo(String activityCode) {
+        return new API("/activity/prize/exchangedPrizeList.do",
+                new ApiParams().put("activityCode", activityCode));
+    }
+
+    /**
+     * /game/acti/currBattle.do
+     * 竞技场当前对战
+     *
+     * @return
+     */
+    public static API requestLastArenaBattleInfo() {
+        return new API("/game/acti/currBattle.do");
+    }
+
+
+    /**
+     * activity/prize/exchangePrize.do
+     * GET
+     * 兑换活动奖品（hlei）
+     *
+     * @param awardId      奖品id
+     * @param activityCode 活动code
+     * @param param        用户填写的参数
+     * @return
+     */
+    public static API commitUserExchangeInfo(int awardId, String activityCode, String param) {
+        return new API("/activity/prize/exchangePrize.do",
+                new ApiParams()
+                        .put("awardId", awardId)
+                        .put("activityCode", activityCode)
+                        .put("param", param));
+    }
+
+    /**
+     * HTTP
+     * /user/dictionary/findDictionaryForJson.do?type=pvp_names
+     * GET
+     * 王者荣耀皮肤名称(yhj)
+     *
+     * @return
+     */
+    public static API requestArenaVirtualAward() {
+        return new API("/user/dictionary/findDictionaryForJson.do?type=pvp_names");
+    }
+
+    /**
+     * /activity/prize/allPrizeRule.do
+     * GET
+     * 各奖品的兑换条件（hlei）
+     *
+     * @param activityCode
+     * @return
+     */
+    public static API requesrAwardExchangeRule(String activityCode) {
+        return new API("/activity/prize/allPrizeRule.do", new ApiParams().put("activityCode", activityCode));
     }
 }
