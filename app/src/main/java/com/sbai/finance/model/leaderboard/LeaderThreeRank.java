@@ -11,6 +11,8 @@ public class LeaderThreeRank {
     public static final String INGOT = "gold";
     public static final String PROFIT = "profit";
     public static final String SAVANT = "appraise";
+    public static final String TODAY = "day";
+    public static final String WEEK = "week";
 
 
     /**
@@ -24,7 +26,7 @@ public class LeaderThreeRank {
     private String type;
     private int userId;
     private UserBean user;
-    private boolean isWorship;
+    private boolean isWorship;//false -- 已膜拜过  true -- 没膜拜过
 
     public int getScore() {
         return score;

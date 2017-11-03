@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,6 +103,7 @@ public class HomePageFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         getIndexData();
+        requestRadioData();
         startAllSchedule();
         MarketSubscriber.get().subscribeAll();
         MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
@@ -324,8 +326,6 @@ public class HomePageFragment extends BaseFragment {
         mHomeTitleView.clickIndexButton(HomeTitleView.BUTTON_HUSHEN);
 //      requestStockIndexData();
 
-        requestRadioData();
-
         requestBannerData();
 
         requestBusniessBannerData();
@@ -525,7 +525,8 @@ public class HomePageFragment extends BaseFragment {
     }
 
     private void requestWorship(String type, int id) {
-        Client.worship(id, type, null).setTag(TAG)
+        String timeType = LeaderThreeRank.TODAY;
+        Client.worship(id, type, timeType).setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -535,6 +536,11 @@ public class HomePageFragment extends BaseFragment {
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        requestLeaderBoardData();
                     }
                 }).fireFree();
     }

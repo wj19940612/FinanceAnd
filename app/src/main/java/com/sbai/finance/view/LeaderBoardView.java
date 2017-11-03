@@ -3,6 +3,7 @@ package com.sbai.finance.view;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -137,6 +138,7 @@ public class LeaderBoardView extends LinearLayout {
         haveDataMap.put(INGOT, null);
         haveDataMap.put(PROFIT, null);
         haveDataMap.put(SAVANT, null);
+        ImageView topIcon = null;
         ImageView mobaiBtn = null;
         ImageView headView = null;
         TextView goneView = null;
@@ -145,27 +147,34 @@ public class LeaderBoardView extends LinearLayout {
                 mobaiBtn = mLeftMobaiBtn;
                 headView = mLeftHead;
                 goneView = mLeftGoneText;
+                topIcon = mLeftTopIcon;
                 haveDataMap.put(INGOT, dataBean);
             } else if (dataBean.getType().equals(PROFIT)) {
                 mobaiBtn = mCenterMobaiBtn;
                 headView = mCenterHead;
                 goneView = mCenterGoneText;
+                topIcon = mCenterTopIcon;
                 haveDataMap.put(PROFIT, dataBean);
             } else if (dataBean.getType().equals(SAVANT)) {
                 mobaiBtn = mRightMobaiBtn;
                 headView = mRightHead;
                 goneView = mRightGoneText;
+                topIcon = mRightTopIcon;
                 haveDataMap.put(SAVANT, dataBean);
             }
+            mobaiBtn.setVisibility(View.VISIBLE);
+            headView.setVisibility(View.VISIBLE);
+            topIcon.setVisibility(View.VISIBLE);
+            goneView.setVisibility(View.GONE);
             GlideApp.with(mContext)
                     .load(dataBean.getUser().getUserPortrait())
                     .placeholder(R.drawable.ic_default_avatar_big)
                     .circleCrop()
                     .into(headView);
-            if (dataBean.isWorship()) {
-                mobaiBtn.setEnabled(false);
-            } else {
+            if (dataBean.isWorship()) {//可以膜拜
                 mobaiBtn.setEnabled(true);
+            } else {
+                mobaiBtn.setEnabled(false);
             }
             final ImageView finalMobaiBtn = mobaiBtn;
             finalMobaiBtn.setOnClickListener(new OnClickListener() {
@@ -182,7 +191,6 @@ public class LeaderBoardView extends LinearLayout {
         }
 
         //不存在的榜首作空显示处理
-        ImageView topIcon = null;
         String type;
         LeaderThreeRank leaderThreeRank;
         Iterator<Map.Entry<String, LeaderThreeRank>> it = haveDataMap.entrySet().iterator();
