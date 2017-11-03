@@ -17,6 +17,8 @@ public class Share {
     public static final String SHARE_CODE_FUTURE_BATTLE = "game01";
     //乐米日报分享
     public static final String SHARE_CODE_DAILY_REPORT = "class01";
+    //竞技场分享
+    public static final String SHARE_CODE_ARENA = "stocktrade01";
 
     /**
      * code : sssssssss1

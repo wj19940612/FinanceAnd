@@ -827,8 +827,9 @@
     <string name="ranking_">排名</string>
     <string name="profit">盈利</string>
     <string name="predict_award">预计奖品</string>
+    <string name="get_award">获得奖品</string>
     <string name="arena_count">对战场次</string>
-    <string name="enter_arena_condition">报名需支付%1$s元宝作为参赛费\n是否继续报名</string>
+    <string name="enter_arena_condition">报名需支付%1$s作为参赛费\n是否继续报名</string>
     <string name="to_sign_up">继续报名</string>
     <string name="me_need_consider">我再想想</string>
     <string name="activity_is_over">活动已结束</string>
@@ -841,5 +842,29 @@
     <string name="battle_result">对战结果</string>
     <string name="against_user">对战者</string>
     <string name="win_rate">胜率：%1$s</string>
-    <string name="battle_count_profit">对局总数：%1$d场  元宝结算: %2$s个</string>
+    <string name="battle_count_profit">对局总数：%1$s场  元宝结算: %2$s个</string>
+    <string name="arena_score">%1$s(积分)</string>
+    <string name="ingot_is_not_enough">您的%1$s不足%s$s,暂时不能参赛</string>
+    <string name="exchange_details">兑换详情</string>
+    <string name="exchange_success">兑换成功</string>
+    <string name="exchange_fail">兑换失败</string>
+    <string name="ranking_low">加油，您离奖品只有一步之遥！</string>
+
+    <string name="write_exchange_info_title">填写兑奖信息</string>
+    <string name="receive_user">收件人:</string>
+    <string name="receive_user_address">邮寄地址:</string>
+    <string name="exchange_award_info">兑奖信息</string>
+    <string name="game_number">微信/QQ:</string>
+    <string name="skin_name">皮肤名称:</string>
+    <string name="game_nickname">游戏昵称:</string>
+    <string name="game_area">所在大区:</string>
+    <string name="checking">乐米小师妹会在3个工作日内为您兑换奖品，请耐心等待。</string>
+    <string name="check_success">您所兑换的奖品已经成功发放，如有疑问请及时反馈。</string>
+    <string name="check_fail">很抱歉，您的信息没通过审核，无法领取奖品，如有疑问请及时反馈</string>
+
+    <string name="go_approve">去认证</string>
+    <string name="you_not_real_name_not_can_exchange_ward">您尚未完成实名认证\n暂时无法兑换奖品</string>
+    <string name="you_miss_exchange_time">很遗憾！您错过了兑奖时间</string>
+    <string name="you_is_real_name_wait_please_wait">您的实名认证还在审核中\n请耐心等待</string>
+    <string name="choose_skin">选择皮肤</string>
 </resources>

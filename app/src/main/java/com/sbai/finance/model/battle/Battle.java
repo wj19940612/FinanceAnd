@@ -123,6 +123,8 @@ public class Battle implements Parcelable {
     private double unwindPrice;     //44.16  平仓价格
     private long unwindTime;        //1499777803000  平仓时间
 
+    //自己加的属性
+    public int type;
 
     //对战正在发起
     public boolean isBattleInitiating() {
@@ -144,7 +146,11 @@ public class Battle implements Parcelable {
     }
 
     public boolean isIngot() {
-        return getCoinType() == 2;
+        return getCoinType() == COIN_TYPE_INGOT;
+    }
+
+    public boolean isScore() {
+        return getCoinType() == COIN_TYPE_SCORE;
     }
 
     public boolean getBattleResult() {
@@ -535,6 +541,14 @@ public class Battle implements Parcelable {
     }
 
     public Battle() {
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Override

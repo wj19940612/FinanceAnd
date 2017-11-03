@@ -107,34 +107,39 @@ public class StrFormatter {
     }
 
     /**
-     * 积分/元宝超过10000显示为1.0万、1.1万、10.0万、10.1万、以千为单位递进
+     * 对局总数＜10000，数值全部显示
+     * 对局总数＝10000，显示1万
+     * 对局总数＞10000，显示1万+，后续以万位递进
+     * <p>
+     * 元宝数＜10000，数值全部显示
+     * 元宝数＝10000，显示1万
+     * 元宝数＞10000，显示1万+，后续以万位递进
+     * 元宝数＝1亿，显示1亿
+     * 元宝数＞1亿，显示1亿+，以亿为单位递进
      *
      * @param money
      * @return
      */
-    public static String formIngotNumber(double money) {
-        String number = String.valueOf((long) money);
-        if (money >= 10000.00) {
-            int length = number.length();
-            return number.substring(0, length - 4) + "." + number.substring(length - 4, length - 3) + FinanceUtil.UNIT_WANG;
+    public static String formIngotNumber(long money) {
+
+        if (money < FinanceUtil.TEN_THOUSAND) {
+            return String.valueOf(money);
+        } else if (money < FinanceUtil.ONE_HUNDRED_MILLION) {
+            if (money % FinanceUtil.TEN_THOUSAND == 0) {
+                return  (money / FinanceUtil.TEN_THOUSAND) + FinanceUtil.UNIT_WANG;
+            } else {
+                return  (money / FinanceUtil.TEN_THOUSAND) + "万+";
+            }
+        } else {
+            if (money % FinanceUtil.ONE_HUNDRED_MILLION == 0) {
+                return (money / FinanceUtil.ONE_HUNDRED_MILLION) + FinanceUtil.UNIT_YI;
+            } else {
+                return (money / FinanceUtil.ONE_HUNDRED_MILLION) + "亿+";
+            }
         }
-        return FinanceUtil.formatWithScaleNoZero(money);
     }
 
-    /**
-     * 积分/元宝超过10000显示为1.0万、1.1万、10.0万、10.1万、以千为单位递进
-     *
-     * @param money
-     * @return
-     */
-    public static String formIntegrateNumber(double money) {
-        String number = String.valueOf((long) money);
-        if (money >= 10000.00) {
-            int length = number.length();
-            return number.substring(0, length - 4) + "." + number.substring(length - 4, length - 3) + FinanceUtil.UNIT_WANG;
-        }
-        return FinanceUtil.formatWithScale(money);
-    }
+
 
     public static String getFormatCount(int count) {
         String number = String.valueOf(count);

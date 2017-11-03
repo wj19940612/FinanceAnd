@@ -23,6 +23,12 @@ public class Resp<T> {
     public static final int CODE_SAFETY_INPUT_ERROR = 2203;
     //未绑定微信
     public static final int CODE_NO_BIND_WE_CHAT = 214;
+    public static final int SUCCESS = 200;
+    //竞技场匹配对战，没有在对战开放时间的错误code
+    public static final int ACTIVITY_IS_NOT_YET_OPEN = 4701;
+
+    //没到兑换时间或者兑换时间已经结束 5114
+    public static final int CODE_ARENA_IS_OVER_OR_NOT_IS_EXCHANGE_TIME = 5114;
 
 
     private int code;

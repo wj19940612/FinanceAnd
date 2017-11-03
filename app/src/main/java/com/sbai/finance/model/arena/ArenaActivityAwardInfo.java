@@ -10,6 +10,14 @@ import com.sbai.finance.net.Client;
 
 public class ArenaActivityAwardInfo {
 
+    public static final int ARENA_ACTIVITY_RUNNING = 0;
+    public static final int ARENA_ACTIVITY_CAN_EXCHANGE_REWARD = 1;
+    public static final int ARENA_ACTIVITY_ALREADY_EXCHANGE_REWARD = 2;
+
+    private static final int AWAED_TYPE_PLATFORM_CURRENCY = 1;
+    private static final int AWAED_TYPE_ENTITY_PRODUCT = 2;
+    private static final int AWARD_TYPE_VIRTUAL_PRODUCT = 3;
+
     /**
      * activityCode : future_game
      * amount : 1
@@ -50,6 +58,9 @@ public class ArenaActivityAwardInfo {
     private int type;            //类型：1平台货币2、实物3、虚拟奖品
     private int userLimit;
 
+    public boolean awardIsVirtual() {
+        return getType() == AWARD_TYPE_VIRTUAL_PRODUCT;
+    }
 
     public String getActivityCode() {
         return activityCode;

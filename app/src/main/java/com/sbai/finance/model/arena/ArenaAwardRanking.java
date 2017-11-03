@@ -4,68 +4,75 @@ import com.sbai.finance.net.Client;
 
 /**
  * Created by ${wangJie} on 2017/10/26.
- {@link Client# /activity/activity/getRank.do}
+ * {@link Client# /activity/activity/getRank.do}
  */
 
 public class ArenaAwardRanking {
+    //            "rank": 1,
+//            "score": 2056.00,
+//            "totalCount": 56，
+//            "prizeName":奖品名称
+    private int rank;
+    private double score;
+    private int totalCount;
+    private String prizeName; //预计可获得奖品
+    private String userName;
+    private int userId;
+    private String userPortrait;
 
-    private String avatar;
-
-    private String name;
-
-    private double profit;
-
-    private int battleCount;
-
-    private String award;
-
-    private int ranking;
-
-    public int getRanking() {
-        return ranking;
+    public int getRank() {
+        return rank;
     }
 
-    public void setRanking(int ranking) {
-        this.ranking = ranking;
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public double getScore() {
+        return score;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setScore(double score) {
+        this.score = score;
     }
 
-    public String getName() {
-        return name;
+    public int getTotalCount() {
+        return totalCount;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
     }
 
-    public double getProfit() {
-        return profit;
+    public String getPrizeName() {
+        return prizeName;
     }
 
-    public void setProfit(double profit) {
-        this.profit = profit;
+    public void setPrizeName(String prizeName) {
+        this.prizeName = prizeName;
     }
 
-    public int getBattleCount() {
-        return battleCount;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setBattleCount(int battleCount) {
-        this.battleCount = battleCount;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getAward() {
-        return award;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setAward(String award) {
-        this.award = award;
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getUserPortrait() {
+        return userPortrait;
+    }
+
+    public void setUserPortrait(String userPortrait) {
+        this.userPortrait = userPortrait;
     }
 }

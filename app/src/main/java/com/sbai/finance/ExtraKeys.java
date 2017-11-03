@@ -44,4 +44,9 @@ public interface ExtraKeys {
     String PUSH_FEEDBACK = "push_feedback";
 
     String BATTLE_HISTORY = "battle_history";
+
+    String ARENA_EXCHANGE_AWARD_ID = "arena_exchange_award";
+
+    String ARENA_VIRTUAL_AWARD_NAME = "Arena_virtual_award_name";
+
 }

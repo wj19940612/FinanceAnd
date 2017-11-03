@@ -214,7 +214,6 @@ public class DailyReportDetailActivity extends BaseActivity {
                 break;
             case R.id.share:
             case R.id.shareArea:
-
                 share();
                 umengEventCount(UmengCountEventId.REPORT_SHARE);
                 break;

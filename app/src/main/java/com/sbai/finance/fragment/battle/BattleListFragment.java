@@ -13,13 +13,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.battle.BattleHisRecordActivity;
+import com.sbai.finance.activity.battle.FutureBattleActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnItemClickListener;
 import com.sbai.finance.view.BattleProgress;
 import com.sbai.glide.GlideApp;
@@ -39,11 +45,8 @@ public class BattleListFragment extends BaseFragment {
 
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
-    @BindView(R.id.customSwipeRefreshLayout)
-    LinearLayout mCustomSwipeRefreshLayout;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-
 
     private Set<Integer> mSet;
 
@@ -90,7 +93,15 @@ public class BattleListFragment extends BaseFragment {
         mArenaBattleListAdapter.setOnItemClickListener(new OnItemClickListener<Battle>() {
             @Override
             public void onItemClick(Battle battle, int position) {
-                // TODO: 2017/10/31 点击事件
+                if (battle != null) {
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                                .putExtra(ExtraKeys.BATTLE, battle)
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
+                }
             }
         });
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -109,6 +120,7 @@ public class BattleListFragment extends BaseFragment {
         });
     }
 
+
     protected boolean isSlideToBottom(RecyclerView recyclerView) {
         return recyclerView != null &&
                 recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange();
@@ -118,11 +130,84 @@ public class BattleListFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         mSet.clear();
+        mLocationTime = null;
+        // TODO: 2017/11/1 先暂时注释了 后期放开
+//        startScheduleJob(5 * 1000);
         requestArenaBattleList();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopScheduleJob();
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        getVisibleBattleIds();
+    }
+
+    private void getVisibleBattleIds() {
+        if (mRecyclerView != null && mArenaBattleListAdapter != null) {
+            StringBuilder stringBuilder = new StringBuilder();
+            LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+
+            int first = layoutManager.findFirstVisibleItemPosition();
+            int last = layoutManager.findLastVisibleItemPosition();
+
+            for (int i = first; i < last; i++) {
+                if (i >= 0) {
+                    Battle battle = mBattleList.get(i);
+                    if (battle != null && battle.isBattleOver()) {
+                        stringBuilder.append(battle.getId()).append(",");
+                    }
+                }
+            }
+            if (stringBuilder.length() > 0) {
+                stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+                requestVisibleBattleData(stringBuilder.toString());
+            }
+        }
+    }
+
+    private void requestVisibleBattleData(String battleIds) {
+        Client.getBattleGamingData(battleIds).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Battle>>, List<Battle>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Battle> data) {
+                        updateVisibleVersusData(data);
+                    }
+                }).fire();
+    }
+
+    private void updateVisibleVersusData(List<Battle> data) {
+        if (data != null && !data.isEmpty()) {
+            for (int i = 0; i < mArenaBattleListAdapter.getItemCount(); i++) {
+                Battle battle = mBattleList.get(i);
+                for (Battle resultBattle : data) {
+                    if (battle.getId() == resultBattle.getId()) {
+//                        battle.setVarietyName(resultBattle.getVarietyName());
+//                        battle.setLaunchUserPortrait(resultBattle.getLaunchUserPortrait());
+//                        battle.setLaunchUserName(resultBattle.getLaunchUserName());
+//                        battle.setAgainstUserName(resultBattle.getAgainstUserName());
+//                        battle.setReward(resultBattle.getReward());
+//                        battle.setGameStatus(resultBattle.getGameStatus());
+//                        battle.setWinResult(resultBattle.getWinResult());
+//                        battle.setLaunchScore(resultBattle.getLaunchScore());
+//                        battle.setAgainstScore(resultBattle.getAgainstScore());
+                        battle = resultBattle;
+                        break;
+                    }
+                }
+            }
+            mArenaBattleListAdapter.notifyDataSetChanged();
+        }
     }
 
     private void requestArenaBattleList() {
         Client.requestArenaBattleListData(mLocationTime)
+//        Client.getVersusGaming(mLocationTime)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
@@ -155,6 +240,11 @@ public class BattleListFragment extends BaseFragment {
             }
         }
         if (!futureVersus.hasMore()) {
+            if (mArenaBattleListAdapter.getItemCount() > 0) {
+                Battle battle = new Battle();
+                battle.setType(ArenaBattleListAdapter.ITEM_TYPE_FOOTER_VIEW);
+                mArenaBattleListAdapter.add(battle);
+            }
             mHasMoreData = false;
         } else if (!futureVersus.getList().isEmpty()) {
             mHasMoreData = true;
@@ -169,7 +259,10 @@ public class BattleListFragment extends BaseFragment {
         mBind.unbind();
     }
 
-    static class ArenaBattleListAdapter extends RecyclerView.Adapter<ArenaBattleListAdapter.ViewHolder> {
+    static class ArenaBattleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        public static final int ITEM_TYPE_ORDINARY = 0;
+        public static final int ITEM_TYPE_FOOTER_VIEW = 1;
 
         private List<Battle> mBattleList;
         private Context mContext;
@@ -196,14 +289,31 @@ public class BattleListFragment extends BaseFragment {
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.row_future_versus_proceed, parent, false);
-            return new ViewHolder(view);
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            if (viewType == ITEM_TYPE_ORDINARY) {
+                View view = LayoutInflater.from(mContext).inflate(R.layout.row_future_versus_proceed, parent, false);
+                return new ViewHolder(view);
+            } else {
+                View footerView = LayoutInflater.from(mContext).inflate(R.layout.footer_battle_list, parent, false);
+                return new FooterViewViewHolder(footerView);
+            }
+
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mBattleList.get(position), position, mContext, mBattleOnItemClickListener);
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof ViewHolder) {
+                ((ViewHolder) holder).bindDataWithView(mBattleList.get(position), position, mContext, mBattleOnItemClickListener);
+            } else if (holder instanceof FooterViewViewHolder) {
+                ((FooterViewViewHolder) holder).mCheckHistoryBattle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(mContext, BattleHisRecordActivity.class)
+                                .putExtra(ExtraKeys.BATTLE_HISTORY, BattleHisRecordActivity.BATTLE_HISTORY_RECORD_TYPE_ARENA)
+                                .execute();
+                    }
+                });
+            }
         }
 
         @Override
@@ -211,9 +321,19 @@ public class BattleListFragment extends BaseFragment {
             return mBattleList != null ? mBattleList.size() : 0;
         }
 
+        @Override
+        public int getItemViewType(int position) {
+            Battle battle = mBattleList.get(position);
+            if (battle.getType() == ITEM_TYPE_FOOTER_VIEW) {
+                return ITEM_TYPE_FOOTER_VIEW;
+            }
+            return super.getItemViewType(position);
+        }
+
         public void setOnItemClickListener(OnItemClickListener<Battle> onItemClickListener) {
             mBattleOnItemClickListener = onItemClickListener;
         }
+
 
         static class ViewHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.createAvatar)
@@ -307,6 +427,16 @@ public class BattleListFragment extends BaseFragment {
                         mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
                 }
+            }
+        }
+
+        static class FooterViewViewHolder extends RecyclerView.ViewHolder {
+            @BindView(R.id.checkHistoryBattle)
+            TextView mCheckHistoryBattle;
+
+            FooterViewViewHolder(View view) {
+                super(view);
+                ButterKnife.bind(this, view);
             }
         }
     }

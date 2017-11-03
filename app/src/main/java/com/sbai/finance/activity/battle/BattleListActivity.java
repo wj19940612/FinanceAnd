@@ -184,7 +184,7 @@ public class BattleListActivity extends BaseActivity implements
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lookBattleResult();
+                lookBattleRule();
             }
         });
     }
@@ -998,7 +998,7 @@ public class BattleListActivity extends BaseActivity implements
 
             private void bindDataWithView(final Battle item, Context context) {
                 mVarietyName.setText(item.getVarietyName());
-                GlideApp.with(context).load(item.getLaunchUserPortrait())
+                GlideApp.with(context)
                         .load(item.getLaunchUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop()

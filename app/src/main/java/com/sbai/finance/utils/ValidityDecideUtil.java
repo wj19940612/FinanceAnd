@@ -23,6 +23,14 @@ public class ValidityDecideUtil {
         return letterMatcher.matches();
     }
 
+    public static boolean isGameAreaLegal(CharSequence data) {
+        data = data.toString().trim();
+        Pattern letter = Pattern.compile("^([A-Za-z0-9\u4e00-\u9fa5]|[-_])+$");
+        Matcher letterMatcher = letter.matcher(data);
+        return letterMatcher.matches();
+    }
+
+
     /**
      * 真实姓名只能是中文
      *

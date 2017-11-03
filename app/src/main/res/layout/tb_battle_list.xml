@@ -38,9 +38,9 @@
 
         <TextView
             android:id="@+id/myBattleResult"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:text="@string/my_battle_result"
             android:textColor="@android:color/white"
             android:textSize="12sp"/>
