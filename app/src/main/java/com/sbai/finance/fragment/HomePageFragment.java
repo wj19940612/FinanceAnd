@@ -138,13 +138,16 @@ public class HomePageFragment extends BaseFragment {
                     break;
                 case HANDLER_BANNER:
                     mBanner.nextAdvertisement();
+                    mScheduleHandler.sendEmptyMessageDelayed(HANDLER_BANNER, TIME_HANDLER_BANNER);
                     break;
                 case HANDLER_BUSNESSBANNER:
                     requestBusniessBannerData();
+                    mScheduleHandler.sendEmptyMessageDelayed(HANDLER_BUSNESSBANNER, TIME_HANDLER_BUSNESSBANNER);
                     break;
                 case HANDLER_DAILY_REPORT:
                     request7NewsData();
                     requestImportantNewsData();
+                    mScheduleHandler.sendEmptyMessageDelayed(HANDLER_DAILY_REPORT, TIME_HANDLER_DAILY_REPORT);
                     break;
             }
         }
