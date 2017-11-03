@@ -12,7 +12,7 @@ import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.profit.ProfitBoardListFragment;
+import com.sbai.finance.fragment.leaderboard.ProfitBoardListFragment;
 import com.sbai.finance.model.leaderboard.LeaderBoardRank;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.TitleBar;

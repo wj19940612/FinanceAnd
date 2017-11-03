@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="10dp">
+
+    <ImageView
+        android:id="@+id/iconView"
+        android:layout_width="6dp"
+        android:layout_height="18dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/home_icon_combined_shape"
+        />
+
+    <TextView
+        android:id="@+id/timeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@id/iconView"
+        android:text="17:45"
+        android:textColor="@color/primaryText"
+        android:textSize="14sp"
+        />
+
+</RelativeLayout>

@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment.profit;
+package com.sbai.finance.fragment.leaderboard;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

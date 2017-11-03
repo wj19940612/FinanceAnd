@@ -10,7 +10,14 @@
         <attr name="point" format="color"/>
         <attr name="selectedPoint" format="color"/>
         <attr name="pointRadius" format="dimension"/>
+        <attr name="pointWidth" format="dimension"/>
+        <attr name="pointHeight" format="dimension"/>
         <attr name="infinite" format="boolean"/>
+        <attr name="isRect" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="HomeBanner">
+        <attr name="isRectIndicator" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="BottomTabs">

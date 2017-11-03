@@ -5,6 +5,8 @@ package com.sbai.finance.model;
  */
 
 public class DailyReport {
+    public static final int INFORMATION = 1;
+    public static final int NEWS = 2;
     public static final int HTML = 1;
 
     /**
@@ -25,10 +27,12 @@ public class DailyReport {
     private String content;
     private String url;
     private int collect;  //0 未收藏  1 已收藏
+    private int type;
 
     public boolean isCollected() {
         return getCollect() == 1;
     }
+
     public String getUrl() {
         return url;
     }
@@ -111,5 +115,13 @@ public class DailyReport {
 
     public void setCollect(int collect) {
         this.collect = collect;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

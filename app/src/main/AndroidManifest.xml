@@ -437,6 +437,20 @@
             android:name=".activity.arena.ArenaVirtualAwardNameActivity"
             android:screenOrientation="portrait"
             />
+
+        <activity
+            android:name=".activity.home.StockFutureActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leaderboard.LeaderBoardsListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.InformationAndFocusNewsActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.home.BroadcastListActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

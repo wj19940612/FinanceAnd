@@ -26,7 +26,7 @@ public class UserArenaExchangeResultDialog {
     public static UserArenaExchangeResultDialog single(Activity activity, UserExchangeAwardInfo userExchangeAwardInfo) {
         UserArenaExchangeResultDialog userArenaExchangeResultDialog = new UserArenaExchangeResultDialog();
         userArenaExchangeResultDialog.mActivity = activity;
-        userArenaExchangeResultDialog.mSmartDialog = SmartDialog.withSingleMap(activity);
+        userArenaExchangeResultDialog.mSmartDialog = SmartDialog.single(activity);
         userArenaExchangeResultDialog.mUserExchangeAwardInfo = userExchangeAwardInfo;
         userArenaExchangeResultDialog.mView = LayoutInflater.from(activity).inflate(R.layout.dialog_user_arena_exchange_result, null);
         userArenaExchangeResultDialog.mSmartDialog.setCustomView(userArenaExchangeResultDialog.mView);

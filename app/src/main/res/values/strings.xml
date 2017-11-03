@@ -9,10 +9,10 @@
     <string name="no">否</string>
 
     <!-- Main -->
-    <string name="training">训练</string>
+    <string name="home">首页</string>
     <string name="miss_talk">姐说</string>
-    <string name="discovery">发现</string>
     <string name="arena">竞技场</string>
+    <string name="mine">我的</string>>
 
 
     <!-- EconomicCircle -->
@@ -55,6 +55,10 @@
     <string name="stock">股票</string>
     <string name="optional">自选</string>
     <string name="ranking">排行榜</string>
+    <string name="ShangShen">沪深</string>
+    <string name="all_day_news">7x24小时</string>
+    <string name="focus_news">要闻</string>
+    <string name="week_">星期%1$s</string>
 
     <!--opinion-->
 
@@ -95,7 +99,7 @@
     <string name="highest">最高</string>
     <string name="lowest">最低</string>
     <string name="publish_point">发表观点</string>
-    <string name="add_optional">+ 自选</string>
+    <string name="add_optional">加入自选</string>
     <string name="delete_optional">取消自选</string>
     <string name="whether_to_cancel_optional">是否要取消自选</string>
     <string name="add_option_succeed">添加自选成功</string>
@@ -867,4 +871,8 @@
     <string name="you_miss_exchange_time">很遗憾！您错过了兑奖时间</string>
     <string name="you_is_real_name_wait_please_wait">您的实名认证还在审核中\n请耐心等待</string>
     <string name="choose_skin">选择皮肤</string>
+    <string name="broadcast">广播</string>
+    <!-- 首页 -->
+    <string name="look_my_rank">查看我的排名</string>
+    <string name="please_retry">请重试</string>
 </resources>

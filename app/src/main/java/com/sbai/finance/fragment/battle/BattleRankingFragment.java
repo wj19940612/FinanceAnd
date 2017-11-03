@@ -79,39 +79,6 @@ public class BattleRankingFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         requestArenaAwardRankingData();
-        // TODO: 2017/11/3 模拟数据
-//        ArrayList<ArenaAwardRanking> arenaAwardRankings = new ArrayList<>();
-//        for (int i = 1; i < 31; i++) {
-//            ArenaAwardRanking arenaAwardRanking = new ArenaAwardRanking();
-//            arenaAwardRanking.setRank(i);
-//            arenaAwardRanking.setUserName("溺水的鱼 " + i);
-//            arenaAwardRanking.setUserPortrait("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3352433622,2935084950&fm=173&s=D00065BC440277ED42B0195E0300E0B2&w=400&h=387&img.JPEG");
-//            arenaAwardRankings.add(arenaAwardRanking);
-//        }
-//
-//        ArrayList<ArenaAwardExchangeRule> arenaAwardExchangeRules = new ArrayList<>();
-//        for (int i = 0; i < 10; i++) {
-//            ArenaAwardExchangeRule awardExchangeRule = new ArenaAwardExchangeRule();
-//            if (i == 0) {
-//                awardExchangeRule.setType(ArenaAwardExchangeRule.AWARD_EXCHANGE_RULE_TTPE_RANK);
-//                awardExchangeRule.setPrizeName("鱼");
-//                awardExchangeRule.setScore("1-10");
-//            }
-//            if (i == 3) {
-//                awardExchangeRule.setType(ArenaAwardExchangeRule.AWARD_EXCHANGE_RULE_TTPE_RANK);
-//                awardExchangeRule.setPrizeName("就卡萨会尽快恢复到");
-//                awardExchangeRule.setScore("11-20");
-//            }
-//
-//            if (i == 7) {
-//                awardExchangeRule.setType(ArenaAwardExchangeRule.AWARD_EXCHANGE_RULE_TTPE_RANK);
-//                awardExchangeRule.setPrizeName("小黄段子");
-//                awardExchangeRule.setScore("21-30");
-//            }
-//            arenaAwardExchangeRules.add(awardExchangeRule);
-//        }
-//
-//        processAward(arenaAwardRankings, arenaAwardExchangeRules);
     }
 
     @Override
@@ -129,19 +96,6 @@ public class BattleRankingFragment extends BaseFragment {
                         if (data != null) {
                             requestAwardExchangeRule(data);
                         }
-//                        // TODO: 2017/11/1 模拟数据
-//                        List<ArenaAwardRanking> arenaAwardRankings = new ArrayList<ArenaAwardRanking>();
-//                        for (int i = 0; i < 30; i++) {
-//                            ArenaAwardRanking arenaAwardRanking = new ArenaAwardRanking();
-//                            arenaAwardRanking.setRank(i + 1);
-//                            arenaAwardRanking.setUserPortrait("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3352433622,2935084950&fm=173&s=D00065BC440277ED42B0195E0300E0B2&w=400&h=387&img.JPEG");
-//                            arenaAwardRanking.setPrizeName(" 小米\n max5 ");
-//                            arenaAwardRanking.setTotalCount(i * i);
-//                            arenaAwardRanking.setUserName(" 溺水的鱼 " + i + " " + i + "" + i + " 号");
-//                            arenaAwardRanking.setScore(i * i * i * i * 10);
-//                            arenaAwardRankings.add(arenaAwardRanking);
-//                        }
-//                        updateAwardRankingList(arenaAwardRankings);
                     }
 
                     @Override
@@ -155,7 +109,7 @@ public class BattleRankingFragment extends BaseFragment {
 
 
     private void requestAwardExchangeRule(final List<ArenaAwardRanking> arenaAwardRankingList) {
-        Client.requesrAwardExchangeRule(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
+        Client.requestAwardExchangeRule(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
                 .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<ArenaAwardExchangeRule>>, List<ArenaAwardExchangeRule>>() {
@@ -184,9 +138,11 @@ public class BattleRankingFragment extends BaseFragment {
                         }
 
                         if (endPosition != -1 && firstPosition != -1) {
-                            for (int i = firstPosition-1; i < endPosition; i++) {
-                                ArenaAwardRanking arenaAwardRanking = arenaAwardRankingList.get(i);
-                                arenaAwardRanking.setPrizeName(awardExchangeRule.getPrizeName());
+                            for (int i = firstPosition - 1; i < endPosition; i++) {
+                                if (i < arenaAwardRankingList.size()) {
+                                    ArenaAwardRanking arenaAwardRanking = arenaAwardRankingList.get(i);
+                                    arenaAwardRanking.setPrizeName(awardExchangeRule.getPrizeName());
+                                }
                             }
                         }
                     } catch (NumberFormatException e) {
@@ -303,7 +259,7 @@ public class BattleRankingFragment extends BaseFragment {
                         .circleCrop()
                         .into(mAvatar);
                 SpannableString spannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
-                        "\n+" + String.valueOf(item.getScore()), 1.4f,
+                        "\n" + String.valueOf(item.getScore()), 1.4f,
                         ContextCompat.getColor(context, R.color.yellowAssist));
                 mNameAndProfit.setText(spannableString);
                 mBattleCount.setText(String.valueOf(item.getTotalCount()));

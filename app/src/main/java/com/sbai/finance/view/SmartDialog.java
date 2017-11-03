@@ -112,12 +112,6 @@ public class SmartDialog {
         return dialog;
     }
 
-    public static SmartDialog withSingleMap(Activity activity) {
-        SmartDialog dialog = new SmartDialog(activity);
-        dialog.init();
-        return dialog;
-    }
-
     public static SmartDialog with(Activity activity, String msg) {
         SmartDialog dialog = new SmartDialog(activity);
         addMap(activity, dialog);
@@ -279,8 +273,8 @@ public class SmartDialog {
     }
 
 
-    public SmartDialog setNegativeVisible(int visable) {
-        mNegativeVisible = visable;
+    public SmartDialog setNegativeVisible(int visible) {
+        mNegativeVisible = visible;
         return this;
     }
 
@@ -469,6 +463,7 @@ public class SmartDialog {
 
             mPosition.setText(mPositiveId);
             mPosition.setTextColor(mPositiveTextColor);
+            mPosition.setVisibility(mPositiveVisible);
             mPosition.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

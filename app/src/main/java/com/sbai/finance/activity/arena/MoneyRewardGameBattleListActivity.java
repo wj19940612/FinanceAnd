@@ -143,9 +143,6 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
 //        }
         initView();
 
-//        // TODO: 2017/11/3 测试数据
-//        ArenaActivityAwardInfo arenaActivityAwardInfo = new ArenaActivityAwardInfo();
-//        showExchangeVirtualProductInputInfoDialog(arenaActivityAwardInfo);
     }
 
     @Override
@@ -157,7 +154,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
             requestUserFundInfo();
             requestUserNowBattle();
         } else {
-            updateUserJoinArenaStatus(false,false);
+            updateUserJoinArenaStatus(false, false);
         }
     }
 
@@ -169,7 +166,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                     @Override
                     protected void onRespSuccessData(ArenaActivityAndUserStatus data) {
                         mArenaActivityAndUserStatus = data;
-                        updateUserJoinArenaStatus(data.isApplyed(),ifShowUserExchangeDialog);
+                        updateUserJoinArenaStatus(data.isApplyed(), ifShowUserExchangeDialog);
                         UserActivityScore userActivityScore = mArenaActivityAndUserStatus.getMyScoreVO();
                         ArenaInfo arenaInfo = mArenaActivityAndUserStatus.getActivityModel();
                         if (arenaInfo != null) {
@@ -184,7 +181,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                 .fireFree();
     }
 
-    private void updateUserJoinArenaStatus(boolean isJoinActivity,boolean ifShowUserExchangeDialog) {
+    private void updateUserJoinArenaStatus(boolean isJoinActivity, boolean ifShowUserExchangeDialog) {
         if (isJoinActivity) {
             mJoinGameLL.setVisibility(View.GONE);
             mGameInfoRl.setVisibility(View.VISIBLE);
@@ -272,8 +269,8 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
 
     private void showOverExchangeTimeDialog() {
         SmartDialog.single(getActivity(), getString(R.string.you_miss_exchange_time))
-                .setPositiveVisable(View.GONE)
-                .setNegative(R.string.i_see)
+                .setPositive(R.string.i_see)
+                .setNegativeVisible(View.GONE)
                 .show();
     }
 

@@ -42,7 +42,7 @@ class SlidingTabStrip extends LinearLayout {
     private final Paint mBottomBorderPaint;
     private boolean mHasBottomBorder;
 
-    private final int mSelectedIndicatorThickness;
+    private int mSelectedIndicatorThickness;
     private final Paint mSelectedIndicatorPaint;
 
     private final int mDefaultBottomBorderColor;
@@ -122,6 +122,12 @@ class SlidingTabStrip extends LinearLayout {
 
     void setSelectedIndicatorPadding(float padding) {
         mSelectedPadding = padding;
+        invalidate();
+    }
+
+    void setSelectedIndicatorHeigh(int height) {
+        float density = getResources().getDisplayMetrics().density;
+        mSelectedIndicatorThickness = (int) (height * density);
         invalidate();
     }
 

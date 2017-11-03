@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#55adff</color>
+    <color name="colorPrimary">#55ADFF</color>
     <color name="colorPrimaryDark">#000</color>
-    <color name="colorAccent">#ff4081</color>
+    <color name="colorAccent">#FF4081</color>
 
-    <color name="redPrimary">#f25b57</color>
+    <color name="redPrimary">#F25B57</color>
     <color name="blackPrimary">#222</color>
 
     <color name="background">#F5F5F5</color>
@@ -25,6 +25,8 @@
     <color name="warningText">#CD4A47</color>
     <color name="opinionText">#5F6166</color>
     <color name="whiteHintText">#FDFDFD</color>
+    <color name="banner_number">#FF8B00</color>
+    <color name="news_content">#5c5c5c</color>
     <color name="blueScoreText">#6595C2</color>
 
     <color name="unluckyText">#999</color>
