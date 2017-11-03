@@ -70,9 +70,9 @@ public class HomeBanner extends FrameLayout {
 
     private void init() {
         //需要方形的indicator
-        if(mIsRectIndicator){
+        if (mIsRectIndicator) {
             LayoutInflater.from(getContext()).inflate(R.layout.new_home_banner, this, true);
-        }else{
+        } else {
             LayoutInflater.from(getContext()).inflate(R.layout.home_banner, this, true);
         }
         ButterKnife.bind(this);
@@ -126,6 +126,10 @@ public class HomeBanner extends FrameLayout {
     }
 
     public void setHomeAdvertisement(List<Banner> informationList) {
+        if (informationList.size() == 0) {
+            setVisibility(View.GONE);
+            return;
+        }
         filterEmptyInformation(informationList);
 
         if (!informationList.isEmpty()) {

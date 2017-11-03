@@ -92,6 +92,10 @@ public class BusinessBanner extends RelativeLayout {
 
 
     public void setBusinessBannerData(List<Banner> data) {
+        if (data.size() == 0) {
+            setVisibility(View.GONE);
+            return;
+        }
         if (data.size() < 1) {
             return;
         }
@@ -172,7 +176,7 @@ public class BusinessBanner extends RelativeLayout {
             stringBuilder.append(subTitle.substring(userCountLocation + USER_COUNT_LOCATION_SIGN.length(), subTitle.length()));
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuilder);
             ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.banner_number));
-            spannableStringBuilder.setSpan(foregroundColorSpan, userCountLocation, userCountLocation +  banner.getMontageData().length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+            spannableStringBuilder.setSpan(foregroundColorSpan, userCountLocation, userCountLocation + banner.getMontageData().length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
             textView.setText(spannableStringBuilder);
         }

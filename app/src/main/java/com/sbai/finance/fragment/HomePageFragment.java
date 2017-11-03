@@ -469,7 +469,7 @@ public class HomePageFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<List<Banner>>, List<Banner>>() {
                     @Override
                     protected void onRespSuccessData(List<Banner> data) {
-                        if (data != null && data.size() != 0) {
+                        if (data != null) {
                             mBanner.setHomeAdvertisement(data);
                         }
                     }
@@ -481,7 +481,7 @@ public class HomePageFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<List<Banner>>, List<Banner>>() {
                     @Override
                     protected void onRespSuccessData(List<Banner> data) {
-                        if (data != null && data.size() != 0) {
+                        if (data != null) {
                             mBusinessBanner.setBusinessBannerData(data);
                         }
                     }
