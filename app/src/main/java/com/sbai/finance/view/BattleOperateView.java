@@ -238,6 +238,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
             case BattleStatus.OVER_OBSERVER:
                 hideAllOperationView();
                 updatePlayersAvatarKo();
+                setBattleProfit(mBattle.getLaunchScore(), mBattle.getAgainstScore());
                 break;
         }
     }
@@ -245,10 +246,10 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
     private void updatePlayersAvatarKo() {
         switch (mBattle.getWinResult()) {
             case Battle.WIN_RESULT_OWNER_WIN:
-                mOwnerKo.setVisibility(VISIBLE);
+                mChallengerKo.setVisibility(VISIBLE);
                 break;
             case Battle.WIN_RESULT_CHALLENGER_WIN:
-                mChallengerKo.setVisibility(VISIBLE);
+                mOwnerKo.setVisibility(VISIBLE);
                 break;
         }
     }
@@ -368,12 +369,15 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         mHoldingInfo.setVisibility(VISIBLE);
     }
 
-    public TradeOrder getOwnerOrder() {
-        return mOwnerOrder;
+    public TradeOrder getHoldingOrder() {
+        return mHoldingOrder;
     }
 
     public void updatePlayersProfit(FutureData futureData) {
         if (mVariety == null) return;
+
+        if (mBattleStatus < BattleStatus.STARTED_OWNER
+                || mBattleStatus > BattleStatus.STARTED_OBSERVER) return;
 
         if (mHoldingOrder != null) {
             double profit = getProfit(futureData, mHoldingOrder);

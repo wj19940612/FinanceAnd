@@ -108,7 +108,13 @@ public class BattleProgress extends LinearLayout {
     public void setBattleProfit(double ownerProfit, double challengerProfit) {
         setProgressValue(ownerProfit, challengerProfit);
 
-        if (ownerProfit > 0 && challengerProfit > 0) {
+        if (ownerProfit == 0 && challengerProfit == 0) {
+            // 00
+            setProgressBars(0, 0);
+            return;
+        }
+
+        if (ownerProfit >= 0 && challengerProfit >= 0) {
             // ++
             int progress = (int) (ownerProfit * 100 / (ownerProfit + challengerProfit));
             setProgressBars(progress, 100 - progress);
@@ -135,12 +141,6 @@ public class BattleProgress extends LinearLayout {
             setProgressBars(0, 100);
             return;
         }
-
-        if (ownerProfit == 0 && challengerProfit == 0) {
-            // 00
-            setProgressBars(0, 0);
-            return;
-        }
     }
 
     private void setProgressValue(double ownerProfit, double challengerProfit) {
@@ -153,7 +153,7 @@ public class BattleProgress extends LinearLayout {
             challengerProfitValue = "+" + challengerProfitValue;
         }
         mLeftValue.setText(ownerProfitValue);
-        mRightProgressBar.setTag(challengerProfitValue);
+        mRightValue.setText(challengerProfitValue);
     }
 
     private void setProgressBars(int left, int right) {

@@ -62,7 +62,7 @@ public class StartGameDialog extends BaseDialog {
     }
 
     private static void startCountDown(final TextView message, final Activity activity, final OnDismissListener onDismissListener) {
-        CountDownTimer timer = new CountDownTimer(4000, 1000) {
+        CountDownTimer timer = new CountDownTimer(3000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 int count = (int) (millisUntilFinished / 1000);

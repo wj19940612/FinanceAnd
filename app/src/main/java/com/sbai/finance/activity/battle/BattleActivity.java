@@ -36,7 +36,6 @@ import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.TradeOrder;
 import com.sbai.finance.model.battle.TradeOrderClosePosition;
 import com.sbai.finance.model.battle.TradeRecord;
-import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.local.BattleStatus;
 import com.sbai.finance.model.local.SysTime;
@@ -111,6 +110,9 @@ import static com.sbai.finance.model.local.BattleStatus.STARTED_OWNER;
  * 8. CANCELED
  */
 public class BattleActivity extends BaseActivity {
+    private static final int UPDATE_BATTLE_INIT = 0;
+    private static final int UPDATE_BATTLE_OVER = 1;
+    private static final int UPDATE_BATTLE = 3;
 
     @BindView(R.id.rootView)
     LinearLayout mRootView;
@@ -142,8 +144,6 @@ public class BattleActivity extends BaseActivity {
 
     private int mBattleStatus;
 
-    private UserFundInfo mUserFundInfo;
-
     private NetworkReceiver mNetworkReceiver;
     private OrderRecordListAdapter mOrderRecordListAdapter;
 
@@ -161,7 +161,7 @@ public class BattleActivity extends BaseActivity {
 
         mNetworkReceiver = new NetworkReceiver();
 
-        initBattle();
+        updateBattle(UPDATE_BATTLE_INIT);
     }
 
     @Override
@@ -196,7 +196,6 @@ public class BattleActivity extends BaseActivity {
 
     private void initData(Intent intent) {
         mBattle = intent.getParcelableExtra(ExtraKeys.BATTLE);
-        mUserFundInfo = intent.getParcelableExtra(ExtraKeys.USER_FUND);
     }
 
     private void initListeners() {
@@ -233,7 +232,7 @@ public class BattleActivity extends BaseActivity {
             public void onClosePositionClick() {
                 umengEventCount(UmengCountEventId.BATTLE_CLOSE_POSITION);
 
-                TradeOrder ownerOrder = mBattleOperateView.getOwnerOrder();
+                TradeOrder ownerOrder = mBattleOperateView.getHoldingOrder();
                 if (ownerOrder != null) {
                     closePosition(ownerOrder.getId());
                 }
@@ -250,30 +249,35 @@ public class BattleActivity extends BaseActivity {
         });
     }
 
-    private void initBattle() {
+    private void updateBattle(final int updateBattle) {
         Client.getBattleInfo(mBattle.getId(), mBattle.getBatchCode()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<Battle>, Battle>() {
                     @Override
                     protected void onRespSuccessData(Battle data) {
                         mBattle = data;
-                        mOrderRecordListAdapter.setOwnerId(mBattle.getLaunchUser());
                         updateBattleStatus();
-                        initBasedOnBattleStatus();
+                        postUpdateBattle(updateBattle);
                     }
                 }).fire();
     }
 
-    private void updateBattle() {
-        Client.getBattleInfo(mBattle.getId(), mBattle.getBatchCode()).setTag(TAG)
-                .setCallback(new Callback2D<Resp<Battle>, Battle>() {
-                    @Override
-                    protected void onRespSuccessData(Battle data) {
-                        mBattle = data;
-                        updateBattleStatus();
-                        mBattleOperateView.setBattle(mBattle);
-                        mBattleOperateView.updateView(mBattleStatus);
-                    }
-                }).fire();
+    private void postUpdateBattle(int updateBattle) {
+        switch (updateBattle) {
+            case UPDATE_BATTLE_INIT:
+                mOrderRecordListAdapter.setOwnerId(mBattle.getLaunchUser());
+                initBasedOnBattleStatus();
+                break;
+            case UPDATE_BATTLE:
+                mBattleOperateView.setBattle(mBattle);
+                mBattleOperateView.updateView(mBattleStatus);
+                break;
+            case UPDATE_BATTLE_OVER:
+                mBattleOperateView.setBattle(mBattle);
+                mBattleOperateView.updateView(mBattleStatus);
+                showGameOverDialog();
+                break;
+        }
+
     }
 
     private void initBasedOnBattleStatus() {
@@ -373,6 +377,21 @@ public class BattleActivity extends BaseActivity {
         remainingTime = remainingTime < 0 ? 0 : remainingTime;
         mBattleRemainingTime.setText(getString(R.string.remaining_time_x,
                 DateUtil.format(remainingTime, "mm:ss")));
+
+        if (remainingTime == 0) { // 对战结束后，一直没有收到结束推送，5秒后 自动刷新结果显示弹窗
+            Object count = mBattleRemainingTime.getTag();
+            if (count == null) {
+                count = new Integer(0);
+            }
+            if (count instanceof Integer) {
+                count = ((Integer) count).intValue() + 1;
+                if (((Integer) count).intValue() == 5) {
+                    updateBattle(UPDATE_BATTLE_OVER);
+                }
+            }
+            mBattleRemainingTime.setTag(count);
+        }
+
     }
 
     private void initTabLayout() {
@@ -489,10 +508,7 @@ public class BattleActivity extends BaseActivity {
                     @Override
                     public void onClick(Dialog dialog) {
                         dismissAllDialog();
-                        Launcher.with(getActivity(), ChooseFuturesActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, "")
-                                .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
-                                .execute();
+                        Launcher.with(getActivity(), ChooseFuturesActivity.class).execute();
                         finish();
                     }
                 })
@@ -504,12 +520,6 @@ public class BattleActivity extends BaseActivity {
         SmartDialog.dismiss(this);
         BaseDialog.dismiss(this);
     }
-
-//    private void refreshTradeView() {
-//        //刷新交易数据
-//        requestOrderOperationHistory();
-//        requestHoldingOrders();
-//    }
 
     private void updateVarietyData() {
         requestTrendDataAndSet();
@@ -576,7 +586,7 @@ public class BattleActivity extends BaseActivity {
                     updateHoldingOrders(order, pushType == PushCode.ORDER_CLOSE);
 
                     if (pushType == PushCode.ORDER_CLOSE) {
-                        updateBattle();
+                        updateBattle(UPDATE_BATTLE);
                     }
                 }
                 return;
