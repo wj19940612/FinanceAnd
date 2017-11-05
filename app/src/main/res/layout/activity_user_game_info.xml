@@ -47,14 +47,15 @@
                 android:text="@string/receive_user"
                 android:textColor="@color/unluckyText"/>
 
-            <android.support.v7.widget.AppCompatEditText
+            <EditText
                 android:id="@+id/userName"
                 style="@style/UserArenaSignEditText"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLength="30"
                 android:maxLines="1"
-                tools:text="肯定撒附近开了圣诞节阿弗莱克dsdsd快捷颠三倒四地方撒"/>
+                android:singleLine="true"
+                tools:text="克鲁塞德荆防颗粒就是大方里看见对方立刻第六空间法律看到手机卡了"/>
         </LinearLayout>
 
         <LinearLayout
@@ -68,20 +69,22 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:layout_marginLeft="8dp"
                 android:layout_marginTop="15dp"
+                android:paddingTop="15dp"
                 android:text="@string/receive_user_address"
                 android:textColor="@color/unluckyText"/>
 
-            <android.support.v7.widget.AppCompatEditText
+
+            <EditText
+                android:singleLine="true"
                 android:id="@+id/userAddress"
                 style="@style/UserArenaSignEditText"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="22dp"
+                android:layout_marginBottom="11dp"
                 android:maxLength="120"
                 android:maxLines="3"
-                tools:text="肯定撒附近开了圣诞节阿弗莱克快捷地方颠三倒四多少度撒"/>
+                tools:text="中华人民共和国"/>
         </LinearLayout>
 
         <LinearLayout
@@ -98,15 +101,13 @@
                 android:text="@string/phone_"
                 android:textColor="@color/unluckyText"/>
 
-            <android.support.v7.widget.AppCompatEditText
+            <EditText
                 android:id="@+id/phone"
                 style="@style/UserArenaSignEditText"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:maxLength="11"
-                android:maxLines="1"
-                tools:text="12345678910"/>
+                android:maxLength="11"/>
         </LinearLayout>
 
         <TextView

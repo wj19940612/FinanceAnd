@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +44,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.view.BgShadowTextView;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.glide.GlideApp;
@@ -99,6 +99,8 @@ public class MineFragment extends BaseFragment {
     TextView mScoreProgress;
     @BindView(R.id.lemiScoreArea)
     LinearLayout mLemiScoreArea;
+    @BindView(R.id.test)
+    BgShadowTextView mTest;
 
     private UserEachTrainingScoreModel mUserEachTrainingScoreModel;
 
@@ -135,10 +137,19 @@ public class MineFragment extends BaseFragment {
                 .registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.ACTION_LOGIN_SUCCESS));
         mEvaluationLevel = getResources().getStringArray(R.array.evaluationLevel);
 
-        String[] split = "1-42".split("-");
-        for (int i = 0; i < split.length; i++) {
-            Log.d(TAG, "onActivityCreated: " + split[i]);
-        }
+
+        mTest.setOnClickListener(new View.OnClickListener() {
+            boolean select;
+
+            @Override
+            public void onClick(View v) {
+                if (select) {
+                    mTest.setSelected(true);
+                } else {
+                    mTest.setSelected(false);
+                }
+            }
+        });
     }
 
     @Override

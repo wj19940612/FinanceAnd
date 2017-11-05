@@ -87,7 +87,6 @@ public class ForgetSecurityPassActivity extends BaseActivity {
             case R.id.submit:
                 final String phoneNumber = LocalUser.getUser().getPhone();
                 final String authCode = mAuthCode.getText().toString().trim();
-                // TODO: 2017/10/25  需要改成 快捷登录的接口  getAuthCode
                 Client.forgetPassWord(authCode, phoneNumber)
                         .setIndeterminate(this)
                         .setCallback(new Callback<Resp<Object>>() {

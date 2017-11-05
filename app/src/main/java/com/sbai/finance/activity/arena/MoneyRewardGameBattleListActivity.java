@@ -137,10 +137,6 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
         setContentView(R.layout.activity_money_reward_game_battle_list);
         ButterKnife.bind(this);
         translucentStatusBar();
-//        boolean mStartQuickMatch = getIntent().getBooleanExtra(Launcher.EX_PAYLOAD, false);
-//        if (mStartQuickMatch) {
-//            quickMatchArena(ArenaQuickMatchLauncher.ARENA_MATCH_START);
-//        }
         initView();
 
     }
@@ -581,6 +577,12 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                 .executeForResult(REQ_CODE_SUBMIT_EXCHANGE_AWARD);
     }
 
+    private void showExchangeEntityAwardDialog(ArenaActivityAwardInfo arenaActivityAwardInfo) {
+        Launcher.with(getActivity(), ArenaEntityExchangeInfoInputActivity.class)
+                .putExtra(ExtraKeys.ARENA_EXCHANGE_AWARD_ID, arenaActivityAwardInfo.getId())
+                .executeForResult(REQ_CODE_SUBMIT_EXCHANGE_AWARD);
+    }
+
     private void requestUserRealNameStatus() {
         Client.getUserCreditApproveStatus()
                 .setTag(TAG)
@@ -599,7 +601,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
     private void updateUserCreditStatus(Integer status) {
         switch (status) {
             case UserInfo.CREDIT_IS_ALREADY_APPROVE:
-
+                requestUserCanExchangeAward();
                 break;
             case UserInfo.CREDIT_IS_APPROVE_ING:
                 showRealNameIsCheckingDialog();
@@ -627,22 +629,6 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                 .setPositiveVisable(View.GONE)
                 .setNegative(R.string.i_see)
                 .show();
-    }
-
-    private void showExchangeEntityAwardDialog(ArenaActivityAwardInfo arenaActivityAwardInfo) {
-        Launcher.with(getActivity(), ArenaEntityExchangeInfoInputActivity.class)
-                .putExtra(ExtraKeys.ARENA_EXCHANGE_AWARD_ID, arenaActivityAwardInfo.getId())
-                .executeForResult(REQ_CODE_SUBMIT_EXCHANGE_AWARD);
-
-
-//        new SubmitUserExchangeRewardInfoDialog()
-//                .setOnUserInfoInputListener(new SubmitUserExchangeRewardInfoDialog.OnUserInfoInputListener() {
-//                    @Override
-//                    public void onUserInput(UserGameInfo userGameInfo) {
-////                        mUserGameInfo = userGameInfo;
-//                    }
-//                })
-//                .show(getSupportFragmentManager());
     }
 
     public void quickMatchArena(final int matchType) {
@@ -795,7 +781,6 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         requestArenaActivityAndUserStatus(false);
-                        ToastUtil.show(resp.getMsg());
                     }
 
                     @Override

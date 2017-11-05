@@ -496,7 +496,6 @@ public class FutureBattleActivity extends BaseActivity implements
                     public void onClick(Dialog dialog) {
                         dismissAllDialog();
                         Launcher.with(getActivity(), ChooseFuturesActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, "")
                                 .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
                                 .execute();
                         finish();

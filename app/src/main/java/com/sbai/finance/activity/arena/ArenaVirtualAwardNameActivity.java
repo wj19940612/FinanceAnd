@@ -1,7 +1,7 @@
 package com.sbai.finance.activity.arena;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.DialogBaseActivity;
 import com.sbai.finance.model.arena.ArenaVirtualAwardName;
 import com.sbai.finance.utils.OnItemClickListener;
 
@@ -20,8 +21,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class ArenaVirtualAwardNameActivity extends AppCompatActivity {
+public class ArenaVirtualAwardNameActivity extends DialogBaseActivity {
 
     public static final String CHOOSE_AWARD = "choose_award";
 
@@ -38,20 +40,17 @@ public class ArenaVirtualAwardNameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_arena_exchange_virtual_name);
         ButterKnife.bind(this);
-        ArenaVirtualAwardName arenaVirtualAwardName = getIntent().getParcelableExtra(ExtraKeys.ARENA_VIRTUAL_AWARD_NAME);
-        mChooseVirtualAwardName = getIntent().getParcelableExtra(CHOOSE_AWARD);
-        ArrayList<ArenaVirtualAwardName.VirtualAwardName> virtualAwardNameList = arenaVirtualAwardName.getVirtualAwardNameList();
-
-
-        mVirtualAwardAdapter = new VirtualAwardAdapter(new ArrayList<ArenaVirtualAwardName.VirtualAwardName>());
+        initData();
         mRecyclerView.setAdapter(mVirtualAwardAdapter);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+
         mVirtualAwardAdapter.setOnItemClickListener(new OnItemClickListener<ArenaVirtualAwardName.VirtualAwardName>() {
             @Override
             public void onItemClick(ArenaVirtualAwardName.VirtualAwardName virtualAwardName, int position) {
                 if (mChooseVirtualAwardName != null) {
                     mChooseVirtualAwardName.setSelect(false);
                     mVirtualAwardAdapter.notifyDataSetChanged();
+                    mChooseVirtualAwardName = null;
                 }
 
                 mChooseVirtualAwardName = virtualAwardName;
@@ -59,20 +58,41 @@ public class ArenaVirtualAwardNameActivity extends AppCompatActivity {
                 mVirtualAwardAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void initData() {
+        ArenaVirtualAwardName arenaVirtualAwardName = getIntent().getParcelableExtra(ExtraKeys.ARENA_VIRTUAL_AWARD_NAME);
+        mChooseVirtualAwardName = getIntent().getParcelableExtra(CHOOSE_AWARD);
+        ArrayList<ArenaVirtualAwardName.VirtualAwardName> virtualAwardNameList = arenaVirtualAwardName.getVirtualAwardNameList();
 
         if (virtualAwardNameList != null) {
-            mVirtualAwardAdapter.addData(virtualAwardNameList);
             if (mChooseVirtualAwardName != null) {
                 for (ArenaVirtualAwardName.VirtualAwardName result : virtualAwardNameList) {
                     if (result.getAwardName().equalsIgnoreCase(mChooseVirtualAwardName.getAwardName())) {
                         result.setSelect(true);
-                        mVirtualAwardAdapter.notifyDataSetChanged();
+                        mChooseVirtualAwardName = result;
                     }
                 }
             }
+            mVirtualAwardAdapter = new VirtualAwardAdapter(new ArrayList<ArenaVirtualAwardName.VirtualAwardName>());
+            mVirtualAwardAdapter.addData(virtualAwardNameList);
         }
     }
 
+    @OnClick(R.id.dialogDelete)
+    public void onViewClicked() {
+        onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mChooseVirtualAwardName != null) {
+            Intent intent = new Intent();
+            intent.putExtra(CHOOSE_AWARD, mChooseVirtualAwardName);
+            setResult(RESULT_OK, intent);
+        }
+        super.onBackPressed();
+    }
 
     class VirtualAwardAdapter extends RecyclerView.Adapter<VirtualAwardAdapter.ViewHolder> {
 

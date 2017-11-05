@@ -553,7 +553,7 @@ public class BattleListActivity extends BaseActivity implements
 
     private void updateUserFund(UserFundInfo data) {
         if (data == null) return;
-        mIngot.setText(getString(R.string.number_ge, StrFormatter.formIngotNumber(data.getYuanbao())));
+        mIngot.setText(getString(R.string.battle_list_ingot_number, StrFormatter.formIngotNumber(data.getYuanbao())));
     }
 
     private void updateAvatar() {
@@ -595,8 +595,6 @@ public class BattleListActivity extends BaseActivity implements
                 if (LocalUser.getUser().isLogin()) {
 
                     Launcher.with(getActivity(), ChooseFuturesActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, "")
-                            .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
                             .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -950,7 +948,6 @@ public class BattleListActivity extends BaseActivity implements
                     break;
             }
 
-
             return convertView;
         }
 
@@ -977,6 +974,8 @@ public class BattleListActivity extends BaseActivity implements
             ImageView mCreateAvatar;
             @BindView(R.id.createKo)
             ImageView mCreateKo;
+            @BindView(R.id.createAvatarRL)
+            FrameLayout mCreateAvatarRL;
             @BindView(R.id.createName)
             TextView mCreateName;
             @BindView(R.id.varietyName)
@@ -989,8 +988,12 @@ public class BattleListActivity extends BaseActivity implements
             ImageView mAgainstAvatar;
             @BindView(R.id.againstKo)
             ImageView mAgainstKo;
+            @BindView(R.id.againstAvatarFL)
+            FrameLayout mAgainstAvatarFL;
             @BindView(R.id.againstName)
             TextView mAgainstName;
+            @BindView(R.id.rootLL)
+            LinearLayout mRootLL;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -998,6 +1001,7 @@ public class BattleListActivity extends BaseActivity implements
 
             private void bindDataWithView(final Battle item, Context context) {
                 mVarietyName.setText(item.getVarietyName());
+
                 GlideApp.with(context)
                         .load(item.getLaunchUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
@@ -1020,17 +1024,19 @@ public class BattleListActivity extends BaseActivity implements
                 String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);
 
                 switch (item.getGameStatus()) {
-//                    case Battle.GAME_STATUS_CREATED:
-//                        mDepositAndTime.setText(reward + " " + DateUtil.getMinutes(item.getEndline()));
-//                        mCreateKo.setVisibility(View.GONE);
-//                        mAgainstKo.setVisibility(View.GONE);
-//                        mAgainstAvatar.setImageDrawable(null);
-//                        mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
-//                        mAgainstAvatar.setClickable(false);
-//                        mAgainstName.setText(context.getString(R.string.join_versus));
-//                        mProgress.showScoreProgress(0, 0, true);
-//                        break;
+                    case Battle.GAME_STATUS_CREATED:
+                        mRootLL.setSelected(true);
+                        mDepositAndTime.setText(reward + " " + DateUtil.getMinutes(item.getEndline()));
+                        mCreateKo.setVisibility(View.GONE);
+                        mAgainstKo.setVisibility(View.GONE);
+                        mAgainstAvatar.setImageDrawable(null);
+                        mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
+                        mAgainstAvatar.setClickable(false);
+                        mAgainstName.setText(context.getString(R.string.join_versus));
+                        mProgress.showScoreProgress(0, 0, true);
+                        break;
                     case Battle.GAME_STATUS_STARTED:
+                        mRootLL.setSelected(true);
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
@@ -1042,6 +1048,7 @@ public class BattleListActivity extends BaseActivity implements
                         mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
                     case Battle.GAME_STATUS_END:
+                        mRootLL.setSelected(false);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)

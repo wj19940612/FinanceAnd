@@ -253,4 +253,8 @@
         <attr name="goingBg" format="reference"/>
     </declare-styleable>
 
+    <declare-styleable name="BgShadowTextView">
+        <attr name="bgStartColor" format="reference|color"/>
+        <attr name="bgEndColor" format="color|reference"/>
+    </declare-styleable>
 </resources>

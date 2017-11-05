@@ -425,18 +425,19 @@
         <activity
             android:name=".activity.home.AllTrainingListActivity"
             android:screenOrientation="portrait"/>
+        <!--android:theme="@style/BaseDialog"-->
         <activity
             android:name=".activity.arena.ArenaEntityExchangeInfoInputActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/BaseDialog"/>
+            android:theme="@style/BaseDialog"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.arena.ArenaVirtualAwardExchangeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/BaseDialog"/>
+            android:theme="@style/BaseDialog"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.arena.ArenaVirtualAwardNameActivity"
-            android:screenOrientation="portrait"
-            />
+            android:theme="@style/BaseDialog"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activity.home.StockFutureActivity"

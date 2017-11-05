@@ -100,13 +100,15 @@ public class ArenaEntityExchangeInfoInputActivity extends DialogBaseActivity {
 
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()) {
-                            setResult(RESULT_OK);
-                            finish();
-                        } else {
-                            //处理
-                        }
+                        setResult(RESULT_OK);
+                        finish();
                         ToastUtil.show(resp.getMsg());
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        super.onRespFailure(failedResp);
+                        ToastUtil.show(failedResp.getMsg());
                     }
                 })
                 .fireFree();

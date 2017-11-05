@@ -27,14 +27,15 @@
             android:paddingRight="9dp">
 
             <FrameLayout
+                android:id="@+id/createAvatarRL"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:background="@drawable/bg_battle_avatar">
 
                 <ImageView
                     android:id="@+id/createAvatar"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:background="@drawable/bg_battle_avatar"
                     android:clickable="false"
@@ -42,11 +43,13 @@
 
                 <ImageView
                     android:id="@+id/createKo"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_versus_ko"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
+
+
             </FrameLayout>
 
             <TextView
@@ -116,22 +119,23 @@
             android:paddingRight="9dp">
 
             <FrameLayout
+                android:id="@+id/againstAvatarFL"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:background="@drawable/bg_battle_avatar">
 
                 <ImageView
                     android:id="@+id/againstAvatar"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:clickable="true"
                     tools:src="@drawable/btn_join_versus"/>
 
                 <ImageView
                     android:id="@+id/againstKo"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_versus_ko"
                     android:visibility="gone"/>

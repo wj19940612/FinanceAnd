@@ -229,6 +229,11 @@
             app:rowTextColor="@color/primaryText"
             app:rowTextSize="15sp"
             app:rowVerticalPadding="0dp"/>
+
+        <com.sbai.finance.view.BgShadowTextView
+            android:id="@+id/test"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
     </LinearLayout>
 
 </ScrollView>

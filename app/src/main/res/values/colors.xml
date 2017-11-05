@@ -8,13 +8,13 @@
     <color name="blackPrimary">#222</color>
 
     <color name="background">#F5F5F5</color>
-    <color name="split">#ddd</color>
-    <color name="white">#ffffff</color>
+    <color name="split">#DDD</color>
+    <color name="white">#FFFFFF</color>
 
     <!--Assist-->
-    <color name="yellowAssist">#ffc336</color>
-    <color name="greenAssist">#2ecc9f</color>
-    <color name="redAssist">#ef6d6a</color>
+    <color name="yellowAssist">#FFC336</color>
+    <color name="greenAssist">#2ECC9F</color>
+    <color name="redAssist">#EF6D6A</color>
     <color name="greyAssist">#7B7B7B</color>
     <color name="blueAssist">#6A9CEF</color>
     <color name="splash">#54ACFE</color>
@@ -26,7 +26,7 @@
     <color name="opinionText">#5F6166</color>
     <color name="whiteHintText">#FDFDFD</color>
     <color name="banner_number">#FF8B00</color>
-    <color name="news_content">#5c5c5c</color>
+    <color name="news_content">#5C5C5C</color>
     <color name="blueScoreText">#6595C2</color>
 
     <color name="unluckyText">#999</color>
@@ -35,12 +35,12 @@
 
     <color name="bgWallet">#FFB804</color>
     <color name="walletRechargeText">#EEB000</color>
-    <color name="bank_card_hint">#bfbfbf</color>
+    <color name="bank_card_hint">#BFBFBF</color>
     <color name="yellowColor2">#FEC022</color>
     <color name="rechargeSelectProduct">#FFC336</color>
 
     <!--gradient-->
-    <color name="backgroundGradientStart">#69b2ff</color>
+    <color name="backgroundGradientStart">#69B2FF</color>
     <color name="creditEndColor">#C286F9</color>
 
     <color name="yellowShallow">#FFFCF5</color>

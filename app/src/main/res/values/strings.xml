@@ -527,7 +527,7 @@
     <string name="is_already_latest_version">已经是最新版本了</string>
 
 
-    <string name="number_ge">%1$s个</string>
+    <string name="battle_list_ingot_number">元宝:   %1$s</string>
 
     <!--金融水平测试 -->
     <string name="level_test_title">测测你的金融水平</string>

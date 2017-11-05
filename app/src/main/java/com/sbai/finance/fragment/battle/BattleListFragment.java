@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -187,16 +188,16 @@ public class BattleListFragment extends BaseFragment {
                 Battle battle = mBattleList.get(i);
                 for (Battle resultBattle : data) {
                     if (battle.getId() == resultBattle.getId()) {
-//                        battle.setVarietyName(resultBattle.getVarietyName());
-//                        battle.setLaunchUserPortrait(resultBattle.getLaunchUserPortrait());
-//                        battle.setLaunchUserName(resultBattle.getLaunchUserName());
-//                        battle.setAgainstUserName(resultBattle.getAgainstUserName());
-//                        battle.setReward(resultBattle.getReward());
-//                        battle.setGameStatus(resultBattle.getGameStatus());
-//                        battle.setWinResult(resultBattle.getWinResult());
-//                        battle.setLaunchScore(resultBattle.getLaunchScore());
-//                        battle.setAgainstScore(resultBattle.getAgainstScore());
-                        battle = resultBattle;
+                        battle.setVarietyName(resultBattle.getVarietyName());
+                        battle.setLaunchUserPortrait(resultBattle.getLaunchUserPortrait());
+                        battle.setLaunchUserName(resultBattle.getLaunchUserName());
+                        battle.setAgainstUserName(resultBattle.getAgainstUserName());
+                        battle.setReward(resultBattle.getReward());
+                        battle.setGameStatus(resultBattle.getGameStatus());
+                        battle.setWinResult(resultBattle.getWinResult());
+                        battle.setLaunchScore(resultBattle.getLaunchScore());
+                        battle.setAgainstScore(resultBattle.getAgainstScore());
+//                        battle = resultBattle;
                         break;
                     }
                 }
@@ -206,8 +207,8 @@ public class BattleListFragment extends BaseFragment {
     }
 
     private void requestArenaBattleList() {
-        Client.requestArenaBattleListData(mLocationTime)
-//        Client.getVersusGaming(mLocationTime)
+//        Client.requestArenaBattleListData(mLocationTime)
+        Client.getVersusGaming(mLocationTime)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
@@ -356,6 +357,10 @@ public class BattleListFragment extends BaseFragment {
             TextView mAgainstName;
             @BindView(R.id.rootLL)
             LinearLayout mRootLL;
+            @BindView(R.id.createAvatarRL)
+            FrameLayout mCreateAvatarRL;
+            @BindView(R.id.againstAvatarFL)
+            FrameLayout mAgainstAvatarFL;
 
             ViewHolder(View view) {
                 super(view);
@@ -415,9 +420,13 @@ public class BattleListFragment extends BaseFragment {
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
                         if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
+                            mAgainstAvatarFL.setSelected(false);
+                            mCreateAvatarRL.setSelected(true);
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
                         } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
+                            mAgainstAvatarFL.setSelected(true);
+                            mCreateAvatarRL.setSelected(false);
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
                         } else {
