@@ -7,6 +7,7 @@ import android.text.SpannableString;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -195,6 +196,21 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         mBattleOrderOperateView.findViewById(R.id.closePositionBtn).setOnClickListener(this);
         mPraiseView.findViewById(R.id.praiseOwner).setOnClickListener(this);
         mPraiseView.findViewById(R.id.praiseChallenger).setOnClickListener(this);
+    }
+
+    public void showSettlingView() {
+        if (mBattleSettlingView.getVisibility() != VISIBLE) {
+            mBattleSettlingView.setVisibility(VISIBLE);
+            mBattleSettlingView.findViewById(R.id.loading).startAnimation(
+                    AnimationUtils.loadAnimation(getContext(), R.anim.loading));
+        }
+    }
+
+    public void hideSettlingView() {
+        if (mBattleSettlingView.getVisibility() != GONE) {
+            mBattleSettlingView.findViewById(R.id.loading).clearAnimation();
+            mBattleSettlingView.setVisibility(GONE);
+        }
     }
 
     public void updateView(int battleStatus) {

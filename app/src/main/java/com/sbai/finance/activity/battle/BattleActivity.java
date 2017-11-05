@@ -379,6 +379,7 @@ public class BattleActivity extends BaseActivity {
                 DateUtil.format(remainingTime, "mm:ss")));
 
         if (remainingTime == 0) { // 对战结束后，一直没有收到结束推送，5秒后 自动刷新结果显示弹窗
+            mBattleOperateView.showSettlingView();
             Object count = mBattleRemainingTime.getTag();
             if (count == null) {
                 count = new Integer(0);
@@ -484,6 +485,8 @@ public class BattleActivity extends BaseActivity {
                     finish();
                 }
             }, resultWinLoss, content);
+
+            mBattleOperateView.hideSettlingView();
         }
     }
 
@@ -565,7 +568,7 @@ public class BattleActivity extends BaseActivity {
                 startBattle();
                 return;
             }
-            if (pushType == PushCode.BATTLE_OVER) {
+            if (pushType == PushCode.BATTLE_OVER && false) {
                 if (mBattleStatus >= STARTED_OWNER && mBattleStatus <= STARTED_OBSERVER) {
                     mBattle = battle;
                     updateBattleStatus();
@@ -1001,17 +1004,14 @@ public class BattleActivity extends BaseActivity {
                 .setCallback(new Callback<Resp<TradeOrder>>() {
                     @Override
                     protected void onRespSuccess(Resp<TradeOrder> resp) {
-                        Log.d(TAG, "onRespSuccess: " + resp);
                     }
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         ToastUtil.show(failedResp.getMsg());
-
                         if (failedResp.getCode() == GameCode.ORDER_EXISIT) {
-                            //refreshTradeView();
-                        } else if (failedResp.getCode() == GameCode.GAME_OVER) {
-                            //requestCurrentBattleInfo();
+                            requestOrderOperationHistory();
+                            requestHoldingOrders();
                         }
                     }
                 }).fire();
@@ -1027,11 +1027,9 @@ public class BattleActivity extends BaseActivity {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         ToastUtil.show(failedResp.getMsg());
-
                         if (failedResp.getCode() == GameCode.ORDER_CLOSE) {
-                            //refreshTradeView();
-                        } else if (failedResp.getCode() == GameCode.GAME_OVER) {
-                            //requestCurrentBattleInfo();
+                            requestOrderOperationHistory();
+                            requestHoldingOrders();
                         }
                     }
                 }).fire();
