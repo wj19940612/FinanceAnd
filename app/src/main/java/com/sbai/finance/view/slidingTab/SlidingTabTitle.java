@@ -75,4 +75,11 @@ public class SlidingTabTitle extends SlidingTabLayout {
             getTabStrip().getChildAt(index).performClick();
         }
     }
+
+    @Override
+    protected TextView createDefaultTabView(Context context) {
+        TextView textView = super.createDefaultTabView(context);
+        textView.setPadding(0,0,0,textView.getPaddingBottom());
+        return textView;
+    }
 }
