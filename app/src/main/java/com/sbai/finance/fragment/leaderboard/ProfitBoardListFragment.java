@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.leaderboard.IngotOrSavantLeaderBoardActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
@@ -71,7 +70,7 @@ public class ProfitBoardListFragment extends BaseFragment implements
     TextView mTipInfo;
     @BindView(R.id.info)
     TextView mInfo;
-    private IngotOrSavantLeaderBoardActivity.LeaderBoardAdapter mLeaderBoardAdapter;
+    private IngotOrSavantBoardLeaderBoardFragment.LeaderBoardAdapter mLeaderBoardAdapter;
     private Set<Integer> mSet;
     private String mType;
 
@@ -133,12 +132,12 @@ public class ProfitBoardListFragment extends BaseFragment implements
     private void initView() {
         mSet = new HashSet<>();
         initFooterView();
-        mLeaderBoardAdapter = new IngotOrSavantLeaderBoardActivity.LeaderBoardAdapter(getActivity(), LeaderBoardRank.PROFIT);
+        mLeaderBoardAdapter = new IngotOrSavantBoardLeaderBoardFragment.LeaderBoardAdapter(getActivity(), LeaderBoardRank.PROFIT);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
         mSwipeRefreshLayout.setLoadMoreEnable(false);
         mSwipeRefreshLayout.setAdapter(mListView, mLeaderBoardAdapter);
-        mLeaderBoardAdapter.setCallback(new IngotOrSavantLeaderBoardActivity.LeaderBoardAdapter.Callback() {
+        mLeaderBoardAdapter.setCallback(new IngotOrSavantBoardLeaderBoardFragment.LeaderBoardAdapter.Callback() {
             @Override
             public void onWarshipClick(LeaderBoardRank.DataBean item) {
                 if (item.getUser() != null) {

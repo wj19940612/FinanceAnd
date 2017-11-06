@@ -193,12 +193,6 @@
             android:name=".activity.mine.fund.WithDrawDetailsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.future.FuturesListActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.home.EventActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.home.OptionalActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -305,18 +299,6 @@
             android:screenOrientation="behind"/>
 
         <!-- 排行榜 -->
-        <activity
-            android:name=".activity.leaderboard.LeaderBoardsActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.leaderboard.LeaderBoardDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.leaderboard.ProfitBoardListActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.leaderboard.IngotOrSavantLeaderBoardActivity"
-            android:screenOrientation="portrait"/>
 
         <!-- 小姐姐 -->
         <activity
