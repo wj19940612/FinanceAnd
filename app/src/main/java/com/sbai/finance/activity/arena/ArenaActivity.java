@@ -336,6 +336,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case PushCode.QUICK_MATCH_SUCCESS:
                 Battle battle = (Battle) battleWSPush.getContent().getData();
+                StartMatchDialog.dismiss(getActivity());
                 if (battle != null) {
                     Launcher.with(getActivity(), BattleActivity.class)
                             .putExtra(ExtraKeys.BATTLE, battle)

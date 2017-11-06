@@ -41,7 +41,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <ImageView
                             android:id="@+id/arenaTitle"
@@ -76,13 +76,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="51dp"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/predictGain"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
                             android:layout_marginLeft="@dimen/common_padding"
                             android:layout_marginRight="@dimen/common_padding"
                             android:layout_marginTop="16dp"
@@ -97,6 +96,7 @@
                             android:layout_below="@+id/predictGain"
                             android:layout_marginLeft="@dimen/common_padding"
                             android:layout_marginRight="@dimen/common_padding"
+                            android:layout_marginTop="8dp"
                             android:textColor="@color/yellowAssist"
                             android:textSize="16sp"
                             tools:text="@string/award"/>
@@ -136,6 +136,7 @@
                             android:visibility="gone"/>
 
                         <LinearLayout
+                            android:id="@+id/myInfo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentBottom="true"

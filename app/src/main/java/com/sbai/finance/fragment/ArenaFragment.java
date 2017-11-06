@@ -135,7 +135,7 @@ public class ArenaFragment extends BaseFragment {
 
 
     @OnClick({R.id.textArenaKnowledge, R.id.iconArenaKnowledge, R.id.moneyRewardArena,
-            R.id.generalBattleBanner, R.id.nameAndIngot})
+            R.id.generalBattleBanner, R.id.nameAndIngot, R.id.avatar})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.textArenaKnowledge:
@@ -150,6 +150,7 @@ public class ArenaFragment extends BaseFragment {
             case R.id.generalBattleBanner:
                 Launcher.with(getActivity(), BattleListActivity.class).execute();
                 break;
+            case R.id.avatar:
             case R.id.nameAndIngot:
                 Launcher.with(getActivity(), WalletActivity.class).execute();
                 break;
