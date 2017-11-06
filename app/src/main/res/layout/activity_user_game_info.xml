@@ -39,7 +39,7 @@
             android:background="@color/background">
 
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:layout_marginLeft="8dp"
@@ -66,10 +66,11 @@
             android:background="@color/background">
 
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginLeft="8dp"
                 android:paddingTop="15dp"
                 android:text="@string/receive_user_address"
                 android:textColor="@color/unluckyText"/>
@@ -93,7 +94,7 @@
             android:background="@color/background">
 
             <TextView
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:layout_marginLeft="8dp"

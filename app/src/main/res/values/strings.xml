@@ -831,7 +831,7 @@
     <string name="ranking_">排名</string>
     <string name="profit">盈利</string>
     <string name="predict_award">预计奖品</string>
-    <string name="get_award">获得奖品</string>
+    <string name="get_award">获得奖品:</string>
     <string name="arena_count">对战场次</string>
     <string name="enter_arena_condition">报名需支付%1$s作为参赛费\n是否继续报名</string>
     <string name="to_sign_up">继续报名</string>
@@ -859,9 +859,11 @@
     <string name="receive_user_address">邮寄地址:</string>
     <string name="exchange_award_info">兑奖信息</string>
     <string name="game_number">微信/QQ:</string>
+    <string name="game_number_hint">游戏绑定的帐号</string>
     <string name="skin_name">皮肤名称:</string>
     <string name="game_nickname">游戏昵称:</string>
     <string name="game_area">所在大区:</string>
+    <string name="game_area_hint">示例：安卓-微信-21区</string>
     <string name="checking">乐米小师妹会在3个工作日内为您兑换奖品，请耐心等待。</string>
     <string name="check_success">您所兑换的奖品已经成功发放，如有疑问请及时反馈。</string>
     <string name="check_fail">很抱歉，您的信息没通过审核，无法领取奖品，如有疑问请及时反馈</string>
@@ -871,8 +873,9 @@
     <string name="you_miss_exchange_time">很遗憾！您错过了兑奖时间</string>
     <string name="you_is_real_name_wait_please_wait">您的实名认证还在审核中\n请耐心等待</string>
     <string name="choose_skin">选择皮肤</string>
-    <string name="broadcast">广播</string>
+
     <!-- 首页 -->
     <string name="look_my_rank">查看我的排名</string>
     <string name="please_retry">请重试</string>
+    <string name="broadcast">广播</string>
 </resources>

@@ -158,6 +158,7 @@ public class ArenaVirtualAwardExchangeActivity extends DialogBaseActivity {
                     protected void onRespSuccess(Resp<Object> resp) {
                         ToastUtil.show(resp.getMsg());
                         setResult(RESULT_OK);
+                        finish();
                     }
 
                     @Override

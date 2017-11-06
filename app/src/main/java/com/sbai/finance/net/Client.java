@@ -2957,15 +2957,15 @@ public class Client {
      * GET
      * 兑换活动奖品（hlei）
      *
-     * @param awardId      奖品id
+     * @param prizeId      奖品id
      * @param activityCode 活动code
      * @param param        用户填写的参数
      * @return
      */
-    public static API commitUserExchangeInfo(int awardId, String activityCode, String param) {
+    public static API commitUserExchangeInfo(int prizeId, String activityCode, String param) {
         return new API("/activity/prize/exchangePrize.do",
                 new ApiParams()
-                        .put("awardId", awardId)
+                        .put("prizeId", prizeId)
                         .put("activityCode", activityCode)
                         .put("param", param));
     }
