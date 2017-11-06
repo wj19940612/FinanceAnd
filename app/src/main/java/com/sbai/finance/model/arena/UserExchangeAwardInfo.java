@@ -49,11 +49,10 @@ public class UserExchangeAwardInfo {
     public UserGameInfo getUserGameInfo() {
         if (!TextUtils.isEmpty(getPrizeParam())) {
             try {
-                new Gson().fromJson(getPrizeParam(), UserGameInfo.class);
+                return new Gson().fromJson(getPrizeParam(), UserGameInfo.class);
             } catch (JsonSyntaxException e) {
                 return null;
             }
-
         }
         return null;
     }

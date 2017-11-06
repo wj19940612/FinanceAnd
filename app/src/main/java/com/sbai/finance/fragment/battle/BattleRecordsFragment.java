@@ -2,10 +2,12 @@ package com.sbai.finance.fragment.battle;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.sbai.finance.App;
 import com.sbai.finance.R;
@@ -15,6 +17,7 @@ import com.sbai.finance.model.battle.TradeRecord;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.BattleBottomBothInfoView;
 import com.sbai.finance.view.BattleTradeView;
 import com.sbai.finance.view.TitleBar;
@@ -42,6 +45,8 @@ public class BattleRecordsFragment extends BaseFragment {
     Unbinder unbinder;
 
     BattleTradeView.BattleTradeAdapter mBattleTradeAdapter;
+    @BindView(R.id.battleIngot)
+    TextView mBattleIngot;
 
     private Battle mBattle;
 
@@ -77,6 +82,19 @@ public class BattleRecordsFragment extends BaseFragment {
 
     private void initViews() {
         scrollToTop(mTitleBar, mListView);
+        String award = "";
+        switch (mBattle.getCoinType()) {
+            case Battle.COIN_TYPE_CASH:
+                award = getString(R.string.ingot_number, String.valueOf(mBattle.getReward()));
+                break;
+            case Battle.COIN_TYPE_INGOT:
+                award = getString(R.string.RMB, String.valueOf(mBattle.getReward()));
+                break;
+            case Battle.COIN_TYPE_SCORE:
+                award = getString(R.string.integrate_number, String.valueOf(mBattle.getReward()));
+                break;
+        }
+        mBattleIngot.setText(StrUtil.mergeTextWithColor(award, "   " + getString(R.string.end), ContextCompat.getColor(getActivity(), R.color.yellowAssist)));
         mBattleTradeAdapter = new BattleTradeView.BattleTradeAdapter(getContext());
         mListView.setAdapter(mBattleTradeAdapter);
         mBattleView.setMode(BattleBottomBothInfoView.Mode.MINE)

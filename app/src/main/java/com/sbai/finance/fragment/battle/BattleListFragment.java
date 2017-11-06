@@ -132,8 +132,7 @@ public class BattleListFragment extends BaseFragment {
         super.onResume();
         mSet.clear();
         mLocationTime = null;
-        // TODO: 2017/11/1 先暂时注释了 后期放开
-//        startScheduleJob(5 * 1000);
+        startScheduleJob(5 * 1000);
         requestArenaBattleList();
     }
 
@@ -401,6 +400,8 @@ public class BattleListFragment extends BaseFragment {
                 switch (item.getGameStatus()) {
                     case Battle.GAME_STATUS_STARTED:
                         mRootLL.setSelected(true);
+                        mAgainstAvatarFL.setSelected(false);
+                        mCreateAvatarRL.setSelected(false);
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())

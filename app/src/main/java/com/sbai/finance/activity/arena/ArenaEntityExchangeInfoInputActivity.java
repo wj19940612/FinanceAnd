@@ -101,8 +101,8 @@ public class ArenaEntityExchangeInfoInputActivity extends DialogBaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         setResult(RESULT_OK);
-                        finish();
                         ToastUtil.show(resp.getMsg());
+                        finish();
                     }
 
                     @Override

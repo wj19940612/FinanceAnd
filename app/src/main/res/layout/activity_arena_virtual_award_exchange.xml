@@ -15,9 +15,9 @@
         android:src="@drawable/ic_popup_delete"/>
 
     <ScrollView
-        android:background="@drawable/bg_white_rounded"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_rounded">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +44,7 @@
                 android:background="@color/background">
 
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:layout_marginLeft="8dp"
@@ -58,6 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:digits="abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ1234567890-_"
+                    android:hint="@string/game_number_hint"
                     android:maxLength="30"
                     android:maxLines="1"/>
             </LinearLayout>
@@ -70,7 +71,7 @@
                 android:background="@color/background">
 
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:layout_marginLeft="8dp"
@@ -94,7 +95,7 @@
                 android:background="@color/background">
 
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:layout_marginLeft="8dp"
@@ -118,7 +119,7 @@
                 android:background="@color/background">
 
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:layout_marginLeft="8dp"
@@ -132,6 +133,7 @@
                     style="@style/UserArenaSignEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/game_area_hint"
                     android:maxLength="30"/>
             </LinearLayout>
 
