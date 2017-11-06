@@ -79,7 +79,7 @@
             android:layout_height="36dp"
             android:gravity="center"
             android:minWidth="40dp"
-            android:text="沪深"
+            android:text="@string/ShangShen"
             android:textColor="@color/primaryText"
             android:textSize="12sp"
             />
@@ -90,7 +90,7 @@
             android:layout_height="36dp"
             android:layout_toRightOf="@id/stockBtn"
             android:gravity="center"
-            android:text="期货"
+            android:text="@string/futures"
             android:textColor="@color/primaryText"
             android:textSize="12sp"
             />
@@ -101,7 +101,7 @@
             android:layout_height="36dp"
             android:layout_toRightOf="@id/futureBtn"
             android:gravity="center"
-            android:text="自选"
+            android:text="@string/optional"
             android:textColor="@color/primaryText"
             android:textSize="12sp"
             />
@@ -129,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:text="查看全部"
+                android:text="@string/look_all"
                 android:textColor="@color/unluckyText"
                 android:textSize="12sp"
                 />
@@ -157,7 +157,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="上证指数"
                     android:textColor="@color/primaryText"
                     android:textSize="12sp"
                     />
@@ -170,7 +169,6 @@
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:minWidth="60dp"
-                    android:text="52.01"
                     android:textColor="@color/greenAssist"
                     android:textSize="20dp"
                     />
@@ -181,7 +179,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@id/leftIndexValue"
                     android:layout_below="@id/leftIndexValue"
-                    android:text="+2.3%"
                     android:textColor="@color/greenAssist"
                     android:textSize="10sp"
                     />
@@ -192,7 +189,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@id/leftIndexValue"
                     android:layout_below="@id/leftIndexValue"
-                    android:text="+2.3%"
                     android:textColor="@color/greenAssist"
                     android:textSize="10sp"
                     />
@@ -211,7 +207,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:text="+"
+                        android:text="@string/add_icon"
                         android:textColor="@color/unluckyText"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -223,7 +219,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/leftSelectAddIcon"
                         android:layout_centerHorizontal="true"
-                        android:text="添加"
+                        android:text="@string/add_text"
                         android:textColor="@color/primaryText"
                         android:textSize="12sp"
                         />
@@ -257,7 +253,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="深圳成指"
                     android:textColor="@color/primaryText"
                     android:textSize="12sp"
                     />
@@ -270,7 +265,6 @@
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:minWidth="60dp"
-                    android:text="3200.23"
                     android:textColor="@color/greenAssist"
                     android:textSize="20dp"
                     />
@@ -281,7 +275,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@id/centerIndexValue"
                     android:layout_below="@id/centerIndexValue"
-                    android:text="+2.3%"
                     android:textColor="@color/greenAssist"
                     android:textSize="10sp"
                     />
@@ -292,7 +285,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@id/centerIndexValue"
                     android:layout_below="@id/centerIndexValue"
-                    android:text="+2.3%"
                     android:textColor="@color/greenAssist"
                     android:textSize="10sp"
                     />
@@ -311,7 +303,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:text="+"
+                        android:text="@string/add_icon"
                         android:textColor="@color/unluckyText"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -323,7 +315,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/centerSelectAddIcon"
                         android:layout_centerHorizontal="true"
-                        android:text="添加"
+                        android:text="@string/add_text"
                         android:textColor="@color/primaryText"
                         android:textSize="12sp"
                         />
@@ -357,7 +349,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="上证指数"
                     android:textColor="@color/primaryText"
                     android:textSize="12sp"
                     />
@@ -370,7 +361,6 @@
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:minWidth="60dp"
-                    android:text="3200.23"
                     android:textColor="@color/greenAssist"
                     android:textSize="20dp"
                     />
@@ -381,7 +371,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@id/rightIndexValue"
                     android:layout_below="@id/rightIndexValue"
-                    android:text="+2.3%"
                     android:textColor="@color/greenAssist"
                     android:textSize="10sp"
                     />
@@ -392,7 +381,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@id/rightIndexValue"
                     android:layout_below="@id/rightIndexValue"
-                    android:text="+2.3%"
                     android:textColor="@color/greenAssist"
                     android:textSize="10sp"
                     />
@@ -412,7 +400,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:text="+"
+                        android:text="@string/add_icon"
                         android:textColor="@color/unluckyText"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -424,7 +412,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/rightSelectAddIcon"
                         android:layout_centerHorizontal="true"
-                        android:text="添加"
+                        android:text="@string/add_text"
                         android:textColor="@color/primaryText"
                         android:textSize="12sp"
                         />

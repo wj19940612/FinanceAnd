@@ -28,7 +28,7 @@
         android:includeFontPadding="false"
         android:textSize="12sp"
         android:textColor="@color/unluckyText"
-        android:text="更多"
+        android:text="@string/more"
         />
 
     <View
