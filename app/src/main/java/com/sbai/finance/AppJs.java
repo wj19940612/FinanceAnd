@@ -7,7 +7,7 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 
 import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.arena.MoneyRewardGameBattleListActivity;
+import com.sbai.finance.activity.arena.ArenaActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
@@ -153,7 +153,7 @@ public class AppJs {
                 if (mContext instanceof WebActivity) {
                     ComponentName callingActivity = ((WebActivity) mContext).getCallingActivity();
                     if (callingActivity != null
-                            && MoneyRewardGameBattleListActivity.class.getName().equals(callingActivity.getClassName())) {
+                            && ArenaActivity.class.getName().equals(callingActivity.getClassName())) {
                         ((WebActivity) mContext).finish();
                     }
                 }

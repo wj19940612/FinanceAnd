@@ -18,9 +18,8 @@
         android:gravity="center_vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="7"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingLeft="9dp"
@@ -39,7 +38,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/bg_battle_avatar"
                     android:clickable="false"
-                    tools:src="@drawable/btn_join_versus"/>
+                    tools:src="@drawable/btn_join_battle"/>
 
                 <ImageView
                     android:id="@+id/createKo"
@@ -68,51 +67,32 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_weight="10"
-            android:gravity="center"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
+
+            <com.sbai.finance.view.BattleProgress
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/varietyName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
                 android:gravity="center_horizontal"
-                android:textColor="@color/white"
+                android:textColor="@color/arenaRankingTitleTextColor"
                 android:textSize="12sp"
                 android:visibility="visible"
-                tools:text="没原油"/>
-
-            <com.sbai.finance.view.BattleProgress
-                android:id="@+id/progress"
-                android:layout_width="match_parent"
-                android:layout_height="14dp"
-                android:layout_marginTop="10dp"
-                app:leftLabelColor="@android:color/white"
-                app:leftLabelSize="10sp"
-                app:leftPadding="5dp"
-                app:max="100"
-                app:progress="50"
-                app:progressDrawable="@drawable/bg_battle_progress"
-                app:rightLabelColor="@android:color/white"
-                app:rightLabelSize="10sp"
-                app:rightPadding="5dp"
-                app:secondaryProgress="100"/>
-
-            <TextView
-                android:id="@+id/depositAndTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:gravity="bottom|center"
-                android:textColor="#9c9c9c"
-                android:textSize="10sp"
-                tools:text="32分钟"/>
+                tools:text="美原油"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="7"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingLeft="9dp"
@@ -130,7 +110,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:clickable="true"
-                    tools:src="@drawable/btn_join_versus"/>
+                    tools:src="@drawable/btn_join_battle"/>
 
                 <ImageView
                     android:id="@+id/againstKo"

@@ -373,7 +373,7 @@ public class CreateBattleActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<Battle>, Battle>() {
                     @Override
                     protected void onRespSuccessData(Battle battle) {
-                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                        Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(ExtraKeys.BATTLE, battle)
                                 .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
                                 .execute();

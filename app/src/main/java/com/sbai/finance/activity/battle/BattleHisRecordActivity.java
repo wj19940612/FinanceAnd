@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,7 +24,6 @@ import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -78,7 +79,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
-                    Launcher.with(getActivity(), FutureBattleActivity.class)
+                    Launcher.with(getActivity(), BattleActivity.class)
                             .putExtra(ExtraKeys.BATTLE, item)
                             .execute();
                 }
@@ -188,20 +189,24 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
             ImageView mCreateAvatar;
             @BindView(R.id.createKo)
             ImageView mCreateKo;
+            @BindView(R.id.createAvatarRL)
+            FrameLayout mCreateAvatarRL;
             @BindView(R.id.createName)
             TextView mCreateName;
             @BindView(R.id.varietyName)
             TextView mVarietyName;
             @BindView(R.id.progress)
             BattleProgress mProgress;
-            @BindView(R.id.depositAndTime)
-            TextView mDepositAndTime;
             @BindView(R.id.againstAvatar)
             ImageView mAgainstAvatar;
             @BindView(R.id.againstKo)
             ImageView mAgainstKo;
+            @BindView(R.id.againstAvatarFL)
+            FrameLayout mAgainstAvatarFL;
             @BindView(R.id.againstName)
             TextView mAgainstName;
+            @BindView(R.id.rootLL)
+            LinearLayout mRootLL;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -209,40 +214,43 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
 
             private void bindDataWithView(final Battle item, Context context) {
                 mVarietyName.setText(item.getVarietyName());
-                GlideApp.with(context).load(item.getLaunchUserPortrait())
+
+                GlideApp.with(context)
                         .load(item.getLaunchUserPortrait())
-                        .placeholder(R.drawable.ic_default_avatar_big)
+                        .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop()
                         .into(mCreateAvatar);
                 mCreateName.setText(item.getLaunchUserName());
-                mProgress.setLeftText(String.valueOf(item.getLaunchScore()));
                 mAgainstName.setText(item.getAgainstUserName());
-                mProgress.setRightText(String.valueOf(item.getAgainstScore()));
                 String reward = "";
                 switch (item.getCoinType()) {
                     case Battle.COIN_TYPE_INGOT:
-                        reward = item.getReward() + context.getString(R.string.ingot);
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.ingot));
                         break;
                     case Battle.COIN_TYPE_CASH:
-                        reward = item.getReward() + context.getString(R.string.cash);
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.cash));
                         break;
                     case Battle.COIN_TYPE_SCORE:
-                        reward = item.getReward() + context.getString(R.string.integral);
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.integral));
                         break;
                 }
+                String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);
+                mVarietyName.setText(varietyReward);
                 switch (item.getGameStatus()) {
                     case Battle.GAME_STATUS_CREATED:
-                        mDepositAndTime.setText(reward + " " + DateUtil.getMinutes(item.getEndline()));
+                        mProgress.setEnabled(true);
+                        mRootLL.setSelected(true);
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         mAgainstAvatar.setImageDrawable(null);
-                        mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
+                        mAgainstAvatar.setImageResource(R.drawable.btn_join_battle);
                         mAgainstAvatar.setClickable(false);
                         mAgainstName.setText(context.getString(R.string.join_versus));
-                        mProgress.showScoreProgress(0, 0, true);
+                        mProgress.setBattleProfit(0, 0);
                         break;
                     case Battle.GAME_STATUS_STARTED:
-                        mDepositAndTime.setText(reward + " " + context.getString(R.string.versusing));
+                        mProgress.setEnabled(true);
+                        mRootLL.setSelected(true);
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
@@ -251,10 +259,11 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                                 .circleCrop()
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.setBattleProfit(item.getLaunchScore(), item.getAgainstScore());
                         break;
                     case Battle.GAME_STATUS_END:
-                        mDepositAndTime.setText(reward + " " + context.getString(R.string.versus_end));
+                        mProgress.setEnabled(false);
+                        mRootLL.setSelected(false);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
@@ -264,14 +273,14 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                         if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                        } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
+                        } else if (item.getWinResult() == Battle.WIN_RESULT_OWNER_WIN) {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
                         } else {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.GONE);
                         }
-                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.setBattleProfit(item.getLaunchScore(), item.getAgainstScore());
                         break;
 
                 }

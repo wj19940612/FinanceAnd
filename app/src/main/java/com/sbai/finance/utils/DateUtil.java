@@ -739,17 +739,4 @@ public class DateUtil {
             return second / 60 + "分" + second % 60 + "秒";
         }
     }
-
-
-    /**
-     * 获取两段时间相差的秒
-     *
-     * @param time1
-     * @param time2
-     * @return
-     */
-    public static int getDiffSeconds(long time1, long time2) {
-        long diff = time1 - time2;
-        return (int) (diff / 1000);
-    }
 }

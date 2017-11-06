@@ -6,10 +6,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.sbai.finance.utils.Display;
-
 import java.lang.reflect.Field;
 
+/**
+ * Modified by john on 26/10/2017
+ *
+ * 修改 TabLayout 添加顶部 tab 之间的 margin
+ *
+ */
 public class HackTabLayout extends TabLayout {
 
     private static final float MARGIN_DP = 10;
@@ -47,8 +51,8 @@ public class HackTabLayout extends TabLayout {
             for (int i = 0; i < tabStrip.getChildCount(); i++) {
                 View child = tabStrip.getChildAt(i);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) child.getLayoutParams();
-                int margin = (int) Display.dp2Px(MARGIN_DP, getResources());
-                params.setMargins(margin, 0, margin, 0);
+                //int margin = (int) Display.dp2Px(MARGIN_DP, getResources());
+                params.setMargins(0, 0, 0, 0);
                 child.setPadding(0, 0, 0, 0);
                 child.invalidate();
             }

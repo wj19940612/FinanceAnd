@@ -20,6 +20,7 @@ import com.sbai.finance.fragment.optional.OptionalListFragment;
 import com.sbai.finance.fragment.stock.StockListFragment;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.slidingTab.SlidingTabTitle;
+import com.sbai.finance.websocket.market.MarketSubscriber;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,7 +72,17 @@ public class StockFutureActivity extends BaseActivity {
             mTabLayout.setTabIndex(mPage);
         }
     }
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        MarketSubscriber.get().subscribeAll();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MarketSubscriber.get().unSubscribeAll();
+    }
     static class PagerAdapter extends FragmentPagerAdapter {
 
         private Context mContext;

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.App;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.TradeRecord;
@@ -18,8 +19,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.StrUtil;
-import com.sbai.finance.view.BattleBottomBothInfoView;
-import com.sbai.finance.view.BattleTradeView;
+import com.sbai.finance.view.BattleOperateView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
 
@@ -39,14 +39,13 @@ public class BattleRecordsFragment extends BaseFragment {
     TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
-    @BindView(R.id.battleView)
-    BattleBottomBothInfoView mBattleView;
+    @BindView(R.id.battleMessage)
+    TextView mBattleMessage;
+    BattleOperateView.PlayersView mPlayersView;
 
     Unbinder unbinder;
 
-    BattleTradeView.BattleTradeAdapter mBattleTradeAdapter;
-    @BindView(R.id.battleIngot)
-    TextView mBattleIngot;
+    BattleActivity.OrderRecordListAdapter mBattleTradeAdapter;
 
     private Battle mBattle;
 
@@ -77,37 +76,45 @@ public class BattleRecordsFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initViews();
-    }
-
-    private void initViews() {
         scrollToTop(mTitleBar, mListView);
-        String award = "";
-        switch (mBattle.getCoinType()) {
-            case Battle.COIN_TYPE_CASH:
-                award = getString(R.string.ingot_number, String.valueOf(mBattle.getReward()));
+        mBattleTradeAdapter = new BattleActivity.OrderRecordListAdapter(getContext());
+        mListView.setAdapter(mBattleTradeAdapter);
+
+        mBattleMessage.setText(StrUtil.mergeTextWithColor(mBattle.getReward() + getCoinType() + "  ",
+                getString(R.string.end), ContextCompat.getColor(getContext(), R.color.yellowAssist)));
+
+        View playersView = getView().findViewById(R.id.playersView);
+        mPlayersView = new BattleOperateView.PlayersView(playersView);
+
+        mPlayersView.battleProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore())
+                .ownerPraise(getContext(), mBattle.getLaunchPraise())
+                .challengerPraise(getContext(), mBattle.getAgainstPraise())
+                .ownerAvatar(getContext(), mBattle.getLaunchUserPortrait())
+                .challengerAvatar(getContext(), mBattle.getAgainstUserPortrait())
+                .ownerName(mBattle.getLaunchUserName())
+                .challengerName(mBattle.getLaunchUserName());
+
+        switch (mBattle.getWinResult()) {
+            case Battle.WIN_RESULT_OWNER_WIN:
+                mPlayersView.challengerKo();
                 break;
-            case Battle.COIN_TYPE_INGOT:
-                award = getString(R.string.RMB, String.valueOf(mBattle.getReward()));
-                break;
-            case Battle.COIN_TYPE_SCORE:
-                award = getString(R.string.integrate_number, String.valueOf(mBattle.getReward()));
+            case Battle.WIN_RESULT_CHALLENGER_WIN:
+                mPlayersView.ownerOk();
                 break;
         }
-        mBattleIngot.setText(StrUtil.mergeTextWithColor(award, "   " + getString(R.string.end), ContextCompat.getColor(getActivity(), R.color.yellowAssist)));
-        mBattleTradeAdapter = new BattleTradeView.BattleTradeAdapter(getContext());
-        mListView.setAdapter(mBattleTradeAdapter);
-        mBattleView.setMode(BattleBottomBothInfoView.Mode.MINE)
-                .initWithModel(mBattle)
-                .setDeadline(mBattle.getGameStatus(), 0)
-                .setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false)
-                .setWinResult(mBattle.getWinResult());
 
         requestOrderHistory();
     }
 
+    private String getCoinType() {
+        if (mBattle.getCoinType() == Battle.COIN_TYPE_INGOT) {
+            return getString(R.string.ingot);
+        }
+        return getString(R.string.integral);
+    }
+
     private void requestOrderHistory() {
-        Client.getOrderHistory(mBattle.getId())
+        Client.getTradeOperationRecords(mBattle.getId())
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<TradeRecord>>, List<TradeRecord>>() {
                     @Override
@@ -119,7 +126,7 @@ public class BattleRecordsFragment extends BaseFragment {
     }
 
     private void updateTradeHistory(List<TradeRecord> resp) {
-        mBattleTradeAdapter.setUserId(mBattle.getLaunchUser(), mBattle.getAgainstUser());
+        mBattleTradeAdapter.setOwnerId(mBattle.getLaunchUser());
         mBattleTradeAdapter.setRecordList(resp);
         mListView.setSelection(View.FOCUS_DOWN);
     }

@@ -11,6 +11,10 @@
     <color name="split">#DDD</color>
     <color name="white">#FFFFFF</color>
 
+    <!--Battle tab-->
+    <color name="greyTab">#323232</color>
+    <color name="greyTabSelected">#2a2a2a</color>
+
     <!--Assist-->
     <color name="yellowAssist">#FFC336</color>
     <color name="greenAssist">#2ECC9F</color>
@@ -37,7 +41,6 @@
     <color name="walletRechargeText">#EEB000</color>
     <color name="bank_card_hint">#BFBFBF</color>
     <color name="yellowColor2">#FEC022</color>
-    <color name="rechargeSelectProduct">#FFC336</color>
 
     <!--gradient-->
     <color name="backgroundGradientStart">#69B2FF</color>

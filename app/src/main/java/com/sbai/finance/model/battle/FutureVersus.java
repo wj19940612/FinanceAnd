@@ -15,6 +15,7 @@ public class FutureVersus {
     public static final int HAS_MORE = 0;
     private int end;
     private List<Battle> list;
+
     private double gold;      //获得金币
     private double integral;  //获得积分
     private double money;     //获得的人民币
@@ -33,7 +34,6 @@ public class FutureVersus {
         double winRate = FinanceUtil.divide(getWinCount(), getTotalCount(), 5).doubleValue();
         return FinanceUtil.formatFloorPercent(winRate, 2);
     }
-
 
     public int getEnd() {
         return end;

@@ -277,7 +277,7 @@ public class BattleListActivity extends BaseActivity implements
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
                     if (item.getGameStatus() == Battle.GAME_STATUS_END) {
-                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                        Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(ExtraKeys.BATTLE, item)
                                 .executeForResult(CANCEL_BATTLE);
 
@@ -305,10 +305,9 @@ public class BattleListActivity extends BaseActivity implements
                         if (data.getGameStatus() != item.getGameStatus()) {
                             item.setWinResult(data.getWinResult());
                             item.setGameStatus(data.getGameStatus());
-                            item.setEndTime(data.getEndTime());
                             mVersusListAdapter.notifyDataSetChanged();
                         }
-                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                        Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
                                 .putExtra(ExtraKeys.BATTLE, item)
                                 .executeForResult(CANCEL_BATTLE);
@@ -428,7 +427,7 @@ public class BattleListActivity extends BaseActivity implements
                             data.setAgainstUserName(battle.getAgainstUserName());
                             mVersusListAdapter.notifyDataSetChanged();
 
-                            Launcher.with(getActivity(), FutureBattleActivity.class)
+                            Launcher.with(getActivity(), BattleActivity.class)
                                     .putExtra(ExtraKeys.BATTLE, battle)
                                     .executeForResult(CANCEL_BATTLE);
                         }
@@ -669,7 +668,7 @@ public class BattleListActivity extends BaseActivity implements
                         dialog.dismiss();
                         if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
                             if (mCurrentBattle != null) {
-                                Launcher.with(getActivity(), FutureBattleActivity.class)
+                                Launcher.with(getActivity(), BattleActivity.class)
                                         .putExtra(ExtraKeys.BATTLE, mCurrentBattle)
                                         .execute();
                             }
@@ -960,7 +959,7 @@ public class BattleListActivity extends BaseActivity implements
         public int getItemViewType(int position) {
             Battle battle = getItem(position);
             if (battle != null) {
-                if (battle.isBattleInitiating()) {
+                if (battle.isBattleStarted()) {
                     return BATTLE_STATUS_WAITING;
                 }
                 return BATTLE_STATUS_PROCEED;
@@ -982,8 +981,6 @@ public class BattleListActivity extends BaseActivity implements
             TextView mVarietyName;
             @BindView(R.id.progress)
             BattleProgress mProgress;
-            @BindView(R.id.depositAndTime)
-            TextView mDepositAndTime;
             @BindView(R.id.againstAvatar)
             ImageView mAgainstAvatar;
             @BindView(R.id.againstKo)
@@ -1022,20 +1019,21 @@ public class BattleListActivity extends BaseActivity implements
                         break;
                 }
                 String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);
-
+                mVarietyName.setText(varietyReward);
                 switch (item.getGameStatus()) {
                     case Battle.GAME_STATUS_CREATED:
+                        mProgress.setEnabled(true);
                         mRootLL.setSelected(true);
-                        mDepositAndTime.setText(reward + " " + DateUtil.getMinutes(item.getEndline()));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         mAgainstAvatar.setImageDrawable(null);
-                        mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
+                        mAgainstAvatar.setImageResource(R.drawable.btn_join_battle);
                         mAgainstAvatar.setClickable(false);
                         mAgainstName.setText(context.getString(R.string.join_versus));
-                        mProgress.showScoreProgress(0, 0, true);
+                        mProgress.setBattleProfit(0, 0);
                         break;
                     case Battle.GAME_STATUS_STARTED:
+                        mProgress.setEnabled(true);
                         mRootLL.setSelected(true);
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
@@ -1045,10 +1043,11 @@ public class BattleListActivity extends BaseActivity implements
                                 .circleCrop()
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.setBattleProfit(item.getLaunchScore(), item.getAgainstScore());
                         break;
                     case Battle.GAME_STATUS_END:
                         mRootLL.setSelected(false);
+                        mProgress.setEnabled(false);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
@@ -1058,14 +1057,14 @@ public class BattleListActivity extends BaseActivity implements
                         if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                        } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
+                        } else if (item.getWinResult() == Battle.WIN_RESULT_OWNER_WIN) {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
                         } else {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.GONE);
                         }
-                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.setBattleProfit(item.getLaunchScore(), item.getAgainstScore());
                         break;
 
                 }
@@ -1121,7 +1120,7 @@ public class BattleListActivity extends BaseActivity implements
                 mCreateKo.setVisibility(View.GONE);
                 mAgainstKo.setVisibility(View.GONE);
                 mAgainstAvatar.setImageDrawable(null);
-                mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
+                mAgainstAvatar.setImageResource(R.drawable.btn_join_battle);
                 mAgainstAvatar.setClickable(false);
                 mAgainstName.setText(context.getString(R.string.join_versus));
             }
