@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
@@ -125,6 +126,8 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     ImageView mGift;
     @BindView(R.id.exchangeDetail)
     TextView mExchangeDetail;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private ArenaFragmentAdapter mArenaFragmentAdapter;
     private UserFundInfo mUserFundInfo;
     private TextView mIngot;
@@ -140,12 +143,15 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
         ButterKnife.bind(this);
         translucentStatusBar();
         initView();
-
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        refreshData();
+    }
+
+    private void refreshData() {
         if (LocalUser.getUser().isLogin()) {
             requestArenaApplyRule(false);
             requestArenaActivityAndUserStatus();
@@ -192,6 +198,12 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                             updateUserActivityScore(userActivityScore);
                         }
 
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 })
                 .fireFree();
@@ -417,34 +429,22 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
         mTabLayout.setCustomTabView(R.layout.layout_arena_tablayout, R.id.tabText);
         mTabLayout.setHasBottomBorder(false);
         mTabLayout.setViewPager(mViewPager);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    BattleListFragment battleListFragment = getBattleListFragment();
-                    if (battleListFragment != null) {
-                        battleListFragment.refresh();
-                    }
-                } else {
-                    BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
-                    if (battleRankingFragment != null) {
-                        battleRankingFragment.requestArenaAwardRankingData();
-                    }
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
 
         initTitleBar();
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                BattleListFragment battleListFragment = getBattleListFragment();
+                if (battleListFragment != null) {
+                    battleListFragment.refresh();
+                }
+                BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
+                if (battleRankingFragment != null) {
+                    battleRankingFragment.requestArenaAwardRankingData();
+                }
+                refreshData();
+            }
+        });
     }
 
     private BattleListFragment getBattleListFragment() {
