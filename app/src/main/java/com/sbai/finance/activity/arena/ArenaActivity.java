@@ -79,7 +79,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MoneyRewardGameBattleListActivity extends BaseActivity implements View.OnClickListener {
+public class ArenaActivity extends BaseActivity implements View.OnClickListener {
 
     private static final int REQ_CODE_FUTURE_BATTLE = 3787;
     private static final int REQ_CODE_SUBMIT_EXCHANGE_AWARD = 8809;
@@ -148,7 +148,6 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
             requestArenaApplyRule(false);
             requestArenaActivityAndUserStatus();
             requestUserFundInfo();
-            requestUserNowBattle();
         } else {
             updateUserJoinArenaStatus(false);
         }
@@ -352,18 +351,6 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
         }
     }
 
-    private void requestUserNowBattle() {
-        Client.requestUserArenaNowBattle()
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Battle>, Battle>() {
-                    @Override
-                    protected void onRespSuccessData(Battle data) {
-                        //当前对战
-                    }
-                })
-                .fireFree();
-    }
 
     private void requestUserFundInfo() {
         if (LocalUser.getUser().isLogin()) {
@@ -760,7 +747,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
     }
 
     private void dismissQuickMatchDialog() {
-        StartMatchDialog.dismiss(MoneyRewardGameBattleListActivity.this);
+        StartMatchDialog.dismiss(ArenaActivity.this);
     }
 
     private void showEnterForACompetitionConditionDialog(ArenaApplyRule data) {

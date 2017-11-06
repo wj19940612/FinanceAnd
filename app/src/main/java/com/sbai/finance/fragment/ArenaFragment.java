@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.arena.MoneyRewardGameBattleListActivity;
+import com.sbai.finance.activity.arena.ArenaActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.model.LocalUser;
@@ -84,7 +84,7 @@ public class ArenaFragment extends BaseFragment {
                     @Override
                     protected void onRespSuccessData(ArenaInfo data) {
                         if (!data.isArenaActivityOver()) {
-                            Launcher.with(getActivity(), MoneyRewardGameBattleListActivity.class).execute();
+                            Launcher.with(getActivity(), ArenaActivity.class).execute();
                         } else {
                             ToastUtil.show("活动未开启");
                         }

@@ -290,7 +290,7 @@
             android:name=".activity.battle.BattleHisRecordActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.arena.MoneyRewardGameBattleListActivity"
+            android:name=".activity.arena.ArenaActivity"
             android:screenOrientation="portrait"/>
         <!-- alipay -->
         <activity
