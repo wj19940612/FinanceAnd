@@ -205,6 +205,18 @@ public class BattleProgress extends LinearLayout {
         }
     }
 
+    public void setEnable(boolean enable) {
+        if (enable) {
+            mRightProgressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progress_battle));
+            mLeftProgressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progress_battle));
+        } else {
+            mRightProgressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progress_battle_disabled));
+            mLeftProgressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progress_battle_disabled));
+        }
+        mRightProgressBar.setEnabled(enable);
+        mLeftProgressBar.setEnabled(enable);
+    }
+
     public void setRightText(CharSequence rightText) {
     }
 
