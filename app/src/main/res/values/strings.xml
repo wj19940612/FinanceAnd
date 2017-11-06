@@ -766,8 +766,9 @@
     <string name="mission_complete">成功完成任务</string>
     <string name="accuracy_to_">准确率达到%1$s</string>
     <string name="accuracy_">准确率：%1$s</string>
-
-
+    <string name="fight_again">再战一局</string>
+    <string name="go_to_normal_battle">去普通场</string>
+    
     <!-- 我的问答-->
     <string name="you_not_has_question">你还未提问</string>
     <string name="this_will_show_your_question">在这里会显示你的提问</string>
@@ -798,4 +799,5 @@
     <string name="auth_code_error">验证码有误</string>
     <string name="image_auth_code">图形验证码</string>
     <string name="change_image_auth_code">看不清？换一张</string>
+    
 </resources>

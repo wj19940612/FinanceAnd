@@ -7,12 +7,11 @@ import com.sbai.finance.net.Client;
 
 /**
  * Modified by john on 31/10/2017
- *
+ * <p>
  * APIs:
  * {@link Client#requestBannerInfo(String)} 获取对战信息
- *
+ * <p>
  * {@link Client#getMyVersusRecord(Long)} 获取对战记录
- *
  */
 public class Battle implements Parcelable {
 
@@ -49,35 +48,36 @@ public class Battle implements Parcelable {
     public static final int CODE_AGAINST_FAST_MATCH_TIMEOUT = 4642;
     public static final int CODE_CREATE_FAST_MATCH_TIMEOUT = 4641;
 
-    /** 对战信息数据结构
-     *
+    /**
+     * 对战信息数据结构
+     * <p>
      * "againstFrom":"1",
-     "againstPraise":27,
-     "againstScore":0,
-     "againstUnwindScore":0,
-     "againstUser":141,
-     "againstUserName":"思想有多远",
-     "againstUserPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494407270799.png",
-     "batchCode":"e2tmM42b",
-     "bigVarietyType":"future",
-     "coinType":2,
-     "createTime":1498640841000,
-     "endline":600,
-     "gameStatus":2,
-     "id":184,
-     "launchPraise":7,
-     "launchScore":0,
-     "launchUnwindScore":0,
-     "launchUser":124,
-     "launchUserName":"用户2972",
-     "launchUserPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1497510090054.png",
-     "loginUser":217,
-     "modifyTime":1498640890000,
-     "reward":300,
-     "startTime":1498640891000,
-     "varietyId":1,
-     "varietyName":"美原油",
-     "varietyType":"CL"
+     * "againstPraise":27,
+     * "againstScore":0,
+     * "againstUnwindScore":0,
+     * "againstUser":141,
+     * "againstUserName":"思想有多远",
+     * "againstUserPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1494407270799.png",
+     * "batchCode":"e2tmM42b",
+     * "bigVarietyType":"future",
+     * "coinType":2,
+     * "createTime":1498640841000,
+     * "endline":600,
+     * "gameStatus":2,
+     * "id":184,
+     * "launchPraise":7,
+     * "launchScore":0,
+     * "launchUnwindScore":0,
+     * "launchUser":124,
+     * "launchUserName":"用户2972",
+     * "launchUserPortrait":"https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1497510090054.png",
+     * "loginUser":217,
+     * "modifyTime":1498640890000,
+     * "reward":300,
+     * "startTime":1498640891000,
+     * "varietyId":1,
+     * "varietyName":"美原油",
+     * "varietyType":"CL"
      */
     private String againstFrom;   //应战者来源
     private int againstPraise;
@@ -102,7 +102,6 @@ public class Battle implements Parcelable {
     private int launchUser;            //发起人ID
     private String launchUserName;     //发起人名字
     private String launchUserPortrait; //发起人头像
-
     //private int loginUser;
     private long modifyTime;           //修改时间
     private int reward;                //赏金
@@ -110,6 +109,7 @@ public class Battle implements Parcelable {
     private int varietyId;             //品种ID
     private String varietyName;
     private String varietyType;
+    private int gameType;               // 1 普通对战 2 竞技场
     /* 以上属性为 查询 Battle 信息获取到的属性 */
 
 
@@ -124,28 +124,29 @@ public class Battle implements Parcelable {
     /* 以上为点赞 Push#Content#Data 数据机构 */
 
 
-    /** 创建订单的推送 数据
-     *
+    /**
+     * 创建订单的推送 数据
+     * <p>
      * "battleBatchCode":"ibYUtouN",
-     "battleId":807,
-     "contractsCode":"CL1708",
-     "contractsId":120,
-     "currencyUnit":"美元",
-     "direction":1,
-     "handsNum":1,
-     "id":2934,
-     "marketPoint":2,
-     "optLogCount":40,
-     "orderMarket":45780,
-     "orderPrice":45.78,
-     "orderStatus":2,
-     "orderTime":1499842365903,
-     "ratio":7.5,
-     "sign":"$",
-     "userId":800184,
-     "varietyId":1,
-     "varietyName":"美原油",
-     "varietyType":"CL"
+     * "battleId":807,
+     * "contractsCode":"CL1708",
+     * "contractsId":120,
+     * "currencyUnit":"美元",
+     * "direction":1,
+     * "handsNum":1,
+     * "id":2934,
+     * "marketPoint":2,
+     * "optLogCount":40,
+     * "orderMarket":45780,
+     * "orderPrice":45.78,
+     * "orderStatus":2,
+     * "orderTime":1499842365903,
+     * "ratio":7.5,
+     * "sign":"$",
+     * "userId":800184,
+     * "varietyId":1,
+     * "varietyName":"美原油",
+     * "varietyType":"CL"
      */
     //下单 推送 属性
     private String battleBatchCode;   //  批次号码 lXGrHpSk
@@ -175,34 +176,36 @@ public class Battle implements Parcelable {
     private long unwindTime;        // 1499777803000  平仓时间
     private int unwindType;         // 1 用户平仓 2 超时平仓
     private double winOrLoss;       // 用户盈亏
-    /** 平仓的推送 数据
+
+    /**
+     * 平仓的推送 数据
      * "battleBatchCode":"ibYUtouN",
-     "battleId":807,
-     "contractsCode":"CL1708",
-     "contractsId":120,
-     "createTime":1499841976000,
-     "currencyUnit":"美元",
-     "direction":1,
-     "handsNum":1,
-     "id":2923,
-     "marketPoint":2,
-     "modifyTime":1499842155000,
-     "optLogCount":33,
-     "orderMarket":45850,
-     "orderPrice":45.85,
-     "orderStatus":4,
-     "orderTime":1499841976000,
-     "ratio":7.5,
-     "sign":"$",
-     "unwindMarket":45810,
-     "unwindPrice":45.81,
-     "unwindTime":1499842155000,
-     "unwindType":1,
-     "userId":800184,
-     "varietyId":1,
-     "varietyName":"美原油",
-     "varietyType":"CL",
-     "winOrLoss":-40
+     * "battleId":807,
+     * "contractsCode":"CL1708",
+     * "contractsId":120,
+     * "createTime":1499841976000,
+     * "currencyUnit":"美元",
+     * "direction":1,
+     * "handsNum":1,
+     * "id":2923,
+     * "marketPoint":2,
+     * "modifyTime":1499842155000,
+     * "optLogCount":33,
+     * "orderMarket":45850,
+     * "orderPrice":45.85,
+     * "orderStatus":4,
+     * "orderTime":1499841976000,
+     * "ratio":7.5,
+     * "sign":"$",
+     * "unwindMarket":45810,
+     * "unwindPrice":45.81,
+     * "unwindTime":1499842155000,
+     * "unwindType":1,
+     * "userId":800184,
+     * "varietyId":1,
+     * "varietyName":"美原油",
+     * "varietyType":"CL",
+     * "winOrLoss":-40
      */
 
     /* 订单数据结构
@@ -632,6 +635,10 @@ public class Battle implements Parcelable {
         this.againstUnwindScore = againstUnwindScore;
     }
 
+    public int getGameType() {
+        return gameType;
+    }
+
     @Override
     public String toString() {
         return "Battle{" +
@@ -662,6 +669,7 @@ public class Battle implements Parcelable {
                 ", varietyId=" + varietyId +
                 ", varietyName='" + varietyName + '\'' +
                 ", varietyType='" + varietyType + '\'' +
+                ", gameType=" + gameType +
                 ", winResult=" + winResult +
                 ", commission=" + commission +
                 ", battleId=" + battleId +
@@ -724,6 +732,7 @@ public class Battle implements Parcelable {
         dest.writeInt(this.varietyId);
         dest.writeString(this.varietyName);
         dest.writeString(this.varietyType);
+        dest.writeInt(this.gameType);
         dest.writeInt(this.winResult);
         dest.writeDouble(this.commission);
         dest.writeInt(this.battleId);
@@ -782,6 +791,7 @@ public class Battle implements Parcelable {
         this.varietyId = in.readInt();
         this.varietyName = in.readString();
         this.varietyType = in.readString();
+        this.gameType = in.readInt();
         this.winResult = in.readInt();
         this.commission = in.readDouble();
         this.battleId = in.readInt();
@@ -809,7 +819,7 @@ public class Battle implements Parcelable {
         this.winOrLoss = in.readDouble();
     }
 
-    public static final Parcelable.Creator<Battle> CREATOR = new Parcelable.Creator<Battle>() {
+    public static final Creator<Battle> CREATOR = new Creator<Battle>() {
         @Override
         public Battle createFromParcel(Parcel source) {
             return new Battle(source);
