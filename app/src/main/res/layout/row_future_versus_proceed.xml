@@ -39,7 +39,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/bg_battle_avatar"
                     android:clickable="false"
-                    tools:src="@drawable/btn_join_versus"/>
+                    tools:src="@drawable/btn_join_battle"/>
 
                 <ImageView
                     android:id="@+id/createKo"
@@ -86,17 +86,7 @@
                 android:id="@+id/progress"
                 android:layout_width="match_parent"
                 android:layout_height="14dp"
-                android:layout_marginTop="10dp"
-                app:leftLabelColor="@android:color/white"
-                app:leftLabelSize="10sp"
-                app:leftPadding="5dp"
-                app:max="100"
-                app:progress="50"
-                app:progressDrawable="@drawable/bg_battle_progress"
-                app:rightLabelColor="@android:color/white"
-                app:rightLabelSize="10sp"
-                app:rightPadding="5dp"
-                app:secondaryProgress="100"/>
+                android:layout_marginTop="10dp"/>
 
             <TextView
                 android:id="@+id/depositAndTime"
@@ -130,7 +120,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:clickable="true"
-                    tools:src="@drawable/btn_join_versus"/>
+                    tools:src="@drawable/btn_join_battle"/>
 
                 <ImageView
                     android:id="@+id/againstKo"

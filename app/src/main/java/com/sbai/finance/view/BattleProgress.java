@@ -2,45 +2,29 @@ package com.sbai.finance.view;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.utils.FinanceUtil;
 
 
-public class BattleProgress extends RelativeLayout {
-    public static final int ORIENTATION_HORIZONTAL=0;
+public class BattleProgress extends LinearLayout {
 
-    private Drawable mProgressDrawable;
-    private CharSequence mRightText;
-    private CharSequence mLeftText;
-    private int mRightSize;
-    private int mLeftSize;
-    private ColorStateList mRightTextColor;
-    private ColorStateList mLeftTextColor;
-    private int mRightPadding;
-    private int mLeftPadding;
-    private int mOrientation;
+    private TextView mRightValue;
+    private TextView mLeftValue;
+    private ProgressBar mLeftProgressBar;
+    private ProgressBar mRightProgressBar;
 
-    private int mMax;
-    private int mProgress;
-    private int mSecondaryProgress;
+    private int mTextSize;
 
-    private TextView mRightView;
-    private TextView mLeftView;
-    private ProgressBar mProgressBar;
     public BattleProgress(Context context, AttributeSet attrs) {
         super(context, attrs);
         processAttrs(attrs);
@@ -49,151 +33,202 @@ public class BattleProgress extends RelativeLayout {
 
     private void processAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.BattleProgress);
-        int defaultFontSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10,
-                getResources().getDisplayMetrics());
-        int defaultTextPadding =  (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5,
-                getResources().getDisplayMetrics());
-        mProgressDrawable = typedArray.getDrawable(R.styleable.BattleProgress_progressDrawable);
-        mOrientation= typedArray.getInt(R.styleable.BattleProgress_orientation,ORIENTATION_HORIZONTAL);
-        mRightPadding = typedArray.getLayoutDimension(R.styleable.BattleProgress_rightPadding,defaultTextPadding);
-        mLeftPadding = typedArray.getLayoutDimension(R.styleable.BattleProgress_leftPadding,defaultTextPadding);
-        mMax = typedArray.getInt(R.styleable.BattleProgress_max,100);
-        mProgress = typedArray.getInt(R.styleable.BattleProgress_progress,50);
-        mSecondaryProgress = typedArray.getInt(R.styleable.BattleProgress_secondaryProgress,100);
 
-        mRightSize = typedArray.getDimensionPixelOffset(R.styleable.BattleProgress_rightLabelSize,defaultFontSize);
-        mRightText = typedArray.getText(R.styleable.BattleProgress_rightLabel);
-        mRightTextColor = typedArray.getColorStateList(R.styleable.BattleProgress_rightLabelColor);
-
-        mLeftSize = typedArray.getDimensionPixelOffset(R.styleable.BattleProgress_leftLabelSize,defaultFontSize);
-        mLeftText = typedArray.getText(R.styleable.BattleProgress_leftLabel);
-        mLeftTextColor = typedArray.getColorStateList(R.styleable.BattleProgress_leftLabelColor);
-
-        if (mRightTextColor==null){
-            mRightTextColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(),R.color.white));
-        }
-        if (mLeftTextColor == null){
-            mLeftTextColor = ColorStateList.valueOf(ContextCompat.getColor(getContext(),R.color.white));
-        }
+        mTextSize = typedArray.getDimensionPixelOffset(R.styleable.BattleProgress_android_textSize, 0);
 
         typedArray.recycle();
     }
 
-    private void init() {
-        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
-        params.addRule(RelativeLayout.CENTER_IN_PARENT,RelativeLayout.TRUE);
-        //progressBar
-        mProgressBar = new ProgressBar(getContext(),null,android.R.attr.progressBarStyleHorizontal);
-        mProgressBar.setProgressDrawable(mProgressDrawable);
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
 
-        mProgressBar.setMax(mMax);
-        mProgressBar.setProgress(mProgress);
-        mProgressBar.setSecondaryProgress(mSecondaryProgress);
-        addView(mProgressBar,params);
-        //rightView
-        params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
-        mRightView = new TextView(getContext());
-        mRightView.setGravity(Gravity.RIGHT);
-        mRightView.setText(mRightText);
-        mRightView.setTextColor(mRightTextColor);
-        mRightView.setTextSize(TypedValue.COMPLEX_UNIT_PX,mRightSize);
-        mRightView.setPadding(0,0,mRightPadding,0);
-        addView(mRightView,params);
-        //leftView
-        params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.MATCH_PARENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
-        mLeftView = new TextView(getContext());
-        mLeftView.setGravity(Gravity.LEFT);
-        mLeftView.setText(mLeftText);
-        mLeftView.setTextColor(mLeftTextColor);
-        mLeftView.setTextSize(TypedValue.COMPLEX_UNIT_PX,mLeftSize);
-        mLeftView.setPadding(mLeftPadding,0,0,0);
-        addView(mLeftView,params);
     }
-    public void showScoreProgress(double createProfit, double fighterProfit, boolean isInviting) {
+
+    private float dp2Px(float value, Resources res) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, res.getDisplayMetrics());
+    }
+
+    private void init() {
+        setOrientation(HORIZONTAL);
+        mLeftValue = new TextView(getContext());
+        mLeftValue.setText(FinanceUtil.formatWithScale(0));
+        mLeftValue.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        mRightValue = new TextView(getContext());
+        mRightValue.setText(FinanceUtil.formatWithScale(0));
+        mRightValue.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        if (mTextSize == 0) {
+            mLeftValue.setTextSize(14);
+            mRightValue.setTextSize(14);
+        } else {
+            mLeftValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
+            mRightValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
+        }
+
+        int height = (int) dp2Px(8, getResources());
+        int width = (int) dp2Px(80, getResources());
+        mLeftProgressBar = createProgressBar();
+        mRightProgressBar = createProgressBar();
+        mRightProgressBar.setRotation(180);
+
+        LinearLayout leftPart = new LinearLayout(getContext());
+        leftPart.setOrientation(LinearLayout.VERTICAL);
+        leftPart.addView(mLeftValue, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+
+        int marginTop = (int) dp2Px(4, getResources());
+        LayoutParams params = new LayoutParams(width, height);
+        params.setMargins(0, marginTop, 0, 0);
+        leftPart.addView(mLeftProgressBar, params);
+
+        addView(leftPart);
+
+        LinearLayout rightPart = new LinearLayout(getContext());
+        rightPart.setOrientation(VERTICAL);
+        mRightValue.setGravity(Gravity.RIGHT);
+        rightPart.addView(mRightValue, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+
+        params = new LayoutParams(width, height);
+        params.setMargins(0, marginTop, 0, 0);
+        rightPart.addView(mRightProgressBar, params);
+
+        int marginLeft = (int) dp2Px(20, getResources());
+        params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        params.setMargins(marginLeft, 0, 0, 0);
+        addView(rightPart, params);
+    }
+
+    private ProgressBar createProgressBar() {
+        ProgressBar progressBar = new ProgressBar(getContext(), null, android.R.attr.progressBarStyleHorizontal);
+        progressBar.setMax(100);
+        progressBar.setProgress(0);
+        progressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progress_battle));
+        return progressBar;
+    }
+
+    public void setBattleProfit(double ownerProfit, double challengerProfit) {
+        setProgressValue(ownerProfit, challengerProfit);
+
+        if (ownerProfit == 0 && challengerProfit == 0) {
+            // 00
+            setProgressBars(0, 0);
+            return;
+        }
+
+        if (ownerProfit >= 0 && challengerProfit >= 0) {
+            // ++
+            int progress = (int) (ownerProfit * 100 / (ownerProfit + challengerProfit));
+            setProgressBars(progress, 100 - progress);
+            return;
+        }
+
+        if (ownerProfit < 0 && challengerProfit < 0) {
+            // --
+            ownerProfit = Math.abs(ownerProfit);
+            challengerProfit = Math.abs(challengerProfit);
+            int progress = (int) (ownerProfit * 100 / (ownerProfit + challengerProfit));
+            setProgressBars(100 - progress, progress);
+            return;
+        }
+
+        if (ownerProfit >= 0 && challengerProfit < 0) {
+            // +-
+            setProgressBars(100, 0);
+            return;
+        }
+
+        if (ownerProfit < 0 && challengerProfit >= 0) {
+            // -+
+            setProgressBars(0, 100);
+            return;
+        }
+    }
+
+    private void setProgressValue(double ownerProfit, double challengerProfit) {
+        String ownerProfitValue = FinanceUtil.formatWithScale(ownerProfit);
+        String challengerProfitValue = FinanceUtil.formatWithScale(challengerProfit);
+        if (ownerProfit > 0) {
+            ownerProfitValue = "+" + ownerProfitValue;
+        }
+        if (challengerProfit > 0) {
+            challengerProfitValue = "+" + challengerProfitValue;
+        }
+        mLeftValue.setText(ownerProfitValue);
+        mRightValue.setText(challengerProfitValue);
+    }
+
+    private void setProgressBars(int left, int right) {
+        mLeftProgressBar.setProgress(left);
+        mRightProgressBar.setProgress(right);
+    }
+
+    public void showScoreProgress(double ownerProfit, double challengerProfit, boolean isFinish) {
         String myFlag = "";
         String fighterFlag = "";
-        if (isInviting) {
+        if (isFinish) {
             setProgress(0);
             setSecondaryProgress(0);
             setLeftText(null);
             setRightText(null);
         } else {
             //正正
-            if ((createProfit > 0 && fighterProfit >= 0) || (createProfit >= 0 && fighterProfit > 0)) {
-                int progress = (int) (createProfit * 100 / (createProfit + fighterProfit));
+            if ((ownerProfit > 0 && challengerProfit >= 0) || (ownerProfit >= 0 && challengerProfit > 0)) {
+                int progress = (int) (ownerProfit * 100 / (ownerProfit + challengerProfit));
                 setProgress(progress);
             }
             //正负
-            if (createProfit >= 0 && fighterProfit < 0) {
+            if (ownerProfit >= 0 && challengerProfit < 0) {
                 setProgress(100);
             }
             //负正
-            if (createProfit < 0 && fighterProfit >= 0) {
+            if (ownerProfit < 0 && challengerProfit >= 0) {
                 setProgress(0);
             }
             //负负
-            if (createProfit < 0 && fighterProfit < 0) {
-                int progress = (int) (Math.abs(createProfit) * 100 / (Math.abs(createProfit) + Math.abs(fighterProfit)));
+            if (ownerProfit < 0 && challengerProfit < 0) {
+                int progress = (int) (Math.abs(ownerProfit) * 100 / (Math.abs(ownerProfit) + Math.abs(challengerProfit)));
                 setProgress(100 - progress);
             }
             //都为0
-            if (createProfit == 0 && fighterProfit == 0) {
+            if (ownerProfit == 0 && challengerProfit == 0) {
                 setProgress(50);
             }
             setSecondaryProgress(100);
-            if (createProfit > 0) {
+            if (ownerProfit > 0) {
                 myFlag = "+";
             }
 
-            if (fighterProfit > 0) {
+            if (challengerProfit > 0) {
                 fighterFlag = "+";
             }
-            setLeftText(myFlag + FinanceUtil.formatWithScale(createProfit));
-            setRightText(fighterFlag + FinanceUtil.formatWithScale(fighterProfit));
+            setLeftText(myFlag + FinanceUtil.formatWithScale(ownerProfit));
+            setRightText(fighterFlag + FinanceUtil.formatWithScale(challengerProfit));
         }
     }
+
     public void setRightText(CharSequence rightText) {
-        mRightText = rightText;
-        mRightView.setText(rightText);
     }
+
     public void setRightText(int resId) {
-        mRightText = getContext().getText(resId);
-        setRightText(mRightText);
     }
 
     public void setLeftText(CharSequence leftText) {
-        mLeftText = leftText;
-        mLeftView.setText(leftText);
     }
-    public void setLeftText(int resId){
-        mLeftText = getContext().getText(resId);
-        setLeftText(mLeftText);
+
+    public void setLeftText(int resId) {
     }
 
     public void setRightTextColor(ColorStateList rightTextColor) {
-        mRightTextColor = rightTextColor;
-        mRightView.setTextColor(rightTextColor);
     }
 
     public void setLeftTextColor(ColorStateList leftTextColor) {
-        mLeftTextColor = leftTextColor;
-        mLeftView.setTextColor(leftTextColor);
     }
 
     public void setMax(int max) {
-        mMax = max;
-        mProgressBar.setMax(max);
     }
 
     public void setProgress(int progress) {
-        mProgress = progress;
-        mProgressBar.setProgress(progress);
     }
 
     public void setSecondaryProgress(int secondaryProgress) {
-        mSecondaryProgress = secondaryProgress;
-        mProgressBar.setSecondaryProgress(secondaryProgress);
     }
 }

@@ -1833,12 +1833,12 @@ public class Client {
     }
 
     /**
-     * 下单记录
+     * 对战交易操作记录
      *
      * @param battleId
      * @return
      */
-    public static API getOrderHistory(int battleId) {
+    public static API getTradeOperationRecords(int battleId) {
         return new API("/game/battleorder/optLog.do", new ApiParams()
                 .put("battleId", battleId));
     }
@@ -1923,13 +1923,13 @@ public class Client {
      * @param battleId
      * @return
      */
-    public static API requestCurrentOrder(int battleId) {
+    public static API requestCurrentOrders(int battleId) {
         return new API("/game/battleorder/orders.do", new ApiParams()
                 .put("battleId", battleId));
     }
 
 
-    public static API requestVarietyPrice(int varietyId) {
+    public static API requestVariety(int varietyId) {
         return new API("/order/future/query/infoPrice.do", new ApiParams()
                 .put("varietyId", varietyId));
     }

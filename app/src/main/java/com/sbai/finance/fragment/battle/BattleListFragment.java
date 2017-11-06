@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.battle.BattleHisRecordActivity;
-import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
@@ -96,7 +96,7 @@ public class BattleListFragment extends BaseFragment {
             public void onItemClick(Battle battle, int position) {
                 if (battle != null) {
                     if (LocalUser.getUser().isLogin()) {
-                        Launcher.with(getActivity(), FutureBattleActivity.class)
+                        Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(ExtraKeys.BATTLE, battle)
                                 .execute();
                     } else {
@@ -425,7 +425,7 @@ public class BattleListFragment extends BaseFragment {
                             mCreateAvatarRL.setSelected(true);
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                        } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
+                        } else if (item.getWinResult() == Battle.WIN_RESULT_OWNER_WIN) {
                             mAgainstAvatarFL.setSelected(true);
                             mCreateAvatarRL.setSelected(false);
                             mCreateKo.setVisibility(View.GONE);

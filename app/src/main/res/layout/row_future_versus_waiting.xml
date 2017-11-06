@@ -37,7 +37,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/bg_battle_avatar"
                     android:clickable="false"
-                    tools:src="@drawable/btn_join_versus"/>
+                    tools:src="@drawable/btn_join_battle"/>
 
                 <ImageView
                     android:id="@+id/createKo"
@@ -72,7 +72,7 @@
                 android:layout_height="14dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="7dp"
-                android:src="@drawable/ic_versus_vs"/>
+                android:src="@drawable/ic_versus"/>
 
             <TextView
                 android:id="@+id/varietyName"
@@ -116,7 +116,7 @@
                     android:layout_height="44dp"
                     android:layout_gravity="center"
                     android:clickable="true"
-                    tools:src="@drawable/btn_join_versus"/>
+                    tools:src="@drawable/btn_join_battle"/>
 
                 <ImageView
                     android:id="@+id/againstKo"

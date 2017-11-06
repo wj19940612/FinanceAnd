@@ -1,13 +1,20 @@
 package com.sbai.finance.model.battle;
 
-/**
- * Created by linrongfang on 2017/6/27.
- */
+import com.sbai.finance.net.Client;
 
+/**
+ * Modified by john on 31/10/2017
+ *
+ * APIs: {@link Client#requestCurrentOrders(int)} 获取当前对战持仓订单
+ *
+ */
 public class TradeOrder {
 
-    public static final int DIRECTION_LONG_PURCHASE = 1;
-    public static final int DIRECTION_SHORT_PURCHASE = 0;
+    public static final int DIRECTION_LONG = 1;
+    public static final int DIRECTION_SHORT = 0;
+
+    public static final int ORDER_STATUS_HOLDING = 2;
+    public static final int ORDER_STATUS_CLOSED = 4;
 
     /**
      * battleBatchCode : g4QvWXFI
@@ -46,28 +53,9 @@ public class TradeOrder {
     private String varietyName;
     private String varietyType;
 
-    public String getBattleBatchCode() {
-        return battleBatchCode;
-    }
-
-    public void setBattleBatchCode(String battleBatchCode) {
-        this.battleBatchCode = battleBatchCode;
-    }
-
-    public int getBattleId() {
-        return battleId;
-    }
-
-    public void setBattleId(int battleId) {
-        this.battleId = battleId;
-    }
 
     public String getContractsCode() {
         return contractsCode;
-    }
-
-    public void setContractsCode(String contractsCode) {
-        this.contractsCode = contractsCode;
     }
 
     public int getContractsId() {
@@ -82,108 +70,69 @@ public class TradeOrder {
         return createTime;
     }
 
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
-    }
-
     public int getDirection() {
         return direction;
-    }
-
-    public void setDirection(int direction) {
-        this.direction = direction;
     }
 
     public int getHandsNum() {
         return handsNum;
     }
 
-    public void setHandsNum(int handsNum) {
-        this.handsNum = handsNum;
-    }
-
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public long getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(long modifyTime) {
-        this.modifyTime = modifyTime;
-    }
-
     public double getOrderPrice() {
         return orderPrice;
-    }
-
-    public void setOrderPrice(double orderPrice) {
-        this.orderPrice = orderPrice;
     }
 
     public int getOrderStatus() {
         return orderStatus;
     }
 
-    public void setOrderStatus(int orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
     public long getOrderTime() {
         return orderTime;
-    }
-
-    public void setOrderTime(long orderTime) {
-        this.orderTime = orderTime;
     }
 
     public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public int getVarietyId() {
         return varietyId;
-    }
-
-    public void setVarietyId(int varietyId) {
-        this.varietyId = varietyId;
     }
 
     public String getVarietyName() {
         return varietyName;
     }
 
-    public void setVarietyName(String varietyName) {
-        this.varietyName = varietyName;
-    }
-
     public String getVarietyType() {
         return varietyType;
     }
 
-    public void setVarietyType(String varietyType) {
-        this.varietyType = varietyType;
-    }
-    
     public static TradeOrder getTradeOrder(Battle battle){
         TradeOrder order = new TradeOrder();
-        order.setContractsCode(battle.getContractsCode());
-        order.setHandsNum(battle.getHandsNum());
-        order.setUserId(battle.getUserId());
-        order.setVarietyName(battle.getVarietyName());
-        order.setVarietyType(battle.getVarietyType());
-        order.setOrderPrice(battle.getOrderPrice());
-        order.setDirection(battle.getDirection());
-        order.setId(battle.getId());
+        order.battleBatchCode = battle.getBattleBatchCode();
+        order.battleId = battle.getBattleId();
+        order.contractsCode = battle.getContractsCode();
+        order.contractsId = battle.getContractsId();
+//        order.createTime = battle.getCreateTime(); 推送数据 无
+        order.handsNum = battle.getHandsNum();
+        order.id = battle.getId();
+//        order.modifyTime = battle.getModifyTime(); 推送数据 无
+        order.orderPrice = battle.getOrderPrice();
+        order.orderStatus = battle.getOrderStatus();
+        order.orderTime = battle.getOrderTime();
+        order.userId = battle.getUserId();
+        order.varietyId = battle.getVarietyId();
+        order.varietyName = battle.getVarietyName();
+        order.varietyType = battle.getVarietyType();
+        order.direction = battle.getDirection();
+        order.id = battle.getId();
         return order;
     }
 

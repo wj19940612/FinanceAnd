@@ -247,7 +247,7 @@
     <string name="is_auditing">审核中</string>
     <string name="hint">提示</string>
 
-    <string name="number999">999+</string>
+    <string name="number999"></string>
 
     <!--introduce-->
     <string name="trade_category">交易品种</string>
@@ -278,8 +278,6 @@
     <string name="prediction_rule4">4.预测成功率高的用户，将会登上我们的观点大神排行榜</string>
     <string name="submit_has_empty">提  交</string>
 
-    <string name="end">已结束</string>
-
     <string name="open_gps_permission">请在设置中开启[乐米金融] 定位服务权限</string>
     <string name="open_gps">请打开gps</string>
     <string name="network_error_please_reload">网络连接失败 请重新加载</string>
@@ -306,7 +304,6 @@
     <string name="earn_profit">净利润</string>
 
     <!--公司简介-->
-
     <string name="company_name">公司名称</string>
     <string name="company_info">公司简介</string>
     <string name="register_capital">注册资本</string>
@@ -390,6 +387,7 @@
     <string name="balance_is_not_enough">余额不足,创建失败</string>
     <string name="holder_card_state">持卡人说明</string>
     <string name="holder_card_content">1.为了您的资金安全,只能绑定持卡人本人的银行卡。\n2.未成年人禁止交易</string>
+    <string name="end">已结束</string>
 
     <!--确认充值-->
     <string name="confirm_recharge">确认充值</string>
@@ -456,7 +454,7 @@
     <string name="failure">败北</string>
     <string name="position_direction">持仓方向</string>
     <string name="buy_price">买入价</string>
-    <string name="position_profit">持仓盈亏(元)</string>
+    <string name="position_profit">持仓盈亏</string>
     <string name="no_position">暂无持仓</string>
     <string name="join_versus_failure">加入失败</string>
     <string name="join_battle_balance_not_enough">余额不足，请充值或选择其他赏金较低的对战</string>
@@ -473,7 +471,7 @@
     <string name="cancel_match">取消匹配</string>
     <string name="desc_matching">正在匹配, 请稍后…</string>
     <string name="title_match_success">匹配成功</string>
-    <string name="desc_match_success">已有对手\n%1$ds后进入对战</string>
+    <string name="match_success_x_seconds_start_battle">匹配成功，%1$ds后进入对战</string>
     <string name="cancel_battle">取消对战</string>
     <string name="cancel_battle_tip">是否要取消对战？</string>
     <string name="continue_to_battle">继续对战</string>
@@ -481,12 +479,12 @@
     <string name="match_overtime">匹配超时，请重新匹配或稍后重试</string>
     <string name="later_try_again">稍后重试</string>
     <string name="rematch">重新匹配</string>
-    <string name="take_more">买多</string>
-    <string name="take_short">卖空</string>
-    <string name="take_more_position">买多建仓</string>
-    <string name="take_short_position">卖空建仓</string>
-    <string name="take_more_close_position">买多平仓</string>
-    <string name="take_short_close_position">卖空平仓</string>
+    <string name="buy_long">买多</string>
+    <string name="sell_short">卖空</string>
+    <string name="buy_long_open_position">买多建仓</string>
+    <string name="sell_short_open_position">卖空建仓</string>
+    <string name="buy_long_close_position">买多平仓</string>
+    <string name="sell_short_close_position">卖空平仓</string>
     <string name="battle_variety_name">对战品种 : </string>
     <string name="battle_time">对战时长 : </string>
     <string name="battle_reward">对战赏金 : </string>
@@ -498,22 +496,22 @@
     <string name="wait_to_overtime">等待时间过长，房间已超时</string>
     <string name="recreate_room">重新创建</string>
     <string name="invite_invalid">对战邀请已失效</string>
-    <string name="remaining_time">剩余%1$s</string>
-    <string name="support">%1$s赞</string>
+    <string name="remaining_time_x">剩余%1$s</string>
+    <string name="_support">%1$s赞</string>
     <string name="game_result_win">神操作！真是羡煞旁人</string>
     <string name="game_result_lose">别气馁，下一站大神</string>
+    <string name="game_result_lose_match">胜率不高？去普通场提升下操作吧</string>
     <string name="game_result_draw">英雄所见略同</string>
     <string name="return_reward">赏金退还</string>
     <string name="join_battle">进入对战</string>
     <string name="quick_join_battle">已有对手加入对战，请尽快进入对战</string>
-    <string name="title_quick_join_battle">即将进入游戏</string>
     <string name="quick_battle">立即对战</string>
     <string name="in_calculating">结算中</string>
     <string name="match_battle">匹配对战</string>
     <string name="start_match_and_battle">进行匹配对战，系统将进行撮合对战</string>
     <string name="you_not_install_weixin">您尚未安装微信</string>
     <string name="you_not_install_weibo">您尚未安装微博</string>
-    <string name="count_down">倒计时%1$s</string>
+    <string name="countdown">等待倒计时</string>
 
     <!--     版本更新             -->
     <string name="download_fail">下载失败</string>
@@ -779,8 +777,9 @@
     <string name="mission_complete">成功完成任务</string>
     <string name="accuracy_to_">准确率达到%1$s</string>
     <string name="accuracy_">准确率：%1$s</string>
-
-
+    <string name="fight_again">再战一局</string>
+    <string name="go_to_normal_battle">去普通场</string>
+    
     <!-- 我的问答-->
     <string name="you_not_has_question">你还未提问</string>
     <string name="this_will_show_your_question">在这里会显示你的提问</string>
@@ -873,7 +872,6 @@
     <string name="you_miss_exchange_time">很遗憾！您错过了兑奖时间</string>
     <string name="you_is_real_name_wait_please_wait">您的实名认证还在审核中\n请耐心等待</string>
     <string name="choose_skin">选择皮肤</string>
-
     <!-- 首页 -->
     <string name="look_my_rank">查看我的排名</string>
     <string name="please_retry">请重试</string>

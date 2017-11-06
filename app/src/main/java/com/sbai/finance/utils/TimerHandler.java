@@ -9,7 +9,6 @@ public class TimerHandler extends Handler {
 
     public final static int TREND_REFRESH_TIME = 60;
     public final static int STOCK_RT_PULL_TIME = 6;
-    public final static int WATCH_REFRESH_TIME = 20;
 
     public static final int DEFAULT_INTERVAL_TIME = 1_000;
 

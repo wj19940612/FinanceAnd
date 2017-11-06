@@ -94,7 +94,7 @@ public class BattleRecordResultListActivity extends BaseActivity implements Cust
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
-                    Launcher.with(getActivity(), FutureBattleActivity.class)
+                    Launcher.with(getActivity(), BattleActivity.class)
                             .putExtra(ExtraKeys.BATTLE, item)
                             .execute();
                 }
@@ -264,7 +264,7 @@ public class BattleRecordResultListActivity extends BaseActivity implements Cust
                         result = context.getString(R.string.failure);
                         profit = context.getString(R.string.minus_int, item.getReward());
                     }
-                    if (item.isScore()) {
+                    if (item.getCoinType() == Battle.COIN_TYPE_SCORE) {
                         profit = context.getString(R.string.arena_score, profit);
                     }
                 }

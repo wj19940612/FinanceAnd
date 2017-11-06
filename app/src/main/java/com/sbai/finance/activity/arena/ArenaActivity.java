@@ -27,9 +27,9 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.battle.BattleHisRecordActivity;
 import com.sbai.finance.activity.battle.BattleRecordResultListActivity;
-import com.sbai.finance.activity.battle.FutureBattleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.activity.mine.userinfo.CreditApproveActivity;
@@ -337,7 +337,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
             case PushCode.QUICK_MATCH_SUCCESS:
                 Battle battle = (Battle) battleWSPush.getContent().getData();
                 if (battle != null) {
-                    Launcher.with(getActivity(), FutureBattleActivity.class)
+                    Launcher.with(getActivity(), BattleActivity.class)
                             .putExtra(ExtraKeys.BATTLE, battle)
                             .executeForResult(REQ_CODE_FUTURE_BATTLE);
                 }
@@ -539,7 +539,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                     @Override
                     protected void onRespSuccessData(Battle battle) {
                         if (battle.isBattleStarted()) {
-                            Launcher.with(getActivity(), FutureBattleActivity.class)
+                            Launcher.with(getActivity(), BattleActivity.class)
                                     .putExtra(ExtraKeys.BATTLE, battle)
                                     .executeForResult(REQ_CODE_FUTURE_BATTLE);
                         } else {
