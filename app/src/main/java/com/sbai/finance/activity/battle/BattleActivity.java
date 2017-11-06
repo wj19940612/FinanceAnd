@@ -114,6 +114,10 @@ public class BattleActivity extends BaseActivity {
     private static final int UPDATE_BATTLE_OVER = 1;
     private static final int UPDATE_BATTLE = 3;
 
+    // 自定义结果码，再战一局 & 去普通练习场
+    public static final int RESULT_CODE_FIGHT_AGAIN = 84;
+    public static final int RESULT_CODE_GO_2_NORMAL_BATTLE = 844;
+
     @BindView(R.id.rootView)
     LinearLayout mRootView;
 
@@ -479,9 +483,21 @@ public class BattleActivity extends BaseActivity {
                     content = "-" + mBattle.getReward() + coinType;
                 }
             }
-            BattleResultDialog.get(this, new BattleResultDialog.OnCloseListener() {
+            BattleResultDialog.get(this, new BattleResultDialog.OnCallback() {
                 @Override
                 public void onClose() {
+                    finish();
+                }
+
+                @Override
+                public void onFightAgain() {
+                    setResult(RESULT_CODE_FIGHT_AGAIN);
+                    finish();
+                }
+
+                @Override
+                public void onGo2NormalBattle() {
+                    setResult(RESULT_CODE_GO_2_NORMAL_BATTLE);
                     finish();
                 }
             }, winLoss, content, mBattle.getGameType());
