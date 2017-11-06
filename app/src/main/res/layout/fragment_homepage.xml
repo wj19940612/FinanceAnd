@@ -22,8 +22,8 @@
             android:layout_height="95dp"
             android:layout_below="@id/homeTitleView"
             android:layout_marginTop="20dp"
-            app:isRectIndicator="true"
             android:background="@color/white"
+            app:isRectIndicator="true"
             />
 
         <com.sbai.finance.view.BusinessBanner
@@ -50,8 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/leaderBoardView"
             android:layout_marginTop="14dp"
-            android:paddingBottom="10dp"
             android:background="@color/white"
+            android:paddingBottom="10dp"
             />
 
         <com.sbai.finance.view.ImportantNewsView
