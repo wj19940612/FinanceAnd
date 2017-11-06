@@ -82,7 +82,7 @@ public class Battle implements Parcelable {
     private String againstFrom;   //应战者来源
     private int againstPraise;
     private double againstScore;
-    private double againstUnwindScore; // 平仓数据 // TODO: 31/10/2017 fix cm
+    private double againstUnwindScore; // 平仓之后挑战者当前累计盈亏
     private int againstUser;      //应战者ID
     private String againstUserName; //应战者用户名
     private String againstUserPortrait;  //应战者头像

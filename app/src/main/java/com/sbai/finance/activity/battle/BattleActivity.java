@@ -56,7 +56,7 @@ import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.BaseDialog;
 import com.sbai.finance.view.dialog.BattleResultDialog;
-import com.sbai.finance.view.dialog.StartGameDialog;
+import com.sbai.finance.view.dialog.StartBattleDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.finance.view.slidingTab.HackTabLayout;
 import com.sbai.finance.websocket.GameCode;
@@ -568,7 +568,7 @@ public class BattleActivity extends BaseActivity {
                 startBattle();
                 return;
             }
-            if (pushType == PushCode.BATTLE_OVER && false) {
+            if (pushType == PushCode.BATTLE_OVER) {
                 if (mBattleStatus >= STARTED_OWNER && mBattleStatus <= STARTED_OBSERVER) {
                     mBattle = battle;
                     updateBattleStatus();
@@ -659,13 +659,16 @@ public class BattleActivity extends BaseActivity {
     }
 
     private void startBattle() {
-        StartGameDialog.get(getActivity(), mBattle.getAgainstUserPortrait(), new StartGameDialog.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                mBattleOperateView.setBattle(mBattle);
-                mBattleOperateView.updateView(mBattleStatus);
-            }
-        });
+        StartBattleDialog.get(getActivity(),
+                mBattle.getLaunchUserPortrait(), mBattle.getLaunchUserName(),
+                mBattle.getAgainstUserPortrait(), mBattle.getAgainstUserName(),
+                new StartBattleDialog.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        mBattleOperateView.setBattle(mBattle);
+                        mBattleOperateView.updateView(mBattleStatus);
+                    }
+                });
     }
 
     private void requestFastMatchResult() {
@@ -1157,7 +1160,7 @@ public class BattleActivity extends BaseActivity {
 
                     mMyInfo.setText(info.toString());
                     mMyInfoTime.setText(time);
-                    mPoint.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_battle_trade_mine));
+                    mPoint.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.point_purple));
                 } else {
                     mMyInfo.setVisibility(GONE);
                     mMyInfoTime.setVisibility(GONE);
@@ -1166,7 +1169,7 @@ public class BattleActivity extends BaseActivity {
 
                     mUserInfo.setText(info.toString());
                     mUserInfoTime.setText(time);
-                    mPoint.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_battle_trade_user));
+                    mPoint.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.point_purple));
                 }
             }
         }

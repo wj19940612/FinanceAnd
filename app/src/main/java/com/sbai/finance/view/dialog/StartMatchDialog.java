@@ -33,7 +33,7 @@ public class StartMatchDialog extends BaseDialog {
 
         setCurrentDialog(DIALOG_START_MATCH);
 
-        View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_fragment_start_match, null);
+        View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_start_match, null);
         final WaveView mMatchLoading = (WaveView) customView.findViewById(R.id.matchLoading);
         customView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override

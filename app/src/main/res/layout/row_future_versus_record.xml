@@ -85,7 +85,7 @@
                 android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_versus_vs"/>
+                android:src="@drawable/ic_versus"/>
         </LinearLayout>
 
         <LinearLayout

@@ -21,9 +21,18 @@
         android:paddingTop="10dp"
         android:scrollbars="none"/>
 
-    <com.sbai.finance.view.BattleBottomBothInfoView
-        android:id="@+id/battleView"
+    <TextView
+        android:id="@+id/battleMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"/>
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:text="200元宝 200元宝"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"/>
+
+    <include
+        android:id="@+id/playersView"
+        layout="@layout/view_battle_versus"/>
 </LinearLayout>

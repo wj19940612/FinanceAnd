@@ -36,18 +36,10 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
 
     TextView mCountdown;
 
-    BattleProgress mBattleProgress;
-    ImageView mOwnerAvatar;
-    ImageView mOwnerKo;
-    TextView mOwnerName;
-    TextView mOwnerPraise;
-    ImageView mChallengerAvatar;
-    ImageView mChallengerKo;
-    TextView mChallengerName;
-    TextView mChallengerPraise;
-
     PraiseView mPraiseOwner;
     PraiseView mPraiseChallenger;
+
+    PlayersView mPlayersView;
 
     LinearLayout mTradeButtons;
     TextView mNoPosition;
@@ -64,8 +56,6 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
     private View mPraiseView;
 
     private View mBattleSettlingView;
-
-    private View mPlayersView;
 
     private OnViewClickListener mOnViewClickListener;
 
@@ -145,26 +135,99 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         init();
     }
 
+    public static class PlayersView {
+        BattleProgress mBattleProgress;
+        ImageView mOwnerAvatar;
+        ImageView mOwnerKo;
+        TextView mOwnerName;
+        TextView mOwnerPraise;
+        ImageView mChallengerAvatar;
+        ImageView mChallengerKo;
+        TextView mChallengerName;
+        TextView mChallengerPraise;
+
+        public PlayersView(View view) {
+            mBattleProgress = view.findViewById(R.id.battleProgress);
+            mOwnerAvatar = view.findViewById(R.id.ownerAvatar);
+            mOwnerKo = view.findViewById(R.id.ownerKo);
+            mOwnerName = view.findViewById(R.id.ownerName);
+            mOwnerPraise = view.findViewById(R.id.ownerPraise);
+            mChallengerAvatar = view.findViewById(R.id.challengerAvatar);
+            mChallengerKo = view.findViewById(R.id.challengerKo);
+            mChallengerName = view.findViewById(R.id.challengerName);
+            mChallengerPraise = view.findViewById(R.id.challengerPraise);
+        }
+
+        public PlayersView ownerOk() {
+            mOwnerKo.setVisibility(VISIBLE);
+            return this;
+        }
+
+        public PlayersView challengerKo() {
+            mChallengerKo.setVisibility(VISIBLE);
+            return this;
+        }
+
+        public PlayersView ownerAvatar(Context context, String url) {
+            GlideApp.with(context)
+                    .load(url)
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_default_avatar_big)
+                    .into(mOwnerAvatar);
+            return this;
+        }
+
+        public PlayersView challengerAvatar(Context context, String url) {
+            GlideApp.with(context)
+                    .load(url)
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_default_avatar_big)
+                    .into(mChallengerAvatar);
+            return this;
+        }
+
+        public PlayersView ownerName(String name) {
+            mOwnerName.setText(name);
+            return this;
+        }
+
+        public PlayersView challengerName(String name) {
+            mChallengerName.setText(name);
+            return this;
+        }
+
+        public PlayersView ownerPraise(Context context, int praise) {
+            String praiseNumber = praise > 999 ? context.getString(R.string.number999)
+                    : String.valueOf(praise);
+            mOwnerPraise.setText(context.getString(R.string._support, String.valueOf(praiseNumber)));
+            return this;
+        }
+
+        public PlayersView challengerPraise(Context context, int praise) {
+            String praiseNumber = praise > 999 ? context.getString(R.string.number999)
+                    : String.valueOf(praise);
+            mChallengerPraise.setText(context.getString(R.string._support, String.valueOf(praiseNumber)));
+            return this;
+        }
+
+        public PlayersView battleProgress(double ownerProfit, double challengerProfit) {
+            mBattleProgress.setBattleProfit(ownerProfit, challengerProfit);
+            return this;
+        }
+    }
+
     private void init() {
         setOrientation(VERTICAL);
         mBattleCreatedView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_created, null);
         mBattleOrderOperateView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_order_operate, null);
         mPraiseView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_praise, null);
-        mPlayersView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_versus, null);
         mBattleSettlingView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_settling, null);
 
         // view find id
         mCountdown = mBattleCreatedView.findViewById(R.id.countdown);
 
-        mBattleProgress = mPlayersView.findViewById(R.id.battleProgress);
-        mOwnerAvatar = mPlayersView.findViewById(R.id.ownerAvatar);
-        mOwnerKo = mPlayersView.findViewById(R.id.ownerKo);
-        mOwnerName = mPlayersView.findViewById(R.id.ownerName);
-        mOwnerPraise = mPlayersView.findViewById(R.id.ownerPraise);
-        mChallengerAvatar = mPlayersView.findViewById(R.id.challengerAvatar);
-        mChallengerKo = mPlayersView.findViewById(R.id.challengerKo);
-        mChallengerName = mPlayersView.findViewById(R.id.challengerName);
-        mChallengerPraise = mPlayersView.findViewById(R.id.challengerPraise);
+        View playersView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_versus, null);
+        mPlayersView = new PlayersView(playersView);
 
         mPraiseOwner = mPraiseView.findViewById(R.id.praiseOwner);
         mPraiseChallenger = mPraiseView.findViewById(R.id.praiseChallenger);
@@ -185,7 +248,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         addView(mBattleOrderOperateView);
         addView(mPraiseView);
         addView(mBattleSettlingView);
-        addView(mPlayersView);
+        addView(playersView);
     }
 
     private void initListeners() {
@@ -262,40 +325,27 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
     private void updatePlayersAvatarKo() {
         switch (mBattle.getWinResult()) {
             case Battle.WIN_RESULT_OWNER_WIN:
-                mChallengerKo.setVisibility(VISIBLE);
+                mPlayersView.challengerKo();
                 break;
             case Battle.WIN_RESULT_CHALLENGER_WIN:
-                mOwnerKo.setVisibility(VISIBLE);
+                mPlayersView.ownerOk();
                 break;
         }
     }
 
     private void updatePlayersAvatarName() {
-        GlideApp.with(getContext())
-                .load(mBattle.getLaunchUserPortrait())
-                .circleCrop()
-                .placeholder(R.drawable.ic_default_avatar_big)
-                .into(mOwnerAvatar);
-        mOwnerName.setText(mBattle.getLaunchUserName());
-
-        GlideApp.with(getContext())
-                .load(mBattle.getAgainstUserPortrait())
-                .circleCrop()
-                .placeholder(R.drawable.ic_default_avatar_big)
-                .into(mChallengerAvatar);
-        mChallengerName.setText(mBattle.getAgainstUserName());
+        mPlayersView
+                .ownerAvatar(getContext(), mBattle.getLaunchUserPortrait())
+                .ownerName(mBattle.getLaunchUserName())
+                .challengerAvatar(getContext(), mBattle.getAgainstUserPortrait())
+                .challengerName(mBattle.getAgainstUserName());
     }
 
     public void setPraise(int ownerPraise, int challengerPraise) {
         if (mBattleStatus != BattleStatus.STARTED_OBSERVER) {
-            String ownerPraiseNumber = ownerPraise > 999 ? getContext().getString(R.string.number999)
-                    : String.valueOf(ownerPraise);
-            String challengerPraiseNumber = challengerPraise > 999 ? getContext().getString(R.string.number999)
-                    : String.valueOf(challengerPraise);
-            mOwnerPraise.setText(
-                    getContext().getString(R.string._support, String.valueOf(ownerPraiseNumber)));
-            mChallengerPraise.setText(
-                    getContext().getString(R.string._support, String.valueOf(challengerPraiseNumber)));
+            mPlayersView
+                    .ownerPraise(getContext(), ownerPraise)
+                    .challengerPraise(getContext(), challengerPraise);
         } else {
             mPraiseOwner.setPraise(ownerPraise);
             mPraiseChallenger.setPraise(challengerPraise);
@@ -320,7 +370,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
     }
 
     public void setBattleProfit(double ownerProfit, double challengerProfit) {
-        mBattleProgress.setBattleProfit(ownerProfit, challengerProfit);
+        mPlayersView.battleProgress(ownerProfit, challengerProfit);
     }
 
     public void setOwnerOrder(TradeOrder ownerOrder) {

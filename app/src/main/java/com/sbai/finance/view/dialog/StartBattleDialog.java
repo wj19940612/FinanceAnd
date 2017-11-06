@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.view.WaveView;
 import com.sbai.glide.GlideApp;
 
 /**
@@ -16,43 +15,47 @@ import com.sbai.glide.GlideApp;
  * <p>
  * 开始对战的倒数两秒弹窗
  */
-public class StartGameDialog extends BaseDialog {
+public class StartBattleDialog extends BaseDialog {
 
     public interface OnDismissListener {
         void onDismiss();
     }
 
-    public StartGameDialog(Activity activity) {
+    public StartBattleDialog(Activity activity) {
         super(activity);
     }
 
-    public static void get(Activity activity, String url, OnDismissListener onDismissListener) {
+    public static void get(Activity activity,
+                           String ownerAvatarUrl, String ownerNameText,
+                           String challengerAvatarUrl, String challengerNameText,
+                           OnDismissListener onDismissListener) {
 
         setCurrentDialog(DIALOG_START_GAME);
 
-        View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_fragment_start_match, null);
+        View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_start_battle, null);
 
-        TextView title = (TextView) customView.findViewById(R.id.message);
-        title.setText(activity.getString(R.string.title_quick_join_battle));
-
-        WaveView mMatchLoading = (WaveView) customView.findViewById(R.id.matchLoading);
-        mMatchLoading.setVisibility(View.GONE);
-        mMatchLoading.stop();
-
-        ImageView matchHead = (ImageView) customView.findViewById(R.id.matchHead);
+        TextView challengerName = (TextView) customView.findViewById(R.id.challengerName);
+        ImageView challengerAvatar = (ImageView) customView.findViewById(R.id.challengerAvatar);
+        TextView ownerName = (TextView) customView.findViewById(R.id.ownerName);
+        ImageView ownerAvatar = (ImageView) customView.findViewById(R.id.ownerAvatar);
 
         GlideApp.with(activity)
-                .load(url)
+                .load(ownerAvatarUrl)
                 .placeholder(R.drawable.ic_default_avatar_big)
                 .circleCrop()
-                .into(matchHead);
-        TextView cancel = (TextView) customView.findViewById(R.id.cancel);
-        cancel.setText("");
-        cancel.setBackgroundResource(android.R.color.white);
+                .into(ownerAvatar);
+        GlideApp.with(activity)
+                .load(challengerAvatarUrl)
+                .placeholder(R.drawable.ic_default_avatar_big)
+                .circleCrop()
+                .into(challengerAvatar);
+
+        ownerName.setText(ownerNameText);
+        challengerName.setText(challengerNameText);
 
         TextView message = (TextView) customView.findViewById(R.id.message);
 
-        StartMatchDialog.single(activity)
+        StartBattleDialog.single(activity)
                 .setCancelableOnBackPress(false)
                 .setCancelableOnTouchOutside(false)
                 .setCustomView(customView)
@@ -67,7 +70,7 @@ public class StartGameDialog extends BaseDialog {
             public void onTick(long millisUntilFinished) {
                 int count = (int) (millisUntilFinished / 1000);
                 if (count == 0) return;
-                message.setText(activity.getString(R.string.desc_match_success, count));
+                message.setText(activity.getString(R.string.match_success_x_seconds_start_battle, count));
             }
 
             @Override
