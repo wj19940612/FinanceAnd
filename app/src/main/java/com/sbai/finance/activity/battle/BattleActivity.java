@@ -474,7 +474,8 @@ public class BattleActivity extends BaseActivity {
                 content = getString(R.string.return_reward);
             } else {
                 String coinType = getCoinType();
-                boolean win = (mBattleStatus == OVER_OWNER) && (mBattle.getWinResult() == Battle.WIN_RESULT_OWNER_WIN);
+                boolean win = (mBattleStatus == OVER_OWNER && mBattle.getWinResult() == Battle.WIN_RESULT_OWNER_WIN)
+                        || (mBattleStatus == OVER_CHALLENGER && mBattle.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN);
                 if (win) {
                     winLoss = BattleResultDialog.GAME_RESULT_WIN;
                     content = "+" + (mBattle.getReward() - (int) mBattle.getCommission()) + coinType;
