@@ -43,17 +43,19 @@
                     android:text="@string/futures"
                     android:textColor="@color/unluckyText"
                     android:textSize="15sp"/>
-
-                <TextView
+                <!--android:background="@drawable/bg_fight_text"-->
+                <com.sbai.finance.view.BgShadowTextView
                     android:id="@+id/chooseFutures"
                     android:layout_width="154dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
-                    android:background="@drawable/bg_fight_text"
+
                     android:gravity="center"
                     android:text="@string/choose_futures"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    app:bgEndColor="#EF6D6A"
+                    app:bgStartColor="#F8DEA3"/>
             </LinearLayout>
 
             <LinearLayout

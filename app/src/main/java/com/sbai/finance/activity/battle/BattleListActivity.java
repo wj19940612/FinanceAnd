@@ -93,7 +93,6 @@ public class BattleListActivity extends BaseActivity implements
     TextView mCurrentBattleBtn;
 
     private ImageView mAvatar;
-    private TextView mIntegral;
     private TextView mIngot;
     private TextView mRecharge;
     private VersusListAdapter mVersusListAdapter;
@@ -161,20 +160,42 @@ public class BattleListActivity extends BaseActivity implements
     private void initTitleBar() {
         View view = mTitleBar.getCustomView();
         mAvatar = (ImageView) view.findViewById(R.id.avatar);
-        mIntegral = (TextView) view.findViewById(R.id.integral);
         mIngot = (TextView) view.findViewById(R.id.ingot);
         mRecharge = (TextView) view.findViewById(R.id.recharge);
+        TextView myBattleResult = (TextView) view.findViewById(R.id.myBattleResult);
         mRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                umengEventCount(UmengCountEventId.BATTLE_HALL_RECHARGE);
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), WalletActivity.class).execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
+                openWalletPage();
             }
         });
+        mIngot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openWalletPage();
+            }
+        });
+        myBattleResult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lookBattleResult();
+            }
+        });
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lookBattleRule();
+            }
+        });
+    }
+
+    private void openWalletPage() {
+        umengEventCount(UmengCountEventId.BATTLE_HALL_RECHARGE);
+        if (LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), WalletActivity.class).execute();
+        } else {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
     }
 
     private void openRechargePage(Battle currentBattle) {
@@ -198,8 +219,6 @@ public class BattleListActivity extends BaseActivity implements
     private void initListHeaderAndFooter() {
         FrameLayout header = (FrameLayout) getLayoutInflater().inflate(R.layout.list_header_battle, null);
         GifImageView battleBanner = (GifImageView) header.findViewById(R.id.battleBanner);
-        TextView checkBattleRecord = (TextView) header.findViewById(R.id.checkBattleRecord);
-        TextView battleRule = (TextView) header.findViewById(R.id.battleRule);
 
         try {
             mGifFromResource = new GifDrawable(getResources(), R.drawable.battle_banner);
@@ -208,32 +227,6 @@ public class BattleListActivity extends BaseActivity implements
             e.printStackTrace();
         }
 
-        checkBattleRecord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                umengEventCount(UmengCountEventId.BATTLE_HALL_CHECK_RECODE);
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), BattleRecordListActivity.class).execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-            }
-        });
-        battleRule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                umengEventCount(UmengCountEventId.BATTLE_HALL_DUEL_RULES);
-                Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BATTLE).setTag(TAG)
-                        .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
-                            @Override
-                            protected void onRespSuccessData(final ArticleProtocol data) {
-                                BattleRuleDialogFragment
-                                        .newInstance(data.getTitle(), data.getContent())
-                                        .showAllowingStateLoss(getSupportFragmentManager());
-                            }
-                        }).fire();
-            }
-        });
         mListView.addHeaderView(header);
         //add footer
         View view = getLayoutInflater().inflate(R.layout.footer_battle_list, null);
@@ -244,6 +237,28 @@ public class BattleListActivity extends BaseActivity implements
             }
         });
         mListView.addFooterView(view);
+    }
+
+    private void lookBattleRule() {
+        umengEventCount(UmengCountEventId.BATTLE_HALL_DUEL_RULES);
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BATTLE).setTag(TAG)
+                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
+                    @Override
+                    protected void onRespSuccessData(final ArticleProtocol data) {
+                        BattleRuleDialogFragment
+                                .newInstance(data.getTitle(), data.getContent())
+                                .showAllowingStateLoss(getSupportFragmentManager());
+                    }
+                }).fire();
+    }
+
+    private void lookBattleResult() {
+        umengEventCount(UmengCountEventId.BATTLE_HALL_CHECK_RECODE);
+        if (LocalUser.getUser().isLogin()) {
+            Launcher.with(getActivity(), BattleRecordResultListActivity.class).execute();
+        } else {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
     }
 
     private void initListView() {
@@ -290,7 +305,6 @@ public class BattleListActivity extends BaseActivity implements
                         if (data.getGameStatus() != item.getGameStatus()) {
                             item.setWinResult(data.getWinResult());
                             item.setGameStatus(data.getGameStatus());
-                            item.setEndTime(data.getEndTime());
                             mVersusListAdapter.notifyDataSetChanged();
                         }
                         Launcher.with(getActivity(), BattleActivity.class)
@@ -311,7 +325,6 @@ public class BattleListActivity extends BaseActivity implements
         } else {
             mCurrentBattleBtn.setVisibility(View.GONE);
             mCreateAndMatchArea.setVisibility(View.VISIBLE);
-            mIntegral.setText(FinanceUtil.formatWithScale(0));
             mIngot.setText(FinanceUtil.formatWithScaleNoZero(0));
         }
         startScheduleJob(5 * 1000);
@@ -539,8 +552,7 @@ public class BattleListActivity extends BaseActivity implements
 
     private void updateUserFund(UserFundInfo data) {
         if (data == null) return;
-        mIntegral.setText(StrFormatter.getFormIntegrate(data.getCredit()));
-        mIngot.setText(getString(R.string.number_ge, StrFormatter.getFormIngot(data.getYuanbao())));
+        mIngot.setText(getString(R.string.battle_list_ingot_number, StrFormatter.formIngotNumber(data.getYuanbao())));
     }
 
     private void updateAvatar() {
@@ -582,8 +594,6 @@ public class BattleListActivity extends BaseActivity implements
                 if (LocalUser.getUser().isLogin()) {
 
                     Launcher.with(getActivity(), ChooseFuturesActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, "")
-                            .putExtra(ExtraKeys.USER_FUND, mUserFundInfo)
                             .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -896,41 +906,75 @@ public class BattleListActivity extends BaseActivity implements
     }
 
 
-    static class VersusListAdapter extends ArrayAdapter<Battle> {
-        interface Callback {
-            void onClick(Battle item);
-        }
+    public static class VersusListAdapter extends ArrayAdapter<Battle> {
 
-        private Callback mCallback;
+        private static final int BATTLE_STATUS_WAITING = 0;
+        private static final int BATTLE_STATUS_PROCEED = 1;
 
-        public void setCallback(Callback callback) {
-            mCallback = callback;
-        }
+        private Context mContext;
 
         public VersusListAdapter(@NonNull Context context) {
             super(context, 0);
+            mContext = context;
         }
 
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            int itemViewType = getItemViewType(position);
             ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_future_versus, parent, false);
-                viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
+            WaitingBattleViewHolder waitingBattleViewHolder;
+            switch (itemViewType) {
+                case BATTLE_STATUS_WAITING:
+                    if (convertView == null) {
+                        convertView = LayoutInflater.from(mContext).inflate(R.layout.row_future_versus_waiting, parent, false);
+                        waitingBattleViewHolder = new WaitingBattleViewHolder(convertView);
+                        convertView.setTag(waitingBattleViewHolder);
+                    } else {
+                        waitingBattleViewHolder = (WaitingBattleViewHolder) convertView.getTag();
+                    }
+                    waitingBattleViewHolder.bindDataWithView(getItem(position), mContext);
+                    break;
+                case BATTLE_STATUS_PROCEED:
+                    if (convertView == null) {
+                        convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_future_versus_proceed, parent, false);
+                        viewHolder = new ViewHolder(convertView);
+                        convertView.setTag(viewHolder);
+                    } else {
+                        viewHolder = (ViewHolder) convertView.getTag();
+                    }
+                    viewHolder.bindDataWithView(getItem(position), getContext());
+                    break;
             }
-            viewHolder.bindDataWithView(getItem(position), getContext(), mCallback);
+
             return convertView;
         }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            Battle battle = getItem(position);
+            if (battle != null) {
+                if (battle.isBattleStarted()) {
+                    return BATTLE_STATUS_WAITING;
+                }
+                return BATTLE_STATUS_PROCEED;
+            }
+            return super.getItemViewType(position);
+        }
+
 
         static class ViewHolder {
             @BindView(R.id.createAvatar)
             ImageView mCreateAvatar;
             @BindView(R.id.createKo)
             ImageView mCreateKo;
+            @BindView(R.id.createAvatarRL)
+            FrameLayout mCreateAvatarRL;
             @BindView(R.id.createName)
             TextView mCreateName;
             @BindView(R.id.varietyName)
@@ -943,18 +987,23 @@ public class BattleListActivity extends BaseActivity implements
             ImageView mAgainstAvatar;
             @BindView(R.id.againstKo)
             ImageView mAgainstKo;
+            @BindView(R.id.againstAvatarFL)
+            FrameLayout mAgainstAvatarFL;
             @BindView(R.id.againstName)
             TextView mAgainstName;
+            @BindView(R.id.rootLL)
+            LinearLayout mRootLL;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindDataWithView(final Battle item, Context context, final Callback callback) {
+            private void bindDataWithView(final Battle item, Context context) {
                 mVarietyName.setText(item.getVarietyName());
-                GlideApp.with(context).load(item.getLaunchUserPortrait())
+
+                GlideApp.with(context)
                         .load(item.getLaunchUserPortrait())
-                        .placeholder(R.drawable.ic_default_avatar_big)
+                        .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop()
                         .into(mCreateAvatar);
                 mCreateName.setText(item.getLaunchUserName());
@@ -962,17 +1011,20 @@ public class BattleListActivity extends BaseActivity implements
                 String reward = "";
                 switch (item.getCoinType()) {
                     case Battle.COIN_TYPE_INGOT:
-                        reward = item.getReward() + context.getString(R.string.ingot);
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.ingot));
                         break;
                     case Battle.COIN_TYPE_CASH:
-                        reward = item.getReward() + context.getString(R.string.cash);
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.cash));
                         break;
                     case Battle.COIN_TYPE_SCORE:
-                        reward = item.getReward() + context.getString(R.string.integral);
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.integral));
                         break;
                 }
+                String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);
+
                 switch (item.getGameStatus()) {
                     case Battle.GAME_STATUS_CREATED:
+                        mRootLL.setSelected(true);
                         mDepositAndTime.setText(reward + " " + DateUtil.getMinutes(item.getEndline()));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
@@ -983,7 +1035,7 @@ public class BattleListActivity extends BaseActivity implements
                         mProgress.showScoreProgress(0, 0, true);
                         break;
                     case Battle.GAME_STATUS_STARTED:
-                        mDepositAndTime.setText(reward + " " + context.getString(R.string.versusing));
+                        mRootLL.setSelected(true);
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
@@ -995,7 +1047,7 @@ public class BattleListActivity extends BaseActivity implements
                         mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
                         break;
                     case Battle.GAME_STATUS_END:
-                        mDepositAndTime.setText(reward + " " + context.getString(R.string.versus_end));
+                        mRootLL.setSelected(false);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
@@ -1019,5 +1071,59 @@ public class BattleListActivity extends BaseActivity implements
             }
         }
 
+        static class WaitingBattleViewHolder {
+            @BindView(R.id.createAvatar)
+            ImageView mCreateAvatar;
+            @BindView(R.id.createKo)
+            ImageView mCreateKo;
+            @BindView(R.id.createName)
+            TextView mCreateName;
+            @BindView(R.id.varietyName)
+            TextView mVarietyName;
+            @BindView(R.id.depositAndTime)
+            TextView mDepositAndTime;
+            @BindView(R.id.againstAvatar)
+            ImageView mAgainstAvatar;
+            @BindView(R.id.againstKo)
+            ImageView mAgainstKo;
+            @BindView(R.id.againstName)
+            TextView mAgainstName;
+
+            WaitingBattleViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
+
+            public void bindDataWithView(Battle item, Context context) {
+                mVarietyName.setText(item.getVarietyName());
+                GlideApp.with(context).load(item.getLaunchUserPortrait())
+                        .load(item.getLaunchUserPortrait())
+                        .placeholder(R.drawable.ic_default_avatar_big)
+                        .circleCrop()
+                        .into(mCreateAvatar);
+                mCreateName.setText(item.getLaunchUserName());
+                mAgainstName.setText(item.getAgainstUserName());
+                String reward = "";
+                switch (item.getCoinType()) {
+                    case Battle.COIN_TYPE_INGOT:
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.ingot));
+                        break;
+                    case Battle.COIN_TYPE_CASH:
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.cash));
+                        break;
+                    case Battle.COIN_TYPE_SCORE:
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.integral));
+                        break;
+                }
+                String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);
+                mVarietyName.setText(varietyReward);
+                mDepositAndTime.setText(DateUtil.getMinutes(item.getEndline()));
+                mCreateKo.setVisibility(View.GONE);
+                mAgainstKo.setVisibility(View.GONE);
+                mAgainstAvatar.setImageDrawable(null);
+                mAgainstAvatar.setImageResource(R.drawable.btn_join_battle);
+                mAgainstAvatar.setClickable(false);
+                mAgainstName.setText(context.getString(R.string.join_versus));
+            }
+        }
     }
 }

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/common_padding"
+              android:minHeight="80dp"
+              android:orientation="horizontal"
+              android:paddingLeft="@dimen/common_padding"
+              android:paddingRight="@dimen/common_padding">
+
+    <LinearLayout
+        android:id="@+id/rootLL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_row_battle_list"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="7"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp">
+
+            <FrameLayout
+                android:id="@+id/createAvatarRL"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_battle_avatar">
+
+                <ImageView
+                    android:id="@+id/createAvatar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_battle_avatar"
+                    android:clickable="false"
+                    tools:src="@drawable/btn_join_battle"/>
+
+                <ImageView
+                    android:id="@+id/createKo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_versus_ko"
+                    android:visibility="visible"/>
+
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/createName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                tools:text="乐米"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="10"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/varietyName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:visibility="visible"
+                tools:text="没原油"/>
+
+            <com.sbai.finance.view.BattleProgress
+                android:id="@+id/progress"
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/depositAndTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="bottom|center"
+                android:textColor="#9c9c9c"
+                android:textSize="10sp"
+                tools:text="32分钟"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="7"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp">
+
+            <FrameLayout
+                android:id="@+id/againstAvatarFL"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_battle_avatar">
+
+                <ImageView
+                    android:id="@+id/againstAvatar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    tools:src="@drawable/btn_join_battle"/>
+
+                <ImageView
+                    android:id="@+id/againstKo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_versus_ko"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/againstName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                tools:text="hah"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -32,6 +32,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.view.BgShadowTextView;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class CreateBattleActivity extends BaseActivity {
     public static final int REQ_CODE_CHOOSE_FUTURES = 1001;
     public static final String CREATE_SUCCESS_ACTION = "CREATE_SUCCESS_ACTION";
     @BindView(R.id.chooseFutures)
-    TextView mChooseFutures;
+    BgShadowTextView mChooseFutures;
     @BindView(ingotWar)
     TextView mIngotWar;
     @BindView(R.id.integralWar)
@@ -289,7 +290,7 @@ public class CreateBattleActivity extends BaseActivity {
 
         static class ViewHolder {
             @BindView(R.id.choice)
-            TextView mChoice;
+            BgShadowTextView mChoice;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -297,11 +298,11 @@ public class CreateBattleActivity extends BaseActivity {
 
             public void bindingData(String bounty, int position, int checked) {
                 mChoice.setText(bounty);
-                mChoice.setSelected(false);
+//                mChoice.setSelected(false);
                 if (checked == position) {
                     mChoice.setSelected(true);
                 } else {
-                    mChoice.setEnabled(false);
+                    mChoice.setSelected(false);
                 }
             }
         }
@@ -337,7 +338,7 @@ public class CreateBattleActivity extends BaseActivity {
 
         static class ViewHolder {
             @BindView(R.id.choice)
-            TextView mChoice;
+            BgShadowTextView mChoice;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -345,11 +346,11 @@ public class CreateBattleActivity extends BaseActivity {
 
             public void bindingData(Context context, String duration, int position, int checked) {
                 mChoice.setText(context.getString(R.string.minute, duration));
-                mChoice.setSelected(false);
+//                mChoice.setSelected(false);
                 if (checked == position) {
                     mChoice.setSelected(true);
                 } else {
-                    mChoice.setEnabled(false);
+                    mChoice.setSelected(false);
                 }
             }
         }
@@ -382,7 +383,7 @@ public class CreateBattleActivity extends BaseActivity {
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
-                        if (failedResp.getCode() == 2201) {
+                        if (failedResp.isInsufficientFund()) {
                             SmartDialog.with(getActivity(), getString(R.string.balance_is_not_enough))
                                     .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
                                         @Override
@@ -406,13 +407,11 @@ public class CreateBattleActivity extends BaseActivity {
             case Battle.COIN_TYPE_INGOT:
                 Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
                         .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
-                        .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0)
                         .execute();
                 break;
             case Battle.COIN_TYPE_SCORE:
                 Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
                         .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_SCORE)
-                        .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? Double.parseDouble(mUserFundInfo.getYuanbao() + "") : 0)
                         .execute();
                 break;
         }

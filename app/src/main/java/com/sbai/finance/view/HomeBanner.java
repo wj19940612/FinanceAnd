@@ -1,6 +1,9 @@
 package com.sbai.finance.view;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -34,6 +37,7 @@ public class HomeBanner extends FrameLayout {
 
     private AdvertisementAdapter mAdapter;
     private int mInnerCounter;
+    private boolean mIsRectIndicator;
 
     public interface OnViewClickListener {
         void onBannerClick(Banner information);
@@ -52,11 +56,25 @@ public class HomeBanner extends FrameLayout {
 
     public HomeBanner(Context context, AttributeSet attrs) {
         super(context, attrs);
+        processAttrs(attrs);
         init();
     }
 
+    private void processAttrs(AttributeSet attrs) {
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.HomeBanner);
+
+        mIsRectIndicator = typedArray.getBoolean(R.styleable.HomeBanner_isRectIndicator, false);
+
+        typedArray.recycle();
+    }
+
     private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.home_banner, this, true);
+        //需要方形的indicator
+        if (mIsRectIndicator) {
+            LayoutInflater.from(getContext()).inflate(R.layout.new_home_banner, this, true);
+        } else {
+            LayoutInflater.from(getContext()).inflate(R.layout.home_banner, this, true);
+        }
         ButterKnife.bind(this);
         mInnerCounter = 1;
     }
@@ -108,6 +126,10 @@ public class HomeBanner extends FrameLayout {
     }
 
     public void setHomeAdvertisement(List<Banner> informationList) {
+        if (informationList.size() == 0) {
+            setVisibility(View.GONE);
+            return;
+        }
         filterEmptyInformation(informationList);
 
         if (!informationList.isEmpty()) {

@@ -11,11 +11,9 @@ public class Resp<T> {
 
     // 验证码请求过多 需要图片验证码
     public static final int CODE_IMAGE_AUTH_CODE_REQUIRED = 215;
-    // 资金不足
-    public static final int CODE_FUND_NOT_ENOUGH = 704;
     // 自选重复添加
     public static final int CODE_REPEAT_ADD = 701;
-    // 聚宝盆兑换资金不足
+    // 打赏或者充值或者参加竞赛  元宝不够
     public static final int CODE_EXCHANGE_FUND_IS_NOT_ENOUGH = 2201;
     // 兑换项目不存在
     public static final int CODE_EXCHANGE_ITEM_IS_GONE = 2204;
@@ -25,6 +23,13 @@ public class Resp<T> {
     public static final int CODE_SAFETY_INPUT_ERROR = 2203;
     //未绑定微信
     public static final int CODE_NO_BIND_WE_CHAT = 214;
+    public static final int SUCCESS = 200;
+    //竞技场匹配对战，没有在对战开放时间的错误code
+    public static final int ACTIVITY_IS_NOT_YET_OPEN = 4701;
+
+    //没到兑换时间或者兑换时间已经结束 5114
+    public static final int CODE_ARENA_IS_OVER_OR_NOT_IS_EXCHANGE_TIME = 5114;
+
 
     private int code;
     private String msg;
@@ -65,6 +70,10 @@ public class Resp<T> {
 
     public boolean isTokenExpired() {
         return code == 503;
+    }
+
+    public boolean isInsufficientFund() {
+        return code == CODE_EXCHANGE_FUND_IS_NOT_ENOUGH;
     }
 
     /**

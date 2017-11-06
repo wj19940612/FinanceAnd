@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_7_24"
+        android:layout_width="84dp"
+        android:layout_height="18dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="22dp"
+        android:src="@drawable/home_title_7x24"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="22dp"
+        android:layout_toRightOf="@id/img_7_24"
+        android:gravity="center"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"
+        android:text="实时快讯"
+        />
+
+    <TextView
+        android:id="@+id/moreBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="12dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="top|right"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"
+        android:text="更多"
+        android:includeFontPadding="false"
+        android:drawableRight="@drawable/ic_little_right_arrow"
+        android:drawablePadding="3dp"
+        />
+
+    <View
+        android:id="@+id/topLine"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/img_7_24"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:background="@color/split"
+        />
+
+    <LinearLayout
+        android:id="@+id/contentLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="344dp"
+        android:layout_below="@+id/topLine"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:orientation="vertical"/>
+</merge>

@@ -27,7 +27,10 @@ android {
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "mips64", "x86", "x86_64"
         }
+        flavorDimensions("app")
     }
+
+
 
     java.util.Properties properties = new Properties();
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
@@ -116,24 +119,24 @@ android {
         }
 
         // channel use default (prod) configuration
-        tencent {}
-        m360 {}
-        xiaomi {}
-        baidu {}
-        huawei {}
-        vivo {}
-        oppo {}
-        others {}
-        baiduapk1 {}
-        baiduapk2 {}
-        baiduapk3 {}
-        baiduapk4 {}
-        baiduapk5 {}
-        baiduapk6 {}
-        baiduapk7 {}
-        baiduapk8 {}
-        baiduapk9 {}
-        baiduapk10 {}
+//        tencent {}
+//        m360 {}
+//        xiaomi {}
+//        baidu {}
+//        huawei {}
+//        vivo {}
+//        oppo {}
+//        others {}
+//        baiduapk1 {}
+//        baiduapk2 {}
+//        baiduapk3 {}
+//        baiduapk4 {}
+//        baiduapk5 {}
+//        baiduapk6 {}
+//        baiduapk7 {}
+//        baiduapk8 {}
+//        baiduapk9 {}
+//        baiduapk10 {}
     }
 
     productFlavors.all { flavor ->

@@ -6,6 +6,7 @@ package com.sbai.finance;
 public interface ExtraKeys {
 
     String PAGE_TYPE = "page_type";
+    String PAGE_INDEX="page_index";
     String PHONE = "phone";
     String HAS_SECURITY_PSD = "has_security_psd";
     String HAS_LOGIN_PSD = "has_login_psd";
@@ -37,9 +38,16 @@ public interface ExtraKeys {
     String QUESTION_ID = "question_id";
 
     String PLAYING_ID = "playing_id";
-    String PLAYING_URL= "playing_url";
+    String PLAYING_URL = "playing_url";
     String PLAYING_AVATAR = "playing_avatar";
     String IS_FROM_MISS_TALK = "is_from_miss_talk";
 
     String PUSH_FEEDBACK = "push_feedback";
+
+    String BATTLE_HISTORY = "battle_history";
+
+    String ARENA_EXCHANGE_AWARD_ID = "arena_exchange_award";
+
+    String ARENA_VIRTUAL_AWARD_NAME = "Arena_virtual_award_name";
+
 }

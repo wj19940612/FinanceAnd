@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.arena.ArenaVirtualAwardNameActivity">
+
+    <ImageView
+        android:id="@+id/dialogDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:src="@drawable/ic_popup_delete"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_rounded"
+        android:orientation="vertical">
+
+        <com.sbai.finance.view.TitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="20dp"
+            app:backFeature="true"
+            app:titleText="@string/choose_skin"
+            app:titleTextColor="@color/blackPrimary"
+            app:titleTextSize="16sp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="94dp"
+            android:layout_marginLeft="20dp"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -14,16 +14,17 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.fragment.DiscoveryFragment;
+import com.sbai.finance.fragment.ArenaFragment;
+import com.sbai.finance.fragment.HomePageFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
-import com.sbai.finance.fragment.TrainingFragment;
 import com.sbai.finance.fragment.dialog.system.StartDialogFragment;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
 import com.sbai.finance.model.ActivityModel;
 import com.sbai.finance.model.AppVersion;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -159,11 +160,11 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                                     .setOnDismissListener(new UpdateVersionDialogFragment.OnDismissListener() {
                                         @Override
                                         public void onDismiss() {
-                                             requestStartActivities();
+                                            requestStartActivities();
                                         }
                                     })
                                     .show(getSupportFragmentManager());
-                        }else {
+                        } else {
                             requestStartActivities();
                         }
                     }
@@ -172,6 +173,34 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                     public void onFailure(VolleyError volleyError) {
                         super.onFailure(volleyError);
                         requestStartActivities();
+                    }
+                })
+                .fireFree();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (LocalUser.getUser().isLogin()) {
+            requestUserFund();
+        }
+    }
+
+    private void requestUserFund() {
+        Client.requestUserFundInfo()
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
+                    @Override
+                    protected void onRespSuccessData(UserFundInfo data) {
+                        ArenaFragment arenaFragment = (ArenaFragment) mMainFragmentsAdapter.getFragment(1);
+                        if (arenaFragment != null) {
+                            arenaFragment.updateIngotNumber(data);
+                        }
+
+                        MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(3);
+                        if (mineFragment != null) {
+                            mineFragment.updateIngotNumber(data);
+                        }
                     }
                 })
                 .fireFree();
@@ -270,11 +299,11 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new TrainingFragment();
+                    return new HomePageFragment();
                 case 1:
-                    return new MissTalkFragment();
+                    return new ArenaFragment();
                 case 2:
-                    return new DiscoveryFragment();
+                    return new MissTalkFragment();
                 case 3:
                     return new MineFragment();
             }

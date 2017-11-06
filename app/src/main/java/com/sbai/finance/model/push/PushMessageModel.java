@@ -1,34 +1,13 @@
 package com.sbai.finance.model.push;
 
 import com.google.gson.annotations.SerializedName;
+import com.sbai.finance.model.system.JsOpenAppPageType;
 
 /**
  * Created by ${wangJie} on 2017/5/4.
  */
 
-public class PushMessageModel {
-
-    private static final int CLASSIFY_SYS = 0;
-    private static final int CLASSIFY_USER = 1;
-
-    //日报 大事件
-    public static final int PUSH_TYPE_DAILY_REPORT = 0;
-    //自习室
-    public static final int PUSH_TYPE_SELF_STUDY_ROOM = 3;
-    // 关注的小姐姐回复问题了  后台推送过来的
-    public static final int PUSH_TYPE_ATTENTION_MISS_ANSWERED_FROM_BACKGROUND = 4;
-    //训练
-    public static final int PUSH_TYPE_TRAINING = 5;
-    //活动
-    public static final int PUSH_TYPE_ACTIVITY = 6;
-    //模块
-    public static final int PUSH_TYPE_MODULE = 7;
-
-    //意见反馈
-    public static final int PUSH_TYPE_FEED_BACK_REPLY = 8;
-    //关注的小姐姐回复问题，自动推送
-    public static final int PUSH_TYPE_ATTENTION_MISS_ANSWERED = 9;
-
+public class PushMessageModel implements JsOpenAppPageType {
 
 //    "msg":"对战匹配成功,赶紧加入吧！","classify":2,"data":"hall","createTime":1499052945482,"title":"对战匹配成功","type":1
 
@@ -60,7 +39,7 @@ public class PushMessageModel {
 
 
     public boolean isDailyReportDetail() {
-        return getClassify() == PushMessageModel.CLASSIFY_SYS && getType() == PushMessageModel.PUSH_TYPE_DAILY_REPORT;
+        return getClassify() == DAILY_REPORT && getType() == DAILY_REPORT;
     }
 
 

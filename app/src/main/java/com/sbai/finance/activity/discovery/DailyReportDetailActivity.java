@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -89,6 +90,8 @@ public class DailyReportDetailActivity extends BaseActivity {
     ScrollView mScrollView;
     @BindView(R.id.collect)
     TextView mCollect;
+    @BindView(R.id.imageArea)
+    RelativeLayout mImageArea;
 
     private boolean mLoadSuccess;
     protected String mPageUrl;
@@ -144,9 +147,14 @@ public class DailyReportDetailActivity extends BaseActivity {
 
 
     private void updateDailyReportData(DailyReport data) {
-        Glide.with(getActivity())
-                .load(data.getCoverUrl())
-                .into(mImage);
+        if (TextUtils.isEmpty(data.getCoverUrl())) {
+            mImageArea.setVisibility(View.GONE);
+        } else {
+            mImageArea.setVisibility(View.VISIBLE);
+            Glide.with(getActivity())
+                    .load(data.getCoverUrl())
+                    .into(mImage);
+        }
         mCollect.setSelected(data.isCollected());
         mTitleContent = data.getTitle();
         mShareImgUrl = data.getCoverUrl();
@@ -159,8 +167,9 @@ public class DailyReportDetailActivity extends BaseActivity {
             mTitleInfo.setVisibility(View.VISIBLE);
             mClick.setText(getString(R.string.read_count, data.getClicks()));
             mTitle.setText(data.getTitle());
-            mSourceAndTime.setText(getString(R.string.source_and_time, data.getSource(), DateUtil.formatDefaultStyleTime(data.getCreateTime())));
+            mSourceAndTime.setText(DateUtil.formatDefaultStyleTime(data.getCreateTime()));
             mPureHtml = data.getContent();
+            if (TextUtils.isEmpty(mPureHtml)) return;
             //获取第一段内容
             String content = Html.fromHtml(data.getContent()).toString().trim();
             if (content.indexOf("\n") > -1) {
@@ -214,7 +223,6 @@ public class DailyReportDetailActivity extends BaseActivity {
                 break;
             case R.id.share:
             case R.id.shareArea:
-
                 share();
                 umengEventCount(UmengCountEventId.REPORT_SHARE);
                 break;

@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_white"
-        app:customView="@layout/tb_battle_list"/>
+        app:customView="@layout/tb_battle_list"
+        app:rightImage="@drawable/ic_general_battle_rule"
+        app:rightVisible="true"/>
 
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"

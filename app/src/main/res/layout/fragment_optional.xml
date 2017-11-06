@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/layout_variety_header"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.sbai.finance.view.CustomSwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/addOptional"
+            android:layout_centerInParent="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.sbai.finance.view.slidingListView.SlideListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:headerDividersEnabled="true"
+                    android:visibility="visible"/>
+
+                <TextView
+                    android:id="@+id/empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:drawablePadding="16dp"
+                    android:drawableTop="@drawable/img_no_message"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="150dp"
+                    android:text="@string/no_option"
+                    android:textColor="@color/assistText"
+                    android:textSize="@dimen/list_title_size"
+                    android:visibility="gone"/>
+            </LinearLayout>
+        </com.sbai.finance.view.CustomSwipeRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/addOptional"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="0.5dp"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_optional"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="49dp"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:text="@string/add_option"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

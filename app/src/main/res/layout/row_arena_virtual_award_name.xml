@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:id="@+id/awardName"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="8dp"
+          android:layout_marginRight="20dp"
+          android:background="@drawable/bg_arena_virtual_award"
+          android:gravity="center"
+          android:minHeight="44dp"
+          android:orientation="vertical"
+          android:textColor="@color/arena_virtual_award_name"
+          android:textSize="12sp"
+          tools:text="溺水的鱼_jkdshfjk"/>

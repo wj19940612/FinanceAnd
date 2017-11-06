@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="37dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/home_title_focus"
+        />
+
+    <TextView
+        android:id="@+id/moreBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="14dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:gravity="top|right"
+        android:drawableRight="@drawable/ic_little_right_arrow"
+        android:drawablePadding="3dp"
+        android:includeFontPadding="false"
+        android:textSize="12sp"
+        android:textColor="@color/unluckyText"
+        android:text="更多"
+        />
+
+    <View
+        android:id="@+id/viewLine"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/icon"
+        android:layout_marginTop="11dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="14dp"
+        android:background="@color/split"
+        />
+
+    <RelativeLayout
+        android:id="@+id/rl1"
+        android:layout_width="wrap_content"
+        android:layout_height="112dp"
+        android:layout_below="@id/viewLine"
+        android:layout_marginTop="4dp"
+        android:padding="14dp"
+        >
+
+        <ImageView
+            android:id="@+id/imgView1"
+            android:layout_width="130dp"
+            android:layout_height="84dp"
+            android:scaleType="centerCrop"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            />
+        <TextView
+            android:id="@+id/title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/imgView1"
+            android:layout_marginRight="14dp"
+            android:textSize="16sp"
+            android:textColor="@color/primaryText"
+            android:maxLines="2"
+            android:ellipsize="end"
+            />
+
+        <TextView
+            android:id="@+id/time1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textSize="12sp"
+            android:textColor="@color/unluckyText"
+            />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/viewLine2"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/rl1"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="14dp"
+        android:background="@color/split"
+        />
+
+    <RelativeLayout
+        android:id="@+id/rl2"
+        android:layout_width="wrap_content"
+        android:layout_height="112dp"
+        android:layout_below="@id/viewLine2"
+        android:layout_marginTop="4dp"
+        android:padding="14dp"
+        >
+
+        <ImageView
+            android:id="@+id/imgView2"
+            android:layout_width="130dp"
+            android:layout_height="84dp"
+            android:scaleType="centerCrop"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            />
+        <TextView
+            android:id="@+id/title2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/imgView2"
+            android:layout_marginRight="14dp"
+            android:textSize="16sp"
+            android:textColor="@color/primaryText"
+            android:maxLines="2"
+            android:ellipsize="end"
+            />
+
+        <TextView
+            android:id="@+id/time2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textSize="12sp"
+            android:textColor="@color/unluckyText"
+            />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/viewLine3"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/rl2"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="14dp"
+        android:background="@color/split"
+        />
+
+    <RelativeLayout
+        android:id="@+id/rl3"
+        android:layout_width="wrap_content"
+        android:layout_height="112dp"
+        android:layout_below="@id/viewLine3"
+        android:layout_marginTop="4dp"
+        android:padding="14dp"
+        >
+
+        <ImageView
+            android:id="@+id/imgView3"
+            android:layout_width="130dp"
+            android:layout_height="84dp"
+            android:scaleType="centerCrop"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            />
+        <TextView
+            android:id="@+id/title3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/imgView3"
+            android:layout_marginRight="14dp"
+            android:textSize="16sp"
+            android:textColor="@color/primaryText"
+            android:maxLines="2"
+            android:ellipsize="end"
+            />
+
+        <TextView
+            android:id="@+id/time3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textSize="12sp"
+            android:textColor="@color/unluckyText"
+            />
+
+    </RelativeLayout>
+</merge>

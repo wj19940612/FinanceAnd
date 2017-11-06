@@ -25,6 +25,7 @@ public class DateUtil {
     public static final String FORMAT_SPECIAL_SLASH_NO_HOUR = "yyyy/MM/dd";
     public static final String FORMAT_HOUR_MINUTE = "HH:mm";
     public static final String FORMAT_DATE_HOUR_MINUTE = "dd日 HH:mm";
+    public static final String FORMAT_DATE_ARENA= "yyyy.MM.dd";
 
 
     private static final String TODAY = "今日";
@@ -123,6 +124,22 @@ public class DateUtil {
                 && calendar.get(Calendar.YEAR) == todayCalendar.get(Calendar.YEAR);
     }
 
+    public static boolean isInThisDay(long time, long today) {
+        Date date = new Date(time);
+        Date todayDate = new Date(today);
+        return isInThisDay(date, todayDate);
+    }
+
+    public static boolean isInThisDay(Date date, Date todayDate) {
+        Calendar todayCalendar = Calendar.getInstance();
+        todayCalendar.setTime(todayDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.DATE) == todayCalendar.get(Calendar.DATE)
+                && calendar.get(Calendar.MONTH) == todayCalendar.get(Calendar.MONTH)
+                && calendar.get(Calendar.YEAR) == todayCalendar.get(Calendar.YEAR);
+    }
+
     public static boolean isInThisYear(long time) {
         Date date = new Date(time);
         return isInThisYear(date);
@@ -194,6 +211,12 @@ public class DateUtil {
                 break;
         }
         return result;
+    }
+
+    public static int getDayOfMonth(long time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        return calendar.get(Calendar.DAY_OF_MONTH);
     }
 
     public static String format(long timestamp) {

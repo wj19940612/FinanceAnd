@@ -243,6 +243,9 @@ public class Battle implements Parcelable {
     private int marketPoint;
     */
 
+    //自己加的属性
+    public int type;
+
     //对战正在发起
     public boolean isBattleCreated() {
         return gameStatus == GAME_STATUS_CREATED;
@@ -641,6 +644,14 @@ public class Battle implements Parcelable {
 
     public int getGameType() {
         return gameType;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Override

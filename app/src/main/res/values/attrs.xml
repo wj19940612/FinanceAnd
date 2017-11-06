@@ -10,7 +10,14 @@
         <attr name="point" format="color"/>
         <attr name="selectedPoint" format="color"/>
         <attr name="pointRadius" format="dimension"/>
+        <attr name="pointWidth" format="dimension"/>
+        <attr name="pointHeight" format="dimension"/>
         <attr name="infinite" format="boolean"/>
+        <attr name="isRect" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="HomeBanner">
+        <attr name="isRectIndicator" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="BottomTabs">
@@ -81,6 +88,7 @@
         <attr name="backIcon" format="reference"/>
         <attr name="hasBottomSplitLine"/>
         <attr name="splitLineColor"/>
+        <attr name="leftViewLeftPadding" format="dimension|reference"/>
     </declare-styleable>
 
     <!--圆形的海浪波纹控件-->
@@ -237,4 +245,8 @@
         <attr name="goingBg" format="reference"/>
     </declare-styleable>
 
+    <declare-styleable name="BgShadowTextView">
+        <attr name="bgStartColor" format="reference|color"/>
+        <attr name="bgEndColor" format="color|reference"/>
+    </declare-styleable>
 </resources>
