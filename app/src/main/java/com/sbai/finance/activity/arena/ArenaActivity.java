@@ -30,6 +30,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.battle.BattleHisRecordActivity;
+import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.battle.BattleRecordResultListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
@@ -143,6 +144,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
         ButterKnife.bind(this);
         translucentStatusBar();
         initView();
+        mSwipeRefreshLayout.setEnabled(false);
     }
 
     @Override
@@ -916,8 +918,16 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CODE_FUTURE_BATTLE && resultCode == RESULT_OK) {
-            requestUserLastBattleInfo();
+        if (requestCode == REQ_CODE_FUTURE_BATTLE) {
+            switch (resultCode) {
+                case BattleActivity.RESULT_CODE_FIGHT_AGAIN:
+                    requestUserLastBattleInfo();
+                    break;
+                case BattleActivity.RESULT_CODE_GO_2_NORMAL_BATTLE:
+                    Launcher.with(getActivity(), BattleListActivity.class).execute();
+                    finish();
+                    break;
+            }
         }
         if (requestCode == REQ_CODE_SUBMIT_EXCHANGE_AWARD && resultCode == RESULT_OK) {
             if (LocalUser.getUser().isLogin()) {
