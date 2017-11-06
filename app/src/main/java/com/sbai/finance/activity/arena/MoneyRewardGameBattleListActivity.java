@@ -81,7 +81,7 @@ import butterknife.OnClick;
 
 public class MoneyRewardGameBattleListActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final int REQ_CODE_FUTURE_BATTLE = 375687;
+    private static final int REQ_CODE_FUTURE_BATTLE = 3787;
     private static final int REQ_CODE_SUBMIT_EXCHANGE_AWARD = 8809;
 
     @BindView(R.id.titleBar)
@@ -146,15 +146,15 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
         super.onPostResume();
         if (LocalUser.getUser().isLogin()) {
             requestArenaApplyRule(false);
-            requestArenaActivityAndUserStatus(false);
+            requestArenaActivityAndUserStatus();
             requestUserFundInfo();
             requestUserNowBattle();
         } else {
-            updateUserJoinArenaStatus(false, false);
+            updateUserJoinArenaStatus(false);
         }
     }
 
-    private void requestArenaActivityAndUserStatus(final boolean ifShowUserExchangeDialog) {
+    private void requestArenaActivityAndUserStatus() {
         Client.requestArenaActivityAndUserStatus(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
                 .setIndeterminate(this)
                 .setTag(TAG)
@@ -162,7 +162,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                     @Override
                     protected void onRespSuccessData(ArenaActivityAndUserStatus data) {
                         mArenaActivityAndUserStatus = data;
-                        updateUserJoinArenaStatus(data.isApplyed(), ifShowUserExchangeDialog);
+                        updateUserJoinArenaStatus(data.isApplyed());
                         UserActivityScore userActivityScore = mArenaActivityAndUserStatus.getMyScoreVO();
                         ArenaInfo arenaInfo = mArenaActivityAndUserStatus.getActivityModel();
                         if (arenaInfo != null) {
@@ -177,7 +177,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                 .fireFree();
     }
 
-    private void updateUserJoinArenaStatus(boolean isJoinActivity, boolean ifShowUserExchangeDialog) {
+    private void updateUserJoinArenaStatus(boolean isJoinActivity) {
         if (isJoinActivity) {
             mJoinGameLL.setVisibility(View.GONE);
             mGameInfoRl.setVisibility(View.VISIBLE);
@@ -192,7 +192,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
             });
             //快速匹配出现
             mQuickMatch.setVisibility(View.VISIBLE);
-            updateUserArenaActivityStatus(mArenaActivityAndUserStatus, ifShowUserExchangeDialog);
+            updateUserArenaActivityStatus(mArenaActivityAndUserStatus);
         } else {
             mJoinGameLL.setVisibility(View.VISIBLE);
             mGameInfoRl.setVisibility(View.GONE);
@@ -217,7 +217,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
         mGameCount.setText(battleCount);
     }
 
-    private void updateUserArenaActivityStatus(ArenaActivityAndUserStatus arenaActivityAndUserStatus, boolean ifShowUserExchangeDialog) {
+    private void updateUserArenaActivityStatus(ArenaActivityAndUserStatus arenaActivityAndUserStatus) {
         List<ArenaActivityAwardInfo> arenaActivityAwardInfoList = arenaActivityAndUserStatus.getPrizeModels();
         //如果可兑换数据为空 则代表排名低 没有进入排名
         if (arenaActivityAwardInfoList.isEmpty()) {
@@ -227,17 +227,16 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
             mAward.setVisibility(View.VISIBLE);
             ArenaActivityAwardInfo arenaActivityAwardInfo = arenaActivityAwardInfoList.get(0);
             if (arenaActivityAndUserStatus.userCanExchangeAward()) {
-                mGift.setVisibility(View.VISIBLE);
                 if (arenaActivityAwardInfo != null) {
                     mAward.setText(arenaActivityAwardInfo.getPrizeName());
                 }
                 mPredictGain.setText(R.string.get_award);
             }
-            requestUserExchangeAwardInfo(arenaActivityAwardInfo, ifShowUserExchangeDialog);
+            requestUserExchangeAwardInfo(arenaActivityAwardInfo);
         }
     }
 
-    private void requestUserExchangeAwardInfo(final ArenaActivityAwardInfo arenaActivityAwardInfo, final boolean ifShowUserExchangeDialog) {
+    private void requestUserExchangeAwardInfo(final ArenaActivityAwardInfo arenaActivityAwardInfo) {
         Client.requestUserExchangeAwardInfo(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -245,9 +244,6 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                     @Override
                     protected void onRespSuccessData(List<UserExchangeAwardInfo> data) {
                         updateUserExchangeAwardStatus(arenaActivityAwardInfo, data);
-                        if (data != null && !data.isEmpty() && ifShowUserExchangeDialog) {
-                            showUserExchangeStatusDialog(data);
-                        }
                     }
 
                     @Override
@@ -270,12 +266,10 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                 .show();
     }
 
-    private void showUserExchangeStatusDialog(List<UserExchangeAwardInfo> data) {
-        if (data != null && !data.isEmpty()) {
-            UserExchangeAwardInfo userExchangeAwardInfo = data.get(0);
-            if (userExchangeAwardInfo != null) {
-                UserArenaExchangeResultDialog.single(getActivity(), userExchangeAwardInfo);
-            }
+    private void showUserExchangeResultDialog(List<UserExchangeAwardInfo> data) {
+        UserExchangeAwardInfo userExchangeAwardInfo = data.get(0);
+        if (userExchangeAwardInfo != null) {
+            UserArenaExchangeResultDialog.single(getActivity(), userExchangeAwardInfo).show();
         }
     }
 
@@ -289,13 +283,12 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
             }
             mPredictGain.setText(R.string.get_award);
         } else {
+            mGift.setVisibility(View.GONE);
             mExchangeDetail.setVisibility(View.VISIBLE);
             if (arenaActivityAwardInfo != null) {
                 mAward.setText(arenaActivityAwardInfo.getPrizeName());
             }
             mPredictGain.setText(R.string.get_award);
-            mGift.setVisibility(View.GONE);
-
 
             UserExchangeAwardInfo userExchangeAwardInfo = data.get(0);
             if (userExchangeAwardInfo != null) {
@@ -521,9 +514,34 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                 requestUserRealNameStatus();
                 break;
             case R.id.exchangeDetail:
-                requestArenaActivityAndUserStatus(true);
+                requestUserExchangeDetail();
                 break;
         }
+    }
+
+    private void requestUserExchangeDetail() {
+        Client.requestUserExchangeAwardInfo(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<List<UserExchangeAwardInfo>>, List<UserExchangeAwardInfo>>() {
+                    @Override
+                    protected void onRespSuccessData(List<UserExchangeAwardInfo> data) {
+                        if (data != null && !data.isEmpty()) {
+                            showUserExchangeResultDialog(data);
+                        }
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        super.onRespFailure(failedResp);
+                        if (failedResp.getCode() == Resp.CODE_ARENA_IS_OVER_OR_NOT_IS_EXCHANGE_TIME) {
+                            // 未到时间或者已经结束
+                            mGift.setVisibility(View.GONE);
+                            showOverExchangeTimeDialog();
+                        }
+                    }
+                })
+                .fireFree();
     }
 
     private void requestUserLastBattleInfo() {
@@ -587,11 +605,14 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
         Client.getUserCreditApproveStatus()
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<UserIdentityCardInfo>, UserIdentityCardInfo>() {
+                .setCallback(new Callback<Resp<UserIdentityCardInfo>>() {
+
                     @Override
-                    protected void onRespSuccessData(UserIdentityCardInfo data) {
-                        if (data.getStatus() != null) {
-                            updateUserCreditStatus(data.getStatus());
+                    protected void onRespSuccess(Resp<UserIdentityCardInfo> resp) {
+                        if (resp.getData() != null) {
+                            updateUserCreditStatus(resp.getData().getStatus());
+                        }else {
+                            showIsNotRealNameDialog();
                         }
                     }
                 })
@@ -613,11 +634,12 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
     }
 
     private void showIsNotRealNameDialog() {
-        SmartDialog.single(getActivity(), getString(R.string.you_is_real_name_wait_please_wait))
+        SmartDialog.single(getActivity(), getString(R.string.you_not_real_name_not_can_exchange_ward))
                 .setPositive(R.string.go_approve, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         Launcher.with(getActivity(), CreditApproveActivity.class).execute();
+                        finish();
                     }
                 })
                 .setNegative(R.string.i_see)
@@ -779,7 +801,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        requestArenaActivityAndUserStatus(false);
+                        requestArenaActivityAndUserStatus();
                     }
 
                     @Override
@@ -848,7 +870,7 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
         }
         if (requestCode == REQ_CODE_SUBMIT_EXCHANGE_AWARD && resultCode == RESULT_OK) {
             if (LocalUser.getUser().isLogin()) {
-                requestArenaActivityAndUserStatus(false);
+                requestArenaActivityAndUserStatus();
             }
         }
     }

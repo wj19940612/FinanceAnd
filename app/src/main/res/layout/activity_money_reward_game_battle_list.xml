@@ -41,7 +41,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/arenaTitle"
@@ -76,7 +76,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="51dp"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <TextView
                             android:id="@+id/predictGain"
@@ -97,7 +97,6 @@
                             android:layout_below="@+id/predictGain"
                             android:layout_marginLeft="@dimen/common_padding"
                             android:layout_marginRight="@dimen/common_padding"
-                            android:minWidth="96dp"
                             android:textColor="@color/yellowAssist"
                             android:textSize="16sp"
                             tools:text="@string/award"/>
