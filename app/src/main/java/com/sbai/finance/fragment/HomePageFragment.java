@@ -68,14 +68,11 @@ import static com.sbai.finance.model.leaderboard.LeaderThreeRank.SAVANT;
 public class HomePageFragment extends BaseFragment {
     public static final int BANNER_TYPE_BANNER = 0;
     public static final int BANNER_TYPE_BUSINESS_BANNER = 1;
-    public static final int HANDLER_STOCK = 1;
-    public static final int HANDLER_BANNER = 2;
-    public static final int HANDLER_BUSNESSBANNER = 3;
-    public static final int HANDLER_DAILY_REPORT = 4;
-    public static final int TIME_HANDLER_STOCK = 10000;
-    public static final int TIME_HANDLER_BANNER = 3000;
-    public static final int TIME_HANDLER_BUSNESSBANNER = 10000;
-    public static final int TIME_HANDLER_DAILY_REPORT = 200000;
+    public static final int TIME_ONE = 3000;//1次轮询为3s
+    public static final int TIME_HANDLER_STOCK = 3;//3次轮询时间
+    public static final int TIME_HANDLER_BANNER = 1;//1次轮询时间
+    public static final int TIME_HANDLER_BUSNESSBANNER = 3;
+    public static final int TIME_HANDLER_DAILY_REPORT = 7;
     Unbinder unbinder;
     @BindView(R.id.homeTitleView)
     HomeTitleView mHomeTitleView;
@@ -103,55 +100,32 @@ public class HomePageFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         getIndexData();
+        startScheduleJob(TIME_ONE);
         requestRadioData();
-        startAllSchedule();
         MarketSubscriber.get().subscribeAll();
         MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
-    }
-
-    private void startAllSchedule() {
-        mScheduleHandler.sendEmptyMessageDelayed(HANDLER_STOCK, TIME_HANDLER_STOCK);
-        mScheduleHandler.sendEmptyMessageDelayed(HANDLER_BANNER, TIME_HANDLER_BANNER);
-        mScheduleHandler.sendEmptyMessageDelayed(HANDLER_BUSNESSBANNER, TIME_HANDLER_BUSNESSBANNER);
-        mScheduleHandler.sendEmptyMessageDelayed(HANDLER_DAILY_REPORT, TIME_HANDLER_DAILY_REPORT);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        stopAllSchedule();
+        stopScheduleJob();
         MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
         MarketSubscriber.get().unSubscribeAll();
     }
 
-    private void stopAllSchedule() {
-        mScheduleHandler.removeCallbacksAndMessages(null);
-    }
-
-    private Handler mScheduleHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case HANDLER_STOCK:
-                    getIndexData();
-                    mScheduleHandler.sendEmptyMessageDelayed(HANDLER_STOCK, TIME_HANDLER_STOCK);
-                    break;
-                case HANDLER_BANNER:
-                    mBanner.nextAdvertisement();
-                    mScheduleHandler.sendEmptyMessageDelayed(HANDLER_BANNER, TIME_HANDLER_BANNER);
-                    break;
-                case HANDLER_BUSNESSBANNER:
-                    requestBusniessBannerData();
-                    mScheduleHandler.sendEmptyMessageDelayed(HANDLER_BUSNESSBANNER, TIME_HANDLER_BUSNESSBANNER);
-                    break;
-                case HANDLER_DAILY_REPORT:
-                    request7NewsData();
-                    requestImportantNewsData();
-                    mScheduleHandler.sendEmptyMessageDelayed(HANDLER_DAILY_REPORT, TIME_HANDLER_DAILY_REPORT);
-                    break;
-            }
+    @Override
+    public void onTimeUp(int count) {
+        if (count % TIME_HANDLER_STOCK == 0) {
+            getIndexData();
+            requestBusniessBannerData();
+        } else if (count % TIME_HANDLER_BANNER == 0) {
+            mBanner.nextAdvertisement();
+        } else if (count % TIME_HANDLER_DAILY_REPORT == 0) {
+            request7NewsData();
+            requestImportantNewsData();
         }
-    };
+    }
 
     private DataReceiveListener mDataReceiveListener = new DataReceiveListener<Resp<FutureData>>() {
         @Override
@@ -504,8 +478,7 @@ public class HomePageFragment extends BaseFragment {
     }
 
     private void request7NewsData() {
-        int type = 1;//1为资讯
-        Client.getDailyReport(type).setTag(TAG).setCallback(new Callback2D<Resp<List<DailyReport>>, List<DailyReport>>() {
+        Client.getDailyReport(DailyReport.ZIXUN).setTag(TAG).setCallback(new Callback2D<Resp<List<DailyReport>>, List<DailyReport>>() {
             @Override
             protected void onRespSuccessData(List<DailyReport> data) {
                 if (data != null && data.size() != 0) {
@@ -516,8 +489,7 @@ public class HomePageFragment extends BaseFragment {
     }
 
     private void requestImportantNewsData() {
-        int type = 2;//2为要闻
-        Client.getDailyReport(type).setTag(TAG).setCallback(new Callback2D<Resp<List<DailyReport>>, List<DailyReport>>() {
+        Client.getDailyReport(DailyReport.IMPORTANT).setTag(TAG).setCallback(new Callback2D<Resp<List<DailyReport>>, List<DailyReport>>() {
             @Override
             protected void onRespSuccessData(List<DailyReport> data) {
                 if (data != null && data.size() != 0) {
