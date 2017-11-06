@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Shader;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -35,6 +36,7 @@ public class PraiseView extends View {
     private float mBorderWidth;
     private String mText;
     private float mOffset4CenterText;
+    private RectF mRectF;
 
     public PraiseView(Context context) {
         super(context);
@@ -68,6 +70,7 @@ public class PraiseView extends View {
         mText = "0";
 
         mOffset4CenterText = calOffsetY4TextCenter();
+        mRectF = new RectF();
     }
 
     protected float calOffsetY4TextCenter() {
@@ -88,9 +91,9 @@ public class PraiseView extends View {
         mPaint.setShader(mGradient);
         mPaint.setStrokeWidth(mBorderWidth);
         mPaint.setStyle(Paint.Style.STROKE);
-        canvas.drawRoundRect(0 + mBorderWidth, 0 + mBorderWidth,
-                mWidth - mBorderWidth, mHeight - mBorderWidth,
-                mRadius, mRadius, mPaint);
+        mRectF.set(0 + mBorderWidth, 0 + mBorderWidth,
+                mWidth - mBorderWidth, mHeight - mBorderWidth);
+        canvas.drawRoundRect(mRectF, mRadius, mRadius, mPaint);
         int centerX = mWidth / 2;
         int centerY = mHeight / 2;
         int bw = mBitmap.getWidth();

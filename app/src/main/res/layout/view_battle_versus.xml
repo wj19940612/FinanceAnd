@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="#564F68"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="#564F68"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
     <com.sbai.finance.view.BattleProgress
         android:id="@+id/battleProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <FrameLayout
         android:id="@+id/owner"
         android:layout_width="44dp"
         android:layout_height="44dp"
-        android:layout_marginRight="8dp"
-        android:layout_toLeftOf="@id/battleProgress"
-        android:background="@drawable/bg_battle_avatar">
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_battle_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/battleProgress"
+        app:layout_constraintEnd_toStartOf="@+id/battleProgress"
+        app:layout_constraintTop_toTopOf="@+id/battleProgress">
 
         <ImageView
             android:id="@+id/ownerAvatar"
@@ -45,34 +51,30 @@
         android:id="@+id/ownerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/owner"
-        android:layout_below="@id/owner"
-        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/wait_to_join"
         android:textColor="@android:color/white"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/owner"/>
 
     <TextView
         android:id="@+id/ownerPraise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/ownerName"
-        android:layout_marginLeft="8dp"
-        android:layout_toRightOf="@id/ownerName"
         android:maxLines="1"
         android:textColor="@color/unluckyText"
         android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/ownerName"
+        tools:layout_editor_absoluteY="48dp"
         tools:text="0赞"/>
 
     <FrameLayout
         android:id="@+id/challenger"
         android:layout_width="44dp"
         android:layout_height="44dp"
-        android:layout_marginLeft="8dp"
-        android:layout_toRightOf="@id/battleProgress"
-        android:background="@drawable/bg_battle_avatar">
+        android:background="@drawable/bg_battle_avatar"
+        app:layout_constraintStart_toEndOf="@+id/battleProgress">
 
         <ImageView
             android:id="@+id/challengerAvatar"
@@ -95,23 +97,25 @@
         android:id="@+id/challengerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/challenger"
-        android:layout_below="@id/challenger"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/wait_to_join"
         android:textColor="@android:color/white"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/challenger"
+        tools:layout_editor_absoluteX="304dp"/>
 
     <TextView
         android:id="@+id/challengerPraise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/challengerName"
-        android:layout_marginRight="8dp"
-        android:layout_toLeftOf="@id/challengerName"
+        android:layout_marginEnd="8dp"
         android:textColor="@color/unluckyText"
         android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/challengerName"
+        tools:layout_editor_absoluteY="56dp"
         tools:text="0赞"/>
-</RelativeLayout>
+
+
+</android.support.constraint.ConstraintLayout>

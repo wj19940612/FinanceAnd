@@ -28,7 +28,7 @@
                 android:layout_below="@+id/leftIcon"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="38dp"
-                android:text="暂无用户数据"
+                android:text="@string/default_user_data"
                 android:textColor="@color/unluckyText"
                 android:textSize="12sp"/>
 
@@ -111,7 +111,7 @@
                 android:layout_below="@+id/centerIcon"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="38dp"
-                android:text="暂无用户数据"
+                android:text="@string/default_user_data"
                 android:textColor="@color/unluckyText"
                 android:textSize="12sp"/>
 
@@ -194,7 +194,7 @@
                 android:layout_below="@+id/rightIcon"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="38dp"
-                android:text="暂无用户数据"
+                android:text="@string/default_user_data"
                 android:textColor="@color/unluckyText"
                 android:textSize="12sp"/>
 

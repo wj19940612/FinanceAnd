@@ -19,15 +19,19 @@ public class BattleResultDialog extends BaseDialog {
     public static final int GAME_RESULT_WIN = 1;
     public static final int GAME_RESULT_LOSE = 2;
 
-    public interface OnCloseListener {
+    public interface OnCallback {
         void onClose();
+
+        void onFightAgain();
+
+        void onGo2NormalBattle();
     }
 
     public BattleResultDialog(Activity activity) {
         super(activity);
     }
 
-    public static void get(final Activity activity, final OnCloseListener listener,
+    public static void get(final Activity activity, final OnCallback callback,
                            int winLoss, String content, int gameType) {
 
         setCurrentDialog(DIALOG_BATTLE_RESULT);
@@ -38,7 +42,7 @@ public class BattleResultDialog extends BaseDialog {
             @Override
             public void onClick(View v) {
                 dismiss(activity);
-                listener.onClose();
+                callback.onClose();
             }
         });
 
