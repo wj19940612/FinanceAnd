@@ -161,7 +161,7 @@ public class BroadcastListActivity extends BaseActivity {
                             } else {
                                 Launcher.with(getActivity(), WebActivity.class)
                                         .putExtra(WebActivity.EX_TITLE, broadcast.getTitle())
-                                        .putExtra(WebActivity.EX_HTML, broadcast.getContent())
+                                        .putExtra(WebActivity.EX_HTML, broadcast.getLink())
                                         .execute();
                             }
                         }
