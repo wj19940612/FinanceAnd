@@ -137,9 +137,13 @@ public class BattleListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        refresh();
+        startScheduleJob(5 * 1000);
+    }
+
+    public void refresh() {
         mSet.clear();
         mLocationTime = null;
-        startScheduleJob(5 * 1000);
         requestArenaBattleList();
     }
 
@@ -194,7 +198,6 @@ public class BattleListFragment extends BaseFragment {
                 Battle battle = mBattleList.get(i);
                 for (Battle resultBattle : data) {
                     if (battle.getId() == resultBattle.getId()) {
-                        battle.setAgainstUserName(resultBattle.getAgainstUserName());
                         battle.setGameStatus(resultBattle.getGameStatus());
                         battle.setWinResult(resultBattle.getWinResult());
                         battle.setLaunchScore(resultBattle.getLaunchScore());
