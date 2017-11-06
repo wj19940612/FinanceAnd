@@ -238,6 +238,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                 mVarietyName.setText(varietyReward);
                 switch (item.getGameStatus()) {
                     case Battle.GAME_STATUS_CREATED:
+                        mProgress.setEnabled(true);
                         mRootLL.setSelected(true);
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
@@ -248,6 +249,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                         mProgress.setBattleProfit(0, 0);
                         break;
                     case Battle.GAME_STATUS_STARTED:
+                        mProgress.setEnabled(true);
                         mRootLL.setSelected(true);
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
@@ -260,6 +262,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                         mProgress.setBattleProfit(item.getLaunchScore(), item.getAgainstScore());
                         break;
                     case Battle.GAME_STATUS_END:
+                        mProgress.setEnabled(false);
                         mRootLL.setSelected(false);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())

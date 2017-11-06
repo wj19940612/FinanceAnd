@@ -393,6 +393,7 @@ public class BattleListFragment extends BaseFragment {
                 switch (item.getGameStatus()) {
                     case Battle.GAME_STATUS_STARTED:
                         mRootLL.setSelected(true);
+                        mProgress.setEnabled(true);
                         mAgainstAvatarFL.setSelected(false);
                         mCreateAvatarRL.setSelected(false);
                         mCreateKo.setVisibility(View.GONE);
@@ -407,6 +408,7 @@ public class BattleListFragment extends BaseFragment {
                         break;
                     case Battle.GAME_STATUS_END:
                         mRootLL.setSelected(false);
+                        mProgress.setEnabled(false);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)

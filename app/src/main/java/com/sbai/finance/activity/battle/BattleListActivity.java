@@ -1022,6 +1022,7 @@ public class BattleListActivity extends BaseActivity implements
                 mVarietyName.setText(varietyReward);
                 switch (item.getGameStatus()) {
                     case Battle.GAME_STATUS_CREATED:
+                        mProgress.setEnabled(true);
                         mRootLL.setSelected(true);
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
@@ -1032,6 +1033,7 @@ public class BattleListActivity extends BaseActivity implements
                         mProgress.setBattleProfit(0, 0);
                         break;
                     case Battle.GAME_STATUS_STARTED:
+                        mProgress.setEnabled(true);
                         mRootLL.setSelected(true);
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
@@ -1045,6 +1047,7 @@ public class BattleListActivity extends BaseActivity implements
                         break;
                     case Battle.GAME_STATUS_END:
                         mRootLL.setSelected(false);
+                        mProgress.setEnabled(false);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)

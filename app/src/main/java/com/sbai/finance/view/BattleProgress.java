@@ -39,12 +39,6 @@ public class BattleProgress extends LinearLayout {
         typedArray.recycle();
     }
 
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-
-    }
-
     private float dp2Px(float value, Resources res) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, res.getDisplayMetrics());
     }
@@ -161,30 +155,18 @@ public class BattleProgress extends LinearLayout {
         mRightProgressBar.setProgress(right);
     }
 
-    public void setRightText(CharSequence rightText) {
+    @Override
+    public void setEnabled(boolean enable) {
+        super.setEnabled(enable);
+        if (enable) {
+            mRightProgressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progress_battle));
+            mLeftProgressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progress_battle));
+        } else {
+            mRightProgressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progress_battle_disabled));
+            mLeftProgressBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.progress_battle_disabled));
+        }
+        mRightProgressBar.setEnabled(enable);
+        mLeftProgressBar.setEnabled(enable);
     }
 
-    public void setRightText(int resId) {
-    }
-
-    public void setLeftText(CharSequence leftText) {
-    }
-
-    public void setLeftText(int resId) {
-    }
-
-    public void setRightTextColor(ColorStateList rightTextColor) {
-    }
-
-    public void setLeftTextColor(ColorStateList leftTextColor) {
-    }
-
-    public void setMax(int max) {
-    }
-
-    public void setProgress(int progress) {
-    }
-
-    public void setSecondaryProgress(int secondaryProgress) {
-    }
 }
