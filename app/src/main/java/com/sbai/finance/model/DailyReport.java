@@ -5,6 +5,8 @@ package com.sbai.finance.model;
  */
 
 public class DailyReport {
+    public static final int ZIXUN = 1;//资讯
+    public static final int IMPORTANT = 2;//要闻
     public static final int INFORMATION = 1;
     public static final int NEWS = 2;
     public static final int HTML = 1;
