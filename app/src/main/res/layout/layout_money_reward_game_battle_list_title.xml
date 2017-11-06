@@ -15,16 +15,22 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="14dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_join_versus_normal"/>
 
             <ImageView
                 android:id="@+id/avatar"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:layout_marginRight="14dp"
-                android:clickable="true"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="1dp"
                 android:src="@drawable/ic_default_avatar"/>
         </RelativeLayout>
 

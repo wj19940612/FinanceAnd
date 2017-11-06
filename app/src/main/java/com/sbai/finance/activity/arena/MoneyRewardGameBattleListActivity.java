@@ -756,7 +756,6 @@ public class MoneyRewardGameBattleListActivity extends BaseActivity implements V
         }
 
         SmartDialog.with(getActivity(), getString(R.string.enter_arena_condition, entryFees))
-                .setMessageGravity(Gravity.CENTER)
                 .setPositive(R.string.to_sign_up, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {

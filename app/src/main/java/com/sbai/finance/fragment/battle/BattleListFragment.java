@@ -207,8 +207,8 @@ public class BattleListFragment extends BaseFragment {
     }
 
     private void requestArenaBattleList() {
-//        Client.requestArenaBattleListData(mLocationTime)
-        Client.getVersusGaming(mLocationTime)
+        Client.requestArenaBattleListData(mLocationTime)
+//        Client.getVersusGaming(mLocationTime)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {

@@ -44,7 +44,6 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
-import com.sbai.finance.view.BgShadowTextView;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.glide.GlideApp;
@@ -99,8 +98,6 @@ public class MineFragment extends BaseFragment {
     TextView mScoreProgress;
     @BindView(R.id.lemiScoreArea)
     LinearLayout mLemiScoreArea;
-    @BindView(R.id.test)
-    BgShadowTextView mTest;
 
     private UserEachTrainingScoreModel mUserEachTrainingScoreModel;
 
@@ -136,20 +133,6 @@ public class MineFragment extends BaseFragment {
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(LoginBroadcastReceiver, new IntentFilter(LoginActivity.ACTION_LOGIN_SUCCESS));
         mEvaluationLevel = getResources().getStringArray(R.array.evaluationLevel);
-
-
-        mTest.setOnClickListener(new View.OnClickListener() {
-            boolean select;
-
-            @Override
-            public void onClick(View v) {
-                if (select) {
-                    mTest.setSelected(true);
-                } else {
-                    mTest.setSelected(false);
-                }
-            }
-        });
     }
 
     @Override
