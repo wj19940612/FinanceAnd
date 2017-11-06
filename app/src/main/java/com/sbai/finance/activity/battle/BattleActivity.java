@@ -463,19 +463,19 @@ public class BattleActivity extends BaseActivity {
 
     private void showGameOverDialog() {
         if (mBattleStatus != OVER_OBSERVER) {
-            int resultWinLoss;
+            int winLoss;
             String content;
             if (mBattle.getWinResult() == Battle.WIN_RESULT_TIE) {
-                resultWinLoss = BattleResultDialog.GAME_RESULT_DRAW;
+                winLoss = BattleResultDialog.GAME_RESULT_TIE;
                 content = getString(R.string.return_reward);
             } else {
                 String coinType = getCoinType();
                 boolean win = (mBattleStatus == OVER_OWNER) && (mBattle.getWinResult() == Battle.WIN_RESULT_OWNER_WIN);
                 if (win) {
-                    resultWinLoss = BattleResultDialog.GAME_RESULT_WIN;
+                    winLoss = BattleResultDialog.GAME_RESULT_WIN;
                     content = "+" + (mBattle.getReward() - (int) mBattle.getCommission()) + coinType;
                 } else {
-                    resultWinLoss = BattleResultDialog.GAME_RESULT_LOSE;
+                    winLoss = BattleResultDialog.GAME_RESULT_LOSE;
                     content = "-" + mBattle.getReward() + coinType;
                 }
             }
@@ -484,7 +484,7 @@ public class BattleActivity extends BaseActivity {
                 public void onClose() {
                     finish();
                 }
-            }, resultWinLoss, content);
+            }, winLoss, content, mBattle.getGameType());
 
             mBattleOperateView.hideSettlingView();
         }

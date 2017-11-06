@@ -50,7 +50,6 @@
         android:layout_below="@id/background"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:visibility="gone"
         tools:background="@color/primaryText">
 
         <TextView
@@ -58,13 +57,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_go_to_normal_battle"
+            android:clickable="true"
             android:paddingBottom="8dp"
             android:paddingLeft="23dp"
             android:paddingRight="23dp"
             android:paddingTop="8dp"
             android:text="@string/go_to_normal_battle"
             android:textColor="@android:color/white"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/fightAgain"
@@ -72,11 +72,13 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:background="@drawable/btn_fight_again"
+            android:clickable="true"
             android:paddingBottom="8dp"
             android:paddingLeft="23dp"
             android:paddingRight="23dp"
             android:paddingTop="8dp"
             android:text="@string/fight_again"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:visibility="gone"/>
     </LinearLayout>
 </RelativeLayout>
