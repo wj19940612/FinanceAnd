@@ -130,7 +130,7 @@
                 android:layout_height="21dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="92dp"
-                android:src="@drawable/ic_rank_second"
+                android:src="@drawable/ic_rank_first"
                 android:visibility="invisible"/>
 
             <ImageView
@@ -213,7 +213,7 @@
                 android:layout_height="21dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="92dp"
-                android:src="@drawable/ic_rank_third"
+                android:src="@drawable/ic_rank_first"
                 android:visibility="invisible"/>
 
             <ImageView
