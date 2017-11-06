@@ -95,12 +95,19 @@ public class BattleListFragment extends BaseFragment {
             @Override
             public void onItemClick(Battle battle, int position) {
                 if (battle != null) {
-                    if (LocalUser.getUser().isLogin()) {
+                    if (battle.isBattleOver()) {
                         Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(ExtraKeys.BATTLE, battle)
                                 .execute();
                     } else {
-                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                        if (LocalUser.getUser().isLogin()) {
+                            Launcher.with(getActivity(), BattleActivity.class)
+                                    .putExtra(ExtraKeys.BATTLE, battle)
+                                    .execute();
+
+                        } else {
+                            Launcher.with(getActivity(), LoginActivity.class).execute();
+                        }
                     }
                 }
             }

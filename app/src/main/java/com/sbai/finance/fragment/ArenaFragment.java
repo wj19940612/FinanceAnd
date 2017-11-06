@@ -17,6 +17,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.arena.ArenaActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.arena.ArenaActivityAndUserStatus;
@@ -94,10 +95,6 @@ public class ArenaFragment extends BaseFragment {
     }
 
     private void updateUserStatus() {
-        updateUserAvatar();
-    }
-
-    private void updateUserAvatar() {
         if (LocalUser.getUser().isLogin()) {
             GlideApp.with(getActivity())
                     .load(LocalUser.getUser().getUserInfo().getUserPortrait())
@@ -109,6 +106,7 @@ public class ArenaFragment extends BaseFragment {
                     .load(R.drawable.ic_default_avatar)
                     .circleCrop()
                     .into(mAvatar);
+            mNameAndIngot.setText(R.string.not_login);
         }
     }
 
@@ -152,7 +150,11 @@ public class ArenaFragment extends BaseFragment {
                 break;
             case R.id.avatar:
             case R.id.nameAndIngot:
-                Launcher.with(getActivity(), WalletActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), WalletActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
 
         }

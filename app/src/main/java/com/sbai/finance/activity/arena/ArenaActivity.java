@@ -32,6 +32,7 @@ import com.sbai.finance.activity.battle.BattleHisRecordActivity;
 import com.sbai.finance.activity.battle.BattleRecordResultListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
+import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.userinfo.CreditApproveActivity;
 import com.sbai.finance.fragment.battle.BattleListFragment;
 import com.sbai.finance.fragment.battle.BattleRankingFragment;
@@ -130,6 +131,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     private ArenaApplyRule mArenaApplyRule;
 
     private ArenaActivityAndUserStatus mArenaActivityAndUserStatus;
+    private ImageView mAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +152,25 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
             requestUserFundInfo();
         } else {
             updateUserJoinArenaStatus(false);
+            mIngot.setText(R.string.not_login);
+        }
+
+        updateUserAvatar();
+    }
+
+    private void updateUserAvatar() {
+        if (LocalUser.getUser().isLogin()) {
+            GlideApp.with(this)
+                    .load(LocalUser.getUser().getUserInfo().getUserPortrait())
+                    .placeholder(R.drawable.ic_default_avatar)
+                    .error(R.drawable.ic_default_avatar)
+                    .circleCrop()
+                    .into(mAvatar);
+        } else {
+            GlideApp.with(this)
+                    .load(R.drawable.ic_default_avatar)
+                    .circleCrop()
+                    .into(mAvatar);
         }
     }
 
@@ -354,21 +375,17 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
 
 
     private void requestUserFundInfo() {
-        if (LocalUser.getUser().isLogin()) {
-            Client.requestUserFundInfo()
-                    .setTag(TAG)
-                    .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
-                        @Override
-                        protected void onRespSuccessData(UserFundInfo data) {
-                            mUserFundInfo = data;
-                            mIngot.setText(getString(R.string.ingot_, StrFormatter.formIngotNumber(data.getYuanbao())));
-                        }
-                    })
-                    .fireFree();
-        } else {
-            mIngot.setText(R.string.not_login);
-        }
+        Client.requestUserFundInfo()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
+                    @Override
+                    protected void onRespSuccessData(UserFundInfo data) {
+                        mUserFundInfo = data;
+                        mIngot.setText(getString(R.string.ingot_, StrFormatter.formIngotNumber(data.getYuanbao())));
+                    }
+                })
+                .fireFree();
     }
 
     private void updateArenaInfo(ArenaInfo data) {
@@ -398,7 +415,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
 
     private void initTitleBar() {
         View customView = mTitleBar.getCustomView();
-        ImageView avatar = (ImageView) customView.findViewById(R.id.avatar);
+        mAvatar = (ImageView) customView.findViewById(R.id.avatar);
         mIngot = (TextView) customView.findViewById(R.id.ingot);
         TextView recharge = (TextView) customView.findViewById(R.id.recharge);
         TextView activityRule = (TextView) customView.findViewById(R.id.activityRule);
@@ -412,14 +429,17 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 }
             }
         });
-        if (LocalUser.getUser().isLogin()) {
-            GlideApp.with(this)
-                    .load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                    .placeholder(R.drawable.ic_default_avatar)
-                    .error(R.drawable.ic_default_avatar)
-                    .circleCrop()
-                    .into(avatar);
-        }
+
+        mIngot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), WalletActivity.class).execute();
+                } else {
+                    openLoginPage();
+                }
+            }
+        });
 
         recharge.setOnClickListener(this);
         activityRule.setOnClickListener(this);
@@ -467,10 +487,14 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.recharge:
-                Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
-                        .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
-                        .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0)
-                        .execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
+                            .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
+                            .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0)
+                            .execute();
+                } else {
+                    openLoginPage();
+                }
                 break;
             case R.id.activityRule:
                 Launcher.with(getActivity(), WebActivity.class)
@@ -599,7 +623,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                     protected void onRespSuccess(Resp<UserIdentityCardInfo> resp) {
                         if (resp.getData() != null) {
                             updateUserCreditStatus(resp.getData().getStatus());
-                        }else {
+                        } else {
                             showIsNotRealNameDialog();
                         }
                     }

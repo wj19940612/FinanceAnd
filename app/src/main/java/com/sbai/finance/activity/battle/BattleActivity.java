@@ -24,7 +24,6 @@ import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.chart.domain.TrendViewData;
-import com.sbai.finance.App;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -1059,7 +1058,7 @@ public class BattleActivity extends BaseActivity {
         BaseDialog.dismiss(this);
         mTabLayout.removeOnTabSelectedListener(mOnTabSelectedListener);
 
-        GlideApp.with(App.getAppContext()).pauseRequestsRecursive();
+        GlideApp.with(this).pauseRequestsRecursive();
     }
 
     public static class OrderRecordListAdapter extends BaseAdapter {
