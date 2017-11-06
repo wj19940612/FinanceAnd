@@ -161,50 +161,6 @@ public class BattleProgress extends LinearLayout {
         mRightProgressBar.setProgress(right);
     }
 
-    public void showScoreProgress(double ownerProfit, double challengerProfit, boolean isFinish) {
-        String myFlag = "";
-        String fighterFlag = "";
-        if (isFinish) {
-            setProgress(0);
-            setSecondaryProgress(0);
-            setLeftText(null);
-            setRightText(null);
-        } else {
-            //正正
-            if ((ownerProfit > 0 && challengerProfit >= 0) || (ownerProfit >= 0 && challengerProfit > 0)) {
-                int progress = (int) (ownerProfit * 100 / (ownerProfit + challengerProfit));
-                setProgress(progress);
-            }
-            //正负
-            if (ownerProfit >= 0 && challengerProfit < 0) {
-                setProgress(100);
-            }
-            //负正
-            if (ownerProfit < 0 && challengerProfit >= 0) {
-                setProgress(0);
-            }
-            //负负
-            if (ownerProfit < 0 && challengerProfit < 0) {
-                int progress = (int) (Math.abs(ownerProfit) * 100 / (Math.abs(ownerProfit) + Math.abs(challengerProfit)));
-                setProgress(100 - progress);
-            }
-            //都为0
-            if (ownerProfit == 0 && challengerProfit == 0) {
-                setProgress(50);
-            }
-            setSecondaryProgress(100);
-            if (ownerProfit > 0) {
-                myFlag = "+";
-            }
-
-            if (challengerProfit > 0) {
-                fighterFlag = "+";
-            }
-            setLeftText(myFlag + FinanceUtil.formatWithScale(ownerProfit));
-            setRightText(fighterFlag + FinanceUtil.formatWithScale(challengerProfit));
-        }
-    }
-
     public void setRightText(CharSequence rightText) {
     }
 

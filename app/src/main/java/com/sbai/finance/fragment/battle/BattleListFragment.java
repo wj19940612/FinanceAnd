@@ -187,11 +187,7 @@ public class BattleListFragment extends BaseFragment {
                 Battle battle = mBattleList.get(i);
                 for (Battle resultBattle : data) {
                     if (battle.getId() == resultBattle.getId()) {
-                        battle.setVarietyName(resultBattle.getVarietyName());
-                        battle.setLaunchUserPortrait(resultBattle.getLaunchUserPortrait());
-                        battle.setLaunchUserName(resultBattle.getLaunchUserName());
                         battle.setAgainstUserName(resultBattle.getAgainstUserName());
-                        battle.setReward(resultBattle.getReward());
                         battle.setGameStatus(resultBattle.getGameStatus());
                         battle.setWinResult(resultBattle.getWinResult());
                         battle.setLaunchScore(resultBattle.getLaunchScore());
@@ -207,7 +203,6 @@ public class BattleListFragment extends BaseFragment {
 
     private void requestArenaBattleList() {
         Client.requestArenaBattleListData(mLocationTime)
-//        Client.getVersusGaming(mLocationTime)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
@@ -346,8 +341,6 @@ public class BattleListFragment extends BaseFragment {
             TextView mVarietyName;
             @BindView(R.id.progress)
             BattleProgress mProgress;
-            @BindView(R.id.depositAndTime)
-            TextView mDepositAndTime;
             @BindView(R.id.againstAvatar)
             ImageView mAgainstAvatar;
             @BindView(R.id.againstKo)
@@ -396,7 +389,7 @@ public class BattleListFragment extends BaseFragment {
                         break;
                 }
                 String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);
-
+                mVarietyName.setText(varietyReward);
                 switch (item.getGameStatus()) {
                     case Battle.GAME_STATUS_STARTED:
                         mRootLL.setSelected(true);
@@ -410,7 +403,7 @@ public class BattleListFragment extends BaseFragment {
                                 .circleCrop()
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.setBattleProfit(item.getLaunchScore(), item.getAgainstScore());
                         break;
                     case Battle.GAME_STATUS_END:
                         mRootLL.setSelected(false);
@@ -434,7 +427,7 @@ public class BattleListFragment extends BaseFragment {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.GONE);
                         }
-                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.setBattleProfit(item.getLaunchScore(), item.getAgainstScore());
                         break;
                 }
             }

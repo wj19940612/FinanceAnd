@@ -981,8 +981,6 @@ public class BattleListActivity extends BaseActivity implements
             TextView mVarietyName;
             @BindView(R.id.progress)
             BattleProgress mProgress;
-            @BindView(R.id.depositAndTime)
-            TextView mDepositAndTime;
             @BindView(R.id.againstAvatar)
             ImageView mAgainstAvatar;
             @BindView(R.id.againstKo)
@@ -1021,18 +1019,17 @@ public class BattleListActivity extends BaseActivity implements
                         break;
                 }
                 String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);
-
+                mVarietyName.setText(varietyReward);
                 switch (item.getGameStatus()) {
                     case Battle.GAME_STATUS_CREATED:
                         mRootLL.setSelected(true);
-                        mDepositAndTime.setText(reward + " " + DateUtil.getMinutes(item.getEndline()));
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         mAgainstAvatar.setImageDrawable(null);
                         mAgainstAvatar.setImageResource(R.drawable.btn_join_battle);
                         mAgainstAvatar.setClickable(false);
                         mAgainstName.setText(context.getString(R.string.join_versus));
-                        mProgress.showScoreProgress(0, 0, true);
+                        mProgress.setBattleProfit(0, 0);
                         break;
                     case Battle.GAME_STATUS_STARTED:
                         mRootLL.setSelected(true);
@@ -1044,7 +1041,7 @@ public class BattleListActivity extends BaseActivity implements
                                 .circleCrop()
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.setBattleProfit(item.getLaunchScore(), item.getAgainstScore());
                         break;
                     case Battle.GAME_STATUS_END:
                         mRootLL.setSelected(false);
@@ -1064,7 +1061,7 @@ public class BattleListActivity extends BaseActivity implements
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.GONE);
                         }
-                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.setBattleProfit(item.getLaunchScore(), item.getAgainstScore());
                         break;
 
                 }
