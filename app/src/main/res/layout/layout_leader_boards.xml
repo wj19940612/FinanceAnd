@@ -9,6 +9,7 @@
         android:layout_weight="1">
 
         <RelativeLayout
+            android:id="@+id/leftRL"
             android:layout_width="104dp"
             android:layout_height="186dp"
             android:background="@color/white">
@@ -52,8 +53,8 @@
 
             <ImageView
                 android:id="@+id/leftMobaiBtn"
-                android:layout_width="60dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/leftHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
@@ -91,6 +92,7 @@
         android:layout_weight="1">
 
         <RelativeLayout
+            android:id="@+id/centerRL"
             android:layout_width="104dp"
             android:layout_height="186dp"
             android:layout_centerInParent="true"
@@ -135,8 +137,8 @@
 
             <ImageView
                 android:id="@+id/centerMobaiBtn"
-                android:layout_width="60dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/centerHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
@@ -174,6 +176,7 @@
         android:layout_weight="1">
 
         <RelativeLayout
+            android:id="@+id/rightRL"
             android:layout_width="104dp"
             android:layout_height="186dp"
             android:layout_alignParentRight="true"
@@ -218,8 +221,8 @@
 
             <ImageView
                 android:id="@+id/rightMobaiBtn"
-                android:layout_width="60dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/rightHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
