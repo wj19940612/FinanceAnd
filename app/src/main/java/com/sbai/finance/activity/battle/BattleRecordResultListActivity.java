@@ -32,6 +32,7 @@ import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,6 +83,7 @@ public class BattleRecordResultListActivity extends BaseActivity implements Cust
                         getString(R.string.money_reward_game) : getString(R.string.ordinary_battle));
         mTitleBar.setTitle(title);
 
+        mListView.setEmptyView(mEmpty);
         mSet = new HashSet<>();
         mVersusRecordListAdapter = new VersusRecordListAdapter(getActivity());
         mCustomSwipeRefreshLayout.setOnRefreshListener(this);
@@ -140,6 +142,12 @@ public class BattleRecordResultListActivity extends BaseActivity implements Cust
         if (mSet.isEmpty()) {
             mVersusRecordListAdapter.clear();
             updateUserBattleResult(futureVersus);
+            List<Battle> list = futureVersus.getList();
+            if (list != null && !list.isEmpty()) {
+                mHeaderLl.setVisibility(View.VISIBLE);
+            } else {
+                mHeaderLl.setVisibility(View.GONE);
+            }
         }
         for (Battle battle : futureVersus.getList()) {
             if (mSet.add(battle.getId())) {
@@ -157,10 +165,11 @@ public class BattleRecordResultListActivity extends BaseActivity implements Cust
     private void updateUserBattleResult(FutureVersus futureVersus) {
         if (futureVersus != null) {
             mSuccessRate.setText(getString(R.string.win_rate, futureVersus.getBattleWinRate()));
+            String ingot = futureVersus.getGold() > 0 ? "+" + futureVersus.getGold() : String.valueOf(futureVersus.getGold());
             mBattleCountAndIngot.setText(
                     getString(R.string.battle_count_profit,
                             StrFormatter.formIngotNumber(futureVersus.getTotalCount()),
-                            String.valueOf(futureVersus.getGold())));
+                            ingot));
         }
     }
 

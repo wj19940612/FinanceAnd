@@ -101,9 +101,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
-                android:drawableTop="@drawable/img_no_record_dack"
                 android:gravity="center_horizontal"
-                android:paddingTop="150dp"/>
+                android:paddingTop="150dp"
+                android:text="@string/you_not_has_battle"
+                android:textColor="@android:color/white"
+                android:textSize="17sp"
+                android:visibility="gone"/>
         </LinearLayout>
 
     </com.sbai.finance.view.CustomSwipeRefreshLayout>

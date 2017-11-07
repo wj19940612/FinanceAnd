@@ -387,7 +387,6 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 if (BuildConfig.DEBUG) {
                     ToastUtil.show("对战结束");
                 }
-                requestUserLastBattleInfo(false);
                 break;
         }
     }

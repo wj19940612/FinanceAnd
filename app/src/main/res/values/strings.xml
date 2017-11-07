@@ -872,6 +872,7 @@
     <string name="you_miss_exchange_time">很遗憾！您错过了兑奖时间</string>
     <string name="you_is_real_name_wait_please_wait">您的实名认证还在审核中\n请耐心等待</string>
     <string name="choose_skin">选择皮肤</string>
+    <string name="you_not_has_battle">您还未参加对战</string>
     <!-- 首页 -->
     <string name="look_my_rank">查看我的排名</string>
     <string name="please_retry">请重试</string>
