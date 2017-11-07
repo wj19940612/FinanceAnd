@@ -48,8 +48,8 @@
             android:id="@+id/verticalScrollText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@id/broadcastIcon"
             android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@id/broadcastIcon"
             android:gravity="center_vertical"
             />
 
@@ -57,15 +57,15 @@
             android:id="@+id/broadcastText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@id/broadcastIcon"
             android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@id/broadcastIcon"
+            android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:ellipsize="end"
+            android:paddingBottom="10dp"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:visibility="gone"
-            android:paddingBottom="10dp"
             />
     </RelativeLayout>
 
@@ -435,95 +435,97 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignBottom="@id/secondBg"
         android:layout_below="@id/indexRL"
-        android:layout_marginBottom="23dp"
-        android:layout_marginTop="14dp"
         android:gravity="center_vertical"
         >
 
-        <View
-            android:id="@+id/linePractice"
-            android:layout_width="0.5dp"
-            android:layout_height="24dp"
-            android:layout_centerInParent="true"
-            android:background="@color/split"
-            />
-
         <RelativeLayout
-            android:id="@+id/practiceBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="22dp"
-            android:layout_toLeftOf="@id/linePractice"
             >
 
-            <TextView
-                android:id="@+id/practiceText"
+            <View
+                android:id="@+id/linePractice"
+                android:layout_width="0.5dp"
+                android:layout_height="24dp"
+                android:layout_centerInParent="true"
+                android:background="@color/split"
+                />
+
+            <RelativeLayout
+                android:id="@+id/practiceBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="31dp"
-                android:text="练一练"
-                android:textColor="@color/primaryText"
-                android:textSize="14sp"
-                />
+                android:layout_marginRight="22dp"
+                android:layout_toLeftOf="@id/linePractice"
+                >
 
-            <TextView
-                android:id="@+id/practiceTipText"
+                <TextView
+                    android:id="@+id/practiceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="31dp"
+                    android:text="练一练"
+                    android:textColor="@color/primaryText"
+                    android:textSize="14sp"
+                    />
+
+                <TextView
+                    android:id="@+id/practiceTipText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/practiceText"
+                    android:layout_marginLeft="31dp"
+                    android:text="小白入门之路"
+                    android:textColor="@color/unluckyText"
+                    android:textSize="12sp"
+                    />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/home_icon_explain"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/writeTopicBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/practiceText"
-                android:layout_marginLeft="31dp"
-                android:text="小白入门之路"
-                android:textColor="@color/unluckyText"
-                android:textSize="12sp"
-                />
+                android:layout_marginLeft="22dp"
+                android:layout_toRightOf="@id/linePractice"
+                >
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/home_icon_explain"
-                />
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/writeTopicText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="一日一题"
+                    android:textColor="@color/primaryText"
+                    android:textSize="14sp"
+                    />
 
-        <RelativeLayout
-            android:id="@+id/writeTopicBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="22dp"
-            android:layout_toRightOf="@id/linePractice"
-            >
+                <TextView
+                    android:id="@+id/writeTopicTipText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/writeTopicText"
+                    android:text="答题可得元宝"
+                    android:textColor="@color/unluckyText"
+                    android:textSize="12sp"
+                    />
 
-            <TextView
-                android:id="@+id/writeTopicText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="一日一题"
-                android:textColor="@color/primaryText"
-                android:textSize="14sp"
-                />
-
-            <TextView
-                android:id="@+id/writeTopicTipText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/writeTopicText"
-                android:text="答题可得元宝"
-                android:textColor="@color/unluckyText"
-                android:textSize="12sp"
-                />
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="25dp"
-                android:src="@drawable/home_icon_subject"
-                />
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="25dp"
+                    android:src="@drawable/home_icon_subject"
+                    />
+            </RelativeLayout>
         </RelativeLayout>
 
     </RelativeLayout>
