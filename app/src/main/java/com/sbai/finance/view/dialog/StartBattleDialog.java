@@ -39,16 +39,18 @@ public class StartBattleDialog extends BaseDialog {
         TextView ownerName = (TextView) customView.findViewById(R.id.ownerName);
         ImageView ownerAvatar = (ImageView) customView.findViewById(R.id.ownerAvatar);
 
-        GlideApp.with(activity)
-                .load(ownerAvatarUrl)
-                .placeholder(R.drawable.ic_default_avatar_big)
-                .circleCrop()
-                .into(ownerAvatar);
-        GlideApp.with(activity)
-                .load(challengerAvatarUrl)
-                .placeholder(R.drawable.ic_default_avatar_big)
-                .circleCrop()
-                .into(challengerAvatar);
+        if (!activity.isFinishing()) {
+            GlideApp.with(activity)
+                    .load(ownerAvatarUrl)
+                    .placeholder(R.drawable.ic_default_avatar_big)
+                    .circleCrop()
+                    .into(ownerAvatar);
+            GlideApp.with(activity)
+                    .load(challengerAvatarUrl)
+                    .placeholder(R.drawable.ic_default_avatar_big)
+                    .circleCrop()
+                    .into(challengerAvatar);
+        }
 
         ownerName.setText(ownerNameText);
         challengerName.setText(challengerNameText);

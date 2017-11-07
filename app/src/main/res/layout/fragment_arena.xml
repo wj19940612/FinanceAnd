@@ -120,6 +120,4 @@
                 android:text="@string/ordinary_battle"/>
         </LinearLayout>
     </FrameLayout>
-
-
 </LinearLayout>

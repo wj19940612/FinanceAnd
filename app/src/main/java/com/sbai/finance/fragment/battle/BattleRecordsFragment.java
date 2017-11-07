@@ -92,7 +92,7 @@ public class BattleRecordsFragment extends BaseFragment {
                 .ownerAvatar(getContext(), mBattle.getLaunchUserPortrait())
                 .challengerAvatar(getContext(), mBattle.getAgainstUserPortrait())
                 .ownerName(mBattle.getLaunchUserName())
-                .challengerName(mBattle.getLaunchUserName());
+                .challengerName(mBattle.getAgainstUserName());
 
         switch (mBattle.getWinResult()) {
             case Battle.WIN_RESULT_OWNER_WIN:

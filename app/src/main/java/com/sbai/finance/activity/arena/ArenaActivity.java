@@ -29,9 +29,11 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.battle.BattleHisRecordActivity;
+import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.battle.BattleRecordResultListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
+import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.userinfo.CreditApproveActivity;
 import com.sbai.finance.fragment.battle.BattleListFragment;
 import com.sbai.finance.fragment.battle.BattleRankingFragment;
@@ -124,32 +126,55 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     ImageView mGift;
     @BindView(R.id.exchangeDetail)
     TextView mExchangeDetail;
-    private MoneyRewardGameBattleFragmentAdapter mMoneyRewardGameBattleFragmentAdapter;
+    private ArenaFragmentAdapter mArenaFragmentAdapter;
     private UserFundInfo mUserFundInfo;
     private TextView mIngot;
     private ArenaApplyRule mArenaApplyRule;
 
     private ArenaActivityAndUserStatus mArenaActivityAndUserStatus;
+    private ImageView mAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_money_reward_game_battle_list);
+        setContentView(R.layout.activity_arena);
         ButterKnife.bind(this);
         translucentStatusBar();
         initView();
-
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        refreshData();
+    }
+
+    private void refreshData() {
         if (LocalUser.getUser().isLogin()) {
             requestArenaApplyRule(false);
             requestArenaActivityAndUserStatus();
             requestUserFundInfo();
         } else {
             updateUserJoinArenaStatus(false);
+            mIngot.setText(R.string.not_login);
+        }
+
+        updateUserAvatar();
+    }
+
+    private void updateUserAvatar() {
+        if (LocalUser.getUser().isLogin()) {
+            GlideApp.with(this)
+                    .load(LocalUser.getUser().getUserInfo().getUserPortrait())
+                    .placeholder(R.drawable.ic_default_avatar)
+                    .error(R.drawable.ic_default_avatar)
+                    .circleCrop()
+                    .into(mAvatar);
+        } else {
+            GlideApp.with(this)
+                    .load(R.drawable.ic_default_avatar)
+                    .circleCrop()
+                    .into(mAvatar);
         }
     }
 
@@ -171,6 +196,11 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                             updateUserActivityScore(userActivityScore);
                         }
 
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
                     }
                 })
                 .fireFree();
@@ -230,6 +260,8 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                     mAward.setText(arenaActivityAwardInfo.getPrizeName());
                 }
                 mPredictGain.setText(R.string.get_award);
+            } else {
+                mPredictGain.setText(R.string.predict_gain);
             }
             requestUserExchangeAwardInfo(arenaActivityAwardInfo);
         }
@@ -258,29 +290,21 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 .fireFree();
     }
 
-    private void showOverExchangeTimeDialog() {
-        SmartDialog.single(getActivity(), getString(R.string.you_miss_exchange_time))
-                .setPositive(R.string.i_see)
-                .setNegativeVisible(View.GONE)
-                .show();
-    }
-
-    private void showUserExchangeResultDialog(List<UserExchangeAwardInfo> data) {
-        UserExchangeAwardInfo userExchangeAwardInfo = data.get(0);
-        if (userExchangeAwardInfo != null) {
-            UserArenaExchangeResultDialog.single(getActivity(), userExchangeAwardInfo).show();
-        }
-    }
-
     private void updateUserExchangeAwardStatus(ArenaActivityAwardInfo arenaActivityAwardInfo, List<UserExchangeAwardInfo> data) {
         //如果用户兑换列表为空，则表示用户还没有提交兑换申请
         if (data.isEmpty()) {
             mExchangeDetail.setVisibility(View.GONE);
-            mGift.setVisibility(View.VISIBLE);
             if (arenaActivityAwardInfo != null) {
                 mAward.setText(arenaActivityAwardInfo.getPrizeName());
             }
-            mPredictGain.setText(R.string.get_award);
+            if (mArenaActivityAndUserStatus != null) {
+                if (mArenaActivityAndUserStatus.userCanExchangeAward()) {
+                    mGift.setVisibility(View.VISIBLE);
+                    mPredictGain.setText(R.string.get_award);
+                } else {
+                    mPredictGain.setText(R.string.predict_gain);
+                }
+            }
         } else {
             mGift.setVisibility(View.GONE);
             mExchangeDetail.setVisibility(View.VISIBLE);
@@ -303,6 +327,20 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                         break;
                 }
             }
+        }
+    }
+
+    private void showOverExchangeTimeDialog() {
+        SmartDialog.single(getActivity(), getString(R.string.you_miss_exchange_time))
+                .setPositive(R.string.i_see)
+                .setNegativeVisible(View.GONE)
+                .show();
+    }
+
+    private void showUserExchangeResultDialog(List<UserExchangeAwardInfo> data) {
+        UserExchangeAwardInfo userExchangeAwardInfo = data.get(0);
+        if (userExchangeAwardInfo != null) {
+            UserArenaExchangeResultDialog.single(getActivity(), userExchangeAwardInfo).show();
         }
     }
 
@@ -336,6 +374,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case PushCode.QUICK_MATCH_SUCCESS:
                 Battle battle = (Battle) battleWSPush.getContent().getData();
+                StartMatchDialog.dismiss(getActivity());
                 if (battle != null) {
                     Launcher.with(getActivity(), BattleActivity.class)
                             .putExtra(ExtraKeys.BATTLE, battle)
@@ -353,21 +392,17 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
 
 
     private void requestUserFundInfo() {
-        if (LocalUser.getUser().isLogin()) {
-            Client.requestUserFundInfo()
-                    .setTag(TAG)
-                    .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
-                        @Override
-                        protected void onRespSuccessData(UserFundInfo data) {
-                            mUserFundInfo = data;
-                            mIngot.setText(getString(R.string.ingot_, StrFormatter.formIngotNumber(data.getYuanbao())));
-                        }
-                    })
-                    .fireFree();
-        } else {
-            mIngot.setText(R.string.not_login);
-        }
+        Client.requestUserFundInfo()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
+                    @Override
+                    protected void onRespSuccessData(UserFundInfo data) {
+                        mUserFundInfo = data;
+                        mIngot.setText(getString(R.string.ingot_, StrFormatter.formIngotNumber(data.getYuanbao())));
+                    }
+                })
+                .fireFree();
     }
 
     private void updateArenaInfo(ArenaInfo data) {
@@ -381,8 +416,8 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
 
     private void initView() {
         setSupportActionBar(mToolBar);
-        mMoneyRewardGameBattleFragmentAdapter = new MoneyRewardGameBattleFragmentAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mMoneyRewardGameBattleFragmentAdapter);
+        mArenaFragmentAdapter = new ArenaFragmentAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mArenaFragmentAdapter);
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(60, getResources()));
@@ -393,11 +428,33 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
         mTabLayout.setViewPager(mViewPager);
 
         initTitleBar();
+//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                BattleListFragment battleListFragment = getBattleListFragment();
+//                if (battleListFragment != null) {
+//                    battleListFragment.refresh();
+//                }
+//                BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
+//                if (battleRankingFragment != null) {
+//                    battleRankingFragment.requestArenaAwardRankingData();
+//                }
+//                refreshData();
+//            }
+//        });
+    }
+
+    private BattleListFragment getBattleListFragment() {
+        return (BattleListFragment) mArenaFragmentAdapter.getFragment(0);
+    }
+
+    private BattleRankingFragment getBattleRankingFragment() {
+        return (BattleRankingFragment) mArenaFragmentAdapter.getFragment(1);
     }
 
     private void initTitleBar() {
         View customView = mTitleBar.getCustomView();
-        ImageView avatar = (ImageView) customView.findViewById(R.id.avatar);
+        mAvatar = (ImageView) customView.findViewById(R.id.avatar);
         mIngot = (TextView) customView.findViewById(R.id.ingot);
         TextView recharge = (TextView) customView.findViewById(R.id.recharge);
         TextView activityRule = (TextView) customView.findViewById(R.id.activityRule);
@@ -411,14 +468,17 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 }
             }
         });
-        if (LocalUser.getUser().isLogin()) {
-            GlideApp.with(this)
-                    .load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                    .placeholder(R.drawable.ic_default_avatar)
-                    .error(R.drawable.ic_default_avatar)
-                    .circleCrop()
-                    .into(avatar);
-        }
+
+        mIngot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), WalletActivity.class).execute();
+                } else {
+                    openLoginPage();
+                }
+            }
+        });
 
         recharge.setOnClickListener(this);
         activityRule.setOnClickListener(this);
@@ -429,36 +489,43 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void requestArenaShareInfo() {
-        if (LocalUser.getUser().isLogin()) {
-            Client.requestShareData(Share.SHARE_CODE_ARENA)
-                    .setIndeterminate(this)
-                    .setTag(TAG)
-                    .setCallback(new Callback2D<Resp<Share>, Share>() {
-                        @Override
-                        protected void onRespSuccessData(Share data) {
-                            share(data);
-                        }
+        Client.requestShareData(Share.SHARE_CODE_ARENA)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<Share>, Share>() {
+                    @Override
+                    protected void onRespSuccessData(Share data) {
+                        share(data);
+                    }
 
-                        @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
-                        }
-                    })
-                    .fireFree();
-        } else {
-            openLoginPage();
-        }
+                    @Override
+                    public void onFailure(VolleyError volleyError) {
+                        super.onFailure(volleyError);
+                    }
+                })
+                .fireFree();
     }
 
     public void share(Share data) {
         ShareDialog.with(getActivity())
-                .setTitle(R.string.share_to)
+                .setTitle(getString(R.string.share_title))
                 .setShareTitle(data.getTitle())
                 .setShareDescription(data.getContent())
-                .setShareUrl(data.getShareLink() + "?inviteCode=%s" + LocalUser.getUser().getUserInfo().getInviteCode())
+                .setShareUrl(data.getShareLink() + "?inviteCode=" + LocalUser.getUser().getUserInfo().getInviteCode())
                 .setShareThumbUrl(data.getShareLeUrl())
                 .hasFeedback(false)
                 .hasWeiBo(false)
+                .setListener(new ShareDialog.OnShareDialogCallback() {
+                    @Override
+                    public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
+                        Client.share().setTag(TAG).fire();
+                    }
+
+                    @Override
+                    public void onFeedbackClick(View view) {
+
+                    }
+                })
                 .show();
     }
 
@@ -466,10 +533,14 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.recharge:
-                Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
-                        .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
-                        .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0)
-                        .execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
+                            .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT)
+                            .putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0)
+                            .execute();
+                } else {
+                    openLoginPage();
+                }
                 break;
             case R.id.activityRule:
                 Launcher.with(getActivity(), WebActivity.class)
@@ -598,7 +669,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                     protected void onRespSuccess(Resp<UserIdentityCardInfo> resp) {
                         if (resp.getData() != null) {
                             updateUserCreditStatus(resp.getData().getStatus());
-                        }else {
+                        } else {
                             showIsNotRealNameDialog();
                         }
                     }
@@ -797,8 +868,9 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                         if (failedResp.isInsufficientFund()) {
                             String fundIsEnoughHint = getFundIsEnoughHint();
                             showInsufficientFundDialog(fundIsEnoughHint);
+                        } else {
+                            ToastUtil.show(failedResp.getMsg());
                         }
-                        ToastUtil.show(failedResp.getMsg());
                     }
                 })
                 .fireFree();
@@ -852,8 +924,16 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CODE_FUTURE_BATTLE && resultCode == RESULT_OK) {
-            requestUserLastBattleInfo();
+        if (requestCode == REQ_CODE_FUTURE_BATTLE) {
+            switch (resultCode) {
+                case BattleActivity.RESULT_CODE_FIGHT_AGAIN:
+                    requestUserLastBattleInfo();
+                    break;
+                case BattleActivity.RESULT_CODE_GO_2_NORMAL_BATTLE:
+                    Launcher.with(getActivity(), BattleListActivity.class).execute();
+                    finish();
+                    break;
+            }
         }
         if (requestCode == REQ_CODE_SUBMIT_EXCHANGE_AWARD && resultCode == RESULT_OK) {
             if (LocalUser.getUser().isLogin()) {
@@ -862,10 +942,13 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    static class MoneyRewardGameBattleFragmentAdapter extends FragmentPagerAdapter {
+    static class ArenaFragmentAdapter extends FragmentPagerAdapter {
 
-        public MoneyRewardGameBattleFragmentAdapter(FragmentManager fm) {
+        private FragmentManager mFragmentManager;
+
+        public ArenaFragmentAdapter(FragmentManager fm) {
             super(fm);
+            mFragmentManager = fm;
         }
 
         @Override
@@ -893,6 +976,10 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                     return "排行榜";
             }
             return super.getPageTitle(position);
+        }
+
+        public Fragment getFragment(int position) {
+            return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
         }
     }
 }
