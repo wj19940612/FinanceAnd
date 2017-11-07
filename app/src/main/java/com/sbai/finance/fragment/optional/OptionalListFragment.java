@@ -20,10 +20,12 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureTradeActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.fragment.dialog.AddOptionalDialogFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.stock.StockData;
@@ -158,6 +160,12 @@ public class OptionalListFragment extends BaseFragment implements
                     protected void onRespSuccessData(List<Variety> data) {
                         updateOptionInfo((ArrayList<Variety>) data);
                     }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
+                    }
                 }).fireFree();
     }
 
@@ -264,7 +272,11 @@ public class OptionalListFragment extends BaseFragment implements
 
     @OnClick(R.id.addOptional)
     public void onClick(View view) {
-        AddOptionalDialogFragment.newInstance().show(getFragmentManager());
+        if (LocalUser.getUser().isLogin()) {
+            AddOptionalDialogFragment.newInstance().show(getFragmentManager());
+        } else {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
     }
 
     @Override
