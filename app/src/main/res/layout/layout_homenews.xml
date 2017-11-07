@@ -58,7 +58,7 @@
         android:id="@+id/contentLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="344dp"
+        android:minHeight="300dp"
         android:layout_below="@+id/topLine"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="14dp"
