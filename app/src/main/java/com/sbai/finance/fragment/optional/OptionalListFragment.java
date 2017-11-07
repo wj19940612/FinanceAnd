@@ -53,6 +53,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
+import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
 
 /**
  * 自选列表页面
@@ -99,6 +100,10 @@ public class OptionalListFragment extends BaseFragment implements
                     requestOptionalData();
                 }
             }
+            if (intent.getAction() == ACTION_LOGIN_SUCCESS) {
+                reset();
+                requestOptionalData();
+            }
         }
     };
 
@@ -121,6 +126,7 @@ public class OptionalListFragment extends BaseFragment implements
     private void initBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(OPTIONAL_CHANGE_ACTION);
+        intentFilter.addAction(ACTION_LOGIN_SUCCESS);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mOptionalChangeReceiver, intentFilter);
     }
 

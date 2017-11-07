@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -34,7 +35,7 @@ import butterknife.OnClick;
  */
 
 public class SevenHourNewsView extends RelativeLayout {
-    public static final int MIN_HEIGHT = 344;
+    public static final int MIN_HEIGHT = 300;
     public static final int TEXT_PADDING_DP = 14;
     public static final int TEXT_BIG_SP = 14;
     public static final int TEXT_SMALL_SP = 12;
@@ -48,13 +49,7 @@ public class SevenHourNewsView extends RelativeLayout {
     private Context mContext;
     private LayoutInflater mInflater;
     private int minHeight;
-    private boolean nowAdding;
-    private boolean canBeAdd;
     private boolean canAnimate;
-
-    private List<DailyReport> mLeaveReports;
-    private List<DailyReport> mDailyReports;
-    private ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener;
     private List<TextViewState> mTextViewStates;
 
     private OnMoreBtnClickListener mOnMoreBtnClickListener;
@@ -95,9 +90,7 @@ public class SevenHourNewsView extends RelativeLayout {
     private void init() {
         mInflater.inflate(R.layout.layout_homenews, this, true);
         ButterKnife.bind(this);
-        addGlobalListener();
         minHeight = (int) Display.dp2Px(MIN_HEIGHT, getResources());
-        mLeaveReports = new ArrayList<DailyReport>();
         mTextViewStates = new ArrayList<TextViewState>();
         canAnimate = true;
     }
@@ -118,68 +111,130 @@ public class SevenHourNewsView extends RelativeLayout {
             return;
         }
         if (mTextViewStates.size() == 0) {
-            mDailyReports = data;
             mContentLL.removeAllViews();
-            mLeaveReports.clear();
             mTextViewStates.clear();
-            for (DailyReport dailyReport : data) {
-                addText(dailyReport);
-            }
-        } else {
-            mDailyReports = data;
             setTextData(data);
+        } else {
+            mContentLL.removeAllViews();
+            mTextViewStates.clear();
+            setTextData(data);
+//            setOldData(data);
         }
     }
 
-    private void setTextData(List<DailyReport> data){
-
-    }
-
-    private void addGlobalListener() {
-        mOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int height = mContentLL.getMeasuredHeight();
-                if (!nowAdding) {
-                    return;
-                }
-                if (height <= minHeight) {
-                    canBeAdd = true;
-                } else {
-                    canBeAdd = false;
-                }
-                nowAdding = false;
-                if (mLeaveReports.size() != 0) {
-                    judgeAddView(mLeaveReports.get(0), true);
-                }
-            }
-        };
-        mContentLL.getViewTreeObserver().addOnGlobalLayoutListener(mOnGlobalLayoutListener);
-    }
-
-    private void addText(DailyReport dailyReport) {
-        if (mContentLL.getChildCount() == 0) {
-            canBeAdd = true;
-        }
-        //逻辑：addView但是ViewTree还未来得及重新绘制，所以要等ViewTree绘制完成后获得新的ContentLayout高度有没有超过设置的minHeight，超过了就只允许再添加一次了
-        judgeAddView(dailyReport, false);
-    }
-
-    private void judgeAddView(DailyReport dailyReport, boolean isFromList) {
-        RelativeLayout contentItemView = (RelativeLayout) mInflater.inflate(R.layout.layout_news_content, mContentLL, false);
-        if (canBeAdd && !nowAdding) {
+    private void setOldData(List<DailyReport> data) {
+        int canAddCount = 0;
+        int addHeight = 0;
+        List<RelativeLayout> relativeLayouts = new ArrayList<RelativeLayout>();
+        for (DailyReport dailyReport : data) {
+            RelativeLayout contentItemView = (RelativeLayout) mInflater.inflate(R.layout.layout_news_content, mContentLL, false);
             TextView textView = getAddTextView(dailyReport);
             TextView timeView = (TextView) contentItemView.findViewById(R.id.timeView);
             timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
             contentItemView.addView(textView);
-            mContentLL.addView(contentItemView);
-            if (isFromList) {
-                mLeaveReports.remove(0);
+            contentItemView.measure(0, 0);
+            addHeight += contentItemView.getMeasuredHeight();
+            relativeLayouts.add(contentItemView);
+            canAddCount++;
+            if (addHeight > minHeight) {
+                break;
             }
-        } else if (!isFromList) {
-            mLeaveReports.add(dailyReport);
+        }
+
+        int oldCount = mContentLL.getChildCount();
+        if (canAddCount < oldCount) {
+            for (int i = oldCount - 1; i >= canAddCount; i--) {
+                removeViewAt(i);
+            }
+        } else if (canAddCount > oldCount) {
+            for (int i = oldCount - 1; i >= canAddCount; i++) {
+                mContentLL.addView(relativeLayouts.get(i), i);
+            }
+        }
+
+        //前面是添加或者删减view，然后就需要set之前oldView的Text
+        for (int i = 0; i < oldCount; i++) {
+            DailyReport dailyReport = data.get(i);
+//            RelativeLayout childLayout = (RelativeLayout) mContentLL.getChildAt(i);
+//            TextView timeView = (TextView) childLayout.findViewById(R.id.timeView);
+//            timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
+//            TextView textView = (TextView) childLayout.getChildAt(2);
+//            revertTextView(textView, dailyReport, mTextViewStates.get(i));
+            mContentLL.removeViewAt(i);
+            mContentLL.addView(relativeLayouts.get(i), i);
         }
     }
+
+    private void revertTextView(final TextView textView, DailyReport dailyReport, final TextViewState textViewState) {
+        String title = dailyReport.getTitle() == null ? "" : dailyReport.getTitle();
+        String content = dailyReport.getContent() == null ? "" : Html.fromHtml(dailyReport.getContent()).toString().trim();
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title + content);
+        ForegroundColorSpan bigColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.primaryText));
+        spannableStringBuilder.setSpan(bigColorSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
+        AbsoluteSizeSpan bigSizeSpan = new AbsoluteSizeSpan(((int) Display.sp2Px(TEXT_BIG_SP, getResources())));
+        spannableStringBuilder.setSpan(bigSizeSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
+        ForegroundColorSpan smallColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.news_content));
+        spannableStringBuilder.setSpan(smallColorSpan, title.length(), title.length() + content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
+        AbsoluteSizeSpan smallSizeSpan = new AbsoluteSizeSpan(((int) Display.sp2Px(TEXT_SMALL_SP, getResources())));
+        spannableStringBuilder.setSpan(smallSizeSpan, title.length(), title.length() + content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
+        int textPadding = (int) Display.dp2Px(TEXT_PADDING_DP, getResources());
+        textView.setPadding(textPadding, textPadding, textPadding, textPadding);
+        textView.setBackgroundColor(getResources().getColor(R.color.background));
+        textView.setText(spannableStringBuilder);
+        textViewState.textView = textView;
+        textViewState.hasMeasure = false;
+        textViewState.onPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                //只需要获取一次就可以了
+                if (!textViewState.hasMeasure && textView.getMeasuredHeight() != 0) {
+                    //这里获取到完全展示的maxLine
+                    textViewState.allHeight = textView.getMeasuredHeight();
+                    //设置maxLine的默认值，这样用户看到View就是限制了maxLine的TextView
+                    textView.setMaxLines(TEXT_MAX_LINES);
+                    textView.setEllipsize(TextUtils.TruncateAt.END);
+                    textViewState.hasMeasure = true;
+                    textView.getViewTreeObserver().removeOnPreDrawListener(this);
+                }
+                return true;
+            }
+        };
+        textView.getViewTreeObserver().addOnPreDrawListener(textViewState.onPreDrawListener);
+        textView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animateTextView(textViewState);
+            }
+        });
+    }
+
+    private void setTextData(List<DailyReport> data) {
+        int canAddCount = 0;
+        int addHeight = 0;
+        List<RelativeLayout> relativeLayouts = new ArrayList<RelativeLayout>();
+        for (DailyReport dailyReport : data) {
+            RelativeLayout contentItemView = (RelativeLayout) mInflater.inflate(R.layout.layout_news_content, mContentLL, false);
+            TextView textView = getAddTextView(dailyReport);
+            TextView timeView = (TextView) contentItemView.findViewById(R.id.timeView);
+            timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
+            contentItemView.addView(textView);
+            contentItemView.measure(0, 0);
+            addHeight += contentItemView.getMeasuredHeight();
+            relativeLayouts.add(contentItemView);
+            canAddCount++;
+            if (addHeight > minHeight) {
+                break;
+            }
+        }
+        for (int i = 0; i < canAddCount; i++) {
+            mContentLL.addView(relativeLayouts.get(i));
+        }
+    }
+
 
     private TextView getAddTextView(DailyReport dailyReport) {
         final TextView textView = new TextView(mContext);
@@ -213,10 +268,6 @@ public class SevenHourNewsView extends RelativeLayout {
             @Override
             public boolean onPreDraw() {
                 //只需要获取一次就可以了
-                if (textViewState.index == 0) {
-                }
-                if (textViewState.index == 1) {
-                }
                 if (!textViewState.hasMeasure && textView.getMeasuredHeight() != 0) {
                     //这里获取到完全展示的maxLine
                     textViewState.allHeight = textView.getMeasuredHeight();
@@ -238,8 +289,6 @@ public class SevenHourNewsView extends RelativeLayout {
         });
         textViewState.index = mTextViewStates.size();
         mTextViewStates.add(textViewState);
-
-        nowAdding = true;
         return textView;
     }
 
@@ -300,17 +349,4 @@ public class SevenHourNewsView extends RelativeLayout {
         valueAnimator.start();
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        removeAllGlobalListener();
-    }
-
-    private void removeAllGlobalListener() {
-//        for (int i = 0; i < mTextViewStates.size(); i++) {
-//            TextView textView = mTextViewStates.get(i).textView;
-//            textView.getViewTreeObserver().removeOnPreDrawListener(mTextViewStates.get(i).onPreDrawListener);
-//        }
-        mContentLL.getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
-    }
 }

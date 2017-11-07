@@ -75,10 +75,8 @@ public class HomePageFragment extends BaseFragment {
     public static final int BANNER_TYPE_BANNER = 0;
     public static final int BANNER_TYPE_BUSINESS_BANNER = 1;
     public static final int TIME_ONE = 1000;//1次轮询为1s
-    public static final int TIME_HANDLER_STOCK = 3;//3次轮询时间
-    public static final int TIME_HANDLER_BANNER = 3;//1次轮询时间
-    public static final int TIME_HANDLER_BUSNESSBANNER = 10;
-    public static final int TIME_HANDLER_DAILY_REPORT = 10;
+    public static final int TIME_HANDLER_THREE = 3;//3次轮询时间
+    public static final int TIME_HANDLER_TEN = 10;
     Unbinder unbinder;
     @BindView(R.id.homeTitleView)
     HomeTitleView mHomeTitleView;
@@ -104,14 +102,12 @@ public class HomePageFragment extends BaseFragment {
 
     @Override
     public void onTimeUp(int count) {
-        if (count % TIME_HANDLER_STOCK == 0) {
-            getIndexData();
-        } else if (count % TIME_HANDLER_BANNER == 0) {
+        if (count % TIME_HANDLER_THREE == 0) {
             mBanner.nextAdvertisement();
-        } else if (count % TIME_HANDLER_DAILY_REPORT == 0) {
+            getIndexData();
+        }  else if (count % TIME_HANDLER_TEN == 0) {
             request7NewsData();
             requestImportantNewsData();
-        } else if (count % TIME_HANDLER_BUSNESSBANNER == 0) {
             requestBusniessBannerData();
         }
     }
@@ -315,27 +311,21 @@ public class HomePageFragment extends BaseFragment {
             }
         });
 
-        requestGreetings();
         mHomeTitleView.clickIndexButton(BUTTON_HUSHEN);
-        getIndexData();
-
-        requestRadioData();
-
-        requestBannerData();
-
-        requestBusniessBannerData();
-
-        requestLeaderBoardData();
-
-        request7NewsData();
-
-        requestImportantNewsData();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         startScheduleJob(TIME_ONE);
+        requestGreetings();
+        getIndexData();
+        requestRadioData();
+        requestBannerData();
+        requestBusniessBannerData();
+        requestLeaderBoardData();
+        request7NewsData();
+        requestImportantNewsData();
         MarketSubscriber.get().subscribeAll();
         MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
     }
@@ -344,9 +334,12 @@ public class HomePageFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isAdded()) {
+            requestGreetings();
             getIndexData();
             requestRadioData();
+            requestBannerData();
             requestBusniessBannerData();
+            requestLeaderBoardData();
             request7NewsData();
             requestImportantNewsData();
         }
@@ -364,6 +357,7 @@ public class HomePageFragment extends BaseFragment {
         if (mHomeTitleView.getOldButton() == BUTTON_HUSHEN) {
             requestStockIndexData();
         } else if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_ZIXUAN) {
+            mHomeTitleView.clickIndexButton(BUTTON_ZIXUAN);
             requestOptionalData();
         }
     }
@@ -423,6 +417,9 @@ public class HomePageFragment extends BaseFragment {
 
     private void requestOptionalData() {
         //这里只需要3个数据，所以请求的page = 0;
+        if (LocalUser.getUser().isLogin()) {
+            return;
+        }
         int page = 0;
         Client.getOptional(page).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {

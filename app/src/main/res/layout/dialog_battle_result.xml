@@ -10,16 +10,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
         android:src="@drawable/ic_popup_delete"/>
 
     <RelativeLayout
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_below="@+id/dialogDelete"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp">
+        android:layout_below="@+id/dialogDelete">
 
         <TextView
             android:id="@+id/winResult"

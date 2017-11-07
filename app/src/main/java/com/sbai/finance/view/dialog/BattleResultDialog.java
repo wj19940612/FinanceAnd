@@ -51,6 +51,18 @@ public class BattleResultDialog extends BaseDialog {
         RelativeLayout background = (RelativeLayout) customView.findViewById(R.id.background);
         TextView fightAgain = (TextView) customView.findViewById(R.id.fightAgain);
         TextView goToNormalBattle = (TextView) customView.findViewById(R.id.goToNormalBattle);
+        fightAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onFightAgain();
+            }
+        });
+        goToNormalBattle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onGo2NormalBattle();
+            }
+        });
 
         if (winLoss == GAME_RESULT_TIE) {
             winDescribe.setText(activity.getString(R.string.game_result_draw));

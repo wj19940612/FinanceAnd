@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.web.BroadcastListWebActivity;
 import com.sbai.finance.model.Broadcast;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -155,8 +156,8 @@ public class BroadcastListActivity extends BaseActivity {
                         @Override
                         public void onClick(View v) {
                             if (broadcast.isH5Style()) {
-                                Launcher.with(getActivity(), WebActivity.class)
-                                        .putExtra(WebActivity.EX_URL, broadcast.getLink())
+                                Launcher.with(getActivity(), BroadcastListWebActivity.class)
+                                        .putExtra(BroadcastListWebActivity.EX_URL, broadcast.getLink())
                                         .execute();
                             } else {
                                 Launcher.with(getActivity(), WebActivity.class)

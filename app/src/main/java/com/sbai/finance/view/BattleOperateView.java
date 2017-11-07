@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -187,12 +188,16 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         }
 
         public PlayersView ownerName(String name) {
-            mOwnerName.setText(name);
+            if (!TextUtils.isEmpty(name)) {
+                mOwnerName.setText(name);
+            }
             return this;
         }
 
         public PlayersView challengerName(String name) {
-            mChallengerName.setText(name);
+            if (!TextUtils.isEmpty(name)) {
+                mChallengerName.setText(name);
+            }
             return this;
         }
 
@@ -226,7 +231,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         // view find id
         mCountdown = mBattleCreatedView.findViewById(R.id.countdown);
 
-        View playersView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_versus, null);
+        View playersView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_players, null);
         mPlayersView = new PlayersView(playersView);
 
         mPraiseOwner = mPraiseView.findViewById(R.id.praiseOwner);
@@ -362,6 +367,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         long pastTime = currentTime - createTime;
         long survivalTime = 10 * 60 * 1000; // 对战房间存活时间固定 10 min
         long remainingTime = survivalTime - pastTime;
+        remainingTime = Math.max(0, remainingTime);
         SpannableString remainingTimeStr = StrUtil.mergeTextWithColor(
                 getContext().getString(R.string.countdown) + " ",
                 DateUtil.format(remainingTime, "mm:ss"),

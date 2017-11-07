@@ -361,7 +361,7 @@ public class InformationFragment extends BaseFragment {
                 } else {
                     mDateArea.setVisibility(View.GONE);
                 }
-                mTime.setText(DateUtil.format(item.getCreateTime(), FORMAT_HOUR_MINUTE));
+                mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
                 if (TextUtils.isEmpty(item.getTitle())) {
                     mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                     mContent.setTextColor(ContextCompat.getColor(context, R.color.luckyText));
