@@ -61,6 +61,7 @@ public class SearchOptionalActivity extends BaseActivity {
     @BindView(R.id.listView)
     ListView mListView;
     private String type;
+    private String mKey;
     private OptionalAdapter mOptionalAdapter;
 
     @Override
@@ -112,7 +113,7 @@ public class SearchOptionalActivity extends BaseActivity {
         mOptionalAdapter = new OptionalAdapter(this);
         mOptionalAdapter.setOnClickListener(new OptionalAdapter.OnClickListener() {
             @Override
-            public void onClick(Variety variety) {
+            public void onClick(final Variety variety) {
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.DISCOVERY_ADD_SELF_OPTIONAL);
                     Client.addOption(variety.getVarietyId())
@@ -121,7 +122,7 @@ public class SearchOptionalActivity extends BaseActivity {
                                 @Override
                                 protected void onRespSuccess(Resp<JsonObject> resp) {
                                     if (resp.isSuccess()) {
-                                        requestSearch(mSearch.getText().toString());
+                                        updateOptionalData(variety.getVarietyId());
                                         sendAddOptionalBroadCast();
                                     } else {
                                         ToastUtil.show(resp.getMsg());
@@ -158,18 +159,32 @@ public class SearchOptionalActivity extends BaseActivity {
         });
     }
 
+    private void updateOptionalData(int varietyId) {
+        for (int i = 0; i < mOptionalAdapter.getCount(); i++) {
+            Variety variety = mOptionalAdapter.getItem(i);
+            if (variety != null && variety.getVarietyId() == varietyId) {
+                variety.setCheckOptional(Variety.OPTIONAL);
+                mOptionalAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
+    }
+
     private void requestSearch(String key) {
         try {
-            key = URLEncoder.encode(key, "utf-8");
+            mKey = key = URLEncoder.encode(key, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        mKey = key;
         if (type.equalsIgnoreCase(Variety.VAR_STOCK) || type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
             Client.searchStock(key).setTag(TAG)
                     .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                         @Override
                         protected void onRespSuccessData(List<Variety> data) {
-                            updateSearchData(data);
+                            if (getUrl().contains(mKey)) {
+                                updateSearchData(data);
+                            }
                         }
                     }).fire();
         } else if (type.equalsIgnoreCase(Variety.VAR_FUTURE)) {
@@ -177,7 +192,9 @@ public class SearchOptionalActivity extends BaseActivity {
                     .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                         @Override
                         protected void onRespSuccessData(List<Variety> data) {
-                            updateSearchData(data);
+                            if (getUrl().contains(mKey)) {
+                                updateSearchData(data);
+                            }
                         }
                     }).fire();
         }
