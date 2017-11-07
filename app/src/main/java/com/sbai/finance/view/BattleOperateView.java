@@ -362,6 +362,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         long pastTime = currentTime - createTime;
         long survivalTime = 10 * 60 * 1000; // 对战房间存活时间固定 10 min
         long remainingTime = survivalTime - pastTime;
+        remainingTime = Math.max(0, remainingTime);
         SpannableString remainingTimeStr = StrUtil.mergeTextWithColor(
                 getContext().getString(R.string.countdown) + " ",
                 DateUtil.format(remainingTime, "mm:ss"),
