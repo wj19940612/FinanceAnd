@@ -112,7 +112,7 @@ public class SearchOptionalActivity extends BaseActivity {
         mOptionalAdapter = new OptionalAdapter(this);
         mOptionalAdapter.setOnClickListener(new OptionalAdapter.OnClickListener() {
             @Override
-            public void onClick(Variety variety) {
+            public void onClick(final Variety variety) {
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.DISCOVERY_ADD_SELF_OPTIONAL);
                     Client.addOption(variety.getVarietyId())
@@ -121,7 +121,7 @@ public class SearchOptionalActivity extends BaseActivity {
                                 @Override
                                 protected void onRespSuccess(Resp<JsonObject> resp) {
                                     if (resp.isSuccess()) {
-                                        requestSearch(mSearch.getText().toString());
+                                        updateOptionalData(variety.getVarietyId());
                                         sendAddOptionalBroadCast();
                                     } else {
                                         ToastUtil.show(resp.getMsg());
@@ -156,6 +156,17 @@ public class SearchOptionalActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private void updateOptionalData(int varietyId) {
+        for (int i = 0; i < mOptionalAdapter.getCount(); i++) {
+            Variety variety = mOptionalAdapter.getItem(i);
+            if (variety != null && variety.getVarietyId() == varietyId) {
+                variety.setCheckOptional(Variety.OPTIONAL);
+                mOptionalAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
     }
 
     private void requestSearch(String key) {
