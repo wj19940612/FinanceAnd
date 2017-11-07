@@ -473,7 +473,7 @@ public class HomeTitleView extends RelativeLayout {
                     }
                 }
             });
-        } else {
+        }else {
             mLeftRL.setOnClickListener(null);
             mCenterRL.setOnClickListener(null);
             mRightRL.setOnClickListener(null);
