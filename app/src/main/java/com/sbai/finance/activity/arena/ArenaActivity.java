@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
@@ -127,8 +126,6 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     ImageView mGift;
     @BindView(R.id.exchangeDetail)
     TextView mExchangeDetail;
-    @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
     private ArenaFragmentAdapter mArenaFragmentAdapter;
     private UserFundInfo mUserFundInfo;
     private TextView mIngot;
@@ -144,7 +141,6 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
         ButterKnife.bind(this);
         translucentStatusBar();
         initView();
-        mSwipeRefreshLayout.setEnabled(false);
     }
 
     @Override
@@ -205,7 +201,6 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 })
                 .fireFree();
@@ -433,20 +428,20 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
         mTabLayout.setViewPager(mViewPager);
 
         initTitleBar();
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                BattleListFragment battleListFragment = getBattleListFragment();
-                if (battleListFragment != null) {
-                    battleListFragment.refresh();
-                }
-                BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
-                if (battleRankingFragment != null) {
-                    battleRankingFragment.requestArenaAwardRankingData();
-                }
-                refreshData();
-            }
-        });
+//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                BattleListFragment battleListFragment = getBattleListFragment();
+//                if (battleListFragment != null) {
+//                    battleListFragment.refresh();
+//                }
+//                BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
+//                if (battleRankingFragment != null) {
+//                    battleRankingFragment.requestArenaAwardRankingData();
+//                }
+//                refreshData();
+//            }
+//        });
     }
 
     private BattleListFragment getBattleListFragment() {
