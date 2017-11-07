@@ -110,8 +110,6 @@ public class InformationFragment extends BaseFragment {
     }
 
     private void initRecyclerView() {
-        mWeekArea.setSelected(true);
-        mDate.setTextColor(Color.parseColor("#2B71FF"));
         mInformationAdapter = new InformationAdapter(getActivity());
         mRecyclerView.setAdapter(mInformationAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -189,8 +187,7 @@ public class InformationFragment extends BaseFragment {
             if (isRefresh) {
                 mInformationAdapter.clear();
                 mLastTime = newsList.get(0).getCreateTime();
-                mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(mLastTime)));
-                mDate.setText(String.valueOf(DateUtil.getDayOfMonth(mLastTime)));
+                setFloatView(mLastTime);
             }
             if (newsList.size() < Client.DEFAULT_PAGE_SIZE) {
                 mLoadMore = false;
@@ -199,6 +196,24 @@ public class InformationFragment extends BaseFragment {
                 mLoadMore = true;
             }
             mInformationAdapter.addAll(newsList);
+        }
+    }
+
+    private void setFloatView(long time) {
+        int dayOfMonth = DateUtil.getDayOfMonth(time);
+        if (dayOfMonth < 10) {
+            mDate.setText("0" + dayOfMonth);
+        } else {
+            mDate.setText(String.valueOf(dayOfMonth));
+        }
+        if (DateUtil.isToday(time, mLastTime)) {
+            mWeekArea.setSelected(true);
+            mDate.setTextColor(Color.parseColor("#2B71FF"));
+            mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(time)));
+        } else {
+            mWeekArea.setSelected(false);
+            mDate.setTextColor(ContextCompat.getColor(getContext(), R.color.luckyText));
+            mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(time)));
         }
     }
 
@@ -212,8 +227,7 @@ public class InformationFragment extends BaseFragment {
 
         if (stickyInfoView != null && stickyInfoView.getContentDescription() != null) {
             long time = Long.valueOf((String) stickyInfoView.getContentDescription());
-            mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(time)));
-            mDate.setText(String.valueOf(DateUtil.getDayOfMonth(time)));
+            setFloatView(time);
         }
 
         View transInfoView = recyclerView.findChildViewUnder(
@@ -338,7 +352,12 @@ public class InformationFragment extends BaseFragment {
                     mDateArea.setVisibility(View.VISIBLE);
                     mWeekArea.setSelected(false);
                     mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(item.getCreateTime())));
-                    mDate.setText(String.valueOf(DateUtil.getDayOfMonth(item.getCreateTime())));
+                    int dayOfMonth = DateUtil.getDayOfMonth(item.getCreateTime());
+                    if (dayOfMonth < 10) {
+                        mDate.setText("0" + dayOfMonth);
+                    } else {
+                        mDate.setText(String.valueOf(dayOfMonth));
+                    }
                 } else {
                     mDateArea.setVisibility(View.GONE);
                 }
