@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -410,74 +411,72 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     private void setRLClick(List<Variety> data) {
-        switch (data.size()) {
-            case 0:
-                return;
-            case 1:
-                final Variety onlyLeftData = data.get(0);
-                mLeftRL.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnClickItemListener != null) {
-                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, onlyLeftData);
-                        }
+        if (data.size() == 1) {
+            final Variety onlyLeftData = data.get(0);
+            mLeftRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickItemListener != null) {
+                        mOnClickItemListener.onItemClick(oldButton, onlyLeftData);
                     }
-                });
-                mCenterRL.setOnClickListener(null);
-                mRightRL.setOnClickListener(null);
-                break;
-            case 2:
-                final Variety twoLeftData = data.get(0);
-                final Variety twoCenterData = data.get(1);
-                mLeftRL.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnClickItemListener != null) {
-                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, twoLeftData);
-                        }
+                }
+            });
+            mCenterRL.setOnClickListener(null);
+            mRightRL.setOnClickListener(null);
+        } else if (data.size() == 2) {
+            final Variety twoLeftData = data.get(0);
+            final Variety twoCenterData = data.get(1);
+            mLeftRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickItemListener != null) {
+                        mOnClickItemListener.onItemClick(oldButton, twoLeftData);
                     }
-                });
-                mCenterRL.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnClickItemListener != null) {
-                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, twoCenterData);
-                        }
+                }
+            });
+            mCenterRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickItemListener != null) {
+                        mOnClickItemListener.onItemClick(oldButton, twoCenterData);
                     }
-                });
-                mRightRL.setOnClickListener(null);
-                break;
-            case 3:
-                final Variety threeLeftData = data.get(0);
-                final Variety threeCenterData = data.get(1);
-                final Variety threeRightData = data.get(2);
-                mLeftRL.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnClickItemListener != null) {
-                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, threeLeftData);
-                        }
+                }
+            });
+            mRightRL.setOnClickListener(null);
+        } else if (data.size() > 2) {
+            final Variety threeLeftData = data.get(0);
+            final Variety threeCenterData = data.get(1);
+            final Variety threeRightData = data.get(2);
+            mLeftRL.setTag(threeLeftData);
+            mLeftRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickItemListener != null) {
+                        Variety data = (Variety) mLeftRL.getTag();
+                        mOnClickItemListener.onItemClick(oldButton, threeLeftData);
                     }
-                });
-                mCenterRL.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnClickItemListener != null) {
-                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, threeCenterData);
-                        }
+                }
+            });
+            mCenterRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickItemListener != null) {
+                        mOnClickItemListener.onItemClick(oldButton, threeCenterData);
                     }
-                });
-                mRightRL.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnClickItemListener != null) {
-                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, threeRightData);
-                        }
+                }
+            });
+            mRightRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickItemListener != null) {
+                        mOnClickItemListener.onItemClick(oldButton, threeRightData);
                     }
-                });
-                break;
-            default:
-                break;
+                }
+            });
+        } else {
+            mLeftRL.setOnClickListener(null);
+            mCenterRL.setOnClickListener(null);
+            mRightRL.setOnClickListener(null);
         }
     }
 
