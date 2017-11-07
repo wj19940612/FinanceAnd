@@ -59,16 +59,16 @@ public class BattleResultDialog extends BaseDialog {
             winDescribe.setText(activity.getString(R.string.game_result_win));
             background.setBackgroundResource(R.drawable.bg_future_battle_alerts_win);
         } else if (winLoss == GAME_RESULT_LOSE) {
-            if (gameType == Battle.GAME_TYPE_MATCH) {
-                winDescribe.setText(activity.getString(R.string.game_result_lose));
+            if (gameType == Battle.GAME_TYPE_ARENA) {
+                winDescribe.setText(activity.getString(R.string.game_result_lose_arena));
             } else {
-                winDescribe.setText(activity.getString(R.string.game_result_lose_match));
+                winDescribe.setText(activity.getString(R.string.game_result_lose));
             }
             background.setBackgroundResource(R.drawable.bg_futuresvs_battle_lose);
         }
         winResult.setText(content);
 
-        if (gameType == Battle.GAME_TYPE_MATCH) {
+        if (gameType == Battle.GAME_TYPE_ARENA) {
             if (winLoss == GAME_RESULT_LOSE) {
                 goToNormalBattle.setVisibility(View.VISIBLE);
                 fightAgain.setVisibility(View.VISIBLE);

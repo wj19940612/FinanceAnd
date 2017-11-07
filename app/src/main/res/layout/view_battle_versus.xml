@@ -17,16 +17,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3"/>
 
     <FrameLayout
         android:id="@+id/owner"
         android:layout_width="44dp"
         android:layout_height="44dp"
-        android:layout_marginTop="20dp"
         android:background="@drawable/bg_battle_avatar"
         app:layout_constraintBottom_toBottomOf="@+id/battleProgress"
         app:layout_constraintEnd_toStartOf="@+id/battleProgress"
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/battleProgress">
 
         <ImageView
@@ -51,22 +53,26 @@
         android:id="@+id/ownerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/wait_to_join"
         android:textColor="@android:color/white"
         android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/owner"
+        app:layout_constraintStart_toStartOf="@+id/owner"
         app:layout_constraintTop_toBottomOf="@+id/owner"/>
 
     <TextView
         android:id="@+id/ownerPraise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
         android:maxLines="1"
         android:textColor="@color/unluckyText"
         android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/ownerName"
         app:layout_constraintStart_toEndOf="@+id/ownerName"
-        tools:layout_editor_absoluteY="48dp"
         tools:text="0赞"/>
 
     <FrameLayout
@@ -74,7 +80,11 @@
         android:layout_width="44dp"
         android:layout_height="44dp"
         android:background="@drawable/bg_battle_avatar"
-        app:layout_constraintStart_toEndOf="@+id/battleProgress">
+        app:layout_constraintBottom_toBottomOf="@+id/battleProgress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toEndOf="@+id/battleProgress"
+        app:layout_constraintTop_toTopOf="@+id/battleProgress">
 
         <ImageView
             android:id="@+id/challengerAvatar"
@@ -97,25 +107,24 @@
         android:id="@+id/challengerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/wait_to_join"
         android:textColor="@android:color/white"
         android:textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@+id/challenger"
-        tools:layout_editor_absoluteX="304dp"/>
+        app:layout_constraintEnd_toEndOf="@+id/challenger"
+        app:layout_constraintStart_toStartOf="@+id/challenger"
+        app:layout_constraintTop_toBottomOf="@+id/challenger"/>
 
     <TextView
         android:id="@+id/challengerPraise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:textColor="@color/unluckyText"
         android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/challengerName"
         app:layout_constraintEnd_toStartOf="@+id/challengerName"
-        tools:layout_editor_absoluteY="56dp"
         tools:text="0赞"/>
-
-
 </android.support.constraint.ConstraintLayout>

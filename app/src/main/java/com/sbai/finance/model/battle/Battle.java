@@ -42,7 +42,7 @@ public class Battle implements Parcelable {
     public static final String SOURCE_FRIEND = "friend";
 
     public static final int GAME_TYPE_NORMAL = 1;
-    public static final int GAME_TYPE_MATCH = 2;
+    public static final int GAME_TYPE_ARENA = 2;
 
 
     public static final int CODE_BATTLE_JOINED_OR_CREATED = 4603;
