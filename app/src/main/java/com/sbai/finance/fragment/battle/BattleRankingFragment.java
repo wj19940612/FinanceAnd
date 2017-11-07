@@ -87,7 +87,7 @@ public class BattleRankingFragment extends BaseFragment {
         mBind.unbind();
     }
 
-    private void requestArenaAwardRankingData() {
+    public void requestArenaAwardRankingData() {
         Client.requestArenaAwardRankingData(ArenaInfo.DEFAULT_ACTIVITY_CODE)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<ArenaAwardRanking>>, List<ArenaAwardRanking>>() {

@@ -155,6 +155,8 @@ public class AppJs {
                     if (callingActivity != null
                             && ArenaActivity.class.getName().equals(callingActivity.getClassName())) {
                         ((WebActivity) mContext).finish();
+                    } else {
+                        Launcher.with(mContext, ArenaActivity.class).execute();
                     }
                 }
                 break;

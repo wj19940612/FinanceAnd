@@ -195,4 +195,28 @@ public class ArenaApplyRule {
     public void setTaskTotalLimit(int taskTotalLimit) {
         this.taskTotalLimit = taskTotalLimit;
     }
+
+    @Override
+    public String toString() {
+        return "ArenaApplyRule{" +
+                "activityCode='" + activityCode + '\'' +
+                ", createTime=" + createTime +
+                ", deleted=" + deleted +
+                ", endTime=" + endTime +
+                ", id=" + id +
+                ", includeRank=" + includeRank +
+                ", includeScore=" + includeScore +
+                ", modifyTime=" + modifyTime +
+                ", ruleCode='" + ruleCode + '\'' +
+                ", ruleName='" + ruleName + '\'' +
+                ", ruleParam='" + ruleParam + '\'' +
+                ", score=" + score +
+                ", stage=" + stage +
+                ", startTime=" + startTime +
+                ", taskDaysLimit=" + taskDaysLimit +
+                ", taskTotalLimit=" + taskTotalLimit +
+                ", money=" + money +
+                ", moneyType=" + moneyType +
+                '}';
+    }
 }

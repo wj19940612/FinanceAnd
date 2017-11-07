@@ -95,12 +95,19 @@ public class BattleListFragment extends BaseFragment {
             @Override
             public void onItemClick(Battle battle, int position) {
                 if (battle != null) {
-                    if (LocalUser.getUser().isLogin()) {
+                    if (battle.isBattleOver()) {
                         Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(ExtraKeys.BATTLE, battle)
                                 .execute();
                     } else {
-                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                        if (LocalUser.getUser().isLogin()) {
+                            Launcher.with(getActivity(), BattleActivity.class)
+                                    .putExtra(ExtraKeys.BATTLE, battle)
+                                    .execute();
+
+                        } else {
+                            Launcher.with(getActivity(), LoginActivity.class).execute();
+                        }
                     }
                 }
             }
@@ -130,9 +137,13 @@ public class BattleListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        refresh();
+        startScheduleJob(5 * 1000);
+    }
+
+    public void refresh() {
         mSet.clear();
         mLocationTime = null;
-        startScheduleJob(5 * 1000);
         requestArenaBattleList();
     }
 
@@ -187,7 +198,6 @@ public class BattleListFragment extends BaseFragment {
                 Battle battle = mBattleList.get(i);
                 for (Battle resultBattle : data) {
                     if (battle.getId() == resultBattle.getId()) {
-                        battle.setAgainstUserName(resultBattle.getAgainstUserName());
                         battle.setGameStatus(resultBattle.getGameStatus());
                         battle.setWinResult(resultBattle.getWinResult());
                         battle.setLaunchScore(resultBattle.getLaunchScore());

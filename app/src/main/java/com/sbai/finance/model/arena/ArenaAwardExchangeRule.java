@@ -9,12 +9,12 @@ import com.sbai.finance.net.Client;
 
 public class ArenaAwardExchangeRule {
 
-    public static final int AWARD_EXCHANGE_RULE_TTPE_CRASH = 1;
-    public static final int AWARD_EXCHANGE_RULE_TTPE_INGOT = 2;
-    public static final int AWARD_EXCHANGE_RULE_TTPE_CREDIT = 3;
-    public static final int AWARD_EXCHANGE_RULE_TTPE_ASSIGN_TASK = 11;
-    public static final int AWARD_EXCHANGE_RULE_TTPE_SCORE = 12;
-    public static final int AWARD_EXCHANGE_RULE_TTPE_RANK = 13;
+    public static final int AWARD_EXCHANGE_RULE_TYPE_CRASH = 1;
+    public static final int AWARD_EXCHANGE_RULE_TYPE_INGOT = 2;
+    public static final int AWARD_EXCHANGE_RULE_TYPE_CREDIT = 3;
+    public static final int AWARD_EXCHANGE_RULE_TYPE_ASSIGN_TASK = 11;
+    public static final int AWARD_EXCHANGE_RULE_TYPE_SCORE = 12;
+    public static final int AWARD_EXCHANGE_RULE_TYPE_RANK = 13;
 
     /**
      * activityCode : future_game
@@ -46,7 +46,7 @@ public class ArenaAwardExchangeRule {
     private String prizeName; //奖品名称
 
     public boolean isRanking() {
-        return getType() == AWARD_EXCHANGE_RULE_TTPE_RANK;
+        return getType() == AWARD_EXCHANGE_RULE_TYPE_RANK;
     }
 
     public String getActivityCode() {

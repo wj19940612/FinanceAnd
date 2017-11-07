@@ -61,6 +61,8 @@ public class ShareDialog {
     private boolean mHasTitle = true;
     private boolean mShareImageOnly;
     private Bitmap mBitmap;
+    //是否调用分享接口
+    private boolean mRequestShareApi;
 
     private OnShareDialogCallback mListener;
 
@@ -269,6 +271,7 @@ public class ShareDialog {
         mHasFeedback = hasFeedback;
         return this;
     }
+
 
     public ShareDialog hasWeiBo(boolean hasWeiBo) {
         mHasWeiBo = hasWeiBo;

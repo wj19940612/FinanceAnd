@@ -383,6 +383,7 @@ public class BattleActivity extends BaseActivity {
                 DateUtil.format(remainingTime, "mm:ss")));
 
         if (remainingTime == 0) { // 对战结束后，一直没有收到结束推送，5秒后 自动刷新结果显示弹窗
+            mBattleRemainingTime.setText(R.string.end);
             mBattleOperateView.showSettlingView();
             Object count = mBattleRemainingTime.getTag();
             if (count == null) {
@@ -474,7 +475,8 @@ public class BattleActivity extends BaseActivity {
                 content = getString(R.string.return_reward);
             } else {
                 String coinType = getCoinType();
-                boolean win = (mBattleStatus == OVER_OWNER) && (mBattle.getWinResult() == Battle.WIN_RESULT_OWNER_WIN);
+                boolean win = (mBattleStatus == OVER_OWNER && mBattle.getWinResult() == Battle.WIN_RESULT_OWNER_WIN)
+                        || (mBattleStatus == OVER_CHALLENGER && mBattle.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN);
                 if (win) {
                     winLoss = BattleResultDialog.GAME_RESULT_WIN;
                     content = "+" + (mBattle.getReward() - (int) mBattle.getCommission()) + coinType;

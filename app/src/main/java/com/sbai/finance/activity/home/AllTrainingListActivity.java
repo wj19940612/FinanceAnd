@@ -74,7 +74,6 @@ public class AllTrainingListActivity extends BaseActivity {
                     Launcher.with(getActivity(), TrainingDetailActivity.class)
                             .putExtra(ExtraKeys.TRAINING, myTrainingRecord.getTrain())
                             .execute();
-                    finish();
                 }
             }
         });

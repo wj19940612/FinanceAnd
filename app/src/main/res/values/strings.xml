@@ -500,7 +500,7 @@
     <string name="_support">%1$s赞</string>
     <string name="game_result_win">神操作！真是羡煞旁人</string>
     <string name="game_result_lose">别气馁，下一站大神</string>
-    <string name="game_result_lose_match">胜率不高？去普通场提升下操作吧</string>
+    <string name="game_result_lose_arena">胜率不高？去普通场提升下操作吧</string>
     <string name="game_result_draw">英雄所见略同</string>
     <string name="return_reward">赏金退还</string>
     <string name="join_battle">进入对战</string>
@@ -847,7 +847,7 @@
     <string name="win_rate">胜率：%1$s</string>
     <string name="battle_count_profit">对局总数：%1$s场  元宝结算: %2$s个</string>
     <string name="arena_score">%1$s(积分)</string>
-    <string name="ingot_is_not_enough">您的%1$s不足%s$s,暂时不能参赛</string>
+    <string name="ingot_is_not_enough">您的%1$s不足%2$s,暂时不能参赛</string>
     <string name="exchange_details">兑换详情</string>
     <string name="exchange_success">兑换成功</string>
     <string name="exchange_fail">兑换失败</string>

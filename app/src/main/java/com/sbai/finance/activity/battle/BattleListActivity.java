@@ -39,7 +39,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
@@ -136,7 +135,6 @@ public class BattleListActivity extends BaseActivity implements
 
         initLoginReceiver();
         initScreenOnReceiver();
-        updateAvatar();
 
         scrollToTop(mTitleBar, mListView);
     }
@@ -325,8 +323,9 @@ public class BattleListActivity extends BaseActivity implements
         } else {
             mCurrentBattleBtn.setVisibility(View.GONE);
             mCreateAndMatchArea.setVisibility(View.VISIBLE);
-            mIngot.setText(FinanceUtil.formatWithScaleNoZero(0));
+            mIngot.setText(R.string.not_login);
         }
+        updateAvatar();
         startScheduleJob(5 * 1000);
 
         reset();

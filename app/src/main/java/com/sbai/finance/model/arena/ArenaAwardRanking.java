@@ -28,8 +28,8 @@ public class ArenaAwardRanking {
         this.rank = rank;
     }
 
-    public double getScore() {
-        return score;
+    public long getScore() {
+        return (long) score;
     }
 
     public void setScore(double score) {
