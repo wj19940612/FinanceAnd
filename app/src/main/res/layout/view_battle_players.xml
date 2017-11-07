@@ -38,6 +38,7 @@
             android:layout_gravity="center"
             android:background="@drawable/bg_battle_avatar"
             android:clickable="false"
+            android:padding="2dp"
             android:src="@drawable/ic_default_avatar_big"/>
 
         <ImageView
@@ -92,6 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:clickable="true"
+            android:padding="2dp"
             android:src="@drawable/ic_default_avatar_big"/>
 
         <ImageView
