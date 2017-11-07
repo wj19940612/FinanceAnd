@@ -4,13 +4,16 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
@@ -59,8 +62,10 @@ public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher
     @Override
     public View makeView() {
         TextView t = new TextView(mContext);
+        t.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
         t.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         t.setMaxLines(1);
+        t.setEllipsize(TextUtils.TruncateAt.END);
         t.setTextColor(textColor);
         t.setTextSize(TEXT_SIZE_SP);
         t.setClickable(true);

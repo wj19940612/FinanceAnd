@@ -117,13 +117,22 @@ public class SevenHourNewsView extends RelativeLayout {
         if (data == null) {
             return;
         }
-        mDailyReports = data;
-        mContentLL.removeAllViews();
-        mLeaveReports.clear();
-        mTextViewStates.clear();
-        for (DailyReport dailyReport : data) {
-            addText(dailyReport);
+        if (mTextViewStates.size() == 0) {
+            mDailyReports = data;
+            mContentLL.removeAllViews();
+            mLeaveReports.clear();
+            mTextViewStates.clear();
+            for (DailyReport dailyReport : data) {
+                addText(dailyReport);
+            }
+        } else {
+            mDailyReports = data;
+            setTextData(data);
         }
+    }
+
+    private void setTextData(List<DailyReport> data){
+
     }
 
     private void addGlobalListener() {
@@ -161,7 +170,7 @@ public class SevenHourNewsView extends RelativeLayout {
         if (canBeAdd && !nowAdding) {
             TextView textView = getAddTextView(dailyReport);
             TextView timeView = (TextView) contentItemView.findViewById(R.id.timeView);
-            timeView.setText(DateUtil.getFormatTime(dailyReport.getCreateTime()));
+            timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
             contentItemView.addView(textView);
             mContentLL.addView(contentItemView);
             if (isFromList) {

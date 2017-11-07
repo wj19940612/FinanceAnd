@@ -57,6 +57,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:visibility="gone"
@@ -146,6 +148,7 @@
             >
 
             <RelativeLayout
+                android:id="@+id/leftRL"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -242,6 +245,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/centerRL"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -337,6 +341,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rightRL"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"

@@ -1,6 +1,7 @@
 package com.sbai.finance.view;
 
 import android.content.Context;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -96,9 +97,6 @@ public class BusinessBanner extends RelativeLayout {
             setVisibility(View.GONE);
             return;
         }
-        if (data.size() < 1) {
-            return;
-        }
         final Banner leftBanner = data.get(0);
         setTitle(leftBanner, LEFT_LOCATION);
         setSubTitle(leftBanner, LEFT_LOCATION);
@@ -107,7 +105,7 @@ public class BusinessBanner extends RelativeLayout {
         if (data.size() < 2) {
             return;
         }
-        final Banner topRightBanner = data.get(0);
+        final Banner topRightBanner = data.get(1);
         setTitle(topRightBanner, TOP_RIGHT_LOCATION);
         setSubTitle(topRightBanner, TOP_RIGHT_LOCATION);
         setImage(topRightBanner, TOP_RIGHT_LOCATION);
@@ -115,7 +113,7 @@ public class BusinessBanner extends RelativeLayout {
         if (data.size() < 3) {
             return;
         }
-        final Banner bottomRightBanner = data.get(0);
+        final Banner bottomRightBanner = data.get(2);
         setTitle(bottomRightBanner, BOTTOM_RIGHT_LOCATION);
         setSubTitle(bottomRightBanner, BOTTOM_RIGHT_LOCATION);
         setImage(bottomRightBanner, BOTTOM_RIGHT_LOCATION);
@@ -142,7 +140,7 @@ public class BusinessBanner extends RelativeLayout {
                 textView = mLeftTitle;
                 break;
         }
-        textView.setText(title);
+        textView.setText(Html.fromHtml(title).toString().trim());
     }
 
     private void setSubTitle(Banner banner, int location) {

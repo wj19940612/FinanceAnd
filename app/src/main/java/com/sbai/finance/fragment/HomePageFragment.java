@@ -14,12 +14,15 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
+import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.home.AllTrainingListActivity;
 import com.sbai.finance.activity.home.BroadcastListActivity;
 import com.sbai.finance.activity.home.InformationAndFocusNewsActivity;
 import com.sbai.finance.activity.home.StockFutureActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.stock.StockDetailActivity;
+import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.DailyReport;
@@ -60,6 +63,9 @@ import butterknife.Unbinder;
 import static com.sbai.finance.model.leaderboard.LeaderThreeRank.INGOT;
 import static com.sbai.finance.model.leaderboard.LeaderThreeRank.PROFIT;
 import static com.sbai.finance.model.leaderboard.LeaderThreeRank.SAVANT;
+import static com.sbai.finance.view.HomeTitleView.BUTTON_HUSHEN;
+import static com.sbai.finance.view.HomeTitleView.BUTTON_QIHUO;
+import static com.sbai.finance.view.HomeTitleView.BUTTON_ZIXUAN;
 
 /**
  * Created by Administrator on 2017\10\26 0026.
@@ -68,11 +74,11 @@ import static com.sbai.finance.model.leaderboard.LeaderThreeRank.SAVANT;
 public class HomePageFragment extends BaseFragment {
     public static final int BANNER_TYPE_BANNER = 0;
     public static final int BANNER_TYPE_BUSINESS_BANNER = 1;
-    public static final int TIME_ONE = 3000;//1次轮询为3s
+    public static final int TIME_ONE = 1000;//1次轮询为1s
     public static final int TIME_HANDLER_STOCK = 3;//3次轮询时间
-    public static final int TIME_HANDLER_BANNER = 1;//1次轮询时间
-    public static final int TIME_HANDLER_BUSNESSBANNER = 3;
-    public static final int TIME_HANDLER_DAILY_REPORT = 7;
+    public static final int TIME_HANDLER_BANNER = 3;//1次轮询时间
+    public static final int TIME_HANDLER_BUSNESSBANNER = 10;
+    public static final int TIME_HANDLER_DAILY_REPORT = 10;
     Unbinder unbinder;
     @BindView(R.id.homeTitleView)
     HomeTitleView mHomeTitleView;
@@ -97,33 +103,16 @@ public class HomePageFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getIndexData();
-        startScheduleJob(TIME_ONE);
-        requestRadioData();
-        MarketSubscriber.get().subscribeAll();
-        MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        stopScheduleJob();
-        MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
-        MarketSubscriber.get().unSubscribeAll();
-    }
-
-    @Override
     public void onTimeUp(int count) {
         if (count % TIME_HANDLER_STOCK == 0) {
             getIndexData();
-            requestBusniessBannerData();
         } else if (count % TIME_HANDLER_BANNER == 0) {
             mBanner.nextAdvertisement();
         } else if (count % TIME_HANDLER_DAILY_REPORT == 0) {
             request7NewsData();
             requestImportantNewsData();
+        } else if (count % TIME_HANDLER_BUSNESSBANNER == 0) {
+            requestBusniessBannerData();
         }
     }
 
@@ -166,6 +155,33 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onSelectClick() {
                 requestOptionalData();
+            }
+        });
+        mHomeTitleView.setOnClickItemListener(new HomeTitleView.OnClickItemListener() {
+            @Override
+            public void onItemClick(int button, Variety variety) {
+                if (button == BUTTON_HUSHEN) {
+                    Launcher.with(getActivity(), StockIndexActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                } else if (button == BUTTON_QIHUO) {
+                    Launcher.with(getActivity(), FutureTradeActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+
+                } else if (button == BUTTON_ZIXUAN) {
+                    if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
+                        Launcher.with(getActivity(), FutureTradeActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                    }
+                    if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
+                        if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)) {
+                            Launcher.with(getActivity(), StockIndexActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                        } else {
+                            Launcher.with(getActivity(), StockDetailActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                        }
+                    }
+                }
             }
         });
         mHomeTitleView.setOnLookAllClickListener(new HomeTitleView.OnLookAllClickListener() {
@@ -300,8 +316,10 @@ public class HomePageFragment extends BaseFragment {
         });
 
         requestGreetings();
-        mHomeTitleView.clickIndexButton(HomeTitleView.BUTTON_HUSHEN);
-//      requestStockIndexData();
+        mHomeTitleView.clickIndexButton(BUTTON_HUSHEN);
+        getIndexData();
+
+        requestRadioData();
 
         requestBannerData();
 
@@ -314,8 +332,36 @@ public class HomePageFragment extends BaseFragment {
         requestImportantNewsData();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        startScheduleJob(TIME_ONE);
+        MarketSubscriber.get().subscribeAll();
+        MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isAdded()) {
+            getIndexData();
+            requestRadioData();
+            requestBusniessBannerData();
+            request7NewsData();
+            requestImportantNewsData();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopScheduleJob();
+        MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
+        MarketSubscriber.get().unSubscribeAll();
+    }
+
     private void getIndexData() {
-        if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_HUSHEN) {
+        if (mHomeTitleView.getOldButton() == BUTTON_HUSHEN) {
             requestStockIndexData();
         } else if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_ZIXUAN) {
             requestOptionalData();
@@ -409,6 +455,10 @@ public class HomePageFragment extends BaseFragment {
     }
 
     private void requestGreetings() {
+        if (!LocalUser.getUser().isLogin()) {
+            mHomeTitleView.setGreetingTitle(null);
+            return;
+        }
         Client.requestGreeting().setTag(TAG).setCallback(new Callback2D<Resp<Greeting>, Greeting>() {
             @Override
             protected void onRespSuccessData(Greeting data) {

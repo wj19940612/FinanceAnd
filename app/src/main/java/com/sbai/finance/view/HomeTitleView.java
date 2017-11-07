@@ -18,6 +18,7 @@ import com.sbai.finance.model.Greeting;
 import com.sbai.finance.model.NoticeRadio;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.leaderboard.LeaderThreeRank;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.utils.FinanceUtil;
 
@@ -29,6 +30,10 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.model.leaderboard.LeaderThreeRank.INGOT;
+import static com.sbai.finance.model.leaderboard.LeaderThreeRank.PROFIT;
+import static com.sbai.finance.model.leaderboard.LeaderThreeRank.SAVANT;
 
 /**
  * Created by Administrator on 2017\10\25 0025.
@@ -98,6 +103,12 @@ public class HomeTitleView extends RelativeLayout {
     TextView mselectBtn;
     @BindView(R.id.lookAllBtn)
     RelativeLayout mLookAllBtn;
+    @BindView(R.id.leftRL)
+    RelativeLayout mLeftRL;
+    @BindView(R.id.centerRL)
+    RelativeLayout mCenterRL;
+    @BindView(R.id.rightRL)
+    RelativeLayout mRightRL;
 
 
     private Context mContext;
@@ -105,6 +116,7 @@ public class HomeTitleView extends RelativeLayout {
     private Map<String, FutureData> futureDataMap = new HashMap<String, FutureData>();
 
     private OnDictumClickListener mOnDictumClickListener;
+    private VerticalScrollTextView.OnItemClickListener mOnBroadcastListener;
 
     public int getOldButton() {
         return oldButton;
@@ -119,7 +131,18 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     public void setOnBroadcastListener(VerticalScrollTextView.OnItemClickListener onBroadcastListener) {
+        mOnBroadcastListener = onBroadcastListener;
         mVerticalScrollTextView.setOnItemClickListener(onBroadcastListener);
+    }
+
+    private OnClickItemListener mOnClickItemListener;
+
+    public void setOnClickItemListener(OnClickItemListener onClickItemListener) {
+        mOnClickItemListener = onClickItemListener;
+    }
+
+    public interface OnClickItemListener {
+        public void onItemClick(int button, Variety variety);
     }
 
     public interface OnLookAllClickListener {
@@ -179,29 +202,37 @@ public class HomeTitleView extends RelativeLayout {
     //问候title
     public void setGreetingTitle(Greeting greetingTitle) {
         if (greetingTitle == null) {
-            mGreetingTitle.setText(R.string.app_name);
+            mGreetingTitle.setText(R.string.welcome_lemi);
             return;
         }
         if (!TextUtils.isEmpty(greetingTitle.getGreetings())) {
             mGreetingTitle.setText(greetingTitle.getGreetings());
         } else {
-            mGreetingTitle.setText(R.string.app_name);
+            mGreetingTitle.setText(R.string.welcome_lemi);
         }
     }
 
     //广播内容
-    public void setBroadcastContent(List<NoticeRadio> noticeRadios) {
+    public void setBroadcastContent(final List<NoticeRadio> noticeRadios) {
         if (noticeRadios != null && noticeRadios.size() > 1) {
             mBroadcastIcon.setVisibility(View.VISIBLE);
             mBroadcastText.setVisibility(View.GONE);
             mVerticalScrollTextView.setVisibility(View.VISIBLE);
             mVerticalScrollTextView.setNoticeRadios(noticeRadios);
             mVerticalScrollTextView.startAutoScroll();
-        } else {
+        } else if (noticeRadios != null) {
             mVerticalScrollTextView.setVisibility(View.GONE);
             mBroadcastIcon.setVisibility(View.VISIBLE);
             mBroadcastText.setVisibility(View.VISIBLE);
-            mBroadcastText.setText(noticeRadios.get(0).getContent());
+            mBroadcastText.setText(noticeRadios.get(0).getTitle());
+            mBroadcastText.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnBroadcastListener != null) {
+                        mOnBroadcastListener.onItemClick(noticeRadios.get(0));
+                    }
+                }
+            });
         }
     }
 
@@ -352,6 +383,7 @@ public class HomeTitleView extends RelativeLayout {
             default:
                 break;
         }
+        setRLClick(data);
     }
 
     //更新期货名称
@@ -374,7 +406,78 @@ public class HomeTitleView extends RelativeLayout {
             mRightIndex.setTag(data.get(2));
             mRightIndex.setText(data.get(2).getVarietyName());
         }
+        setRLClick(data);
         updateFutureMarketData();
+    }
+
+    private void setRLClick(List<Variety> data) {
+        if (data.size() == 1) {
+            final Variety onlyLeftData = data.get(0);
+            mLeftRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickItemListener != null) {
+                        mOnClickItemListener.onItemClick(oldButton, onlyLeftData);
+                    }
+                }
+            });
+            mCenterRL.setOnClickListener(null);
+            mRightRL.setOnClickListener(null);
+        } else if (data.size() == 2) {
+            final Variety twoLeftData = data.get(0);
+            final Variety twoCenterData = data.get(1);
+            mLeftRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickItemListener != null) {
+                        mOnClickItemListener.onItemClick(oldButton, twoLeftData);
+                    }
+                }
+            });
+            mCenterRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickItemListener != null) {
+                        mOnClickItemListener.onItemClick(oldButton, twoCenterData);
+                    }
+                }
+            });
+            mRightRL.setOnClickListener(null);
+        } else if (data.size() > 2) {
+            final Variety threeLeftData = data.get(0);
+            final Variety threeCenterData = data.get(1);
+            final Variety threeRightData = data.get(2);
+            mLeftRL.setTag(threeLeftData);
+            mLeftRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickItemListener != null) {
+                        Variety data = (Variety) mLeftRL.getTag();
+                        mOnClickItemListener.onItemClick(oldButton, threeLeftData);
+                    }
+                }
+            });
+            mCenterRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickItemListener != null) {
+                        mOnClickItemListener.onItemClick(oldButton, threeCenterData);
+                    }
+                }
+            });
+            mRightRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnClickItemListener != null) {
+                        mOnClickItemListener.onItemClick(oldButton, threeRightData);
+                    }
+                }
+            });
+        }else {
+            mLeftRL.setOnClickListener(null);
+            mCenterRL.setOnClickListener(null);
+            mRightRL.setOnClickListener(null);
+        }
     }
 
     //更新股票行情
@@ -533,6 +636,7 @@ public class HomeTitleView extends RelativeLayout {
             mRightIndex.setTag(data.get(2));
             mRightIndex.setText(data.get(2).getVarietyName());
         }
+        setRLClick(data);
     }
 
     private void initStockOrFutureUI(int button) {
