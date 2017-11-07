@@ -64,6 +64,12 @@ public class LeaderBoardView extends LinearLayout {
     ImageView mCenterTopIcon;
     @BindView(R.id.rightTopIcon)
     ImageView mRightTopIcon;
+    @BindView(R.id.leftRL)
+    RelativeLayout mLeftRL;
+    @BindView(R.id.centerRL)
+    RelativeLayout mCenterRL;
+    @BindView(R.id.rightRL)
+    RelativeLayout mRightRL;
 
     private Context mContext;
 
@@ -106,20 +112,20 @@ public class LeaderBoardView extends LinearLayout {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.leftLookRankBtn, R.id.centerLookRankBtn, R.id.rightLookRankBtn})
+    @OnClick({R.id.leftRL, R.id.centerRL, R.id.rightRL})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.leftLookRankBtn:
+            case R.id.leftRL:
                 if (mLookRankListener != null) {
                     mLookRankListener.lookRank(INGOT);
                 }
                 break;
-            case R.id.centerLookRankBtn:
+            case R.id.centerRL:
                 if (mLookRankListener != null) {
                     mLookRankListener.lookRank(PROFIT);
                 }
                 break;
-            case R.id.rightLookRankBtn:
+            case R.id.rightRL:
                 if (mLookRankListener != null) {
                     mLookRankListener.lookRank(SAVANT);
                 }

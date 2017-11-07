@@ -105,6 +105,7 @@ public class HomeTitleView extends RelativeLayout {
     private Map<String, FutureData> futureDataMap = new HashMap<String, FutureData>();
 
     private OnDictumClickListener mOnDictumClickListener;
+    private VerticalScrollTextView.OnItemClickListener mOnBroadcastListener;
 
     public int getOldButton() {
         return oldButton;
@@ -119,6 +120,7 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     public void setOnBroadcastListener(VerticalScrollTextView.OnItemClickListener onBroadcastListener) {
+        mOnBroadcastListener = onBroadcastListener;
         mVerticalScrollTextView.setOnItemClickListener(onBroadcastListener);
     }
 
@@ -179,29 +181,37 @@ public class HomeTitleView extends RelativeLayout {
     //问候title
     public void setGreetingTitle(Greeting greetingTitle) {
         if (greetingTitle == null) {
-            mGreetingTitle.setText(R.string.app_name);
+            mGreetingTitle.setText(R.string.welcome_lemi);
             return;
         }
         if (!TextUtils.isEmpty(greetingTitle.getGreetings())) {
             mGreetingTitle.setText(greetingTitle.getGreetings());
         } else {
-            mGreetingTitle.setText(R.string.app_name);
+            mGreetingTitle.setText(R.string.welcome_lemi);
         }
     }
 
     //广播内容
-    public void setBroadcastContent(List<NoticeRadio> noticeRadios) {
+    public void setBroadcastContent(final List<NoticeRadio> noticeRadios) {
         if (noticeRadios != null && noticeRadios.size() > 1) {
             mBroadcastIcon.setVisibility(View.VISIBLE);
             mBroadcastText.setVisibility(View.GONE);
             mVerticalScrollTextView.setVisibility(View.VISIBLE);
             mVerticalScrollTextView.setNoticeRadios(noticeRadios);
             mVerticalScrollTextView.startAutoScroll();
-        } else {
+        } else if (noticeRadios != null) {
             mVerticalScrollTextView.setVisibility(View.GONE);
             mBroadcastIcon.setVisibility(View.VISIBLE);
             mBroadcastText.setVisibility(View.VISIBLE);
-            mBroadcastText.setText(noticeRadios.get(0).getContent());
+            mBroadcastText.setText(noticeRadios.get(0).getTitle());
+            mBroadcastText.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnBroadcastListener != null) {
+                        mOnBroadcastListener.onItemClick(noticeRadios.get(0));
+                    }
+                }
+            });
         }
     }
 

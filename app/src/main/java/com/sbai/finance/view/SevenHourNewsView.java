@@ -161,7 +161,7 @@ public class SevenHourNewsView extends RelativeLayout {
         if (canBeAdd && !nowAdding) {
             TextView textView = getAddTextView(dailyReport);
             TextView timeView = (TextView) contentItemView.findViewById(R.id.timeView);
-            timeView.setText(DateUtil.getFormatTime(dailyReport.getCreateTime()));
+            timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
             contentItemView.addView(textView);
             mContentLL.addView(contentItemView);
             if (isFromList) {
