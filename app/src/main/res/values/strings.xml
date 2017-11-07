@@ -500,7 +500,7 @@
     <string name="_support">%1$s赞</string>
     <string name="game_result_win">神操作！真是羡煞旁人</string>
     <string name="game_result_lose">别气馁，下一站大神</string>
-    <string name="game_result_lose_match">胜率不高？去普通场提升下操作吧</string>
+    <string name="game_result_lose_arena">胜率不高？去普通场提升下操作吧</string>
     <string name="game_result_draw">英雄所见略同</string>
     <string name="return_reward">赏金退还</string>
     <string name="join_battle">进入对战</string>

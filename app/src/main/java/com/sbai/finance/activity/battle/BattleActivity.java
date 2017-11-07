@@ -383,6 +383,7 @@ public class BattleActivity extends BaseActivity {
                 DateUtil.format(remainingTime, "mm:ss")));
 
         if (remainingTime == 0) { // 对战结束后，一直没有收到结束推送，5秒后 自动刷新结果显示弹窗
+            mBattleRemainingTime.setText(R.string.end);
             mBattleOperateView.showSettlingView();
             Object count = mBattleRemainingTime.getTag();
             if (count == null) {

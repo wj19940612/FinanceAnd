@@ -30,9 +30,12 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by linrongfang on 2017/6/20.
+ * Modified by john on 07/11/2017
+ *
+ * APIs: {@link Client#}
+ *
+ * 对战已经结束的状态下跳转的对战记录界面
  */
-
 public class BattleRecordsFragment extends BaseFragment {
 
     @BindView(R.id.titleBar)
