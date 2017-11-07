@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.arena.ArenaActivity;
 import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.battle.BattleHisRecordActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -59,7 +60,30 @@ public class BattleListFragment extends BaseFragment {
     private ArenaBattleListAdapter mArenaBattleListAdapter;
     private ArrayList<Battle> mBattleList;
 
+    OnFragmentRecycleViewScrollListener mOnFragmentRecycleViewScrollListener;
+
+    private Battle mCurrentBattle;
+
+    public void setCurrentBattle(Battle currentBattle) {
+        mCurrentBattle = currentBattle;
+    }
+
+    public interface OnFragmentRecycleViewScrollListener {
+
+        void onSwipRefreshEnable(boolean enabled, int fragmentPosition);
+
+        void onCurrentBattle(Battle battle);
+    }
+
     public BattleListFragment() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof ArenaActivity) {
+            mOnFragmentRecycleViewScrollListener = (OnFragmentRecycleViewScrollListener) context;
+        }
     }
 
     @SuppressWarnings("unused")
@@ -124,6 +148,11 @@ public class BattleListFragment extends BaseFragment {
                 if (isSlideToBottom(recyclerView) && mHasMoreData) {
                     requestArenaBattleList();
                 }
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
+                if (mOnFragmentRecycleViewScrollListener != null) {
+                    mOnFragmentRecycleViewScrollListener.onSwipRefreshEnable(isTop, 0);
+                }
             }
         });
     }
@@ -175,6 +204,9 @@ public class BattleListFragment extends BaseFragment {
                     }
                 }
             }
+            if (mCurrentBattle != null) {
+                stringBuilder.append(mCurrentBattle.getId()).append(",");
+            }
             if (stringBuilder.length() > 0) {
                 stringBuilder.deleteCharAt(stringBuilder.length() - 1);
                 requestVisibleBattleData(stringBuilder.toString());
@@ -197,6 +229,14 @@ public class BattleListFragment extends BaseFragment {
             for (int i = 0; i < mArenaBattleListAdapter.getItemCount(); i++) {
                 Battle battle = mBattleList.get(i);
                 for (Battle resultBattle : data) {
+                    if (mCurrentBattle != null) {
+                        if (mCurrentBattle.getId() == resultBattle.getId()) {
+                            if (resultBattle.isBattleOver()) {
+                                mOnFragmentRecycleViewScrollListener.onCurrentBattle(resultBattle);
+                            }
+                        }
+
+                    }
                     if (battle.getId() == resultBattle.getId()) {
                         battle.setGameStatus(resultBattle.getGameStatus());
                         battle.setWinResult(resultBattle.getWinResult());

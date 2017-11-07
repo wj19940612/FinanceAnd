@@ -11,9 +11,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -81,10 +82,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class ArenaActivity extends BaseActivity implements View.OnClickListener {
+public class ArenaActivity extends BaseActivity implements View.OnClickListener, BattleListFragment.OnFragmentRecycleViewScrollListener {
 
     private static final int REQ_CODE_FUTURE_BATTLE = 3787;
     private static final int REQ_CODE_SUBMIT_EXCHANGE_AWARD = 8809;
+
+    private static final int VIEWPAGER_BATTLE_LIST_POSITION = 0;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -116,16 +119,21 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     AppBarLayout mAppBarLayout;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
-    @BindView(R.id.toolBar)
-    Toolbar mToolBar;
-    @BindView(R.id.collapsingToolbarLayout)
-    CollapsingToolbarLayout mCollapsingToolbarLayout;
+    //    @BindView(R.id.toolBar)
+//    Toolbar mToolBar;
     @BindView(R.id.quickMatch)
     TextView mQuickMatch;
     @BindView(R.id.gift)
     ImageView mGift;
     @BindView(R.id.exchangeDetail)
     TextView mExchangeDetail;
+    @BindView(R.id.myInfo)
+    LinearLayout mMyInfo;
+    @BindView(R.id.collapsingToolbarLayout)
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
     private ArenaFragmentAdapter mArenaFragmentAdapter;
     private UserFundInfo mUserFundInfo;
     private TextView mIngot;
@@ -135,6 +143,9 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     private ImageView mAvatar;
     UserActivityScore mUserActivityScore;
     private Battle mBattle;
+    private int mAppBarVerticalOffset = -1;
+    private boolean mSwipEnabled = true;
+    private int mViperPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +173,15 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
             mIngot.setText(R.string.not_login);
         }
 
+        BattleListFragment battleListFragment = getBattleListFragment();
+        if (battleListFragment != null) {
+            battleListFragment.refresh();
+        }
+
+        BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
+        if (battleRankingFragment != null) {
+            battleRankingFragment.requestArenaAwardRankingData();
+        }
         updateUserAvatar();
     }
 
@@ -205,6 +225,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                     @Override
                     public void onFinish() {
                         super.onFinish();
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 })
                 .fireFree();
@@ -233,7 +254,9 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 }
             });
             //快速匹配出现
-            mQuickMatch.setVisibility(View.VISIBLE);
+            if (mViperPosition == VIEWPAGER_BATTLE_LIST_POSITION) {
+                mQuickMatch.setVisibility(View.VISIBLE);
+            }
             updateUserArenaActivityStatus(mArenaActivityAndUserStatus);
         } else {
             mJoinGameLL.setVisibility(View.VISIBLE);
@@ -426,7 +449,17 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void initView() {
-        setSupportActionBar(mToolBar);
+//        setSupportActionBar(mToolBar);
+
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                mAppBarVerticalOffset = verticalOffset;
+                boolean b = mSwipEnabled && mAppBarVerticalOffset > -1;
+                mSwipeRefreshLayout.setEnabled(b);
+            }
+        });
+
         mArenaFragmentAdapter = new ArenaFragmentAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mArenaFragmentAdapter);
         mTabLayout.setDistributeEvenly(true);
@@ -438,6 +471,13 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
         mTabLayout.setHasBottomBorder(false);
         mTabLayout.setViewPager(mViewPager);
 
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+            }
+        });
+
         initTitleBar();
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -448,6 +488,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void onPageSelected(int position) {
+                mViperPosition = position;
                 if (position == 0) {
                     BattleListFragment battleListFragment = getBattleListFragment();
                     if (battleListFragment != null) {
@@ -639,6 +680,10 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                     protected void onRespSuccess(Resp<Battle> resp) {
                         mBattle = resp.getData();
                         if (mBattle != null && mBattle.isBattleStarted()) {
+                            BattleListFragment battleListFragment = getBattleListFragment();
+                            if (battleListFragment != null) {
+                                battleListFragment.setCurrentBattle(mBattle);
+                            }
                             mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
                             if (needQuickMatch) {
                                 Launcher.with(getActivity(), BattleActivity.class)
@@ -970,6 +1015,26 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
             }
         }
     }
+
+    @Override
+    public void onSwipRefreshEnable(boolean enabled, int fragmentPosition) {
+        Log.d(TAG, "onSwipRefreshEnable: " + enabled + "  " + mAppBarVerticalOffset);
+        mSwipEnabled = enabled;
+        boolean b = enabled && mAppBarVerticalOffset > -1;
+        mSwipeRefreshLayout.setEnabled(b);
+    }
+
+    @Override
+    public void onCurrentBattle(Battle battle) {
+        if (battle != null) {
+            if (battle.isBattleStarted()) {
+                mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
+            } else {
+                mQuickMatch.setBackgroundResource(R.drawable.btn_battle_matching);
+            }
+        }
+    }
+
 
     static class ArenaFragmentAdapter extends FragmentPagerAdapter {
 

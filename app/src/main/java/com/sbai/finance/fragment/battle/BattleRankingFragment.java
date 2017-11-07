@@ -51,6 +51,16 @@ public class BattleRankingFragment extends BaseFragment {
     private ArrayList<ArenaAwardRanking> mArenaAwardRankingArrayList;
 
 
+    BattleListFragment.OnFragmentRecycleViewScrollListener mOnFragmentRecycleViewScrollListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof BattleListFragment.OnFragmentRecycleViewScrollListener) {
+            mOnFragmentRecycleViewScrollListener = (BattleListFragment.OnFragmentRecycleViewScrollListener) context;
+        }
+    }
+
     public BattleRankingFragment() {
     }
 
@@ -73,13 +83,24 @@ public class BattleRankingFragment extends BaseFragment {
         mArenaAwardRankingAdapter = new ArenaAwardRankingAdapter(mArenaAwardRankingArrayList, getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mArenaAwardRankingAdapter);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
+                if(mOnFragmentRecycleViewScrollListener!=null){
+                    mOnFragmentRecycleViewScrollListener.onSwipRefreshEnable(isTop,1);
+                }
+            }
+        });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        requestArenaAwardRankingData();
-    }
 
     @Override
     public void onDestroyView() {

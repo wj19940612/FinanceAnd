@@ -564,7 +564,7 @@ public class BattleListActivity extends BaseActivity implements
     private void updateCurrentBattleStatus(Battle battle) {
         if (mCurrentBattle != null) {
             if (mCurrentBattle.getId() == battle.getId()) {
-                if (mCurrentBattle.isBattleOver()) {
+                if (battle.isBattleOver()) {
                     mCreateAndMatchArea.setVisibility(View.VISIBLE);
                     mCurrentBattleBtn.setVisibility(View.GONE);
                 } else {
