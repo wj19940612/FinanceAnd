@@ -181,7 +181,7 @@ public class MineFragment extends BaseFragment {
 
     private void updateUserScore(UserEachTrainingScoreModel data) {
         if (LocalUser.getUser().isLogin()) {
-            if (data.isTrain()) {
+            if (data.isTrain() || data.isEvaluate()) {
                 mScore.setVisibility(View.VISIBLE);
                 mScore.setText(String.valueOf((int) data.getUserTotalScore()));
                 mScoreProgress.setText(getString(R.string._more_than_number, FinanceUtil.formatFloorPercent(data.getRank())));

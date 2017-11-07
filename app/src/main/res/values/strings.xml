@@ -873,6 +873,9 @@
     <string name="you_is_real_name_wait_please_wait">您的实名认证还在审核中\n请耐心等待</string>
     <string name="choose_skin">选择皮肤</string>
     <string name="you_not_has_battle">您还未参加对战</string>
+    <string name="battle_count_is_not_enough">对战场次不足30，未计入最终排名</string>
+    <string name="your_rank_is_not_exchange_reward">非常抱歉！您当前排名无奖品可领取</string>
+
     <!-- 首页 -->
     <string name="look_my_rank">查看我的排名</string>
     <string name="please_retry">请重试</string>

@@ -133,6 +133,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
 
     private ArenaActivityAndUserStatus mArenaActivityAndUserStatus;
     private ImageView mAvatar;
+    UserActivityScore mUserActivityScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,15 +188,16 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                     @Override
                     protected void onRespSuccessData(ArenaActivityAndUserStatus data) {
                         mArenaActivityAndUserStatus = data;
-                        updateUserJoinArenaStatus(data.isApplyed());
-                        UserActivityScore userActivityScore = mArenaActivityAndUserStatus.getMyScoreVO();
+                        mUserActivityScore = mArenaActivityAndUserStatus.getMyScoreVO();
                         ArenaInfo arenaInfo = mArenaActivityAndUserStatus.getActivityModel();
                         if (arenaInfo != null) {
                             updateArenaInfo(arenaInfo);
                         }
-                        if (userActivityScore != null) {
-                            updateUserActivityScore(userActivityScore);
+                        if (mUserActivityScore != null) {
+                            updateUserActivityScore(mUserActivityScore);
                         }
+
+                        updateUserJoinArenaStatus(data.isApplyed());
 
                     }
 
@@ -252,30 +254,38 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
         //如果可兑换数据为空 则代表排名低 没有进入排名
         if (arenaActivityAwardInfoList.isEmpty()) {
             mAward.setVisibility(View.GONE);
-            mPredictGain.setText(R.string.ranking_low);
+            if (arenaActivityAndUserStatus.userCanExchangeAward()) {
+                mPredictGain.setText(R.string.your_rank_is_not_exchange_reward);
+            }else {
+                mPredictGain.setText(R.string.ranking_low);
+            }
         } else {
             mAward.setVisibility(View.VISIBLE);
             ArenaActivityAwardInfo arenaActivityAwardInfo = arenaActivityAwardInfoList.get(0);
+            if (arenaActivityAwardInfo != null) {
+                mAward.setText(arenaActivityAwardInfo.getPrizeName());
+            }
             if (arenaActivityAndUserStatus.userCanExchangeAward()) {
-                if (arenaActivityAwardInfo != null) {
-                    mAward.setText(arenaActivityAwardInfo.getPrizeName());
+                if (mUserActivityScore.getTotalCount() < 30) {
+                    mPredictGain.setText(R.string.battle_count_is_not_enough);
+                } else {
+                    mPredictGain.setText(R.string.get_award);
+                    requestUserExchangeAwardInfo();
                 }
-                mPredictGain.setText(R.string.get_award);
-                requestUserExchangeAwardInfo(arenaActivityAwardInfo);
             } else {
                 mPredictGain.setText(R.string.predict_gain);
             }
         }
     }
 
-    private void requestUserExchangeAwardInfo(final ArenaActivityAwardInfo arenaActivityAwardInfo) {
+    private void requestUserExchangeAwardInfo() {
         Client.requestUserExchangeAwardInfo(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<UserExchangeAwardInfo>>, List<UserExchangeAwardInfo>>() {
                     @Override
                     protected void onRespSuccessData(List<UserExchangeAwardInfo> data) {
-                        updateUserExchangeAwardStatus(arenaActivityAwardInfo, data);
+                        updateUserExchangeAwardStatus(data);
                     }
 
                     @Override
@@ -291,29 +301,16 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 .fireFree();
     }
 
-    private void updateUserExchangeAwardStatus(ArenaActivityAwardInfo arenaActivityAwardInfo, List<UserExchangeAwardInfo> data) {
+    private void updateUserExchangeAwardStatus(List<UserExchangeAwardInfo> data) {
         //如果用户兑换列表为空，则表示用户还没有提交兑换申请
         if (data.isEmpty()) {
             mExchangeDetail.setVisibility(View.GONE);
-            if (arenaActivityAwardInfo != null) {
-                mAward.setText(arenaActivityAwardInfo.getPrizeName());
-            }
-            if (mArenaActivityAndUserStatus != null) {
-                if (mArenaActivityAndUserStatus.userCanExchangeAward()) {
-                    mGift.setVisibility(View.VISIBLE);
-                    mPredictGain.setText(R.string.get_award);
-                } else {
-                    mPredictGain.setText(R.string.predict_gain);
-                }
+            if (mArenaActivityAndUserStatus.userCanExchangeAward()) {
+                mGift.setVisibility(View.VISIBLE);
             }
         } else {
             mGift.setVisibility(View.GONE);
             mExchangeDetail.setVisibility(View.VISIBLE);
-            if (arenaActivityAwardInfo != null) {
-                mAward.setText(arenaActivityAwardInfo.getPrizeName());
-            }
-            mPredictGain.setText(R.string.get_award);
-
             UserExchangeAwardInfo userExchangeAwardInfo = data.get(0);
             if (userExchangeAwardInfo != null) {
                 switch (userExchangeAwardInfo.getStatus()) {
