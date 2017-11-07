@@ -508,13 +508,24 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
 
     public void share(Share data) {
         ShareDialog.with(getActivity())
-                .setTitle(R.string.share_to)
+                .setTitle(getString(R.string.share_title))
                 .setShareTitle(data.getTitle())
                 .setShareDescription(data.getContent())
                 .setShareUrl(data.getShareLink() + "?inviteCode=%s" + LocalUser.getUser().getUserInfo().getInviteCode())
                 .setShareThumbUrl(data.getShareLeUrl())
                 .hasFeedback(false)
                 .hasWeiBo(false)
+                .setListener(new ShareDialog.OnShareDialogCallback() {
+                    @Override
+                    public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
+                        Client.share().setTag(TAG).fire();
+                    }
+
+                    @Override
+                    public void onFeedbackClick(View view) {
+
+                    }
+                })
                 .show();
     }
 
