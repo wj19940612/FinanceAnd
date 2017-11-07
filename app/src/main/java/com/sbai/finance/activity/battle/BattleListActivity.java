@@ -157,10 +157,10 @@ public class BattleListActivity extends BaseActivity implements
 
     private void initTitleBar() {
         View view = mTitleBar.getCustomView();
-        mAvatar =  view.findViewById(R.id.avatar);
-        mIngot =  view.findViewById(R.id.ingot);
-        mRecharge =  view.findViewById(R.id.recharge);
-        TextView myBattleResult =  view.findViewById(R.id.myBattleResult);
+        mAvatar = view.findViewById(R.id.avatar);
+        mIngot = view.findViewById(R.id.ingot);
+        mRecharge = view.findViewById(R.id.recharge);
+        TextView myBattleResult = view.findViewById(R.id.myBattleResult);
         mRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -499,6 +499,9 @@ public class BattleListActivity extends BaseActivity implements
                     }
                 }
             }
+            if (mCurrentBattle != null) {
+                stringBuilder.append(mCurrentBattle.getId()).append(",");
+            }
             if (stringBuilder.length() > 0) {
                 stringBuilder.deleteCharAt(stringBuilder.length() - 1);
                 requestVisibleBattleData(stringBuilder.toString());
@@ -523,29 +526,31 @@ public class BattleListActivity extends BaseActivity implements
         for (int i = 0; i < mVersusListAdapter.getCount(); i++) {
             Battle item = mVersusListAdapter.getItem(i);
             for (Battle battle : data) {
-                if (item.getId() == battle.getId() && item.getGameStatus() != Battle.GAME_STATUS_END) {
-
-                    if (battle.getGameStatus() == Battle.GAME_STATUS_CANCELED) {
-                        removeBattleList.add(item);
-                    } else {
-                        item.setGameStatus(battle.getGameStatus());
-                        item.setLaunchPraise(battle.getLaunchPraise());
-                        item.setLaunchScore(battle.getLaunchScore());
-                        item.setAgainstPraise(battle.getAgainstPraise());
-                        item.setAgainstScore(battle.getAgainstScore());
-                        item.setWinResult(battle.getWinResult());
-                        if (battle.getGameStatus() == Battle.GAME_STATUS_STARTED
-                                || battle.getGameStatus() == Battle.GAME_STATUS_END) {
-                            item.setAgainstUser(battle.getAgainstUser());
-                            item.setAgainstUserName(battle.getAgainstUserName());
-                            item.setAgainstUserPortrait(battle.getAgainstUserPortrait());
-                        }
-                        if (battle.getGameStatus() == Battle.GAME_STATUS_END) {
+                updateCurrentBattleStatus(battle);
+                if(item!=null){
+                    if (item.getId() == battle.getId() && item.getGameStatus() != Battle.GAME_STATUS_END) {
+                        if (battle.getGameStatus() == Battle.GAME_STATUS_CANCELED) {
+                            removeBattleList.add(item);
+                        } else {
+                            item.setGameStatus(battle.getGameStatus());
+                            item.setLaunchPraise(battle.getLaunchPraise());
+                            item.setLaunchScore(battle.getLaunchScore());
+                            item.setAgainstPraise(battle.getAgainstPraise());
+                            item.setAgainstScore(battle.getAgainstScore());
                             item.setWinResult(battle.getWinResult());
+                            if (battle.getGameStatus() == Battle.GAME_STATUS_STARTED
+                                    || battle.getGameStatus() == Battle.GAME_STATUS_END) {
+                                item.setAgainstUser(battle.getAgainstUser());
+                                item.setAgainstUserName(battle.getAgainstUserName());
+                                item.setAgainstUserPortrait(battle.getAgainstUserPortrait());
+                            }
+                            if (battle.getGameStatus() == Battle.GAME_STATUS_END) {
+                                item.setWinResult(battle.getWinResult());
+                            }
                         }
+                        data.remove(battle);
+                        break;
                     }
-                    data.remove(battle);
-                    break;
                 }
             }
         }
@@ -553,6 +558,20 @@ public class BattleListActivity extends BaseActivity implements
             mVersusListAdapter.remove(battle);
         }
         mVersusListAdapter.notifyDataSetChanged();
+    }
+
+    private void updateCurrentBattleStatus(Battle battle) {
+        if (mCurrentBattle != null) {
+            if (mCurrentBattle.getId() == battle.getId()) {
+                if (mCurrentBattle.isBattleOver()) {
+                    mCreateAndMatchArea.setVisibility(View.VISIBLE);
+                    mCurrentBattleBtn.setVisibility(View.GONE);
+                } else {
+                    mCreateAndMatchArea.setVisibility(View.GONE);
+                    mCurrentBattleBtn.setVisibility(View.VISIBLE);
+                }
+            }
+        }
     }
 
     private void updateUserFund(UserFundInfo data) {

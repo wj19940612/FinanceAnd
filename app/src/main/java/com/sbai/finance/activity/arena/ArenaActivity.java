@@ -134,6 +134,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     private ArenaActivityAndUserStatus mArenaActivityAndUserStatus;
     private ImageView mAvatar;
     UserActivityScore mUserActivityScore;
+    private Battle mBattle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,9 +152,9 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void refreshData() {
+        requestArenaActivityAndUserStatus();
         if (LocalUser.getUser().isLogin()) {
             requestArenaApplyRule(false);
-            requestArenaActivityAndUserStatus();
             requestUserFundInfo();
             requestUserLastBattleInfo(false);
         } else {
@@ -209,6 +210,15 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 .fireFree();
     }
 
+    private void updateArenaInfo(ArenaInfo data) {
+        if (data == null) return;
+        String activityTime = getString(R.string.activity_time,
+                DateUtil.format(data.getStartDate(), DateUtil.FORMAT_DATE_ARENA),
+                DateUtil.format(data.getEndDate(), DateUtil.FORMAT_DATE_ARENA));
+        mActivityTime.setText(activityTime);
+        mActivityTime2.setText(activityTime);
+    }
+
     private void updateUserJoinArenaStatus(boolean isJoinActivity) {
         if (isJoinActivity) {
             mJoinGameLL.setVisibility(View.GONE);
@@ -256,11 +266,11 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
             mAward.setVisibility(View.GONE);
             if (arenaActivityAndUserStatus.userCanExchangeAward()) {
                 mPredictGain.setText(R.string.your_rank_is_not_exchange_reward);
-            }else {
+            } else {
                 mPredictGain.setText(R.string.ranking_low);
             }
         } else {
-            mAward.setVisibility(View.VISIBLE);
+
             ArenaActivityAwardInfo arenaActivityAwardInfo = arenaActivityAwardInfoList.get(0);
             if (arenaActivityAwardInfo != null) {
                 mAward.setText(arenaActivityAwardInfo.getPrizeName());
@@ -269,10 +279,12 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 if (mUserActivityScore.getTotalCount() < 30) {
                     mPredictGain.setText(R.string.battle_count_is_not_enough);
                 } else {
+                    mAward.setVisibility(View.VISIBLE);
                     mPredictGain.setText(R.string.get_award);
                     requestUserExchangeAwardInfo();
                 }
             } else {
+                mAward.setVisibility(View.VISIBLE);
                 mPredictGain.setText(R.string.predict_gain);
             }
         }
@@ -372,11 +384,11 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case PushCode.QUICK_MATCH_SUCCESS:
                 mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
-                Battle battle = (Battle) battleWSPush.getContent().getData();
+                mBattle = (Battle) battleWSPush.getContent().getData();
                 StartMatchDialog.dismiss(getActivity());
-                if (battle != null) {
+                if (mBattle != null) {
                     Launcher.with(getActivity(), BattleActivity.class)
-                            .putExtra(ExtraKeys.BATTLE, battle)
+                            .putExtra(ExtraKeys.BATTLE, mBattle)
                             .executeForResult(REQ_CODE_FUTURE_BATTLE);
                 }
                 break;
@@ -401,15 +413,6 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                     }
                 })
                 .fireFree();
-    }
-
-    private void updateArenaInfo(ArenaInfo data) {
-        if (data == null) return;
-        String activityTime = getString(R.string.activity_time,
-                DateUtil.format(data.getStartDate(), DateUtil.FORMAT_DATE_ARENA),
-                DateUtil.format(data.getEndDate(), DateUtil.FORMAT_DATE_ARENA));
-        mActivityTime.setText(activityTime);
-        mActivityTime2.setText(activityTime);
     }
 
     private void initView() {
@@ -608,12 +611,12 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
 
                     @Override
                     protected void onRespSuccess(Resp<Battle> resp) {
-                        Battle battle = resp.getData();
-                        if (battle != null && battle.isBattleStarted()) {
+                        mBattle = resp.getData();
+                        if (mBattle != null && mBattle.isBattleStarted()) {
                             mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
                             if (needQuickMatch) {
                                 Launcher.with(getActivity(), BattleActivity.class)
-                                        .putExtra(ExtraKeys.BATTLE, battle)
+                                        .putExtra(ExtraKeys.BATTLE, mBattle)
                                         .executeForResult(REQ_CODE_FUTURE_BATTLE);
                             }
                         } else {
