@@ -29,12 +29,12 @@
         android:textSize="24sp"
         />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="35dp"
         android:layout_marginLeft="22dp"
         android:layout_marginTop="55dp"
-        android:orientation="horizontal"
+        android:gravity="center_vertical"
         >
 
         <ImageView
@@ -48,7 +48,8 @@
             android:id="@+id/verticalScrollText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/broadcastIcon"
+            android:layout_marginLeft="2dp"
             android:gravity="center_vertical"
             />
 
@@ -56,14 +57,17 @@
             android:id="@+id/broadcastText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_toRightOf="@id/broadcastIcon"
+            android:layout_marginLeft="2dp"
             android:gravity="center_vertical"
             android:maxLines="1"
             android:ellipsize="end"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:visibility="gone"
+            android:paddingBottom="10dp"
             />
-    </LinearLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/indexRL"

@@ -315,27 +315,21 @@ public class HomePageFragment extends BaseFragment {
             }
         });
 
-        requestGreetings();
         mHomeTitleView.clickIndexButton(BUTTON_HUSHEN);
-        getIndexData();
-
-        requestRadioData();
-
-        requestBannerData();
-
-        requestBusniessBannerData();
-
-        requestLeaderBoardData();
-
-        request7NewsData();
-
-        requestImportantNewsData();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         startScheduleJob(TIME_ONE);
+        requestGreetings();
+        getIndexData();
+        requestRadioData();
+        requestBannerData();
+        requestBusniessBannerData();
+        requestLeaderBoardData();
+        request7NewsData();
+        requestImportantNewsData();
         MarketSubscriber.get().subscribeAll();
         MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
     }
@@ -344,9 +338,12 @@ public class HomePageFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isAdded()) {
+            requestGreetings();
             getIndexData();
             requestRadioData();
+            requestBannerData();
             requestBusniessBannerData();
+            requestLeaderBoardData();
             request7NewsData();
             requestImportantNewsData();
         }

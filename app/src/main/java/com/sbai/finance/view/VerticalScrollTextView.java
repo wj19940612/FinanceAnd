@@ -32,9 +32,11 @@ import java.util.List;
 public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher.ViewFactory {
     private static final int FLAG_START_AUTO_SCROLL = 0;
     private static final int FLAG_STOP_AUTO_SCROLL = 1;
+    private static final int FLAG_DELAY_TIME = 1000;
     public static final int TEXT_SIZE_SP = 14;
     public static final int TEXT_ANIMATIONTIME = 300;
     public static final int TEXT_STILLTIME = 3000;
+    public static final int TEXT_PADDING_BOTTOM = 15;
 
     private int textColor = Color.WHITE;
 
@@ -62,8 +64,8 @@ public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher
     @Override
     public View makeView() {
         TextView t = new TextView(mContext);
-        t.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
-        t.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+        t.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        t.setPadding(0,0,0, (int) Display.dp2Px(TEXT_PADDING_BOTTOM,getResources()));
         t.setMaxLines(1);
         t.setEllipsize(TextUtils.TruncateAt.END);
         t.setTextColor(textColor);
@@ -114,7 +116,7 @@ public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher
      */
     public void startAutoScroll() {
         handler.removeMessages(FLAG_START_AUTO_SCROLL);
-        handler.sendEmptyMessage(FLAG_START_AUTO_SCROLL);
+        handler.sendEmptyMessageDelayed(FLAG_START_AUTO_SCROLL,FLAG_DELAY_TIME);
     }
 
     /**
