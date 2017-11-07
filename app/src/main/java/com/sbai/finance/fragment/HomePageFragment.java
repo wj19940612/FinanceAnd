@@ -60,6 +60,9 @@ import butterknife.Unbinder;
 import static com.sbai.finance.model.leaderboard.LeaderThreeRank.INGOT;
 import static com.sbai.finance.model.leaderboard.LeaderThreeRank.PROFIT;
 import static com.sbai.finance.model.leaderboard.LeaderThreeRank.SAVANT;
+import static com.sbai.finance.view.HomeTitleView.BUTTON_HUSHEN;
+import static com.sbai.finance.view.HomeTitleView.BUTTON_QIHUO;
+import static com.sbai.finance.view.HomeTitleView.BUTTON_ZIXUAN;
 
 /**
  * Created by Administrator on 2017\10\26 0026.
@@ -149,6 +152,17 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onSelectClick() {
                 requestOptionalData();
+            }
+        });
+        mHomeTitleView.setOnClickItemListener(new HomeTitleView.OnClickItemListener() {
+            @Override
+            public void onItemClick(int button, Variety variety) {
+                if (button == BUTTON_HUSHEN) {
+
+                } else if (button == BUTTON_QIHUO) {
+
+                } else if (button == BUTTON_ZIXUAN) {
+                }
             }
         });
         mHomeTitleView.setOnLookAllClickListener(new HomeTitleView.OnLookAllClickListener() {
@@ -283,7 +297,7 @@ public class HomePageFragment extends BaseFragment {
         });
 
         requestGreetings();
-        mHomeTitleView.clickIndexButton(HomeTitleView.BUTTON_HUSHEN);
+        mHomeTitleView.clickIndexButton(BUTTON_HUSHEN);
         getIndexData();
 
         requestRadioData();
@@ -328,7 +342,7 @@ public class HomePageFragment extends BaseFragment {
     }
 
     private void getIndexData() {
-        if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_HUSHEN) {
+        if (mHomeTitleView.getOldButton() == BUTTON_HUSHEN) {
             requestStockIndexData();
         } else if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_ZIXUAN) {
             requestOptionalData();

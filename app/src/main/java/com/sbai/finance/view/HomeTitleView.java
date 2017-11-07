@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +17,7 @@ import com.sbai.finance.model.Greeting;
 import com.sbai.finance.model.NoticeRadio;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.leaderboard.LeaderThreeRank;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.utils.FinanceUtil;
 
@@ -29,6 +29,10 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.model.leaderboard.LeaderThreeRank.INGOT;
+import static com.sbai.finance.model.leaderboard.LeaderThreeRank.PROFIT;
+import static com.sbai.finance.model.leaderboard.LeaderThreeRank.SAVANT;
 
 /**
  * Created by Administrator on 2017\10\25 0025.
@@ -98,6 +102,12 @@ public class HomeTitleView extends RelativeLayout {
     TextView mselectBtn;
     @BindView(R.id.lookAllBtn)
     RelativeLayout mLookAllBtn;
+    @BindView(R.id.leftRL)
+    RelativeLayout mLeftRL;
+    @BindView(R.id.centerRL)
+    RelativeLayout mCenterRL;
+    @BindView(R.id.rightRL)
+    RelativeLayout mRightRL;
 
 
     private Context mContext;
@@ -122,6 +132,16 @@ public class HomeTitleView extends RelativeLayout {
     public void setOnBroadcastListener(VerticalScrollTextView.OnItemClickListener onBroadcastListener) {
         mOnBroadcastListener = onBroadcastListener;
         mVerticalScrollTextView.setOnItemClickListener(onBroadcastListener);
+    }
+
+    private OnClickItemListener mOnClickItemListener;
+
+    public void setOnClickItemListener(OnClickItemListener onClickItemListener) {
+        mOnClickItemListener = onClickItemListener;
+    }
+
+    public interface OnClickItemListener {
+        public void onItemClick(int button, Variety variety);
     }
 
     public interface OnLookAllClickListener {
@@ -362,6 +382,7 @@ public class HomeTitleView extends RelativeLayout {
             default:
                 break;
         }
+        setRLClick(data);
     }
 
     //更新期货名称
@@ -384,7 +405,80 @@ public class HomeTitleView extends RelativeLayout {
             mRightIndex.setTag(data.get(2));
             mRightIndex.setText(data.get(2).getVarietyName());
         }
+        setRLClick(data);
         updateFutureMarketData();
+    }
+
+    private void setRLClick(List<Variety> data) {
+        switch (data.size()) {
+            case 0:
+                return;
+            case 1:
+                final Variety onlyLeftData = data.get(0);
+                mLeftRL.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnClickItemListener != null) {
+                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, onlyLeftData);
+                        }
+                    }
+                });
+                mCenterRL.setOnClickListener(null);
+                mRightRL.setOnClickListener(null);
+                break;
+            case 2:
+                final Variety twoLeftData = data.get(0);
+                final Variety twoCenterData = data.get(1);
+                mLeftRL.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnClickItemListener != null) {
+                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, twoLeftData);
+                        }
+                    }
+                });
+                mCenterRL.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnClickItemListener != null) {
+                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, twoCenterData);
+                        }
+                    }
+                });
+                mRightRL.setOnClickListener(null);
+                break;
+            case 3:
+                final Variety threeLeftData = data.get(0);
+                final Variety threeCenterData = data.get(1);
+                final Variety threeRightData = data.get(2);
+                mLeftRL.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnClickItemListener != null) {
+                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, threeLeftData);
+                        }
+                    }
+                });
+                mCenterRL.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnClickItemListener != null) {
+                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, threeCenterData);
+                        }
+                    }
+                });
+                mRightRL.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnClickItemListener != null) {
+                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, threeRightData);
+                        }
+                    }
+                });
+                break;
+            default:
+                break;
+        }
     }
 
     //更新股票行情
@@ -543,6 +637,7 @@ public class HomeTitleView extends RelativeLayout {
             mRightIndex.setTag(data.get(2));
             mRightIndex.setText(data.get(2).getVarietyName());
         }
+        setRLClick(data);
     }
 
     private void initStockOrFutureUI(int button) {
