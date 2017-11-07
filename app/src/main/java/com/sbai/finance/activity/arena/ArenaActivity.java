@@ -511,7 +511,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 .setTitle(getString(R.string.share_title))
                 .setShareTitle(data.getTitle())
                 .setShareDescription(data.getContent())
-                .setShareUrl(data.getShareLink() + "?inviteCode=%s" + LocalUser.getUser().getUserInfo().getInviteCode())
+                .setShareUrl(data.getShareLink() + "?inviteCode=" + LocalUser.getUser().getUserInfo().getInviteCode())
                 .setShareThumbUrl(data.getShareLeUrl())
                 .hasFeedback(false)
                 .hasWeiBo(false)
