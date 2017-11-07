@@ -61,6 +61,7 @@ public class SearchOptionalActivity extends BaseActivity {
     @BindView(R.id.listView)
     ListView mListView;
     private String type;
+    private String mKey;
     private OptionalAdapter mOptionalAdapter;
 
     @Override
@@ -171,16 +172,19 @@ public class SearchOptionalActivity extends BaseActivity {
 
     private void requestSearch(String key) {
         try {
-            key = URLEncoder.encode(key, "utf-8");
+            mKey = key = URLEncoder.encode(key, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        mKey = key;
         if (type.equalsIgnoreCase(Variety.VAR_STOCK) || type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
             Client.searchStock(key).setTag(TAG)
                     .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                         @Override
                         protected void onRespSuccessData(List<Variety> data) {
-                            updateSearchData(data);
+                            if (getUrl().contains(mKey)) {
+                                updateSearchData(data);
+                            }
                         }
                     }).fire();
         } else if (type.equalsIgnoreCase(Variety.VAR_FUTURE)) {
@@ -188,7 +192,9 @@ public class SearchOptionalActivity extends BaseActivity {
                     .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                         @Override
                         protected void onRespSuccessData(List<Variety> data) {
-                            updateSearchData(data);
+                            if (getUrl().contains(mKey)) {
+                                updateSearchData(data);
+                            }
                         }
                     }).fire();
         }
