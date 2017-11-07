@@ -592,6 +592,9 @@ public class BattleActivity extends BaseActivity {
                     mBattleOperateView.setBattle(mBattle);
                     mBattleOperateView.updateView(mBattleStatus);
                     showGameOverDialog();
+                } else if (mBattleStatus >= OVER_OWNER && mBattleStatus <= OVER_OBSERVER) {
+                    // 最后对战结束平仓推送会提前把对战改为结束状态，此时再收到结束对战通知，显示弹框
+                    showGameOverDialog();
                 }
                 return;
             }
