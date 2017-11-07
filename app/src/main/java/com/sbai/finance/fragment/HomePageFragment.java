@@ -14,12 +14,15 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
+import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.home.AllTrainingListActivity;
 import com.sbai.finance.activity.home.BroadcastListActivity;
 import com.sbai.finance.activity.home.InformationAndFocusNewsActivity;
 import com.sbai.finance.activity.home.StockFutureActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.stock.StockDetailActivity;
+import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.DailyReport;
@@ -158,10 +161,26 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onItemClick(int button, Variety variety) {
                 if (button == BUTTON_HUSHEN) {
-
+                    Launcher.with(getActivity(), StockIndexActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                 } else if (button == BUTTON_QIHUO) {
+                    Launcher.with(getActivity(), FutureTradeActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
 
                 } else if (button == BUTTON_ZIXUAN) {
+                    if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
+                        Launcher.with(getActivity(), FutureTradeActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                    }
+                    if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
+                        if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)) {
+                            Launcher.with(getActivity(), StockIndexActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                        } else {
+                            Launcher.with(getActivity(), StockDetailActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                        }
+                    }
                 }
             }
         });

@@ -49,7 +49,7 @@ import butterknife.OnClick;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 /**
- * Created by houcc on 2017-06-0.
+ * 自选搜索
  */
 
 public class SearchOptionalActivity extends BaseActivity {
@@ -70,6 +70,15 @@ public class SearchOptionalActivity extends BaseActivity {
         type = getIntent().getStringExtra("type");
         ButterKnife.bind(this);
         initView();
+        initVariety();
+    }
+
+    private void initVariety() {
+        if (type.equalsIgnoreCase(Variety.VAR_STOCK) || type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
+            requestStockData();
+        } else if (type.equalsIgnoreCase(Variety.VAR_FUTURE)) {
+            requestFutureData();
+        }
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -172,7 +181,34 @@ public class SearchOptionalActivity extends BaseActivity {
                         }
                     }).fire();
         }
+    }
 
+    private void requestStockData() {
+        Client.searchStock("0000").setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Variety> data) {
+                        if (data.size() >= 10) {
+                            updateSearchData(data.subList(0, 10));
+                        } else {
+                            updateSearchData(data);
+                        }
+                    }
+                }).fire();
+    }
+
+    private void requestFutureData() {
+        Client.searchFuture("").setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Variety> data) {
+                        if (data.size() >= 10) {
+                            updateSearchData(data.subList(0, 10));
+                        } else {
+                            updateSearchData(data);
+                        }
+                    }
+                }).fire();
     }
 
     private void updateSearchData(List<Variety> data) {

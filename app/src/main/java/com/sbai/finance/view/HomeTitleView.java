@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -410,6 +411,7 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     private void setRLClick(List<Variety> data) {
+        Log.e("zzz","data:"+data.get(0).getVarietyName());
         switch (data.size()) {
             case 0:
                 return;
@@ -419,7 +421,7 @@ public class HomeTitleView extends RelativeLayout {
                     @Override
                     public void onClick(View v) {
                         if (mOnClickItemListener != null) {
-                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, onlyLeftData);
+                            mOnClickItemListener.onItemClick(oldButton, onlyLeftData);
                         }
                     }
                 });
@@ -433,7 +435,7 @@ public class HomeTitleView extends RelativeLayout {
                     @Override
                     public void onClick(View v) {
                         if (mOnClickItemListener != null) {
-                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, twoLeftData);
+                            mOnClickItemListener.onItemClick(oldButton, twoLeftData);
                         }
                     }
                 });
@@ -441,7 +443,7 @@ public class HomeTitleView extends RelativeLayout {
                     @Override
                     public void onClick(View v) {
                         if (mOnClickItemListener != null) {
-                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, twoCenterData);
+                            mOnClickItemListener.onItemClick(oldButton, twoCenterData);
                         }
                     }
                 });
@@ -455,7 +457,7 @@ public class HomeTitleView extends RelativeLayout {
                     @Override
                     public void onClick(View v) {
                         if (mOnClickItemListener != null) {
-                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, threeLeftData);
+                            mOnClickItemListener.onItemClick(oldButton, threeLeftData);
                         }
                     }
                 });
@@ -463,7 +465,7 @@ public class HomeTitleView extends RelativeLayout {
                     @Override
                     public void onClick(View v) {
                         if (mOnClickItemListener != null) {
-                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, threeCenterData);
+                            mOnClickItemListener.onItemClick(oldButton, threeCenterData);
                         }
                     }
                 });
@@ -471,7 +473,7 @@ public class HomeTitleView extends RelativeLayout {
                     @Override
                     public void onClick(View v) {
                         if (mOnClickItemListener != null) {
-                            mOnClickItemListener.onItemClick(BUTTON_HUSHEN, threeRightData);
+                            mOnClickItemListener.onItemClick(oldButton, threeRightData);
                         }
                     }
                 });
