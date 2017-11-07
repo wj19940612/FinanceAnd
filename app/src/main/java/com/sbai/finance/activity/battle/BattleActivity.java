@@ -378,7 +378,7 @@ public class BattleActivity extends BaseActivity {
         long startTime = mBattle.getStartTime();
         long pastTime = curTime - startTime;
         long remainingTime = mBattle.getEndline() * 1000 - pastTime;
-        remainingTime = remainingTime < 0 ? 0 : remainingTime;
+        remainingTime = Math.max(0, remainingTime);
         mBattleRemainingTime.setText(getString(R.string.remaining_time_x,
                 DateUtil.format(remainingTime, "mm:ss")));
 
@@ -397,7 +397,6 @@ public class BattleActivity extends BaseActivity {
             }
             mBattleRemainingTime.setTag(count);
         }
-
     }
 
     private void initTabLayout() {
@@ -593,6 +592,9 @@ public class BattleActivity extends BaseActivity {
                     mBattleOperateView.setBattle(mBattle);
                     mBattleOperateView.updateView(mBattleStatus);
                     showGameOverDialog();
+                } else if (mBattleStatus >= OVER_OWNER && mBattleStatus <= OVER_OBSERVER) {
+                    // 最后对战结束平仓推送会提前把对战改为结束状态，此时再收到结束对战通知，显示弹框
+                    showGameOverDialog();
                 }
                 return;
             }
@@ -732,7 +734,7 @@ public class BattleActivity extends BaseActivity {
                         mVariety = variety;
                         mBattleOperateView.setVariety(mVariety);
                         initChartViews();
-                        showTrendView();
+                        mTabLayout.getTabAt(1).select();
                         subscribeFutureData();
                     }
                 }).fire();

@@ -35,5 +35,5 @@
 
     <include
         android:id="@+id/playersView"
-        layout="@layout/view_battle_versus"/>
+        layout="@layout/view_battle_players"/>
 </LinearLayout>

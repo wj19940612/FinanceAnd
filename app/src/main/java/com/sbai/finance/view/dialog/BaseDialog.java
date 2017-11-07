@@ -117,7 +117,7 @@ public class BaseDialog {
         }
 
         if (mActivity != null && !mActivity.isFinishing()) {
-            scaleDialogWidth(1);
+            scaleDialogWidth(0.8);
             mDialog.show();
         }
     }
