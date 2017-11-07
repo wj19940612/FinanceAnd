@@ -261,10 +261,10 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                     mAward.setText(arenaActivityAwardInfo.getPrizeName());
                 }
                 mPredictGain.setText(R.string.get_award);
+                requestUserExchangeAwardInfo(arenaActivityAwardInfo);
             } else {
                 mPredictGain.setText(R.string.predict_gain);
             }
-            requestUserExchangeAwardInfo(arenaActivityAwardInfo);
         }
     }
 

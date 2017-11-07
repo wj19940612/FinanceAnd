@@ -173,6 +173,12 @@ public class BattleListActivity extends BaseActivity implements
                 openWalletPage();
             }
         });
+        mAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lookBattleResult();
+            }
+        });
         myBattleResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
