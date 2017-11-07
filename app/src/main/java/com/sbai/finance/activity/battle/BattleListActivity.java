@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -527,7 +528,7 @@ public class BattleListActivity extends BaseActivity implements
             Battle item = mVersusListAdapter.getItem(i);
             for (Battle battle : data) {
                 updateCurrentBattleStatus(battle);
-                if(item!=null){
+                if (item != null) {
                     if (item.getId() == battle.getId() && item.getGameStatus() != Battle.GAME_STATUS_END) {
                         if (battle.getGameStatus() == Battle.GAME_STATUS_CANCELED) {
                             removeBattleList.add(item);
@@ -934,7 +935,6 @@ public class BattleListActivity extends BaseActivity implements
 
         private static final int BATTLE_STATUS_WAITING = 0;
         private static final int BATTLE_STATUS_PROCEED = 1;
-
         private Context mContext;
 
         public VersusListAdapter(@NonNull Context context) {
@@ -961,7 +961,7 @@ public class BattleListActivity extends BaseActivity implements
                     break;
                 case BATTLE_STATUS_PROCEED:
                     if (convertView == null) {
-                        convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_future_versus_proceed, parent, false);
+                        convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_ordinary_battle, parent, false);
                         viewHolder = new ViewHolder(convertView);
                         convertView.setTag(viewHolder);
                     } else {
@@ -983,7 +983,7 @@ public class BattleListActivity extends BaseActivity implements
         public int getItemViewType(int position) {
             Battle battle = getItem(position);
             if (battle != null) {
-                if (battle.isBattleStarted()) {
+                if (battle.isBattleCreated()) {
                     return BATTLE_STATUS_WAITING;
                 }
                 return BATTLE_STATUS_PROCEED;
@@ -991,30 +991,29 @@ public class BattleListActivity extends BaseActivity implements
             return super.getItemViewType(position);
         }
 
-
         static class ViewHolder {
+            @BindView(R.id.progress)
+            BattleProgress mProgress;
             @BindView(R.id.createAvatar)
             ImageView mCreateAvatar;
             @BindView(R.id.createKo)
             ImageView mCreateKo;
             @BindView(R.id.createAvatarRL)
             FrameLayout mCreateAvatarRL;
-            @BindView(R.id.createName)
-            TextView mCreateName;
-            @BindView(R.id.varietyName)
-            TextView mVarietyName;
-            @BindView(R.id.progress)
-            BattleProgress mProgress;
             @BindView(R.id.againstAvatar)
             ImageView mAgainstAvatar;
             @BindView(R.id.againstKo)
             ImageView mAgainstKo;
             @BindView(R.id.againstAvatarFL)
             FrameLayout mAgainstAvatarFL;
+            @BindView(R.id.createName)
+            TextView mCreateName;
             @BindView(R.id.againstName)
             TextView mAgainstName;
+            @BindView(R.id.varietyName)
+            TextView mVarietyName;
             @BindView(R.id.rootLL)
-            LinearLayout mRootLL;
+            ConstraintLayout mRootLL;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -1096,28 +1095,39 @@ public class BattleListActivity extends BaseActivity implements
         }
 
         static class WaitingBattleViewHolder {
+            @BindView(R.id.varietyName)
+            TextView mVarietyName;
+            @BindView(R.id.progress)
+            LinearLayout mProgress;
             @BindView(R.id.createAvatar)
             ImageView mCreateAvatar;
             @BindView(R.id.createKo)
             ImageView mCreateKo;
-            @BindView(R.id.createName)
-            TextView mCreateName;
-            @BindView(R.id.varietyName)
-            TextView mVarietyName;
-            @BindView(R.id.depositAndTime)
-            TextView mDepositAndTime;
+            @BindView(R.id.createAvatarRL)
+            FrameLayout mCreateAvatarRL;
             @BindView(R.id.againstAvatar)
             ImageView mAgainstAvatar;
             @BindView(R.id.againstKo)
             ImageView mAgainstKo;
+            @BindView(R.id.againstAvatarFL)
+            FrameLayout mAgainstAvatarFL;
+            @BindView(R.id.createName)
+            TextView mCreateName;
             @BindView(R.id.againstName)
             TextView mAgainstName;
+            @BindView(R.id.depositAndTime)
+            TextView mDepositAndTime;
+            @BindView(R.id.rootLL)
+            ConstraintLayout mRootLL;
 
             WaitingBattleViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
             public void bindDataWithView(Battle item, Context context) {
+                mRootLL.setSelected(true);
+                mAgainstAvatarFL.setSelected(false);
+                mCreateAvatarRL.setSelected(false);
                 mVarietyName.setText(item.getVarietyName());
                 GlideApp.with(context).load(item.getLaunchUserPortrait())
                         .load(item.getLaunchUserPortrait())

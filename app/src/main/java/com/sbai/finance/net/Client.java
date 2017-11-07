@@ -2924,7 +2924,7 @@ public class Client {
      * @return
      */
     public static API requestArenaActivityAndUserStatus(String activityCode) {
-        return new API("/activity/activity/getActivityScore.do",
+        return new API("/activity/futureGame/getActivityScore.do",
                 new ApiParams().put("activityCode", activityCode));
     }
 

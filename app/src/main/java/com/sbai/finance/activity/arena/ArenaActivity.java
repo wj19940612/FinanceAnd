@@ -248,7 +248,16 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 0.6f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
         mRanking.setText(ranking);
 
-        SpannableString myProfit = StrUtil.mergeTextWithRatioColor(getString(R.string.my_profit_count, data.getScore()),
+        String score = "";
+        if (data.getScore() == 0) {
+            score = "0";
+        } else if (data.getScore() > 0) {
+            score = getString(R.string.my_profit_count, data.getScore());
+        } else {
+            score = String.valueOf(data.getScore());
+        }
+        SpannableString
+                myProfit = StrUtil.mergeTextWithRatioColor(score,
                 "\n" + getString(R.string.my_profit),
                 0.6f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
         mMyProfit.setText(myProfit);
@@ -386,6 +395,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
                 mBattle = (Battle) battleWSPush.getContent().getData();
                 StartMatchDialog.dismiss(getActivity());
+                SmartDialog.dismiss(getActivity());
                 if (mBattle != null) {
                     Launcher.with(getActivity(), BattleActivity.class)
                             .putExtra(ExtraKeys.BATTLE, mBattle)
@@ -429,20 +439,36 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
         mTabLayout.setViewPager(mViewPager);
 
         initTitleBar();
-//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                BattleListFragment battleListFragment = getBattleListFragment();
-//                if (battleListFragment != null) {
-//                    battleListFragment.refresh();
-//                }
-//                BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
-//                if (battleRankingFragment != null) {
-//                    battleRankingFragment.requestArenaAwardRankingData();
-//                }
-//                refreshData();
-//            }
-//        });
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    BattleListFragment battleListFragment = getBattleListFragment();
+                    if (battleListFragment != null) {
+                        battleListFragment.refresh();
+                    }
+                    mQuickMatch.setVisibility(View.VISIBLE);
+                } else {
+                    BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
+                    if (battleRankingFragment != null) {
+                        battleRankingFragment.requestArenaAwardRankingData();
+                    }
+                    mQuickMatch.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     private BattleListFragment getBattleListFragment() {

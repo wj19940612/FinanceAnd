@@ -1,137 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/common_padding"
-              android:minHeight="80dp"
-              android:orientation="horizontal"
-              android:paddingLeft="@dimen/common_padding"
-              android:paddingRight="@dimen/common_padding">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLL"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_marginBottom="@dimen/common_padding"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/bg_row_battle_list"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/rootLL"
+    <com.sbai.finance.view.BattleProgress
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3"/>
+
+    <FrameLayout
+        android:id="@+id/createAvatarRL"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="@drawable/bg_battle_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/progress"
+        app:layout_constraintEnd_toStartOf="@+id/progress"
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/progress">
+
+        <ImageView
+            android:id="@+id/createAvatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_battle_avatar"
+            android:clickable="false"
+            tools:src="@drawable/btn_join_battle"/>
+
+        <ImageView
+            android:id="@+id/createKo"
+            android:layout_width="40dp"
+            android:layout_height="99dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_versus_ko"
+            android:visibility="visible"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/againstAvatarFL"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="@drawable/bg_battle_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/progress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toEndOf="@+id/progress"
+        app:layout_constraintTop_toTopOf="@+id/progress">
+
+        <ImageView
+            android:id="@+id/againstAvatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            tools:src="@drawable/btn_join_battle"/>
+
+        <ImageView
+            android:id="@+id/againstKo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_versus_ko"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/createName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/createAvatarRL"
+        app:layout_constraintStart_toStartOf="@+id/createAvatarRL"
+        app:layout_constraintTop_toBottomOf="@+id/createAvatarRL"
+        tools:text="乐米"/>
+
+    <TextView
+        android:id="@+id/againstName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/againstAvatarFL"
+        app:layout_constraintStart_toStartOf="@+id/againstAvatarFL"
+        app:layout_constraintTop_toBottomOf="@+id/againstAvatarFL"
+        tools:text="hah"/>
+
+    <TextView
+        android:id="@+id/varietyName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_row_battle_list"
-        android:gravity="center_vertical">
+        android:layout_height="15dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/arenaRankingTitleTextColor"
+        android:textSize="12sp"
+        android:visibility="visible"
+        app:layout_constraintBaseline_toBaselineOf="@+id/againstName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="美原油"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="9dp"
-            android:paddingRight="9dp">
-
-            <FrameLayout
-                android:id="@+id/createAvatarRL"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/bg_battle_avatar">
-
-                <ImageView
-                    android:id="@+id/createAvatar"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/bg_battle_avatar"
-                    android:clickable="false"
-                    tools:src="@drawable/btn_join_battle"/>
-
-                <ImageView
-                    android:id="@+id/createKo"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_versus_ko"
-                    android:visibility="visible"/>
-
-
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/createName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                tools:text="乐米"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <com.sbai.finance.view.BattleProgress
-                android:id="@+id/progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:textSize="14sp"/>
-
-            <TextView
-                android:id="@+id/varietyName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:gravity="center_horizontal"
-                android:textColor="@color/arenaRankingTitleTextColor"
-                android:textSize="12sp"
-                android:visibility="visible"
-                tools:text="美原油"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="9dp"
-            android:paddingRight="9dp">
-
-            <FrameLayout
-                android:id="@+id/againstAvatarFL"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/bg_battle_avatar">
-
-                <ImageView
-                    android:id="@+id/againstAvatar"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    tools:src="@drawable/btn_join_battle"/>
-
-                <ImageView
-                    android:id="@+id/againstKo"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_versus_ko"
-                    android:visibility="gone"/>
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/againstName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                tools:text="hah"/>
-        </LinearLayout>
-    </LinearLayout>
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

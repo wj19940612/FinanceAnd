@@ -3,6 +3,7 @@ package com.sbai.finance.fragment.battle;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
@@ -267,7 +267,6 @@ public class BattleListFragment extends BaseFragment {
 
         public static final int ITEM_TYPE_ORDINARY = 0;
         public static final int ITEM_TYPE_FOOTER_VIEW = 1;
-
         private List<Battle> mBattleList;
         private Context mContext;
         private OnItemClickListener<Battle> mBattleOnItemClickListener;
@@ -340,28 +339,28 @@ public class BattleListFragment extends BaseFragment {
 
 
         static class ViewHolder extends RecyclerView.ViewHolder {
+            @BindView(R.id.progress)
+            BattleProgress mProgress;
             @BindView(R.id.createAvatar)
             ImageView mCreateAvatar;
             @BindView(R.id.createKo)
             ImageView mCreateKo;
-            @BindView(R.id.createName)
-            TextView mCreateName;
-            @BindView(R.id.varietyName)
-            TextView mVarietyName;
-            @BindView(R.id.progress)
-            BattleProgress mProgress;
+            @BindView(R.id.createAvatarRL)
+            FrameLayout mCreateAvatarRL;
             @BindView(R.id.againstAvatar)
             ImageView mAgainstAvatar;
             @BindView(R.id.againstKo)
             ImageView mAgainstKo;
-            @BindView(R.id.againstName)
-            TextView mAgainstName;
-            @BindView(R.id.rootLL)
-            LinearLayout mRootLL;
-            @BindView(R.id.createAvatarRL)
-            FrameLayout mCreateAvatarRL;
             @BindView(R.id.againstAvatarFL)
             FrameLayout mAgainstAvatarFL;
+            @BindView(R.id.createName)
+            TextView mCreateName;
+            @BindView(R.id.againstName)
+            TextView mAgainstName;
+            @BindView(R.id.varietyName)
+            TextView mVarietyName;
+            @BindView(R.id.rootLL)
+            ConstraintLayout mRootLL;
 
             ViewHolder(View view) {
                 super(view);
@@ -385,20 +384,21 @@ public class BattleListFragment extends BaseFragment {
                         .into(mCreateAvatar);
                 mCreateName.setText(item.getLaunchUserName());
                 mAgainstName.setText(item.getAgainstUserName());
-                String reward = "";
-                switch (item.getCoinType()) {
-                    case Battle.COIN_TYPE_INGOT:
-                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.ingot));
-                        break;
-                    case Battle.COIN_TYPE_CASH:
-                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.cash));
-                        break;
-                    case Battle.COIN_TYPE_SCORE:
-                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.integral));
-                        break;
-                }
-                String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);
-                mVarietyName.setText(varietyReward);
+//                String reward = "";
+//                switch (item.getCoinType()) {
+//                    case Battle.COIN_TYPE_INGOT:
+//                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.ingot));
+//                        break;
+//                    case Battle.COIN_TYPE_CASH:
+//                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.cash));
+//                        break;
+//                    case Battle.COIN_TYPE_SCORE:
+//                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.integral));
+//                        break;
+//                }
+//                String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);
+//                mVarietyName.setText(varietyReward);
+                mVarietyName.setVisibility(View.GONE);
                 switch (item.getGameStatus()) {
                     case Battle.GAME_STATUS_STARTED:
                         mRootLL.setSelected(true);

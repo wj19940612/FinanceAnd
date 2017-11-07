@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -174,7 +174,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_battle_his, parent, false);
+                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_future_versus_proceed, parent, false);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -185,28 +185,28 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
         }
 
         static class ViewHolder {
+            @BindView(R.id.progress)
+            BattleProgress mProgress;
             @BindView(R.id.createAvatar)
             ImageView mCreateAvatar;
             @BindView(R.id.createKo)
             ImageView mCreateKo;
             @BindView(R.id.createAvatarRL)
             FrameLayout mCreateAvatarRL;
-            @BindView(R.id.createName)
-            TextView mCreateName;
-            @BindView(R.id.varietyName)
-            TextView mVarietyName;
-            @BindView(R.id.progress)
-            BattleProgress mProgress;
             @BindView(R.id.againstAvatar)
             ImageView mAgainstAvatar;
             @BindView(R.id.againstKo)
             ImageView mAgainstKo;
             @BindView(R.id.againstAvatarFL)
             FrameLayout mAgainstAvatarFL;
+            @BindView(R.id.createName)
+            TextView mCreateName;
             @BindView(R.id.againstName)
             TextView mAgainstName;
+            @BindView(R.id.varietyName)
+            TextView mVarietyName;
             @BindView(R.id.rootLL)
-            LinearLayout mRootLL;
+            ConstraintLayout mRootLL;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
