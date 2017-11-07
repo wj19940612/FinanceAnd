@@ -31,7 +31,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="22dp"
+                android:layout_marginTop="20dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:gravity="center"
                 android:textColor="@color/primaryText"
                 android:textSize="16sp"
@@ -43,9 +45,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/leftTitle"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="1dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="@color/unluckyText"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 />
 
             <ImageView
@@ -78,37 +82,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
                 >
 
                 <TextView
                     android:id="@+id/topRightTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginTop="22dp"
-                    android:gravity="center"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_toLeftOf="@id/topRightImg"
                     android:textColor="@color/primaryText"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
+                    android:includeFontPadding="false"
                     />
 
                 <TextView
                     android:id="@+id/topRightSubTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/topRightTitle"
+                    android:maxLines="2"
+                    android:layout_toLeftOf="@id/topRightImg"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="2dp"
                     android:textColor="@color/unluckyText"
-                    android:textSize="16sp"
+                    android:textSize="10sp"
+                    android:includeFontPadding="false"
                     />
 
                 <ImageView
                     android:id="@+id/topRightImg"
-                    android:layout_width="35dp"
-                    android:layout_height="40dp"
+                    android:layout_width="67dp"
+                    android:layout_height="50dp"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginRight="14dp"
                     />
 
             </RelativeLayout>
@@ -124,37 +133,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
                 >
 
                 <TextView
                     android:id="@+id/bottomRightTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_toLeftOf="@id/bottomRightImg"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginTop="22dp"
-                    android:gravity="center"
                     android:textColor="@color/primaryText"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
+                    android:includeFontPadding="false"
                     />
 
                 <TextView
                     android:id="@+id/bottomRightSubTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/bottomRightTitle"
+                    android:layout_toLeftOf="@id/bottomRightImg"
+                    android:maxLines="2"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="2dp"
                     android:textColor="@color/unluckyText"
-                    android:textSize="16sp"
+                    android:textSize="10sp"
+                    android:includeFontPadding="false"
                     />
 
                 <ImageView
                     android:id="@+id/bottomRightImg"
-                    android:layout_width="35dp"
-                    android:layout_height="40dp"
+                    android:layout_width="67dp"
+                    android:layout_height="50dp"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginRight="14dp"
                     />
             </RelativeLayout>
 
