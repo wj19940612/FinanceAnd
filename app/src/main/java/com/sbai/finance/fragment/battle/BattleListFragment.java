@@ -202,7 +202,6 @@ public class BattleListFragment extends BaseFragment {
                         battle.setWinResult(resultBattle.getWinResult());
                         battle.setLaunchScore(resultBattle.getLaunchScore());
                         battle.setAgainstScore(resultBattle.getAgainstScore());
-//                        battle = resultBattle;
                         break;
                     }
                 }

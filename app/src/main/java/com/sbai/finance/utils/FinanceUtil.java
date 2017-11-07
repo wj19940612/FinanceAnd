@@ -217,16 +217,20 @@ public class FinanceUtil {
      * @return 处理后的字符串
      */
     public static String formatWithScale(double value, int scale) {
+        return formatWithScale(value, scale, RoundingMode.HALF_EVEN);
+    }
+
+    public static String formatWithScale(double value, int scale, RoundingMode roundingMode) {
         DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
         decimalFormat.setMaximumFractionDigits(scale);
         decimalFormat.setMinimumFractionDigits(scale);
         decimalFormat.setMinimumIntegerDigits(1);
         decimalFormat.setGroupingUsed(false);
-        decimalFormat.setRoundingMode(RoundingMode.HALF_EVEN);
-
+        decimalFormat.setRoundingMode(roundingMode);
         String v = decimalFormat.format(value);
         return v;
     }
+
 
     /**
      * 处理 Double 的大数据减法
@@ -459,41 +463,7 @@ public class FinanceUtil {
      * @return 99.54%
      */
     public static String formatFloorPercent(double number, int scale) {
-        double data = 0;
-        if (number < 1) {
-            data = (number * 100);
-        } else {
-            data = number;
-        }
-        if (scale == 0) {
-            return (int) data + "%";
-        }
-        String result = String.valueOf(data);
-        if (result.length() - 3 > scale) {
-            result = result.substring(0, result.indexOf(".") + 3);
-        }
-        return result + "%";
+        BigDecimal bigDecimal = multiply(number, 100d);
+        return removeNeedlessZero(formatWithScale(bigDecimal.doubleValue(), scale, RoundingMode.DOWN) + "%");
     }
-
-    /**
-     * @param number 0.995   转换为 100%    0.994  转为 99%
-     * @return
-     */
-    public static String formatPercent(double number) {
-        return formatPercent(number, 0, 0);
-    }
-
-    /**
-     * @param number                数字
-     * @param maximumFractionDigits 设置数字小数部分允许的最大位数。
-     * @param minimumFractionDigits 设置数字小数部分允许的最小位数。
-     * @return
-     */
-    public static String formatPercent(double number, int maximumFractionDigits, int minimumFractionDigits) {
-        NumberFormat percentInstance = NumberFormat.getPercentInstance();
-        percentInstance.setMaximumFractionDigits(maximumFractionDigits);
-        percentInstance.setMinimumFractionDigits(minimumFractionDigits);
-        return percentInstance.format(number);
-    }
-
 }

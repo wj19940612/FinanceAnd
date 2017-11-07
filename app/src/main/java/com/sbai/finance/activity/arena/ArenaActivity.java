@@ -612,6 +612,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                         super.onFailure(volleyError);
                         quickMatchArena(ArenaQuickMatchLauncher.ARENA_MATCH_START);
                     }
+
                 })
                 .fireFree();
     }
