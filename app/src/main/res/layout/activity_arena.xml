@@ -35,7 +35,7 @@
                         android:layout_marginTop="54dp"
                         android:orientation="vertical"
                         android:visibility="visible"
-                        >
+                        app:layout_collapseMode="parallax">
 
                         <LinearLayout
                             android:id="@+id/joinGameLL"

@@ -154,6 +154,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
             requestArenaApplyRule(false);
             requestArenaActivityAndUserStatus();
             requestUserFundInfo();
+            requestUserLastBattleInfo(false);
         } else {
             updateUserJoinArenaStatus(false);
             mIngot.setText(R.string.not_login);
@@ -373,6 +374,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 showMatchTimeoutDialog();
                 break;
             case PushCode.QUICK_MATCH_SUCCESS:
+                mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
                 Battle battle = (Battle) battleWSPush.getContent().getData();
                 StartMatchDialog.dismiss(getActivity());
                 if (battle != null) {
@@ -385,7 +387,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 if (BuildConfig.DEBUG) {
                     ToastUtil.show("对战结束");
                 }
-//                requestCurrentBattle();
+                requestUserLastBattleInfo(false);
                 break;
         }
     }
@@ -555,7 +557,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                         .execute();
                 break;
             case R.id.quickMatch:
-                requestUserLastBattleInfo();
+                requestUserLastBattleInfo(true);
                 break;
             case R.id.gift:
                 requestUserRealNameStatus();
@@ -591,28 +593,29 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
                 .fireFree();
     }
 
-    private void requestUserLastBattleInfo() {
+    private void requestUserLastBattleInfo(final boolean needQuickMatch) {
         Client.requestLastArenaBattleInfo()
                 .setIndeterminate(this)
                 .setTag(TAG)
-                .setCallback(new Callback2D<Resp<Battle>, Battle>() {
+                .setCallback(new Callback<Resp<Battle>>() {
+
                     @Override
-                    protected void onRespSuccessData(Battle battle) {
-                        if (battle.isBattleStarted()) {
-                            Launcher.with(getActivity(), BattleActivity.class)
-                                    .putExtra(ExtraKeys.BATTLE, battle)
-                                    .executeForResult(REQ_CODE_FUTURE_BATTLE);
+                    protected void onRespSuccess(Resp<Battle> resp) {
+                        Battle battle = resp.getData();
+                        if (battle != null && battle.isBattleStarted()) {
+                            mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
+                            if (needQuickMatch) {
+                                Launcher.with(getActivity(), BattleActivity.class)
+                                        .putExtra(ExtraKeys.BATTLE, battle)
+                                        .executeForResult(REQ_CODE_FUTURE_BATTLE);
+                            }
                         } else {
-                            quickMatchArena(ArenaQuickMatchLauncher.ARENA_MATCH_START);
+                            mQuickMatch.setBackgroundResource(R.drawable.btn_battle_matching);
+                            if (needQuickMatch) {
+                                quickMatchArena(ArenaQuickMatchLauncher.ARENA_MATCH_START);
+                            }
                         }
                     }
-
-                    @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
-                        quickMatchArena(ArenaQuickMatchLauncher.ARENA_MATCH_START);
-                    }
-
                 })
                 .fireFree();
     }
@@ -917,7 +920,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener 
         if (requestCode == REQ_CODE_FUTURE_BATTLE) {
             switch (resultCode) {
                 case BattleActivity.RESULT_CODE_FIGHT_AGAIN:
-                    requestUserLastBattleInfo();
+                    requestUserLastBattleInfo(true);
                     break;
                 case BattleActivity.RESULT_CODE_GO_2_NORMAL_BATTLE:
                     Launcher.with(getActivity(), BattleListActivity.class).execute();

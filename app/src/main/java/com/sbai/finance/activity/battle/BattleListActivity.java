@@ -157,10 +157,10 @@ public class BattleListActivity extends BaseActivity implements
 
     private void initTitleBar() {
         View view = mTitleBar.getCustomView();
-        mAvatar = (ImageView) view.findViewById(R.id.avatar);
-        mIngot = (TextView) view.findViewById(R.id.ingot);
-        mRecharge = (TextView) view.findViewById(R.id.recharge);
-        TextView myBattleResult = (TextView) view.findViewById(R.id.myBattleResult);
+        mAvatar =  view.findViewById(R.id.avatar);
+        mIngot =  view.findViewById(R.id.ingot);
+        mRecharge =  view.findViewById(R.id.recharge);
+        TextView myBattleResult =  view.findViewById(R.id.myBattleResult);
         mRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
