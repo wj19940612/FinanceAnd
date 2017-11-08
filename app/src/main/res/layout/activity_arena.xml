@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.arena.ArenaActivity">
+    tools:context="com.sbai.finance.activity.arena.RewardActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -188,7 +188,7 @@
                     <android.support.v7.widget.Toolbar
                         android:id="@+id/toolBar"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="?attr/actionBarSize"
                         app:layout_collapseMode="pin">
 
                         <com.sbai.finance.view.TitleBar
@@ -199,10 +199,11 @@
                             app:backFeature="true"
                             app:backIcon="@drawable/ic_tb_back_white"
                             app:customView="@layout/layout_money_reward_game_battle_list_title"
-                            app:layout_collapseMode="pin"
+
                             app:leftViewLeftPadding="0dp"
                             app:rightImage="@drawable/ic_share"
                             app:rightVisible="true"/>
+
                     </android.support.v7.widget.Toolbar>
                 </android.support.design.widget.CollapsingToolbarLayout>
 

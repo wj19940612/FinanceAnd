@@ -284,7 +284,7 @@
             android:name=".activity.battle.BattleHisRecordActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.arena.ArenaActivity"
+            android:name=".activity.arena.RewardActivity"
             android:screenOrientation="portrait"/>
         <!-- alipay -->
         <activity

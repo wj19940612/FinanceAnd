@@ -14,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -82,7 +81,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class ArenaActivity extends BaseActivity implements View.OnClickListener, BattleListFragment.OnFragmentRecycleViewScrollListener {
+public class RewardActivity extends BaseActivity implements View.OnClickListener, BattleListFragment.OnFragmentRecycleViewScrollListener {
 
     private static final int REQ_CODE_FUTURE_BATTLE = 3787;
     private static final int REQ_CODE_SUBMIT_EXCHANGE_AWARD = 8809;
@@ -172,18 +171,9 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
             updateUserJoinArenaStatus(false);
             mIngot.setText(R.string.not_login);
         }
-
-        BattleListFragment battleListFragment = getBattleListFragment();
-        if (battleListFragment != null) {
-            battleListFragment.refresh();
-        }
-
-        BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
-        if (battleRankingFragment != null) {
-            battleRankingFragment.requestArenaAwardRankingData();
-        }
         updateUserAvatar();
     }
+
 
     private void updateUserAvatar() {
         if (LocalUser.getUser().isLogin()) {
@@ -266,7 +256,8 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void updateUserActivityScore(UserActivityScore data) {
-        SpannableString ranking = StrUtil.mergeTextWithRatioColor(String.valueOf(data.getRank()),
+        String rank = data.getRank() == 0 ? "-" : String.valueOf(data.getRank());
+        SpannableString ranking = StrUtil.mergeTextWithRatioColor(rank,
                 "\n" + getString(R.string.ranking_now),
                 0.6f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
         mRanking.setText(ranking);
@@ -456,7 +447,9 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 mAppBarVerticalOffset = verticalOffset;
                 boolean b = mSwipEnabled && mAppBarVerticalOffset > -1;
-                mSwipeRefreshLayout.setEnabled(b);
+                if (mSwipeRefreshLayout.isEnabled() != b) {
+                    mSwipeRefreshLayout.setEnabled(b);
+                }
             }
         });
 
@@ -475,6 +468,15 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
             @Override
             public void onRefresh() {
                 refreshData();
+                BattleListFragment battleListFragment = getBattleListFragment();
+                if (battleListFragment != null) {
+                    battleListFragment.refresh();
+                }
+
+                BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
+                if (battleRankingFragment != null) {
+                    battleRankingFragment.requestArenaAwardRankingData();
+                }
             }
         });
 
@@ -489,7 +491,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
             @Override
             public void onPageSelected(int position) {
                 mViperPosition = position;
-                if (mArenaActivityAndUserStatus != null&&mArenaActivityAndUserStatus.isApplyed()) {
+                if (mArenaActivityAndUserStatus != null && mArenaActivityAndUserStatus.isApplyed()) {
                     if (position == 0) {
                         BattleListFragment battleListFragment = getBattleListFragment();
                         if (battleListFragment != null) {
@@ -894,7 +896,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void dismissQuickMatchDialog() {
-        StartMatchDialog.dismiss(ArenaActivity.this);
+        StartMatchDialog.dismiss(RewardActivity.this);
     }
 
     private void showEnterForACompetitionConditionDialog(ArenaApplyRule data) {
@@ -936,6 +938,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         requestArenaActivityAndUserStatus();
+                        requestUserFundInfo();
                     }
 
                     @Override
@@ -1020,10 +1023,12 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onSwipRefreshEnable(boolean enabled, int fragmentPosition) {
-        Log.d(TAG, "onSwipRefreshEnable: " + enabled + "  " + mAppBarVerticalOffset);
+//        Log.d(TAG, "onSwipRefreshEnable: " + enabled + "  " + mAppBarVerticalOffset);
         mSwipEnabled = enabled;
         boolean b = enabled && mAppBarVerticalOffset > -1;
-        mSwipeRefreshLayout.setEnabled(b);
+        if (mSwipeRefreshLayout.isEnabled() != b) {
+            mSwipeRefreshLayout.setEnabled(b);
+        }
     }
 
     @Override
