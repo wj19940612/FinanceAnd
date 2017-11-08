@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -151,7 +152,6 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_arena);
         ButterKnife.bind(this);
-//        translucentStatusBar();
         initView();
     }
 
@@ -286,28 +286,33 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
         List<ArenaActivityAwardInfo> arenaActivityAwardInfoList = arenaActivityAndUserStatus.getPrizeModels();
         //如果可兑换数据为空 则代表排名低 没有进入排名
         if (arenaActivityAwardInfoList.isEmpty()) {
-            mAward.setVisibility(View.GONE);
+            mPredictGain.setVisibility(View.INVISIBLE);
+            mAward.setTextColor(Color.WHITE);
             if (arenaActivityAndUserStatus.userCanExchangeAward()) {
-                mPredictGain.setText(R.string.your_rank_is_not_exchange_reward);
+                mAward.setText(R.string.your_rank_is_not_exchange_reward);
             } else {
-                mPredictGain.setText(R.string.ranking_low);
+                mAward.setText(R.string.ranking_low);
             }
         } else {
-
             ArenaActivityAwardInfo arenaActivityAwardInfo = arenaActivityAwardInfoList.get(0);
-            if (arenaActivityAwardInfo != null) {
-                mAward.setText(arenaActivityAwardInfo.getPrizeName());
-            }
+            mPredictGain.setVisibility(View.VISIBLE);
             if (arenaActivityAndUserStatus.userCanExchangeAward()) {
                 if (mUserActivityScore.getTotalCount() < 30) {
-                    mPredictGain.setText(R.string.battle_count_is_not_enough);
+                    mAward.setSelected(true);
+                    mAward.setText(R.string.battle_count_is_not_enough);
                 } else {
-                    mAward.setVisibility(View.VISIBLE);
                     mPredictGain.setText(R.string.get_award);
+                    mAward.setSelected(false);
                     requestUserExchangeAwardInfo();
+                    if (arenaActivityAwardInfo != null) {
+                        mAward.setText(arenaActivityAwardInfo.getPrizeName());
+                    }
                 }
             } else {
-                mAward.setVisibility(View.VISIBLE);
+                mAward.setSelected(false);
+                if (arenaActivityAwardInfo != null) {
+                    mAward.setText(arenaActivityAwardInfo.getPrizeName());
+                }
                 mPredictGain.setText(R.string.predict_gain);
             }
         }
@@ -407,12 +412,14 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 break;
             case PushCode.QUICK_MATCH_SUCCESS:
                 mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
-                mBattle = (Battle) battleWSPush.getContent().getData();
+                Battle data = (Battle) battleWSPush.getContent().getData();
+                mBattle = data;
                 StartMatchDialog.dismiss(getActivity());
                 SmartDialog.dismiss(getActivity());
-                if (mBattle != null) {
+                if (data != null) {
+                    Log.d(TAG, "竞技场:开始对战 "+""+data.toString());
                     Launcher.with(getActivity(), BattleActivity.class)
-                            .putExtra(ExtraKeys.BATTLE, mBattle)
+                            .putExtra(ExtraKeys.BATTLE, data)
                             .executeForResult(REQ_CODE_FUTURE_BATTLE);
                 }
                 break;
@@ -526,10 +533,10 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
 
     private void initTitleBar() {
         View customView = mTitleBar.getCustomView();
-        mAvatar = (ImageView) customView.findViewById(R.id.avatar);
-        mIngot = (TextView) customView.findViewById(R.id.ingot);
-        TextView recharge = (TextView) customView.findViewById(R.id.recharge);
-        TextView activityRule = (TextView) customView.findViewById(R.id.activityRule);
+        mAvatar = customView.findViewById(R.id.avatar);
+        mIngot =  customView.findViewById(R.id.ingot);
+        TextView recharge =  customView.findViewById(R.id.recharge);
+        TextView activityRule =  customView.findViewById(R.id.activityRule);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

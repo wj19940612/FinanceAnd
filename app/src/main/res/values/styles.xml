@@ -96,6 +96,7 @@
         <item name="tabSelectedTextColor">@android:color/white</item>
         <item name="tabBackground">@drawable/tab_layout_battle</item>
     </style>
+
     <style name="BattleTabText" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/unluckyText</item>
@@ -210,6 +211,12 @@
         <item name="android:textColor">@color/future_text_color</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/btn_future_primary_large_rounded</item>
+    </style>
+
+    <style name="battle_user_nick_name">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLength">8</item>
+        <item name="android:maxLines">1</item>
     </style>
 
 </resources>

@@ -7,16 +7,14 @@
         android:id="@+id/titleBg"
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:background="@drawable/home_background_blue"
-        />
+        android:background="@drawable/home_background_blue"/>
 
     <ImageView
         android:id="@+id/secondBg"
         android:layout_width="match_parent"
         android:layout_height="189dp"
         android:layout_below="@id/titleBg"
-        android:background="@color/white"
-        />
+        android:background="@color/white"/>
 
     <TextView
         android:id="@+id/greetingTitle"
@@ -26,23 +24,20 @@
         android:layout_marginTop="20dp"
         android:gravity="center_vertical"
         android:textColor="@color/white"
-        android:textSize="24sp"
-        />
+        android:textSize="24sp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:layout_marginLeft="22dp"
         android:layout_marginTop="55dp"
-        android:gravity="center_vertical"
-        >
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/broadcastIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/home_icon_horn"
-            />
+            android:src="@drawable/home_icon_horn"/>
 
         <com.sbai.finance.view.VerticalScrollTextView
             android:id="@+id/verticalScrollText"
@@ -50,8 +45,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="2dp"
             android:layout_toRightOf="@id/broadcastIcon"
-            android:gravity="center_vertical"
-            />
+            android:gravity="center_vertical"/>
 
         <TextView
             android:id="@+id/broadcastText"
@@ -65,8 +59,7 @@
             android:paddingBottom="10dp"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:visibility="gone"
-            />
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -76,8 +69,7 @@
         android:layout_marginLeft="14dp"
         android:layout_marginRight="14dp"
         android:layout_marginTop="99dp"
-        android:background="@drawable/home_select_open_one"
-        >
+        android:background="@drawable/home_select_open_one">
 
         <TextView
             android:id="@+id/stockBtn"
@@ -87,8 +79,7 @@
             android:minWidth="40dp"
             android:text="@string/ShangShen"
             android:textColor="@color/primaryText"
-            android:textSize="12sp"
-            />
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/futureBtn"
@@ -438,29 +429,25 @@
         android:layout_height="match_parent"
         android:layout_alignBottom="@id/secondBg"
         android:layout_below="@id/indexRL"
-        android:gravity="center_vertical"
-        >
+        android:gravity="center_vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <View
                 android:id="@+id/linePractice"
                 android:layout_width="0.5dp"
                 android:layout_height="24dp"
                 android:layout_centerInParent="true"
-                android:background="@color/split"
-                />
+                android:background="@color/split"/>
 
             <RelativeLayout
                 android:id="@+id/practiceBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="22dp"
-                android:layout_toLeftOf="@id/linePractice"
-                >
+                android:layout_toLeftOf="@id/linePractice">
 
                 <TextView
                     android:id="@+id/practiceText"
@@ -469,8 +456,7 @@
                     android:layout_marginLeft="31dp"
                     android:text="练一练"
                     android:textColor="@color/primaryText"
-                    android:textSize="14sp"
-                    />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/practiceTipText"
@@ -480,15 +466,13 @@
                     android:layout_marginLeft="31dp"
                     android:text="小白入门之路"
                     android:textColor="@color/unluckyText"
-                    android:textSize="12sp"
-                    />
+                    android:textSize="12sp"/>
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/home_icon_explain"
-                    />
+                    android:src="@drawable/home_icon_explain"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -496,8 +480,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="22dp"
-                android:layout_toRightOf="@id/linePractice"
-                >
+                android:layout_toRightOf="@id/linePractice">
 
                 <TextView
                     android:id="@+id/writeTopicText"

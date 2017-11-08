@@ -76,10 +76,12 @@
                                 android:textColor="@android:color/white"/>
                         </LinearLayout>
 
+
                         <RelativeLayout
                             android:id="@+id/gameInfoRl"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
                             android:layout_marginTop="51dp"
                             android:visibility="visible">
 
@@ -102,7 +104,7 @@
                                 android:layout_marginLeft="@dimen/common_padding"
                                 android:layout_marginRight="@dimen/common_padding"
                                 android:layout_marginTop="8dp"
-                                android:textColor="@color/yellowAssist"
+                                android:textColor="@color/reward_award_gift"
                                 android:textSize="16sp"
                                 tools:text="@string/award"/>
 
