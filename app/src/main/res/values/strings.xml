@@ -880,6 +880,7 @@
     <string name="look_my_rank">查看我的排名</string>
     <string name="please_retry">请重试</string>
     <string name="broadcast">广播</string>
+    <string name="broadcast_detail">广播详情</string>
     <string name="look_all">查看全部</string>
     <string name="add_icon">+</string>
     <string name="add_text">添加</string>

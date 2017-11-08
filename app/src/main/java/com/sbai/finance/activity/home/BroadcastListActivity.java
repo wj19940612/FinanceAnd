@@ -145,7 +145,7 @@ public class BroadcastListActivity extends BaseActivity {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindDataWithView(final Broadcast broadcast, Context context) {
+            public void bindDataWithView(final Broadcast broadcast, final Context context) {
                 mContent.setText(broadcast.getContent());
                 mTime.setText(DateUtil.formatDefaultStyleTime(broadcast.getCreateTime()));
                 if (TextUtils.isEmpty(broadcast.getLink())) {
@@ -162,7 +162,7 @@ public class BroadcastListActivity extends BaseActivity {
                                         .execute();
                             } else {
                                 Launcher.with(getActivity(), WebActivity.class)
-                                        .putExtra(WebActivity.EX_TITLE, broadcast.getTitle())
+                                        .putExtra(WebActivity.EX_TITLE, context.getString(R.string.broadcast_detail))
                                         .putExtra(WebActivity.EX_HTML, broadcast.getLink())
                                         .execute();
                             }
