@@ -417,7 +417,7 @@ public class HomePageFragment extends BaseFragment {
 
     private void requestOptionalData() {
         //这里只需要3个数据，所以请求的page = 0;
-        if (LocalUser.getUser().isLogin()) {
+        if (!LocalUser.getUser().isLogin()) {
             return;
         }
         int page = 0;
