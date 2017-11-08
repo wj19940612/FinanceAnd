@@ -38,6 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.sbai.finance.utils.DateUtil.DEFAULT_FORMAT;
 import static com.sbai.finance.utils.DateUtil.FORMAT_HOUR_MINUTE;
 
 /**
@@ -361,7 +362,11 @@ public class InformationFragment extends BaseFragment {
                 } else {
                     mDateArea.setVisibility(View.GONE);
                 }
-                mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
+                if (DateUtil.isToday(mLastTime,item.getCreateTime())){
+                    mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
+                }else {
+                    mTime.setText(DateUtil.format(item.getCreateTime(),FORMAT_HOUR_MINUTE));
+                }
                 if (TextUtils.isEmpty(item.getTitle())) {
                     mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                     mContent.setTextColor(ContextCompat.getColor(context, R.color.luckyText));
