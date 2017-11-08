@@ -150,6 +150,7 @@ public class BroadcastListActivity extends BaseActivity {
                 mTime.setText(DateUtil.formatDefaultStyleTime(broadcast.getCreateTime()));
                 if (TextUtils.isEmpty(broadcast.getLink())) {
                     mImgMore.setVisibility(View.INVISIBLE);
+                    mContentArea.setOnClickListener(null);
                 } else {
                     mImgMore.setVisibility(View.VISIBLE);
                     mContentArea.setOnClickListener(new View.OnClickListener() {

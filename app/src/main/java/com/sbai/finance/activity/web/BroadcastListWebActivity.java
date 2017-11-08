@@ -11,4 +11,5 @@ public class BroadcastListWebActivity extends WebActivity {
     protected boolean isNeedViewTitle() {
         return false;
     }
+
 }

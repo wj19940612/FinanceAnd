@@ -52,7 +52,7 @@ public class StockFutureActivity extends BaseActivity {
     }
 
     private void initViewPager() {
-        mViewPager.setOffscreenPageLimit(1);
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setCurrentItem(0, false);
         mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mPagerAdapter);
