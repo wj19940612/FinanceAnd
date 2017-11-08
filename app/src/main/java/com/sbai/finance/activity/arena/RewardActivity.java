@@ -151,7 +151,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_arena);
         ButterKnife.bind(this);
-        translucentStatusBar();
+//        translucentStatusBar();
         initView();
     }
 

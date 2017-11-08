@@ -19,9 +19,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.discovery.DailyReportActivity;
-import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
+import com.sbai.finance.activity.home.InformationAndFocusNewsActivity;
+import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.net.Callback2D;
@@ -127,7 +128,7 @@ public class ArticleCollectionFragment extends BaseFragment {
     private void initView() {
         mSet = new HashSet<>();
         initListEmptyView();
-        mList.setPadding((int) Display.dp2Px(14, getResources()), 0, (int) Display.dp2Px(14, getResources()), 0);
+
         mList.setDivider(null);
         mList.setVerticalScrollBarEnabled(false);
         mList.setHorizontalScrollBarEnabled(false);
@@ -189,7 +190,9 @@ public class ArticleCollectionFragment extends BaseFragment {
         mListEmptyView.setOnGoingViewClickListener(new ListEmptyView.OnGoingViewClickListener() {
             @Override
             public void onGoingViewClick() {
-                Launcher.with(getActivity(), DailyReportActivity.class).execute();
+                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class)
+                        .putExtra(ExtraKeys.PAGE_INDEX, 1)
+                        .execute();
             }
         });
         mLayout.addView(mListEmptyView);
@@ -204,17 +207,6 @@ public class ArticleCollectionFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == BaseActivity.RESULT_OK) {
-//            switch (requestCode) {
-//                case REQ_CODE_ARTICLE_DETAIL_PAGE:
-//                    refreshData();
-//                    break;
-//            }
-//        }
-    }
 
     @Override
     public void onDestroyView() {
@@ -234,7 +226,7 @@ public class ArticleCollectionFragment extends BaseFragment {
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_daily_report, null, true);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_focus_news, null, true);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -245,14 +237,13 @@ public class ArticleCollectionFragment extends BaseFragment {
         }
 
         static class ViewHolder {
-            @BindView(R.id.image)
-            ImageView mImage;
-            @BindView(R.id.click)
-            TextView mClick;
-            @BindView(R.id.time)
-            TextView mTime;
+
             @BindView(R.id.title)
             TextView mTitle;
+            @BindView(R.id.time)
+            TextView mTime;
+            @BindView(R.id.image)
+            ImageView mImage;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -260,7 +251,6 @@ public class ArticleCollectionFragment extends BaseFragment {
 
             public void bindDataWithView(MyCollect item, Context context) {
                 Glide.with(context).load(item.getCoverUrl()).into(mImage);
-                mClick.setText(context.getString(R.string.read_count, item.getClicks()));
                 mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
                 mTitle.setText(item.getTitle());
             }

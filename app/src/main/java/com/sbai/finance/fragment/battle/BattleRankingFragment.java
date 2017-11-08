@@ -94,8 +94,8 @@ public class BattleRankingFragment extends BaseFragment {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
-                if(mOnFragmentRecycleViewScrollListener!=null){
-                    mOnFragmentRecycleViewScrollListener.onSwipRefreshEnable(isTop,1);
+                if (mOnFragmentRecycleViewScrollListener != null) {
+                    mOnFragmentRecycleViewScrollListener.onSwipRefreshEnable(isTop, 1);
                 }
             }
         });
@@ -279,8 +279,16 @@ public class BattleRankingFragment extends BaseFragment {
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop()
                         .into(mAvatar);
+
+                String score = "";
+                if (item.getScore() <= 0) {
+                    score = String.valueOf(item.getScore());
+                } else {
+                    score = "+" + item.getScore();
+                }
+
                 SpannableString spannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
-                        "\n" + String.valueOf(item.getScore()), 1.4f,
+                        "\n " + score, 1.4f,
                         ContextCompat.getColor(context, R.color.yellowAssist));
                 mNameAndProfit.setText(spannableString);
                 mBattleCount.setText(String.valueOf(item.getTotalCount()));

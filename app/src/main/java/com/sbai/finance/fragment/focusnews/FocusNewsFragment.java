@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
+import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.net.Callback2D;

@@ -1,10 +1,7 @@
 package com.sbai.finance.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +10,7 @@ import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
+import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.home.AllTrainingListActivity;
 import com.sbai.finance.activity.home.BroadcastListActivity;

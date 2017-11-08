@@ -343,10 +343,7 @@
 
         <!-- 发现 -->
         <activity
-            android:name=".activity.discovery.DailyReportDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.discovery.DailyReportActivity"
+            android:name=".activity.web.DailyReportDetailActivity"
             android:screenOrientation="portrait"/>
 
         <!-- 自习室 -->
