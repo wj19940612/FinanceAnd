@@ -241,7 +241,7 @@ public class HomeTitleView extends RelativeLayout {
             mBroadcastText.setVisibility(View.GONE);
             mVerticalScrollTextView.setVisibility(View.VISIBLE);
             mVerticalScrollTextView.setNoticeRadios(noticeRadios);
-            mVerticalScrollTextView.startAutoScroll();
+//            mVerticalScrollTextView.startAutoScroll();
         } else if (noticeRadios != null) {
             mVerticalScrollTextView.setVisibility(View.GONE);
             mBroadcastIcon.setVisibility(View.VISIBLE);
@@ -256,6 +256,10 @@ public class HomeTitleView extends RelativeLayout {
                 }
             });
         }
+    }
+
+    public void stopBroadcastScroll(){
+        mVerticalScrollTextView.stopAutoScroll();
     }
 
     //设置名言

@@ -342,6 +342,8 @@ public class HomePageFragment extends BaseFragment {
             requestLeaderBoardData();
             request7NewsData();
             requestImportantNewsData();
+        }else if(!isVisibleToUser && isAdded()){
+            mHomeTitleView.stopBroadcastScroll();
         }
     }
 
@@ -349,6 +351,7 @@ public class HomePageFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         stopScheduleJob();
+        mHomeTitleView.stopBroadcastScroll();
         MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
         MarketSubscriber.get().unSubscribeAll();
     }

@@ -96,13 +96,15 @@ public class BusinessBanner extends RelativeLayout {
         if (data.size() == 0 || data.get(0) == null) {
             setVisibility(View.GONE);
             return;
+        }else {
+            setVisibility(View.VISIBLE);
         }
         final Banner leftBanner = data.get(0);
         setTitle(leftBanner, LEFT_LOCATION);
         setSubTitle(leftBanner, LEFT_LOCATION);
         setImage(leftBanner, LEFT_LOCATION);
 
-        if (data.size() < 2 && data.get(1) == null) {
+        if (data.size() < 2 || data.get(1) == null) {
             return;
         }
         final Banner topRightBanner = data.get(1);
