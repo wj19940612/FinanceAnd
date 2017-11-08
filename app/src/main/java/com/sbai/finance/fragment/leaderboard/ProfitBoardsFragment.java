@@ -25,7 +25,7 @@ import butterknife.Unbinder;
  * 盈利榜
  */
 
-public class ProfitBoardFragment extends BaseFragment {
+public class ProfitBoardsFragment extends BaseFragment {
     @BindView(R.id.today)
     TextView mToday;
     @BindView(R.id.thisWeek)
@@ -39,7 +39,7 @@ public class ProfitBoardFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profit_board_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_profit_boards, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
