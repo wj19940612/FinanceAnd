@@ -489,18 +489,20 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
             @Override
             public void onPageSelected(int position) {
                 mViperPosition = position;
-                if (position == 0) {
-                    BattleListFragment battleListFragment = getBattleListFragment();
-                    if (battleListFragment != null) {
-                        battleListFragment.refresh();
+                if (mArenaActivityAndUserStatus != null&&mArenaActivityAndUserStatus.isApplyed()) {
+                    if (position == 0) {
+                        BattleListFragment battleListFragment = getBattleListFragment();
+                        if (battleListFragment != null) {
+                            battleListFragment.refresh();
+                        }
+                        mQuickMatch.setVisibility(View.VISIBLE);
+                    } else {
+                        BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
+                        if (battleRankingFragment != null) {
+                            battleRankingFragment.requestArenaAwardRankingData();
+                        }
+                        mQuickMatch.setVisibility(View.GONE);
                     }
-                    mQuickMatch.setVisibility(View.VISIBLE);
-                } else {
-                    BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
-                    if (battleRankingFragment != null) {
-                        battleRankingFragment.requestArenaAwardRankingData();
-                    }
-                    mQuickMatch.setVisibility(View.GONE);
                 }
             }
 
