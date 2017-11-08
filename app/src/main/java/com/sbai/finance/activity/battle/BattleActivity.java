@@ -1035,7 +1035,7 @@ public class BattleActivity extends BaseActivity {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         ToastUtil.show(failedResp.getMsg());
-                        if (failedResp.getCode() == GameCode.ORDER_EXISIT) {
+                        if (failedResp.getCode() == GameCode.ORDER_EXISTED) {
                             requestOrderOperationHistory();
                             requestHoldingOrders();
                         }
@@ -1053,7 +1053,7 @@ public class BattleActivity extends BaseActivity {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         ToastUtil.show(failedResp.getMsg());
-                        if (failedResp.getCode() == GameCode.ORDER_CLOSE) {
+                        if (failedResp.getCode() == GameCode.ORDER_CLOSED) {
                             requestOrderOperationHistory();
                             requestHoldingOrders();
                         }
