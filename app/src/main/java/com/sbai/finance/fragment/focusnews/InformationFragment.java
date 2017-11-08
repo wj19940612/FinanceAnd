@@ -210,11 +210,19 @@ public class InformationFragment extends BaseFragment {
         if (DateUtil.isToday(time, mLastTime)) {
             mWeekArea.setSelected(true);
             mDate.setTextColor(Color.parseColor("#2B71FF"));
-            mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(time)));
         } else {
             mWeekArea.setSelected(false);
             mDate.setTextColor(ContextCompat.getColor(getContext(), R.color.luckyText));
+        }
+        if (DateUtil.isInThisMonth(time,mLastTime)){
             mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(time)));
+        }else {
+            int month = DateUtil.getMonthOfYear(time);
+            if (month<10){
+                mWeek.setText(getContext().getString(R.string._month,"0"+month));
+            }else {
+                mWeek.setText(getContext().getString(R.string._month,String.valueOf(month)));
+            }
         }
     }
 
@@ -352,7 +360,16 @@ public class InformationFragment extends BaseFragment {
                 if (theDifferentDate) {
                     mDateArea.setVisibility(View.VISIBLE);
                     mWeekArea.setSelected(false);
-                    mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(item.getCreateTime())));
+                    if (DateUtil.isInThisMonth(item.getCreateTime(),mLastTime)){
+                        mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(item.getCreateTime())));
+                    }else {
+                        int month = DateUtil.getMonthOfYear(item.getCreateTime());
+                        if (month<10){
+                            mWeek.setText(context.getString(R.string._month,"0"+month));
+                        }else {
+                            mWeek.setText(context.getString(R.string._month,String.valueOf(month)));
+                        }
+                    }
                     int dayOfMonth = DateUtil.getDayOfMonth(item.getCreateTime());
                     if (dayOfMonth < 10) {
                         mDate.setText("0" + dayOfMonth);
