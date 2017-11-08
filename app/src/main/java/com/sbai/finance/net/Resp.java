@@ -30,6 +30,8 @@ public class Resp<T> {
     //没到兑换时间或者兑换时间已经结束 5114
     public static final int CODE_ARENA_IS_OVER_OR_NOT_IS_EXCHANGE_TIME = 5114;
 
+    //已听过语音
+    public static final int CODE_LISTENED=4707;
 
     private int code;
     private String msg;

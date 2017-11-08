@@ -9,14 +9,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.view.MotionEvent;
-import android.view.View;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.leaderboard.IngotOrSavantBoardLeaderBoardFragment;
-import com.sbai.finance.fragment.leaderboard.ProfitBoardFragment;
+import com.sbai.finance.fragment.leaderboard.ProfitBoardsFragment;
 import com.sbai.finance.model.leaderboard.LeaderBoardRank;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.slidingTab.SlidingTabTitle;
@@ -51,7 +49,7 @@ public class LeaderBoardsListActivity extends BaseActivity {
     }
 
     private void initViewPager() {
-        mViewPager.setOffscreenPageLimit(1);
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setCurrentItem(0, false);
         mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mPagerAdapter);
@@ -102,7 +100,7 @@ public class LeaderBoardsListActivity extends BaseActivity {
                 case 0:
                     return IngotOrSavantBoardLeaderBoardFragment.newInstance(LeaderBoardRank.INGOT);
                 case 1:
-                    return new ProfitBoardFragment();
+                    return new ProfitBoardsFragment();
                 case 2:
                     return IngotOrSavantBoardLeaderBoardFragment.newInstance(LeaderBoardRank.SAVANT);
 

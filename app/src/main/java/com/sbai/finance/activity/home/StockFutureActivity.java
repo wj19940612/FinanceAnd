@@ -4,18 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.PluralsRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.future.FutureListsFragment;
+import com.sbai.finance.fragment.future.FuturesFragment;
 import com.sbai.finance.fragment.optional.OptionalListFragment;
 import com.sbai.finance.fragment.stock.StockListFragment;
 import com.sbai.finance.utils.Display;
@@ -52,7 +50,7 @@ public class StockFutureActivity extends BaseActivity {
     }
 
     private void initViewPager() {
-        mViewPager.setOffscreenPageLimit(1);
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setCurrentItem(0, false);
         mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mPagerAdapter);
@@ -113,7 +111,7 @@ public class StockFutureActivity extends BaseActivity {
                 case 0:
                     return new StockListFragment();
                 case 1:
-                    return new FutureListsFragment();
+                    return new FuturesFragment();
                 case 2:
                     return new OptionalListFragment();
 
