@@ -44,7 +44,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/auth_code_login"
+                android:text="@string/password_login"
                 android:textColor="@color/primaryText"
                 android:textSize="30sp"/>
 
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_login_switch"
                 android:drawablePadding="4dp"
-                android:text="@string/password_login"/>
+                android:text="@string/auth_code_login"/>
         </LinearLayout>
 
         <LinearLayout
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:minHeight="50dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <EditText
                 android:id="@+id/authCode"
@@ -123,7 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="50dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:maxCharNum="18"
             app:textHint="@string/password"/>
 
@@ -165,7 +165,7 @@
             android:layout_marginTop="25dp"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/register"

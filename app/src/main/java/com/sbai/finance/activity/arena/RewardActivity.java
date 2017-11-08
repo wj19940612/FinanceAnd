@@ -590,7 +590,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 .setListener(new ShareDialog.OnShareDialogCallback() {
                     @Override
                     public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
-                        Client.share().setTag(TAG).fire();
+                        Client.share().setTag(TAG).fireFree();
                     }
 
                     @Override
