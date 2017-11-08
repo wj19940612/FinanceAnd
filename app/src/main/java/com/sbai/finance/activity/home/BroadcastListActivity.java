@@ -147,7 +147,7 @@ public class BroadcastListActivity extends BaseActivity {
 
             public void bindDataWithView(final Broadcast broadcast, Context context) {
                 mContent.setText(broadcast.getContent());
-                mTime.setText(DateUtil.format(broadcast.getCreateTime(), DateUtil.FORMAT_SPECIAL_SLASH));
+                mTime.setText(DateUtil.formatDefaultStyleTime(broadcast.getCreateTime()));
                 if (TextUtils.isEmpty(broadcast.getLink())) {
                     mImgMore.setVisibility(View.INVISIBLE);
                 } else {
