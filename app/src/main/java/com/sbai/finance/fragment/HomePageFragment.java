@@ -339,6 +339,8 @@ public class HomePageFragment extends BaseFragment {
             requestLeaderBoardData();
             request7NewsData();
             requestImportantNewsData();
+        }else if(!isVisibleToUser && isAdded()){
+            mHomeTitleView.stopBroadcastScroll();
         }
     }
 
@@ -346,6 +348,7 @@ public class HomePageFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         stopScheduleJob();
+        mHomeTitleView.stopBroadcastScroll();
         MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
         MarketSubscriber.get().unSubscribeAll();
     }
@@ -414,7 +417,7 @@ public class HomePageFragment extends BaseFragment {
 
     private void requestOptionalData() {
         //这里只需要3个数据，所以请求的page = 0;
-        if (LocalUser.getUser().isLogin()) {
+        if (!LocalUser.getUser().isLogin()) {
             return;
         }
         int page = 0;

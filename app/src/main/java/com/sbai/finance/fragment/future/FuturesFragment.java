@@ -27,7 +27,7 @@ import butterknife.Unbinder;
  * 国内 国外期货
  */
 
-public class FutureListsFragment extends BaseFragment {
+public class FuturesFragment extends BaseFragment {
     @BindView(R.id.futureForeign)
     TextView mFutureForeign;
     @BindView(R.id.futureChina)

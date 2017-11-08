@@ -37,12 +37,13 @@
             android:id="@+id/broadcastIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/home_icon_horn"/>
+            android:src="@drawable/home_icon_horn"
+            android:layout_centerVertical="true"/>
 
         <com.sbai.finance.view.VerticalScrollTextView
             android:id="@+id/verticalScrollText"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="35dp"
             android:layout_marginLeft="2dp"
             android:layout_toRightOf="@id/broadcastIcon"
             android:gravity="center_vertical"/>
@@ -53,10 +54,11 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="2dp"
             android:layout_toRightOf="@id/broadcastIcon"
+            android:includeFontPadding="false"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:visibility="gone"/>
@@ -235,8 +237,7 @@
                     android:layout_width="0.5dp"
                     android:layout_height="18dp"
                     android:layout_centerVertical="true"
-                    android:background="@color/split"
-                    />
+                    android:background="@color/split"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -244,8 +245,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                >
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/centerIndex"
@@ -253,8 +253,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:textColor="@color/primaryText"
-                    android:textSize="12sp"
-                    />
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/centerIndexValue"
@@ -265,8 +264,7 @@
                     android:gravity="center"
                     android:minWidth="60dp"
                     android:textColor="@color/greenAssist"
-                    android:textSize="20dp"
-                    />
+                    android:textSize="20dp"/>
 
                 <TextView
                     android:id="@+id/centerLeftIndexPer"
@@ -275,8 +273,7 @@
                     android:layout_alignLeft="@id/centerIndexValue"
                     android:layout_below="@id/centerIndexValue"
                     android:textColor="@color/greenAssist"
-                    android:textSize="10sp"
-                    />
+                    android:textSize="10sp"/>
 
                 <TextView
                     android:id="@+id/centerRightIndexPer"
@@ -285,8 +282,7 @@
                     android:layout_alignRight="@id/centerIndexValue"
                     android:layout_below="@id/centerIndexValue"
                     android:textColor="@color/greenAssist"
-                    android:textSize="10sp"
-                    />
+                    android:textSize="10sp"/>
 
                 <RelativeLayout
                     android:id="@+id/centerSelectRL"
@@ -294,8 +290,7 @@
                     android:layout_height="66dp"
                     android:background="@color/background"
                     android:gravity="center_vertical"
-                    android:visibility="gone"
-                    >
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/centerSelectAddIcon"
@@ -305,8 +300,7 @@
                         android:text="@string/add_icon"
                         android:textColor="@color/unluckyText"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/centerSelectAddText"
@@ -316,8 +310,7 @@
                         android:layout_centerHorizontal="true"
                         android:text="@string/add_text"
                         android:textColor="@color/primaryText"
-                        android:textSize="12sp"
-                        />
+                        android:textSize="12sp"/>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -331,8 +324,7 @@
                     android:layout_width="0.5dp"
                     android:layout_height="18dp"
                     android:layout_centerVertical="true"
-                    android:background="@color/split"
-                    />
+                    android:background="@color/split"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -341,8 +333,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:gravity="center"
-                >
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/rightIndex"
@@ -350,8 +341,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:textColor="@color/primaryText"
-                    android:textSize="12sp"
-                    />
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:id="@+id/rightIndexValue"
@@ -362,8 +352,7 @@
                     android:gravity="center"
                     android:minWidth="60dp"
                     android:textColor="@color/greenAssist"
-                    android:textSize="20dp"
-                    />
+                    android:textSize="20dp"/>
 
                 <TextView
                     android:id="@+id/rightLeftIndexPer"
@@ -372,8 +361,7 @@
                     android:layout_alignLeft="@id/rightIndexValue"
                     android:layout_below="@id/rightIndexValue"
                     android:textColor="@color/greenAssist"
-                    android:textSize="10sp"
-                    />
+                    android:textSize="10sp"/>
 
                 <TextView
                     android:id="@+id/rightRightIndexPer"
@@ -382,8 +370,7 @@
                     android:layout_alignRight="@id/rightIndexValue"
                     android:layout_below="@id/rightIndexValue"
                     android:textColor="@color/greenAssist"
-                    android:textSize="10sp"
-                    />
+                    android:textSize="10sp"/>
 
                 <RelativeLayout
                     android:id="@+id/rightSelectRL"
@@ -392,8 +379,7 @@
                     android:layout_centerInParent="true"
                     android:background="@color/background"
                     android:gravity="center_vertical"
-                    android:visibility="gone"
-                    >
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/rightSelectAddIcon"
@@ -403,8 +389,7 @@
                         android:text="@string/add_icon"
                         android:textColor="@color/unluckyText"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/rightSelectAddText"
@@ -414,8 +399,7 @@
                         android:layout_centerHorizontal="true"
                         android:text="@string/add_text"
                         android:textColor="@color/primaryText"
-                        android:textSize="12sp"
-                        />
+                        android:textSize="12sp"/>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -426,8 +410,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignBottom="@id/secondBg"
+        android:layout_height="90dp"
         android:layout_below="@id/indexRL"
         android:gravity="center_vertical">
 
@@ -488,8 +471,7 @@
                     android:layout_height="wrap_content"
                     android:text="一日一题"
                     android:textColor="@color/primaryText"
-                    android:textSize="14sp"
-                    />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/writeTopicTipText"
@@ -498,16 +480,14 @@
                     android:layout_below="@+id/writeTopicText"
                     android:text="答题可得元宝"
                     android:textColor="@color/unluckyText"
-                    android:textSize="12sp"
-                    />
+                    android:textSize="12sp"/>
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="25dp"
-                    android:src="@drawable/home_icon_subject"
-                    />
+                    android:src="@drawable/home_icon_subject"/>
             </RelativeLayout>
         </RelativeLayout>
 

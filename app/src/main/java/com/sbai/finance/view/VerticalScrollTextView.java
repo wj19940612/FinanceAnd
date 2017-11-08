@@ -32,7 +32,7 @@ import java.util.List;
 public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher.ViewFactory {
     private static final int FLAG_START_AUTO_SCROLL = 0;
     private static final int FLAG_STOP_AUTO_SCROLL = 1;
-    private static final int FLAG_DELAY_TIME = 1000;
+    private static final int FLAG_DELAY_TIME = 500;
     public static final int TEXT_SIZE_SP = 14;
     public static final int TEXT_ANIMATIONTIME = 300;
     public static final int TEXT_STILLTIME = 3000;
@@ -55,18 +55,19 @@ public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher
     public VerticalScrollTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
+        setFactory(this);
 //        textList = new ArrayList<String>();
         mNoticeRadios = new ArrayList<NoticeRadio>();
         setTextStillTime(TEXT_STILLTIME);
-        setAnimTime(TEXT_ANIMATIONTIME);
     }
 
     @Override
     public View makeView() {
         TextView t = new TextView(mContext);
-        t.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        t.setPadding(0,0,0, (int) Display.dp2Px(TEXT_PADDING_BOTTOM,getResources()));
+        t.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         t.setMaxLines(1);
+        t.setIncludeFontPadding(false);
+        t.setGravity(Gravity.CENTER_VERTICAL);
         t.setEllipsize(TextUtils.TruncateAt.END);
         t.setTextColor(textColor);
         t.setTextSize(TEXT_SIZE_SP);
@@ -84,7 +85,6 @@ public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher
 
     //设置进出动画以及动画的持续时间
     public void setAnimTime(long animDuration) {
-        setFactory(this);
         Animation in = new TranslateAnimation(0, 0, Display.sp2Px(TEXT_SIZE_SP,getResources()), 0);
         in.setDuration(animDuration);
         in.setInterpolator(new AccelerateInterpolator());
@@ -96,9 +96,11 @@ public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher
     }
 
     public void setNoticeRadios(List<NoticeRadio> noticeRadios){
+        setAnimTime(TEXT_ANIMATIONTIME);
         mNoticeRadios.clear();
         mNoticeRadios.addAll(noticeRadios);
         currentId = -1;
+        startAutoScroll();
     }
 
     /**
@@ -164,6 +166,9 @@ public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher
                         break;
                     case FLAG_STOP_AUTO_SCROLL:
                         handler.removeMessages(FLAG_START_AUTO_SCROLL);
+                        setInAnimation(null);
+                        setOutAnimation(null);
+                        setText("");
                         break;
                 }
             }

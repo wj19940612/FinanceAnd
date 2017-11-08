@@ -19,7 +19,9 @@ import com.sbai.finance.model.NoticeRadio;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.leaderboard.LeaderThreeRank;
+import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.model.stock.StockData;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 
 import java.util.HashMap;
@@ -41,6 +43,8 @@ import static com.sbai.finance.model.leaderboard.LeaderThreeRank.SAVANT;
 
 public class HomeTitleView extends RelativeLayout {
 
+    public static final String SPLIT = ";";
+
     public static final int BUTTON_HUSHEN = 1;
     public static final int BUTTON_QIHUO = 2;
     public static final int BUTTON_ZIXUAN = 3;
@@ -48,6 +52,10 @@ public class HomeTitleView extends RelativeLayout {
     public static final int SELECT_LEFT = 1;
     public static final int SELECT_CENTER = 2;
     public static final int SELECT_RIGHT = 3;
+
+    public static final String MEIYUANYOU = "CL";
+    public static final String MEIHUANGJIN = "GC";
+    public static final String HENGZHI = "HSI";
 
     @BindView(R.id.verticalScrollText)
     VerticalScrollTextView mVerticalScrollTextView;
@@ -205,10 +213,24 @@ public class HomeTitleView extends RelativeLayout {
             mGreetingTitle.setText(R.string.welcome_lemi);
             return;
         }
-        if (!TextUtils.isEmpty(greetingTitle.getGreetings())) {
-            mGreetingTitle.setText(greetingTitle.getGreetings());
-        } else {
+        boolean nowShow = judgeShowTime(greetingTitle);
+        if (TextUtils.isEmpty(greetingTitle.getGreetings()) || !nowShow) {
             mGreetingTitle.setText(R.string.welcome_lemi);
+        } else {
+            String[] greetingTitles = greetingTitle.getGreetings().split(SPLIT);
+            int showIndex = (int) (SysTime.getSysTime().getSystemTimestamp() % greetingTitles.length);
+            mGreetingTitle.setText(greetingTitles[showIndex]);
+        }
+    }
+
+    private boolean judgeShowTime(Greeting greetingTitle) {
+        long startTime = DateUtil.convertString2Long(greetingTitle.getStartTime(), DateUtil.DEFAULT_FORMAT);
+        long endTime = DateUtil.convertString2Long(greetingTitle.getEndTime(), DateUtil.DEFAULT_FORMAT);
+        long nowTime = SysTime.getSysTime().getSystemTimestamp();
+        if (nowTime >= startTime && nowTime <= endTime) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -219,7 +241,7 @@ public class HomeTitleView extends RelativeLayout {
             mBroadcastText.setVisibility(View.GONE);
             mVerticalScrollTextView.setVisibility(View.VISIBLE);
             mVerticalScrollTextView.setNoticeRadios(noticeRadios);
-            mVerticalScrollTextView.startAutoScroll();
+//            mVerticalScrollTextView.startAutoScroll();
         } else if (noticeRadios != null) {
             mVerticalScrollTextView.setVisibility(View.GONE);
             mBroadcastIcon.setVisibility(View.VISIBLE);
@@ -234,6 +256,10 @@ public class HomeTitleView extends RelativeLayout {
                 }
             });
         }
+    }
+
+    public void stopBroadcastScroll(){
+        mVerticalScrollTextView.stopAutoScroll();
     }
 
     //设置名言
@@ -388,26 +414,89 @@ public class HomeTitleView extends RelativeLayout {
 
     //更新期货名称
     public void updateFutureData(List<Variety> data) {
-        if (data == null || data.size() == 0) {
-            return;
-        } else if (data.size() == 1) {
-            mLeftIndex.setText(data.get(0).getVarietyName());
-            mLeftIndex.setTag(data.get(0));
-        } else if (data.size() == 2) {
-            mLeftIndex.setTag(data.get(0));
-            mLeftIndex.setText(data.get(0).getVarietyName());
-            mCenterIndex.setTag(data.get(1));
-            mCenterIndex.setText(data.get(1).getVarietyName());
+        final SelectFuture selectFuture = selectFutureData(data);
+        if (selectFuture.leftVarity != null) {
+            mLeftIndex.setText(selectFuture.leftVarity.getVarietyName());
+            mLeftIndex.setTag(selectFuture.leftVarity);
+            mLeftRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnClickItemListener.onItemClick(oldButton, selectFuture.leftVarity);
+                }
+            });
         } else {
-            mLeftIndex.setTag(data.get(0));
-            mLeftIndex.setText(data.get(0).getVarietyName());
-            mCenterIndex.setTag(data.get(1));
-            mCenterIndex.setText(data.get(1).getVarietyName());
-            mRightIndex.setTag(data.get(2));
-            mRightIndex.setText(data.get(2).getVarietyName());
+            mLeftRL.setOnClickListener(null);
         }
-        setRLClick(data);
+        if (selectFuture.centerVarity != null) {
+            mCenterIndex.setTag(selectFuture.centerVarity);
+            mCenterIndex.setText(selectFuture.centerVarity.getVarietyName());
+            mCenterRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnClickItemListener.onItemClick(oldButton, selectFuture.centerVarity);
+                }
+            });
+        } else {
+            mCenterRL.setOnClickListener(null);
+        }
+        if (selectFuture.rightVarity != null) {
+            mRightIndex.setTag(selectFuture.rightVarity);
+            mRightIndex.setText(selectFuture.rightVarity.getVarietyName());
+            mRightRL.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnClickItemListener.onItemClick(oldButton, selectFuture.rightVarity);
+                }
+            });
+        } else {
+            mRightRL.setOnClickListener(null);
+        }
+//        if (data == null || data.size() == 0) {
+//            return;
+//        } else if (data.size() == 1) {
+//            mLeftIndex.setText(data.get(0).getVarietyName());
+//            mLeftIndex.setTag(data.get(0));
+//        } else if (data.size() == 2) {
+//            mLeftIndex.setTag(data.get(0));
+//            mLeftIndex.setText(data.get(0).getVarietyName());
+//            mCenterIndex.setTag(data.get(1));
+//            mCenterIndex.setText(data.get(1).getVarietyName());
+//        } else {
+//            mLeftIndex.setTag(data.get(0));
+//            mLeftIndex.setText(data.get(0).getVarietyName());
+//            mCenterIndex.setTag(data.get(1));
+//            mCenterIndex.setText(data.get(1).getVarietyName());
+//            mRightIndex.setTag(data.get(2));
+//            mRightIndex.setText(data.get(2).getVarietyName());
+//        }
+//        setRLClick(data);
         updateFutureMarketData();
+    }
+
+    public class SelectFuture {
+        private Variety leftVarity;
+        private Variety centerVarity;
+        private Variety rightVarity;
+    }
+
+    //当前只显示美原油，美黄金，恒指
+    private SelectFuture selectFutureData(List<Variety> data) {
+        SelectFuture selectFuture = new SelectFuture();
+        for (Variety variety : data) {
+            if (variety.getVarietyType().equals(MEIYUANYOU)) {
+                selectFuture.leftVarity = variety;
+            } else if (variety.getVarietyType().equals(MEIHUANGJIN)) {
+                selectFuture.centerVarity = variety;
+            } else if (variety.getVarietyType().equals(HENGZHI)) {
+                selectFuture.rightVarity = variety;
+            }
+            if (selectFuture.leftVarity != null && selectFuture.centerVarity != null && selectFuture.rightVarity != null) {
+                return selectFuture;
+            }
+        }
+
+        return selectFuture;
+
     }
 
     private void setRLClick(List<Variety> data) {
@@ -473,7 +562,7 @@ public class HomeTitleView extends RelativeLayout {
                     }
                 }
             });
-        }else {
+        } else {
             mLeftRL.setOnClickListener(null);
             mCenterRL.setOnClickListener(null);
             mRightRL.setOnClickListener(null);
@@ -666,36 +755,39 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     private void revertIndexUI() {
+        mLeftRL.setOnClickListener(null);
+        mCenterRL.setOnClickListener(null);
+        mRightRL.setOnClickListener(null);
         int greyColor = ContextCompat.getColor(mContext, R.color.unluckyText);
-        mLeftIndex.setText("--");
+        mLeftIndex.setText("");
         mLeftIndexValue.setTextColor(greyColor);
-        mLeftIndexValue.setText("--");
+        mLeftIndexValue.setText("");
         mLeftLeftIndexPer.setTextColor(greyColor);
-        mLeftLeftIndexPer.setText("--");
+        mLeftLeftIndexPer.setText("");
         mLeftLeftIndexPer.setTextColor(greyColor);
-        mLeftLeftIndexPer.setText("--");
+        mLeftLeftIndexPer.setText("");
         mLeftRightIndexPer.setTextColor(greyColor);
-        mLeftRightIndexPer.setText("--");
+        mLeftRightIndexPer.setText("");
 
-        mCenterIndex.setText("--");
+        mCenterIndex.setText("");
         mCenterIndexValue.setTextColor(greyColor);
-        mCenterIndexValue.setText("--");
+        mCenterIndexValue.setText("");
         mCenterLeftIndexPer.setTextColor(greyColor);
-        mCenterLeftIndexPer.setText("--");
+        mCenterLeftIndexPer.setText("");
         mCenterLeftIndexPer.setTextColor(greyColor);
-        mCenterLeftIndexPer.setText("--");
+        mCenterLeftIndexPer.setText("");
         mCenterRightIndexPer.setTextColor(greyColor);
-        mCenterRightIndexPer.setText("--");
+        mCenterRightIndexPer.setText("");
 
-        mRightIndex.setText("--");
+        mRightIndex.setText("");
         mRightIndexValue.setTextColor(greyColor);
-        mRightIndexValue.setText("--");
+        mRightIndexValue.setText("");
         mRightLeftIndexPer.setTextColor(greyColor);
-        mRightLeftIndexPer.setText("--");
+        mRightLeftIndexPer.setText("");
         mRightLeftIndexPer.setTextColor(greyColor);
-        mRightLeftIndexPer.setText("--");
+        mRightLeftIndexPer.setText("");
         mRightRightIndexPer.setTextColor(greyColor);
-        mRightRightIndexPer.setText("--");
+        mRightRightIndexPer.setText("");
     }
 
     private void setIndexViewVisible(int locationIndexVisible, boolean isVisible) {

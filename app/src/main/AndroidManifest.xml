@@ -202,9 +202,6 @@
             android:name=".activity.future.FutureTradeActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.stock.StockListActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.stock.SearchStockActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -212,9 +209,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.stock.StockIndexActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.web.TopicDetailActivity"
             android:screenOrientation="portrait"/>
         <!-- 观点大神 -->
 

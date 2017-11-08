@@ -129,6 +129,8 @@ public class HomeBanner extends FrameLayout {
         if (informationList.size() == 0) {
             setVisibility(View.GONE);
             return;
+        }else {
+            setVisibility(View.VISIBLE);
         }
         filterEmptyInformation(informationList);
 

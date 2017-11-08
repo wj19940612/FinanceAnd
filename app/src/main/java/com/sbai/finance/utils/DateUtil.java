@@ -218,7 +218,11 @@ public class DateUtil {
         calendar.setTimeInMillis(time);
         return calendar.get(Calendar.DAY_OF_MONTH);
     }
-
+    public static int getMonthOfYear(long time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        return calendar.get(Calendar.MONTH)+1;
+    }
     public static String format(long timestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DEFAULT_FORMAT);
         Date date = new Date(timestamp);
