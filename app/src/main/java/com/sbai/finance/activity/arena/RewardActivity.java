@@ -15,7 +15,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -304,7 +303,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
             if (arenaActivityAndUserStatus.userCanExchangeAward()) {
                 mPredictGain.setText(R.string.get_award);
                 mAward.setSelected(false);
-                requestUserExchangeAwardInfo();
+                requestUserExchangeAwardInfo(false);
                 if (arenaActivityAwardInfo != null) {
                     mAward.setText(arenaActivityAwardInfo.getPrizeName());
                 }
@@ -318,7 +317,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    private void requestUserExchangeAwardInfo() {
+    private void requestUserExchangeAwardInfo(final boolean ifShowResultDialog) {
         Client.requestUserExchangeAwardInfo(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -326,6 +325,9 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     protected void onRespSuccessData(List<UserExchangeAwardInfo> data) {
                         updateUserExchangeAwardStatus(data);
+                        if (data != null && !data.isEmpty() && ifShowResultDialog) {
+                            showUserExchangeResultDialog(data);
+                        }
                     }
 
                     @Override
@@ -334,8 +336,13 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                         if (failedResp.getCode() == Resp.CODE_ARENA_IS_OVER_OR_NOT_IS_EXCHANGE_TIME) {
                             // 未到时间或者已经结束
                             mGift.setVisibility(View.GONE);
-                            showOverExchangeTimeDialog();
+                            ToastUtil.show(failedResp.getMsg());
                         }
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
                     }
                 })
                 .fireFree();
@@ -368,12 +375,6 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    private void showOverExchangeTimeDialog() {
-        SmartDialog.single(getActivity(), getString(R.string.you_miss_exchange_time))
-                .setPositive(R.string.i_see)
-                .setNegativeVisible(View.GONE)
-                .show();
-    }
 
     private void showUserExchangeResultDialog(List<UserExchangeAwardInfo> data) {
         UserExchangeAwardInfo userExchangeAwardInfo = data.get(0);
@@ -413,15 +414,17 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
             case PushCode.QUICK_MATCH_SUCCESS:
                 mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
                 Battle data = (Battle) battleWSPush.getContent().getData();
-                mBattle = data;
                 StartMatchDialog.dismiss(getActivity());
                 SmartDialog.dismiss(getActivity());
                 if (data != null) {
-                    Log.d(TAG, "竞技场:开始对战 " + "" + data.toString());
-                    Launcher.with(getActivity(), BattleActivity.class)
-                            .putExtra(ExtraKeys.BATTLE, data)
-                            .executeForResult(REQ_CODE_FUTURE_BATTLE);
+                    //防止出现多次推送
+                    if(mBattle==null||mBattle.getId()!=data.getId()){
+                        Launcher.with(getActivity(), BattleActivity.class)
+                                .putExtra(ExtraKeys.BATTLE, data)
+                                .executeForResult(REQ_CODE_FUTURE_BATTLE);
+                    }
                 }
+                mBattle = data;
                 break;
             case PushCode.BATTLE_OVER:
                 if (BuildConfig.DEBUG) {
@@ -652,34 +655,9 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 requestUserRealNameStatus();
                 break;
             case R.id.exchangeDetail:
-                requestUserExchangeDetail();
+                requestUserExchangeAwardInfo(true);
                 break;
         }
-    }
-
-    private void requestUserExchangeDetail() {
-        Client.requestUserExchangeAwardInfo(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<UserExchangeAwardInfo>>, List<UserExchangeAwardInfo>>() {
-                    @Override
-                    protected void onRespSuccessData(List<UserExchangeAwardInfo> data) {
-                        if (data != null && !data.isEmpty()) {
-                            showUserExchangeResultDialog(data);
-                        }
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        super.onRespFailure(failedResp);
-                        if (failedResp.getCode() == Resp.CODE_ARENA_IS_OVER_OR_NOT_IS_EXCHANGE_TIME) {
-                            // 未到时间或者已经结束
-                            mGift.setVisibility(View.GONE);
-                            showOverExchangeTimeDialog();
-                        }
-                    }
-                })
-                .fireFree();
     }
 
     private void requestUserLastBattleInfo(final boolean needQuickMatch) {
@@ -783,7 +761,6 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onClick(Dialog dialog) {
                         Launcher.with(getActivity(), CreditApproveActivity.class).execute();
-                        finish();
                     }
                 })
                 .setNegative(R.string.i_see)
