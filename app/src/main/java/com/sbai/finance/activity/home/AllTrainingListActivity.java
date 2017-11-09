@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -41,7 +42,7 @@ import butterknife.ButterKnife;
 
 
 public class AllTrainingListActivity extends BaseActivity {
-
+    public static final int RETURN_CODE=250;
     @BindView(android.R.id.list)
     ListView mList;
     @BindView(android.R.id.empty)
@@ -73,7 +74,7 @@ public class AllTrainingListActivity extends BaseActivity {
                 if(myTrainingRecord!=null){
                     Launcher.with(getActivity(), TrainingDetailActivity.class)
                             .putExtra(ExtraKeys.TRAINING, myTrainingRecord.getTrain())
-                            .execute();
+                            .executeForResult(RETURN_CODE);
                 }
             }
         });
@@ -104,6 +105,14 @@ public class AllTrainingListActivity extends BaseActivity {
             if (trainingRecord.getTrain() != null) {
                 mTrainAdapter.add(trainingRecord);
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==RETURN_CODE){
+            requestAllTrainingList();
         }
     }
 
