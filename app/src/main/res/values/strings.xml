@@ -889,4 +889,7 @@
     <string name="real_time_news">实时快讯</string>
     <string name="more">更多</string>
     <string name="welcome_lemi">Hi，欢迎来到乐米金融~</string>
+    <string name="hello_morning">上午好，%1$s</string>
+    <string name="hello_afternoon">下午好，%1$s</string>
+    <string name="hello_evening">晚上好，%1$s</string>
 </resources>
