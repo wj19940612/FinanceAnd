@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -29,6 +30,8 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
+import com.sbai.finance.utils.SerializeObjectUtil;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -41,6 +44,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
+import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 /**
  * 盈利榜
@@ -77,7 +83,17 @@ public class ProfitBoardListFragment extends BaseFragment implements
     private BroadcastReceiver mLoginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            reset();
             requestProfitBoardData();
+        }
+    };
+    private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                reset();
+               requestProfitBoardData();
+            }
         }
     };
 
@@ -111,7 +127,11 @@ public class ProfitBoardListFragment extends BaseFragment implements
         initInfoView();
         initView();
         initLoginReceiver();
-        requestProfitBoardData();
+        if (Network.isNetworkAvailable()) {
+            requestProfitBoardData();
+        } else {
+            loadFromCache();
+        }
     }
 
     private void initInfoView() {
@@ -163,13 +183,30 @@ public class ProfitBoardListFragment extends BaseFragment implements
     public void scrollToTop() {
         mListView.smoothScrollToPosition(0);
     }
+    private void loadFromCache() {
+        LeaderBoardRank leaderBoardRank = SerializeObjectUtil.String2Object(Preference.get().getProfitBoardData(mType));
+        if (leaderBoardRank!=null){
+            updateProfitBoardData(leaderBoardRank,false);
+        }
+    }
 
+    private void saveDataToFile(LeaderBoardRank data) {
+        if (data != null) {
+            Preference.get().setProfitBoardData(mType, SerializeObjectUtil.Object2String(data));
+        }
+    }
     private void requestProfitBoardData() {
         Client.getleaderBoardList(LeaderBoardRank.PROFIT, mType).setTag(TAG)
                 .setCallback(new Callback2D<Resp<LeaderBoardRank>, LeaderBoardRank>() {
                     @Override
                     protected void onRespSuccessData(LeaderBoardRank data) {
-                        updateProfitBoardData(data);
+                        updateProfitBoardData(data,true);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
                     }
                 }).fireFree();
     }
@@ -189,8 +226,7 @@ public class ProfitBoardListFragment extends BaseFragment implements
                 }).fireFree();
     }
 
-    private void updateProfitBoardData(LeaderBoardRank data) {
-        stopRefreshAnimation();
+    private void updateProfitBoardData(LeaderBoardRank data,boolean saved) {
         mSet.clear();
         mLeaderBoardAdapter.clear();
         for (LeaderBoardRank.DataBean dataBean : data.getData()) {
@@ -200,6 +236,9 @@ public class ProfitBoardListFragment extends BaseFragment implements
         }
         mLeaderBoardAdapter.notifyDataSetChanged();
         updateMyLeaderData(data);
+        if (saved){
+            saveDataToFile(data);
+        }
     }
 
     private void updateMyLeaderData(LeaderBoardRank data) {
@@ -294,6 +333,18 @@ public class ProfitBoardListFragment extends BaseFragment implements
             mMyBoardInfo.setVisibility(View.GONE);
             mTipInfo.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerNetworkChangeReceiver(getActivity(),mNetworkChangeReceiver);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterNetworkChangeReceiver(getActivity(), mNetworkChangeReceiver);
     }
 
     @Override
