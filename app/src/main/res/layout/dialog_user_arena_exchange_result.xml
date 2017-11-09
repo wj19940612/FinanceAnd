@@ -33,6 +33,8 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:minWidth="60dp"
+                android:id="@+id/weixinOrReceiver"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
@@ -54,6 +56,8 @@
             android:layout_marginTop="5dp">
 
             <TextView
+                android:minWidth="60dp"
+                android:id="@+id/addressOrSkin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
@@ -75,6 +79,8 @@
             android:layout_marginTop="5dp">
 
             <TextView
+                android:minWidth="60dp"
+                android:id="@+id/phoneOrNick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
@@ -91,11 +97,13 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/gameAreaLL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp">
 
             <TextView
+                android:minWidth="60dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"

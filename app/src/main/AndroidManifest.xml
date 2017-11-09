@@ -404,11 +404,11 @@
         <activity
             android:name=".activity.arena.ArenaEntityExchangeInfoInputActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseDialog"/>
+            android:theme="@style/BaseDialog.WindowCloseOnTouchOutside"/>
         <activity
             android:name=".activity.arena.ArenaVirtualAwardExchangeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseDialog"/>
+            android:theme="@style/BaseDialog.WindowCloseOnTouchOutside"/>
         <activity
             android:name=".activity.arena.ArenaVirtualAwardNameActivity"
             android:screenOrientation="portrait"
