@@ -207,7 +207,18 @@ public class Preference {
     public void setMyStudyData(int id, String data) {
         apply(id + Key.MY_STUDY, data);
     }
-
+    public String getLeaderBoardData(String type) {
+        return mPrefs.getString(type, null);
+    }
+    public void setLeaderBoardData(String type,String data) {
+        apply(type, data);
+    }
+    public String getProfitBoardData(String type) {
+        return mPrefs.getString(type, null);
+    }
+    public void setProfitBoardData(String type,String data) {
+        apply(type, data);
+    }
     public boolean isFirstTrain(int trainId) {
         return mPrefs.getBoolean(Key.IS_FIRST_TRAIN + trainId, true);
     }

@@ -328,7 +328,7 @@ public class WebActivity extends BaseActivity {
             mLoadSuccess = true;
             mPageUrl = url;
 
-            if (!Network.isNetworkAvailable()) {
+            if (!Network.isNetworkAvailable()&&TextUtils.isEmpty(mPureHtml)) {
                 mLoadSuccess = false;
                 mWebView.stopLoading();
             }
