@@ -189,9 +189,9 @@ public class LeaderBoardView extends LinearLayout {
                     if (LocalUser.getUser().isLogin() && Network.isNetworkAvailable()) {
                         finalMobaiBtn.setEnabled(false);
                     }
-//                    if (mMobaiRankListener != null) {
-//                        mMobaiRankListener.mobai(dataBean.getType(), dataBean);
-//                    }
+                    if (mMobaiRankListener != null) {
+                        mMobaiRankListener.mobai(dataBean.getType(), dataBean);
+                    }
                 }
             });
         }

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.model.Dictum;
 import com.sbai.finance.model.Greeting;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.NoticeRadio;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
@@ -24,6 +25,8 @@ import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -215,12 +218,31 @@ public class HomeTitleView extends RelativeLayout {
         }
         boolean nowShow = judgeShowTime(greetingTitle);
         if (TextUtils.isEmpty(greetingTitle.getGreetings()) || !nowShow) {
-            mGreetingTitle.setText(R.string.welcome_lemi);
-        } else {
+        String helloString = null;
+        int dayAndNight = DateUtil.getDayAndNight(SysTime.getSysTime().getSystemTimestamp());
+        switch (dayAndNight) {
+            case 1:
+                helloString = getResources().getString(R.string.hello_morning);
+                break;
+            case 2:
+                helloString = getResources().getString(R.string.hello_afternoon);
+                break;
+            case 3:
+                helloString = getResources().getString(R.string.hello_evening);
+                break;
+        }
+        String stringResult = String.format(helloString, LocalUser.getUser().getUserInfo().getUserName());
+        mGreetingTitle.setText(stringResult);
+        }
+        else {
             String[] greetingTitles = greetingTitle.getGreetings().split(SPLIT);
             int showIndex = (int) (SysTime.getSysTime().getSystemTimestamp() % greetingTitles.length);
             mGreetingTitle.setText(greetingTitles[showIndex]);
         }
+    }
+
+    public void setGreetingTitle(int id) {
+        mGreetingTitle.setText(id);
     }
 
     private boolean judgeShowTime(Greeting greetingTitle) {
@@ -241,7 +263,6 @@ public class HomeTitleView extends RelativeLayout {
             mBroadcastText.setVisibility(View.GONE);
             mVerticalScrollTextView.setVisibility(View.VISIBLE);
             mVerticalScrollTextView.setNoticeRadios(noticeRadios);
-//            mVerticalScrollTextView.startAutoScroll();
         } else if (noticeRadios != null) {
             mVerticalScrollTextView.setVisibility(View.GONE);
             mBroadcastIcon.setVisibility(View.VISIBLE);
@@ -256,10 +277,6 @@ public class HomeTitleView extends RelativeLayout {
                 }
             });
         }
-    }
-
-    public void stopBroadcastScroll(){
-        mVerticalScrollTextView.stopAutoScroll();
     }
 
     //设置名言
@@ -341,6 +358,10 @@ public class HomeTitleView extends RelativeLayout {
             return;
         }
         oldButton = buttonIndex;
+        forceRefershUI(buttonIndex);
+    }
+
+    public void forceRefershUI(int buttonIndex) {
         switch (buttonIndex) {
             case BUTTON_HUSHEN:
                 mIndexRL.setBackgroundDrawable(getResources().getDrawable(R.drawable.home_select_open_one));

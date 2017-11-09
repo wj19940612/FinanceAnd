@@ -25,7 +25,7 @@ public class DateUtil {
     public static final String FORMAT_SPECIAL_SLASH_NO_HOUR = "yyyy/MM/dd";
     public static final String FORMAT_HOUR_MINUTE = "HH:mm";
     public static final String FORMAT_DATE_HOUR_MINUTE = "dd日 HH:mm";
-    public static final String FORMAT_DATE_ARENA= "yyyy.MM.dd";
+    public static final String FORMAT_DATE_ARENA = "yyyy.MM.dd";
 
 
     private static final String TODAY = "今日";
@@ -218,11 +218,13 @@ public class DateUtil {
         calendar.setTimeInMillis(time);
         return calendar.get(Calendar.DAY_OF_MONTH);
     }
+
     public static int getMonthOfYear(long time) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(time);
-        return calendar.get(Calendar.MONTH)+1;
+        return calendar.get(Calendar.MONTH) + 1;
     }
+
     public static String format(long timestamp) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DEFAULT_FORMAT);
         Date date = new Date(timestamp);
@@ -741,6 +743,37 @@ public class DateUtil {
             return second / 60 + "分钟";
         } else {
             return second / 60 + "分" + second % 60 + "秒";
+        }
+    }
+
+    /**
+     * @param timestamp
+     * @return 1-上午 2-下午 3-晚上
+     */
+    public static int getDayAndNight(long timestamp) {
+        Date date = new Date(timestamp);
+        int hour = date.getHours();
+        if (hour == 12) {
+            if (date.getMinutes() > 0) {
+                return 2;
+            } else {
+                return 1;
+            }
+        }
+
+        if (hour == 18) {
+            if (date.getMinutes() > 0) {
+                return 3;
+            } else {
+                return 2;
+            }
+        }
+        if (hour > 0 && hour < 12) {
+            return 1;
+        } else if (hour > 12 && hour < 18) {
+            return 2;
+        } else {
+            return 3;
         }
     }
 }

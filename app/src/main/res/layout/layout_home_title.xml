@@ -51,14 +51,13 @@
         <TextView
             android:id="@+id/broadcastText"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="35dp"
             android:layout_marginLeft="2dp"
             android:layout_toRightOf="@id/broadcastIcon"
             android:includeFontPadding="false"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:paddingBottom="15dp"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:visibility="gone"/>

@@ -103,10 +103,6 @@ public class SevenHourNewsView extends RelativeLayout {
 //                    Log.e("zzz", "ccwidth:" + ccWidth);
                     mContentLL.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
-//                Log.e("zzz", "ccHeight:" + mContentLL.getMeasuredHeight());
-//                View child = mContentLL.getChildAt(0);
-//                if (child != null)
-//                    Log.e("zzz", "child height:" + mContentLL.getChildAt(0).getMeasuredHeight());
             }
         });
     }
