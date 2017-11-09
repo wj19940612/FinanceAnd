@@ -84,9 +84,11 @@
         <!-- Login & Register -->
         <activity
             android:name=".activity.mine.LoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/PageBottomEnter"/>
+            android:theme="@style/PageBottomEnter"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.mine.InputPhoneActivity"
             android:screenOrientation="portrait"/>
