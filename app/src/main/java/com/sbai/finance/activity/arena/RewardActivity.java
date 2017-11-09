@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.Gravity;
@@ -119,8 +120,8 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     AppBarLayout mAppBarLayout;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
-    //    @BindView(R.id.toolBar)
-//    Toolbar mToolBar;
+    @BindView(R.id.toolBar)
+    Toolbar mToolBar;
     @BindView(R.id.quickMatch)
     TextView mQuickMatch;
     @BindView(R.id.gift)
@@ -446,18 +447,9 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initView() {
-//        setSupportActionBar(mToolBar);
+        setSupportActionBar(mToolBar);
 
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                mAppBarVerticalOffset = verticalOffset;
-                boolean b = mSwipEnabled && mAppBarVerticalOffset > -1;
-                if (mSwipeRefreshLayout.isEnabled() != b) {
-                    mSwipeRefreshLayout.setEnabled(b);
-                }
-            }
-        });
+        mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
 
         mArenaFragmentAdapter = new ArenaFragmentAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mArenaFragmentAdapter);
@@ -519,8 +511,18 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
 
             }
         });
-
     }
+
+    AppBarLayout.OnOffsetChangedListener mOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
+        @Override
+        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+            mAppBarVerticalOffset = verticalOffset;
+            boolean b = mSwipEnabled && mAppBarVerticalOffset > -1;
+            if (mSwipeRefreshLayout.isEnabled() != b) {
+                mSwipeRefreshLayout.setEnabled(b);
+            }
+        }
+    };
 
     private BattleListFragment getBattleListFragment() {
         return (BattleListFragment) mArenaFragmentAdapter.getFragment(0);
@@ -1006,6 +1008,12 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                         requestArenaShareInfo();
                     }
                 }).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAppBarLayout.removeOnOffsetChangedListener(mOnOffsetChangedListener);
     }
 
     @Override
