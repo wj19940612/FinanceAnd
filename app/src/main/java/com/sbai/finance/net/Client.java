@@ -2993,4 +2993,11 @@ public class Client {
     public static API requestAwardExchangeRule(String activityCode) {
         return new API("/activity/prize/allPrizeRule.do", new ApiParams().put("activityCode", activityCode));
     }
+
+    /**
+     * 点击banner后
+     */
+    public static API requestClickBanner(String bannerId){
+        return new API("/user/news/findBannerById.do",new ApiParams().put("id",bannerId));
+    }
 }

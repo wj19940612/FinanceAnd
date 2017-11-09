@@ -32,6 +32,7 @@ import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.leaderboard.LeaderThreeRank;
 import com.sbai.finance.model.stock.StockData;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -75,6 +76,8 @@ public class HomePageFragment extends BaseFragment {
     public static final int TIME_ONE = 1000;//1次轮询为1s
     public static final int TIME_HANDLER_THREE = 3;//3次轮询时间
     public static final int TIME_HANDLER_TEN = 10;
+    public static final int TIME_HANDLER_FIVE = 5;
+
     Unbinder unbinder;
     @BindView(R.id.homeTitleView)
     HomeTitleView mHomeTitleView;
@@ -89,7 +92,6 @@ public class HomePageFragment extends BaseFragment {
     @BindView(R.id.importantNewsView)
     ImportantNewsView mImportantNewsView;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -102,11 +104,12 @@ public class HomePageFragment extends BaseFragment {
     public void onTimeUp(int count) {
         if (count % TIME_HANDLER_THREE == 0) {
             mBanner.nextAdvertisement();
-            getIndexData();
         } else if (count % TIME_HANDLER_TEN == 0) {
             request7NewsData();
             requestImportantNewsData();
             requestBusniessBannerData();
+        }else if(count % TIME_HANDLER_FIVE == 0){
+            getIndexData();
         }
     }
 
@@ -219,6 +222,7 @@ public class HomePageFragment extends BaseFragment {
         {
             @Override
             public void onBannerClick(Banner information) {
+                requestClickBanner(information.getId());
                 if (information.isH5Style()) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, information.getContent())
@@ -236,6 +240,7 @@ public class HomePageFragment extends BaseFragment {
         {
             @Override
             public void onBannerClick(Banner information) {
+                requestClickBanner(information.getId());
                 if (information.isH5Style()) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, information.getContent())
@@ -316,6 +321,7 @@ public class HomePageFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         startScheduleJob(TIME_ONE);
+        TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
         requestGreetings();
         getRefreshData();
         requestRadioData();
@@ -332,6 +338,7 @@ public class HomePageFragment extends BaseFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isAdded()) {
+            TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
             requestGreetings();
             getRefreshData();
             requestRadioData();
@@ -340,6 +347,8 @@ public class HomePageFragment extends BaseFragment {
             requestLeaderBoardData();
             request7NewsData();
             requestImportantNewsData();
+        }else if(!isVisibleToUser && isAdded()){
+            API.cancel(TAG);
         }
     }
 
@@ -347,6 +356,7 @@ public class HomePageFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         stopScheduleJob();
+        API.cancel(TAG);
         MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
         MarketSubscriber.get().unSubscribeAll();
     }
@@ -579,6 +589,10 @@ public class HomePageFragment extends BaseFragment {
                         requestLeaderBoardData();
                     }
                 }).fireFree();
+    }
+
+    private void requestClickBanner(String bannerId){
+        Client.requestClickBanner(bannerId).setTag(TAG).fireFree();
     }
 
     @Override
