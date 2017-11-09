@@ -44,6 +44,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     private static final int REQ_CODE_FEEDBACK_LOGIN = 23333;
 
+    public static final int MISS_PAGE_POSITION = 2;
+
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
     @BindView(R.id.bottomTabs)
