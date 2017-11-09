@@ -1,6 +1,7 @@
 package com.sbai.finance.fragment.battle;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -286,11 +287,17 @@ public class BattleRankingFragment extends BaseFragment {
                 } else {
                     score = "+" + item.getScore();
                 }
-
-                SpannableString spannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
-                        "\n " + score, 1.4f,
-                        ContextCompat.getColor(context, R.color.yellowAssist));
-                mNameAndProfit.setText(spannableString);
+                if (position == 0) {
+                    SpannableString spannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
+                            "\n " + score, 1.4f, Color.WHITE,
+                            ContextCompat.getColor(context, R.color.yellowAssist));
+                    mNameAndProfit.setText(spannableString);
+                } else {
+                    SpannableString spannableString = StrUtil.mergeTextWithRatioColor(item.getUserName(),
+                            "\n " + score, 1.4f,
+                            ContextCompat.getColor(context, R.color.yellowAssist));
+                    mNameAndProfit.setText(spannableString);
+                }
                 mBattleCount.setText(String.valueOf(item.getTotalCount()));
                 mAward.setText(item.getPrizeName());
             }

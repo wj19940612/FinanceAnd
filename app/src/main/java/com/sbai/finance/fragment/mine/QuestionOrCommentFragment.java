@@ -170,7 +170,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
                 mListEmptyView.setOnGoingViewClickListener(new ListEmptyView.OnGoingViewClickListener() {
                     @Override
                     public void onGoingViewClick() {
-                        Launcher.with(getActivity(), MainActivity.class).putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 1).execute();
+                        Launcher.with(getActivity(), MainActivity.class).putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 2).execute();
                         getActivity().finish();
                     }
                 });

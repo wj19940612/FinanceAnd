@@ -36,8 +36,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.R.id.authCode;
-import static com.sbai.finance.net.Resp.CODE_NO_BIND_WE_CHAT;
 
 public class LoginActivity extends WeChatActivity {
 
@@ -51,7 +49,7 @@ public class LoginActivity extends WeChatActivity {
     EditText mPhoneNumber;
     @BindView(R.id.phoneNumberClear)
     ImageView mPhoneNumberClear;
-    @BindView(authCode)
+    @BindView(R.id.authCode)
     EditText mAuthCode;
     @BindView(R.id.getAuthCode)
     TextView mGetAuthCode;
@@ -108,6 +106,7 @@ public class LoginActivity extends WeChatActivity {
             }
         });
 
+        mPhoneNumber.requestFocus();
         initListener();
 
         setKeyboardHelper();
@@ -345,7 +344,7 @@ public class LoginActivity extends WeChatActivity {
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
-                        if (failedResp.getCode() == CODE_NO_BIND_WE_CHAT) {
+                        if (failedResp.getCode() == Resp.CODE_NO_BIND_WE_CHAT) {
                             updateBindPhoneViews();
                         }
                     }

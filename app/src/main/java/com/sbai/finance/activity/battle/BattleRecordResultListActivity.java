@@ -263,9 +263,11 @@ public class BattleRecordResultListActivity extends BaseActivity implements Cust
                     result = context.getString(R.string.tie);
                     profit = context.getString(R.string.plus_int, 0);
                     mVersusResult.setSelected(false);
+                    mProfit.setSelected(false);
                 } else {
                     boolean mineIsWinBattle = mineIsWinBattle(item);
                     mVersusResult.setSelected(mineIsWinBattle);
+                    mProfit.setSelected(mineIsWinBattle);
                     if (mineIsWinBattle) {
                         result = context.getString(R.string.wing);
                         profit = context.getString(R.string.plus_int, Math.round(item.getReward() - item.getCommission()));

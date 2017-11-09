@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.Gravity;
@@ -119,8 +120,8 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     AppBarLayout mAppBarLayout;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
-    //    @BindView(R.id.toolBar)
-//    Toolbar mToolBar;
+    @BindView(R.id.toolBar)
+    Toolbar mToolBar;
     @BindView(R.id.quickMatch)
     TextView mQuickMatch;
     @BindView(R.id.gift)
@@ -289,7 +290,11 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
             mPredictGain.setVisibility(View.INVISIBLE);
             mAward.setTextColor(Color.WHITE);
             if (arenaActivityAndUserStatus.userCanExchangeAward()) {
-                mAward.setText(R.string.your_rank_is_not_exchange_reward);
+                if (mUserActivityScore.getTotalCount() < 30) {
+                    mAward.setText(R.string.battle_count_is_not_enough);
+                } else {
+                    mAward.setText(R.string.your_rank_is_not_exchange_reward);
+                }
             } else {
                 mAward.setText(R.string.ranking_low);
             }
@@ -297,16 +302,11 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
             ArenaActivityAwardInfo arenaActivityAwardInfo = arenaActivityAwardInfoList.get(0);
             mPredictGain.setVisibility(View.VISIBLE);
             if (arenaActivityAndUserStatus.userCanExchangeAward()) {
-                if (mUserActivityScore.getTotalCount() < 30) {
-                    mAward.setSelected(true);
-                    mAward.setText(R.string.battle_count_is_not_enough);
-                } else {
-                    mPredictGain.setText(R.string.get_award);
-                    mAward.setSelected(false);
-                    requestUserExchangeAwardInfo();
-                    if (arenaActivityAwardInfo != null) {
-                        mAward.setText(arenaActivityAwardInfo.getPrizeName());
-                    }
+                mPredictGain.setText(R.string.get_award);
+                mAward.setSelected(false);
+                requestUserExchangeAwardInfo();
+                if (arenaActivityAwardInfo != null) {
+                    mAward.setText(arenaActivityAwardInfo.getPrizeName());
                 }
             } else {
                 mAward.setSelected(false);
@@ -417,7 +417,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 StartMatchDialog.dismiss(getActivity());
                 SmartDialog.dismiss(getActivity());
                 if (data != null) {
-                    Log.d(TAG, "竞技场:开始对战 "+""+data.toString());
+                    Log.d(TAG, "竞技场:开始对战 " + "" + data.toString());
                     Launcher.with(getActivity(), BattleActivity.class)
                             .putExtra(ExtraKeys.BATTLE, data)
                             .executeForResult(REQ_CODE_FUTURE_BATTLE);
@@ -447,18 +447,9 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initView() {
-//        setSupportActionBar(mToolBar);
+        setSupportActionBar(mToolBar);
 
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                mAppBarVerticalOffset = verticalOffset;
-                boolean b = mSwipEnabled && mAppBarVerticalOffset > -1;
-                if (mSwipeRefreshLayout.isEnabled() != b) {
-                    mSwipeRefreshLayout.setEnabled(b);
-                }
-            }
-        });
+        mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
 
         mArenaFragmentAdapter = new ArenaFragmentAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mArenaFragmentAdapter);
@@ -520,8 +511,18 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
 
             }
         });
-
     }
+
+    AppBarLayout.OnOffsetChangedListener mOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
+        @Override
+        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+            mAppBarVerticalOffset = verticalOffset;
+            boolean b = mSwipEnabled && mAppBarVerticalOffset > -1;
+            if (mSwipeRefreshLayout.isEnabled() != b) {
+                mSwipeRefreshLayout.setEnabled(b);
+            }
+        }
+    };
 
     private BattleListFragment getBattleListFragment() {
         return (BattleListFragment) mArenaFragmentAdapter.getFragment(0);
@@ -534,9 +535,9 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     private void initTitleBar() {
         View customView = mTitleBar.getCustomView();
         mAvatar = customView.findViewById(R.id.avatar);
-        mIngot =  customView.findViewById(R.id.ingot);
-        TextView recharge =  customView.findViewById(R.id.recharge);
-        TextView activityRule =  customView.findViewById(R.id.activityRule);
+        mIngot = customView.findViewById(R.id.ingot);
+        TextView recharge = customView.findViewById(R.id.recharge);
+        TextView activityRule = customView.findViewById(R.id.activityRule);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -814,6 +815,8 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                         showMatchFundNotEnoughDialog(content.getMsg());
                     } else if (content.getCode() == Resp.ACTIVITY_IS_NOT_YET_OPEN) {
                         showThereWasNoOpeningHoursDialog(content.getMsg());
+                    } else {
+                        ToastUtil.show(content.getMsg());
                     }
                 }
             }
@@ -1005,6 +1008,12 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                         requestArenaShareInfo();
                     }
                 }).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAppBarLayout.removeOnOffsetChangedListener(mOnOffsetChangedListener);
     }
 
     @Override
