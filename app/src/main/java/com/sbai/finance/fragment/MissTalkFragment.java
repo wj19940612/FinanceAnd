@@ -317,6 +317,14 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
                         mQuestionListAdapter.notifyDataSetChanged();
                     }
                 }
+
+                @Override
+                protected void onRespFailure(Resp failedResp) {
+                    if (failedResp.getCode() == Resp.CODE_LISTENED) {
+                        MissVoiceRecorder.markHeard(item.getId());
+                        mQuestionListAdapter.notifyDataSetChanged();
+                    }
+                }
             }).fire();
         }
     }

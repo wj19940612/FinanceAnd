@@ -435,6 +435,14 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                         mListenerNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
                         mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
                     }
+
+                }
+                @Override
+                protected void onRespFailure(Resp failedResp) {
+                    if (failedResp.getCode() == Resp.CODE_LISTENED) {
+                        MissVoiceRecorder.markHeard(question.getId());
+                        mListenerNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
+                    }
                 }
             }).fire();
         }
