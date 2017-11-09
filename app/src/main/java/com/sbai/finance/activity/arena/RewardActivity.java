@@ -813,6 +813,8 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                         showMatchFundNotEnoughDialog(content.getMsg());
                     } else if (content.getCode() == Resp.ACTIVITY_IS_NOT_YET_OPEN) {
                         showThereWasNoOpeningHoursDialog(content.getMsg());
+                    } else {
+                        ToastUtil.show(content.getMsg());
                     }
                 }
             }
