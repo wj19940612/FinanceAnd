@@ -289,7 +289,11 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
             mPredictGain.setVisibility(View.INVISIBLE);
             mAward.setTextColor(Color.WHITE);
             if (arenaActivityAndUserStatus.userCanExchangeAward()) {
-                mAward.setText(R.string.your_rank_is_not_exchange_reward);
+                if (mUserActivityScore.getTotalCount() < 30) {
+                    mAward.setText(R.string.battle_count_is_not_enough);
+                } else {
+                    mAward.setText(R.string.your_rank_is_not_exchange_reward);
+                }
             } else {
                 mAward.setText(R.string.ranking_low);
             }
@@ -297,16 +301,11 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
             ArenaActivityAwardInfo arenaActivityAwardInfo = arenaActivityAwardInfoList.get(0);
             mPredictGain.setVisibility(View.VISIBLE);
             if (arenaActivityAndUserStatus.userCanExchangeAward()) {
-                if (mUserActivityScore.getTotalCount() < 30) {
-                    mAward.setSelected(true);
-                    mAward.setText(R.string.battle_count_is_not_enough);
-                } else {
-                    mPredictGain.setText(R.string.get_award);
-                    mAward.setSelected(false);
-                    requestUserExchangeAwardInfo();
-                    if (arenaActivityAwardInfo != null) {
-                        mAward.setText(arenaActivityAwardInfo.getPrizeName());
-                    }
+                mPredictGain.setText(R.string.get_award);
+                mAward.setSelected(false);
+                requestUserExchangeAwardInfo();
+                if (arenaActivityAwardInfo != null) {
+                    mAward.setText(arenaActivityAwardInfo.getPrizeName());
                 }
             } else {
                 mAward.setSelected(false);
@@ -417,7 +416,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 StartMatchDialog.dismiss(getActivity());
                 SmartDialog.dismiss(getActivity());
                 if (data != null) {
-                    Log.d(TAG, "竞技场:开始对战 "+""+data.toString());
+                    Log.d(TAG, "竞技场:开始对战 " + "" + data.toString());
                     Launcher.with(getActivity(), BattleActivity.class)
                             .putExtra(ExtraKeys.BATTLE, data)
                             .executeForResult(REQ_CODE_FUTURE_BATTLE);
@@ -534,9 +533,9 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     private void initTitleBar() {
         View customView = mTitleBar.getCustomView();
         mAvatar = customView.findViewById(R.id.avatar);
-        mIngot =  customView.findViewById(R.id.ingot);
-        TextView recharge =  customView.findViewById(R.id.recharge);
-        TextView activityRule =  customView.findViewById(R.id.activityRule);
+        mIngot = customView.findViewById(R.id.ingot);
+        TextView recharge = customView.findViewById(R.id.recharge);
+        TextView activityRule = customView.findViewById(R.id.activityRule);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
