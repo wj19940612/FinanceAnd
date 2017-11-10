@@ -16,6 +16,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -84,7 +87,14 @@ public class StartDialogFragment extends DialogFragment {
 
     private void initView() {
         if (mActivityModel != null) {
-            GlideApp.with(getActivity()).load(mActivityModel.getWindowUrl()).into(mWindow);
+            GlideApp.with(getActivity())
+                    .load(mActivityModel.getWindowUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .encodeQuality(50)
+                    .centerCrop()
+                    .encodeQuality(50)
+                    .priority(Priority.IMMEDIATE)
+                    .into(mWindow);
             mButton.setText(mActivityModel.getButtonUrl());
         }
     }

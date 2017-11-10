@@ -295,4 +295,134 @@ public class UmengCountEventId {
     public static final String TRAINING_LEADER_BOARD = "home0201";
     public static final String TRAINING_STUDY_ROOM = "home0202";
     public static final String TRAINING_TEST = "home0300";
+
+
+    /**
+     * 首页
+     * home0100,沪深,0
+     * home0101,沪深_查看全部,0
+     * home0200,期货,0
+     * home0201,期货_查看全部,0
+     * home0300,自选,0
+     * home0301,自选_查看全部,0
+     * home0400,广播,0
+     * home0500,练一练,0
+     * home0600,一日一题,0
+     * home0700,banner,0
+     * home0701,运营位1,0
+     * home0702,运营位2,0
+     * home0703,运营位3,0
+     * home0801,土豪榜,0
+     * home0802,盈利榜,0
+     * home0803,学霸榜,0
+     * home0901,快讯_更多,0
+     * home1000,要闻_更多,0
+     * home1001,要闻收藏,0
+     * home1002,要闻分享_朋友圈,0
+     * home1003,要闻分享_微信好友,0
+     * home1004,要闻分享_微博,0
+     */
+    public static final String HOME_HU_SHEN = "home0100";
+    public static final String HOME_HU_SHEN_ALL = "home0101";
+    public static final String HOME_FUTURE = "home0200";
+    public static final String HOME_FUTURE_ALL = "home0201";
+    public static final String HOME_OPTIONAL = "home0300";
+    public static final String HOME_OPTIONAL_ALL = "home0301";
+    public static final String HOME_BROADCAST = "home0400";
+    public static final String HOME_TRAINING = "home0500";
+    public static final String HOME_STUDY_ROOM = "home0600";
+    public static final String HOME_BANNER = "home0700";
+    public static final String HOME_OPERATE_1 = "home0701";
+    public static final String HOME_OPERATE_2 = "home0702";
+    public static final String HOME_OPERATE_3 = "home0703";
+    public static final String HOME_INGOT = "home0801";
+    public static final String HOME_PROFIT = "home0802";
+    public static final String HOME_SAVANT = "home0803";
+    public static final String HOME_INFORMATION_MORE = "home0901";
+    public static final String HOME_FOCUS_NEWS_MORE = "home1000";
+    public static final String HOME_FOCUS_NEWS_COLLECT = "home1001";
+    public static final String HOME_FOCUS_NEWS_SHARE_CIRCLE = "home1002";
+    public static final String HOME_FOCUS_NEWS_SHARE_FRIEND = "home1003";
+    public static final String HOME_FOCUS_NEWS_SHARE_SINA = "home1004";
+
+    /**
+     * 行情
+     * find0100,标签_自选,0
+     * find0101,添加自选,0
+     * <p>
+     * find0200,标签_股票,0
+     * find0201,新闻,0
+     * find0202,财务,0
+     * find0203,股票分享,0
+     * find0204,股票分享_微信好友,0
+     * find0205,股票分享_微博,0
+     * find0206,股票分享_朋友圈,0
+     * <p>
+     * find0300,标签_期货,0
+     * find0301,交易,0
+     * find0303,期货分享,0
+     * find0304,期货分享_微信好友,0
+     * find0305,期货分享_微博,0
+     * find0306,期货分享_朋友圈,0
+     */
+    public static final String FIND_OPTIONAL = "find0100";
+    public static final String FIND_OPTIONAL_ADD = "find0101";
+    public static final String FIND_STOCK = "find0200";
+    public static final String FIND_STOCK_NEWS = "find0201";
+    public static final String FIND_STOCK_FINANCE = "find0202";
+    public static final String FIND_STOCK_SHARE = "find0203";
+    public static final String FIND_STOCK_SHARE_FRIEND = "find0204";
+    public static final String FIND_STOCK_SHARE_SINA = "find0205";
+    public static final String FIND_STOCK_SHARE_CIRCLE = "find0206";
+    public static final String FIND_FUTURE = "find0300";
+    public static final String FIND_FUTURE_TRADE = "find0301";
+    public static final String FIND_FUTURE_SHARE = "find0303";
+    public static final String FIND_FUTURE_SHARE_FRIEND = "find0304";
+    public static final String FIND_FUTURE_SHARE_SINA = "find0305";
+    public static final String FIND_FUTURE_SHARE_CIRCLE = "find0306";
+
+    /**
+     * 竞技场_首页
+     * arena0100,竞技场tap,0
+     * arena0200,我的元宝,0
+     * arena0300,知识点,0
+     * arena0400,赏金赛,0
+     * arena0500,普通场,0
+     */
+    public static final String ARENA_TAP = "arena0100";
+    public static final String ARENA_INGOT = "arena0200";
+    public static final String ARENA_KNOWLEDGE = "arena0300";
+    public static final String ARENA_MRPK = "arena0400";
+    public static final String ARENA_FUTURE_PK = "arena0500";
+
+    /**
+     * 竞技场_普通场
+     * futurespk0100,对战大厅_充值,0
+     * futurespk0200,对战大厅_我的战绩,0
+     * futurespk0300,对战大厅_对战规则,0
+     * futurespk0400,对战大厅_匹配对战,0
+     * futurespk0500,对战大厅_创建对战,0
+     * futurespk0600,创建对战_发起对战,0
+     * futurespk0700,对战大厅_当前对战,0
+     * futurespk0900,等待房间_快速匹配,0
+     * futurespk1000,等待房间_取消对战,0
+     * futurespk1001,对战中_买多,0
+     * futurespk1002,对战中_卖空,0
+     * futurespk1003,对战中_平仓,0
+     * futurespk1004,对战中_用户头像,0
+     * futurespk1005,观战_点赞,0
+     */
+
+    public static final String FUTURE_PK_RECHARGE = "";
+    public static final String FUTURE_PK_MY_RECORD = "";
+    public static final String FUTURE_PK_RULE = "";
+    public static final String FUTURE_PK_MATCH = "";
+    public static final String FUTURE_PK_CREATE = "";
+    public static final String FUTURE_PK_LAUNCHER = "";
+    public static final String FUTURE_PK_CURRENT = "";
+    public static final String FUTURE_PK_FAST_MATCH = "";
+    public static final String FUTURE_PK_CANCEL_MATCH = "";
+    public static final String FUTURE_PK_BUY = "";
+    public static final String FUTURE_PK_SELL = "";
+    public static final String FUTURE_PK_ = "";
 }
