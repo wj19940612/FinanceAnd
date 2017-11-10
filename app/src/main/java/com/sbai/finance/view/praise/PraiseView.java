@@ -1,4 +1,4 @@
-package com.sbai.finance.view;
+package com.sbai.finance.view.praise;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -38,6 +38,12 @@ public class PraiseView extends View {
     private float mOffset4CenterText;
     private RectF mRectF;
 
+    private OnPraiseChangeListener mOnPraiseChangeListener;
+
+    public interface OnPraiseChangeListener {
+        void onPraiseChange(View view);
+    }
+
     public PraiseView(Context context) {
         super(context);
         init();
@@ -48,9 +54,11 @@ public class PraiseView extends View {
         init();
     }
 
-    private void init() {
-        setWillNotDraw(false);
+    public void setOnPraiseChangeListener(OnPraiseChangeListener onPraiseChangeListener) {
+        mOnPraiseChangeListener = onPraiseChangeListener;
+    }
 
+    private void init() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_praise);
 
@@ -111,7 +119,13 @@ public class PraiseView extends View {
     }
 
     public void setPraise(int praise) {
-        mText = praise > 999 ? "999+" : String.valueOf(praise);
-        invalidate();
+        String text = praise > 999 ? "999+" : String.valueOf(praise);
+        if (!text.equals(mText)) {
+            mText = text;
+            invalidate();
+            if (mOnPraiseChangeListener != null) {
+                mOnPraiseChangeListener.onPraiseChange(this);
+            }
+        }
     }
 }

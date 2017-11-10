@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                tools:background="@android:color/black">
+<com.sbai.finance.view.praise.FlyPraiseLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:background="@android:color/black">
 
-    <com.sbai.finance.view.PraiseView
+    <com.sbai.finance.view.praise.PraiseView
         android:id="@+id/praiseOwner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
         android:layout_marginLeft="40dp"
-        android:layout_marginBottom="14dp"/>
+        android:layout_marginTop="150dp"/>
 
-    <com.sbai.finance.view.PraiseView
+    <com.sbai.finance.view.praise.PraiseView
         android:id="@+id/praiseChallenger"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="14dp"
         android:layout_marginRight="40dp"
-        android:layout_alignParentRight="true"/>
-</RelativeLayout>
+        android:layout_marginTop="150dp"/>
+</com.sbai.finance.view.praise.FlyPraiseLayout>
