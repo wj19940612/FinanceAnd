@@ -113,8 +113,10 @@ public abstract class StockTradeActivity extends BaseActivity {
         @Override
         protected void onNetworkChanged(int availableNetworkType) {
             if (availableNetworkType > Network.NET_NONE) {
-                 requestStockTrendDataAndSet();
+                requestStockTrendDataAndSet();
                 requestStockRTData();
+                requestExchangeStatus();
+                requestOptionalStatus();
             }
         }
     };

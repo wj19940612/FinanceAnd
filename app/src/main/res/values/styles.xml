@@ -127,6 +127,10 @@
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
+    <style name="BaseDialog.WindowCloseOnTouchOutside" parent="BaseDialog">
+        <item name="android:windowCloseOnTouchOutside">false</item>
+    </style>
+
     <style name="BaseDialog.Bottom">
         <item name="android:windowAnimationStyle">@style/BottomDialogAnimation</item>
     </style>

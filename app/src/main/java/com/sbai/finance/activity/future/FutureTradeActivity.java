@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.future;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
@@ -56,6 +58,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sbai.finance.R.id.klineView;
+import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
+import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 import static com.sbai.finance.websocket.market.MarketSubscribe.REQ_QUOTA;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
@@ -121,6 +125,19 @@ public class FutureTradeActivity extends BaseActivity {
     private Prediction mPrediction;
     private FutureData mFutureData;
 
+    private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                requestExchangeStatus();
+                requestOptionalStatus();
+                requestTrendDataAndSet();
+                requestVarietyTradeIntroduce();
+                requestTradeButtonVisible();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +168,8 @@ public class FutureTradeActivity extends BaseActivity {
         requestVarietyTradeIntroduce();
 
         requestTradeButtonVisible();
+
+        registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 
     private void requestTradeButtonVisible() {
@@ -206,6 +225,7 @@ public class FutureTradeActivity extends BaseActivity {
         super.onPause();
         MarketSubscriber.get().unSubscribe(mVariety.getContractsCode());
         MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
+        unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 
     @Override

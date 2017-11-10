@@ -90,7 +90,11 @@ public class LoginActivity extends WeChatActivity {
         if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
             mPhoneNumber.setText(LocalUser.getUser().getPhone());
             formatPhoneNumber();
+            mPhoneNumber.clearFocus();
+            mPassword.requestFocus();
             mGetAuthCode.setEnabled(checkObtainAuthCodeEnable());
+        } else {
+            mPhoneNumber.requestFocus();
         }
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
@@ -106,7 +110,6 @@ public class LoginActivity extends WeChatActivity {
             }
         });
 
-        mPhoneNumber.requestFocus();
         initListener();
 
         setKeyboardHelper();
@@ -378,6 +381,12 @@ public class LoginActivity extends WeChatActivity {
             mPassword.setVisibility(View.VISIBLE);
             mPasswordLoginOperations.setVisibility(View.VISIBLE);
             mAuthCode.setText("");
+            String phoneNumber = mPhoneNumber.getText().toString();
+            if (!TextUtils.isEmpty(phoneNumber)) {
+                mAuthCode.requestFocus();
+            } else {
+                mPhoneNumber.requestFocus();
+            }
         } else {
             mPageTitle.setText(R.string.auth_code_login);
             mLoginSwitchTop.setText(R.string.password_login);
@@ -385,6 +394,12 @@ public class LoginActivity extends WeChatActivity {
             mPassword.setVisibility(View.GONE);
             mPasswordLoginOperations.setVisibility(View.GONE);
             mPassword.setPassword("");
+            String phoneNumber = mPhoneNumber.getText().toString();
+            if (!TextUtils.isEmpty(phoneNumber)) {
+                mPassword.requestFocus();
+            } else {
+                mPhoneNumber.requestFocus();
+            }
         }
     }
 

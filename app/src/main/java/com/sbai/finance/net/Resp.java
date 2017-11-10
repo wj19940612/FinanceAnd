@@ -27,11 +27,12 @@ public class Resp<T> {
     //竞技场匹配对战，没有在对战开放时间的错误code
     public static final int ACTIVITY_IS_NOT_YET_OPEN = 4701;
 
-    //没到兑换时间或者兑换时间已经结束 5114
+    //兑换时间已经结束 5114
     public static final int CODE_ARENA_IS_OVER_OR_NOT_IS_EXCHANGE_TIME = 5114;
-
+    //商品兑换时间尚未开始
+    public static final int CODE_PRIZE_EXCHANGE_NOT_START = 5117;
     //已听过语音
-    public static final int CODE_LISTENED=4707;
+    public static final int CODE_LISTENED = 4707;
 
     private int code;
     private String msg;

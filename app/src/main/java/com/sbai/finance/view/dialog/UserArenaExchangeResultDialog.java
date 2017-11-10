@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -35,12 +36,19 @@ public class UserArenaExchangeResultDialog {
     }
 
     private void init() {
-        ImageView dialogDelete = (ImageView) mView.findViewById(R.id.dialogDelete);
-        TextView gameNumber = (TextView) mView.findViewById(R.id.gameNumber);
-        TextView skinName = (TextView) mView.findViewById(R.id.skinName);
-        TextView gameNickName = (TextView) mView.findViewById(R.id.gameNickName);
-        TextView gameArea = (TextView) mView.findViewById(R.id.gameArea);
-        TextView exchangeStatus = (TextView) mView.findViewById(R.id.exchangeStatus);
+        ImageView dialogDelete = mView.findViewById(R.id.dialogDelete);
+        TextView gameNumber = mView.findViewById(R.id.gameNumber);
+        TextView skinName = mView.findViewById(R.id.skinName);
+        TextView gameNickName = mView.findViewById(R.id.gameNickName);
+        TextView gameArea = mView.findViewById(R.id.gameArea);
+        TextView exchangeStatus = mView.findViewById(R.id.exchangeStatus);
+
+
+        TextView wechatOrReceiver = mView.findViewById(R.id.weixinOrReceiver);
+        TextView addressOrSkin = mView.findViewById(R.id.addressOrSkin);
+        TextView phoneOrNick = mView.findViewById(R.id.phoneOrNick);
+        LinearLayout gameAreaLL = mView.findViewById(R.id.gameAreaLL);
+
         dialogDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,12 +57,30 @@ public class UserArenaExchangeResultDialog {
         });
 
         UserGameInfo userGameInfo = mUserExchangeAwardInfo.getUserGameInfo();
-        if (userGameInfo != null) {
-            gameArea.setText(userGameInfo.getGameZone());
-            gameNumber.setText(userGameInfo.getWxqq());
-            skinName.setText(userGameInfo.getSkin());
-            gameNickName.setText(userGameInfo.getGameNickName());
+        if (mUserExchangeAwardInfo.getPrizeType() == UserExchangeAwardInfo.AWARD_TYPE_ENTITY) {
+            gameAreaLL.setVisibility(View.GONE);
+            if (userGameInfo != null) {
+                gameNumber.setText(userGameInfo.getReceiver());
+                skinName.setText(userGameInfo.getAddress());
+                gameNickName.setText(userGameInfo.getPhone());
+            }
+            wechatOrReceiver.setText(R.string.receive_user);
+            addressOrSkin.setText(R.string.receive_user_address);
+            phoneOrNick.setText(R.string.phone_);
+        } else {
+            if (userGameInfo != null) {
+                gameArea.setText(userGameInfo.getGameZone());
+                gameNumber.setText(userGameInfo.getWxqq());
+                skinName.setText(userGameInfo.getSkin());
+                gameNickName.setText(userGameInfo.getGameNickName());
+            }
+
+            wechatOrReceiver.setText(R.string.game_number);
+            addressOrSkin.setText(R.string.skin_name);
+            phoneOrNick.setText(R.string.game_nickname);
+            gameAreaLL.setVisibility(View.VISIBLE);
         }
+
 
         switch (mUserExchangeAwardInfo.getStatus()) {
             case UserExchangeAwardInfo.EXCHANGE_STATUS_APPLY_FOR:
@@ -69,7 +95,7 @@ public class UserArenaExchangeResultDialog {
         }
     }
 
-    public void show(){
+    public void show() {
         mSmartDialog.show();
     }
 }
