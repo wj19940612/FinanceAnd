@@ -309,8 +309,8 @@ public class MineFragment extends BaseFragment {
             mFinanceEvaluation.setSubText(mEvaluationLevel[maxLevel]);
         } else {
             stopScheduleJob();
-            mUserName.setText(R.string.login);
-            mFinanceEvaluation.setSubText("");
+            mUserName.setText(R.string.to_login);
+            mFinanceEvaluation.setSubText(R.string.finance_evaluation_hint);
             mWallet.setSubText("");
             mMessage.setSubTextVisible(View.GONE);
             mFeedback.setSubTextVisible(View.GONE);
