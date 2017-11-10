@@ -37,10 +37,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/challengerAvatar"
-        app:layout_constraintStart_toStartOf="@+id/challengerAvatar"
-        app:layout_constraintTop_toBottomOf="@+id/challengerAvatar"
-        tools:text="麦田里的"/>
+        app:layout_constraintEnd_toEndOf="@+id/ownerAvatar"
+        app:layout_constraintStart_toStartOf="@+id/ownerAvatar"
+        app:layout_constraintTop_toBottomOf="@+id/ownerAvatar"
+        tools:text="麦田里的守望者"/>
 
 
     <ImageView
@@ -70,8 +70,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/ownerAvatar"
-        app:layout_constraintStart_toStartOf="@+id/ownerAvatar"
-        app:layout_constraintTop_toBottomOf="@+id/ownerAvatar"
-        tools:text="麦田里的守望者"/>
+        app:layout_constraintEnd_toEndOf="@+id/challengerAvatar"
+        app:layout_constraintStart_toStartOf="@+id/challengerAvatar"
+        app:layout_constraintTop_toBottomOf="@+id/challengerAvatar"
+        tools:text="麦田里的"/>
 </android.support.constraint.ConstraintLayout>
