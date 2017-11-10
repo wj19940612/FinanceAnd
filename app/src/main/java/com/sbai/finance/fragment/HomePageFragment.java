@@ -110,11 +110,13 @@ public class HomePageFragment extends BaseFragment {
         if (count % TIME_HANDLER_THREE == 0) {
             mBanner.nextAdvertisement();
         } else if (count % TIME_HANDLER_TEN == 0) {
+
+        } else if (count % TIME_HANDLER_FIVE == 0) {
+            getIndexData();
             request7NewsData();
             requestImportantNewsData();
             requestBusniessBannerData();
-        } else if (count % TIME_HANDLER_FIVE == 0) {
-            getIndexData();
+            requestLeaderBoardData();
         }
     }
 
