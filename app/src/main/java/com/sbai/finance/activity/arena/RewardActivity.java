@@ -418,7 +418,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 SmartDialog.dismiss(getActivity());
                 if (data != null) {
                     //防止出现多次推送
-                    if(mBattle==null||mBattle.getId()!=data.getId()){
+                    if (mBattle == null || mBattle.getId() != data.getId()) {
                         Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(ExtraKeys.BATTLE, data)
                                 .executeForResult(REQ_CODE_FUTURE_BATTLE);
@@ -991,6 +991,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     protected void onDestroy() {
         super.onDestroy();
         mAppBarLayout.removeOnOffsetChangedListener(mOnOffsetChangedListener);
+        dismissQuickMatchDialog();
     }
 
     @Override

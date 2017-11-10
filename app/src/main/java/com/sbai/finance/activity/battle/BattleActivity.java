@@ -572,9 +572,11 @@ public class BattleActivity extends BaseActivity {
 
         WSPush.PushData pushData = push.getContent();
         Battle battle = (Battle) pushData.getData();
-        if (battle.getId() != mBattle.getId() && pushData.getType() == PushCode.BATTLE_JOINED) { // 观战，查看对战记录
-            if (mBattleStatus >= STARTED_OBSERVER && mBattleStatus <= OVER_OBSERVER) {
-                showQuickJoinBattleDialog(battle);
+        if (battle.getId() != mBattle.getId()) { // 观战，查看对战记录,不同类型战场数据
+            if (pushData.getType() == PushCode.BATTLE_JOINED && battle.getType() == Battle.GAME_TYPE_NORMAL) {
+                if (mBattleStatus >= STARTED_OBSERVER && mBattleStatus <= OVER_OBSERVER) {
+                    showQuickJoinBattleDialog(battle);
+                }
             }
         } else { // 有人加入，对战结束，订单操作，匹配玩家
             int pushType = pushData.getType();

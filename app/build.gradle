@@ -101,7 +101,7 @@ android {
         }
 
         alpha {
-//            applicationId "com.sbai.finance.alpha"
+            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-Alpha'
             versionCode 126
             versionName "1.2.11090"
@@ -181,5 +181,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
+
 
 

@@ -137,7 +137,6 @@
         <activity
             android:name=".activity.mine.ImagePreViewActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.mine.NewsActivity"
             android:screenOrientation="portrait"/>
@@ -296,6 +295,7 @@
 
         <!-- 排行榜 -->
 
+
         <!-- 小姐姐 -->
         <activity
             android:name=".activity.miss.MissProfileActivity"
@@ -400,7 +400,7 @@
         <activity
             android:name=".activity.home.AllTrainingListActivity"
             android:screenOrientation="portrait"/>
-        <!--android:theme="@style/BaseDialog"-->
+        <!-- android:theme="@style/BaseDialog" -->
         <activity
             android:name=".activity.arena.ArenaEntityExchangeInfoInputActivity"
             android:screenOrientation="portrait"
@@ -413,7 +413,6 @@
             android:name=".activity.arena.ArenaVirtualAwardNameActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BaseDialog"/>
-
         <activity
             android:name=".activity.home.StockFutureActivity"
             android:screenOrientation="portrait"/>
@@ -423,13 +422,14 @@
         <activity
             android:name=".activity.home.InformationAndFocusNewsActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.home.BroadcastListActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.web.BroadcastListWebActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.battle.BattleRuleActivity"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
