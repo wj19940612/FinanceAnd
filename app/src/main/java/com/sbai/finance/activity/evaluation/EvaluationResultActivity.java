@@ -1,6 +1,5 @@
 package com.sbai.finance.activity.evaluation;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -9,11 +8,10 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.activity.RewardGetActivity;
-import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.activity.home.AllTrainingListActivity;
 import com.sbai.finance.model.levelevaluation.EvaluationResult;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.leveltest.ScoreView;
 
@@ -93,18 +91,8 @@ public class EvaluationResultActivity extends BaseActivity {
 
     @OnClick(R.id.going_train)
     public void onViewClicked() {
-
-        Intent intent = new Intent();
-        intent.setClass(this, MainActivity.class);
-        intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
-        startActivity(intent);
-
-        if (LocalUser.getUser().getUserInfo().isNewUser()) {
-            int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
-            RewardGetActivity.show(getActivity(), reward);
-            LocalUser.getUser().setNewUser(false);
-        }
-
+        Launcher.with(getActivity(), AllTrainingListActivity.class)
+                .executeForResult(555);
         finish();
     }
 }
