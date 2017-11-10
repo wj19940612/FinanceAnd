@@ -125,9 +125,22 @@ public class HomeTitleView extends RelativeLayout {
     private Context mContext;
     private int oldButton;
     private Map<String, FutureData> futureDataMap = new HashMap<String, FutureData>();
+    private Map<Integer, StockData> mStockCacheData = new HashMap<Integer, StockData>();
+    private Map<Integer, CacheFutureData> mFutureCacheData = new HashMap<Integer, CacheFutureData>();
+    private Map<Integer, Object> mOptionCacheData = new HashMap<Integer, Object>();
 
     private OnDictumClickListener mOnDictumClickListener;
     private VerticalScrollTextView.OnItemClickListener mOnBroadcastListener;
+
+    public class CacheFutureData {
+        private Variety mVariety;
+        private FutureData mFutureData;
+
+        public CacheFutureData(Variety variety, FutureData futureData) {
+            mVariety = variety;
+            mFutureData = futureData;
+        }
+    }
 
     public int getOldButton() {
         return oldButton;
@@ -186,7 +199,7 @@ public class HomeTitleView extends RelativeLayout {
         mIndexClickListener = indexClickListener;
     }
 
-    public Map<String,FutureData> getFutureDataMap(){
+    public Map<String, FutureData> getFutureDataMap() {
         return futureDataMap;
     }
 
@@ -215,9 +228,9 @@ public class HomeTitleView extends RelativeLayout {
 //    }
 
     public void putNewFutureData(List<FutureData> data) {
-        if(data != null && data.size() != 0){
-            for(FutureData futureData : data){
-                futureDataMap.put(futureData.getInstrumentId(),futureData);
+        if (data != null && data.size() != 0) {
+            for (FutureData futureData : data) {
+                futureDataMap.put(futureData.getInstrumentId(), futureData);
             }
         }
         updateFutureOrSelectData();
@@ -231,23 +244,22 @@ public class HomeTitleView extends RelativeLayout {
         }
         boolean nowShow = judgeShowTime(greetingTitle);
         if (TextUtils.isEmpty(greetingTitle.getGreetings()) || !nowShow) {
-        String helloString = null;
-        int dayAndNight = DateUtil.getDayAndNight(SysTime.getSysTime().getSystemTimestamp());
-        switch (dayAndNight) {
-            case 1:
-                helloString = getResources().getString(R.string.hello_morning);
-                break;
-            case 2:
-                helloString = getResources().getString(R.string.hello_afternoon);
-                break;
-            case 3:
-                helloString = getResources().getString(R.string.hello_evening);
-                break;
-        }
-        String stringResult = String.format(helloString, LocalUser.getUser().getUserInfo().getUserName());
-        mGreetingTitle.setText(stringResult);
-        }
-        else {
+            String helloString = null;
+            int dayAndNight = DateUtil.getDayAndNight(SysTime.getSysTime().getSystemTimestamp());
+            switch (dayAndNight) {
+                case 1:
+                    helloString = getResources().getString(R.string.hello_morning);
+                    break;
+                case 2:
+                    helloString = getResources().getString(R.string.hello_afternoon);
+                    break;
+                case 3:
+                    helloString = getResources().getString(R.string.hello_evening);
+                    break;
+            }
+            String stringResult = String.format(helloString, LocalUser.getUser().getUserInfo().getUserName());
+            mGreetingTitle.setText(stringResult);
+        } else {
             String[] greetingTitles = greetingTitle.getGreetings().split(SPLIT);
             int showIndex = (int) (SysTime.getSysTime().getSystemTimestamp() % greetingTitles.length);
             mGreetingTitle.setText(greetingTitles[showIndex]);
@@ -378,11 +390,11 @@ public class HomeTitleView extends RelativeLayout {
         switch (buttonIndex) {
             case BUTTON_HUSHEN:
                 mIndexRL.setBackgroundDrawable(getResources().getDrawable(R.drawable.home_select_open_one));
-                initStockOrFutureUI(BUTTON_HUSHEN);
+                initStockeUI(BUTTON_HUSHEN);
                 break;
             case BUTTON_QIHUO:
                 mIndexRL.setBackgroundDrawable(getResources().getDrawable(R.drawable.home_select_open_two));
-                initStockOrFutureUI(BUTTON_QIHUO);
+                initFutureUI(BUTTON_QIHUO);
                 break;
             case BUTTON_ZIXUAN:
                 mIndexRL.setBackgroundDrawable(getResources().getDrawable(R.drawable.home_select_open_three));
@@ -610,14 +622,29 @@ public class HomeTitleView extends RelativeLayout {
             variety = (Variety) mLeftIndex.getTag();
             if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK) && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
                 updateIndexDataToUI(SELECT_LEFT, stockData);
+                if (oldButton == BUTTON_HUSHEN) {
+                    mStockCacheData.put(SELECT_LEFT, stockData);
+                } else if (oldButton == BUTTON_ZIXUAN) {
+                    mOptionCacheData.put(SELECT_LEFT, stockData);
+                }
             }
             variety = (Variety) mCenterIndex.getTag();
             if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK) && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
                 updateIndexDataToUI(SELECT_CENTER, stockData);
+                if (oldButton == BUTTON_HUSHEN) {
+                    mStockCacheData.put(SELECT_CENTER, stockData);
+                } else if (oldButton == BUTTON_ZIXUAN) {
+                    mOptionCacheData.put(SELECT_CENTER, stockData);
+                }
             }
             variety = (Variety) mRightIndex.getTag();
             if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK) && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
                 updateIndexDataToUI(SELECT_RIGHT, stockData);
+                if (oldButton == BUTTON_HUSHEN) {
+                    mStockCacheData.put(SELECT_RIGHT, stockData);
+                } else if (oldButton == BUTTON_ZIXUAN) {
+                    mOptionCacheData.put(SELECT_RIGHT, stockData);
+                }
             }
 
         }
@@ -665,12 +692,12 @@ public class HomeTitleView extends RelativeLayout {
 //            leftIndexPer.setTextColor(greyColor);
 //            rightIndexPer.setTextColor(greyColor);
 //        } else {
-            indexValue.setTextColor(color);
-            indexValue.setText(data.getLastPrice());
-            leftIndexPer.setText(ratePrice);
-            rightIndexPer.setText(rateChange);
-            leftIndexPer.setTextColor(color);
-            rightIndexPer.setTextColor(color);
+        indexValue.setTextColor(color);
+        indexValue.setText(data.getLastPrice());
+        leftIndexPer.setText(ratePrice);
+        rightIndexPer.setText(rateChange);
+        leftIndexPer.setTextColor(color);
+        rightIndexPer.setTextColor(color);
 //        }
     }
 
@@ -706,16 +733,13 @@ public class HomeTitleView extends RelativeLayout {
                 mLeftRightIndexPer.setText(rateChange);
                 mLeftLeftIndexPer.setTextColor(color);
                 mLeftRightIndexPer.setTextColor(color);
+                if (oldButton == BUTTON_QIHUO) {
+                    mFutureCacheData.put(SELECT_LEFT, new CacheFutureData(variety, data));
+                } else if (oldButton == BUTTON_ZIXUAN) {
+                    mOptionCacheData.put(SELECT_LEFT, new CacheFutureData(variety, data));
+                }
             }
-            variety = (Variety) mRightIndex.getTag();
-            if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE) && variety.getContractsCode().equalsIgnoreCase(data.getInstrumentId())) {
-                mRightIndexValue.setTextColor(color);
-                mRightIndexValue.setText(String.valueOf(data.getLastPrice()));
-                mRightLeftIndexPer.setText(ratePrice);
-                mRightRightIndexPer.setText(rateChange);
-                mRightLeftIndexPer.setTextColor(color);
-                mRightRightIndexPer.setTextColor(color);
-            }
+
             variety = (Variety) mCenterIndex.getTag();
             if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE) && variety.getContractsCode().equalsIgnoreCase(data.getInstrumentId())) {
                 mCenterIndexValue.setTextColor(color);
@@ -724,27 +748,69 @@ public class HomeTitleView extends RelativeLayout {
                 mCenterRightIndexPer.setText(rateChange);
                 mCenterLeftIndexPer.setTextColor(color);
                 mCenterRightIndexPer.setTextColor(color);
+                if (oldButton == BUTTON_QIHUO) {
+                    mFutureCacheData.put(SELECT_CENTER, new CacheFutureData(variety, data));
+                } else if (oldButton == BUTTON_ZIXUAN) {
+                    mOptionCacheData.put(SELECT_CENTER, new CacheFutureData(variety, data));
+                }
+            }
+
+            variety = (Variety) mRightIndex.getTag();
+            if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE) && variety.getContractsCode().equalsIgnoreCase(data.getInstrumentId())) {
+                mRightIndexValue.setTextColor(color);
+                mRightIndexValue.setText(String.valueOf(data.getLastPrice()));
+                mRightLeftIndexPer.setText(ratePrice);
+                mRightRightIndexPer.setText(rateChange);
+                mRightLeftIndexPer.setTextColor(color);
+                mRightRightIndexPer.setTextColor(color);
+                if (oldButton == BUTTON_QIHUO) {
+                    mFutureCacheData.put(SELECT_RIGHT, new CacheFutureData(variety, data));
+                } else if (oldButton == BUTTON_ZIXUAN) {
+                    mOptionCacheData.put(SELECT_RIGHT, new CacheFutureData(variety, data));
+                }
             }
         }
     }
 
     public void updateSelectData(List<Variety> data) {
         if (data == null || data.size() == 0) {
+            setIndexViewVisible(SELECT_LEFT, false);
+            mLeftSelectRL.setVisibility(View.VISIBLE);
+            setIndexViewVisible(SELECT_RIGHT, false);
+            mCenterSelectRL.setVisibility(View.VISIBLE);
+            setIndexViewVisible(SELECT_CENTER, false);
+            mRightSelectRL.setVisibility(View.VISIBLE);
+
+            mOptionCacheData.put(SELECT_LEFT,null);
+            mOptionCacheData.put(SELECT_CENTER,null);
+            mOptionCacheData.put(SELECT_RIGHT,null);
             return;
         } else if (data.size() == 1) {
             setIndexViewVisible(SELECT_LEFT, true);
             mLeftSelectRL.setVisibility(View.GONE);
             mLeftIndex.setText(data.get(0).getVarietyName());
             mLeftIndex.setTag(data.get(0));
+
+            setIndexViewVisible(SELECT_CENTER, false);
+            mCenterSelectRL.setVisibility(View.VISIBLE);
+            setIndexViewVisible(SELECT_RIGHT, false);
+            mRightSelectRL.setVisibility(View.VISIBLE);
+
+            mOptionCacheData.put(SELECT_CENTER,null);
+            mOptionCacheData.put(SELECT_RIGHT,null);
         } else if (data.size() == 2) {
             setIndexViewVisible(SELECT_LEFT, true);
             mLeftSelectRL.setVisibility(View.GONE);
             mLeftIndex.setTag(data.get(0));
             mLeftIndex.setText(data.get(0).getVarietyName());
-            setIndexViewVisible(SELECT_CENTER, true);
-            mCenterSelectRL.setVisibility(View.GONE);
             mCenterIndex.setTag(data.get(1));
             mCenterIndex.setText(data.get(1).getVarietyName());
+
+            setIndexViewVisible(SELECT_CENTER, true);
+            mCenterSelectRL.setVisibility(View.GONE);
+            setIndexViewVisible(SELECT_RIGHT, false);
+            mRightSelectRL.setVisibility(View.VISIBLE);
+            mOptionCacheData.put(SELECT_RIGHT,null);
         } else {
             setIndexViewVisible(SELECT_LEFT, true);
             mLeftSelectRL.setVisibility(View.GONE);
@@ -762,6 +828,160 @@ public class HomeTitleView extends RelativeLayout {
         setRLClick(data);
     }
 
+    private void initStockeUI(int button) {
+        if (mStockCacheData.isEmpty()) {
+            initStockOrFutureUI(button);
+            return;
+        }
+        setIndexViewVisible(SELECT_LEFT, true);
+        setIndexViewVisible(SELECT_CENTER, true);
+        setIndexViewVisible(SELECT_RIGHT, true);
+        mLeftSelectRL.setVisibility(View.GONE);
+        mCenterSelectRL.setVisibility(View.GONE);
+        mRightSelectRL.setVisibility(View.GONE);
+        mLeftIndex.setTag(null);
+        mCenterIndex.setTag(null);
+        mRightIndex.setTag(null);
+        mLeftRL.setOnClickListener(null);
+        mCenterRL.setOnClickListener(null);
+        mRightRL.setOnClickListener(null);
+
+        if (mStockCacheData.get(SELECT_LEFT) != null) {
+            StockData leftData = mStockCacheData.get(SELECT_LEFT);
+            mLeftIndex.setText(leftData.getName());
+            updateIndexDataToUI(SELECT_LEFT, leftData);
+        } else {
+            mLeftIndex.setText("");
+            mLeftIndexValue.setText("");
+            mLeftLeftIndexPer.setText("");
+            mLeftRightIndexPer.setText("");
+        }
+        if (mStockCacheData.get(SELECT_CENTER) != null) {
+            StockData centerData = mStockCacheData.get(SELECT_CENTER);
+            mCenterIndex.setText(centerData.getName());
+            updateIndexDataToUI(SELECT_CENTER, centerData);
+        } else {
+            mCenterIndex.setText("");
+            mCenterIndexValue.setText("");
+            mCenterLeftIndexPer.setText("");
+            mCenterRightIndexPer.setText("");
+        }
+        if (mStockCacheData.get(SELECT_RIGHT) != null) {
+            StockData rightData = mStockCacheData.get(SELECT_RIGHT);
+            mRightIndex.setText(rightData.getName());
+            updateIndexDataToUI(SELECT_RIGHT, rightData);
+        } else {
+            mRightIndex.setText("");
+            mRightIndexValue.setText("");
+            mRightLeftIndexPer.setText("");
+            mRightRightIndexPer.setText("");
+        }
+    }
+
+    private void initFutureUI(int button) {
+        if (mFutureCacheData.isEmpty()) {
+            initStockOrFutureUI(button);
+            return;
+        }
+        setIndexViewVisible(SELECT_LEFT, true);
+        setIndexViewVisible(SELECT_CENTER, true);
+        setIndexViewVisible(SELECT_RIGHT, true);
+        mLeftSelectRL.setVisibility(View.GONE);
+        mCenterSelectRL.setVisibility(View.GONE);
+        mRightSelectRL.setVisibility(View.GONE);
+        mLeftIndex.setTag(null);
+        mCenterIndex.setTag(null);
+        mRightIndex.setTag(null);
+        mLeftRL.setOnClickListener(null);
+        mCenterRL.setOnClickListener(null);
+        mRightRL.setOnClickListener(null);
+
+        int redColor = ContextCompat.getColor(mContext, R.color.redPrimary);
+        int greenColor = ContextCompat.getColor(mContext, R.color.greenAssist);
+        int color;
+
+        CacheFutureData cacheLeftFutureData = mFutureCacheData.get(SELECT_LEFT);
+        CacheFutureData cacheCenterFutureData = mFutureCacheData.get(SELECT_CENTER);
+        CacheFutureData cacheRightFutureData = mFutureCacheData.get(SELECT_RIGHT);
+        if (cacheLeftFutureData != null) {
+            Variety variety = cacheLeftFutureData.mVariety;
+            FutureData data = cacheLeftFutureData.mFutureData;
+            String rateChange = FinanceUtil.formatToPercentage(data.getUpDropSpeed());
+            String ratePrice = FinanceUtil.formatWithScale(data.getUpDropPrice());
+            if (rateChange.startsWith("-")) {
+                color = greenColor;
+            } else {
+                color = redColor;
+                rateChange = "+" + rateChange;
+                ratePrice = "+" + ratePrice;
+            }
+            mLeftIndex.setText(variety.getVarietyName());
+            mLeftIndexValue.setTextColor(color);
+            mLeftIndexValue.setText(String.valueOf(data.getLastPrice()));
+            mLeftLeftIndexPer.setText(ratePrice);
+            mLeftRightIndexPer.setText(rateChange);
+            mLeftLeftIndexPer.setTextColor(color);
+            mLeftRightIndexPer.setTextColor(color);
+        } else {
+            mLeftIndex.setText("");
+            mLeftIndexValue.setText("");
+            mLeftLeftIndexPer.setText("");
+            mLeftRightIndexPer.setText("");
+        }
+
+        if (cacheCenterFutureData != null) {
+            Variety variety = cacheCenterFutureData.mVariety;
+            FutureData data = cacheCenterFutureData.mFutureData;
+            String rateChange = FinanceUtil.formatToPercentage(data.getUpDropSpeed());
+            String ratePrice = FinanceUtil.formatWithScale(data.getUpDropPrice());
+            if (rateChange.startsWith("-")) {
+                color = greenColor;
+            } else {
+                color = redColor;
+                rateChange = "+" + rateChange;
+                ratePrice = "+" + ratePrice;
+            }
+            mCenterIndex.setText(variety.getVarietyName());
+            mCenterIndexValue.setTextColor(color);
+            mCenterIndexValue.setText(String.valueOf(data.getLastPrice()));
+            mCenterLeftIndexPer.setText(ratePrice);
+            mCenterRightIndexPer.setText(rateChange);
+            mCenterLeftIndexPer.setTextColor(color);
+            mCenterRightIndexPer.setTextColor(color);
+        } else {
+            mCenterIndex.setText("");
+            mCenterIndexValue.setText("");
+            mCenterLeftIndexPer.setText("");
+            mCenterRightIndexPer.setText("");
+        }
+
+        if (cacheRightFutureData != null) {
+            Variety variety = cacheLeftFutureData.mVariety;
+            FutureData data = cacheLeftFutureData.mFutureData;
+            String rateChange = FinanceUtil.formatToPercentage(data.getUpDropSpeed());
+            String ratePrice = FinanceUtil.formatWithScale(data.getUpDropPrice());
+            if (rateChange.startsWith("-")) {
+                color = greenColor;
+            } else {
+                color = redColor;
+                rateChange = "+" + rateChange;
+                ratePrice = "+" + ratePrice;
+            }
+            mRightIndex.setText(variety.getVarietyName());
+            mRightIndexValue.setTextColor(color);
+            mRightIndexValue.setText(String.valueOf(data.getLastPrice()));
+            mRightLeftIndexPer.setText(ratePrice);
+            mRightRightIndexPer.setText(rateChange);
+            mRightLeftIndexPer.setTextColor(color);
+            mRightRightIndexPer.setTextColor(color);
+        } else {
+            mRightIndex.setText("");
+            mRightIndexValue.setText("");
+            mRightLeftIndexPer.setText("");
+            mRightRightIndexPer.setText("");
+        }
+    }
+
     private void initStockOrFutureUI(int button) {
         setIndexViewVisible(SELECT_LEFT, true);
         setIndexViewVisible(SELECT_CENTER, true);
@@ -776,6 +996,118 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     private void initSelectUI() {
+        if (mOptionCacheData.isEmpty()) {
+            forceInitSelectUI();
+            return;
+        }
+        mLeftIndex.setTag(null);
+        mLeftRL.setOnClickListener(null);
+        mCenterIndex.setTag(null);
+        mCenterRL.setOnClickListener(null);
+        mRightIndex.setTag(null);
+        mRightRL.setOnClickListener(null);
+
+        int redColor = ContextCompat.getColor(mContext, R.color.redPrimary);
+        int greenColor = ContextCompat.getColor(mContext, R.color.greenAssist);
+        int color;
+        if (mOptionCacheData.get(SELECT_LEFT) != null) {
+            Object leftObjectData = mOptionCacheData.get(SELECT_LEFT);
+            if (leftObjectData instanceof StockData) {
+                StockData leftData = (StockData) leftObjectData;
+                mLeftIndex.setText(leftData.getName());
+                updateIndexDataToUI(SELECT_LEFT, leftData);
+            } else if (leftObjectData instanceof CacheFutureData) {
+                CacheFutureData cacheLeftFutureData = (CacheFutureData) leftObjectData;
+                Variety variety = cacheLeftFutureData.mVariety;
+                FutureData data = cacheLeftFutureData.mFutureData;
+                String rateChange = FinanceUtil.formatToPercentage(data.getUpDropSpeed());
+                String ratePrice = FinanceUtil.formatWithScale(data.getUpDropPrice());
+                if (rateChange.startsWith("-")) {
+                    color = greenColor;
+                } else {
+                    color = redColor;
+                    rateChange = "+" + rateChange;
+                    ratePrice = "+" + ratePrice;
+                }
+                mLeftIndex.setText(variety.getVarietyName());
+                mLeftIndexValue.setTextColor(color);
+                mLeftIndexValue.setText(String.valueOf(data.getLastPrice()));
+                mLeftLeftIndexPer.setText(ratePrice);
+                mLeftRightIndexPer.setText(rateChange);
+                mLeftLeftIndexPer.setTextColor(color);
+                mLeftRightIndexPer.setTextColor(color);
+            }
+        } else {
+            setIndexViewVisible(SELECT_LEFT, false);
+            mLeftSelectRL.setVisibility(View.VISIBLE);
+        }
+
+        if (mOptionCacheData.get(SELECT_CENTER) != null) {
+            Object centerObjectData = mOptionCacheData.get(SELECT_CENTER);
+            if (centerObjectData instanceof StockData) {
+                StockData centerData = (StockData) centerObjectData;
+                mCenterIndex.setText(centerData.getName());
+                updateIndexDataToUI(SELECT_CENTER, centerData);
+            } else if (centerObjectData instanceof CacheFutureData) {
+                CacheFutureData cacheCenterFutureData = (CacheFutureData) centerObjectData;
+                Variety variety = cacheCenterFutureData.mVariety;
+                FutureData data = cacheCenterFutureData.mFutureData;
+                String rateChange = FinanceUtil.formatToPercentage(data.getUpDropSpeed());
+                String ratePrice = FinanceUtil.formatWithScale(data.getUpDropPrice());
+                if (rateChange.startsWith("-")) {
+                    color = greenColor;
+                } else {
+                    color = redColor;
+                    rateChange = "+" + rateChange;
+                    ratePrice = "+" + ratePrice;
+                }
+                mCenterIndex.setText(variety.getVarietyName());
+                mCenterIndexValue.setTextColor(color);
+                mCenterIndexValue.setText(String.valueOf(data.getLastPrice()));
+                mCenterLeftIndexPer.setText(ratePrice);
+                mCenterRightIndexPer.setText(rateChange);
+                mCenterLeftIndexPer.setTextColor(color);
+                mCenterRightIndexPer.setTextColor(color);
+            }
+        }else{
+            setIndexViewVisible(SELECT_CENTER, false);
+            mCenterSelectRL.setVisibility(View.VISIBLE);
+        }
+
+        if (mOptionCacheData.get(SELECT_RIGHT) != null) {
+            Object rightObjectData = mOptionCacheData.get(SELECT_RIGHT);
+            if (rightObjectData instanceof StockData) {
+                StockData rightData = (StockData) rightObjectData;
+                mRightIndex.setText(rightData.getName());
+                updateIndexDataToUI(SELECT_RIGHT, rightData);
+            } else if (rightObjectData instanceof CacheFutureData) {
+                CacheFutureData cacheRightFutureData = (CacheFutureData) rightObjectData;
+                Variety variety = cacheRightFutureData.mVariety;
+                FutureData data = cacheRightFutureData.mFutureData;
+                String rateChange = FinanceUtil.formatToPercentage(data.getUpDropSpeed());
+                String ratePrice = FinanceUtil.formatWithScale(data.getUpDropPrice());
+                if (rateChange.startsWith("-")) {
+                    color = greenColor;
+                } else {
+                    color = redColor;
+                    rateChange = "+" + rateChange;
+                    ratePrice = "+" + ratePrice;
+                }
+                mRightIndex.setText(variety.getVarietyName());
+                mRightIndexValue.setTextColor(color);
+                mRightIndexValue.setText(String.valueOf(data.getLastPrice()));
+                mRightLeftIndexPer.setText(ratePrice);
+                mRightRightIndexPer.setText(rateChange);
+                mRightLeftIndexPer.setTextColor(color);
+                mRightRightIndexPer.setTextColor(color);
+            }
+        }else{
+            setIndexViewVisible(SELECT_RIGHT, false);
+            mRightSelectRL.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void forceInitSelectUI() {
         setIndexViewVisible(SELECT_LEFT, false);
         setIndexViewVisible(SELECT_CENTER, false);
         setIndexViewVisible(SELECT_RIGHT, false);

@@ -455,6 +455,7 @@ public class HomePageFragment extends BaseFragment {
     private void requestOptionalData() {
         //这里只需要3个数据，所以请求的page = 0;
         if (!LocalUser.getUser().isLogin()) {
+            mHomeTitleView.forceInitSelectUI();
             return;
         }
         int page = 0;
@@ -462,7 +463,7 @@ public class HomePageFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
-                        if (data != null && data.size() != 0) {
+                        if (data != null) {
                             mHomeTitleView.updateSelectData(data);
                             updateOptionInfo((ArrayList<Variety>) data);
                         }
@@ -471,7 +472,9 @@ public class HomePageFragment extends BaseFragment {
     }
 
     private void updateOptionInfo(ArrayList<Variety> data) {
-        requestMarketData(data);
+        if (data != null && data.size() > 0) {
+            requestMarketData(data);
+        }
     }
 
     private void requestMarketData(ArrayList<Variety> data) {

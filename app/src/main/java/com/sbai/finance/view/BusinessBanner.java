@@ -96,29 +96,46 @@ public class BusinessBanner extends RelativeLayout {
         if (data.size() == 0 || data.get(0) == null) {
             setVisibility(View.GONE);
             return;
-        }else {
+        } else {
             setVisibility(View.VISIBLE);
         }
         final Banner leftBanner = data.get(0);
         setTitle(leftBanner, LEFT_LOCATION);
         setSubTitle(leftBanner, LEFT_LOCATION);
         setImage(leftBanner, LEFT_LOCATION);
+        mLeftRL.setVisibility(View.VISIBLE);
 
         if (data.size() < 2 || data.get(1) == null) {
+            clearViews(TOP_RIGHT_LOCATION);
+            clearViews(BOTTOM_RIGHT_LOCATION);
             return;
         }
+
         final Banner topRightBanner = data.get(1);
         setTitle(topRightBanner, TOP_RIGHT_LOCATION);
         setSubTitle(topRightBanner, TOP_RIGHT_LOCATION);
         setImage(topRightBanner, TOP_RIGHT_LOCATION);
+        mtopRightRL.setVisibility(View.VISIBLE);
 
         if (data.size() < 3 || data.get(2) == null) {
+            clearViews(BOTTOM_RIGHT_LOCATION);
             return;
         }
         final Banner bottomRightBanner = data.get(2);
         setTitle(bottomRightBanner, BOTTOM_RIGHT_LOCATION);
         setSubTitle(bottomRightBanner, BOTTOM_RIGHT_LOCATION);
         setImage(bottomRightBanner, BOTTOM_RIGHT_LOCATION);
+        mbottomRightRL.setVisibility(View.VISIBLE);
+    }
+
+    private void clearViews(int location) {
+        if (location == LEFT_LOCATION) {
+            mLeftRL.setVisibility(View.INVISIBLE);
+        } else if (location == TOP_RIGHT_LOCATION) {
+            mtopRightRL.setVisibility(View.INVISIBLE);
+        } else if (location == BOTTOM_RIGHT_LOCATION) {
+            mbottomRightRL.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setTitle(Banner banner, int location) {
