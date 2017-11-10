@@ -114,7 +114,16 @@ public class BattleListActivity extends BaseActivity implements
                 showMatchTimeoutDialog();
                 break;
             case PushCode.QUICK_MATCH_SUCCESS:
-                showMatchSuccessDialog((Battle) battleWSPush.getContent().getData());
+                Battle battle = (Battle) battleWSPush.getContent().getData();
+                if (battle != null) {
+                    if (battle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                        Launcher.with(getActivity(), BattleActivity.class)
+                                .putExtra(ExtraKeys.BATTLE, battle)
+                                .execute();
+                    } else {
+                        showMatchSuccessDialog(battle);
+                    }
+                }
                 break;
             case PushCode.BATTLE_OVER:
                 requestCurrentBattle();
