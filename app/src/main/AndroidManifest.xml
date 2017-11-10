@@ -84,9 +84,11 @@
         <!-- Login & Register -->
         <activity
             android:name=".activity.mine.LoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/PageBottomEnter"/>
+            android:theme="@style/PageBottomEnter"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.mine.InputPhoneActivity"
             android:screenOrientation="portrait"/>
@@ -202,9 +204,6 @@
             android:name=".activity.future.FutureTradeActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.stock.StockListActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.stock.SearchStockActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -212,9 +211,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.stock.StockIndexActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.web.TopicDetailActivity"
             android:screenOrientation="portrait"/>
         <!-- 观点大神 -->
 
@@ -284,7 +280,7 @@
             android:name=".activity.battle.BattleHisRecordActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.arena.ArenaActivity"
+            android:name=".activity.arena.RewardActivity"
             android:screenOrientation="portrait"/>
         <!-- alipay -->
         <activity
@@ -343,10 +339,7 @@
 
         <!-- 发现 -->
         <activity
-            android:name=".activity.discovery.DailyReportDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.discovery.DailyReportActivity"
+            android:name=".activity.web.DailyReportDetailActivity"
             android:screenOrientation="portrait"/>
 
         <!-- 自习室 -->
@@ -411,11 +404,11 @@
         <activity
             android:name=".activity.arena.ArenaEntityExchangeInfoInputActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseDialog"/>
+            android:theme="@style/BaseDialog.WindowCloseOnTouchOutside"/>
         <activity
             android:name=".activity.arena.ArenaVirtualAwardExchangeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseDialog"/>
+            android:theme="@style/BaseDialog.WindowCloseOnTouchOutside"/>
         <activity
             android:name=".activity.arena.ArenaVirtualAwardNameActivity"
             android:screenOrientation="portrait"

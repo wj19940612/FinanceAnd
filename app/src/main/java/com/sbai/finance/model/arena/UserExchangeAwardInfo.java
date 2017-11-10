@@ -15,7 +15,7 @@ import com.sbai.finance.net.Client;
 public class UserExchangeAwardInfo {
 
     public static final int AWARD_TYPE_PLATFORM_CURRENCY = 1;
-    public static final int AWARD_TYPE_ENTITYY = 2;
+    public static final int AWARD_TYPE_ENTITY = 2;
     public static final int AWARD_TYPE_VIRTUAL_PRODUCT = 3;
 
     public static final int EXCHANGE_STATUS_APPLY_FOR = 1;

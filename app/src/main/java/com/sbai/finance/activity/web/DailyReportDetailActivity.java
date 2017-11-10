@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.discovery;
+package com.sbai.finance.activity.web;
 
 import android.content.BroadcastReceiver;
 import android.content.Intent;

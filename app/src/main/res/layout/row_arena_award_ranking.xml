@@ -65,6 +65,7 @@
             android:layout_height="24dp"
             android:gravity="center"
             android:minWidth="20dp"
+            android:textColor="@color/unluckyText"
             tools:drawableLeft="@drawable/ic_rank_first"
             tools:text="4"/>
 

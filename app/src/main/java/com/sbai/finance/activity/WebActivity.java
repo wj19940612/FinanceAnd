@@ -192,7 +192,7 @@ public class WebActivity extends BaseActivity {
         webSettings.setEnableSmoothTransition(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setUseWideViewPort(true);
-
+        webSettings.setLoadWithOverviewMode(true);
         mWebView.clearHistory();
         mWebView.clearCache(true);
         mWebView.clearFormData();
@@ -328,7 +328,7 @@ public class WebActivity extends BaseActivity {
             mLoadSuccess = true;
             mPageUrl = url;
 
-            if (!Network.isNetworkAvailable()) {
+            if (!Network.isNetworkAvailable()&&TextUtils.isEmpty(mPureHtml)) {
                 mLoadSuccess = false;
                 mWebView.stopLoading();
             }

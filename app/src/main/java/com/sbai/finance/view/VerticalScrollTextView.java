@@ -32,11 +32,10 @@ import java.util.List;
 public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher.ViewFactory {
     private static final int FLAG_START_AUTO_SCROLL = 0;
     private static final int FLAG_STOP_AUTO_SCROLL = 1;
-    private static final int FLAG_DELAY_TIME = 1000;
+    private static final int FLAG_DELAY_TIME = 4000;
     public static final int TEXT_SIZE_SP = 14;
     public static final int TEXT_ANIMATIONTIME = 300;
     public static final int TEXT_STILLTIME = 3000;
-    public static final int TEXT_PADDING_BOTTOM = 15;
 
     private int textColor = Color.WHITE;
 
@@ -46,27 +45,35 @@ public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher
     private OnItemClickListener itemClickListener;
     private Handler handler;
     private int currentId = -1;
+    private Animation mInAnimation;
+    private Animation mOutAnimation;
 
     public VerticalScrollTextView(Context context) {
         super(context);
         mContext = context;
+        init();
     }
 
     public VerticalScrollTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-//        textList = new ArrayList<String>();
+        init();
+    }
+
+    private void init(){
+        setFactory(this);
         mNoticeRadios = new ArrayList<NoticeRadio>();
+        initAnimation(TEXT_ANIMATIONTIME);
         setTextStillTime(TEXT_STILLTIME);
-        setAnimTime(TEXT_ANIMATIONTIME);
     }
 
     @Override
     public View makeView() {
         TextView t = new TextView(mContext);
-        t.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        t.setPadding(0,0,0, (int) Display.dp2Px(TEXT_PADDING_BOTTOM,getResources()));
+        t.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         t.setMaxLines(1);
+        t.setIncludeFontPadding(false);
+        t.setGravity(Gravity.CENTER_VERTICAL);
         t.setEllipsize(TextUtils.TruncateAt.END);
         t.setTextColor(textColor);
         t.setTextSize(TEXT_SIZE_SP);
@@ -82,39 +89,42 @@ public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher
         return t;
     }
 
-    //设置进出动画以及动画的持续时间
-    public void setAnimTime(long animDuration) {
-        setFactory(this);
-        Animation in = new TranslateAnimation(0, 0, Display.sp2Px(TEXT_SIZE_SP,getResources()), 0);
-        in.setDuration(animDuration);
-        in.setInterpolator(new AccelerateInterpolator());
-        Animation out = new TranslateAnimation(0, 0, 0, -Display.sp2Px(TEXT_SIZE_SP,getResources()));
-        out.setDuration(animDuration);
-        out.setInterpolator(new AccelerateInterpolator());
-        setInAnimation(in);
-        setOutAnimation(out);
+    private void initAnimation(long animDuration){
+        mInAnimation = new TranslateAnimation(0, 0, Display.sp2Px(TEXT_SIZE_SP,getResources()), 0);
+        mInAnimation.setDuration(animDuration);
+        mInAnimation.setInterpolator(new AccelerateInterpolator());
+        mOutAnimation = new TranslateAnimation(0, 0, 0, -Display.sp2Px(TEXT_SIZE_SP,getResources()));
+        mOutAnimation.setDuration(animDuration);
+        mOutAnimation.setInterpolator(new AccelerateInterpolator());
     }
 
-    public void setNoticeRadios(List<NoticeRadio> noticeRadios){
-        mNoticeRadios.clear();
-        mNoticeRadios.addAll(noticeRadios);
-        currentId = -1;
+    //设置进出动画以及动画的持续时间
+    public void setAnimation() {
+        setInAnimation(mInAnimation);
+        setOutAnimation(mOutAnimation);
     }
 
     /**
      * 设置数据源
-     * @param titles
      */
-    public void setTextList(List<String> titles) {
-//        textList.clear();
-//        textList.addAll(titles);
+    public void setNoticeRadios(List<NoticeRadio> noticeRadios){
+        mNoticeRadios.clear();
+        mNoticeRadios.addAll(noticeRadios);
         currentId = -1;
+        startAutoScroll();
     }
 
     /**
      * 开始滚动
      */
     public void startAutoScroll() {
+        setInAnimation(null);
+        setOutAnimation(null);
+        if (mNoticeRadios.size() > 0) {
+            currentId++;
+            setText(mNoticeRadios.get(currentId % mNoticeRadios.size()).getTitle());
+        }
+        setAnimation();
         handler.removeMessages(FLAG_START_AUTO_SCROLL);
         handler.sendEmptyMessageDelayed(FLAG_START_AUTO_SCROLL,FLAG_DELAY_TIME);
     }
@@ -164,9 +174,18 @@ public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher
                         break;
                     case FLAG_STOP_AUTO_SCROLL:
                         handler.removeMessages(FLAG_START_AUTO_SCROLL);
+                        setInAnimation(null);
+                        setOutAnimation(null);
+                        setText("");
                         break;
                 }
             }
         };
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        handler.removeCallbacksAndMessages(null);
     }
 }

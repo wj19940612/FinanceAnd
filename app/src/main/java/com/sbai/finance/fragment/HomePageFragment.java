@@ -1,8 +1,6 @@
 package com.sbai.finance.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +11,7 @@ import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
+import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.home.AllTrainingListActivity;
 import com.sbai.finance.activity.home.BroadcastListActivity;
@@ -105,7 +103,7 @@ public class HomePageFragment extends BaseFragment {
         if (count % TIME_HANDLER_THREE == 0) {
             mBanner.nextAdvertisement();
             getIndexData();
-        }  else if (count % TIME_HANDLER_TEN == 0) {
+        } else if (count % TIME_HANDLER_TEN == 0) {
             request7NewsData();
             requestImportantNewsData();
             requestBusniessBannerData();
@@ -319,7 +317,7 @@ public class HomePageFragment extends BaseFragment {
         super.onResume();
         startScheduleJob(TIME_ONE);
         requestGreetings();
-        getIndexData();
+        getRefreshData();
         requestRadioData();
         requestBannerData();
         requestBusniessBannerData();
@@ -335,7 +333,7 @@ public class HomePageFragment extends BaseFragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isAdded()) {
             requestGreetings();
-            getIndexData();
+            getRefreshData();
             requestRadioData();
             requestBannerData();
             requestBusniessBannerData();
@@ -353,11 +351,27 @@ public class HomePageFragment extends BaseFragment {
         MarketSubscriber.get().unSubscribeAll();
     }
 
+    //只更新部分字符,用于轮询数据
     private void getIndexData() {
         if (mHomeTitleView.getOldButton() == BUTTON_HUSHEN) {
             requestStockIndexData();
+        } else if (mHomeTitleView.getOldButton() == BUTTON_QIHUO) {
+            requestFutureVarietyList();
         } else if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_ZIXUAN) {
-            mHomeTitleView.clickIndexButton(BUTTON_ZIXUAN);
+            requestOptionalData();
+        }
+    }
+
+    //强制刷新，按钮界面变化
+    private void getRefreshData() {
+        if (mHomeTitleView.getOldButton() == BUTTON_HUSHEN) {
+            mHomeTitleView.forceRefershUI(BUTTON_HUSHEN);
+            requestStockIndexData();
+        } else if (mHomeTitleView.getOldButton() == BUTTON_QIHUO) {
+            mHomeTitleView.forceRefershUI(BUTTON_QIHUO);
+            requestFutureVarietyList();
+        } else if (mHomeTitleView.getOldButton() == HomeTitleView.BUTTON_ZIXUAN) {
+            mHomeTitleView.forceRefershUI(BUTTON_ZIXUAN);
             requestOptionalData();
         }
     }
@@ -417,7 +431,7 @@ public class HomePageFragment extends BaseFragment {
 
     private void requestOptionalData() {
         //这里只需要3个数据，所以请求的page = 0;
-        if (LocalUser.getUser().isLogin()) {
+        if (!LocalUser.getUser().isLogin()) {
             return;
         }
         int page = 0;
@@ -453,7 +467,7 @@ public class HomePageFragment extends BaseFragment {
 
     private void requestGreetings() {
         if (!LocalUser.getUser().isLogin()) {
-            mHomeTitleView.setGreetingTitle(null);
+            mHomeTitleView.setGreetingTitle(R.string.welcome_lemi);
             return;
         }
         Client.requestGreeting().setTag(TAG).setCallback(new Callback2D<Resp<Greeting>, Greeting>() {

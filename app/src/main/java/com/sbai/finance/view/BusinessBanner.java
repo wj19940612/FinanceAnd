@@ -93,16 +93,18 @@ public class BusinessBanner extends RelativeLayout {
 
 
     public void setBusinessBannerData(List<Banner> data) {
-        if (data.size() == 0) {
+        if (data.size() == 0 || data.get(0) == null) {
             setVisibility(View.GONE);
             return;
+        }else {
+            setVisibility(View.VISIBLE);
         }
         final Banner leftBanner = data.get(0);
         setTitle(leftBanner, LEFT_LOCATION);
         setSubTitle(leftBanner, LEFT_LOCATION);
         setImage(leftBanner, LEFT_LOCATION);
 
-        if (data.size() < 2) {
+        if (data.size() < 2 || data.get(1) == null) {
             return;
         }
         final Banner topRightBanner = data.get(1);
@@ -110,7 +112,7 @@ public class BusinessBanner extends RelativeLayout {
         setSubTitle(topRightBanner, TOP_RIGHT_LOCATION);
         setImage(topRightBanner, TOP_RIGHT_LOCATION);
 
-        if (data.size() < 3) {
+        if (data.size() < 3 || data.get(2) == null) {
             return;
         }
         final Banner bottomRightBanner = data.get(2);
@@ -167,7 +169,7 @@ public class BusinessBanner extends RelativeLayout {
         if (userCountLocation == -1) {
             //没有特殊标志位说明副标题不需要富文本
             textView.setText(subTitle);
-        } else {
+        } else if (banner.getMontageData() != null) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(subTitle.substring(0, userCountLocation));
             stringBuilder.append(banner.getMontageData());
@@ -176,6 +178,12 @@ public class BusinessBanner extends RelativeLayout {
             ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.banner_number));
             spannableStringBuilder.setSpan(foregroundColorSpan, userCountLocation, userCountLocation + banner.getMontageData().length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
+            textView.setText(spannableStringBuilder);
+        } else if (banner.getMontageData() == null) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(subTitle.substring(0, userCountLocation));
+            stringBuilder.append(subTitle.substring(userCountLocation + USER_COUNT_LOCATION_SIGN.length(), subTitle.length()));
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuilder);
             textView.setText(spannableStringBuilder);
         }
     }

@@ -1,12 +1,13 @@
 package com.sbai.finance.model.leaderboard;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 排行榜数据
  */
 
-public class LeaderBoardRank {
+public class LeaderBoardRank implements Serializable {
     public static final String INGOT = "gold";
     public static final String PROFIT = "profit";
     public static final String SAVANT = "appraise";
@@ -40,7 +41,7 @@ public class LeaderBoardRank {
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Serializable {
         /**
          * score : 9999994.2
          * user : {"id":171,"userName":"用户2464","userPhone":"17853127907"}
@@ -83,7 +84,7 @@ public class LeaderBoardRank {
             this.user = user;
         }
 
-        public static class UserBean {
+        public static class UserBean implements Serializable {
             /**
              * id : 171
              * userName : 用户2464
@@ -129,7 +130,7 @@ public class LeaderBoardRank {
         }
     }
 
-    public static class CurrBean {
+    public static class CurrBean implements Serializable {
         private int no;
         private double score;
 

@@ -20,7 +20,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.home.SearchOptionalActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
-import com.sbai.finance.activity.stock.StockListActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.stock.StockData;

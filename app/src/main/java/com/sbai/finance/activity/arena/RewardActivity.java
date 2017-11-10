@@ -13,8 +13,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -82,7 +82,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class ArenaActivity extends BaseActivity implements View.OnClickListener, BattleListFragment.OnFragmentRecycleViewScrollListener {
+public class RewardActivity extends BaseActivity implements View.OnClickListener, BattleListFragment.OnFragmentRecycleViewScrollListener {
 
     private static final int REQ_CODE_FUTURE_BATTLE = 3787;
     private static final int REQ_CODE_SUBMIT_EXCHANGE_AWARD = 8809;
@@ -119,8 +119,8 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
     AppBarLayout mAppBarLayout;
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
-    //    @BindView(R.id.toolBar)
-//    Toolbar mToolBar;
+    @BindView(R.id.toolBar)
+    Toolbar mToolBar;
     @BindView(R.id.quickMatch)
     TextView mQuickMatch;
     @BindView(R.id.gift)
@@ -152,7 +152,6 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_arena);
         ButterKnife.bind(this);
-        translucentStatusBar();
         initView();
     }
 
@@ -172,18 +171,9 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
             updateUserJoinArenaStatus(false);
             mIngot.setText(R.string.not_login);
         }
-
-        BattleListFragment battleListFragment = getBattleListFragment();
-        if (battleListFragment != null) {
-            battleListFragment.refresh();
-        }
-
-        BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
-        if (battleRankingFragment != null) {
-            battleRankingFragment.requestArenaAwardRankingData();
-        }
         updateUserAvatar();
     }
+
 
     private void updateUserAvatar() {
         if (LocalUser.getUser().isLogin()) {
@@ -266,7 +256,8 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void updateUserActivityScore(UserActivityScore data) {
-        SpannableString ranking = StrUtil.mergeTextWithRatioColor(String.valueOf(data.getRank()),
+        String rank = data.getRank() == 0 ? "-" : String.valueOf(data.getRank());
+        SpannableString ranking = StrUtil.mergeTextWithRatioColor(rank,
                 "\n" + getString(R.string.ranking_now),
                 0.6f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
         mRanking.setText(ranking);
@@ -295,34 +286,38 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
         List<ArenaActivityAwardInfo> arenaActivityAwardInfoList = arenaActivityAndUserStatus.getPrizeModels();
         //如果可兑换数据为空 则代表排名低 没有进入排名
         if (arenaActivityAwardInfoList.isEmpty()) {
-            mAward.setVisibility(View.GONE);
-            if (arenaActivityAndUserStatus.userCanExchangeAward()) {
-                mPredictGain.setText(R.string.your_rank_is_not_exchange_reward);
-            } else {
-                mPredictGain.setText(R.string.ranking_low);
-            }
-        } else {
-
-            ArenaActivityAwardInfo arenaActivityAwardInfo = arenaActivityAwardInfoList.get(0);
-            if (arenaActivityAwardInfo != null) {
-                mAward.setText(arenaActivityAwardInfo.getPrizeName());
-            }
+            mPredictGain.setVisibility(View.INVISIBLE);
+            mAward.setTextColor(Color.WHITE);
             if (arenaActivityAndUserStatus.userCanExchangeAward()) {
                 if (mUserActivityScore.getTotalCount() < 30) {
-                    mPredictGain.setText(R.string.battle_count_is_not_enough);
+                    mAward.setText(R.string.battle_count_is_not_enough);
                 } else {
-                    mAward.setVisibility(View.VISIBLE);
-                    mPredictGain.setText(R.string.get_award);
-                    requestUserExchangeAwardInfo();
+                    mAward.setText(R.string.your_rank_is_not_exchange_reward);
                 }
             } else {
-                mAward.setVisibility(View.VISIBLE);
+                mAward.setText(R.string.ranking_low);
+            }
+        } else {
+            ArenaActivityAwardInfo arenaActivityAwardInfo = arenaActivityAwardInfoList.get(0);
+            mPredictGain.setVisibility(View.VISIBLE);
+            if (arenaActivityAndUserStatus.userCanExchangeAward()) {
+                mPredictGain.setText(R.string.get_award);
+                mAward.setSelected(false);
+                requestUserExchangeAwardInfo(false);
+                if (arenaActivityAwardInfo != null) {
+                    mAward.setText(arenaActivityAwardInfo.getPrizeName());
+                }
+            } else {
+                mAward.setSelected(false);
+                if (arenaActivityAwardInfo != null) {
+                    mAward.setText(arenaActivityAwardInfo.getPrizeName());
+                }
                 mPredictGain.setText(R.string.predict_gain);
             }
         }
     }
 
-    private void requestUserExchangeAwardInfo() {
+    private void requestUserExchangeAwardInfo(final boolean ifShowResultDialog) {
         Client.requestUserExchangeAwardInfo(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -330,6 +325,9 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
                     @Override
                     protected void onRespSuccessData(List<UserExchangeAwardInfo> data) {
                         updateUserExchangeAwardStatus(data);
+                        if (data != null && !data.isEmpty() && ifShowResultDialog) {
+                            showUserExchangeResultDialog(data);
+                        }
                     }
 
                     @Override
@@ -338,8 +336,13 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
                         if (failedResp.getCode() == Resp.CODE_ARENA_IS_OVER_OR_NOT_IS_EXCHANGE_TIME) {
                             // 未到时间或者已经结束
                             mGift.setVisibility(View.GONE);
-                            showOverExchangeTimeDialog();
+                            ToastUtil.show(failedResp.getMsg());
                         }
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
                     }
                 })
                 .fireFree();
@@ -372,12 +375,6 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    private void showOverExchangeTimeDialog() {
-        SmartDialog.single(getActivity(), getString(R.string.you_miss_exchange_time))
-                .setPositive(R.string.i_see)
-                .setNegativeVisible(View.GONE)
-                .show();
-    }
 
     private void showUserExchangeResultDialog(List<UserExchangeAwardInfo> data) {
         UserExchangeAwardInfo userExchangeAwardInfo = data.get(0);
@@ -416,14 +413,18 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case PushCode.QUICK_MATCH_SUCCESS:
                 mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
-                mBattle = (Battle) battleWSPush.getContent().getData();
+                Battle data = (Battle) battleWSPush.getContent().getData();
                 StartMatchDialog.dismiss(getActivity());
                 SmartDialog.dismiss(getActivity());
-                if (mBattle != null) {
-                    Launcher.with(getActivity(), BattleActivity.class)
-                            .putExtra(ExtraKeys.BATTLE, mBattle)
-                            .executeForResult(REQ_CODE_FUTURE_BATTLE);
+                if (data != null) {
+                    //防止出现多次推送
+                    if(mBattle==null||mBattle.getId()!=data.getId()){
+                        Launcher.with(getActivity(), BattleActivity.class)
+                                .putExtra(ExtraKeys.BATTLE, data)
+                                .executeForResult(REQ_CODE_FUTURE_BATTLE);
+                    }
                 }
+                mBattle = data;
                 break;
             case PushCode.BATTLE_OVER:
                 if (BuildConfig.DEBUG) {
@@ -449,16 +450,9 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void initView() {
-//        setSupportActionBar(mToolBar);
+        setSupportActionBar(mToolBar);
 
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                mAppBarVerticalOffset = verticalOffset;
-                boolean b = mSwipEnabled && mAppBarVerticalOffset > -1;
-                mSwipeRefreshLayout.setEnabled(b);
-            }
-        });
+        mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
 
         mArenaFragmentAdapter = new ArenaFragmentAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mArenaFragmentAdapter);
@@ -475,6 +469,15 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
             @Override
             public void onRefresh() {
                 refreshData();
+                BattleListFragment battleListFragment = getBattleListFragment();
+                if (battleListFragment != null) {
+                    battleListFragment.refresh();
+                }
+
+                BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
+                if (battleRankingFragment != null) {
+                    battleRankingFragment.requestArenaAwardRankingData();
+                }
             }
         });
 
@@ -489,7 +492,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
             @Override
             public void onPageSelected(int position) {
                 mViperPosition = position;
-                if (mArenaActivityAndUserStatus != null&&mArenaActivityAndUserStatus.isApplyed()) {
+                if (mArenaActivityAndUserStatus != null && mArenaActivityAndUserStatus.isApplyed()) {
                     if (position == 0) {
                         BattleListFragment battleListFragment = getBattleListFragment();
                         if (battleListFragment != null) {
@@ -511,8 +514,18 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
 
             }
         });
-
     }
+
+    AppBarLayout.OnOffsetChangedListener mOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
+        @Override
+        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+            mAppBarVerticalOffset = verticalOffset;
+            boolean b = mSwipEnabled && mAppBarVerticalOffset > -1;
+            if (mSwipeRefreshLayout.isEnabled() != b) {
+                mSwipeRefreshLayout.setEnabled(b);
+            }
+        }
+    };
 
     private BattleListFragment getBattleListFragment() {
         return (BattleListFragment) mArenaFragmentAdapter.getFragment(0);
@@ -524,10 +537,10 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
 
     private void initTitleBar() {
         View customView = mTitleBar.getCustomView();
-        mAvatar = (ImageView) customView.findViewById(R.id.avatar);
-        mIngot = (TextView) customView.findViewById(R.id.ingot);
-        TextView recharge = (TextView) customView.findViewById(R.id.recharge);
-        TextView activityRule = (TextView) customView.findViewById(R.id.activityRule);
+        mAvatar = customView.findViewById(R.id.avatar);
+        mIngot = customView.findViewById(R.id.ingot);
+        TextView recharge = customView.findViewById(R.id.recharge);
+        TextView activityRule = customView.findViewById(R.id.activityRule);
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -588,7 +601,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
                 .setListener(new ShareDialog.OnShareDialogCallback() {
                     @Override
                     public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
-                        Client.share().setTag(TAG).fire();
+                        Client.share().setTag(TAG).fireFree();
                     }
 
                     @Override
@@ -642,34 +655,9 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
                 requestUserRealNameStatus();
                 break;
             case R.id.exchangeDetail:
-                requestUserExchangeDetail();
+                requestUserExchangeAwardInfo(true);
                 break;
         }
-    }
-
-    private void requestUserExchangeDetail() {
-        Client.requestUserExchangeAwardInfo(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<UserExchangeAwardInfo>>, List<UserExchangeAwardInfo>>() {
-                    @Override
-                    protected void onRespSuccessData(List<UserExchangeAwardInfo> data) {
-                        if (data != null && !data.isEmpty()) {
-                            showUserExchangeResultDialog(data);
-                        }
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        super.onRespFailure(failedResp);
-                        if (failedResp.getCode() == Resp.CODE_ARENA_IS_OVER_OR_NOT_IS_EXCHANGE_TIME) {
-                            // 未到时间或者已经结束
-                            mGift.setVisibility(View.GONE);
-                            showOverExchangeTimeDialog();
-                        }
-                    }
-                })
-                .fireFree();
     }
 
     private void requestUserLastBattleInfo(final boolean needQuickMatch) {
@@ -773,7 +761,6 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
                     @Override
                     public void onClick(Dialog dialog) {
                         Launcher.with(getActivity(), CreditApproveActivity.class).execute();
-                        finish();
                     }
                 })
                 .setNegative(R.string.i_see)
@@ -805,6 +792,8 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
                         showMatchFundNotEnoughDialog(content.getMsg());
                     } else if (content.getCode() == Resp.ACTIVITY_IS_NOT_YET_OPEN) {
                         showThereWasNoOpeningHoursDialog(content.getMsg());
+                    } else {
+                        ToastUtil.show(content.getMsg());
                     }
                 }
             }
@@ -894,7 +883,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void dismissQuickMatchDialog() {
-        StartMatchDialog.dismiss(ArenaActivity.this);
+        StartMatchDialog.dismiss(RewardActivity.this);
     }
 
     private void showEnterForACompetitionConditionDialog(ArenaApplyRule data) {
@@ -936,6 +925,7 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         requestArenaActivityAndUserStatus();
+                        requestUserFundInfo();
                     }
 
                     @Override
@@ -998,6 +988,12 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAppBarLayout.removeOnOffsetChangedListener(mOnOffsetChangedListener);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_FUTURE_BATTLE) {
@@ -1020,10 +1016,12 @@ public class ArenaActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onSwipRefreshEnable(boolean enabled, int fragmentPosition) {
-        Log.d(TAG, "onSwipRefreshEnable: " + enabled + "  " + mAppBarVerticalOffset);
+//        Log.d(TAG, "onSwipRefreshEnable: " + enabled + "  " + mAppBarVerticalOffset);
         mSwipEnabled = enabled;
         boolean b = enabled && mAppBarVerticalOffset > -1;
-        mSwipeRefreshLayout.setEnabled(b);
+        if (mSwipeRefreshLayout.isEnabled() != b) {
+            mSwipeRefreshLayout.setEnabled(b);
+        }
     }
 
     @Override

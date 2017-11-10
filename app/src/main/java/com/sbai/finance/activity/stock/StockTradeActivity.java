@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.stock;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -37,6 +38,7 @@ import com.sbai.finance.net.stock.StockResp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -54,6 +56,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
+import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
@@ -105,6 +109,17 @@ public abstract class StockTradeActivity extends BaseActivity {
     private Prediction mPrediction;
 
     protected Variety mVariety;
+    private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                requestStockTrendDataAndSet();
+                requestStockRTData();
+                requestExchangeStatus();
+                requestOptionalStatus();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,7 +257,7 @@ public abstract class StockTradeActivity extends BaseActivity {
         super.onPostResume();
         requestStockTrendDataAndSet();
         requestExchangeStatus();
-
+        registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
         startScheduleJob(1 * 1000);
     }
 
@@ -280,6 +295,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
         stopScheduleJob();
     }
 
@@ -536,5 +552,4 @@ public abstract class StockTradeActivity extends BaseActivity {
                     }
                 }).fire();
     }
-
 }

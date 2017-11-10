@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.arena.ArenaActivity">
+    tools:context="com.sbai.finance.activity.arena.RewardActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -76,10 +76,12 @@
                                 android:textColor="@android:color/white"/>
                         </LinearLayout>
 
+
                         <RelativeLayout
                             android:id="@+id/gameInfoRl"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
                             android:layout_marginTop="51dp"
                             android:visibility="visible">
 
@@ -102,7 +104,7 @@
                                 android:layout_marginLeft="@dimen/common_padding"
                                 android:layout_marginRight="@dimen/common_padding"
                                 android:layout_marginTop="8dp"
-                                android:textColor="@color/yellowAssist"
+                                android:textColor="@color/reward_award_gift"
                                 android:textSize="16sp"
                                 tools:text="@string/award"/>
 
@@ -188,7 +190,7 @@
                     <android.support.v7.widget.Toolbar
                         android:id="@+id/toolBar"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="?attr/actionBarSize"
                         app:layout_collapseMode="pin">
 
                         <com.sbai.finance.view.TitleBar
@@ -199,10 +201,11 @@
                             app:backFeature="true"
                             app:backIcon="@drawable/ic_tb_back_white"
                             app:customView="@layout/layout_money_reward_game_battle_list_title"
-                            app:layout_collapseMode="pin"
+
                             app:leftViewLeftPadding="0dp"
                             app:rightImage="@drawable/ic_share"
                             app:rightVisible="true"/>
+
                     </android.support.v7.widget.Toolbar>
                 </android.support.design.widget.CollapsingToolbarLayout>
 

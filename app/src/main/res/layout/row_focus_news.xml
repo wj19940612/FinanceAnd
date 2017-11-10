@@ -44,6 +44,7 @@
             android:layout_width="130dp"
             android:layout_height="84dp"
             android:layout_marginLeft="@dimen/common_padding"
+            android:background="@drawable/ic_common_mask_black"
             android:scaleType="centerCrop"
             android:visibility="visible"
             tools:src="@drawable/ic_future_battle_game"/>

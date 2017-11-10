@@ -56,6 +56,7 @@ public class ArenaVirtualAwardNameActivity extends DialogBaseActivity {
                 mChooseVirtualAwardName = virtualAwardName;
                 mChooseVirtualAwardName.setSelect(true);
                 mVirtualAwardAdapter.notifyDataSetChanged();
+                finish();
             }
         });
     }

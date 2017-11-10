@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,19 +38,19 @@ public class LeaderBoardView extends LinearLayout {
     @BindView(R.id.leftHead)
     ImageView mLeftHead;
     @BindView(R.id.leftMobaiBtn)
-    ImageView mLeftMobaiBtn;
+    Button mLeftMobaiBtn;
     @BindView(R.id.leftLookRankBtn)
     RelativeLayout mLeftLookRankBtn;
     @BindView(R.id.centerHead)
     ImageView mCenterHead;
     @BindView(R.id.centerMobaiBtn)
-    ImageView mCenterMobaiBtn;
+    Button mCenterMobaiBtn;
     @BindView(R.id.centerLookRankBtn)
     RelativeLayout mCenterLookRankBtn;
     @BindView(R.id.rightHead)
     ImageView mRightHead;
     @BindView(R.id.rightMobaiBtn)
-    ImageView mRightMobaiBtn;
+    Button mRightMobaiBtn;
     @BindView(R.id.rightLookRankBtn)
     RelativeLayout mRightLookRankBtn;
     @BindView(R.id.leftGoneText)
@@ -144,7 +145,7 @@ public class LeaderBoardView extends LinearLayout {
         haveDataMap.put(PROFIT, null);
         haveDataMap.put(SAVANT, null);
         ImageView topIcon = null;
-        ImageView mobaiBtn = null;
+        Button mobaiBtn = null;
         ImageView headView = null;
         TextView goneView = null;
         for (final LeaderThreeRank dataBean : data) {
@@ -181,7 +182,7 @@ public class LeaderBoardView extends LinearLayout {
             } else {
                 mobaiBtn.setEnabled(false);
             }
-            final ImageView finalMobaiBtn = mobaiBtn;
+            final Button finalMobaiBtn = mobaiBtn;
             finalMobaiBtn.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

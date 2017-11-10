@@ -51,6 +51,7 @@ public class SevenHourNewsView extends RelativeLayout {
     private int minHeight;
     private boolean canAnimate;
     private List<TextViewState> mTextViewStates;
+    private int ccWidth;
 
     private OnMoreBtnClickListener mOnMoreBtnClickListener;
 
@@ -64,12 +65,13 @@ public class SevenHourNewsView extends RelativeLayout {
 
     public class TextViewState {
         public TextView textView;
-        public ViewTreeObserver.OnPreDrawListener onPreDrawListener;
-        public boolean hasMeasure;
-        private int allHeight;
-        public boolean hasGetLinesHeight;
-        public int linesHeight;
+        //        public ViewTreeObserver.OnPreDrawListener onPreDrawListener;
+//        public boolean hasMeasure;
+//        private int allHeight;
+//        public boolean hasGetLinesHeight;
+//        public int linesHeight;
         public int index;
+        private boolean isExpand;
     }
 
     public SevenHourNewsView(Context context) {
@@ -93,6 +95,16 @@ public class SevenHourNewsView extends RelativeLayout {
         minHeight = (int) Display.dp2Px(MIN_HEIGHT, getResources());
         mTextViewStates = new ArrayList<TextViewState>();
         canAnimate = true;
+        mContentLL.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (mContentLL.getMeasuredHeight() != 0) {
+                    ccWidth = mContentLL.getMeasuredWidth();
+//                    Log.e("zzz", "ccwidth:" + ccWidth);
+                    mContentLL.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            }
+        });
     }
 
     @OnClick(R.id.moreBtn)
@@ -112,118 +124,41 @@ public class SevenHourNewsView extends RelativeLayout {
         }
         if (mTextViewStates.size() == 0) {
             mContentLL.removeAllViews();
-            mTextViewStates.clear();
+//            mTextViewStates.clear();
             setTextData(data);
         } else {
             mContentLL.removeAllViews();
-            mTextViewStates.clear();
+//            mTextViewStates.clear();
             setTextData(data);
 //            setOldData(data);
         }
     }
 
-    private void setOldData(List<DailyReport> data) {
-        int canAddCount = 0;
-        int addHeight = 0;
-        List<RelativeLayout> relativeLayouts = new ArrayList<RelativeLayout>();
-        for (DailyReport dailyReport : data) {
-            RelativeLayout contentItemView = (RelativeLayout) mInflater.inflate(R.layout.layout_news_content, mContentLL, false);
-            TextView textView = getAddTextView(dailyReport);
-            TextView timeView = (TextView) contentItemView.findViewById(R.id.timeView);
-            timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
-            contentItemView.addView(textView);
-            contentItemView.measure(0, 0);
-            addHeight += contentItemView.getMeasuredHeight();
-            relativeLayouts.add(contentItemView);
-            canAddCount++;
-            if (addHeight > minHeight) {
-                break;
-            }
-        }
-
-        int oldCount = mContentLL.getChildCount();
-        if (canAddCount < oldCount) {
-            for (int i = oldCount - 1; i >= canAddCount; i--) {
-                removeViewAt(i);
-            }
-        } else if (canAddCount > oldCount) {
-            for (int i = oldCount - 1; i >= canAddCount; i++) {
-                mContentLL.addView(relativeLayouts.get(i), i);
-            }
-        }
-
-        //前面是添加或者删减view，然后就需要set之前oldView的Text
-        for (int i = 0; i < oldCount; i++) {
-            DailyReport dailyReport = data.get(i);
-//            RelativeLayout childLayout = (RelativeLayout) mContentLL.getChildAt(i);
-//            TextView timeView = (TextView) childLayout.findViewById(R.id.timeView);
-//            timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
-//            TextView textView = (TextView) childLayout.getChildAt(2);
-//            revertTextView(textView, dailyReport, mTextViewStates.get(i));
-            mContentLL.removeViewAt(i);
-            mContentLL.addView(relativeLayouts.get(i), i);
-        }
-    }
-
-    private void revertTextView(final TextView textView, DailyReport dailyReport, final TextViewState textViewState) {
-        String title = dailyReport.getTitle() == null ? "" : dailyReport.getTitle();
-        String content = dailyReport.getContent() == null ? "" : Html.fromHtml(dailyReport.getContent()).toString().trim();
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title + content);
-        ForegroundColorSpan bigColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.primaryText));
-        spannableStringBuilder.setSpan(bigColorSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-
-        AbsoluteSizeSpan bigSizeSpan = new AbsoluteSizeSpan(((int) Display.sp2Px(TEXT_BIG_SP, getResources())));
-        spannableStringBuilder.setSpan(bigSizeSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-
-        ForegroundColorSpan smallColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.news_content));
-        spannableStringBuilder.setSpan(smallColorSpan, title.length(), title.length() + content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-
-        AbsoluteSizeSpan smallSizeSpan = new AbsoluteSizeSpan(((int) Display.sp2Px(TEXT_SMALL_SP, getResources())));
-        spannableStringBuilder.setSpan(smallSizeSpan, title.length(), title.length() + content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-
-        int textPadding = (int) Display.dp2Px(TEXT_PADDING_DP, getResources());
-        textView.setPadding(textPadding, textPadding, textPadding, textPadding);
-        textView.setBackgroundColor(getResources().getColor(R.color.background));
-        textView.setText(spannableStringBuilder);
-        textViewState.textView = textView;
-        textViewState.hasMeasure = false;
-        textViewState.onPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                //只需要获取一次就可以了
-                if (!textViewState.hasMeasure && textView.getMeasuredHeight() != 0) {
-                    //这里获取到完全展示的maxLine
-                    textViewState.allHeight = textView.getMeasuredHeight();
-                    //设置maxLine的默认值，这样用户看到View就是限制了maxLine的TextView
-                    textView.setMaxLines(TEXT_MAX_LINES);
-                    textView.setEllipsize(TextUtils.TruncateAt.END);
-                    textViewState.hasMeasure = true;
-                    textView.getViewTreeObserver().removeOnPreDrawListener(this);
-                }
-                return true;
-            }
-        };
-        textView.getViewTreeObserver().addOnPreDrawListener(textViewState.onPreDrawListener);
-        textView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                animateTextView(textViewState);
-            }
-        });
-    }
-
     private void setTextData(List<DailyReport> data) {
+//        List<DailyReport> data = new ArrayList<DailyReport>();
+//        data.add(data2.get(0));
         int canAddCount = 0;
         int addHeight = 0;
         List<RelativeLayout> relativeLayouts = new ArrayList<RelativeLayout>();
         for (DailyReport dailyReport : data) {
             RelativeLayout contentItemView = (RelativeLayout) mInflater.inflate(R.layout.layout_news_content, mContentLL, false);
-            TextView textView = getAddTextView(dailyReport);
+            TextView textView = getAddTextView(dailyReport, canAddCount);
             TextView timeView = (TextView) contentItemView.findViewById(R.id.timeView);
             timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
             contentItemView.addView(textView);
-            contentItemView.measure(0, 0);
-            addHeight += contentItemView.getMeasuredHeight();
+            int widthSpec = MeasureSpec.makeMeasureSpec(ccWidth, MeasureSpec.EXACTLY);
+            int heightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+            contentItemView.measure(widthSpec, heightSpec);
+            int measureRelativeHeight = contentItemView.getMeasuredHeight();
+            if (mTextViewStates.get(canAddCount).isExpand && textView.getLayout().getLineCount() > TEXT_MAX_LINES) {
+                //如果是展开的话，这里我们需要计算被加入的高度其实是缩小的，因此这里只要三行的高度
+                int textAllHeight = textView.getMeasuredHeight();
+                int threeTop = textView.getLayout().getLineTop(TEXT_MAX_LINES) + textView.getCompoundPaddingTop() + textView.getCompoundPaddingBottom();
+                measureRelativeHeight = measureRelativeHeight - (textAllHeight - threeTop);
+//                Log.e("zzz", "threeTop:" + measureRelativeHeight);
+            }
+            addHeight += measureRelativeHeight;
+//            Log.e("zzz", "old height:" + contentItemView.getMeasuredHeight());
             relativeLayouts.add(contentItemView);
             canAddCount++;
             if (addHeight > minHeight) {
@@ -236,7 +171,7 @@ public class SevenHourNewsView extends RelativeLayout {
     }
 
 
-    private TextView getAddTextView(DailyReport dailyReport) {
+    private TextView getAddTextView(DailyReport dailyReport, int canAddCount) {
         final TextView textView = new TextView(mContext);
         String title = dailyReport.getTitle() == null ? "" : dailyReport.getTitle();
         String content = dailyReport.getContent() == null ? "" : Html.fromHtml(dailyReport.getContent()).toString().trim();
@@ -262,29 +197,25 @@ public class SevenHourNewsView extends RelativeLayout {
         textView.setPadding(textPadding, textPadding, textPadding, textPadding);
         textView.setBackgroundColor(getResources().getColor(R.color.background));
         textView.setText(spannableStringBuilder);
-        final TextViewState textViewState = new TextViewState();
+        final TextViewState textViewState;
+        if (canAddCount >= mTextViewStates.size()) {
+            textViewState = new TextViewState();
+        } else {
+            textViewState = mTextViewStates.get(canAddCount);
+        }
         textViewState.textView = textView;
-        textViewState.onPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                //只需要获取一次就可以了
-                if (!textViewState.hasMeasure && textView.getMeasuredHeight() != 0) {
-                    //这里获取到完全展示的maxLine
-                    textViewState.allHeight = textView.getMeasuredHeight();
-                    //设置maxLine的默认值，这样用户看到View就是限制了maxLine的TextView
-                    textView.setMaxLines(TEXT_MAX_LINES);
-                    textView.setEllipsize(TextUtils.TruncateAt.END);
-                    textViewState.hasMeasure = true;
-                    textView.getViewTreeObserver().removeOnPreDrawListener(this);
-                }
-                return true;
-            }
-        };
-        textView.getViewTreeObserver().addOnPreDrawListener(textViewState.onPreDrawListener);
+
+        if (textViewState.isExpand) {
+            textView.setMaxLines(Integer.MAX_VALUE);
+        } else {
+            textView.setMaxLines(TEXT_MAX_LINES);
+            textView.setEllipsize(TextUtils.TruncateAt.END);
+        }
+
         textView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                animateTextView(textViewState);
+                expandOrbackTextView(textViewState);
             }
         });
         textViewState.index = mTextViewStates.size();
@@ -292,61 +223,73 @@ public class SevenHourNewsView extends RelativeLayout {
         return textView;
     }
 
-    private void animateTextView(final TextViewState textViewState) {
-        if (!canAnimate) {
-            return;
-        }
-        if (!textViewState.hasGetLinesHeight) {
-            textViewState.linesHeight = textViewState.textView.getMeasuredHeight();
-            textViewState.hasGetLinesHeight = true;
-        }
-        int nowHeight = textViewState.textView.getMeasuredHeight();
-        final int leftHeight;
-        final int rightHeight;
-        if (nowHeight < textViewState.allHeight) {
-            leftHeight = textViewState.linesHeight;
-            rightHeight = textViewState.allHeight;
+    private void expandOrbackTextView(final TextViewState textViewState) {
+        if (textViewState.isExpand) {
+            //展开的，需要从展开到收缩
+            textViewState.textView.setMaxLines(TEXT_MAX_LINES);
+            textViewState.textView.setEllipsize(TextUtils.TruncateAt.END);
+            textViewState.isExpand = false;
         } else {
-            leftHeight = textViewState.allHeight;
-            rightHeight = textViewState.linesHeight;
+            textViewState.textView.setMaxLines(Integer.MAX_VALUE);
+            textViewState.isExpand = true;
         }
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(leftHeight, rightHeight);
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (int) animation.getAnimatedValue();
-                textViewState.textView.setHeight(value);
-            }
-        });
+    }
 
-        valueAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (leftHeight > rightHeight) {
-                    textViewState.textView.setMaxLines(TEXT_MAX_LINES);
-                    textViewState.textView.setEllipsize(TextUtils.TruncateAt.END);
-                }
-                canAnimate = true;
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        valueAnimator.setDuration(TEXT_ANIMATE_DURATION);
-        canAnimate = false;
-        valueAnimator.start();
+    private void animateTextView(final TextViewState textViewState) {
+//        if (!canAnimate) {
+//            return;
+//        }
+//        if (!textViewState.hasGetLinesHeight) {
+//            textViewState.linesHeight = textViewState.textView.getMeasuredHeight();
+//            textViewState.hasGetLinesHeight = true;
+//        }
+//        int nowHeight = textViewState.textView.getMeasuredHeight();
+//        final int leftHeight;
+//        final int rightHeight;
+//        if (nowHeight < textViewState.allHeight) {
+//            leftHeight = textViewState.linesHeight;
+//            rightHeight = textViewState.allHeight;
+//        } else {
+//            leftHeight = textViewState.allHeight;
+//            rightHeight = textViewState.linesHeight;
+//        }
+//        ValueAnimator valueAnimator = ValueAnimator.ofInt(leftHeight, rightHeight);
+//        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                int value = (int) animation.getAnimatedValue();
+//                textViewState.textView.setHeight(value);
+//            }
+//        });
+//
+//        valueAnimator.addListener(new Animator.AnimatorListener() {
+//            @Override
+//            public void onAnimationStart(Animator animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                if (leftHeight > rightHeight) {
+//                    textViewState.textView.setMaxLines(TEXT_MAX_LINES);
+//                    textViewState.textView.setEllipsize(TextUtils.TruncateAt.END);
+//                }
+//                canAnimate = true;
+//            }
+//
+//            @Override
+//            public void onAnimationCancel(Animator animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animator animation) {
+//
+//            }
+//        });
+//        valueAnimator.setDuration(TEXT_ANIMATE_DURATION);
+//        canAnimate = false;
+//        valueAnimator.start();
     }
 
 }

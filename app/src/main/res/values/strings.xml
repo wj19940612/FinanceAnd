@@ -525,7 +525,7 @@
     <string name="is_already_latest_version">已经是最新版本了</string>
 
 
-    <string name="battle_list_ingot_number">元宝:   %1$s</string>
+    <string name="battle_list_ingot_number">元宝:%1$s</string>
 
     <!--金融水平测试 -->
     <string name="level_test_title">测测你的金融水平</string>
@@ -779,7 +779,7 @@
     <string name="accuracy_">准确率：%1$s</string>
     <string name="fight_again">再战一局</string>
     <string name="go_to_normal_battle">去普通场</string>
-    
+
     <!-- 我的问答-->
     <string name="you_not_has_question">你还未提问</string>
     <string name="this_will_show_your_question">在这里会显示你的提问</string>
@@ -792,7 +792,7 @@
     <!--我的收藏-->
     <string name="you_not_has_article_collection">暂无文章收藏</string>
     <string name="collect_favorite_articles_here">在这里收藏喜欢的文章</string>
-    <string name="look_report">查看日报</string>
+    <string name="look_report">查看要闻</string>
     <string name="collect">收藏</string>
 
     <string name="you_not_has_comment_collection">暂无提问收藏</string>
@@ -880,11 +880,16 @@
     <string name="look_my_rank">查看我的排名</string>
     <string name="please_retry">请重试</string>
     <string name="broadcast">广播</string>
+    <string name="broadcast_detail">广播详情</string>
+    <string name="_month">%1$s月</string>
     <string name="look_all">查看全部</string>
     <string name="add_icon">+</string>
     <string name="add_text">添加</string>
     <string name="default_user_data">暂无用户数据</string>
     <string name="real_time_news">实时快讯</string>
     <string name="more">更多</string>
-    <string name="welcome_lemi">Hi,欢迎来到乐米金融~</string>
+    <string name="welcome_lemi">Hi，欢迎来到乐米金融~</string>
+    <string name="hello_morning">上午好，%1$s</string>
+    <string name="hello_afternoon">下午好，%1$s</string>
+    <string name="hello_evening">晚上好，%1$s</string>
 </resources>

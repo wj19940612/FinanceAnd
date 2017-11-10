@@ -36,8 +36,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.R.id.authCode;
-import static com.sbai.finance.net.Resp.CODE_NO_BIND_WE_CHAT;
 
 public class LoginActivity extends WeChatActivity {
 
@@ -51,7 +49,7 @@ public class LoginActivity extends WeChatActivity {
     EditText mPhoneNumber;
     @BindView(R.id.phoneNumberClear)
     ImageView mPhoneNumberClear;
-    @BindView(authCode)
+    @BindView(R.id.authCode)
     EditText mAuthCode;
     @BindView(R.id.getAuthCode)
     TextView mGetAuthCode;
@@ -92,7 +90,11 @@ public class LoginActivity extends WeChatActivity {
         if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
             mPhoneNumber.setText(LocalUser.getUser().getPhone());
             formatPhoneNumber();
+            mPhoneNumber.clearFocus();
+            mPassword.requestFocus();
             mGetAuthCode.setEnabled(checkObtainAuthCodeEnable());
+        } else {
+            mPhoneNumber.requestFocus();
         }
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
@@ -345,7 +347,7 @@ public class LoginActivity extends WeChatActivity {
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
-                        if (failedResp.getCode() == CODE_NO_BIND_WE_CHAT) {
+                        if (failedResp.getCode() == Resp.CODE_NO_BIND_WE_CHAT) {
                             updateBindPhoneViews();
                         }
                     }
@@ -379,6 +381,12 @@ public class LoginActivity extends WeChatActivity {
             mPassword.setVisibility(View.VISIBLE);
             mPasswordLoginOperations.setVisibility(View.VISIBLE);
             mAuthCode.setText("");
+            String phoneNumber = mPhoneNumber.getText().toString();
+            if (!TextUtils.isEmpty(phoneNumber)) {
+                mAuthCode.requestFocus();
+            } else {
+                mPhoneNumber.requestFocus();
+            }
         } else {
             mPageTitle.setText(R.string.auth_code_login);
             mLoginSwitchTop.setText(R.string.password_login);
@@ -386,6 +394,12 @@ public class LoginActivity extends WeChatActivity {
             mPassword.setVisibility(View.GONE);
             mPasswordLoginOperations.setVisibility(View.GONE);
             mPassword.setPassword("");
+            String phoneNumber = mPhoneNumber.getText().toString();
+            if (!TextUtils.isEmpty(phoneNumber)) {
+                mPassword.requestFocus();
+            } else {
+                mPhoneNumber.requestFocus();
+            }
         }
     }
 

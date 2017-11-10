@@ -892,7 +892,6 @@ public class BattleListActivity extends BaseActivity implements
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equalsIgnoreCase(LoginActivity.ACTION_LOGIN_SUCCESS)) {
                 updateAvatar();
-                requestUserFindInfo();
                 requestCurrentBattle();
             }
             if (intent.getAction().equalsIgnoreCase(CreateBattleActivity.CREATE_SUCCESS_ACTION)
@@ -901,7 +900,6 @@ public class BattleListActivity extends BaseActivity implements
                 requestBattleList();
                 if (LocalUser.getUser().isLogin()) {
                     requestCurrentBattle();
-                    requestUserFindInfo();
                 }
             }
         }

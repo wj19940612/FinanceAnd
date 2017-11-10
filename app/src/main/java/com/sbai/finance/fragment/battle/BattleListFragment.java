@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.arena.ArenaActivity;
+import com.sbai.finance.activity.arena.RewardActivity;
 import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.battle.BattleHisRecordActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -81,7 +81,7 @@ public class BattleListFragment extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ArenaActivity) {
+        if (context instanceof RewardActivity) {
             mOnFragmentRecycleViewScrollListener = (OnFragmentRecycleViewScrollListener) context;
         }
     }
@@ -284,12 +284,12 @@ public class BattleListFragment extends BaseFragment {
             }
         }
         if (!futureVersus.hasMore()) {
+            mHasMoreData = false;
             if (mArenaBattleListAdapter.getItemCount() > 0) {
                 Battle battle = new Battle();
                 battle.setType(ArenaBattleListAdapter.ITEM_TYPE_FOOTER_VIEW);
                 mArenaBattleListAdapter.add(battle);
             }
-            mHasMoreData = false;
         } else if (!futureVersus.getList().isEmpty()) {
             mHasMoreData = true;
             mLocationTime = futureVersus.getList().get(futureVersus.getList().size() - 1).getCreateTime();

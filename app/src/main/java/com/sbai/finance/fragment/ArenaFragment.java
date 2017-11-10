@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -15,7 +16,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.arena.ArenaActivity;
+import com.sbai.finance.activity.arena.RewardActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
@@ -41,7 +42,7 @@ import butterknife.Unbinder;
  * 竞技场
  */
 
-public class ArenaFragment extends BaseFragment {
+public class ArenaFragment extends BaseFragment implements View.OnTouchListener {
 
     private static final int BREATHE_ANIMATION_DURATION = 1500;
 
@@ -69,6 +70,13 @@ public class ArenaFragment extends BaseFragment {
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mMoneyRewardArena.setOnTouchListener(this);
+        mGeneralBattleBanner.setOnTouchListener(this);
+    }
 
     @Override
     public void onResume() {
@@ -85,7 +93,7 @@ public class ArenaFragment extends BaseFragment {
                     @Override
                     protected void onRespSuccessData(ArenaInfo data) {
                         if (!data.isArenaActivityOver()) {
-                            Launcher.with(getActivity(), ArenaActivity.class).execute();
+                            Launcher.with(getActivity(), RewardActivity.class).execute();
                         } else {
                             ToastUtil.show("活动未开启");
                         }
@@ -167,5 +175,23 @@ public class ArenaFragment extends BaseFragment {
                 , 0.75f,
                 ContextCompat.getColor(getActivity(), R.color.yellowAssist));
         mNameAndIngot.setText(nameAndIngot);
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (motionEvent.getAction()) {
+            case MotionEvent.ACTION_UP:
+                mGeneralBattleBanner.setAlpha(1f);
+                mMoneyRewardArena.setAlpha(1f);
+                break;
+            case MotionEvent.ACTION_DOWN:
+                if (view.getId() == R.id.generalBattleBanner) {
+                    mGeneralBattleBanner.setAlpha(0.5f);
+                } else {
+                    mMoneyRewardArena.setAlpha(0.5f);
+                }
+                break;
+        }
+        return false;
     }
 }
