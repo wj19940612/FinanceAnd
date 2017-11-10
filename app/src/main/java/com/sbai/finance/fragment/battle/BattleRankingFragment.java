@@ -102,6 +102,11 @@ public class BattleRankingFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        requestArenaAwardRankingData();
+    }
 
     @Override
     public void onDestroyView() {

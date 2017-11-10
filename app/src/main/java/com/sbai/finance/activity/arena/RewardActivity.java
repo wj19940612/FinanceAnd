@@ -621,16 +621,8 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 mViperPosition = position;
                 if (mArenaActivityAndUserStatus != null && mArenaActivityAndUserStatus.isApplyed()) {
                     if (position == 0) {
-                        BattleListFragment battleListFragment = getBattleListFragment();
-                        if (battleListFragment != null) {
-                            battleListFragment.refresh();
-                        }
                         mQuickMatch.setVisibility(View.VISIBLE);
                     } else {
-                        BattleRankingFragment battleRankingFragment = getBattleRankingFragment();
-                        if (battleRankingFragment != null) {
-                            battleRankingFragment.requestArenaAwardRankingData();
-                        }
                         mQuickMatch.setVisibility(View.GONE);
                     }
                 }
