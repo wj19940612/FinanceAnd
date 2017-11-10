@@ -186,6 +186,10 @@ public class HomeTitleView extends RelativeLayout {
         mIndexClickListener = indexClickListener;
     }
 
+    public Map<String,FutureData> getFutureDataMap(){
+        return futureDataMap;
+    }
+
     public HomeTitleView(Context context) {
         this(context, null);
     }
@@ -205,8 +209,17 @@ public class HomeTitleView extends RelativeLayout {
         ButterKnife.bind(this);
     }
 
-    public void putNewFutureData(FutureData futureData) {
-        futureDataMap.put(futureData.getInstrumentId(), futureData);
+//    public void putNewFutureData(FutureData futureData) {
+//        futureDataMap.put(futureData.getInstrumentId(), futureData);
+//        updateFutureOrSelectData();
+//    }
+
+    public void putNewFutureData(List<FutureData> data) {
+        if(data != null && data.size() != 0){
+            for(FutureData futureData : data){
+                futureDataMap.put(futureData.getInstrumentId(),futureData);
+            }
+        }
         updateFutureOrSelectData();
     }
 
@@ -495,13 +508,13 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     public class SelectFuture {
-        private Variety leftVarity;
-        private Variety centerVarity;
-        private Variety rightVarity;
+        public Variety leftVarity;
+        public Variety centerVarity;
+        public Variety rightVarity;
     }
 
     //当前只显示美原油，美黄金，恒指
-    private SelectFuture selectFutureData(List<Variety> data) {
+    public SelectFuture selectFutureData(List<Variety> data) {
         SelectFuture selectFuture = new SelectFuture();
         for (Variety variety : data) {
             if (variety.getVarietyType().equals(MEIYUANYOU)) {
@@ -644,21 +657,21 @@ public class HomeTitleView extends RelativeLayout {
             rateChange = "+" + rateChange;
             ratePrice = "+" + ratePrice;
         }
-        if (data.isDelist()) {
-            indexValue.setText("停牌");
-            indexValue.setTextColor(greyColor);
-            leftIndexPer.setText(ratePrice);
-            rightIndexPer.setText(rateChange);
-            leftIndexPer.setTextColor(greyColor);
-            rightIndexPer.setTextColor(greyColor);
-        } else {
+//        if (data.isDelist()) {
+//            indexValue.setText("停牌");
+//            indexValue.setTextColor(greyColor);
+//            leftIndexPer.setText(ratePrice);
+//            rightIndexPer.setText(rateChange);
+//            leftIndexPer.setTextColor(greyColor);
+//            rightIndexPer.setTextColor(greyColor);
+//        } else {
             indexValue.setTextColor(color);
             indexValue.setText(data.getLastPrice());
             leftIndexPer.setText(ratePrice);
             rightIndexPer.setText(rateChange);
             leftIndexPer.setTextColor(color);
             rightIndexPer.setTextColor(color);
-        }
+//        }
     }
 
     public void updateFutureMarketData() {
