@@ -31,6 +31,7 @@ import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.leaderboard.LeaderThreeRank;
 import com.sbai.finance.model.stock.StockData;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -52,6 +53,7 @@ import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +65,9 @@ import static com.sbai.finance.model.leaderboard.LeaderThreeRank.SAVANT;
 import static com.sbai.finance.view.HomeTitleView.BUTTON_HUSHEN;
 import static com.sbai.finance.view.HomeTitleView.BUTTON_QIHUO;
 import static com.sbai.finance.view.HomeTitleView.BUTTON_ZIXUAN;
+import static com.sbai.finance.view.HomeTitleView.HENGZHI;
+import static com.sbai.finance.view.HomeTitleView.MEIHUANGJIN;
+import static com.sbai.finance.view.HomeTitleView.MEIYUANYOU;
 
 /**
  * Created by Administrator on 2017\10\26 0026.
@@ -72,8 +77,11 @@ public class HomePageFragment extends BaseFragment {
     public static final int BANNER_TYPE_BANNER = 0;
     public static final int BANNER_TYPE_BUSINESS_BANNER = 1;
     public static final int TIME_ONE = 1000;//1次轮询为1s
+    public static final int TIME_HANDLER_ONE = 1;
     public static final int TIME_HANDLER_THREE = 3;//3次轮询时间
     public static final int TIME_HANDLER_TEN = 10;
+    public static final int TIME_HANDLER_FIVE = 5;
+
     Unbinder unbinder;
     @BindView(R.id.homeTitleView)
     HomeTitleView mHomeTitleView;
@@ -88,7 +96,6 @@ public class HomePageFragment extends BaseFragment {
     @BindView(R.id.importantNewsView)
     ImportantNewsView mImportantNewsView;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -101,22 +108,17 @@ public class HomePageFragment extends BaseFragment {
     public void onTimeUp(int count) {
         if (count % TIME_HANDLER_THREE == 0) {
             mBanner.nextAdvertisement();
-            getIndexData();
         } else if (count % TIME_HANDLER_TEN == 0) {
+
+        } else if (count % TIME_HANDLER_FIVE == 0) {
+            getIndexData();
             request7NewsData();
             requestImportantNewsData();
             requestBusniessBannerData();
+            requestLeaderBoardData();
         }
     }
 
-    private DataReceiveListener mDataReceiveListener = new DataReceiveListener<Resp<FutureData>>() {
-        @Override
-        public void onDataReceive(Resp<FutureData> data) {
-            if (data.getCode() == MarketSubscribe.REQ_QUOTA && data.hasData()) {
-                mHomeTitleView.putNewFutureData(data.getData());
-            }
-        }
-    };
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -218,6 +220,7 @@ public class HomePageFragment extends BaseFragment {
         {
             @Override
             public void onBannerClick(Banner information) {
+                requestClickBanner(information.getId());
                 if (information.isH5Style()) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, information.getContent())
@@ -235,6 +238,7 @@ public class HomePageFragment extends BaseFragment {
         {
             @Override
             public void onBannerClick(Banner information) {
+                requestClickBanner(information.getId());
                 if (information.isH5Style()) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, information.getContent())
@@ -315,6 +319,7 @@ public class HomePageFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         startScheduleJob(TIME_ONE);
+        TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
         requestGreetings();
         getRefreshData();
         requestRadioData();
@@ -323,14 +328,15 @@ public class HomePageFragment extends BaseFragment {
         requestLeaderBoardData();
         request7NewsData();
         requestImportantNewsData();
-        MarketSubscriber.get().subscribeAll();
-        MarketSubscriber.get().addDataReceiveListener(mDataReceiveListener);
+//        MarketSubscriber.get().subscribeAll();
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isAdded()) {
+            startScheduleJob(TIME_ONE);
+            TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
             requestGreetings();
             getRefreshData();
             requestRadioData();
@@ -339,6 +345,9 @@ public class HomePageFragment extends BaseFragment {
             requestLeaderBoardData();
             request7NewsData();
             requestImportantNewsData();
+        } else if (!isVisibleToUser && isAdded()) {
+            stopScheduleJob();
+            API.cancel(TAG);
         }
     }
 
@@ -346,8 +355,7 @@ public class HomePageFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         stopScheduleJob();
-        MarketSubscriber.get().removeDataReceiveListener(mDataReceiveListener);
-        MarketSubscriber.get().unSubscribeAll();
+        API.cancel(TAG);
     }
 
     //只更新部分字符,用于轮询数据
@@ -402,7 +410,6 @@ public class HomePageFragment extends BaseFragment {
                         if (result != null && result.size() != 0) {
                             mHomeTitleView.updateStockOrSelectData(result);
                         }
-//                        mHomeTitleView.updateStockIndexMarketData(result);
                     }
                 }).fireFree();
     }
@@ -416,6 +423,7 @@ public class HomePageFragment extends BaseFragment {
                     protected void onRespSuccessData(List<Variety> data) {
                         if (data != null && data.size() != 0) {
                             mHomeTitleView.updateFutureData(data);
+                            requestFutureMarketData(data);
                         }
                     }
 
@@ -428,9 +436,27 @@ public class HomePageFragment extends BaseFragment {
                 }).fireFree();
     }
 
+    private void requestFutureMarketData(List<Variety> data) {
+        if (data == null || data.isEmpty()) return;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Variety variety : data) {
+            stringBuilder.append(variety.getContractsCode()).append(",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        Client.getFutureMarketData(stringBuilder.toString()).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<FutureData>>, List<FutureData>>() {
+                    @Override
+                    protected void onRespSuccessData(List<FutureData> data) {
+                        mHomeTitleView.putNewFutureData(data);
+                    }
+                })
+                .fireFree();
+    }
+
     private void requestOptionalData() {
         //这里只需要3个数据，所以请求的page = 0;
         if (!LocalUser.getUser().isLogin()) {
+            mHomeTitleView.forceInitSelectUI();
             return;
         }
         int page = 0;
@@ -438,7 +464,7 @@ public class HomePageFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
-                        if (data != null && data.size() != 0) {
+                        if (data != null) {
                             mHomeTitleView.updateSelectData(data);
                             updateOptionInfo((ArrayList<Variety>) data);
                         }
@@ -447,7 +473,9 @@ public class HomePageFragment extends BaseFragment {
     }
 
     private void updateOptionInfo(ArrayList<Variety> data) {
-        requestMarketData(data);
+        if (data != null && data.size() > 0) {
+            requestMarketData(data);
+        }
     }
 
     private void requestMarketData(ArrayList<Variety> data) {
@@ -460,7 +488,7 @@ public class HomePageFragment extends BaseFragment {
                 futures.add(variety);
             }
         }
-//        requestFutureMarketData(futures);
+        requestFutureMarketData(futures);
         requestStockIndexMarketData(stocks);
     }
 
@@ -578,6 +606,10 @@ public class HomePageFragment extends BaseFragment {
                         requestLeaderBoardData();
                     }
                 }).fireFree();
+    }
+
+    private void requestClickBanner(String bannerId) {
+        Client.requestClickBanner(bannerId).setTag(TAG).fireFree();
     }
 
     @Override
