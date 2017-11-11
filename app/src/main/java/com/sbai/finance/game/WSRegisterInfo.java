@@ -1,4 +1,4 @@
-package com.sbai.finance.websocket;
+package com.sbai.finance.game;
 
 import com.sbai.finance.BuildConfig;
 

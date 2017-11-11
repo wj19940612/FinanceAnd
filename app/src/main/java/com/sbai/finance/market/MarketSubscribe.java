@@ -1,4 +1,4 @@
-package com.sbai.finance.websocket.market;
+package com.sbai.finance.market;
 
 public interface MarketSubscribe {
 

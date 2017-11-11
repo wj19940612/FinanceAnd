@@ -1,4 +1,4 @@
-package com.sbai.finance.websocket.callback;
+package com.sbai.finance.game.callback;
 
 import com.google.gson.internal.$Gson$Types;
 import com.sbai.finance.BuildConfig;

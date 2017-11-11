@@ -33,7 +33,7 @@ import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.autofit.AutofitTextView;
-import com.sbai.finance.websocket.WsClient;
+import com.sbai.finance.game.WsClient;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.CookieManger;
 

@@ -67,12 +67,12 @@ import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.finance.view.dialog.UserArenaExchangeResultDialog;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
-import com.sbai.finance.websocket.PushCode;
-import com.sbai.finance.websocket.WSMessage;
-import com.sbai.finance.websocket.WSPush;
-import com.sbai.finance.websocket.WsClient;
-import com.sbai.finance.websocket.callback.WSCallback;
-import com.sbai.finance.websocket.cmd.ArenaQuickMatchLauncher;
+import com.sbai.finance.game.PushCode;
+import com.sbai.finance.game.WSMessage;
+import com.sbai.finance.game.WSPush;
+import com.sbai.finance.game.WsClient;
+import com.sbai.finance.game.callback.WSCallback;
+import com.sbai.finance.game.cmd.ArenaQuickMatchLauncher;
 import com.sbai.glide.GlideApp;
 
 import java.util.List;

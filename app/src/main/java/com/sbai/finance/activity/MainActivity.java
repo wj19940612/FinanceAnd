@@ -34,8 +34,8 @@ import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.view.ScrollableViewPager;
-import com.sbai.finance.websocket.WsClient;
-import com.sbai.finance.websocket.market.MarketSubscriber;
+import com.sbai.finance.game.WsClient;
+import com.sbai.finance.market.MarketSubscriber;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

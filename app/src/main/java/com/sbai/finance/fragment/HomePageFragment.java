@@ -2,7 +2,6 @@ package com.sbai.finance.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +45,9 @@ import com.sbai.finance.view.ImportantNewsView;
 import com.sbai.finance.view.LeaderBoardView;
 import com.sbai.finance.view.SevenHourNewsView;
 import com.sbai.finance.view.VerticalScrollTextView;
-import com.sbai.finance.websocket.market.DataReceiveListener;
-import com.sbai.finance.websocket.market.MarketSubscribe;
-import com.sbai.finance.websocket.market.MarketSubscriber;
+import com.sbai.finance.market.DataReceiveListener;
+import com.sbai.finance.market.MarketSubscribe;
+import com.sbai.finance.market.MarketSubscriber;
 import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;

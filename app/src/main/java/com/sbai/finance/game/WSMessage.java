@@ -1,9 +1,9 @@
-package com.sbai.finance.websocket;
+package com.sbai.finance.game;
 
 import com.google.gson.Gson;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.websocket.callback.WSCallback;
+import com.sbai.finance.game.callback.WSCallback;
 
 import java.util.UUID;
 
