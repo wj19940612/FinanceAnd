@@ -103,7 +103,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:minWidth="30dp"
-            android:textColor="@android:color/white"
+            android:textColor="@color/redPrimary"
             android:textSize="10sp"/>
     </LinearLayout>
 </LinearLayout>

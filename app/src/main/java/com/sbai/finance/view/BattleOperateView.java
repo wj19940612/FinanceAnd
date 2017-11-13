@@ -420,7 +420,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
             orderPrice = FinanceUtil.formatWithScale(order.getOrderPrice(), mVariety.getPriceScale());
         }
         mBuyPrice.setText(orderPrice);
-        mProfit.setText(String.valueOf(0));
+        mProfit.setText(FinanceUtil.formatWithScale(0));
     }
 
     private void showOpenPositionView() {
@@ -451,9 +451,12 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
             double profit = getProfit(futureData, mHoldingOrder);
             if (profit >= 0) {
                 mProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
-                mProfit.setText("+" + FinanceUtil.formatWithScale(profit));
             } else {
                 mProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.greenAssist));
+            }
+            if (profit > 0) {
+                mProfit.setText("+" + FinanceUtil.formatWithScale(profit));
+            } else {
                 mProfit.setText(FinanceUtil.formatWithScale(profit));
             }
         }
