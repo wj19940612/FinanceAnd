@@ -88,6 +88,12 @@ public class BaseFragment extends Fragment implements
         }
     }
 
+    public void revertTimerCount(){
+        if(mTimerHandler != null){
+            mTimerHandler.revertCount();
+        }
+    }
+
     /**
      *  友盟统计埋点
      * @param eventKey

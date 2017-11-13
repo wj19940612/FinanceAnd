@@ -376,6 +376,7 @@ public class HomePageFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         stopScheduleJob();
+        revertTimerCount();
         API.cancel(TAG);
     }
 
