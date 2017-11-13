@@ -1056,6 +1056,11 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                             ToastUtil.show(failedResp.getMsg());
                         }
                     }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
+                    }
                 })
                 .fireFree();
     }
