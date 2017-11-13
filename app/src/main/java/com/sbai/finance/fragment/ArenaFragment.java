@@ -30,6 +30,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
@@ -146,18 +147,22 @@ public class ArenaFragment extends BaseFragment implements View.OnTouchListener 
         switch (view.getId()) {
             case R.id.textArenaKnowledge:
             case R.id.iconArenaKnowledge:
+                umengEventCount(UmengCountEventId.ARENA_KNOWLEDGE);
                 Launcher.with(getActivity(), WebActivity.class)
                         .putExtra(WebActivity.EX_URL, Client.ARENA_KNOWLEDGE)
                         .execute();
                 break;
             case R.id.moneyRewardArena:
+                umengEventCount(UmengCountEventId.ARENA_MRPK);
                 updateArenaActivityStatus();
                 break;
             case R.id.generalBattleBanner:
+                umengEventCount(UmengCountEventId.ARENA_FUTURE_PK);
                 Launcher.with(getActivity(), BattleListActivity.class).execute();
                 break;
             case R.id.avatar:
             case R.id.nameAndIngot:
+                umengEventCount(UmengCountEventId.ARENA_INGOT);
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), WalletActivity.class).execute();
                 } else {

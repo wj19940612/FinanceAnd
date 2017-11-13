@@ -46,8 +46,8 @@ import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
-import com.sbai.finance.websocket.market.DataReceiveListener;
-import com.sbai.finance.websocket.market.MarketSubscriber;
+import com.sbai.finance.market.DataReceiveListener;
+import com.sbai.finance.market.MarketSubscriber;
 import com.umeng.socialize.UMShareAPI;
 
 import java.math.BigDecimal;
@@ -61,7 +61,7 @@ import static com.sbai.finance.R.id.klineView;
 import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
-import static com.sbai.finance.websocket.market.MarketSubscribe.REQ_QUOTA;
+import static com.sbai.finance.market.MarketSubscribe.REQ_QUOTA;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public class FutureTradeActivity extends BaseActivity {
@@ -346,7 +346,7 @@ public class FutureTradeActivity extends BaseActivity {
 
             @Override
             public void onTradeButtonClick() {
-                umengEventCount(UmengCountEventId.DISCOVERY_FUTURES_TRADE);
+                umengEventCount(UmengCountEventId.FIND_FUTURE_TRADE);
                 TradeOptionDialogFragment.newInstance().show(getSupportFragmentManager());
             }
         });
@@ -600,7 +600,7 @@ public class FutureTradeActivity extends BaseActivity {
 //        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES);
+//                umengEventCount(UmengCountEventId.FIND_FUTURE_SHARE);
 //                ShareDialogFragment
 //                        .newInstance()
 //                        .setShareContent(shareTitle, shareDescribe, shareUrl)
@@ -609,13 +609,13 @@ public class FutureTradeActivity extends BaseActivity {
 //                            public void onSharePlatformClick(ShareDialogFragment.SHARE_PLATFORM platform) {
 //                                switch (platform) {
 //                                    case SINA_WEIBO:
-//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES_WEIBO);
+//                                        umengEventCount(UmengCountEventId.FIND_FUTURE_SHARE_SINA);
 //                                        break;
 //                                    case WECHAT_FRIEND:
-//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES_FRIEND);
+//                                        umengEventCount(UmengCountEventId.FIND_FUTURE_SHARE_FRIEND);
 //                                        break;
 //                                    case WECHAT_CIRCLE:
-//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES_CIRCLE);
+//                                        umengEventCount(UmengCountEventId.FIND_FUTURE_SHARE_CIRCLE);
 //                                        break;
 //                                }
 //                            }

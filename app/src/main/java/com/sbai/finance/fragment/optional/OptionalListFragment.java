@@ -36,6 +36,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.slidingListView.SlideItem;
 import com.sbai.finance.view.slidingListView.SlideListView;
@@ -279,6 +280,7 @@ public class OptionalListFragment extends BaseFragment implements
     @OnClick(R.id.addOptional)
     public void onClick(View view) {
         if (LocalUser.getUser().isLogin()) {
+            umengEventCount(UmengCountEventId.FIND_OPTIONAL_ADD);
             AddOptionalDialogFragment.newInstance().show(getFragmentManager());
         } else {
             Launcher.with(getActivity(), LoginActivity.class).execute();

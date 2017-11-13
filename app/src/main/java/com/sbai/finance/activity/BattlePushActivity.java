@@ -3,6 +3,8 @@ package com.sbai.finance.activity;
 import android.app.Dialog;
 import android.support.v4.app.FragmentActivity;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.battle.BattleActivity;
@@ -11,15 +13,19 @@ import com.sbai.finance.activity.training.KlineTrainActivity;
 import com.sbai.finance.activity.training.NounExplanationActivity;
 import com.sbai.finance.activity.training.SortQuestionActivity;
 import com.sbai.finance.activity.training.TrainingCountDownActivity;
+import com.sbai.finance.game.PushCode;
+import com.sbai.finance.game.WSPush;
+import com.sbai.finance.game.WsClient;
+import com.sbai.finance.game.callback.OnPushReceiveListener;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.battle.Praise;
+import com.sbai.finance.model.battle.TradeOrder;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.view.SmartDialog;
-import com.sbai.finance.websocket.PushCode;
-import com.sbai.finance.websocket.WSPush;
-import com.sbai.finance.websocket.WsClient;
-import com.sbai.finance.websocket.callback.OnPushReceiveListener;
+
+import java.lang.reflect.Type;
 
 /**
  * Modified by john on 01/11/2017
@@ -42,27 +48,58 @@ public class BattlePushActivity extends StatusBarActivity {
         WsClient.get().removePushReceiveListener(mPushReceiveListener);
     }
 
-    private OnPushReceiveListener<WSPush<Battle>> mPushReceiveListener = new OnPushReceiveListener<WSPush<Battle>>() {
+    private OnPushReceiveListener<WSPush> mPushReceiveListener = new OnPushReceiveListener<WSPush>() {
         @Override
-        public void onPushReceive(WSPush<Battle> battleWSPush) {
-            switch (battleWSPush.getContent().getType()) {
-                case PushCode.BATTLE_JOINED:
-                    if (isShowQuickJoinBattleDialog() && battleWSPush.getContent() != null) {
-                        if (battleWSPush.getContent().getData() != null) {
-                            Battle battle = (Battle) battleWSPush.getContent().getData();
-                            boolean isCreator = battle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId();
-                            if (isCreator) { // 只有创建对战的人才显示弹窗通知
-                                showQuickJoinBattleDialog(battle);
-                            }
-                        }
-                    }
-                    break;
+        public void onPushReceive(WSPush wsPush, String originalData) {
+            int pushType = wsPush.getContent().getType();
+            if (pushType == PushCode.ORDER_CREATED || pushType == PushCode.ORDER_CLOSE) {
+                Type type = new TypeToken<WSPush<TradeOrder>>() {
+                }.getType();
+                WSPush<TradeOrder> tradeOrderWSPush = new Gson().fromJson(originalData, type);
+                onBattleOrdersReceived(tradeOrderWSPush);
+            } else if (pushType == PushCode.USER_PRAISE) {
+                Type type = new TypeToken<WSPush<Praise>>() {
+                }.getType();
+                WSPush<Praise> praiseWSPush = new Gson().fromJson(originalData, type);
+                onBattlePraiseReceived(praiseWSPush);
+            } else {
+                Type type = new TypeToken<WSPush<Battle>>() {
+                }.getType();
+                WSPush<Battle> battleWSPush = new Gson().fromJson(originalData, type);
+                onBattlePushReceived(battleWSPush);
             }
-            onBattlePushReceived(battleWSPush);
         }
     };
 
     protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
+        if (battleWSPush.getContent().getType() == PushCode.BATTLE_JOINED) {
+            if (LocalUser.getUser().isLogin() && isValidPage()) {
+                Battle battle = (Battle) battleWSPush.getContent().getData();
+                boolean isCreator =
+                        battle.getLaunchUser() == LocalUser.getUser().getUserInfo().getId();
+                if (isCreator) { // 只有创建对战的人才显示弹窗通知
+                    showQuickJoinBattleDialog(battle);
+                }
+            }
+        }
+    }
+
+    private boolean isValidPage() {
+        if (getActivity() instanceof SortQuestionActivity
+                || getActivity() instanceof KlineTrainActivity
+                || getActivity() instanceof NounExplanationActivity
+                || getActivity() instanceof JudgeTrainingActivity
+                || getActivity() instanceof TrainingCountDownActivity
+                || getActivity() instanceof BattleActivity) {
+            return false;
+        }
+        return true;
+    }
+
+    protected void onBattlePraiseReceived(WSPush<Praise> praiseWSPush) {
+    }
+
+    protected void onBattleOrdersReceived(WSPush<TradeOrder> tradeOrderWSPush) {
     }
 
     protected void showQuickJoinBattleDialog(final Battle battle) {
@@ -82,18 +119,6 @@ public class BattlePushActivity extends StatusBarActivity {
                 })
                 .setNegative(R.string.cancel)
                 .show();
-    }
-
-    private boolean isShowQuickJoinBattleDialog() {
-        if (getActivity() instanceof SortQuestionActivity
-                || getActivity() instanceof KlineTrainActivity
-                || getActivity() instanceof NounExplanationActivity
-                || getActivity() instanceof JudgeTrainingActivity
-                || getActivity() instanceof TrainingCountDownActivity
-                || getActivity() instanceof BattleActivity) {
-            return false;
-        }
-        return LocalUser.getUser().isLogin();
     }
 
     protected FragmentActivity getActivity() {

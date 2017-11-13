@@ -30,11 +30,24 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.fragment.battle.BattleRecordsFragment;
+import com.sbai.finance.game.GameCode;
+import com.sbai.finance.game.PushCode;
+import com.sbai.finance.game.WSMessage;
+import com.sbai.finance.game.WSPush;
+import com.sbai.finance.game.WsClient;
+import com.sbai.finance.game.callback.WSCallback;
+import com.sbai.finance.game.cmd.QuickMatchLauncher;
+import com.sbai.finance.game.cmd.SubscribeBattle;
+import com.sbai.finance.game.cmd.UnSubscribeBattle;
+import com.sbai.finance.game.cmd.UserPraise;
+import com.sbai.finance.market.DataReceiveListener;
+import com.sbai.finance.market.MarketSubscribe;
+import com.sbai.finance.market.MarketSubscriber;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.battle.Praise;
 import com.sbai.finance.model.battle.TradeOrder;
-import com.sbai.finance.model.battle.TradeOrderClosePosition;
 import com.sbai.finance.model.battle.TradeRecord;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.local.BattleStatus;
@@ -59,19 +72,6 @@ import com.sbai.finance.view.dialog.BattleResultDialog;
 import com.sbai.finance.view.dialog.StartBattleDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.finance.view.slidingTab.HackTabLayout;
-import com.sbai.finance.websocket.GameCode;
-import com.sbai.finance.websocket.PushCode;
-import com.sbai.finance.websocket.WSMessage;
-import com.sbai.finance.websocket.WSPush;
-import com.sbai.finance.websocket.WsClient;
-import com.sbai.finance.websocket.callback.WSCallback;
-import com.sbai.finance.websocket.cmd.QuickMatchLauncher;
-import com.sbai.finance.websocket.cmd.SubscribeBattle;
-import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
-import com.sbai.finance.websocket.cmd.UserPraise;
-import com.sbai.finance.websocket.market.DataReceiveListener;
-import com.sbai.finance.websocket.market.MarketSubscribe;
-import com.sbai.finance.websocket.market.MarketSubscriber;
 import com.sbai.glide.GlideApp;
 
 import java.math.BigDecimal;
@@ -151,6 +151,7 @@ public class BattleActivity extends BaseActivity {
     private NetworkReceiver mNetworkReceiver;
     private OrderRecordListAdapter mOrderRecordListAdapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -206,35 +207,53 @@ public class BattleActivity extends BaseActivity {
         mBattleOperateView.setOnViewClickListener(new BattleOperateView.OnViewClickListener() {
             @Override
             public void onQuickMatchClick() {
-                umengEventCount(UmengCountEventId.WAITING_ROOM_FAST_MATCH);
+                umengEventCount(UmengCountEventId.FUTURE_PK_FAST_MATCH);
 
                 showQuickMatchDialog();
             }
 
             @Override
             public void onCancelBattleClick() {
-                umengEventCount(UmengCountEventId.WAITING_ROOM_CANCEL_BATTLE);
+                umengEventCount(UmengCountEventId.FUTURE_PK_CANCEL_MATCH);
 
                 showCancelBattleDialog();
             }
 
             @Override
             public void onBuyLongClick() {
-                umengEventCount(UmengCountEventId.BATTLE_BULLISH);
+                if (mBattle != null) {
+                    if (mBattle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                        umengEventCount(UmengCountEventId.MRPK_BUY);
+                    } else {
+                        umengEventCount(UmengCountEventId.FUTURE_PK_BUY);
+                    }
+                }
 
                 createOrder(TradeOrder.DIRECTION_LONG);
             }
 
             @Override
             public void onSellShortClick() {
-                umengEventCount(UmengCountEventId.BATTLE_BEARISH);
+                if (mBattle != null) {
+                    if (mBattle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                        umengEventCount(UmengCountEventId.MRPK_SELL);
+                    } else {
+                        umengEventCount(UmengCountEventId.FUTURE_PK_SELL);
+                    }
+                }
 
                 createOrder(TradeOrder.DIRECTION_SHORT);
             }
 
             @Override
             public void onClosePositionClick() {
-                umengEventCount(UmengCountEventId.BATTLE_CLOSE_POSITION);
+                if (mBattle != null) {
+                    if (mBattle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                        umengEventCount(UmengCountEventId.MRPK_CLEAR);
+                    } else {
+                        umengEventCount(UmengCountEventId.FUTURE_PK_CLEAR);
+                    }
+                }
 
                 TradeOrder ownerOrder = mBattleOperateView.getHoldingOrder();
                 if (ownerOrder != null) {
@@ -244,10 +263,28 @@ public class BattleActivity extends BaseActivity {
 
             @Override
             public void onPraiseClick(boolean isOwner) {
+                if (mBattle != null) {
+                    if (mBattle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                        umengEventCount(UmengCountEventId.MRPK_PRAISE);
+                    } else {
+                        umengEventCount(UmengCountEventId.FUTURE_PK_PRAISE);
+                    }
+                }
                 if (isOwner) {
                     requestAddBattlePraise(mBattle.getLaunchUser());
                 } else {
                     requestAddBattlePraise(mBattle.getAgainstUser());
+                }
+            }
+
+            @Override
+            public void onAvatarClick() {
+                if (mBattle != null) {
+                    if (mBattle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                        umengEventCount(UmengCountEventId.MRPK_USER_AVATAR);
+                    } else {
+                        umengEventCount(UmengCountEventId.FUTURE_PK_USER_AVATAR);
+                    }
                 }
             }
         });
@@ -567,14 +604,15 @@ public class BattleActivity extends BaseActivity {
 
     @Override
     protected void onBattlePushReceived(WSPush<Battle> push) {
-        if (push == null || push.getContent() == null || push.getContent().getData() == null)
-            return;
+        super.onBattlePushReceived(push);
 
         WSPush.PushData pushData = push.getContent();
         Battle battle = (Battle) pushData.getData();
-        if (battle.getId() != mBattle.getId() && pushData.getType() == PushCode.BATTLE_JOINED) { // 观战，查看对战记录
-            if (mBattleStatus >= STARTED_OBSERVER && mBattleStatus <= OVER_OBSERVER) {
-                showQuickJoinBattleDialog(battle);
+        if (battle.getId() != mBattle.getId()) { // 观战，查看对战记录
+            if (pushData.getType() == PushCode.BATTLE_JOINED) {
+                if (mBattleStatus >= STARTED_OBSERVER && mBattleStatus <= OVER_OBSERVER) {
+                    showQuickJoinBattleDialog(battle);
+                }
             }
         } else { // 有人加入，对战结束，订单操作，匹配玩家
             int pushType = pushData.getType();
@@ -602,35 +640,6 @@ public class BattleActivity extends BaseActivity {
                 return;
             }
 
-            // 订单的 battle 没有 Battle 相关内容，不能 mBattle = battle
-            if (pushType == PushCode.ORDER_CREATED || pushType == PushCode.ORDER_CLOSE) {
-                if (mBattleStatus >= STARTED_OWNER && mBattleStatus <= STARTED_OBSERVER) {
-                    TradeRecord record = TradeRecord.getRecord(battle);
-                    updateBattleRecordListView(record, battle.getOptLogCount());
-
-                    TradeOrder order = TradeOrder.getTradeOrder(battle);
-                    updateHoldingOrders(order, pushType == PushCode.ORDER_CLOSE);
-
-                    if (pushType == PushCode.ORDER_CLOSE) {
-                        updateBattle(UPDATE_BATTLE);
-                    }
-                }
-                return;
-            }
-
-            // 赞的 battle 没有 Battle 相关内容，不能 mBattle = battle
-            if (pushType == PushCode.USER_PRAISE) {
-                if (mBattleStatus >= STARTED_OWNER && mBattleStatus <= STARTED_OBSERVER) {
-                    if (battle.getPraiseUserId() == mBattle.getLaunchUser()) {
-                        mBattle.setLaunchPraise(battle.getCurrentPraise());
-                    } else {
-                        mBattle.setAgainstPraise(battle.getCurrentPraise());
-                    }
-                    mBattleOperateView.setPraise(mBattle.getLaunchPraise(), mBattle.getAgainstPraise());
-                }
-                return;
-            }
-
             if (pushType == PushCode.QUICK_MATCH_TIMEOUT && mBattleStatus == CREATED_OWNER) {
                 dismissAllDialog();
                 showOvertimeMatchDialog();
@@ -641,6 +650,40 @@ public class BattleActivity extends BaseActivity {
                 if (battle.getId() == mBattle.getId()) {
                     showRoomOvertimeDialog();
                 }
+            }
+        }
+    }
+
+    @Override
+    protected void onBattlePraiseReceived(WSPush<Praise> praiseWSPush) {
+        super.onBattlePraiseReceived(praiseWSPush);
+        Praise praise = (Praise) praiseWSPush.getContent().getData();
+        if (praise.getBattleId() != mBattle.getId()) return;
+
+        if (mBattleStatus >= STARTED_OWNER && mBattleStatus <= STARTED_OBSERVER) {
+            if (praise.getPraiseUserId() == mBattle.getLaunchUser()) {
+                mBattle.setLaunchPraise(praise.getCurrentPraise());
+            } else {
+                mBattle.setAgainstPraise(praise.getCurrentPraise());
+            }
+            mBattleOperateView.setPraise(mBattle.getLaunchPraise(), mBattle.getAgainstPraise());
+        }
+    }
+
+    @Override
+    protected void onBattleOrdersReceived(WSPush<TradeOrder> tradeOrderWSPush) {
+        super.onBattleOrdersReceived(tradeOrderWSPush);
+        TradeOrder tradeOrder = (TradeOrder) tradeOrderWSPush.getContent().getData();
+        if (tradeOrder.getBattleId() != mBattle.getId()) return;
+
+        if (mBattleStatus >= STARTED_OWNER && mBattleStatus <= STARTED_OBSERVER) {
+            TradeRecord record = TradeRecord.getRecord(tradeOrder);
+            updateBattleRecordListView(record, tradeOrder.getOptLogCount());
+
+            updateHoldingOrders(tradeOrder, tradeOrder.getUnwindType() > 0);
+
+            if (tradeOrder.getUnwindType() > 0) {
+                updateBattle(UPDATE_BATTLE);
             }
         }
     }
@@ -1035,7 +1078,7 @@ public class BattleActivity extends BaseActivity {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         ToastUtil.show(failedResp.getMsg());
-                        if (failedResp.getCode() == GameCode.ORDER_EXISIT) {
+                        if (failedResp.getCode() == GameCode.ORDER_EXISTED) {
                             requestOrderOperationHistory();
                             requestHoldingOrders();
                         }
@@ -1045,15 +1088,15 @@ public class BattleActivity extends BaseActivity {
 
     private void closePosition(int oderId) {
         Client.closePosition(mBattle.getId(), oderId).setTag(TAG)
-                .setCallback(new Callback<Resp<TradeOrderClosePosition>>() {
+                .setCallback(new Callback<Resp<TradeOrder>>() {
                     @Override
-                    protected void onRespSuccess(Resp<TradeOrderClosePosition> resp) {
+                    protected void onRespSuccess(Resp<TradeOrder> resp) {
                     }
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         ToastUtil.show(failedResp.getMsg());
-                        if (failedResp.getCode() == GameCode.ORDER_CLOSE) {
+                        if (failedResp.getCode() == GameCode.ORDER_CLOSED) {
                             requestOrderOperationHistory();
                             requestHoldingOrders();
                         }

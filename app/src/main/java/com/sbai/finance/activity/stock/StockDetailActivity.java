@@ -32,7 +32,7 @@ public class StockDetailActivity extends StockTradeActivity {
             public void onPageSelected(int position) {
                 pagePosition = position;
                 if (position == 0) {
-                    umengEventCount(UmengCountEventId.DISCOVERY_NEWS);
+                    umengEventCount(UmengCountEventId.FIND_STOCK_NEWS);
                     StockNewsFragment stockNewsFragment = getStockNewsFragment();
                     if (stockNewsFragment != null) {
                         stockNewsFragment.requestStockNewsList(0);
@@ -40,7 +40,7 @@ public class StockDetailActivity extends StockTradeActivity {
                 }
 
                 if (position == 1) {
-                    umengEventCount(UmengCountEventId.DISCOVERY_FINANCE);
+                    umengEventCount(UmengCountEventId.FIND_STOCK_FINANCE);
                     FinanceFragment financeFragment = getFinanceFragment();
                     if (financeFragment != null) {
                         financeFragment.requestCompanyAnnualReport(0);

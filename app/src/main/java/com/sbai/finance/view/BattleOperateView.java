@@ -24,6 +24,7 @@ import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.view.praise.PraiseView;
 import com.sbai.glide.GlideApp;
 
 /**
@@ -109,6 +110,11 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
                     mOnViewClickListener.onPraiseClick(false);
                 }
                 break;
+            case R.id.ownerAvatar:
+            case R.id.challengerAvatar:
+                if (mOnViewClickListener != null) {
+                    mOnViewClickListener.onAvatarClick();
+                }
         }
     }
 
@@ -124,6 +130,8 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         void onClosePositionClick();
 
         void onPraiseClick(boolean isOwner);
+
+        void onAvatarClick();
     }
 
     public BattleOperateView(Context context) {
@@ -157,6 +165,14 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
             mChallengerKo = view.findViewById(R.id.challengerKo);
             mChallengerName = view.findViewById(R.id.challengerName);
             mChallengerPraise = view.findViewById(R.id.challengerPraise);
+        }
+
+        public ImageView getOwnerAvatar() {
+            return mOwnerAvatar;
+        }
+
+        public ImageView getChallengerAvatar() {
+            return mChallengerAvatar;
         }
 
         public PlayersView ownerOk() {
@@ -264,10 +280,13 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         mBattleOrderOperateView.findViewById(R.id.closePositionBtn).setOnClickListener(this);
         mPraiseView.findViewById(R.id.praiseOwner).setOnClickListener(this);
         mPraiseView.findViewById(R.id.praiseChallenger).setOnClickListener(this);
+        mPlayersView.getOwnerAvatar().setOnClickListener(this);
+        mPlayersView.getChallengerAvatar().setOnClickListener(this);
     }
 
     public void showSettlingView() {
         if (mBattleSettlingView.getVisibility() != VISIBLE) {
+            hideAllOperationView();
             mBattleSettlingView.setVisibility(VISIBLE);
             mBattleSettlingView.findViewById(R.id.loading).startAnimation(
                     AnimationUtils.loadAnimation(getContext(), R.anim.loading));

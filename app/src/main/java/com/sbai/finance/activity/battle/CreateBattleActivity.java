@@ -233,7 +233,7 @@ public class CreateBattleActivity extends BaseActivity {
                 mCoinType = 3;
                 break;
             case R.id.launch_battle:
-                umengEventCount(UmengCountEventId.BATTLE_HALL_LAUNCH_BATTLE);
+                umengEventCount(UmengCountEventId.FUTURE_PK_LAUNCHER);
                 launchBattle();
                 break;
         }

@@ -87,7 +87,6 @@ android {
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
-//            buildConfigField('String', 'HOST', '\"192.168.1.7\"')
             buildConfigField('String', 'HOST', '\"devlm.esongbai.abc\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 
@@ -103,8 +102,8 @@ android {
         alpha {
 //            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-Alpha'
-            versionCode 126
-            versionName "1.2.11090"
+            versionCode 127
+            versionName "2.0.1110"
             buildConfigField('String', 'HOST', '\"testlemi.ailemi.com\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 
