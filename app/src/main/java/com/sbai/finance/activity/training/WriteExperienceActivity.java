@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
@@ -29,6 +28,7 @@ import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
+import com.sbai.httplib.ApiError;
 
 import java.util.List;
 
@@ -170,8 +170,8 @@ public class WriteExperienceActivity extends BaseActivity {
                         }
 
                         @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
+                        public void onFailure(ApiError apiError) {
+                            super.onFailure(apiError);
                             mPublish.setEnabled(true);
                         }
                     }).fire();

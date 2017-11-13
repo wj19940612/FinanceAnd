@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -24,6 +23,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.httplib.ApiError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,8 +100,8 @@ public class PriceLimitRankingFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         updateStockSort(null);
                     }
                 }).fireFree();

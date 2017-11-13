@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -45,6 +44,7 @@ import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.finance.view.training.ExperienceView;
 import com.sbai.finance.view.training.TrainingAchievementView2;
+import com.sbai.httplib.ApiError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -303,8 +303,8 @@ public class TrainingDetailActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         mTrainingExperience.setSubTextVisible(View.INVISIBLE);
                         mTrainingExperience.setClickable(false);
                         mEmpty.setVisibility(View.VISIBLE);
@@ -341,8 +341,8 @@ public class TrainingDetailActivity extends BaseActivity {
                         }
 
                         @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
+                        public void onFailure(ApiError apiError) {
+                            super.onFailure(apiError);
                             mTrainingExperience.setSubTextVisible(View.INVISIBLE);
                             mTrainingExperience.setClickable(false);
                             mEmpty.setVisibility(View.VISIBLE);
@@ -525,8 +525,8 @@ public class TrainingDetailActivity extends BaseActivity {
                         }
 
                         @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
+                        public void onFailure(ApiError apiError) {
+                            super.onFailure(apiError);
                             share(shareTitle, shareDescription, shareUrl, null);
                         }
                     })

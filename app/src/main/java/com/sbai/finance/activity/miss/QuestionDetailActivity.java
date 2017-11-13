@@ -23,7 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
@@ -55,6 +54,7 @@ import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.glide.GlideApp;
+import com.sbai.httplib.ApiError;
 
 import java.util.HashSet;
 import java.util.List;
@@ -177,8 +177,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         share(shareTitle, shareDescription, shareUrl, null);
                     }
                 })
@@ -477,8 +477,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         stopRefreshAnimation();
                     }
                 }).fire();

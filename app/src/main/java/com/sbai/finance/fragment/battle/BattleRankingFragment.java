@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.BuildConfig;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
@@ -31,6 +30,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.glide.GlideApp;
+import com.sbai.httplib.ApiError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,8 +126,8 @@ public class BattleRankingFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
 
                     }
                 })

@@ -16,6 +16,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.httplib.ApiCallback;
+import com.sbai.httplib.ApiError;
 import com.sbai.httplib.NullResponseError;
 import com.sbai.httplib.RequestManager;
 
@@ -71,10 +72,12 @@ public abstract class Callback<T> extends ApiCallback<T> {
     }
 
     @Override
-    public void onFailure(VolleyError volleyError) {
-        if (volleyError == null) return;
+    public void onFailure(ApiError apiError) {
+        if (apiError == null) return;
 
-        Log.d(RequestManager.TAG, getUrl() + " " + volleyError.toString());
+        Log.d(RequestManager.TAG, getUrl() + " " + apiError.toString());
+
+        VolleyError volleyError = (VolleyError) apiError.getError();
 
         int toastResId = R.string.http_lib_error_network;
         if (volleyError instanceof NullResponseError) {

@@ -25,7 +25,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
@@ -54,6 +53,7 @@ import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
+import com.sbai.httplib.ApiError;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -401,8 +401,8 @@ public class MissProfileActivity extends BaseActivity implements
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         mPraiseNumber.setVisibility(View.GONE);
                     }
                 }).fire();
@@ -551,8 +551,8 @@ public class MissProfileActivity extends BaseActivity implements
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         stopRefreshAnimation();
                         if (mCreateTime == null) {
                             mEmpty.setVisibility(View.VISIBLE);
