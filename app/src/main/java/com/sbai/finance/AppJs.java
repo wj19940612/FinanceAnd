@@ -20,7 +20,7 @@ import com.sbai.finance.view.dialog.ShareDialog;
 
 public class AppJs {
 
-    private static final String ONLY_WECHAT_SHARE = "onlyywx";
+    private static final String ONLY_WE_CHAT_SHARE = "onlywx";
 
     private Context mContext;
 
@@ -45,7 +45,7 @@ public class AppJs {
      */
     @JavascriptInterface
     public void openShareDialog(String title, String description, String shareUrl, String shareThumbnailUrl, String shareChannel) {
-        boolean isOnlyWeChatShare = ONLY_WECHAT_SHARE.equalsIgnoreCase(shareThumbnailUrl);
+        boolean isOnlyWeChatShare = ONLY_WE_CHAT_SHARE.equalsIgnoreCase(shareThumbnailUrl);
         if (mContext instanceof Activity) {
             final Activity activity = (Activity) mContext;
             ShareDialog.with(activity)
