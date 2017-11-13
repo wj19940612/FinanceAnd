@@ -259,12 +259,13 @@ public class AccountFundDetailFragment extends BaseFragment {
     public void onViewClicked() {
         switch (mFundType) {
             case AccountFundDetail.TYPE_CRASH:
-                umengEventCount(UmengCountEventId.WALLET_RECHARGE);
+                umengEventCount(UmengCountEventId.WALLET_CASH_RECHARGE);
                 Intent intent = new Intent(getActivity(), RechargeActivity.class);
                 intent.putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_CRASH);
                 getActivity().startActivityForResult(intent, REQ_CODE_RECHARGE_CRASH);
                 break;
             case AccountFundDetail.TYPE_INGOT:
+                umengEventCount(UmengCountEventId.WALLET_INGOT_RECHARGE);
                 Intent ingotIntent = new Intent(getActivity(), VirtualProductExchangeActivity.class);
                 ingotIntent.putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_INGOT);
                 ingotIntent.putExtra(ExtraKeys.USER_FUND, mUserFundInfo != null ? mUserFundInfo.getMoney() : 0);

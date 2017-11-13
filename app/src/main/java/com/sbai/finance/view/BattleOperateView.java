@@ -110,6 +110,11 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
                     mOnViewClickListener.onPraiseClick(false);
                 }
                 break;
+            case R.id.ownerAvatar:
+            case R.id.challengerAvatar:
+                if (mOnViewClickListener != null) {
+                    mOnViewClickListener.onAvatarClick();
+                }
         }
     }
 
@@ -125,6 +130,8 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         void onClosePositionClick();
 
         void onPraiseClick(boolean isOwner);
+
+        void onAvatarClick();
     }
 
     public BattleOperateView(Context context) {
@@ -158,6 +165,14 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
             mChallengerKo = view.findViewById(R.id.challengerKo);
             mChallengerName = view.findViewById(R.id.challengerName);
             mChallengerPraise = view.findViewById(R.id.challengerPraise);
+        }
+
+        public ImageView getOwnerAvatar() {
+            return mOwnerAvatar;
+        }
+
+        public ImageView getChallengerAvatar() {
+            return mChallengerAvatar;
         }
 
         public PlayersView ownerOk() {
@@ -259,6 +274,10 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         mBattleOrderOperateView.findViewById(R.id.buyLong).setOnClickListener(this);
         mBattleOrderOperateView.findViewById(R.id.sellShort).setOnClickListener(this);
         mBattleOrderOperateView.findViewById(R.id.closePositionBtn).setOnClickListener(this);
+        mPraiseView.findViewById(R.id.praiseOwner).setOnClickListener(this);
+        mPraiseView.findViewById(R.id.praiseChallenger).setOnClickListener(this);
+        mPlayersView.getOwnerAvatar().setOnClickListener(this);
+        mPlayersView.getChallengerAvatar().setOnClickListener(this);
     }
 
     public void showSettlingView() {

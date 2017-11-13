@@ -13,6 +13,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.mine.ArticleCollectionFragment;
 import com.sbai.finance.fragment.mine.MyCollectQuestionFragment;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
@@ -45,6 +46,26 @@ public class MyCollectionActivity extends BaseActivity {
         mSlidingTabLayout.setPadding(Display.dp2Px(13, getResources()));
         mMyCollectionFragmentPagerAdapter = new MyCollectionFragmentPagerAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(mMyCollectionFragmentPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+              if (position==0){
+                  umengEventCount(UmengCountEventId.ME_MY_COLLECTION_ASK);
+              }else {
+                  umengEventCount(UmengCountEventId.ME_MY_COLLECTION_ARTICLE);
+              }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mSlidingTabLayout.setViewPager(mViewPager);
     }
 

@@ -172,6 +172,7 @@ public class BattleListActivity extends BaseActivity implements
         mRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                umengEventCount(UmengCountEventId.FUTURE_PK_RECHARGE);
                 openWalletPage();
             }
         });
@@ -190,6 +191,7 @@ public class BattleListActivity extends BaseActivity implements
         myBattleResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                umengEventCount(UmengCountEventId.FUTURE_PK_RULE);
                 lookBattleResult();
             }
         });
@@ -202,7 +204,6 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void openWalletPage() {
-        umengEventCount(UmengCountEventId.BATTLE_HALL_RECHARGE);
         if (LocalUser.getUser().isLogin()) {
             Launcher.with(getActivity(), WalletActivity.class).execute();
         } else {
@@ -252,12 +253,11 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void lookBattleRule() {
-        umengEventCount(UmengCountEventId.BATTLE_HALL_DUEL_RULES);
         Launcher.with(getActivity(), BattleRuleActivity.class).execute();
     }
 
     private void lookBattleResult() {
-        umengEventCount(UmengCountEventId.BATTLE_HALL_CHECK_RECODE);
+        umengEventCount(UmengCountEventId.FUTURE_PK_MY_RECORD);
         if (LocalUser.getUser().isLogin()) {
             Launcher.with(getActivity(), BattleRecordResultListActivity.class).execute();
         } else {
@@ -614,7 +614,7 @@ public class BattleListActivity extends BaseActivity implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.createBattle:
-                umengEventCount(UmengCountEventId.BATTLE_HALL_CREATE_BATTLE);
+                umengEventCount(UmengCountEventId.FUTURE_PK_CREATE);
                 if (LocalUser.getUser().isLogin()) {
 
                     Launcher.with(getActivity(), ChooseFuturesActivity.class)
@@ -624,7 +624,7 @@ public class BattleListActivity extends BaseActivity implements
                 }
                 break;
             case R.id.matchBattle:
-                umengEventCount(UmengCountEventId.BATTLE_HALL_MATCH_BATTLE);
+                umengEventCount(UmengCountEventId.FUTURE_PK_MATCH);
                 if (LocalUser.getUser().isLogin()) {
                     showAskMatchDialog();
                 } else {
@@ -632,7 +632,7 @@ public class BattleListActivity extends BaseActivity implements
                 }
                 break;
             case R.id.currentBattle:
-                umengEventCount(UmengCountEventId.BATTLE_HALL_CURRENT_BATTLE);
+                umengEventCount(UmengCountEventId.FUTURE_PK_CURRENT);
                 if (mCurrentBattle != null) {
                     requestLastBattleInfo(mCurrentBattle);
                 }

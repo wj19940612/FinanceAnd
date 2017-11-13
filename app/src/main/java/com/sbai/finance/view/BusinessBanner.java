@@ -62,12 +62,12 @@ public class BusinessBanner extends RelativeLayout {
     private Context mContext;
 
     public interface OnViewClickListener {
-        void onBannerClick(Banner information);
+        void onBannerClick(Banner information, int index);
     }
 
-    private HomeBanner.OnViewClickListener mOnViewClickListener;
+    private OnViewClickListener mOnViewClickListener;
 
-    public void setOnViewClickListener(HomeBanner.OnViewClickListener onViewClickListener) {
+    public void setOnViewClickListener(OnViewClickListener onViewClickListener) {
         mOnViewClickListener = onViewClickListener;
     }
 
@@ -205,7 +205,7 @@ public class BusinessBanner extends RelativeLayout {
         }
     }
 
-    private void setImage(final Banner banner, int location) {
+    private void setImage(final Banner banner, final int location) {
         RelativeLayout rl;
         ImageView imageView;
         switch (location) {
@@ -233,7 +233,7 @@ public class BusinessBanner extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 if (mOnViewClickListener != null) {
-                    mOnViewClickListener.onBannerClick(banner);
+                    mOnViewClickListener.onBannerClick(banner, location - 1);
                 }
             }
         });

@@ -119,6 +119,7 @@ public class HomePageFragment extends BaseFragment {
         mHomeTitleView.setOnBroadcastListener(new VerticalScrollTextView.OnItemClickListener() {
             @Override
             public void onItemClick(NoticeRadio noticeRadio) {
+                umengEventCount(UmengCountEventId.PAGE_BROADCAST);
                 Launcher.with(getActivity(), BroadcastListActivity.class).execute();
             }
         });
@@ -149,13 +150,16 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onItemClick(int button, Variety variety) {
                 if (button == BUTTON_HUSHEN) {
+                    umengEventCount(UmengCountEventId.PAGE_HU_SHEN);
                     Launcher.with(getActivity(), StockIndexActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, variety).execute();
                 } else if (button == BUTTON_QIHUO) {
+                    umengEventCount(UmengCountEventId.PAGE_FUTURE);
                     Launcher.with(getActivity(), FutureTradeActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, variety).execute();
 
                 } else if (button == BUTTON_ZIXUAN) {
+                    umengEventCount(UmengCountEventId.PAGE_OPTIONAL);
                     if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
                         Launcher.with(getActivity(), FutureTradeActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, variety).execute();
@@ -177,6 +181,11 @@ public class HomePageFragment extends BaseFragment {
             public void onLookAll() {
                 //查看更多
                 int pageIndex = mHomeTitleView.getOldButton() - 1;
+                if (pageIndex == 0) {
+                    umengEventCount(UmengCountEventId.PAGE_HU_SHEN_ALL);
+                } else if (pageIndex == 1) {
+                    umengEventCount(UmengCountEventId.PAGE_FUTURE_ALL);
+                }
                 Launcher.with(getActivity(), StockFutureActivity.class)
                         .putExtra(ExtraKeys.PAGE_INDEX, pageIndex)
                         .execute();
@@ -186,7 +195,7 @@ public class HomePageFragment extends BaseFragment {
             public void onSelectClick() {
                 //自选点击
                 if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventId.DISCOVERY_SELF_OPTIONAL);
+                    umengEventCount(UmengCountEventId.PAGE_OPTIONAL_ALL);
                     Launcher.with(getActivity(), StockFutureActivity.class)
                             .putExtra(ExtraKeys.PAGE_INDEX, 2)
                             .execute();
@@ -199,11 +208,13 @@ public class HomePageFragment extends BaseFragment {
 
             public void onPractice() {
                 //点击练一练
+                umengEventCount(UmengCountEventId.PAGE_TRAINING);
                 Launcher.with(getActivity(), AllTrainingListActivity.class).execute();
             }
 
             @Override
             public void onDaySubjuect() {
+                umengEventCount(UmengCountEventId.PAGE_STUDY_ROOM);
                 Launcher.with(getActivity(), StudyRoomActivity.class).execute();
                 //点击一日一题
             }
@@ -213,6 +224,7 @@ public class HomePageFragment extends BaseFragment {
         {
             @Override
             public void onBannerClick(Banner information) {
+                umengEventCount(UmengCountEventId.PAGE_BANNER);
                 requestClickBanner(information.getId());
                 if (information.isH5Style()) {
                     Launcher.with(getActivity(), WebActivity.class)
@@ -226,11 +238,22 @@ public class HomePageFragment extends BaseFragment {
                 }
             }
         });
-        mBusinessBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener()
+        mBusinessBanner.setOnViewClickListener(new BusinessBanner.OnViewClickListener()
 
         {
             @Override
-            public void onBannerClick(Banner information) {
+            public void onBannerClick(Banner information, int index) {
+                switch (index) {
+                    case 0:
+                        umengEventCount(UmengCountEventId.PAGE_OPERATE_1);
+                        break;
+                    case 1:
+                        umengEventCount(UmengCountEventId.PAGE_OPERATE_2);
+                        break;
+                    case 2:
+                        umengEventCount(UmengCountEventId.PAGE_OPERATE_3);
+                        break;
+                }
                 requestClickBanner(information.getId());
                 if (information.isH5Style()) {
                     Launcher.with(getActivity(), WebActivity.class)
@@ -253,10 +276,13 @@ public class HomePageFragment extends BaseFragment {
                 //查看我的排名
                 if (rankType.equals(INGOT)) {
                     pageIndex = 0;
+                    umengEventCount(UmengCountEventId.FIND_INGOT);
                 } else if (rankType.equals(PROFIT)) {
                     pageIndex = 1;
+                    umengEventCount(UmengCountEventId.FIND_PROFIT);
                 } else if (rankType.equals(SAVANT)) {
                     pageIndex = 2;
+                    umengEventCount(UmengCountEventId.FIND_SAVANT);
                 }
                 Launcher.with(getActivity(), LeaderBoardsListActivity.class)
                         .putExtra(ExtraKeys.PAGE_INDEX, pageIndex)
@@ -282,6 +308,7 @@ public class HomePageFragment extends BaseFragment {
         {
             @Override
             public void onMoreClick() {
+                umengEventCount(UmengCountEventId.PAGE_INFORMATION_MORE);
                 Launcher.with(getActivity(), InformationAndFocusNewsActivity.class).execute();
             }
         });
@@ -299,6 +326,7 @@ public class HomePageFragment extends BaseFragment {
 
             @Override
             public void onMoreClick() {
+                umengEventCount(UmengCountEventId.PAGE_FOCUS_NEWS_MORE);
                 Launcher.with(getActivity(), InformationAndFocusNewsActivity.class)
                         .putExtra(ExtraKeys.PAGE_INDEX, 1)
                         .execute();

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white">
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:background="@color/white">
 
     <View
         android:id="@+id/topLine"
@@ -32,9 +32,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
-                android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
                 android:textColor="@color/primaryText"
                 android:textSize="16sp"
                 />
@@ -46,8 +46,8 @@
                 android:layout_below="@id/leftTitle"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="1dp"
-                android:maxLines="1"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/unluckyText"
                 android:textSize="14sp"
                 />
@@ -90,12 +90,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
                     android:layout_toLeftOf="@id/topRightImg"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
                     android:textColor="@color/primaryText"
                     android:textSize="14sp"
-                    android:includeFontPadding="false"
                     />
 
                 <TextView
@@ -103,13 +103,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/topRightTitle"
-                    android:maxLines="2"
-                    android:layout_toLeftOf="@id/topRightImg"
                     android:layout_marginLeft="12dp"
                     android:layout_marginTop="2dp"
+                    android:layout_toLeftOf="@id/topRightImg"
+                    android:includeFontPadding="false"
+                    android:maxLines="2"
                     android:textColor="@color/unluckyText"
                     android:textSize="10sp"
-                    android:includeFontPadding="false"
                     />
 
                 <ImageView
@@ -140,13 +140,13 @@
                     android:id="@+id/bottomRightTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:layout_toLeftOf="@id/bottomRightImg"
                     android:layout_marginLeft="12dp"
+                    android:layout_toLeftOf="@id/bottomRightImg"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
                     android:textColor="@color/primaryText"
                     android:textSize="14sp"
-                    android:includeFontPadding="false"
                     />
 
                 <TextView
@@ -154,13 +154,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/bottomRightTitle"
-                    android:layout_toLeftOf="@id/bottomRightImg"
-                    android:maxLines="2"
                     android:layout_marginLeft="12dp"
                     android:layout_marginTop="2dp"
+                    android:layout_toLeftOf="@id/bottomRightImg"
+                    android:includeFontPadding="false"
+                    android:maxLines="2"
                     android:textColor="@color/unluckyText"
                     android:textSize="10sp"
-                    android:includeFontPadding="false"
                     />
 
                 <ImageView

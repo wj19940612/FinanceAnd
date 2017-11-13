@@ -348,7 +348,7 @@ public class MineFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.userInfoArea:
-                umengEventCount(UmengCountEventId.ME_AVATAR);
+                umengEventCount(UmengCountEventId.ME_MOD_USER_INFO);
                 if (LocalUser.getUser().isLogin()) {
                     startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
                 } else {
@@ -359,7 +359,7 @@ public class MineFragment extends BaseFragment {
             case R.id.lemiScoreArea:
                 if (LocalUser.getUser().isLogin()) {
                     if (mUserEachTrainingScoreModel != null) {
-                        umengEventCount(UmengCountEventId.TRAINING_KNOW_CREDITS);
+                        umengEventCount(UmengCountEventId.ME_SEE_MY_CREDIT);
                         Launcher.with(getActivity(), CreditIntroduceActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, mUserEachTrainingScoreModel)
                                 .execute();
@@ -370,6 +370,7 @@ public class MineFragment extends BaseFragment {
                 break;
 
             case R.id.wallet:
+                umengEventCount(UmengCountEventId.ME_WALLET);
                 if (LocalUser.getUser().isLogin()) {
                     boolean firstOpenWalletPage = Preference.get().isFirstOpenWalletPage(LocalUser.getUser().getPhone());
                     if (firstOpenWalletPage) {
@@ -383,6 +384,7 @@ public class MineFragment extends BaseFragment {
                 break;
 
             case R.id.mineQuestionsAndAnswers:
+                umengEventCount(UmengCountEventId.ME_MY_QUESTION);
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), MyQuestionAndAnswerActivity.class).execute();
                 } else {
@@ -390,6 +392,7 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.mineCollection:
+                umengEventCount(UmengCountEventId.ME_MY_COLLECTION);
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), MyCollectionActivity.class).execute();
                 } else {

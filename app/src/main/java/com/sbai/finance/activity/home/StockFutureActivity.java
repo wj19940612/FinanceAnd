@@ -17,6 +17,7 @@ import com.sbai.finance.fragment.future.FuturesFragment;
 import com.sbai.finance.fragment.optional.OptionalListFragment;
 import com.sbai.finance.fragment.stock.StockListFragment;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.slidingTab.SlidingTabTitle;
 import com.sbai.finance.market.MarketSubscriber;
 
@@ -54,6 +55,32 @@ public class StockFutureActivity extends BaseActivity {
         mViewPager.setCurrentItem(0, false);
         mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        umengEventCount(UmengCountEventId.FIND_STOCK);
+                        break;
+                    case 1:
+                        umengEventCount(UmengCountEventId.FIND_FUTURE);
+                        break;
+                    case 2:
+                        umengEventCount(UmengCountEventId.FIND_OPTIONAL);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 
@@ -70,6 +97,7 @@ public class StockFutureActivity extends BaseActivity {
             mTabLayout.setTabIndex(mPage);
         }
     }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -81,6 +109,7 @@ public class StockFutureActivity extends BaseActivity {
         super.onPause();
         MarketSubscriber.get().unSubscribeAll();
     }
+
     static class PagerAdapter extends FragmentPagerAdapter {
 
         private Context mContext;

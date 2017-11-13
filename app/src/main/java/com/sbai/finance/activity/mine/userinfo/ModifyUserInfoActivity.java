@@ -243,6 +243,7 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.headImageLayout:
+				umengEventCount(UmengCountEventId.ME_AVATAR);
 				UploadUserImageDialogFragment uploadUserImageDialogFragment = UploadUserImageDialogFragment.newInstance(
 						UploadUserImageDialogFragment.IMAGE_TYPE_CLIPPING_IMAGE_SCALE_OR_MOVE,
 						LocalUser.getUser().getUserInfo().getUserPortrait());
@@ -271,9 +272,11 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
 		       Launcher.with(getActivity(), CreditApproveActivity.class).executeForResult(REQ_CODE_CREDIT_APPROVE);
                 break;
 			case R.id.logout:
+				umengEventCount(UmengCountEventId.ME_EXIT_LOGIN);
 				logout();
 				break;
 			case R.id.weChat:
+				umengEventCount(UmengCountEventId.ME_BIND_WECHAT);
 				final UserInfo userInfo = LocalUser.getUser().getUserInfo();
 				if (TextUtils.isEmpty(userInfo.getWxOpenId())) {
 					bindWeChat();

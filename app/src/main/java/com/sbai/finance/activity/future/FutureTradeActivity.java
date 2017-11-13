@@ -24,6 +24,8 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.dialog.TradeOptionDialogFragment;
+import com.sbai.finance.market.DataReceiveListener;
+import com.sbai.finance.market.MarketSubscriber;
 import com.sbai.finance.model.FutureIntroduce;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Prediction;
@@ -46,8 +48,6 @@ import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.TradeFloatButtons;
-import com.sbai.finance.market.DataReceiveListener;
-import com.sbai.finance.market.MarketSubscriber;
 import com.umeng.socialize.UMShareAPI;
 
 import java.math.BigDecimal;
@@ -58,10 +58,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sbai.finance.R.id.klineView;
+import static com.sbai.finance.market.MarketSubscribe.REQ_QUOTA;
 import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
-import static com.sbai.finance.market.MarketSubscribe.REQ_QUOTA;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public class FutureTradeActivity extends BaseActivity {
@@ -134,6 +134,7 @@ public class FutureTradeActivity extends BaseActivity {
                 requestTrendDataAndSet();
                 requestVarietyTradeIntroduce();
                 requestTradeButtonVisible();
+                MarketSubscriber.get().subscribe(mVariety.getContractsCode());
             }
         }
     };
@@ -143,7 +144,6 @@ public class FutureTradeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_future_trade);
         ButterKnife.bind(this);
-
         initData();
 
         initTabLayout();
@@ -346,7 +346,7 @@ public class FutureTradeActivity extends BaseActivity {
 
             @Override
             public void onTradeButtonClick() {
-                umengEventCount(UmengCountEventId.DISCOVERY_FUTURES_TRADE);
+                umengEventCount(UmengCountEventId.FIND_FUTURE_TRADE);
                 TradeOptionDialogFragment.newInstance().show(getSupportFragmentManager());
             }
         });
@@ -457,7 +457,7 @@ public class FutureTradeActivity extends BaseActivity {
         intent.setAction(OptionalActivity.OPTIONAL_CHANGE_ACTION);
         intent.putExtra(Launcher.EX_PAYLOAD, variety);
         intent.putExtra(Launcher.EX_PAYLOAD_1, isAddOptional);
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -600,7 +600,7 @@ public class FutureTradeActivity extends BaseActivity {
 //        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES);
+//                umengEventCount(UmengCountEventId.FIND_FUTURE_SHARE);
 //                ShareDialogFragment
 //                        .newInstance()
 //                        .setShareContent(shareTitle, shareDescribe, shareUrl)
@@ -609,13 +609,13 @@ public class FutureTradeActivity extends BaseActivity {
 //                            public void onSharePlatformClick(ShareDialogFragment.SHARE_PLATFORM platform) {
 //                                switch (platform) {
 //                                    case SINA_WEIBO:
-//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES_WEIBO);
+//                                        umengEventCount(UmengCountEventId.FIND_FUTURE_SHARE_SINA);
 //                                        break;
 //                                    case WECHAT_FRIEND:
-//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES_FRIEND);
+//                                        umengEventCount(UmengCountEventId.FIND_FUTURE_SHARE_FRIEND);
 //                                        break;
 //                                    case WECHAT_CIRCLE:
-//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES_CIRCLE);
+//                                        umengEventCount(UmengCountEventId.FIND_FUTURE_SHARE_CIRCLE);
 //                                        break;
 //                                }
 //                            }
