@@ -838,6 +838,7 @@ public class BattleListActivity extends BaseActivity implements
         getActivity().unregisterReceiver(mScreenOnBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mLoginBroadcastReceiver);
         mGifFromResource.recycle();
+        dismissQuickMatchDialog();
     }
 
     @Override
