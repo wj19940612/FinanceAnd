@@ -10,8 +10,6 @@ public class TimerHandler extends Handler {
     public final static int TREND_REFRESH_TIME = 60;
     public final static int STOCK_RT_PULL_TIME = 6;
 
-    public static final int DEFAULT_INTERVAL_TIME = 1_000;
-
     private static final int MAX = Integer.MAX_VALUE;
 
     public interface TimerCallback {
@@ -26,7 +24,7 @@ public class TimerHandler extends Handler {
     WeakReference<TimerCallback> mWeakReference;
     private int mCount;
 
-    public void revertCount(){
+    public void resetCount(){
         mCount = 0;
     }
 

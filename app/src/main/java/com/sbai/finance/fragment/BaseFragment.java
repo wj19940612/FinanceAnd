@@ -85,12 +85,7 @@ public class BaseFragment extends Fragment implements
     protected void stopScheduleJob() {
         if (mTimerHandler != null) {
             mTimerHandler.removeCallbacksAndMessages(null);
-        }
-    }
-
-    public void revertTimerCount(){
-        if(mTimerHandler != null){
-            mTimerHandler.revertCount();
+            mTimerHandler.resetCount();
         }
     }
 
