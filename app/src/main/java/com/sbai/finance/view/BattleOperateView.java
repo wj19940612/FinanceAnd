@@ -226,17 +226,16 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         setOrientation(VERTICAL);
         mBattleCreatedView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_created, null);
         mBattleOrderOperateView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_order_operate, null);
-        mPraiseView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_praise, null);
         mBattleSettlingView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_settling, null);
+        mBattleCreatedView.setVisibility(GONE);
+        mBattleOrderOperateView.setVisibility(GONE);
+        mBattleSettlingView.setVisibility(GONE);
 
         // view find id
         mCountdown = mBattleCreatedView.findViewById(R.id.countdown);
 
         View playersView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_players, null);
         mPlayersView = new PlayersView(playersView);
-
-        mPraiseOwner = mPraiseView.findViewById(R.id.praiseOwner);
-        mPraiseChallenger = mPraiseView.findViewById(R.id.praiseChallenger);
 
         mTradeButtons = mBattleOrderOperateView.findViewById(R.id.tradeButtons);
         mNoPosition = mBattleOrderOperateView.findViewById(R.id.noPosition);
@@ -248,11 +247,8 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
 
         initListeners();
 
-        hideAllOperationView();
-
         addView(mBattleCreatedView);
         addView(mBattleOrderOperateView);
-        addView(mPraiseView);
         addView(mBattleSettlingView);
         addView(playersView);
     }
@@ -263,8 +259,6 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         mBattleOrderOperateView.findViewById(R.id.buyLong).setOnClickListener(this);
         mBattleOrderOperateView.findViewById(R.id.sellShort).setOnClickListener(this);
         mBattleOrderOperateView.findViewById(R.id.closePositionBtn).setOnClickListener(this);
-        mPraiseView.findViewById(R.id.praiseOwner).setOnClickListener(this);
-        mPraiseView.findViewById(R.id.praiseChallenger).setOnClickListener(this);
     }
 
     public void showSettlingView() {
@@ -484,5 +478,17 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
 
     public void setVariety(Variety variety) {
         mVariety = variety;
+    }
+
+    public void setPraiseView(View praiseView) {
+        mPraiseView = praiseView;
+        initPraiseView();
+    }
+
+    private void initPraiseView() {
+        mPraiseOwner = mPraiseView.findViewById(R.id.praiseOwner);
+        mPraiseChallenger = mPraiseView.findViewById(R.id.praiseChallenger);
+        mPraiseOwner.setOnClickListener(this);
+        mPraiseChallenger.setOnClickListener(this);
     }
 }

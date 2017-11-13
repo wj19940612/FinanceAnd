@@ -64,7 +64,7 @@ android {
 
     android.applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "lemi-${variant.name}-${variant.versionName}.apk"
+            outputFileName = "aLm-${variant.name}-${variant.versionName}.apk"
         }
     }
 
@@ -102,8 +102,8 @@ android {
         alpha {
             applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-Alpha'
-            versionCode 127
-            versionName "2.0.1110"
+            versionCode 128
+            versionName "2.0.1113"
             buildConfigField('String', 'HOST', '\"testlemi.ailemi.com\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 
