@@ -26,6 +26,10 @@ public class TimerHandler extends Handler {
     WeakReference<TimerCallback> mWeakReference;
     private int mCount;
 
+    public void revertCount(){
+        mCount = 0;
+    }
+
     public TimerHandler(TimerCallback callback) {
         mWeakReference = new WeakReference<>(callback);
         mCount = 0;

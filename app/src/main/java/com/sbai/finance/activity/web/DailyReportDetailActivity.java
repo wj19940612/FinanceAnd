@@ -92,6 +92,8 @@ public class DailyReportDetailActivity extends BaseActivity {
     TextView mCollect;
     @BindView(R.id.imageArea)
     RelativeLayout mImageArea;
+    @BindView(R.id.click1)
+    TextView mClick1;
 
     private boolean mLoadSuccess;
     protected String mPageUrl;
@@ -150,6 +152,7 @@ public class DailyReportDetailActivity extends BaseActivity {
             mImageArea.setVisibility(View.GONE);
         } else {
             mImageArea.setVisibility(View.VISIBLE);
+            mClick1.setVisibility(View.GONE);
             Glide.with(getActivity())
                     .load(data.getCoverUrl())
                     .into(mImage);
@@ -165,6 +168,7 @@ public class DailyReportDetailActivity extends BaseActivity {
         if (data.isHtml()) {
             mTitleInfo.setVisibility(View.VISIBLE);
             mClick.setText(getString(R.string.read_count, data.getClicks()));
+            mClick1.setText(getString(R.string.read_count, data.getClicks()));
             mTitle.setText(data.getTitle());
             mSourceAndTime.setText(DateUtil.formatDefaultStyleTime(data.getCreateTime()));
             mPureHtml = data.getContent();
