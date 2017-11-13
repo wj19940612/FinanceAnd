@@ -209,35 +209,53 @@ public class BattleActivity extends BaseActivity {
         mBattleOperateView.setOnViewClickListener(new BattleOperateView.OnViewClickListener() {
             @Override
             public void onQuickMatchClick() {
-                umengEventCount(UmengCountEventId.WAITING_ROOM_FAST_MATCH);
+                umengEventCount(UmengCountEventId.FUTURE_PK_FAST_MATCH);
 
                 showQuickMatchDialog();
             }
 
             @Override
             public void onCancelBattleClick() {
-                umengEventCount(UmengCountEventId.WAITING_ROOM_CANCEL_BATTLE);
+                umengEventCount(UmengCountEventId.FUTURE_PK_CANCEL_MATCH);
 
                 showCancelBattleDialog();
             }
 
             @Override
             public void onBuyLongClick() {
-                umengEventCount(UmengCountEventId.BATTLE_BULLISH);
+                if (mBattle != null) {
+                    if (mBattle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                        umengEventCount(UmengCountEventId.MRPK_BUY);
+                    } else {
+                        umengEventCount(UmengCountEventId.FUTURE_PK_BUY);
+                    }
+                }
 
                 createOrder(TradeOrder.DIRECTION_LONG);
             }
 
             @Override
             public void onSellShortClick() {
-                umengEventCount(UmengCountEventId.BATTLE_BEARISH);
+                if (mBattle != null) {
+                    if (mBattle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                        umengEventCount(UmengCountEventId.MRPK_SELL);
+                    } else {
+                        umengEventCount(UmengCountEventId.FUTURE_PK_SELL);
+                    }
+                }
 
                 createOrder(TradeOrder.DIRECTION_SHORT);
             }
 
             @Override
             public void onClosePositionClick() {
-                umengEventCount(UmengCountEventId.BATTLE_CLOSE_POSITION);
+                if (mBattle != null) {
+                    if (mBattle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                        umengEventCount(UmengCountEventId.MRPK_CLEAR);
+                    } else {
+                        umengEventCount(UmengCountEventId.FUTURE_PK_CLEAR);
+                    }
+                }
 
                 TradeOrder ownerOrder = mBattleOperateView.getHoldingOrder();
                 if (ownerOrder != null) {
@@ -247,10 +265,28 @@ public class BattleActivity extends BaseActivity {
 
             @Override
             public void onPraiseClick(boolean isOwner) {
+                if (mBattle != null) {
+                    if (mBattle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                        umengEventCount(UmengCountEventId.MRPK_PRAISE);
+                    } else {
+                        umengEventCount(UmengCountEventId.FUTURE_PK_PRAISE);
+                    }
+                }
                 if (isOwner) {
                     requestAddBattlePraise(mBattle.getLaunchUser());
                 } else {
                     requestAddBattlePraise(mBattle.getAgainstUser());
+                }
+            }
+
+            @Override
+            public void onAvatarClick() {
+                if (mBattle != null) {
+                    if (mBattle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                        umengEventCount(UmengCountEventId.MRPK_USER_AVATAR);
+                    } else {
+                        umengEventCount(UmengCountEventId.FUTURE_PK_USER_AVATAR);
+                    }
                 }
             }
         });
@@ -453,7 +489,6 @@ public class BattleActivity extends BaseActivity {
     }
 
     private void requestAddBattlePraise(int launchUser) {
-        umengEventCount(UmengCountEventId.WITNESS_BATTLE_PRAISE);
 
         WsClient.get().send(new UserPraise(mBattle.getId(), launchUser)); // praise push received
     }

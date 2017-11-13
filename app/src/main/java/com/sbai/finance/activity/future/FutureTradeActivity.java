@@ -345,7 +345,7 @@ public class FutureTradeActivity extends BaseActivity {
 
             @Override
             public void onTradeButtonClick() {
-                umengEventCount(UmengCountEventId.DISCOVERY_FUTURES_TRADE);
+                umengEventCount(UmengCountEventId.FIND_FUTURE_TRADE);
                 TradeOptionDialogFragment.newInstance().show(getSupportFragmentManager());
             }
         });
@@ -599,7 +599,7 @@ public class FutureTradeActivity extends BaseActivity {
 //        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES);
+//                umengEventCount(UmengCountEventId.FIND_FUTURE_SHARE);
 //                ShareDialogFragment
 //                        .newInstance()
 //                        .setShareContent(shareTitle, shareDescribe, shareUrl)
@@ -608,13 +608,13 @@ public class FutureTradeActivity extends BaseActivity {
 //                            public void onSharePlatformClick(ShareDialogFragment.SHARE_PLATFORM platform) {
 //                                switch (platform) {
 //                                    case SINA_WEIBO:
-//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES_WEIBO);
+//                                        umengEventCount(UmengCountEventId.FIND_FUTURE_SHARE_SINA);
 //                                        break;
 //                                    case WECHAT_FRIEND:
-//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES_FRIEND);
+//                                        umengEventCount(UmengCountEventId.FIND_FUTURE_SHARE_FRIEND);
 //                                        break;
 //                                    case WECHAT_CIRCLE:
-//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_FUTURES_CIRCLE);
+//                                        umengEventCount(UmengCountEventId.FIND_FUTURE_SHARE_CIRCLE);
 //                                        break;
 //                                }
 //                            }

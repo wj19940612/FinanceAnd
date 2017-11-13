@@ -68,6 +68,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
@@ -583,6 +584,26 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
 
         mArenaFragmentAdapter = new ArenaFragmentAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mArenaFragmentAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    umengEventCount(UmengCountEventId.MRPK_CURRENT_BATTLE);
+                } else {
+                    umengEventCount(UmengCountEventId.MRPK_LEARD_BOARD);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(60, getResources()));
@@ -720,6 +741,14 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 .setListener(new ShareDialog.OnShareDialogCallback() {
                     @Override
                     public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
+                        switch (platform) {
+                            case WECHAT_FRIEND:
+                                umengEventCount(UmengCountEventId.MRPK_INVITE_FRIEND);
+                                break;
+                            case WECHAT_CIRCLE:
+                                umengEventCount(UmengCountEventId.MRPK_INVITE_CIRCLE);
+                                break;
+                        }
                         Client.share().setTag(TAG).fireFree();
                     }
 
@@ -735,6 +764,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.recharge:
+                umengEventCount(UmengCountEventId.MRPK_RECHARAGE);
                 if (LocalUser.getUser().isLogin()) {
                     openVirtualCurrencyPage();
                 } else {
@@ -742,6 +772,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 }
                 break;
             case R.id.activityRule:
+                umengEventCount(UmengCountEventId.MRPK_RULE);
                 Launcher.with(getActivity(), WebActivity.class)
                         .putExtra(WebActivity.EX_URL, Client.ARENA_RULE)
                         .executeForResult(500);
@@ -767,11 +798,13 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 }
                 break;
             case R.id.gameCount:
+                umengEventCount(UmengCountEventId.MRPK_MY_RECORD);
                 Launcher.with(getActivity(), BattleRecordResultListActivity.class)
                         .putExtra(ExtraKeys.BATTLE_HISTORY, BattleRecordResultListActivity.BATTLE_HISTORY_RECORD_TYPE_ARENA)
                         .execute();
                 break;
             case R.id.quickMatch:
+                umengEventCount(UmengCountEventId.MRPK_FAST_MATCH);
                 requestUserLastBattleInfo(true);
                 break;
             case R.id.gift:
@@ -1095,6 +1128,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        umengEventCount(UmengCountEventId.MRPK_RECHARAGE);
                         openVirtualCurrencyPage();
                     }
                 })

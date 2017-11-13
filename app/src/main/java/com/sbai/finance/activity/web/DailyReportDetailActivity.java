@@ -128,7 +128,6 @@ public class DailyReportDetailActivity extends BaseActivity {
         initWebView();
         requestDailyReportDetail();
         MissAudioManager.get().stop();
-        umengEventCount(UmengCountEventId.REPORT_VIEW_DETAIL);
     }
 
     private void requestDailyReportDetail() {
@@ -224,7 +223,6 @@ public class DailyReportDetailActivity extends BaseActivity {
             case R.id.share:
             case R.id.shareArea:
                 share();
-                umengEventCount(UmengCountEventId.REPORT_SHARE);
                 break;
             case R.id.refreshButton:
                 mWebView.reload();
@@ -232,6 +230,7 @@ public class DailyReportDetailActivity extends BaseActivity {
             case R.id.collect:
             case R.id.collectArea:
                 if (LocalUser.getUser().isLogin()) {
+                    umengEventCount(UmengCountEventId.PAGE_FOCUS_NEWS_COLLECT);
                     changeCollectionStatus();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).executeForResult(LoginActivity.REQ_CODE_LOGIN);
@@ -253,13 +252,13 @@ public class DailyReportDetailActivity extends BaseActivity {
                     public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
                         switch (platform) {
                             case SINA_WEIBO:
-                                umengEventCount(UmengCountEventId.REPORT_SHARE_SINA_WEIBO);
+                                umengEventCount(UmengCountEventId.PAGE_FOCUS_NEWS_SHARE_SINA);
                                 break;
                             case WECHAT_FRIEND:
-                                umengEventCount(UmengCountEventId.REPORT_SHARE_FRIEND);
+                                umengEventCount(UmengCountEventId.PAGE_FOCUS_NEWS_SHARE_FRIEND);
                                 break;
                             case WECHAT_CIRCLE:
-                                umengEventCount(UmengCountEventId.REPORT_SHARE_CIRCLE);
+                                umengEventCount(UmengCountEventId.PAGE_FOCUS_NEWS_SHARE_CIRCLE);
                                 break;
                         }
                     }

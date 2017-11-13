@@ -154,7 +154,7 @@ public class RechargeActivity extends BaseActivity {
             mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    umengEventCount(UmengCountEventId.WALLET_EXCHANGE_RULES);
+                    umengEventCount(UmengCountEventId.WALLET_INGOT_RULE);
                     openExchangeRulePage();
                 }
             });
@@ -387,7 +387,11 @@ public class RechargeActivity extends BaseActivity {
                 submitRechargeData();
                 break;
             case R.id.connect_service:
-                umengEventCount(UmengCountEventId.RECHARGE_CONTACT_CUSTOMER_SERVICE);
+                if (mRechargeType == AccountFundDetail.TYPE_CRASH) {
+                    umengEventCount(UmengCountEventId.WALLET_CASH_CALL_SERVICE);
+                } else if (mRechargeType == AccountFundDetail.TYPE_INGOT) {
+                    umengEventCount(UmengCountEventId.WALLET_INGOT_CALL_SERVICE);
+                }
                 Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 break;
         }

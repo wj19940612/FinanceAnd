@@ -1,10 +1,12 @@
 package com.sbai.finance.fragment.stock;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
@@ -40,6 +43,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
+import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 /**
  * 股票列表
@@ -71,6 +77,16 @@ public class StockListFragment extends BaseFragment
     private StockListAdapter mStockListAdapter;
     private List<Variety> mStockIndexData;
     private HashSet<String> mSet;
+    private BroadcastReceiver mBroadcastReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                requestStockIndexData();
+                reset();
+                requestStockData();
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -102,6 +118,8 @@ public class StockListFragment extends BaseFragment
         mShangHai.setText(initStockIndex(getString(R.string.ShangHaiStockExchange)));
         mShenZhen.setText(initStockIndex(getString(R.string.ShenzhenStockExchange)));
         mBoard.setText(initStockIndex(getString(R.string.GrowthEnterpriseMarket)));
+
+        registerNetworkChangeReceiver(getActivity(), mBroadcastReceiver);
     }
 
     private SpannableString initStockIndex(String market) {
@@ -116,6 +134,7 @@ public class StockListFragment extends BaseFragment
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        unregisterNetworkChangeReceiver(getActivity(), mBroadcastReceiver);
     }
 
     @Override
