@@ -1,4 +1,4 @@
-package com.sbai.finance.websocket;
+package com.sbai.finance.game;
 
 public interface GameCode {
     int ORDER_NOT_EXISIT = 4610;//订单不存在

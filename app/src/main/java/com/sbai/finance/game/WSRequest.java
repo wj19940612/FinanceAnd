@@ -1,6 +1,6 @@
-package com.sbai.finance.websocket;
+package com.sbai.finance.game;
 
-import com.sbai.finance.websocket.callback.WSCallback;
+import com.sbai.finance.game.callback.WSCallback;
 
 public abstract class WSRequest<T> {
 

@@ -1,7 +1,7 @@
-package com.sbai.finance.websocket.cmd;
+package com.sbai.finance.game.cmd;
 
 import com.sbai.finance.net.Client;
-import com.sbai.finance.websocket.WSCmd;
+import com.sbai.finance.game.WSCmd;
 
 /**
  * Created by ${wangJie} on 2017/11/1.

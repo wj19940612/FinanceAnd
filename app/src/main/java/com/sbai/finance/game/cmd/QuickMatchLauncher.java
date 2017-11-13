@@ -1,6 +1,6 @@
-package com.sbai.finance.websocket.cmd;
+package com.sbai.finance.game.cmd;
 
-import com.sbai.finance.websocket.WSCmd;
+import com.sbai.finance.game.WSCmd;
 
 /**
  * 房主快速匹配

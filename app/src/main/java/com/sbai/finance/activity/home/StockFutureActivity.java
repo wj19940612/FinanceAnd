@@ -18,7 +18,7 @@ import com.sbai.finance.fragment.optional.OptionalListFragment;
 import com.sbai.finance.fragment.stock.StockListFragment;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.slidingTab.SlidingTabTitle;
-import com.sbai.finance.websocket.market.MarketSubscriber;
+import com.sbai.finance.market.MarketSubscriber;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

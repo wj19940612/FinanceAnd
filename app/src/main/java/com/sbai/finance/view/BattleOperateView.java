@@ -269,6 +269,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
 
     public void showSettlingView() {
         if (mBattleSettlingView.getVisibility() != VISIBLE) {
+            hideAllOperationView();
             mBattleSettlingView.setVisibility(VISIBLE);
             mBattleSettlingView.findViewById(R.id.loading).startAnimation(
                     AnimationUtils.loadAnimation(getContext(), R.anim.loading));

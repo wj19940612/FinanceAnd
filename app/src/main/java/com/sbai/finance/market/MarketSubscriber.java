@@ -1,4 +1,4 @@
-package com.sbai.finance.websocket.market;
+package com.sbai.finance.market;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -9,7 +9,6 @@ import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 import com.sbai.finance.net.API;
-import com.sbai.finance.websocket.Connector;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

@@ -1,13 +1,13 @@
-package com.sbai.finance.websocket.callback;
+package com.sbai.finance.market;
 
 import com.google.gson.internal.$Gson$Types;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public abstract class OnPushReceiveListener<T> {
+public abstract class DataReceiveListener<T> {
 
-    public abstract void onPushReceive(T t);
+    public abstract void onDataReceive(T data);
 
     public Type getGenericType() {
         Type superclass = getClass().getGenericSuperclass();

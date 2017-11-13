@@ -47,12 +47,12 @@ import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.StartMatchDialog;
-import com.sbai.finance.websocket.PushCode;
-import com.sbai.finance.websocket.WSMessage;
-import com.sbai.finance.websocket.WSPush;
-import com.sbai.finance.websocket.WsClient;
-import com.sbai.finance.websocket.callback.WSCallback;
-import com.sbai.finance.websocket.cmd.QuickMatch;
+import com.sbai.finance.game.PushCode;
+import com.sbai.finance.game.WSMessage;
+import com.sbai.finance.game.WSPush;
+import com.sbai.finance.game.WsClient;
+import com.sbai.finance.game.callback.WSCallback;
+import com.sbai.finance.game.cmd.QuickMatch;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.BuildConfig;
 

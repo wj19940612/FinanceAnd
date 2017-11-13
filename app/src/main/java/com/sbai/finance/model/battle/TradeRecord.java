@@ -101,34 +101,34 @@ public class TradeRecord {
         this.varietyType = varietyType;
     }
 
-    public static TradeRecord getRecord(Battle battle) {
+    public static TradeRecord getRecord(TradeOrder tradeOrder) {
         TradeRecord record = new TradeRecord();
-        record.handsNum = battle.getHandsNum();
-        record.userId = battle.getUserId();
-        record.contractsCode = battle.getContractsCode();
-        record.varietyName = battle.getVarietyName();
-        record.varietyType = battle.getVarietyType();
-        record.marketPoint = battle.getMarketPoint();
+        record.handsNum = tradeOrder.getHandsNum();
+        record.userId = tradeOrder.getUserId();
+        record.contractsCode = tradeOrder.getContractsCode();
+        record.varietyName = tradeOrder.getVarietyName();
+        record.varietyType = tradeOrder.getVarietyType();
+        record.marketPoint = tradeOrder.getMarketPoint();
 
-        if (battle.getUnwindType() > 0) { // 平仓
-            record.optPrice =  battle.getUnwindPrice();
-            record.optTime = battle.getUnwindTime();
+        if (tradeOrder.getUnwindType() > 0) { // 平仓
+            record.optPrice =  tradeOrder.getUnwindPrice();
+            record.optTime = tradeOrder.getUnwindTime();
         } else {
-            record.optPrice = battle.getOrderPrice();
-            record.optTime = battle.getOrderTime();
+            record.optPrice = tradeOrder.getOrderPrice();
+            record.optTime = tradeOrder.getOrderTime();
         }
 
         int orderStatus = 0;
-        if (battle.getDirection() == DIRECTION_LONG) { //买涨
-            if (battle.getOrderStatus() == TradeOrder.ORDER_STATUS_HOLDING) {
+        if (tradeOrder.getDirection() == DIRECTION_LONG) { //买涨
+            if (tradeOrder.getOrderStatus() == TradeOrder.ORDER_STATUS_HOLDING) {
                 orderStatus = OPT_STATUS_OPEN_POSITION_LONG;
-            } else if (battle.getOrderStatus() == TradeOrder.ORDER_STATUS_CLOSED) {
+            } else if (tradeOrder.getOrderStatus() == TradeOrder.ORDER_STATUS_CLOSED) {
                 orderStatus = OPT_STATUS_CLOSE_POSITION_LONG;
             }
-        } else if (battle.getDirection() == DIRECTION_SHORT) { //买跌
-            if (battle.getOrderStatus() == TradeOrder.ORDER_STATUS_HOLDING) {
+        } else if (tradeOrder.getDirection() == DIRECTION_SHORT) { //买跌
+            if (tradeOrder.getOrderStatus() == TradeOrder.ORDER_STATUS_HOLDING) {
                 orderStatus = OPT_STATUS_OPEN_POSITION_SHORT;
-            } else if (battle.getOrderStatus() == TradeOrder.ORDER_STATUS_CLOSED) {
+            } else if (tradeOrder.getOrderStatus() == TradeOrder.ORDER_STATUS_CLOSED) {
                 orderStatus = OPT_STATUS_CLOSE_POSITION_SHORT;
             }
         }

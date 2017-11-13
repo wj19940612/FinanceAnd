@@ -30,11 +30,24 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.fragment.battle.BattleRecordsFragment;
+import com.sbai.finance.game.GameCode;
+import com.sbai.finance.game.PushCode;
+import com.sbai.finance.game.WSMessage;
+import com.sbai.finance.game.WSPush;
+import com.sbai.finance.game.WsClient;
+import com.sbai.finance.game.callback.WSCallback;
+import com.sbai.finance.game.cmd.QuickMatchLauncher;
+import com.sbai.finance.game.cmd.SubscribeBattle;
+import com.sbai.finance.game.cmd.UnSubscribeBattle;
+import com.sbai.finance.game.cmd.UserPraise;
+import com.sbai.finance.market.DataReceiveListener;
+import com.sbai.finance.market.MarketSubscribe;
+import com.sbai.finance.market.MarketSubscriber;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.battle.Praise;
 import com.sbai.finance.model.battle.TradeOrder;
-import com.sbai.finance.model.battle.TradeOrderClosePosition;
 import com.sbai.finance.model.battle.TradeRecord;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.local.BattleStatus;
@@ -59,19 +72,6 @@ import com.sbai.finance.view.dialog.BattleResultDialog;
 import com.sbai.finance.view.dialog.StartBattleDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.finance.view.slidingTab.HackTabLayout;
-import com.sbai.finance.websocket.GameCode;
-import com.sbai.finance.websocket.PushCode;
-import com.sbai.finance.websocket.WSMessage;
-import com.sbai.finance.websocket.WSPush;
-import com.sbai.finance.websocket.WsClient;
-import com.sbai.finance.websocket.callback.WSCallback;
-import com.sbai.finance.websocket.cmd.QuickMatchLauncher;
-import com.sbai.finance.websocket.cmd.SubscribeBattle;
-import com.sbai.finance.websocket.cmd.UnSubscribeBattle;
-import com.sbai.finance.websocket.cmd.UserPraise;
-import com.sbai.finance.websocket.market.DataReceiveListener;
-import com.sbai.finance.websocket.market.MarketSubscribe;
-import com.sbai.finance.websocket.market.MarketSubscriber;
 import com.sbai.glide.GlideApp;
 
 import java.math.BigDecimal;
@@ -150,6 +150,7 @@ public class BattleActivity extends BaseActivity {
 
     private NetworkReceiver mNetworkReceiver;
     private OrderRecordListAdapter mOrderRecordListAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -567,13 +568,13 @@ public class BattleActivity extends BaseActivity {
 
     @Override
     protected void onBattlePushReceived(WSPush<Battle> push) {
-        if (push == null || push.getContent() == null || push.getContent().getData() == null)
-            return;
+        super.onBattlePushReceived(push);
 
         WSPush.PushData pushData = push.getContent();
         Battle battle = (Battle) pushData.getData();
-        if (battle.getId() != mBattle.getId()) { // 观战，查看对战记录,不同类型战场数据
-            if (pushData.getType() == PushCode.BATTLE_JOINED && battle.getType() == Battle.GAME_TYPE_NORMAL) {
+
+        if (battle.getId() != mBattle.getId()) { // 观战，查看对战记录
+            if (pushData.getType() == PushCode.BATTLE_JOINED) {
                 if (mBattleStatus >= STARTED_OBSERVER && mBattleStatus <= OVER_OBSERVER) {
                     showQuickJoinBattleDialog(battle);
                 }
@@ -604,35 +605,6 @@ public class BattleActivity extends BaseActivity {
                 return;
             }
 
-            // 订单的 battle 没有 Battle 相关内容，不能 mBattle = battle
-            if (pushType == PushCode.ORDER_CREATED || pushType == PushCode.ORDER_CLOSE) {
-                if (mBattleStatus >= STARTED_OWNER && mBattleStatus <= STARTED_OBSERVER) {
-                    TradeRecord record = TradeRecord.getRecord(battle);
-                    updateBattleRecordListView(record, battle.getOptLogCount());
-
-                    TradeOrder order = TradeOrder.getTradeOrder(battle);
-                    updateHoldingOrders(order, pushType == PushCode.ORDER_CLOSE);
-
-                    if (pushType == PushCode.ORDER_CLOSE) {
-                        updateBattle(UPDATE_BATTLE);
-                    }
-                }
-                return;
-            }
-
-            // 赞的 battle 没有 Battle 相关内容，不能 mBattle = battle
-            if (pushType == PushCode.USER_PRAISE) {
-                if (mBattleStatus >= STARTED_OWNER && mBattleStatus <= STARTED_OBSERVER) {
-                    if (battle.getPraiseUserId() == mBattle.getLaunchUser()) {
-                        mBattle.setLaunchPraise(battle.getCurrentPraise());
-                    } else {
-                        mBattle.setAgainstPraise(battle.getCurrentPraise());
-                    }
-                    mBattleOperateView.setPraise(mBattle.getLaunchPraise(), mBattle.getAgainstPraise());
-                }
-                return;
-            }
-
             if (pushType == PushCode.QUICK_MATCH_TIMEOUT && mBattleStatus == CREATED_OWNER) {
                 dismissAllDialog();
                 showOvertimeMatchDialog();
@@ -643,6 +615,40 @@ public class BattleActivity extends BaseActivity {
                 if (battle.getId() == mBattle.getId()) {
                     showRoomOvertimeDialog();
                 }
+            }
+        }
+    }
+
+    @Override
+    protected void onBattlePraiseReceived(WSPush<Praise> praiseWSPush) {
+        super.onBattlePraiseReceived(praiseWSPush);
+        Praise praise = (Praise) praiseWSPush.getContent().getData();
+        if (praise.getBattleId() != mBattle.getId()) return;
+
+        if (mBattleStatus >= STARTED_OWNER && mBattleStatus <= STARTED_OBSERVER) {
+            if (praise.getPraiseUserId() == mBattle.getLaunchUser()) {
+                mBattle.setLaunchPraise(praise.getCurrentPraise());
+            } else {
+                mBattle.setAgainstPraise(praise.getCurrentPraise());
+            }
+            mBattleOperateView.setPraise(mBattle.getLaunchPraise(), mBattle.getAgainstPraise());
+        }
+    }
+
+    @Override
+    protected void onBattleOrdersReceived(WSPush<TradeOrder> tradeOrderWSPush) {
+        super.onBattleOrdersReceived(tradeOrderWSPush);
+        TradeOrder tradeOrder = (TradeOrder) tradeOrderWSPush.getContent().getData();
+        if (tradeOrder.getBattleId() != mBattle.getId()) return;
+
+        if (mBattleStatus >= STARTED_OWNER && mBattleStatus <= STARTED_OBSERVER) {
+            TradeRecord record = TradeRecord.getRecord(tradeOrder);
+            updateBattleRecordListView(record, tradeOrder.getOptLogCount());
+
+            updateHoldingOrders(tradeOrder, tradeOrder.getUnwindType() > 0);
+
+            if (tradeOrder.getUnwindType() > 0) {
+                updateBattle(UPDATE_BATTLE);
             }
         }
     }
@@ -1047,9 +1053,9 @@ public class BattleActivity extends BaseActivity {
 
     private void closePosition(int oderId) {
         Client.closePosition(mBattle.getId(), oderId).setTag(TAG)
-                .setCallback(new Callback<Resp<TradeOrderClosePosition>>() {
+                .setCallback(new Callback<Resp<TradeOrder>>() {
                     @Override
-                    protected void onRespSuccess(Resp<TradeOrderClosePosition> resp) {
+                    protected void onRespSuccess(Resp<TradeOrder> resp) {
                     }
 
                     @Override

@@ -27,9 +27,9 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
-import com.sbai.finance.websocket.market.DataReceiveListener;
-import com.sbai.finance.websocket.market.MarketSubscribe;
-import com.sbai.finance.websocket.market.MarketSubscriber;
+import com.sbai.finance.market.DataReceiveListener;
+import com.sbai.finance.market.MarketSubscribe;
+import com.sbai.finance.market.MarketSubscriber;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -40,8 +40,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
-import static android.R.attr.data;
 
 
 public class FutureListFragment extends BaseFragment implements AbsListView.OnScrollListener,

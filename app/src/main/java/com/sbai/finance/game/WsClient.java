@@ -1,4 +1,4 @@
-package com.sbai.finance.websocket;
+package com.sbai.finance.game;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -11,8 +11,8 @@ import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 import com.sbai.finance.BuildConfig;
 import com.sbai.finance.net.API;
-import com.sbai.finance.websocket.callback.OnPushReceiveListener;
-import com.sbai.finance.websocket.callback.WSCallback;
+import com.sbai.finance.game.callback.OnPushReceiveListener;
+import com.sbai.finance.game.callback.WSCallback;
 import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
@@ -257,7 +257,7 @@ public class WsClient implements AbsWsClient {
     }
 
     @Override
-    public void onMessage(String message) {
+    public void onMessage(final String message) {
         Log.d(TAG, "onMessage: " + message);
         WSMessage resp = null;
         try {
@@ -291,7 +291,7 @@ public class WsClient implements AbsWsClient {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                listener.onPushReceive(o);
+                                listener.onPushReceive(o, message);
                             }
                         });
                     }
