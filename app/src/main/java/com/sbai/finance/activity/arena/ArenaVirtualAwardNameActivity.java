@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
@@ -21,14 +20,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class ArenaVirtualAwardNameActivity extends DialogBaseActivity {
 
     public static final String CHOOSE_AWARD = "choose_award";
 
-    @BindView(R.id.dialogDelete)
-    ImageView mDialogDelete;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
@@ -56,6 +52,10 @@ public class ArenaVirtualAwardNameActivity extends DialogBaseActivity {
                 mChooseVirtualAwardName = virtualAwardName;
                 mChooseVirtualAwardName.setSelect(true);
                 mVirtualAwardAdapter.notifyDataSetChanged();
+
+                Intent intent = new Intent();
+                intent.putExtra(CHOOSE_AWARD, mChooseVirtualAwardName);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -79,22 +79,7 @@ public class ArenaVirtualAwardNameActivity extends DialogBaseActivity {
             mVirtualAwardAdapter.addData(virtualAwardNameList);
         }
     }
-
-    @OnClick(R.id.dialogDelete)
-    public void onViewClicked() {
-        onBackPressed();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mChooseVirtualAwardName != null) {
-            Intent intent = new Intent();
-            intent.putExtra(CHOOSE_AWARD, mChooseVirtualAwardName);
-            setResult(RESULT_OK, intent);
-        }
-        super.onBackPressed();
-    }
-
+    
     class VirtualAwardAdapter extends RecyclerView.Adapter<VirtualAwardAdapter.ViewHolder> {
 
         private List<ArenaVirtualAwardName.VirtualAwardName> mVirtualAwardNameList;

@@ -8,13 +8,6 @@
     android:orientation="vertical"
     tools:context="com.sbai.finance.activity.arena.ArenaVirtualAwardNameActivity">
 
-    <ImageView
-        android:id="@+id/dialogDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:src="@drawable/ic_popup_delete"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

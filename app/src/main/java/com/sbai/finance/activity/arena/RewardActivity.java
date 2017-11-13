@@ -914,6 +914,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 .setPositive(R.string.go_approve, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
+                        dialog.dismiss();
                         Launcher.with(getActivity(), CreditApproveActivity.class).execute();
                     }
                 })
@@ -1088,6 +1089,11 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                         } else {
                             ToastUtil.show(failedResp.getMsg());
                         }
+                    }
+
+                    @Override
+                    protected boolean onErrorToast() {
+                        return false;
                     }
                 })
                 .fireFree();
