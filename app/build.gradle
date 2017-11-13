@@ -100,7 +100,7 @@ android {
         }
 
         alpha {
-            applicationId "com.sbai.finance.Alpha"
+            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-Alpha'
             versionCode 128
             versionName "2.0.1113"
