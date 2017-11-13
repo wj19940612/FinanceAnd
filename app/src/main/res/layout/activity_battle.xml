@@ -86,9 +86,17 @@
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/battleOperateView"
             android:divider="@null"
             android:scrollbars="none"/>
+
+        <include
+            layout="@layout/view_battle_praise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/battleOperateView"
+            android:visibility="gone"/>
 
         <com.sbai.finance.view.BattleOperateView
             android:id="@+id/battleOperateView"

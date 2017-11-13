@@ -71,6 +71,7 @@ import com.sbai.finance.view.dialog.BaseDialog;
 import com.sbai.finance.view.dialog.BattleResultDialog;
 import com.sbai.finance.view.dialog.StartBattleDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
+import com.sbai.finance.view.praise.FlyPraiseLayout;
 import com.sbai.finance.view.slidingTab.HackTabLayout;
 import com.sbai.glide.GlideApp;
 
@@ -141,6 +142,8 @@ public class BattleActivity extends BaseActivity {
     ListView mListView;
     @BindView(R.id.battleOperateView)
     BattleOperateView mBattleOperateView;
+    @BindView(R.id.praiseView)
+    FlyPraiseLayout mPraiseView;
 
     private Battle mBattle;
 
@@ -151,7 +154,6 @@ public class BattleActivity extends BaseActivity {
     private NetworkReceiver mNetworkReceiver;
     private OrderRecordListAdapter mOrderRecordListAdapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,7 +163,7 @@ public class BattleActivity extends BaseActivity {
         MissAudioManager.get().stop();
 
         initData(getIntent());
-        initListeners();
+        initBattleOperateView();
         initListView();
 
         mNetworkReceiver = new NetworkReceiver();
@@ -203,7 +205,7 @@ public class BattleActivity extends BaseActivity {
         mBattle = intent.getParcelableExtra(ExtraKeys.BATTLE);
     }
 
-    private void initListeners() {
+    private void initBattleOperateView() {
         mBattleOperateView.setOnViewClickListener(new BattleOperateView.OnViewClickListener() {
             @Override
             public void onQuickMatchClick() {
@@ -288,6 +290,7 @@ public class BattleActivity extends BaseActivity {
                 }
             }
         });
+        mBattleOperateView.setPraiseView(mPraiseView);
     }
 
     private void updateBattle(final int updateBattle) {
@@ -486,7 +489,6 @@ public class BattleActivity extends BaseActivity {
     }
 
     private void requestAddBattlePraise(int launchUser) {
-        umengEventCount(UmengCountEventId.WITNESS_BATTLE_PRAISE);
 
         WsClient.get().send(new UserPraise(mBattle.getId(), launchUser)); // praise push received
     }
@@ -608,6 +610,7 @@ public class BattleActivity extends BaseActivity {
 
         WSPush.PushData pushData = push.getContent();
         Battle battle = (Battle) pushData.getData();
+
         if (battle.getId() != mBattle.getId()) { // 观战，查看对战记录
             if (pushData.getType() == PushCode.BATTLE_JOINED) {
                 if (mBattleStatus >= STARTED_OBSERVER && mBattleStatus <= OVER_OBSERVER) {

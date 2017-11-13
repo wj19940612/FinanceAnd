@@ -383,8 +383,10 @@ public class LoginActivity extends WeChatActivity {
             mAuthCode.setText("");
             String phoneNumber = mPhoneNumber.getText().toString();
             if (!TextUtils.isEmpty(phoneNumber)) {
+                mPhoneNumber.clearFocus();
                 mAuthCode.requestFocus();
             } else {
+                mAuthCode.clearFocus();
                 mPhoneNumber.requestFocus();
             }
         } else {
@@ -396,8 +398,10 @@ public class LoginActivity extends WeChatActivity {
             mPassword.setPassword("");
             String phoneNumber = mPhoneNumber.getText().toString();
             if (!TextUtils.isEmpty(phoneNumber)) {
+                mPhoneNumber.clearFocus();
                 mPassword.requestFocus();
             } else {
+                mPassword.clearFocus();
                 mPhoneNumber.requestFocus();
             }
         }

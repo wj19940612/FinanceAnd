@@ -139,10 +139,11 @@
     <string name="attention">关注</string>
     <string name="setting">设置</string>
     <string name="news">消息</string>
-    <string name="click_to_view">点击查查</string>
+    <string name="click_to_view">点击查看</string>
     <string name="about_us">关于我们</string>
     <string name="feedback">意见反馈</string>
-    <string name="finance_evaluation">金融水平初步测评</string>
+    <string name="finance_evaluation">金融测评</string>
+    <string name="finance_evaluation_hint">测测金融水平</string>
     <string name="wallet">钱包</string>
     <string name="my_collection">我的收藏</string>
     <string name="my_question_and_answer">我的问答</string>
@@ -875,6 +876,7 @@
     <string name="you_not_has_battle">您还未参加对战</string>
     <string name="battle_count_is_not_enough">对战场次不足30，未计入最终排名</string>
     <string name="your_rank_is_not_exchange_reward">非常抱歉！您当前排名无奖品可领取</string>
+    <string name="game_help">游戏帮助</string>
 
     <!-- 首页 -->
     <string name="look_my_rank">查看我的排名</string>

@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.home;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,6 +26,9 @@ import com.bumptech.glide.Glide;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.MainActivity;
+import com.sbai.finance.activity.RewardGetActivity;
+import com.sbai.finance.activity.evaluation.EvaluationResultActivity;
 import com.sbai.finance.activity.training.TrainingDetailActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.training.MyTrainingRecord;
@@ -42,7 +46,7 @@ import butterknife.ButterKnife;
 
 
 public class AllTrainingListActivity extends BaseActivity {
-    public static final int RETURN_CODE=250;
+    public static final int RETURN_CODE = 250;
     @BindView(android.R.id.list)
     ListView mList;
     @BindView(android.R.id.empty)
@@ -58,6 +62,13 @@ public class AllTrainingListActivity extends BaseActivity {
         setContentView(R.layout.activity_all_training_list);
         ButterKnife.bind(this);
 
+
+        if (LocalUser.getUser().getUserInfo().isNewUser()) {
+            int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
+            RewardGetActivity.show(getActivity(), reward);
+            LocalUser.getUser().setNewUser(false);
+        }
+
         mTrainAdapter = new TrainAdapter(this);
         mList.setEmptyView(mEmpty);
         mList.setAdapter(mTrainAdapter);
@@ -71,7 +82,7 @@ public class AllTrainingListActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MyTrainingRecord myTrainingRecord = (MyTrainingRecord) parent.getAdapter().getItem(position);
-                if(myTrainingRecord!=null){
+                if (myTrainingRecord != null) {
                     Launcher.with(getActivity(), TrainingDetailActivity.class)
                             .putExtra(ExtraKeys.TRAINING, myTrainingRecord.getTrain())
                             .executeForResult(RETURN_CODE);
@@ -109,9 +120,19 @@ public class AllTrainingListActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        ComponentName callingActivity = getCallingActivity();
+        if (callingActivity != null &&
+                callingActivity.getClassName().equalsIgnoreCase(EvaluationResultActivity.class.getName())) {
+            Launcher.with(getActivity(), MainActivity.class).execute();
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==RETURN_CODE){
+        if (requestCode == RETURN_CODE) {
             requestAllTrainingList();
         }
     }

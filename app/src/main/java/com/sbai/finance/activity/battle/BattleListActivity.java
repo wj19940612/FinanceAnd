@@ -28,13 +28,11 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
-import com.sbai.finance.fragment.dialog.BattleRuleDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
-import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -116,7 +114,16 @@ public class BattleListActivity extends BaseActivity implements
                 showMatchTimeoutDialog();
                 break;
             case PushCode.QUICK_MATCH_SUCCESS:
-                showMatchSuccessDialog((Battle) battleWSPush.getContent().getData());
+                Battle battle = (Battle) battleWSPush.getContent().getData();
+                if (battle != null) {
+                    if (battle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                        Launcher.with(getActivity(), BattleActivity.class)
+                                .putExtra(ExtraKeys.BATTLE, battle)
+                                .execute();
+                    } else {
+                        showMatchSuccessDialog(battle);
+                    }
+                }
                 break;
             case PushCode.BATTLE_OVER:
                 requestCurrentBattle();
@@ -197,7 +204,6 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void openWalletPage() {
-        umengEventCount(UmengCountEventId.BATTLE_HALL_RECHARGE);
         if (LocalUser.getUser().isLogin()) {
             Launcher.with(getActivity(), WalletActivity.class).execute();
         } else {
@@ -247,20 +253,11 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void lookBattleRule() {
-        umengEventCount(UmengCountEventId.BATTLE_HALL_DUEL_RULES);
-        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BATTLE).setTag(TAG)
-                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
-                    @Override
-                    protected void onRespSuccessData(final ArticleProtocol data) {
-                        BattleRuleDialogFragment
-                                .newInstance(data.getTitle(), data.getContent())
-                                .showAllowingStateLoss(getSupportFragmentManager());
-                    }
-                }).fire();
+        Launcher.with(getActivity(), BattleRuleActivity.class).execute();
     }
 
     private void lookBattleResult() {
-        umengEventCount(UmengCountEventId.BATTLE_HALL_CHECK_RECODE);
+        umengEventCount(UmengCountEventId.FUTURE_PK_MY_RECORD);
         if (LocalUser.getUser().isLogin()) {
             Launcher.with(getActivity(), BattleRecordResultListActivity.class).execute();
         } else {

@@ -22,15 +22,19 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@android:id/empty"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:drawablePadding="10dp"
-        android:drawableTop="@drawable/img_no_message"
-        android:gravity="center_horizontal"
-        android:paddingTop="100dp"
-        android:visibility="gone"/>
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:drawablePadding="10dp"
+            android:drawableTop="@drawable/img_no_message"
+            android:gravity="center_horizontal"
+            android:paddingTop="100dp"
+            android:visibility="gone"/>
+    </android.support.v4.widget.NestedScrollView>
+
 </LinearLayout>

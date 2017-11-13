@@ -241,17 +241,16 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         setOrientation(VERTICAL);
         mBattleCreatedView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_created, null);
         mBattleOrderOperateView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_order_operate, null);
-        mPraiseView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_praise, null);
         mBattleSettlingView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_settling, null);
+        mBattleCreatedView.setVisibility(GONE);
+        mBattleOrderOperateView.setVisibility(GONE);
+        mBattleSettlingView.setVisibility(GONE);
 
         // view find id
         mCountdown = mBattleCreatedView.findViewById(R.id.countdown);
 
         View playersView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_players, null);
         mPlayersView = new PlayersView(playersView);
-
-        mPraiseOwner = mPraiseView.findViewById(R.id.praiseOwner);
-        mPraiseChallenger = mPraiseView.findViewById(R.id.praiseChallenger);
 
         mTradeButtons = mBattleOrderOperateView.findViewById(R.id.tradeButtons);
         mNoPosition = mBattleOrderOperateView.findViewById(R.id.noPosition);
@@ -263,11 +262,8 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
 
         initListeners();
 
-        hideAllOperationView();
-
         addView(mBattleCreatedView);
         addView(mBattleOrderOperateView);
-        addView(mPraiseView);
         addView(mBattleSettlingView);
         addView(playersView);
     }
@@ -443,7 +439,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
             orderPrice = FinanceUtil.formatWithScale(order.getOrderPrice(), mVariety.getPriceScale());
         }
         mBuyPrice.setText(orderPrice);
-        mProfit.setText(String.valueOf(0));
+        mProfit.setText(FinanceUtil.formatWithScale(0));
     }
 
     private void showOpenPositionView() {
@@ -474,9 +470,12 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
             double profit = getProfit(futureData, mHoldingOrder);
             if (profit >= 0) {
                 mProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
-                mProfit.setText("+" + FinanceUtil.formatWithScale(profit));
             } else {
                 mProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.greenAssist));
+            }
+            if (profit > 0) {
+                mProfit.setText("+" + FinanceUtil.formatWithScale(profit));
+            } else {
                 mProfit.setText(FinanceUtil.formatWithScale(profit));
             }
         }
@@ -501,5 +500,17 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
 
     public void setVariety(Variety variety) {
         mVariety = variety;
+    }
+
+    public void setPraiseView(View praiseView) {
+        mPraiseView = praiseView;
+        initPraiseView();
+    }
+
+    private void initPraiseView() {
+        mPraiseOwner = mPraiseView.findViewById(R.id.praiseOwner);
+        mPraiseChallenger = mPraiseView.findViewById(R.id.praiseChallenger);
+        mPraiseOwner.setOnClickListener(this);
+        mPraiseChallenger.setOnClickListener(this);
     }
 }
