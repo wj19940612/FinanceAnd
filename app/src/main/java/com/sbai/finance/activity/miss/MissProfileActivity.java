@@ -152,6 +152,22 @@ public class MissProfileActivity extends BaseActivity implements
             }
         });
 
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), SubmitQuestionActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mCustomId)
+                            .execute();
+                } else {
+                    stopVoice();
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivityForResult(intent, REQ_SUBMIT_QUESTION_LOGIN);
+                }
+            }
+        });
+
+
         mHerAnswerAdapter.setCallback(new HerAnswerAdapter.Callback() {
             @Override
             public void praiseOnClick(final Question item) {
@@ -417,21 +433,6 @@ public class MissProfileActivity extends BaseActivity implements
         mName.setText(miss.getName());
         mPraiseNumber.setText(getString(R.string.praise_number, StrFormatter.getFormatCount(miss.getTotalPrise())));
         mTitleBar.setTitle(miss.getName());
-
-        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), SubmitQuestionActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, mCustomId)
-                            .execute();
-                } else {
-                    stopVoice();
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivityForResult(intent, REQ_SUBMIT_QUESTION_LOGIN);
-                }
-            }
-        });
 
         if (miss.getSoundTime() == 0 || TextUtils.isEmpty(miss.getBriefingSound())) {
             mVoiceIntroduce.setVisibility(View.GONE);
