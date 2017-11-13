@@ -20,6 +20,8 @@ import com.sbai.finance.view.dialog.ShareDialog;
 
 public class AppJs {
 
+    private static final String ONLY_WECHAT_SHARE = "onlyywx";
+
     private Context mContext;
 
     public AppJs(Context context) {
@@ -31,12 +33,26 @@ public class AppJs {
      */
     @JavascriptInterface
     public void openShareDialog(String title, String description, String shareUrl, String shareThumbnailUrl) {
+        openShareDialog(title, description, shareUrl, shareThumbnailUrl, "");
+    }
+
+    /**
+     * @param title
+     * @param description
+     * @param shareUrl
+     * @param shareThumbnailUrl
+     * @param shareChannel      分享渠道配置 onlyywx 只有微信分享
+     */
+    @JavascriptInterface
+    public void openShareDialog(String title, String description, String shareUrl, String shareThumbnailUrl, String shareChannel) {
+        boolean isOnlyWeChatShare = ONLY_WECHAT_SHARE.equalsIgnoreCase(shareThumbnailUrl);
         if (mContext instanceof Activity) {
             final Activity activity = (Activity) mContext;
             ShareDialog.with(activity)
                     .setTitle(title)
                     .setTitleVisible(false)
                     .setShareTitle(title)
+                    .hasWeiBo(!isOnlyWeChatShare)
                     .setShareDescription(description)
                     .setShareUrl(shareUrl)
                     .setShareThumbUrl(shareThumbnailUrl)
