@@ -15,12 +15,14 @@ import android.widget.AbsListView;
 import android.widget.ScrollView;
 
 import com.sbai.finance.Preference;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
@@ -53,6 +55,8 @@ public class BaseActivity extends BattlePushActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             LocalUser.getUser().logout();
+            Launcher.with(getActivity(), MainActivity.class).execute();
+            Launcher.with(getActivity(), LoginActivity.class).execute();
         }
     };
 

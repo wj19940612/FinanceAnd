@@ -208,11 +208,12 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                         if (arenaInfo != null) {
                             updateArenaInfo(arenaInfo);
                         }
-                        if (mUserActivityScore != null) {
-                            updateUserActivityScore(mUserActivityScore);
+                        if (LocalUser.getUser().isLogin()) {
+                            if (mUserActivityScore != null) {
+                                updateUserActivityScore(mUserActivityScore);
+                            }
+                            updateUserJoinArenaStatus(data.isApplyed());
                         }
-
-                        updateUserJoinArenaStatus(data.isApplyed());
 
                     }
 
@@ -580,7 +581,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
 
     private void initView() {
         setSupportActionBar(mToolBar);
-        
+
         mRefuseBattleIdSb = new StringBuilder();
         mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
 
