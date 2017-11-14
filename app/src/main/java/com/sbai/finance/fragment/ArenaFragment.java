@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -31,6 +30,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.view.OnTouchAlphaChangeImageView;
 import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
@@ -43,7 +43,7 @@ import butterknife.Unbinder;
  * 竞技场
  */
 
-public class ArenaFragment extends BaseFragment implements View.OnTouchListener {
+public class ArenaFragment extends BaseFragment {
 
     private static final int BREATHE_ANIMATION_DURATION = 1500;
 
@@ -58,9 +58,9 @@ public class ArenaFragment extends BaseFragment implements View.OnTouchListener 
     @BindView(R.id.stairHalo)
     ImageView mStairHalo;
     @BindView(R.id.moneyRewardArena)
-    ImageView mMoneyRewardArena;
+    OnTouchAlphaChangeImageView mMoneyRewardArena;
     @BindView(R.id.generalBattleBanner)
-    ImageView mGeneralBattleBanner;
+    OnTouchAlphaChangeImageView mGeneralBattleBanner;
     private Unbinder mBind;
 
     @Nullable
@@ -69,14 +69,6 @@ public class ArenaFragment extends BaseFragment implements View.OnTouchListener 
         View view = inflater.inflate(R.layout.fragment_arena, container, false);
         mBind = ButterKnife.bind(this, view);
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mMoneyRewardArena.setOnTouchListener(this);
-        mGeneralBattleBanner.setOnTouchListener(this);
     }
 
     @Override
@@ -180,23 +172,5 @@ public class ArenaFragment extends BaseFragment implements View.OnTouchListener 
                 , 0.75f,
                 ContextCompat.getColor(getActivity(), R.color.yellowAssist));
         mNameAndIngot.setText(nameAndIngot);
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        switch (motionEvent.getAction()) {
-            case MotionEvent.ACTION_UP:
-                mGeneralBattleBanner.setAlpha(1f);
-                mMoneyRewardArena.setAlpha(1f);
-                break;
-            case MotionEvent.ACTION_DOWN:
-                if (view.getId() == R.id.generalBattleBanner) {
-                    mGeneralBattleBanner.setAlpha(0.5f);
-                } else {
-                    mMoneyRewardArena.setAlpha(0.5f);
-                }
-                break;
-        }
-        return false;
     }
 }

@@ -102,7 +102,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp">
 
-            <ImageView
+            <com.sbai.finance.view.OnTouchAlphaChangeImageView
                 android:id="@+id/moneyRewardArena"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -110,7 +110,7 @@
                 android:layout_weight="1"
                 android:src="@drawable/ic_future_reward_arena_banner"/>
 
-            <ImageView
+            <com.sbai.finance.view.OnTouchAlphaChangeImageView
                 android:id="@+id/generalBattleBanner"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
