@@ -63,7 +63,7 @@ public class AllTrainingListActivity extends BaseActivity {
         ButterKnife.bind(this);
 
 
-        if (LocalUser.getUser().getUserInfo().isNewUser()) {
+        if (LocalUser.getUser().isLogin() && LocalUser.getUser().getUserInfo().isNewUser()) {
             int reward = LocalUser.getUser().getUserInfo().getRegisterRewardIngot();
             RewardGetActivity.show(getActivity(), reward);
             LocalUser.getUser().setNewUser(false);
