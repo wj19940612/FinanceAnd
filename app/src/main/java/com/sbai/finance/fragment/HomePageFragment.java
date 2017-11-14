@@ -513,6 +513,10 @@ public class HomePageFragment extends BaseFragment {
         Client.requestGreeting().setTag(TAG).setCallback(new Callback2D<Resp<Greeting>, Greeting>() {
             @Override
             protected void onRespSuccessData(Greeting data) {
+                if (!LocalUser.getUser().isLogin()) {
+                    mHomeTitleView.setGreetingTitle(R.string.welcome_lemi);
+                    return;
+                }
                 mHomeTitleView.setGreetingTitle(data);
             }
         }).fireFree();
