@@ -30,7 +30,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_future_reward"
                     app:contentScrim="@color/bgArenaRankingTab"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                     <LinearLayout
                         android:layout_width="match_parent"

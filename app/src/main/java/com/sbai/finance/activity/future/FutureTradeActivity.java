@@ -134,6 +134,7 @@ public class FutureTradeActivity extends BaseActivity {
                 requestTrendDataAndSet();
                 requestVarietyTradeIntroduce();
                 requestTradeButtonVisible();
+                MarketSubscriber.get().subscribe(mVariety.getContractsCode());
             }
         }
     };
@@ -456,7 +457,7 @@ public class FutureTradeActivity extends BaseActivity {
         intent.setAction(OptionalActivity.OPTIONAL_CHANGE_ACTION);
         intent.putExtra(Launcher.EX_PAYLOAD, variety);
         intent.putExtra(Launcher.EX_PAYLOAD_1, isAddOptional);
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {

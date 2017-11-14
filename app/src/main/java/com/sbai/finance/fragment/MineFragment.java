@@ -310,7 +310,7 @@ public class MineFragment extends BaseFragment {
         } else {
             stopScheduleJob();
             mUserName.setText(R.string.to_login);
-            mFinanceEvaluation.setSubText(R.string.finance_evaluation_hint);
+//            mFinanceEvaluation.setSubText(R.string.finance_evaluation_hint);
             mWallet.setSubText("");
             mMessage.setSubTextVisible(View.GONE);
             mFeedback.setSubTextVisible(View.GONE);

@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.BuildConfig;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
@@ -76,6 +75,7 @@ import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.finance.view.dialog.UserArenaExchangeResultDialog;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.glide.GlideApp;
+import com.sbai.httplib.ApiError;
 
 import java.util.List;
 
@@ -722,8 +722,8 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                     }
                 })
                 .fireFree();

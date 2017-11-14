@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
@@ -36,6 +35,7 @@ import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.view.ScrollableViewPager;
 import com.sbai.finance.game.WsClient;
 import com.sbai.finance.market.MarketSubscriber;
+import com.sbai.httplib.ApiError;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -172,8 +172,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         requestStartActivities();
                     }
                 })

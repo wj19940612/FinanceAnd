@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -39,6 +38,7 @@ import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.MyListView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
+import com.sbai.httplib.ApiError;
 
 import java.util.HashSet;
 import java.util.List;
@@ -236,8 +236,8 @@ public class TrainingExperienceActivity extends BaseActivity {
 						}
 
 						@Override
-						public void onFailure(VolleyError volleyError) {
-							super.onFailure(volleyError);
+						public void onFailure(ApiError apiError) {
+							super.onFailure(apiError);
 							stopRefreshAnimation();
 							mSpit.setVisibility(View.GONE);
 							mWhiteSpit.setVisibility(View.GONE);
@@ -271,8 +271,8 @@ public class TrainingExperienceActivity extends BaseActivity {
 						}
 
 						@Override
-						public void onFailure(VolleyError volleyError) {
-							super.onFailure(volleyError);
+						public void onFailure(ApiError apiError) {
+							super.onFailure(apiError);
 							stopRefreshAnimation();
 							if (mPage == 0) {
 								mEmpty.setVisibility(View.VISIBLE);

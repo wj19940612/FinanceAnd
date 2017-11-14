@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
@@ -46,14 +45,11 @@ import com.sbai.finance.view.ImportantNewsView;
 import com.sbai.finance.view.LeaderBoardView;
 import com.sbai.finance.view.SevenHourNewsView;
 import com.sbai.finance.view.VerticalScrollTextView;
-import com.sbai.finance.market.DataReceiveListener;
-import com.sbai.finance.market.MarketSubscribe;
-import com.sbai.finance.market.MarketSubscriber;
+import com.sbai.httplib.ApiError;
 import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,9 +61,6 @@ import static com.sbai.finance.model.leaderboard.LeaderThreeRank.SAVANT;
 import static com.sbai.finance.view.HomeTitleView.BUTTON_HUSHEN;
 import static com.sbai.finance.view.HomeTitleView.BUTTON_QIHUO;
 import static com.sbai.finance.view.HomeTitleView.BUTTON_ZIXUAN;
-import static com.sbai.finance.view.HomeTitleView.HENGZHI;
-import static com.sbai.finance.view.HomeTitleView.MEIHUANGJIN;
-import static com.sbai.finance.view.HomeTitleView.MEIYUANYOU;
 
 /**
  * Created by Administrator on 2017\10\26 0026.
@@ -456,8 +449,8 @@ public class HomePageFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
 //                        stopRefreshAnimation();
                     }
 
@@ -630,7 +623,7 @@ public class HomePageFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
+                    public void onFailure(ApiError apiError) {
                         requestLeaderBoardData();
                     }
                 }).fireFree();

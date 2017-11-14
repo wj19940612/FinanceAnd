@@ -302,6 +302,7 @@ public class BattleActivity extends BaseActivity {
                         updateBattleStatus();
                         postUpdateBattle(updateBattle);
                     }
+
                 }).fire();
     }
 

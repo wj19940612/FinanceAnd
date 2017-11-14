@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.$Gson$Types;
 import com.sbai.finance.net.Callback;
+import com.sbai.httplib.ApiError;
 import com.sbai.httplib.NullResponseError;
 import com.sbai.httplib.RequestManager;
 
@@ -32,10 +33,10 @@ public abstract class StockCallback<T, D> extends Callback<T> {
                 if (msg.getError_no().equals("3000")) {
                     onDataMsg(getData(resultList), msg);
                 } else {
-                    onFailure(new NetworkError());
+                    onFailure(new ApiError(new NetworkError()));
                 }
             } else {
-                onFailure(new NullResponseError("Server return result[]"));
+                onFailure(new ApiError(new NullResponseError("Server return result[]")));
             }
         }
     }

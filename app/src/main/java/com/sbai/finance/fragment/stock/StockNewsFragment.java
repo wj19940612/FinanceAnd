@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.web.EventDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -22,6 +21,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.httplib.ApiError;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -147,8 +147,8 @@ public class StockNewsFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         updateStockNewsList(null, -1);
                     }
                 })

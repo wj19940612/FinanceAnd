@@ -84,16 +84,17 @@ public abstract class ApiCallback<T> implements Response.Listener<T>, Response.E
     public abstract void onSuccess(T t);
 
     /**
+     *
      * Call when request failure
      *
-     * @param volleyError
+     * @param apiError
      */
-    public abstract void onFailure(VolleyError volleyError);
+    public abstract void onFailure(ApiError apiError);
 
     @Override
     public void onErrorResponse(VolleyError volleyError) {
         onFinish();
-        onFailure(volleyError);
+        onFailure(new ApiError(volleyError));
     }
 
     @Override
@@ -103,7 +104,7 @@ public abstract class ApiCallback<T> implements Response.Listener<T>, Response.E
             Log.d(RequestManager.TAG, getUrl() + " onResponse: " + t.toString());
             onSuccess(t);
         } else {
-            onFailure(new NullResponseError("Server return null"));
+            onFailure(new ApiError(new NullResponseError("Server return null")));
         }
     }
 

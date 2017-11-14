@@ -274,8 +274,6 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         mBattleOrderOperateView.findViewById(R.id.buyLong).setOnClickListener(this);
         mBattleOrderOperateView.findViewById(R.id.sellShort).setOnClickListener(this);
         mBattleOrderOperateView.findViewById(R.id.closePositionBtn).setOnClickListener(this);
-        mPraiseView.findViewById(R.id.praiseOwner).setOnClickListener(this);
-        mPraiseView.findViewById(R.id.praiseChallenger).setOnClickListener(this);
         mPlayersView.getOwnerAvatar().setOnClickListener(this);
         mPlayersView.getChallengerAvatar().setOnClickListener(this);
     }

@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.CompanyIntroActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -27,6 +26,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BottomTextViewLayout;
 import com.sbai.finance.view.IconTextRow;
+import com.sbai.httplib.ApiError;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -148,8 +148,8 @@ public class FinanceFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         updateCompanyAnnualReportList(null);
                     }
                 })
