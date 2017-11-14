@@ -95,7 +95,8 @@
             layout="@layout/view_battle_praise"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/battleOperateView"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="80dp"
             android:visibility="gone"/>
 
         <com.sbai.finance.view.BattleOperateView
