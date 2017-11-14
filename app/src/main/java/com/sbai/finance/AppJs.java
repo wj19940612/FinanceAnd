@@ -45,12 +45,12 @@ public class AppJs {
      */
     @JavascriptInterface
     public void openShareDialog(String title, String description, String shareUrl, String shareThumbnailUrl, String shareChannel) {
-        boolean isOnlyWeChatShare = ONLY_WE_CHAT_SHARE.equalsIgnoreCase(shareThumbnailUrl);
+        boolean isOnlyWeChatShare = ONLY_WE_CHAT_SHARE.equalsIgnoreCase(shareChannel);
         if (mContext instanceof Activity) {
             final Activity activity = (Activity) mContext;
             ShareDialog.with(activity)
-                    .setTitle(title)
-                    .setTitleVisible(false)
+                    .setTitle(mContext.getString(R.string.share_and_get_ingot))
+                    .setTitleVisible(true)
                     .setShareTitle(title)
                     .hasWeiBo(!isOnlyWeChatShare)
                     .setShareDescription(description)
