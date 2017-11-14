@@ -22,6 +22,7 @@ import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.local.BattleStatus;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.praise.PraiseView;
@@ -56,6 +57,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
     private View mBattleOrderOperateView;
 
     private View mPraiseView;
+    private View mFakePraiseView;
 
     private View mBattleSettlingView;
 
@@ -242,9 +244,11 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         mBattleCreatedView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_created, null);
         mBattleOrderOperateView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_order_operate, null);
         mBattleSettlingView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_settling, null);
+        mFakePraiseView = new View(getContext());
         mBattleCreatedView.setVisibility(GONE);
         mBattleOrderOperateView.setVisibility(GONE);
         mBattleSettlingView.setVisibility(GONE);
+        mFakePraiseView.setVisibility(GONE);
 
         // view find id
         mCountdown = mBattleCreatedView.findViewById(R.id.countdown);
@@ -265,6 +269,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         addView(mBattleCreatedView);
         addView(mBattleOrderOperateView);
         addView(mBattleSettlingView);
+        addView(mFakePraiseView, LayoutParams.MATCH_PARENT, (int) Display.dp2Px(48f, getResources()));
         addView(playersView);
     }
 
@@ -305,6 +310,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
         mBattleCreatedView.setVisibility(GONE);
         mBattleOrderOperateView.setVisibility(GONE);
         mPraiseView.setVisibility(GONE);
+        mFakePraiseView.setVisibility(GONE);
         mBattleSettlingView.setVisibility(GONE);
     }
 
@@ -327,6 +333,7 @@ public class BattleOperateView extends LinearLayout implements View.OnClickListe
             case BattleStatus.STARTED_OBSERVER:
                 hideAllOperationView();
                 mPraiseView.setVisibility(VISIBLE);
+                mFakePraiseView.setVisibility(VISIBLE);
                 updatePlayersAvatarName();
                 setPraise(mBattle.getLaunchPraise(), mBattle.getAgainstPraise());
                 break;
