@@ -59,9 +59,9 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/bg_arena_future_knowledge"
             android:gravity="right"
-            android:paddingBottom="3dp"
+            android:paddingBottom="1dp"
             android:paddingRight="7dp"
-            android:paddingTop="3dp"
+            android:paddingTop="1dp"
             android:text="@string/knowledge_point"
             android:textColor="@android:color/white"
             android:textSize="12sp"/>
