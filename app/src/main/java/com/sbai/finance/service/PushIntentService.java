@@ -1,11 +1,15 @@
 package com.sbai.finance.service;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
@@ -115,8 +119,8 @@ public class PushIntentService extends GTIntentService {
             return;
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"");
-
+        String channelId = getString(R.string.app_name);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId);
         builder.setContentTitle(pushMessageModel.getTitle());
         builder.setContentText(pushMessageModel.getMsg());
         builder.setAutoCancel(true);
@@ -133,7 +137,27 @@ public class PushIntentService extends GTIntentService {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 //        notificationManager.notify(R.string.app_name, builder.build());
         int notificationId = (int) pushMessageModel.getCreateTime();
-        notificationManager.notify(notificationId, builder.build());
+        if (notificationManager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel notificationChannel = createNotificationChannel(channelId,notificationManager);
+            }
+            notificationManager.notify(notificationId, builder.build());
+        }
+    }
+
+    @SuppressLint("InlinedApi")
+    private NotificationChannel createNotificationChannel(String channelId, NotificationManager notificationManager) {
+        NotificationChannel notificationChannel = new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_DEFAULT);
+        notificationChannel.enableLights(true);   //开启指示灯，如果设备有的话。
+        notificationChannel.enableVibration(true); //开启震动
+        notificationChannel.setLightColor(Color.RED); // 设置指示灯颜色
+        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);//设置是否应在锁定屏幕上显示此频道的通知
+        notificationChannel.setShowBadge(true);  //设置是否显示角标
+        notificationChannel.setBypassDnd(true);  // 设置绕过免打扰模式
+        notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400}); //设置震动频率
+        notificationChannel.setDescription(channelId);
+        notificationManager.createNotificationChannel(notificationChannel);
+        return notificationChannel;
     }
 
     @NonNull
