@@ -4,14 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.home.AllTrainingListActivity;
 import com.sbai.finance.activity.home.BroadcastListActivity;
@@ -22,6 +20,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
+import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.Dictum;
@@ -228,9 +227,16 @@ public class HomePageFragment extends BaseFragment {
             public void onBannerClick(Banner information) {
                 umengEventCount(UmengCountEventId.PAGE_BANNER);
                 requestClickBanner(information.getId());
-                if (information.isH5Style() && !TextUtils.isEmpty(information.getContent())) {
+                if (information.isH5Style()) {
+                    if (!TextUtils.isEmpty(information.getContent())) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_URL, information.getContent())
+                                .execute();
+                    }
+                } else {
                     Launcher.with(getActivity(), WebActivity.class)
-                            .putExtra(WebActivity.EX_URL, information.getContent())
+                            .putExtra(WebActivity.EX_HTML, information.getContent())
+                            .putExtra(WebActivity.EX_TITLE, information.getTitle())
                             .execute();
                 }
             }
