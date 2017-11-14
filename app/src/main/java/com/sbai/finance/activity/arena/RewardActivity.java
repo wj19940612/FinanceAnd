@@ -68,6 +68,7 @@ import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.view.OnTouchAlphaChangeImageView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
@@ -124,7 +125,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     @BindView(R.id.toolBar)
     Toolbar mToolBar;
     @BindView(R.id.quickMatch)
-    TextView mQuickMatch;
+    OnTouchAlphaChangeImageView mQuickMatch;
     @BindView(R.id.gift)
     ImageView mGift;
     @BindView(R.id.exchangeDetail)
@@ -207,11 +208,12 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                         if (arenaInfo != null) {
                             updateArenaInfo(arenaInfo);
                         }
-                        if (mUserActivityScore != null) {
-                            updateUserActivityScore(mUserActivityScore);
+                        if (LocalUser.getUser().isLogin()) {
+                            if (mUserActivityScore != null) {
+                                updateUserActivityScore(mUserActivityScore);
+                            }
+                            updateUserJoinArenaStatus(data.isApplyed());
                         }
-
-                        updateUserJoinArenaStatus(data.isApplyed());
 
                     }
 
@@ -421,15 +423,15 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 SmartDialog.dismiss(getActivity());
                 if (battle != null) {
                     //防止出现多次推送
-                    if (battle.getGameType() == Battle.GAME_TYPE_ARENA) {
-                        if (mBattle == null || mBattle.getId() != battle.getId()) {
+                    if (mBattle == null || mBattle.getId() != battle.getId()) {
+                        if (battle.getGameType() == Battle.GAME_TYPE_ARENA) {
                             openBattlePage(battle);
+                        } else {
+                            showMatchSuccessDialog(battle);
                         }
-                    } else {
-                        showMatchSuccessDialog(battle);
                     }
+                    mBattle = battle;
                 }
-                mBattle = battle;
                 break;
             case PushCode.BATTLE_OVER:
                 if (BuildConfig.DEBUG) {
@@ -579,6 +581,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
 
     private void initView() {
         setSupportActionBar(mToolBar);
+
         mRefuseBattleIdSb = new StringBuilder();
         mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
 

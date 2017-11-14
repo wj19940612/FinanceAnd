@@ -177,10 +177,16 @@ public class LeaderBoardView extends LinearLayout {
                     .placeholder(R.drawable.ic_default_avatar_big)
                     .circleCrop()
                     .into(headView);
-            if (dataBean.isWorship()) {//可以膜拜
-                mobaiBtn.setEnabled(true);
-            } else {
+            if (LocalUser.getUser().isLogin() && LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getId() == dataBean.getUserId()) {
+                //没膜拜过但是 榜首是自己
                 mobaiBtn.setEnabled(false);
+                mobaiBtn.setBackgroundResource(R.drawable.home_button_ash);
+            }else if (!dataBean.isWorship()) {//已膜拜过
+                mobaiBtn.setEnabled(false);
+                mobaiBtn.setBackgroundResource(R.drawable.home_button_noworship);
+            }  else if (dataBean.isWorship()) {
+                mobaiBtn.setEnabled(true);
+                mobaiBtn.setBackgroundResource(R.drawable.home_button_worship);
             }
             final Button finalMobaiBtn = mobaiBtn;
             finalMobaiBtn.setOnClickListener(new OnClickListener() {
@@ -188,6 +194,7 @@ public class LeaderBoardView extends LinearLayout {
                 public void onClick(View v) {
                     if (LocalUser.getUser().isLogin() && Network.isNetworkAvailable()) {
                         finalMobaiBtn.setEnabled(false);
+                        finalMobaiBtn.setBackgroundResource(R.drawable.home_button_noworship);
                     }
                     if (mMobaiRankListener != null) {
                         mMobaiRankListener.mobai(dataBean.getType(), dataBean);

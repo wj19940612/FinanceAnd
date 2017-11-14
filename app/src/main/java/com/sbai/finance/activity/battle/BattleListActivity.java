@@ -116,12 +116,14 @@ public class BattleListActivity extends BaseActivity implements
             case PushCode.QUICK_MATCH_SUCCESS:
                 Battle battle = (Battle) battleWSPush.getContent().getData();
                 if (battle != null) {
-                    if (battle.getGameType() == Battle.GAME_TYPE_ARENA) {
-                        Launcher.with(getActivity(), BattleActivity.class)
-                                .putExtra(ExtraKeys.BATTLE, battle)
-                                .execute();
-                    } else {
-                        showMatchSuccessDialog(battle);
+                    if(mCurrentBattle==null||mCurrentBattle.getId()!=battle.getId()){
+                        if (battle.getGameType() == Battle.GAME_TYPE_ARENA) {
+                            Launcher.with(getActivity(), BattleActivity.class)
+                                    .putExtra(ExtraKeys.BATTLE, battle)
+                                    .execute();
+                        } else {
+                            showMatchSuccessDialog(battle);
+                        }
                     }
                 }
                 break;
@@ -838,6 +840,7 @@ public class BattleListActivity extends BaseActivity implements
         getActivity().unregisterReceiver(mScreenOnBroadcastReceiver);
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mLoginBroadcastReceiver);
         mGifFromResource.recycle();
+        dismissQuickMatchDialog();
     }
 
     @Override
