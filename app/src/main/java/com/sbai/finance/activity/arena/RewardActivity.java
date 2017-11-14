@@ -423,15 +423,15 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 SmartDialog.dismiss(getActivity());
                 if (battle != null) {
                     //防止出现多次推送
-                    if (battle.getGameType() == Battle.GAME_TYPE_ARENA) {
-                        if (mBattle == null || mBattle.getId() != battle.getId()) {
+                    if (mBattle == null || mBattle.getId() != battle.getId()) {
+                        if (battle.getGameType() == Battle.GAME_TYPE_ARENA) {
                             openBattlePage(battle);
+                        } else {
+                            showMatchSuccessDialog(battle);
                         }
-                    } else {
-                        showMatchSuccessDialog(battle);
                     }
+                    mBattle = battle;
                 }
-                mBattle = battle;
                 break;
             case PushCode.BATTLE_OVER:
                 if (BuildConfig.DEBUG) {
