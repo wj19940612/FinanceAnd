@@ -118,23 +118,27 @@ android {
 
         // channel use default (prod) configuration
         tencent {}
-        m360 {}
-        xiaomi {}
-        baidu {}
-        huawei {}
-        vivo {}
-        oppo {}
-        others {}
-        baiduapk1 {}
-        baiduapk2 {}
-        baiduapk3 {}
-        baiduapk4 {}
-        baiduapk5 {}
-        baiduapk6 {}
-        baiduapk7 {}
-        baiduapk8 {}
-        baiduapk9 {}
-        baiduapk10 {}
+//        m360 {}
+//        xiaomi {}
+//        baidu {}
+//        huawei {}
+//        vivo {}
+//        oppo {}
+//        others {}
+//        baiduapk1 {}
+//        baiduapk2 {}
+//        baiduapk3 {}
+//        baiduapk4 {}
+//        baiduapk5 {}
+//        baiduapk6 {}
+//        baiduapk7 {}
+//        baiduapk8 {}
+//        baiduapk9 {}
+//        baiduapk10 {}
+//        jiri {}
+        fensitong {}
+        guangdiantong {}
+        fuyi {}
     }
 
     productFlavors.all { flavor ->
