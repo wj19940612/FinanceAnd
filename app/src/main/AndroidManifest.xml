@@ -421,9 +421,6 @@
         <activity
             android:name=".activity.home.BroadcastListActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.web.BroadcastListWebActivity"
-            android:screenOrientation="portrait"/>
         <activity android:name=".activity.battle.BattleRuleActivity"
                   android:screenOrientation="portrait"/>
     </application>
