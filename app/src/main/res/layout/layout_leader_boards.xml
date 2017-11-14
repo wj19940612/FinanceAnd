@@ -60,7 +60,7 @@
                 android:layout_below="@id/leftHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
-                android:background="@drawable/btn_mobai"
+                android:background="@drawable/home_button_worship"
                 android:visibility="invisible"/>
 
             <RelativeLayout
@@ -146,7 +146,7 @@
                 android:layout_below="@id/centerHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
-                android:background="@drawable/btn_mobai"
+                android:background="@drawable/home_button_worship"
                 android:visibility="invisible"/>
 
             <RelativeLayout
@@ -232,7 +232,7 @@
                 android:layout_below="@id/rightHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
-                android:background="@drawable/btn_mobai"
+                android:background="@drawable/home_button_worship"
                 android:visibility="invisible"/>
 
             <RelativeLayout

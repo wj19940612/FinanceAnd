@@ -2,7 +2,9 @@ package com.sbai.finance.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -226,14 +228,9 @@ public class HomePageFragment extends BaseFragment {
             public void onBannerClick(Banner information) {
                 umengEventCount(UmengCountEventId.PAGE_BANNER);
                 requestClickBanner(information.getId());
-                if (information.isH5Style()) {
+                if (information.isH5Style() && !TextUtils.isEmpty(information.getContent())) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, information.getContent())
-                            .execute();
-                } else {
-                    Launcher.with(getActivity(), WebActivity.class)
-                            .putExtra(WebActivity.EX_HTML, information.getContent())
-                            .putExtra(WebActivity.EX_TITLE, information.getTitle())
                             .execute();
                 }
             }
@@ -255,14 +252,9 @@ public class HomePageFragment extends BaseFragment {
                         break;
                 }
                 requestClickBanner(information.getId());
-                if (information.isH5Style()) {
+                if (information.isH5Style() && !TextUtils.isEmpty(information.getContent())) {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, information.getContent())
-                            .execute();
-                } else {
-                    Launcher.with(getActivity(), WebActivity.class)
-                            .putExtra(WebActivity.EX_HTML, information.getContent())
-                            .putExtra(WebActivity.EX_TITLE, information.getTitle())
                             .execute();
                 }
             }
@@ -521,6 +513,10 @@ public class HomePageFragment extends BaseFragment {
         Client.requestGreeting().setTag(TAG).setCallback(new Callback2D<Resp<Greeting>, Greeting>() {
             @Override
             protected void onRespSuccessData(Greeting data) {
+                if (!LocalUser.getUser().isLogin()) {
+                    mHomeTitleView.setGreetingTitle(R.string.welcome_lemi);
+                    return;
+                }
                 mHomeTitleView.setGreetingTitle(data);
             }
         }).fireFree();
