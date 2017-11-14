@@ -360,6 +360,7 @@ public class HomePageFragment extends BaseFragment {
             requestImportantNewsData();
         } else if (!isVisibleToUser && isAdded()) {
             stopScheduleJob();
+            mHomeTitleView.stopVerticalSrcoll();
             API.cancel(TAG);
         }
     }
@@ -368,6 +369,7 @@ public class HomePageFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
         stopScheduleJob();
+        mHomeTitleView.stopVerticalSrcoll();
         API.cancel(TAG);
     }
 

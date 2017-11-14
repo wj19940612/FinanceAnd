@@ -199,6 +199,10 @@ public class HomeTitleView extends RelativeLayout {
         mIndexClickListener = indexClickListener;
     }
 
+    public void stopVerticalSrcoll(){
+        mVerticalScrollTextView.stopAutoScroll();
+    }
+
     public Map<String, FutureData> getFutureDataMap() {
         return futureDataMap;
     }
