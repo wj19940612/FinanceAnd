@@ -82,7 +82,6 @@ public class BattleRecordResultListActivity extends BaseActivity implements Cust
                 mBattleType == BATTLE_HISTORY_RECORD_TYPE_ARENA ?
                         getString(R.string.money_reward_game) : getString(R.string.ordinary_battle));
         mTitleBar.setTitle(title);
-
         mListView.setEmptyView(mEmpty);
         mSet = new HashSet<>();
         mVersusRecordListAdapter = new VersusRecordListAdapter(getActivity());

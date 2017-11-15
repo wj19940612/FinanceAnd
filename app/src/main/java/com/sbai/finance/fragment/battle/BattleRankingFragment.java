@@ -153,6 +153,7 @@ public class BattleRankingFragment extends BaseFragment {
     private void processAward(List<ArenaAwardRanking> arenaAwardRankingList, List<ArenaAwardExchangeRule> data) {
         int endPosition = -1;
         int firstPosition = -1;
+
         for (ArenaAwardExchangeRule awardExchangeRule : data) {
             if (awardExchangeRule.isRanking()) {
                 String score = awardExchangeRule.getScore();
@@ -164,14 +165,20 @@ public class BattleRankingFragment extends BaseFragment {
                             endPosition = Integer.valueOf(split[1]);
                         }
 
-                        if (endPosition != -1 && firstPosition != -1) {
-                            for (int i = firstPosition - 1; i < endPosition; i++) {
-                                if (i < arenaAwardRankingList.size()) {
-                                    ArenaAwardRanking arenaAwardRanking = arenaAwardRankingList.get(i);
-                                    arenaAwardRanking.setPrizeName(awardExchangeRule.getPrizeName());
-                                }
+                        for (ArenaAwardRanking arenaAwardRanking : arenaAwardRankingList) {
+                            if (firstPosition <= arenaAwardRanking.getRank() && arenaAwardRanking.getRank() <= endPosition) {
+                                arenaAwardRanking.setPrizeName(awardExchangeRule.getPrizeName());
                             }
                         }
+
+//                        if (endPosition != -1 && firstPosition != -1) {
+//                            for (int i = firstPosition - 1; i < endPosition + 1; i++) {
+//                                if (i < arenaAwardRankingList.size()) {
+//                                    ArenaAwardRanking arenaAwardRanking = arenaAwardRankingList.get(i);
+//                                    arenaAwardRanking.setPrizeName(awardExchangeRule.getPrizeName());
+//                                }
+//                            }
+//                        }
                     } catch (NumberFormatException e) {
                         if (BuildConfig.DEBUG) {
                             ToastUtil.show("服务端排行榜数据有问题");
