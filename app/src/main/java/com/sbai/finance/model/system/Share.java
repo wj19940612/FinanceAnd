@@ -22,6 +22,7 @@ public class Share {
     //资讯分享
     public static final String SHARE_CODE_INFORMATION = "newsflash01";
 
+
     /**
      * code : sssssssss1
      * content : 是的实打实

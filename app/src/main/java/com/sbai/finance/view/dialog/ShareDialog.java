@@ -223,7 +223,6 @@ public class ShareDialog {
         @Override
         public void onError(SHARE_MEDIA share_media, Throwable throwable) {
             //   ToastUtil.show(R.string.share_failed);
-            Log.e("zzz","error:"+throwable.getMessage());
             ToastUtil.show(throwable.getMessage());
         }
 
