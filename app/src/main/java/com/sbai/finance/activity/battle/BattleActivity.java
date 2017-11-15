@@ -307,6 +307,7 @@ public class BattleActivity extends BaseActivity {
                     public void onFinish() {
                         super.onFinish();
                         if (updateBattle == UPDATE_BATTLE_OVER) {
+                            stopScheduleJob();
                             mBattleOperateView.hideSettlingView();
                         }
                     }
