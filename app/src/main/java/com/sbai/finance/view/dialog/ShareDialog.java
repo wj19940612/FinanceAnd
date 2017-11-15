@@ -3,6 +3,7 @@ package com.sbai.finance.view.dialog;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -222,6 +223,7 @@ public class ShareDialog {
         @Override
         public void onError(SHARE_MEDIA share_media, Throwable throwable) {
             //   ToastUtil.show(R.string.share_failed);
+            Log.e("zzz","error:"+throwable.getMessage());
             ToastUtil.show(throwable.getMessage());
         }
 

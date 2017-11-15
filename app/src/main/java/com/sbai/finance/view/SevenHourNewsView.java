@@ -23,6 +23,10 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.DailyReport;
+import com.sbai.finance.model.system.Share;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.view.dialog.ShareDialog;
@@ -57,6 +61,15 @@ public class SevenHourNewsView extends RelativeLayout {
     private List<TextViewState> mTextViewStates;
     private int ccWidth;
 
+    private OnShareClickListener mOnShareClickListener;
+
+    public void setOnShareClickListener(OnShareClickListener onShareClickListener){
+        mOnShareClickListener = onShareClickListener;
+    }
+
+    public interface OnShareClickListener{
+        public void onShare(DailyReport dailyReport);
+    }
     private OnMoreBtnClickListener mOnMoreBtnClickListener;
 
     public interface OnMoreBtnClickListener {
@@ -191,16 +204,11 @@ public class SevenHourNewsView extends RelativeLayout {
         shareView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (dailyReport.getUrl() == null) {
-                    return;
+                if(mOnShareClickListener != null){
+                    mOnShareClickListener.onShare(dailyReport);
                 }
-                ShareDialog.with((Activity) mContext)
-                        .setTitle((mContext.getString(R.string.share_to)))
-                        .hasFeedback(false)
-                        .setShareThumbUrl(dailyReport.getCoverUrl())
-                        .setShareUrl(dailyReport.getUrl())
-                        .setShareDescription(dailyReport.getTitle() + dailyReport.getContent())
-                        .show();
+
+
             }
         });
         TextView timeView = contentItemView.findViewById(R.id.timeView);
