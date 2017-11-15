@@ -6,7 +6,7 @@ package com.sbai.finance;
 public interface ExtraKeys {
 
     String PAGE_TYPE = "page_type";
-    String PAGE_INDEX="page_index";
+    String PAGE_INDEX = "page_index";
     String PHONE = "phone";
     String HAS_SECURITY_PSD = "has_security_psd";
     String HAS_LOGIN_PSD = "has_login_psd";
@@ -49,5 +49,7 @@ public interface ExtraKeys {
     String ARENA_EXCHANGE_AWARD_ID = "arena_exchange_award";
 
     String ARENA_VIRTUAL_AWARD_NAME = "Arena_virtual_award_name";
+
+    String WEB_PAGE_URL = "web_page_url";
 
 }

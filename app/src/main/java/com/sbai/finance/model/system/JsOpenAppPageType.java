@@ -21,4 +21,5 @@ public interface JsOpenAppPageType {
     int ARENA = 11;         //竞技场
     int RECHARGE = 12;      // 充值  默认充值方式为元宝 如果有需要 可以在AppJs 的jsOpenAppPage 中的data 增加标志位
     int WALLET = 13;        // 钱包
+    int H5_LINK = 14;
 }

@@ -44,7 +44,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     private static final int REQ_CODE_FEEDBACK_LOGIN = 23333;
 
-    public static final int MISS_PAGE_POSITION = 2;
+    public static final int PAGE_POSITION_MISS = 2;
+    public static final int PAGE_POSITION_MINE = 4;
 
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
@@ -104,26 +105,33 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         //banner用接口去查询  如果url用数据 则是h5直接打开连接
         if (banner != null) {
             if (TextUtils.isEmpty(banner.getId())) {
-                Launcher.with(getActivity(), WebActivity.class)
-                        .putExtra(WebActivity.EX_URL, banner.getContent())
-                        .execute();
+                openWebPage(banner.getContent());
             } else {
                 requestPushBannerInfo(banner);
             }
+        }
+
+        String webPageUrl = intent.getStringExtra(ExtraKeys.WEB_PAGE_URL);
+        if (!TextUtils.isEmpty(webPageUrl)) {
+            openWebPage(webPageUrl);
         }
     }
 
     private void openActivityPage(Banner banner) {
         if (banner.isH5Style()) {
-            Launcher.with(getActivity(), WebActivity.class)
-                    .putExtra(WebActivity.EX_URL, banner.getContent())
-                    .execute();
+            openWebPage(banner.getContent());
         } else {
             Launcher.with(getActivity(), WebActivity.class)
                     .putExtra(WebActivity.EX_HTML, banner.getContent())
                     .putExtra(WebActivity.EX_TITLE, banner.getTitle())
                     .execute();
         }
+    }
+
+    private void openWebPage(String url) {
+        Launcher.with(getActivity(), WebActivity.class)
+                .putExtra(WebActivity.EX_URL, url)
+                .execute();
     }
 
     private void requestPushBannerInfo(Banner banner) {
