@@ -54,7 +54,7 @@ public class InfiniteViewPager extends ViewPager {
             mInnerPosition = position;
             int pos = calExternalPosition(position, mInnerAdapter);
             if (mExternalListener != null) {
-                mExternalListener.onPageSelected(pos); // TODO: 8/9/16 this will be called twice, since setCurrentItem to real item. Fix latter
+                mExternalListener.onPageSelected(pos); // FIXME: 15/11/2017 this will be called twice, since setCurrentItem to real item.
             }
         }
 
