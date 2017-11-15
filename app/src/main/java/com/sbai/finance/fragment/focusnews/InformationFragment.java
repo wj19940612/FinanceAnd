@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.view.dialog.ShareDialog;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -214,14 +216,14 @@ public class InformationFragment extends BaseFragment {
             mWeekArea.setSelected(false);
             mDate.setTextColor(ContextCompat.getColor(getContext(), R.color.luckyText));
         }
-        if (DateUtil.isInThisMonth(time,mLastTime)){
+        if (DateUtil.isInThisMonth(time, mLastTime)) {
             mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(time)));
-        }else {
+        } else {
             int month = DateUtil.getMonthOfYear(time);
-            if (month<10){
-                mWeek.setText(getContext().getString(R.string._month,"0"+month));
-            }else {
-                mWeek.setText(getContext().getString(R.string._month,String.valueOf(month)));
+            if (month < 10) {
+                mWeek.setText(getContext().getString(R.string._month, "0" + month));
+            } else {
+                mWeek.setText(getContext().getString(R.string._month, String.valueOf(month)));
             }
         }
     }
@@ -350,24 +352,28 @@ public class InformationFragment extends BaseFragment {
             TextView mTime;
             @BindView(R.id.content)
             TextView mContent;
+            @BindView(R.id.readCount)
+            TextView mReadCount;
+            @BindView(R.id.share)
+            ImageView mShare;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindDataWithView(DailyReport item, boolean theDifferentDate, Context context) {
+            public void bindDataWithView(final DailyReport item, boolean theDifferentDate, Context context) {
                 if (theDifferentDate) {
                     mDateArea.setVisibility(View.VISIBLE);
                     mWeekArea.setSelected(false);
-                    if (DateUtil.isInThisMonth(item.getCreateTime(),mLastTime)){
+                    if (DateUtil.isInThisMonth(item.getCreateTime(), mLastTime)) {
                         mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(item.getCreateTime())));
-                    }else {
+                    } else {
                         int month = DateUtil.getMonthOfYear(item.getCreateTime());
-                        if (month<10){
-                            mWeek.setText(context.getString(R.string._month,"0"+month));
-                        }else {
-                            mWeek.setText(context.getString(R.string._month,String.valueOf(month)));
+                        if (month < 10) {
+                            mWeek.setText(context.getString(R.string._month, "0" + month));
+                        } else {
+                            mWeek.setText(context.getString(R.string._month, String.valueOf(month)));
                         }
                     }
                     int dayOfMonth = DateUtil.getDayOfMonth(item.getCreateTime());
@@ -379,18 +385,32 @@ public class InformationFragment extends BaseFragment {
                 } else {
                     mDateArea.setVisibility(View.GONE);
                 }
-                if (DateUtil.isToday(mLastTime,item.getCreateTime())){
+                if (DateUtil.isToday(mLastTime, item.getCreateTime())) {
                     mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
-                }else {
-                    mTime.setText(DateUtil.format(item.getCreateTime(),FORMAT_HOUR_MINUTE));
+                } else {
+                    mTime.setText(DateUtil.format(item.getCreateTime(), FORMAT_HOUR_MINUTE));
                 }
+                mReadCount.setText(getString(R.string.read_count_, item.getClicks()));
+                mShare.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ShareDialog.with(getActivity())
+                                .setTitle(getString(R.string.share_to))
+                                .hasFeedback(false)
+                                .setShareThumbUrl(item.getCoverUrl())
+                                .setShareUrl(item.getUrl())
+                                .setShareDescription(item.getTitle() + item.getContent())
+                                .setShareImageOnly(true)
+                                .show();
+                    }
+                });
                 if (TextUtils.isEmpty(item.getTitle())) {
-                    mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                    mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                     mContent.setTextColor(ContextCompat.getColor(context, R.color.luckyText));
                     mContent.setText(Html.fromHtml(item.getContent().toString().trim()));
                 } else {
-                    mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                    mContent.setText(StrUtil.mergeTextWithRatioColorBold(item.getTitle(), Html.fromHtml(item.getContent()).toString().trim(), 0.86f,
+                    mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    mContent.setText(StrUtil.mergeTextWithRatioColorBold(item.getTitle(), Html.fromHtml(item.getContent()).toString().trim(), 0.93f,
                             ContextCompat.getColor(context, R.color.primaryText), ContextCompat.getColor(context, R.color.luckyText)));
                 }
                 mContent.setMaxLines(3);
