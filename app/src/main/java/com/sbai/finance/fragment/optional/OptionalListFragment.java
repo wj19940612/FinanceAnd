@@ -161,19 +161,21 @@ public class OptionalListFragment extends BaseFragment implements
     }
 
     private void requestOptionalData() {
-        Client.getOptional(mPage).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
-                    @Override
-                    protected void onRespSuccessData(List<Variety> data) {
-                        updateOptionInfo((ArrayList<Variety>) data);
-                    }
+        if (LocalUser.getUser().isLogin()) {
+            Client.getOptional(mPage).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+                        @Override
+                        protected void onRespSuccessData(List<Variety> data) {
+                            updateOptionInfo((ArrayList<Variety>) data);
+                        }
 
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        stopRefreshAnimation();
-                    }
-                }).fireFree();
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            stopRefreshAnimation();
+                        }
+                    }).fireFree();
+        }
     }
 
     private void requestDelOptionalData(final Variety variety) {
