@@ -400,7 +400,6 @@ public class InformationFragment extends BaseFragment {
                                 .setShareThumbUrl(item.getCoverUrl())
                                 .setShareUrl(item.getUrl())
                                 .setShareDescription(item.getTitle() + item.getContent())
-                                .setShareImageOnly(true)
                                 .show();
                     }
                 });
