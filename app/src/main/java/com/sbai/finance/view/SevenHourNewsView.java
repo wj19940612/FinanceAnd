@@ -2,6 +2,7 @@ package com.sbai.finance.view;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
 import android.text.Spannable;
@@ -9,11 +10,13 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,6 +25,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.view.dialog.ShareDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +41,8 @@ import butterknife.OnClick;
 public class SevenHourNewsView extends RelativeLayout {
     public static final int MIN_HEIGHT = 300;
     public static final int TEXT_PADDING_DP = 14;
-    public static final int TEXT_BIG_SP = 14;
-    public static final int TEXT_SMALL_SP = 12;
+    public static final int TEXT_BIG_SP = 15;
+    public static final int TEXT_SMALL_SP = 15;
     public static final int TEXT_MAX_LINES = 3;
     public static final int TEXT_ANIMATE_DURATION = 300;
     @BindView(R.id.contentLL)
@@ -140,16 +144,18 @@ public class SevenHourNewsView extends RelativeLayout {
         int canAddCount = 0;
         int addHeight = 0;
         List<RelativeLayout> relativeLayouts = new ArrayList<RelativeLayout>();
-        for (DailyReport dailyReport : data) {
+        for (final DailyReport dailyReport : data) {
             RelativeLayout contentItemView = (RelativeLayout) mInflater.inflate(R.layout.layout_news_content, mContentLL, false);
-            TextView textView = getAddTextView(dailyReport, canAddCount);
-            TextView timeView = (TextView) contentItemView.findViewById(R.id.timeView);
-            timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
-            contentItemView.addView(textView);
+            TextView textView = contentItemView.findViewById(R.id.textView);
+            getAddTextView(dailyReport, canAddCount, textView);
+
+            setRelativeLayoutUI(contentItemView, dailyReport);
+
             int widthSpec = MeasureSpec.makeMeasureSpec(ccWidth, MeasureSpec.EXACTLY);
             int heightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
             contentItemView.measure(widthSpec, heightSpec);
             int measureRelativeHeight = contentItemView.getMeasuredHeight();
+
             if (mTextViewStates.get(canAddCount).isExpand && textView.getLayout().getLineCount() > TEXT_MAX_LINES) {
                 //如果是展开的话，这里我们需要计算被加入的高度其实是缩小的，因此这里只要三行的高度
                 int textAllHeight = textView.getMeasuredHeight();
@@ -165,37 +171,70 @@ public class SevenHourNewsView extends RelativeLayout {
                 break;
             }
         }
+
+        dealLastRelativeLayout(relativeLayouts.get(canAddCount - 1));
         for (int i = 0; i < canAddCount; i++) {
             mContentLL.addView(relativeLayouts.get(i));
         }
     }
 
+    //最后一行有些内容不显示以及padding设置
+    private void dealLastRelativeLayout(RelativeLayout relativeLayout) {
+        relativeLayout.setPadding(0, 0, 0, 0);
+        relativeLayout.findViewById(R.id.bottomLine).setVisibility(View.GONE);
+    }
 
-    private TextView getAddTextView(DailyReport dailyReport, int canAddCount) {
-        final TextView textView = new TextView(mContext);
+    private void setRelativeLayoutUI(RelativeLayout contentItemView, final DailyReport dailyReport) {
+        TextView lookView = contentItemView.findViewById(R.id.lookTextView);
+        lookView.setText("阅 " + dailyReport.getClicks());
+        ImageView shareView = contentItemView.findViewById(R.id.shareView);
+        shareView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dailyReport.getUrl() == null) {
+                    return;
+                }
+                ShareDialog.with((Activity) mContext)
+                        .setTitle((mContext.getString(R.string.share_to)))
+                        .hasFeedback(false)
+                        .setShareThumbUrl(dailyReport.getCoverUrl())
+                        .setShareUrl(dailyReport.getUrl())
+                        .setShareDescription(dailyReport.getTitle() + dailyReport.getContent())
+                        .show();
+            }
+        });
+        TextView timeView = contentItemView.findViewById(R.id.timeView);
+        timeView.setText(DateUtil.formatDefaultStyleTime(dailyReport.getCreateTime()));
+    }
+
+
+    private TextView getAddTextView(DailyReport dailyReport, int canAddCount, TextView textView) {
         String title = dailyReport.getTitle() == null ? "" : dailyReport.getTitle();
         String content = dailyReport.getContent() == null ? "" : Html.fromHtml(dailyReport.getContent()).toString().trim();
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title + content);
         ForegroundColorSpan bigColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.primaryText));
         spannableStringBuilder.setSpan(bigColorSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
+        StyleSpan boldSpan = new StyleSpan(android.graphics.Typeface.BOLD);
+        spannableStringBuilder.setSpan(boldSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
         AbsoluteSizeSpan bigSizeSpan = new AbsoluteSizeSpan(((int) Display.sp2Px(TEXT_BIG_SP, getResources())));
         spannableStringBuilder.setSpan(bigSizeSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
-        ForegroundColorSpan smallColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.news_content));
+        ForegroundColorSpan smallColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.luckyText));
         spannableStringBuilder.setSpan(smallColorSpan, title.length(), title.length() + content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
         AbsoluteSizeSpan smallSizeSpan = new AbsoluteSizeSpan(((int) Display.sp2Px(TEXT_SMALL_SP, getResources())));
         spannableStringBuilder.setSpan(smallSizeSpan, title.length(), title.length() + content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
-        LayoutParams textParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        textParams.addRule(BELOW, R.id.iconView);
-        textParams.setMargins((int) Display.dp2Px(TEXT_PADDING_DP, getResources()), 0, (int) Display.dp2Px(TEXT_PADDING_DP, getResources()), 0);
-        textView.setLayoutParams(textParams);
+//        LayoutParams textParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+//        textParams.addRule(BELOW, R.id.iconView);
+//        textParams.setMargins(0, (int) Display.dp2Px(TEXT_PADDING_DP, getResources()), 0, 0);
+//        textView.setLayoutParams(textParams);
 
-        int textPadding = (int) Display.dp2Px(TEXT_PADDING_DP, getResources());
-        textView.setPadding(textPadding, textPadding, textPadding, textPadding);
-        textView.setBackgroundColor(getResources().getColor(R.color.background));
+//        int textPadding = (int) Display.dp2Px(TEXT_PADDING_DP, getResources());
+//        textView.setPadding(textPadding, textPadding, textPadding, textPadding);
+//        textView.setBackgroundColor(getResources().getColor(R.color.background));
         textView.setText(spannableStringBuilder);
         final TextViewState textViewState;
         if (canAddCount >= mTextViewStates.size()) {

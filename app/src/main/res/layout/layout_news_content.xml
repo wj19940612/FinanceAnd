@@ -1,27 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="10dp">
+                android:layout_height="wrap_content"
+                android:paddingBottom="14dp">
 
-    <ImageView
+    <View
         android:id="@+id/iconView"
         android:layout_width="6dp"
-        android:layout_height="18dp"
-        android:layout_marginLeft="14dp"
+        android:layout_height="6dp"
         android:layout_marginTop="6dp"
-        android:src="@drawable/home_icon_combined_shape"
-        />
+        android:layout_marginLeft="6dp"
+        android:background="@drawable/bg_gray_circular"/>
 
     <TextView
         android:id="@+id/timeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="4dp"
         android:layout_toRightOf="@id/iconView"
         android:text="17:45"
-        android:textColor="@color/primaryText"
-        android:textSize="14sp"
-        />
+        android:textColor="@color/unluckyText"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_below="@+id/iconView"
+        android:layout_marginTop="14dp"
+        android:lineSpacingMultiplier="1.2"/>
+
+    <RelativeLayout
+        android:id="@+id/shareLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:id="@+id/shareView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="2dp"
+            android:src="@drawable/ic_share_black"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/lookTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@id/shareView"
+            android:textColor="@color/unluckyText"
+            android:textSize="12sp"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/bottomLine"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/shareLayout"
+        android:layout_marginTop="14dp"
+        android:background="@color/background"/>
 
 </RelativeLayout>

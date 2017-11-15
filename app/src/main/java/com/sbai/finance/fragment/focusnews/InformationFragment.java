@@ -409,7 +409,7 @@ public class InformationFragment extends BaseFragment {
                     mContent.setTextColor(ContextCompat.getColor(context, R.color.luckyText));
                     mContent.setText(Html.fromHtml(item.getContent().toString().trim()));
                 } else {
-                    mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                     mContent.setText(StrUtil.mergeTextWithRatioColorBold(item.getTitle(), Html.fromHtml(item.getContent()).toString().trim(), 0.93f,
                             ContextCompat.getColor(context, R.color.primaryText), ContextCompat.getColor(context, R.color.luckyText)));
                 }
