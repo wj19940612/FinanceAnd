@@ -176,7 +176,6 @@ public class VerticalScrollTextView extends TextSwitcher implements ViewSwitcher
                         handler.removeMessages(FLAG_START_AUTO_SCROLL);
                         setInAnimation(null);
                         setOutAnimation(null);
-                        setText("");
                         break;
                 }
             }
