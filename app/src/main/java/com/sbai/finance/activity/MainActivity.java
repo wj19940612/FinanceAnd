@@ -15,6 +15,7 @@ import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.ArenaFragment;
 import com.sbai.finance.fragment.HomePageFragment;
+import com.sbai.finance.fragment.InformationAndFocusFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.dialog.system.StartDialogFragment;
@@ -199,7 +200,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                             arenaFragment.updateIngotNumber(data);
                         }
 
-                        MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(3);
+                        MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(4);
                         if (mineFragment != null) {
                             mineFragment.updateIngotNumber(data);
                         }
@@ -238,7 +239,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     private void initView() {
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setScrollable(false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -271,11 +272,18 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     private void refreshNotReadMessageCount() {
         if (LocalUser.getUser().isLogin()) {
-            MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(3);
+            MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(4);
             if (mineFragment != null) {
                 mineFragment.refreshNotReadMessageCount();
             }
         }
+    }
+
+    public void switchToInformation(int page){
+        InformationAndFocusFragment informationFragment = (InformationAndFocusFragment) mMainFragmentsAdapter.getFragment(3);
+        informationFragment.setPage(page );
+        mBottomTabs.selectTab(3);
+        mViewPager.setCurrentItem(3, false);
     }
 
     @Override
@@ -307,6 +315,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 case 2:
                     return new MissTalkFragment();
                 case 3:
+                    return new InformationAndFocusFragment();
+                case 4:
                     return new MineFragment();
             }
             return null;
@@ -314,7 +324,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
 
         public Fragment getFragment(int position) {

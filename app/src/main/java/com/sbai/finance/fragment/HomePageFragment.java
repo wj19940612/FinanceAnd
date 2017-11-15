@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.home.AllTrainingListActivity;
@@ -89,6 +90,16 @@ public class HomePageFragment extends BaseFragment {
     SevenHourNewsView mSevenHourNewsView;
     @BindView(R.id.importantNewsView)
     ImportantNewsView mImportantNewsView;
+
+    private MoreClickListener mMoreClickListener;
+
+    public void setMoreClickListener(MoreClickListener moreClickListener){
+        moreClickListener = moreClickListener;
+    }
+
+    public interface MoreClickListener{
+        public void onMoreClick(int pageSize);
+    }
 
     @Nullable
     @Override
@@ -262,6 +273,11 @@ public class HomePageFragment extends BaseFragment {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, information.getContent())
                             .execute();
+                } else {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_HTML, information.getContent())
+                            .putExtra(WebActivity.EX_TITLE, information.getTitle())
+                            .execute();
                 }
             }
         });
@@ -307,7 +323,8 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onMoreClick() {
                 umengEventCount(UmengCountEventId.PAGE_INFORMATION_MORE);
-                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class).execute();
+                ((MainActivity)getActivity()).switchToInformation(0);
+//                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class).execute();
             }
         });
         mImportantNewsView.setOnImportantNewsClickListener(new ImportantNewsView.OnImportantNewsClickListener()
@@ -325,9 +342,10 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onMoreClick() {
                 umengEventCount(UmengCountEventId.PAGE_FOCUS_NEWS_MORE);
-                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class)
-                        .putExtra(ExtraKeys.PAGE_INDEX, 1)
-                        .execute();
+                ((MainActivity)getActivity()).switchToInformation(1);
+//                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class)
+//                        .putExtra(ExtraKeys.PAGE_INDEX, 1)
+//                        .execute();
             }
         });
 
