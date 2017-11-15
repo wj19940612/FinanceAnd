@@ -24,6 +24,7 @@ import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -68,6 +69,15 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
 
     private void initView() {
         mSet = new HashSet<>();
+
+        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.KITKAT) {
+            int margin = (int) Display.dp2Px(10f, getResources());
+//            LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) mListView.getLayoutParams();
+//            layoutParams1.setMargins(margin, 0, margin, 0);
+            mListView.setPadding(margin,0,margin,0);
+//            mListView.setLayoutParams(layoutParams1);
+        }
+
         mVersusRecordListAdapter = new VersusRecordListAdapter(getActivity());
         mCustomSwipeRefreshLayout.setOnRefreshListener(this);
         mCustomSwipeRefreshLayout.setOnLoadMoreListener(this);

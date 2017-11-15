@@ -303,6 +303,14 @@ public class BattleActivity extends BaseActivity {
                         postUpdateBattle(updateBattle);
                     }
 
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        if (updateBattle == UPDATE_BATTLE_OVER) {
+                            stopScheduleJob();
+                            mBattleOperateView.hideSettlingView();
+                        }
+                    }
                 }).fire();
     }
 
@@ -542,8 +550,6 @@ public class BattleActivity extends BaseActivity {
                     finish();
                 }
             }, winLoss, content, mBattle.getGameType());
-
-            mBattleOperateView.hideSettlingView();
         }
     }
 
