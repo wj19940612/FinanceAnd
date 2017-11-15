@@ -23,12 +23,14 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.DailyReport;
+import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.dialog.ShareDialog;
+import com.sbai.httplib.ApiError;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,6 +72,10 @@ public class InformationFragment extends BaseFragment {
     private InformationAdapter mInformationAdapter;
     private Set<String> mSet;
     private long mLastTime;
+
+    interface OnShareClickListener {
+        void share(DailyReport dailyReport);
+    }
 
     @Nullable
     @Override
@@ -113,7 +119,12 @@ public class InformationFragment extends BaseFragment {
     }
 
     private void initRecyclerView() {
-        mInformationAdapter = new InformationAdapter(getActivity());
+        mInformationAdapter = new InformationAdapter(getActivity(), new OnShareClickListener() {
+            @Override
+            public void share(DailyReport dailyReport) {
+                requestShare(dailyReport);
+            }
+        });
         mRecyclerView.setAdapter(mInformationAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -128,6 +139,31 @@ public class InformationFragment extends BaseFragment {
                 handleRecycleScroll(recyclerView);
             }
         });
+    }
+
+    private void requestShare(final DailyReport dailyReport) {
+        Client.requestShareData(Share.SHARE_CODE_INFORMATION)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<Share>, Share>() {
+                    @Override
+                    protected void onRespSuccessData(Share data) {
+                        ShareDialog.with(getActivity())
+                                .setTitle(getString(R.string.share_to))
+                                .hasFeedback(false)
+                                .setShareThumbUrl(data.getShareLeUrl())
+                                .setShareTitle(data.getTitle())
+                                .setShareUrl(data.getShareLink() + "?id=" + dailyReport.getId())
+                                .setShareDescription(dailyReport.getTitle() + dailyReport.getContent())
+                                .show();
+                    }
+
+                    @Override
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
+                    }
+                })
+                .fireFree();
     }
 
     private void requestNewsList(final boolean isRefresh) {
@@ -282,10 +318,12 @@ public class InformationFragment extends BaseFragment {
         public static final int NONE_STICKY_VIEW = 3;
         private List<DailyReport> mNewsList;
         private Context mContext;
+        private OnShareClickListener mOnShareClickListener;
 
-        public InformationAdapter(Context context) {
+        public InformationAdapter(Context context, OnShareClickListener onShareClickListener) {
             this.mNewsList = new ArrayList<>();
             this.mContext = context;
+            this.mOnShareClickListener = onShareClickListener;
         }
 
         public void addAll(List<DailyReport> detailArrayList) {
@@ -314,7 +352,7 @@ public class InformationFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mNewsList.get(position), isTheDifferentDate((position)), mContext);
+            holder.bindDataWithView(mNewsList.get(position), isTheDifferentDate((position)), mContext, mOnShareClickListener);
             if (isTheDifferentDate(position)) {
                 holder.itemView.setTag(HAS_STICKY_VIEW);
             } else {
@@ -362,7 +400,7 @@ public class InformationFragment extends BaseFragment {
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindDataWithView(final DailyReport item, boolean theDifferentDate, Context context) {
+            public void bindDataWithView(final DailyReport item, boolean theDifferentDate, Context context, OnShareClickListener onShareClickListener) {
                 if (theDifferentDate) {
                     mDateArea.setVisibility(View.VISIBLE);
                     mWeekArea.setSelected(false);
@@ -394,13 +432,7 @@ public class InformationFragment extends BaseFragment {
                 mShare.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ShareDialog.with(getActivity())
-                                .setTitle(getString(R.string.share_to))
-                                .hasFeedback(false)
-                                .setShareThumbUrl(item.getCoverUrl())
-                                .setShareUrl(item.getUrl())
-                                .setShareDescription(item.getTitle() + item.getContent())
-                                .show();
+                        mOnShareClickListener.share(item);
                     }
                 });
                 if (TextUtils.isEmpty(item.getTitle())) {

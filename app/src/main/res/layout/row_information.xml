@@ -48,8 +48,9 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="6dp"
             android:ellipsize="end"
+            android:lineSpacingMultiplier="1.2"
             android:maxLines="3"
             android:textSize="14sp"
             tool:text="【深交所：将研究创新监管和服务质量，提高上市公司质量】深交所：将研究创新监管和服务质量，提高上市公司质量深交所：将研究创新监管和服究创新监管和究..."/>
@@ -65,6 +66,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="36dp"
                 android:layout_toLeftOf="@+id/share"
+                android:gravity="right"
+                android:minWidth="52dp"
                 android:textColor="@color/unluckyText"
                 android:textSize="12sp"
                 tool:text="阅读10"/>
