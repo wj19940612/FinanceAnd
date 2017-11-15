@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sbai.finance.BuildConfig;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -43,7 +42,6 @@ import com.sbai.finance.game.WSPush;
 import com.sbai.finance.game.WsClient;
 import com.sbai.finance.game.callback.WSCallback;
 import com.sbai.finance.game.cmd.ArenaQuickMatchLauncher;
-import com.sbai.finance.game.cmd.QuickMatch;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.arena.ArenaActivityAndUserStatus;
 import com.sbai.finance.model.arena.ArenaActivityAwardInfo;
@@ -411,34 +409,22 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
         super.onBattlePushReceived(battleWSPush);
-        switch (battleWSPush.getContent().getType()) {
-            case PushCode.QUICK_MATCH_TIMEOUT:
-            case PushCode.QUICK_MATCH_FAILURE:
-                showMatchTimeoutDialog();
-                break;
-            case PushCode.QUICK_MATCH_SUCCESS:
-                mQuickMatch.setImageResource(R.drawable.btn_current_battle);
-                Battle battle = (Battle) battleWSPush.getContent().getData();
-                StartMatchDialog.dismiss(getActivity());
-                SmartDialog.dismiss(getActivity());
-                if (battle != null) {
+        Battle battle = (Battle) battleWSPush.getContent().getData();
+        if (battle != null && (mBattle == null || mBattle.getId() != battle.getId())) {
+            switch (battleWSPush.getContent().getType()) {
+                case PushCode.QUICK_MATCH_TIMEOUT:
+                case PushCode.QUICK_MATCH_FAILURE:
+                    showMatchTimeoutDialog();
+                    break;
+                case PushCode.QUICK_MATCH_SUCCESS:
+                    StartMatchDialog.dismiss(getActivity());
+                    SmartDialog.dismiss(getActivity());
                     //防止出现多次推送
-                    if (mBattle == null || mBattle.getId() != battle.getId()) {
-                        if (battle.getGameType() == Battle.GAME_TYPE_ARENA) {
-                            openBattlePage(battle);
-                            mQuickMatch.setImageResource(R.drawable.btn_current_battle);
-                        } else {
-                            showMatchSuccessDialog(battle);
-                        }
-                    }
+                    openBattlePage(battle);
+                    mQuickMatch.setImageResource(R.drawable.btn_current_battle);
                     mBattle = battle;
-                }
-                break;
-            case PushCode.BATTLE_OVER:
-                if (BuildConfig.DEBUG) {
-                    ToastUtil.show("对战结束");
-                }
-                break;
+                    break;
+            }
         }
     }
 
@@ -446,124 +432,6 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
         Launcher.with(getActivity(), BattleActivity.class)
                 .putExtra(ExtraKeys.BATTLE, battle)
                 .executeForResult(REQ_CODE_FUTURE_BATTLE);
-    }
-
-    private void showMatchSuccessDialog(final Battle data) {
-        if (data == null) return;
-        String reward = "";
-        switch (data.getCoinType()) {
-            case Battle.COIN_TYPE_INGOT:
-                reward = data.getReward() + getActivity().getString(R.string.ingot);
-                break;
-            case Battle.COIN_TYPE_CASH:
-                reward = data.getReward() + getActivity().getString(R.string.cash);
-                break;
-            case Battle.COIN_TYPE_SCORE:
-                reward = data.getReward() + getActivity().getString(R.string.integral);
-                break;
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append(getString(R.string.battle_variety_name)).append(" ").append(data.getVarietyName()).append("\n")
-                .append(getString(R.string.battle_time)).append(" ").append(DateUtil.getMinutes(data.getEndline())).append("\n")
-                .append(getString(R.string.battle_reward)).append(" ").append(reward).append("\n")
-                .append(getString(R.string.versus_tip));
-
-        SmartDialog.single(getActivity(), sb.toString())
-                .setTitle(getString(R.string.title_match_success))
-                .setMessageMaxLines(10)
-                .setPositive(R.string.join_versus, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        requestJoinBattle(data, Battle.SOURCE_MATCH);
-                    }
-                })
-                .setNegative(R.string.continue_match, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        requestContinueMatch(data.getId());
-                    }
-                })
-                .setCancelableOnTouchOutside(false)
-                .show();
-    }
-
-
-    private void requestContinueMatch(int filteredId) {
-        if (mRefuseBattleIdSb.length() == 0) {
-            mRefuseBattleIdSb.append(filteredId);
-        } else {
-            mRefuseBattleIdSb.append(",").append(filteredId);
-        }
-        WsClient.get().send(new QuickMatch(QuickMatch.TYPE_CONTINUE, mRefuseBattleIdSb.toString()), new WSCallback<WSMessage<Resp>>() {
-            @Override
-            public void onResponse(WSMessage<Resp> respWSMessage) {
-                showMatchDialog();
-            }
-        }, TAG);
-    }
-
-    private void requestJoinBattle(final Battle data, String sourceMatch) {
-        Client.joinBattle(data.getId(), sourceMatch).setTag(TAG)
-                .setCallback(new Callback<Resp<Battle>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Battle> resp) {
-                        Battle battle = resp.getData();
-                        if (battle != null) {
-                            //更新列表对战信息
-                            data.setGameStatus(battle.getGameStatus());
-                            data.setAgainstUser(battle.getAgainstUser());
-                            data.setAgainstUserPortrait(battle.getAgainstUserPortrait());
-                            data.setAgainstUserName(battle.getAgainstUserName());
-                            mArenaFragmentAdapter.notifyDataSetChanged();
-
-                            openBattlePage(data);
-                        }
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        showJoinBattleFailureDialog(failedResp, data);
-                    }
-                }).fireFree();
-    }
-
-    private void showJoinBattleFailureDialog(Resp failedResp, Battle data) {
-        final int code = failedResp.getCode();
-        String msg = failedResp.getMsg();
-        int positiveMsg;
-        SmartDialog smartDialog = SmartDialog.single(getActivity(), msg);
-        if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
-            msg = getString(R.string.battle_joined_or_created);
-            positiveMsg = R.string.go_battle;
-        } else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
-            msg = getString(R.string.join_battle_balance_not_enough);
-            positiveMsg = R.string.go_recharge;
-        } else {
-            msg = getString(R.string.invite_invalid);
-            positiveMsg = R.string.ok;
-            smartDialog.setNegativeVisible(View.GONE);
-        }
-        smartDialog.setMessage(msg)
-                .setPositive(positiveMsg, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                        if (code == Battle.CODE_BATTLE_JOINED_OR_CREATED) {
-                            if (mBattle != null) {
-                                Launcher.with(getActivity(), BattleActivity.class)
-                                        .putExtra(ExtraKeys.BATTLE, mBattle)
-                                        .execute();
-                            }
-                        } else if (code == Battle.CODE_NO_ENOUGH_MONEY) {
-                            openVirtualCurrencyPage();
-                        }
-                    }
-                })
-                .setTitle(getString(R.string.join_versus_failure))
-                .setNegative(R.string.cancel)
-                .show();
     }
 
     private void requestUserFundInfo() {
