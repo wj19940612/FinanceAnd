@@ -436,7 +436,7 @@ public class InformationFragment extends BaseFragment {
                     }
                 });
                 if (TextUtils.isEmpty(item.getTitle())) {
-                    mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                    mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     mContent.setTextColor(ContextCompat.getColor(context, R.color.luckyText));
                     mContent.setText(Html.fromHtml(item.getContent().toString().trim()));
                 } else {

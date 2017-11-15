@@ -46,7 +46,7 @@ public class SevenHourNewsView extends RelativeLayout {
     public static final int MIN_HEIGHT = 300;
     public static final int TEXT_PADDING_DP = 14;
     public static final int TEXT_BIG_SP = 15;
-    public static final int TEXT_SMALL_SP = 15;
+    public static final int TEXT_SMALL_SP = 14;
     public static final int TEXT_MAX_LINES = 3;
     public static final int TEXT_ANIMATE_DURATION = 300;
     @BindView(R.id.contentLL)
@@ -223,8 +223,8 @@ public class SevenHourNewsView extends RelativeLayout {
         ForegroundColorSpan bigColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.primaryText));
         spannableStringBuilder.setSpan(bigColorSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
-        StyleSpan boldSpan = new StyleSpan(android.graphics.Typeface.BOLD);
-        spannableStringBuilder.setSpan(boldSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        StyleSpan boldSpan = new StyleSpan(android.graphics.Typeface.BOLD);
+//        spannableStringBuilder.setSpan(boldSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         AbsoluteSizeSpan bigSizeSpan = new AbsoluteSizeSpan(((int) Display.sp2Px(TEXT_BIG_SP, getResources())));
         spannableStringBuilder.setSpan(bigSizeSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
