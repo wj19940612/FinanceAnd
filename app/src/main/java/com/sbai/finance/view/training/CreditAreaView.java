@@ -93,9 +93,9 @@ public class CreditAreaView extends View {
     }
 
     private void parameterIsNotLegal() {
-        if (mCredPercent < 0 | mCredPercent > 1) {
-            throw new IllegalStateException(" please input legal data   ");
-        }
+//        if (mCredPercent < 0 | mCredPercent > 1) {
+//            throw new IllegalStateException(" please input legal data   ");
+//        }
     }
 
     @Override
@@ -150,6 +150,8 @@ public class CreditAreaView extends View {
      * @param percent
      */
     public void setPercent(@FloatRange(from = 0, to = 1) float percent) {
+        if (percent > 1)
+            percent = 1;
         setPercentAndGradeCount(percent, mGradeCount);
     }
 

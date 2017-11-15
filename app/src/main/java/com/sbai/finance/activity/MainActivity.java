@@ -20,6 +20,8 @@ import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.dialog.system.StartDialogFragment;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
+import com.sbai.finance.game.WsClient;
+import com.sbai.finance.market.MarketSubscriber;
 import com.sbai.finance.model.ActivityModel;
 import com.sbai.finance.model.AppVersion;
 import com.sbai.finance.model.Banner;
@@ -34,8 +36,6 @@ import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.view.ScrollableViewPager;
-import com.sbai.finance.game.WsClient;
-import com.sbai.finance.market.MarketSubscriber;
 import com.sbai.httplib.ApiError;
 
 import butterknife.BindView;

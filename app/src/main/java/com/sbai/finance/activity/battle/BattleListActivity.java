@@ -108,28 +108,21 @@ public class BattleListActivity extends BaseActivity implements
     @Override
     protected void onBattlePushReceived(WSPush<Battle> battleWSPush) {
         super.onBattlePushReceived(battleWSPush);
-        switch (battleWSPush.getContent().getType()) {
-            case PushCode.QUICK_MATCH_TIMEOUT:
-            case PushCode.QUICK_MATCH_FAILURE:
-                showMatchTimeoutDialog();
-                break;
-            case PushCode.QUICK_MATCH_SUCCESS:
-                Battle battle = (Battle) battleWSPush.getContent().getData();
-                if (battle != null) {
-                    if(mCurrentBattle==null||mCurrentBattle.getId()!=battle.getId()){
-                        if (battle.getGameType() == Battle.GAME_TYPE_ARENA) {
-                            Launcher.with(getActivity(), BattleActivity.class)
-                                    .putExtra(ExtraKeys.BATTLE, battle)
-                                    .execute();
-                        } else {
-                            showMatchSuccessDialog(battle);
-                        }
-                    }
-                }
-                break;
-            case PushCode.BATTLE_OVER:
-                requestCurrentBattle();
-                break;
+        Battle battle = (Battle) battleWSPush.getContent().getData();
+        if (battle != null && (mCurrentBattle == null || mCurrentBattle.getId() != battle.getId())) {
+            switch (battleWSPush.getContent().getType()) {
+                case PushCode.QUICK_MATCH_TIMEOUT:
+                case PushCode.QUICK_MATCH_FAILURE:
+                    showMatchTimeoutDialog();
+                    break;
+                case PushCode.QUICK_MATCH_SUCCESS:
+                    showMatchSuccessDialog(battle);
+                    mCurrentBattle = battle;
+                    break;
+                case PushCode.BATTLE_OVER:
+                    requestCurrentBattle();
+                    break;
+            }
         }
     }
 
