@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.home.AllTrainingListActivity;
@@ -31,6 +33,7 @@ import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.leaderboard.LeaderThreeRank;
 import com.sbai.finance.model.stock.StockData;
+import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -46,6 +49,7 @@ import com.sbai.finance.view.ImportantNewsView;
 import com.sbai.finance.view.LeaderBoardView;
 import com.sbai.finance.view.SevenHourNewsView;
 import com.sbai.finance.view.VerticalScrollTextView;
+import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.httplib.ApiError;
 import com.sbai.httplib.CookieManger;
 
@@ -89,6 +93,16 @@ public class HomePageFragment extends BaseFragment {
     SevenHourNewsView mSevenHourNewsView;
     @BindView(R.id.importantNewsView)
     ImportantNewsView mImportantNewsView;
+
+    private MoreClickListener mMoreClickListener;
+
+    public void setMoreClickListener(MoreClickListener moreClickListener) {
+        moreClickListener = moreClickListener;
+    }
+
+    public interface MoreClickListener {
+        public void onMoreClick(int pageSize);
+    }
 
     @Nullable
     @Override
@@ -262,6 +276,11 @@ public class HomePageFragment extends BaseFragment {
                     Launcher.with(getActivity(), WebActivity.class)
                             .putExtra(WebActivity.EX_URL, information.getContent())
                             .execute();
+                } else {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_HTML, information.getContent())
+                            .putExtra(WebActivity.EX_TITLE, information.getTitle())
+                            .execute();
                 }
             }
         });
@@ -307,7 +326,15 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onMoreClick() {
                 umengEventCount(UmengCountEventId.PAGE_INFORMATION_MORE);
-                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class).execute();
+                ((MainActivity) getActivity()).switchToInformation(0);
+//                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class).execute();
+            }
+        });
+
+        mSevenHourNewsView.setOnShareClickListener(new SevenHourNewsView.OnShareClickListener() {
+            @Override
+            public void onShare(DailyReport dailyReport) {
+                requestShareData(dailyReport);
             }
         });
         mImportantNewsView.setOnImportantNewsClickListener(new ImportantNewsView.OnImportantNewsClickListener()
@@ -325,9 +352,10 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onMoreClick() {
                 umengEventCount(UmengCountEventId.PAGE_FOCUS_NEWS_MORE);
-                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class)
-                        .putExtra(ExtraKeys.PAGE_INDEX, 1)
-                        .execute();
+                ((MainActivity) getActivity()).switchToInformation(1);
+//                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class)
+//                        .putExtra(ExtraKeys.PAGE_INDEX, 1)
+//                        .execute();
             }
         });
 
@@ -635,6 +663,23 @@ public class HomePageFragment extends BaseFragment {
 
     private void requestClickBanner(String bannerId) {
         Client.requestClickBanner(bannerId).setTag(TAG).fireFree();
+    }
+
+    private void requestShareData(final DailyReport dailyReport) {
+        Client.requestShareData(Share.SHARE_CODE_INFORMATION).setCallback(new Callback2D<Resp<Share>, Share>() {
+
+            @Override
+            protected void onRespSuccessData(Share data) {
+                ShareDialog.with(getActivity())
+                        .setTitle((getActivity().getString(R.string.share_to)))
+                        .hasFeedback(false)
+                        .setShareThumbUrl(data.getShareLeUrl())
+                        .setShareUrl(data.getShareLink() + "?id=" + dailyReport.getId())
+                        .setShareTitle(data.getTitle() == null ? "" : data.getTitle())
+                        .setShareDescription(dailyReport.getTitle() + dailyReport.getContent())
+                        .show();
+            }
+        }).fireFree();
     }
 
     @Override

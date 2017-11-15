@@ -1,31 +1,36 @@
-package com.sbai.finance.activity.home;
+package com.sbai.finance.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.home.InformationAndFocusNewsActivity;
 import com.sbai.finance.fragment.focusnews.FocusNewsFragment;
 import com.sbai.finance.fragment.focusnews.InformationFragment;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.finance.view.slidingTab.SlidingTabTitle;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
- * 7x24资讯  要闻
+ * Created by Administrator on 2017\11\15 0015.
  */
 
-public class InformationAndFocusNewsActivity extends BaseActivity {
+public class InformationAndFocusFragment extends BaseFragment {
+    Unbinder unbinder;
     @BindView(R.id.tabLayout)
     SlidingTabTitle mTabLayout;
     @BindView(R.id.viewPager)
@@ -33,24 +38,20 @@ public class InformationAndFocusNewsActivity extends BaseActivity {
     private PagerAdapter mPagerAdapter;
     private int mPage;
 
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_information_and_focus_news);
-        ButterKnife.bind(this);
-        initData(getIntent());
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_information_and_focus_news, container, false);
+        unbinder = ButterKnife.bind(this, view);
         initViewPager();
         initTabView();
-    }
-
-    private void initData(Intent intent) {
-        mPage = intent.getIntExtra(ExtraKeys.PAGE_INDEX, -1);
+        return view;
     }
 
     private void initViewPager() {
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setCurrentItem(0, false);
-        mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), getActivity());
+        mPagerAdapter = new PagerAdapter(getChildFragmentManager(), getActivity());
         mViewPager.setAdapter(mPagerAdapter);
     }
 
@@ -69,6 +70,10 @@ public class InformationAndFocusNewsActivity extends BaseActivity {
         }
     }
 
+    public void setPage(int page) {
+        mPage = page;
+        mTabLayout.setTabIndex(mPage);
+    }
 
     public static class PagerAdapter extends FragmentPagerAdapter {
 

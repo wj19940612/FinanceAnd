@@ -2,6 +2,7 @@ package com.sbai.finance.view.slidingTab;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -18,16 +19,24 @@ import com.sbai.finance.R;
 
 public class SlidingTabTitle extends SlidingTabLayout {
 
+    private boolean mShowBack;
+
     public SlidingTabTitle(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
     public SlidingTabTitle(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        initView(context);
+        initView(context, attrs);
     }
 
-    private void initView(Context context) {
+    private void initView(Context context, AttributeSet attrs) {
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.SlidingTabTitle);
+
+        mShowBack = typedArray.getBoolean(R.styleable.SlidingTabTitle_showBack, true);
+
+        typedArray.recycle();
+
         int fixedHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
                 getResources().getDisplayMetrics());
         int paddingHorizontal = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14,
@@ -53,7 +62,9 @@ public class SlidingTabTitle extends SlidingTabLayout {
                 }
             }
         });
-        viewGroup.addView(leftView, params);
+        if (mShowBack) {
+            viewGroup.addView(leftView, params);
+        }
         // center tab view
         params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
@@ -79,7 +90,7 @@ public class SlidingTabTitle extends SlidingTabLayout {
     @Override
     protected TextView createDefaultTabView(Context context) {
         TextView textView = super.createDefaultTabView(context);
-        textView.setPadding(0,0,0,textView.getPaddingBottom());
+        textView.setPadding(0, 0, 0, textView.getPaddingBottom());
         return textView;
     }
 }

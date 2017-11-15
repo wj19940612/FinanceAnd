@@ -20,6 +20,10 @@
         <attr name="isRectIndicator" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="SlidingTabTitle">
+        <attr name="showBack" format="boolean"/>
+    </declare-styleable>
+
     <declare-styleable name="BottomTabs">
         <attr name="textSize" format="dimension"/>
         <attr name="textColor" format="color"/>

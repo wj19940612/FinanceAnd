@@ -10,6 +10,7 @@
 
     <!-- Main -->
     <string name="home">首页</string>
+    <string name="information">资讯</string>
     <string name="miss_talk">姐说</string>
     <string name="arena">竞技场</string>
     <string name="mine">我的</string>>
@@ -677,6 +678,7 @@
     <string name="source_and_time">来源: %1$s    %2$s</string>
     <string name="more_training">更多训练</string>
     <string name="all_training">所有训练</string>
+    <string name="lemi_actual_flash">乐米实时快讯</string>
 
     <!--了解学分-->
     <string name="score_explain_title">乐米学分</string>
@@ -894,4 +896,5 @@
     <string name="hello_morning">上午好，%1$s！</string>
     <string name="hello_afternoon">下午好，%1$s！</string>
     <string name="hello_evening">晚上好，%1$s！</string>
+    <string name="read_count_">阅 %1$d</string>
 </resources>
