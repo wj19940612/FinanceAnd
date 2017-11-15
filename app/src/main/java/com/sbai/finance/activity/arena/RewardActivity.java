@@ -417,7 +417,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 showMatchTimeoutDialog();
                 break;
             case PushCode.QUICK_MATCH_SUCCESS:
-                mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
+                mQuickMatch.setImageResource(R.drawable.btn_current_battle);
                 Battle battle = (Battle) battleWSPush.getContent().getData();
                 StartMatchDialog.dismiss(getActivity());
                 SmartDialog.dismiss(getActivity());
@@ -426,6 +426,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                     if (mBattle == null || mBattle.getId() != battle.getId()) {
                         if (battle.getGameType() == Battle.GAME_TYPE_ARENA) {
                             openBattlePage(battle);
+                            mQuickMatch.setImageResource(R.drawable.btn_current_battle);
                         } else {
                             showMatchSuccessDialog(battle);
                         }
@@ -833,12 +834,12 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                             if (battleListFragment != null) {
                                 battleListFragment.setCurrentBattle(mBattle);
                             }
-                            mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
+                            mQuickMatch.setImageResource(R.drawable.btn_current_battle);
                             if (needQuickMatch) {
                                 openBattlePage(mBattle);
                             }
                         } else {
-                            mQuickMatch.setBackgroundResource(R.drawable.btn_battle_matching);
+                            mQuickMatch.setImageResource(R.drawable.btn_battle_matching);
                             if (needQuickMatch) {
                                 quickMatchArena(ArenaQuickMatchLauncher.ARENA_MATCH_START);
                             }
@@ -1187,9 +1188,9 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     public void onCurrentBattle(Battle battle) {
         if (battle != null) {
             if (battle.isBattleStarted()) {
-                mQuickMatch.setBackgroundResource(R.drawable.btn_current_battle);
+                mQuickMatch.setImageResource(R.drawable.btn_current_battle);
             } else {
-                mQuickMatch.setBackgroundResource(R.drawable.btn_battle_matching);
+                mQuickMatch.setImageResource(R.drawable.btn_battle_matching);
             }
         }
     }
