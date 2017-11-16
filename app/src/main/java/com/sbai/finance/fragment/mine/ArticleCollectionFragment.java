@@ -193,8 +193,8 @@ public class ArticleCollectionFragment extends BaseFragment {
             @Override
             public void onGoingViewClick() {
                 Launcher.with(getActivity(), MainActivity.class)
-                        .putExtra(ExtraKeys.PAGE_INDEX, 1)
                         .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM,MainActivity.PAGE_POSITION_INFO_NEWS)
+                        .putExtra(ExtraKeys.PAGE_INDEX, 1)
                         .execute();
             }
         });

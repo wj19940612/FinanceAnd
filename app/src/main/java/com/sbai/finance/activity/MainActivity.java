@@ -60,7 +60,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     private StartDialogFragment mStartDialogFragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void
+    onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
@@ -99,10 +100,10 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     private void handleIntentData(Intent intent) {
         int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
         if (0 <= currentItem && currentItem < mViewPager.getChildCount()) {
-            if (intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, -1) != -1) {
+            if (intent.getIntExtra(ExtraKeys.PAGE_INDEX, -1) != -1) {
                 //资讯要闻页
                 InformationAndFocusFragment informationFragment = (InformationAndFocusFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_INFO_NEWS);
-                informationFragment.setPage(intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, -1));
+                informationFragment.setPage(intent.getIntExtra(ExtraKeys.PAGE_INDEX, -1));
             }
             mViewPager.setCurrentItem(currentItem, false);
         }

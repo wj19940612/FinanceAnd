@@ -141,7 +141,7 @@ public class BusinessBanner extends RelativeLayout {
     private void setTitle(Banner banner, int location) {
         String title = banner.getTitle();
         if (TextUtils.isEmpty(title)) {
-            return;
+            title = "";
         }
 
         TextView textView;
@@ -165,7 +165,7 @@ public class BusinessBanner extends RelativeLayout {
     private void setSubTitle(Banner banner, int location) {
         String subTitle = banner.getSubTitle();
         if (TextUtils.isEmpty(subTitle)) {
-            return;
+            subTitle = "";
         }
         TextView textView;
         switch (location) {
@@ -228,6 +228,8 @@ public class BusinessBanner extends RelativeLayout {
         }
         if (!TextUtils.isEmpty(banner.getCover())) {
             Glide.with(mContext).load(banner.getCover()).into(imageView);
+        } else {
+            imageView.setVisibility(View.GONE);
         }
         rl.setOnClickListener(new OnClickListener() {
             @Override

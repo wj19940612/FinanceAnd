@@ -171,9 +171,9 @@ public class InformationFragment extends BaseFragment {
                                 .setTitle(getString(R.string.share_to))
                                 .hasFeedback(false)
                                 .setShareThumbUrl(data.getShareLeUrl())
-                                .setShareTitle(data.getTitle())
+                                .setShareTitle(dailyReport.getTitle())
                                 .setShareUrl(shareLinkBuilder.toString())
-                                .setShareDescription(dailyReport.getTitle() + dailyReport.getContent())
+                                .setShareDescription(dailyReport.getContent())
                                 .show();
                     }
 
