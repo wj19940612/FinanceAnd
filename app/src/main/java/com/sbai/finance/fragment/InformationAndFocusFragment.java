@@ -14,11 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.home.InformationAndFocusNewsActivity;
 import com.sbai.finance.fragment.focusnews.FocusNewsFragment;
 import com.sbai.finance.fragment.focusnews.InformationFragment;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.finance.view.slidingTab.SlidingTabTitle;
 
 import butterknife.BindView;
@@ -73,6 +71,22 @@ public class InformationAndFocusFragment extends BaseFragment {
     public void setPage(int page) {
         mPage = page;
         mTabLayout.setTabIndex(mPage);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            InformationFragment fragment = (InformationFragment) mPagerAdapter.getFragment(0);
+            if (fragment != null) {
+                fragment.refreshData();
+            }
+
+            FocusNewsFragment focusNewsFragment = (FocusNewsFragment) mPagerAdapter.getFragment(1);
+            if (focusNewsFragment != null) {
+
+            }
+        }
     }
 
     public static class PagerAdapter extends FragmentPagerAdapter {

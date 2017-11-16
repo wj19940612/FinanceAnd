@@ -51,7 +51,6 @@ public class FocusNewsFragment extends BaseFragment implements
     CustomSwipeRefreshLayout mSwipeRefreshLayout;
     Unbinder unbinder;
 
-    private int mPageSize = 20;
     private int mPageNo = 0;
     private Set<String> mSet;
     private DailyReportAdapter mDailyReportAdapter;
@@ -82,6 +81,7 @@ public class FocusNewsFragment extends BaseFragment implements
     public void onPause() {
         super.onPause();
         stopRefreshAnimation();
+        stopScheduleJob();
     }
 
     @Override
@@ -164,7 +164,7 @@ public class FocusNewsFragment extends BaseFragment implements
                 mDailyReportAdapter.add(dailyReport);
             }
         }
-        if (data.size() < mPageSize) {
+        if (data.size() < Client.DEFAULT_PAGE_SIZE) {
             mSwipeRefreshLayout.setLoadMoreEnable(false);
         } else {
             mPageNo++;

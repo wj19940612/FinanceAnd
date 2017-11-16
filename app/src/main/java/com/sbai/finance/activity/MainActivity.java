@@ -47,6 +47,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     public static final int PAGE_POSITION_MISS = 3;
     public static final int PAGE_POSITION_MINE = 4;
+    private static final int PAGE_POSITION_INFO_NEWS = 1;
+    private static final int PAGE_POSITION_ARENA = 2;
 
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
@@ -203,12 +205,12 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
                     @Override
                     protected void onRespSuccessData(UserFundInfo data) {
-                        ArenaFragment arenaFragment = (ArenaFragment) mMainFragmentsAdapter.getFragment(1);
+                        ArenaFragment arenaFragment = (ArenaFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_ARENA);
                         if (arenaFragment != null) {
                             arenaFragment.updateIngotNumber(data);
                         }
 
-                        MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(4);
+                        MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_MINE);
                         if (mineFragment != null) {
                             mineFragment.updateIngotNumber(data);
                         }
@@ -271,7 +273,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
             public void onTabClick(int position) {
                 mBottomTabs.selectTab(position);
                 mViewPager.setCurrentItem(position, false);
-                if (position == 1) {
+                if (position == PAGE_POSITION_MISS) {
                     umengEventCount(UmengCountEventId.MISS_TALK_NAVIGATION);
                 }
             }
@@ -280,18 +282,18 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     private void refreshNotReadMessageCount() {
         if (LocalUser.getUser().isLogin()) {
-            MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(4);
+            MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_MINE);
             if (mineFragment != null) {
                 mineFragment.refreshNotReadMessageCount();
             }
         }
     }
 
-    public void switchToInformation(int page){
-        InformationAndFocusFragment informationFragment = (InformationAndFocusFragment) mMainFragmentsAdapter.getFragment(3);
-        informationFragment.setPage(page );
-        mBottomTabs.selectTab(3);
-        mViewPager.setCurrentItem(3, false);
+    public void switchToInformation(int page) {
+        InformationAndFocusFragment informationFragment = (InformationAndFocusFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_INFO_NEWS);
+        informationFragment.setPage(page);
+        mBottomTabs.selectTab(PAGE_POSITION_INFO_NEWS);
+        mViewPager.setCurrentItem(PAGE_POSITION_INFO_NEWS, false);
     }
 
     @Override
@@ -299,9 +301,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         mBottomTabs.setPointNum(count);
     }
 
-    public boolean isMissTalkFragment() {
-        return mViewPager.getCurrentItem() == 1;
-    }
 
 
     private static class MainFragmentsAdapter extends FragmentPagerAdapter {
@@ -319,11 +318,11 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 case 0:
                     return new HomePageFragment();
                 case 1:
-                    return new ArenaFragment();
-                case 2:
-                    return new MissTalkFragment();
-                case 3:
                     return new InformationAndFocusFragment();
+                case 2:
+                    return new ArenaFragment();
+                case 3:
+                    return new MissTalkFragment();
                 case 4:
                     return new MineFragment();
             }

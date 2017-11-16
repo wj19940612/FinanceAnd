@@ -42,7 +42,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.utils.DateUtil.DEFAULT_FORMAT;
 import static com.sbai.finance.utils.DateUtil.FORMAT_HOUR_MINUTE;
 
 /**
@@ -94,10 +93,15 @@ public class InformationFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPage = 0;
-                requestNewsList(true);
+                refreshData();
             }
         });
+    }
+
+    public void refreshData() {
+        mPage = 0;
+        mLoadMore = true;
+        requestNewsList(true);
     }
 
     @Override

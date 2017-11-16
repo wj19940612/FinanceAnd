@@ -2113,7 +2113,7 @@ public class Client {
     public static API getNewsList(int type, int page) {
         return new API("/user/dailyReport/findDailyReportList.do", new ApiParams()
                 .put("page", page)
-                .put("pageSize", 20)
+                .put("pageSize", Client.DEFAULT_PAGE_SIZE)
                 .put("type", type));
     }
 
