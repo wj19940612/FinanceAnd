@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.MainActivity;
 
 public class BottomTabs extends LinearLayout {
 
@@ -63,7 +64,7 @@ public class BottomTabs extends LinearLayout {
         for (int i = 0; i < mLength; i++) {
             LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             params.weight = 1;
-            if (i == 3) {
+            if (i == MainActivity.PAGE_POSITION_MINE) {
                 addView(createPointTab(i), params);
                 continue;
             }
@@ -94,8 +95,8 @@ public class BottomTabs extends LinearLayout {
         return text;
     }
 
-    public void setPointNum(int num) {
-        RedPointTextView tabTextView = (RedPointTextView) getChildAt(3);
+    public void setPointNum(int index, int num) {
+        RedPointTextView tabTextView = (RedPointTextView) getChildAt(index);
         tabTextView.setNum(num);
     }
 

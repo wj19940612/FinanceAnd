@@ -74,14 +74,14 @@ public class FocusNewsFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
         requestAllDayNewsList();
-        startScheduleJob(5 * 1000);
+//        startScheduleJob(5 * 1000);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         stopRefreshAnimation();
-        stopScheduleJob();
+//        stopScheduleJob();
     }
 
     @Override

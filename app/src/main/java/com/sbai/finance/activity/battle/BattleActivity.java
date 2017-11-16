@@ -514,7 +514,7 @@ public class BattleActivity extends BaseActivity {
     }
 
     private void showGameOverDialog() {
-        if (mBattleStatus != OVER_OBSERVER) {
+        if (mBattleStatus >= OVER_OWNER && mBattleStatus <= OVER_CHALLENGER) {
             int winLoss;
             String content;
             if (mBattle.getWinResult() == Battle.WIN_RESULT_TIE) {
