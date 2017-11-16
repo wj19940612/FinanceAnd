@@ -28,6 +28,22 @@ public class AppJs {
         mContext = context;
     }
 
+    @JavascriptInterface
+    public void openShareDialogWithoutReward(String title, String description, String shareUrl, String shareThumbnailUrl) {
+        if (mContext instanceof Activity) {
+            final Activity activity = (Activity) mContext;
+            ShareDialog.with(activity)
+                    .setTitle(mContext.getString(R.string.share_to))
+                    .setTitleVisible(true)
+                    .setShareTitle(title)
+                    .setShareDescription(description)
+                    .setShareUrl(shareUrl)
+                    .setShareThumbUrl(shareThumbnailUrl)
+                    .hasFeedback(false)
+                    .show();
+        }
+    }
+
     /**
      * 打开分享弹窗
      */

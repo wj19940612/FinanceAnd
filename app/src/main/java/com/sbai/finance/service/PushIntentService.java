@@ -38,6 +38,8 @@ import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventId;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by ${wangJie} on 2017/5/3.
@@ -163,9 +165,11 @@ public class PushIntentService extends GTIntentService {
     private PendingIntent setPendingIntent(Context context, PushMessageModel data) {
         Intent intent = null;
         if (data.isDailyReportDetail()) {
+            MobclickAgent.onEvent(context, UmengCountEventId.PUSH_FOCUS_NEWS);
             intent = new Intent(context, DailyReportDetailActivity.class);
             intent.putExtra(DailyReportDetailActivity.EX_ID, data.getDataId());
         } else if (data.isBattleMatchSuccess()) {
+            MobclickAgent.onEvent(context, UmengCountEventId.PUSH_FUTURE_PK);
             if (!Preference.get().isForeground() && data.getData() != null) {
                 intent = new Intent(context, BattleActivity.class);
                 intent.putExtra(ExtraKeys.BATTLE, data.getData());
@@ -178,6 +182,7 @@ public class PushIntentService extends GTIntentService {
 
         switch (data.getType()) {
             case PushMessageModel.QUESTION_DETAIL:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_FOLLOW_MANUAL);
                 intent = new Intent(context, QuestionDetailActivity.class);
                 try {
                     intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
@@ -188,6 +193,7 @@ public class PushIntentService extends GTIntentService {
                 }
                 break;
             case PushMessageModel.ACTIVITY:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_ACTIVITY);
                 intent = new Intent(context, MainActivity.class);
                 Banner banner = new Banner();
                 //返回id 去查询banner
@@ -196,18 +202,22 @@ public class PushIntentService extends GTIntentService {
                 intent.putExtra(ExtraKeys.ACTIVITY, banner);
                 break;
             case PushMessageModel.FEED_BACK_REPLY:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_FEEDBACK);
                 intent = new Intent(context, MainActivity.class);
                 intent.putExtra(ExtraKeys.TRAINING, data.getDataId());
                 intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_MINE);
                 intent.putExtra(ExtraKeys.PUSH_FEEDBACK, true);
                 break;
             case PushMessageModel.SELF_STUDY_ROOM:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_STUDY_ROOM);
                 intent = new Intent(context, StudyRoomActivity.class);
                 break;
             case PushMessageModel.TRAINING:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_TRAINING);
                 intent = new Intent(context, MainActivity.class);
                 break;
             case PushMessageModel.MISS_MESSAGE:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_FOLLOW_AUTOMATIC);
                 intent = new Intent(context, MissProfileActivity.class);
                 try {
                     intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
@@ -218,6 +228,7 @@ public class PushIntentService extends GTIntentService {
                 }
                 break;
             case PushMessageModel.MODULE:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_MODULE);
                 // 暂时保留，先不处理
                 break;
             case PushMessageModel.H5_LINK:

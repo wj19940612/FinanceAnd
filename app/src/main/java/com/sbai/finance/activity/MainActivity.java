@@ -121,6 +121,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
         String webPageUrl = intent.getStringExtra(ExtraKeys.WEB_PAGE_URL);
         if (!TextUtils.isEmpty(webPageUrl)) {
+            umengEventCount(UmengCountEventId.PUSH_INFORMATION);
             openWebPage(webPageUrl);
         }
     }

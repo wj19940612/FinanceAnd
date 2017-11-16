@@ -382,5 +382,32 @@ public class UmengCountEventId {
     public static final String WALLET_CASH = "purse0200";
     public static final String WALLET_CASH_RECHARGE = "purse0201";
     public static final String WALLET_CASH_CALL_SERVICE = "purse0202";
+
+    /**
+     * Push（主播就是小姐姐）
+     * push0001,自习室自动推送,0
+     * push0002,训练自动推送,0
+     * push0003,活动手动推送,0
+     * push0004,模块手动推送,0
+     * push0005,意见反馈推送,0
+     * push0006,关注的主播手动推送,0
+     * push0007,关注的主播自动推送,0
+     * push0008,主播回答问题自动推送,0
+     * push0009,快讯自动推送,0
+     * push0010,快讯手动推送,0
+     * push0011,要闻手动推送,0
+     * push0012,期货对战消息推送,0
+     */
+    public static final String PUSH_STUDY_ROOM = "push0001";
+    public static final String PUSH_TRAINING = "push0002";
+    public static final String PUSH_ACTIVITY = "push0003";
+    public static final String PUSH_MODULE = "push0004";
+    public static final String PUSH_FEEDBACK = "push0005";
+    public static final String PUSH_FOLLOW_MANUAL = "push0006";
+    public static final String PUSH_FOLLOW_AUTOMATIC = "push0007";
+    public static final String PUSH_ANSWER = "push0008";
+    public static final String PUSH_INFORMATION = "push0009";
+    public static final String PUSH_FOCUS_NEWS = "push0010";
+    public static final String PUSH_FUTURE_PK = "push0011";
 }
 
