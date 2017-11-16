@@ -159,12 +159,19 @@ public class InformationFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<Share>, Share>() {
                     @Override
                     protected void onRespSuccessData(Share data) {
+                        String shareLink = data.getShareLink();
+                        StringBuilder shareLinkBuilder = new StringBuilder(data.getShareLink());
+                        if(shareLink.contains("?")){
+                            shareLinkBuilder.append("&id=");
+                        }else{
+                            shareLinkBuilder.append("?id=");
+                        }
                         ShareDialog.with(getActivity())
                                 .setTitle(getString(R.string.share_to))
                                 .hasFeedback(false)
                                 .setShareThumbUrl(data.getShareLeUrl())
                                 .setShareTitle(data.getTitle())
-                                .setShareUrl(data.getShareLink() + "?id=" + dailyReport.getId())
+                                .setShareUrl(shareLinkBuilder.toString())
                                 .setShareDescription(dailyReport.getTitle() + dailyReport.getContent())
                                 .show();
                     }

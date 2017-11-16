@@ -669,11 +669,19 @@ public class HomePageFragment extends BaseFragment {
 
             @Override
             protected void onRespSuccessData(Share data) {
+                String shareLink = data.getShareLink();
+                StringBuilder shareLinkBuilder = new StringBuilder(data.getShareLink());
+                if(shareLink.contains("?")){
+                    shareLinkBuilder.append("&id=");
+                }else{
+                    shareLinkBuilder.append("?id=");
+                }
+                shareLinkBuilder.append(dailyReport.getId());
                 ShareDialog.with(getActivity())
                         .setTitle((getActivity().getString(R.string.share_to)))
                         .hasFeedback(false)
                         .setShareThumbUrl(data.getShareLeUrl())
-                        .setShareUrl(data.getShareLink() + "?id=" + dailyReport.getId())
+                        .setShareUrl(shareLinkBuilder.toString())
                         .setShareTitle(data.getTitle() == null ? "" : data.getTitle())
                         .setShareDescription(dailyReport.getTitle() + dailyReport.getContent())
                         .show();
