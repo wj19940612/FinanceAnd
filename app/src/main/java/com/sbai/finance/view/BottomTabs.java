@@ -94,8 +94,8 @@ public class BottomTabs extends LinearLayout {
         return text;
     }
 
-    public void setPointNum(int num) {
-        RedPointTextView tabTextView = (RedPointTextView) getChildAt(3);
+    public void setPointNum(int index, int num) {
+        RedPointTextView tabTextView = (RedPointTextView) getChildAt(index);
         tabTextView.setNum(num);
     }
 

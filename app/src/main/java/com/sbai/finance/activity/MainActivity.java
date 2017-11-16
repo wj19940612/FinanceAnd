@@ -298,9 +298,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     @Override
     public void onNoReadNewsNumber(int count) {
-        mBottomTabs.setPointNum(count);
+        mBottomTabs.setPointNum(PAGE_POSITION_MINE, count);
     }
-
 
 
     private static class MainFragmentsAdapter extends FragmentPagerAdapter {

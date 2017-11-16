@@ -114,13 +114,13 @@ public class InformationFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        startScheduleJob(5 * 1000);
+//        startScheduleJob(5 * 1000);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        stopRefreshAnimation();
+//        stopRefreshAnimation();
     }
 
     @Override
