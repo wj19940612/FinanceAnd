@@ -89,13 +89,20 @@ public class InformationFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         mSet = new HashSet<>();
         initRecyclerView();
-        requestNewsList(true);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshData();
             }
         });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            refreshData();
+        }
     }
 
     public void refreshData() {
@@ -172,7 +179,6 @@ public class InformationFragment extends BaseFragment {
 
     private void requestNewsList(final boolean isRefresh) {
         Client.getNewsList(DailyReport.INFORMATION, mPage)
-                .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<DailyReport>>, List<DailyReport>>() {
                     @Override
