@@ -23,6 +23,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.arena.ArenaActivityAndUserStatus;
 import com.sbai.finance.model.arena.ArenaInfo;
 import com.sbai.finance.model.fund.UserFundInfo;
+import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -31,6 +32,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.OnTouchAlphaChangeImageView;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
@@ -61,6 +63,8 @@ public class ArenaFragment extends BaseFragment {
     OnTouchAlphaChangeImageView mMoneyRewardArena;
     @BindView(R.id.generalBattleBanner)
     OnTouchAlphaChangeImageView mGeneralBattleBanner;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     private Unbinder mBind;
 
     @Nullable
@@ -76,6 +80,21 @@ public class ArenaFragment extends BaseFragment {
         super.onResume();
         startBreatheAnimation();
         updateUserStatus();
+        // TODO: 2017/11/16 后期删除
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: 2017/11/16 增加入口 后期删除
+                mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_URL, API.getHost()+"/lm/futurespk/index.html?show=1")
+                                .execute();
+                    }
+                });
+            }
+        });
     }
 
     private void updateArenaActivityStatus() {

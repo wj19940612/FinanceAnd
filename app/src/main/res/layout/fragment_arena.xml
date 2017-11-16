@@ -8,6 +8,9 @@
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        app:rightVisible="true"
+        app:rightText="活动入口"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:titleText="@string/arena"

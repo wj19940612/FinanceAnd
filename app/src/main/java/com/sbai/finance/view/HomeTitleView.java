@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,14 +18,11 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.NoticeRadio;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
-import com.sbai.finance.model.leaderboard.LeaderThreeRank;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,10 +31,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.sbai.finance.model.leaderboard.LeaderThreeRank.INGOT;
-import static com.sbai.finance.model.leaderboard.LeaderThreeRank.PROFIT;
-import static com.sbai.finance.model.leaderboard.LeaderThreeRank.SAVANT;
 
 /**
  * Created by Administrator on 2017\10\25 0025.
@@ -199,7 +191,7 @@ public class HomeTitleView extends RelativeLayout {
         mIndexClickListener = indexClickListener;
     }
 
-    public void stopVerticalSrcoll(){
+    public void stopVerticalSrcoll() {
         mVerticalScrollTextView.stopAutoScroll();
     }
 
@@ -275,8 +267,14 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     private boolean judgeShowTime(Greeting greetingTitle) {
-        long startTime = DateUtil.convertString2Long(greetingTitle.getStartTime(), DateUtil.DEFAULT_FORMAT);
-        long endTime = DateUtil.convertString2Long(greetingTitle.getEndTime(), DateUtil.DEFAULT_FORMAT);
+        long startTime = 0;
+        long endTime = 0;
+        if (!TextUtils.isEmpty(greetingTitle.getStartTime())) {
+            startTime = DateUtil.convertString2Long(greetingTitle.getStartTime(), DateUtil.DEFAULT_FORMAT);
+        }
+        if (!TextUtils.isEmpty(greetingTitle.getEndTime())) {
+            endTime = DateUtil.convertString2Long(greetingTitle.getEndTime(), DateUtil.DEFAULT_FORMAT);
+        }
         long nowTime = SysTime.getSysTime().getSystemTimestamp();
         if (nowTime >= startTime && nowTime <= endTime) {
             return true;
@@ -785,9 +783,9 @@ public class HomeTitleView extends RelativeLayout {
             setIndexViewVisible(SELECT_CENTER, false);
             mRightSelectRL.setVisibility(View.VISIBLE);
 
-            mOptionCacheData.put(SELECT_LEFT,null);
-            mOptionCacheData.put(SELECT_CENTER,null);
-            mOptionCacheData.put(SELECT_RIGHT,null);
+            mOptionCacheData.put(SELECT_LEFT, null);
+            mOptionCacheData.put(SELECT_CENTER, null);
+            mOptionCacheData.put(SELECT_RIGHT, null);
             return;
         } else if (data.size() == 1) {
             setIndexViewVisible(SELECT_LEFT, true);
@@ -800,8 +798,8 @@ public class HomeTitleView extends RelativeLayout {
             setIndexViewVisible(SELECT_RIGHT, false);
             mRightSelectRL.setVisibility(View.VISIBLE);
 
-            mOptionCacheData.put(SELECT_CENTER,null);
-            mOptionCacheData.put(SELECT_RIGHT,null);
+            mOptionCacheData.put(SELECT_CENTER, null);
+            mOptionCacheData.put(SELECT_RIGHT, null);
         } else if (data.size() == 2) {
             setIndexViewVisible(SELECT_LEFT, true);
             mLeftSelectRL.setVisibility(View.GONE);
@@ -814,7 +812,7 @@ public class HomeTitleView extends RelativeLayout {
             mCenterSelectRL.setVisibility(View.GONE);
             setIndexViewVisible(SELECT_RIGHT, false);
             mRightSelectRL.setVisibility(View.VISIBLE);
-            mOptionCacheData.put(SELECT_RIGHT,null);
+            mOptionCacheData.put(SELECT_RIGHT, null);
         } else {
             setIndexViewVisible(SELECT_LEFT, true);
             mLeftSelectRL.setVisibility(View.GONE);
@@ -1073,7 +1071,7 @@ public class HomeTitleView extends RelativeLayout {
                 mCenterLeftIndexPer.setTextColor(color);
                 mCenterRightIndexPer.setTextColor(color);
             }
-        }else{
+        } else {
             setIndexViewVisible(SELECT_CENTER, false);
             mCenterSelectRL.setVisibility(View.VISIBLE);
         }
@@ -1105,7 +1103,7 @@ public class HomeTitleView extends RelativeLayout {
                 mRightLeftIndexPer.setTextColor(color);
                 mRightRightIndexPer.setTextColor(color);
             }
-        }else{
+        } else {
             setIndexViewVisible(SELECT_RIGHT, false);
             mRightSelectRL.setVisibility(View.VISIBLE);
         }

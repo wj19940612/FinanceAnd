@@ -22,17 +22,17 @@ public class LeaderThreeRank {
      * user : {"id":846,"userName":"黄三","userPortrait":"http://wx.qlogo.cn/mmopen/6Fz3aS6k35aYiade1A7JjAu7msUojMwIhLojfsJAnzwYjKxm2f3thWXic6KCOia667vEx5eKXcVW4rmg3qMzo7cLg/0"}
      */
 
-    private int score;
+    private double score;
     private String type;
     private int userId;
     private UserBean user;
     private boolean isWorship;//false -- 已膜拜过  true -- 没膜拜过
 
-    public int getScore() {
-        return score;
+    public long getScore() {
+        return (long) score;
     }
 
-    public void setScore(int score) {
+    public void setScore(double score) {
         this.score = score;
     }
 

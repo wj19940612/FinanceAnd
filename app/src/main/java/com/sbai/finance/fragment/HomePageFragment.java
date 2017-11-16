@@ -604,7 +604,7 @@ public class HomePageFragment extends BaseFragment {
     }
 
     private void requestLeaderBoardData() {
-        Client.getleaderBoardThree().setTag(TAG)
+        Client.getLeaderBoardThree().setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<LeaderThreeRank>>, List<LeaderThreeRank>>() {
                     @Override
                     protected void onRespSuccessData(List<LeaderThreeRank> data) {

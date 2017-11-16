@@ -2442,7 +2442,7 @@ public class Client {
     /**
      * 乐米分排行三个榜首
      */
-    public static API getleaderBoardThree() {
+    public static API getLeaderBoardThree() {
         return new API("/user/radio/getTopForRank.do");
     }
 
