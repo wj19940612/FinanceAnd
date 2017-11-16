@@ -830,6 +830,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
 
     private void showThereWasNoOpeningHoursDialog(String msg) {
         SmartDialog.single(getActivity(), msg)
+                .setNegativeVisible(View.GONE)
                 .show();
     }
 
