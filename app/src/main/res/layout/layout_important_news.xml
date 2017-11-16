@@ -34,7 +34,7 @@
     <View
         android:id="@+id/viewLine"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="1px"
         android:layout_below="@id/icon"
         android:layout_marginTop="11dp"
         android:layout_marginLeft="15dp"
@@ -85,7 +85,7 @@
     <View
         android:id="@+id/viewLine2"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="1px"
         android:layout_below="@id/rl1"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="14dp"
@@ -135,7 +135,7 @@
     <View
         android:id="@+id/viewLine3"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="1px"
         android:layout_below="@id/rl2"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="14dp"
