@@ -680,8 +680,8 @@ public class HomePageFragment extends BaseFragment {
                         .hasFeedback(false)
                         .setShareThumbUrl(data.getShareLeUrl())
                         .setShareUrl(shareLinkBuilder.toString())
-                        .setShareTitle(data.getTitle() == null ? "" : data.getTitle())
-                        .setShareDescription(dailyReport.getTitle() + dailyReport.getContent())
+                        .setShareTitle(dailyReport.getTitle())
+                        .setShareDescription(dailyReport.getContent())
                         .show();
             }
         }).fireFree();
