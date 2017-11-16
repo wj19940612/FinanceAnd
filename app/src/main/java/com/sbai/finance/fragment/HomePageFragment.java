@@ -1,6 +1,5 @@
 package com.sbai.finance.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -15,7 +14,6 @@ import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.home.AllTrainingListActivity;
 import com.sbai.finance.activity.home.BroadcastListActivity;
-import com.sbai.finance.activity.home.InformationAndFocusNewsActivity;
 import com.sbai.finance.activity.home.StockFutureActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;

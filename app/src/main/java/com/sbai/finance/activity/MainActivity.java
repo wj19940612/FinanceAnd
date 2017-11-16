@@ -47,8 +47,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     public static final int PAGE_POSITION_MISS = 3;
     public static final int PAGE_POSITION_MINE = 4;
-    private static final int PAGE_POSITION_INFO_NEWS = 1;
-    private static final int PAGE_POSITION_ARENA = 2;
+    public static final int PAGE_POSITION_INFO_NEWS = 1;
+    public static final int PAGE_POSITION_ARENA = 2;
 
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
@@ -92,6 +92,11 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         super.onNewIntent(intent);
         int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
         if (0 <= currentItem && currentItem < mViewPager.getChildCount()) {
+            if (intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, -1) != -1) {
+                //资讯要闻页
+                InformationAndFocusFragment informationFragment = (InformationAndFocusFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_INFO_NEWS);
+                informationFragment.setPage(intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, -1));
+            }
             mViewPager.setCurrentItem(currentItem, false);
         }
 

@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.home.InformationAndFocusNewsActivity;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.MyCollect;
@@ -41,6 +41,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static com.sbai.finance.activity.MainActivity.PAGE_POSITION_INFO_NEWS;
 
 
 public class ArticleCollectionFragment extends BaseFragment {
@@ -190,8 +192,9 @@ public class ArticleCollectionFragment extends BaseFragment {
         mListEmptyView.setOnGoingViewClickListener(new ListEmptyView.OnGoingViewClickListener() {
             @Override
             public void onGoingViewClick() {
-                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class)
+                Launcher.with(getActivity(), MainActivity.class)
                         .putExtra(ExtraKeys.PAGE_INDEX, 1)
+                        .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM,MainActivity.PAGE_POSITION_INFO_NEWS)
                         .execute();
             }
         });
