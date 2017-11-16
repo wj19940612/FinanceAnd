@@ -24,7 +24,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.home.AllTrainingListActivity;
-import com.sbai.finance.activity.home.InformationAndFocusNewsActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.training.CreditIntroduceActivity;
@@ -387,7 +386,7 @@ public class TrainingFragment extends BaseFragment {
             case R.id.rankingList:
 //                umengEventCount(UmengCountEventId.TRAINING_LEADER_BOARD);
 //                Launcher.with(getActivity(), LeaderBoardsActivity.class).execute();
-                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class).execute();
+//                Launcher.with(getActivity(), InformationAndFocusNewsActivity.class).execute();
                 break;
             case R.id.reviewLessonRoom:
                 umengEventCount(UmengCountEventId.TRAINING_STUDY_ROOM);
