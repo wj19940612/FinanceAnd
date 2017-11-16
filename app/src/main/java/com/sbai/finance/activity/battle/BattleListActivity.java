@@ -117,7 +117,6 @@ public class BattleListActivity extends BaseActivity implements
                     break;
                 case PushCode.QUICK_MATCH_SUCCESS:
                     showMatchSuccessDialog(battle);
-                    mCurrentBattle = battle;
                     break;
                 case PushCode.BATTLE_OVER:
                     requestCurrentBattle();
