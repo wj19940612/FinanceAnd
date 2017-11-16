@@ -121,6 +121,12 @@ public class FocusNewsFragment extends BaseFragment implements
                         if (data.isEmpty()) return;
                         updateAllDayNewsList(data);
                     }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
+                    }
                 }).fireFree();
     }
 
@@ -154,7 +160,6 @@ public class FocusNewsFragment extends BaseFragment implements
     }
 
     private void updateAllDayNewsList(List<DailyReport> data) {
-        stopRefreshAnimation();
         if (mSet.isEmpty()) {
             mDailyReportAdapter.clear();
             mLastTime = data.get(0).getCreateTime();

@@ -395,7 +395,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private void setStopState() {
         mPlayImage.setImageResource(R.drawable.ic_play);
         mProgressBar.setProgress(0);
-        mSoundTime.setText(getString(R.string._seconds, mQuestionDetail.getSoundTime()));
+        mSoundTime.setText(getString(R.string._seconds, mQuestionDetail != null ? mQuestionDetail.getSoundTime() : 0));
     }
 
     private void setPauseState() {
@@ -437,6 +437,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     }
 
                 }
+
                 @Override
                 protected void onRespFailure(Resp failedResp) {
                     if (failedResp.getCode() == Resp.CODE_LISTENED) {
