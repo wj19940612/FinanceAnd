@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
@@ -62,12 +63,14 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     protected void
     onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
 //        translucentStatusBar();
         checkVersion();
         requestServiceConnectWay();
+        handleIntentData(getIntent());
     }
 
     private void requestStartActivities() {
@@ -91,6 +94,10 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        handleIntentData(intent);
+    }
+
+    private void handleIntentData(Intent intent) {
         int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
         if (0 <= currentItem && currentItem < mViewPager.getChildCount()) {
             if (intent.getIntExtra(ExtraKeys.PAGE_INDEX, -1) != -1) {
@@ -120,7 +127,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
             }
         }
 
-        String webPageUrl = intent.getStringExtra(ExtraKeys.WEB_PAGE_URL);
+        String webPageUrl = getIntent().getStringExtra(ExtraKeys.WEB_PAGE_URL);
         if (!TextUtils.isEmpty(webPageUrl)) {
             openWebPage(webPageUrl);
         }
