@@ -15,6 +15,7 @@ import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.ArenaFragment;
 import com.sbai.finance.fragment.HomePageFragment;
+import com.sbai.finance.fragment.InformationAndFocusFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.dialog.system.StartDialogFragment;
@@ -44,7 +45,10 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     private static final int REQ_CODE_FEEDBACK_LOGIN = 23333;
 
-    public static final int MISS_PAGE_POSITION = 2;
+    public static final int PAGE_POSITION_MISS = 3;
+    public static final int PAGE_POSITION_MINE = 4;
+    private static final int PAGE_POSITION_INFO_NEWS = 1;
+    private static final int PAGE_POSITION_ARENA = 2;
 
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
@@ -104,26 +108,33 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         //banner用接口去查询  如果url用数据 则是h5直接打开连接
         if (banner != null) {
             if (TextUtils.isEmpty(banner.getId())) {
-                Launcher.with(getActivity(), WebActivity.class)
-                        .putExtra(WebActivity.EX_URL, banner.getContent())
-                        .execute();
+                openWebPage(banner.getContent());
             } else {
                 requestPushBannerInfo(banner);
             }
+        }
+
+        String webPageUrl = intent.getStringExtra(ExtraKeys.WEB_PAGE_URL);
+        if (!TextUtils.isEmpty(webPageUrl)) {
+            openWebPage(webPageUrl);
         }
     }
 
     private void openActivityPage(Banner banner) {
         if (banner.isH5Style()) {
-            Launcher.with(getActivity(), WebActivity.class)
-                    .putExtra(WebActivity.EX_URL, banner.getContent())
-                    .execute();
+            openWebPage(banner.getContent());
         } else {
             Launcher.with(getActivity(), WebActivity.class)
                     .putExtra(WebActivity.EX_HTML, banner.getContent())
                     .putExtra(WebActivity.EX_TITLE, banner.getTitle())
                     .execute();
         }
+    }
+
+    private void openWebPage(String url) {
+        Launcher.with(getActivity(), WebActivity.class)
+                .putExtra(WebActivity.EX_URL, url)
+                .execute();
     }
 
     private void requestPushBannerInfo(Banner banner) {
@@ -194,12 +205,12 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
                     @Override
                     protected void onRespSuccessData(UserFundInfo data) {
-                        ArenaFragment arenaFragment = (ArenaFragment) mMainFragmentsAdapter.getFragment(1);
+                        ArenaFragment arenaFragment = (ArenaFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_ARENA);
                         if (arenaFragment != null) {
                             arenaFragment.updateIngotNumber(data);
                         }
 
-                        MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(3);
+                        MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_MINE);
                         if (mineFragment != null) {
                             mineFragment.updateIngotNumber(data);
                         }
@@ -238,7 +249,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     private void initView() {
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setScrollable(false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -262,7 +273,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
             public void onTabClick(int position) {
                 mBottomTabs.selectTab(position);
                 mViewPager.setCurrentItem(position, false);
-                if (position == 1) {
+                if (position == PAGE_POSITION_MISS) {
                     umengEventCount(UmengCountEventId.MISS_TALK_NAVIGATION);
                 }
             }
@@ -271,11 +282,18 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     private void refreshNotReadMessageCount() {
         if (LocalUser.getUser().isLogin()) {
-            MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(3);
+            MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_MINE);
             if (mineFragment != null) {
                 mineFragment.refreshNotReadMessageCount();
             }
         }
+    }
+
+    public void switchToInformation(int page) {
+        InformationAndFocusFragment informationFragment = (InformationAndFocusFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_INFO_NEWS);
+        informationFragment.setPage(page);
+        mBottomTabs.selectTab(PAGE_POSITION_INFO_NEWS);
+        mViewPager.setCurrentItem(PAGE_POSITION_INFO_NEWS, false);
     }
 
     @Override
@@ -283,9 +301,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         mBottomTabs.setPointNum(count);
     }
 
-    public boolean isMissTalkFragment() {
-        return mViewPager.getCurrentItem() == 1;
-    }
 
 
     private static class MainFragmentsAdapter extends FragmentPagerAdapter {
@@ -303,10 +318,12 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                 case 0:
                     return new HomePageFragment();
                 case 1:
-                    return new ArenaFragment();
+                    return new InformationAndFocusFragment();
                 case 2:
-                    return new MissTalkFragment();
+                    return new ArenaFragment();
                 case 3:
+                    return new MissTalkFragment();
+                case 4:
                     return new MineFragment();
             }
             return null;
@@ -314,7 +331,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
 
         public Fragment getFragment(int position) {

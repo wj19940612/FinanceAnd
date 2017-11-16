@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,11 +23,14 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.DailyReport;
+import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.view.dialog.ShareDialog;
+import com.sbai.httplib.ApiError;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +42,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.utils.DateUtil.DEFAULT_FORMAT;
 import static com.sbai.finance.utils.DateUtil.FORMAT_HOUR_MINUTE;
 
 /**
@@ -69,6 +72,10 @@ public class InformationFragment extends BaseFragment {
     private Set<String> mSet;
     private long mLastTime;
 
+    interface OnShareClickListener {
+        void share(DailyReport dailyReport);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -86,10 +93,15 @@ public class InformationFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPage = 0;
-                requestNewsList(true);
+                refreshData();
             }
         });
+    }
+
+    public void refreshData() {
+        mPage = 0;
+        mLoadMore = true;
+        requestNewsList(true);
     }
 
     @Override
@@ -111,7 +123,12 @@ public class InformationFragment extends BaseFragment {
     }
 
     private void initRecyclerView() {
-        mInformationAdapter = new InformationAdapter(getActivity());
+        mInformationAdapter = new InformationAdapter(getActivity(), new OnShareClickListener() {
+            @Override
+            public void share(DailyReport dailyReport) {
+                requestShare(dailyReport);
+            }
+        });
         mRecyclerView.setAdapter(mInformationAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -126,6 +143,31 @@ public class InformationFragment extends BaseFragment {
                 handleRecycleScroll(recyclerView);
             }
         });
+    }
+
+    private void requestShare(final DailyReport dailyReport) {
+        Client.requestShareData(Share.SHARE_CODE_INFORMATION)
+                .setIndeterminate(this)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<Share>, Share>() {
+                    @Override
+                    protected void onRespSuccessData(Share data) {
+                        ShareDialog.with(getActivity())
+                                .setTitle(getString(R.string.share_to))
+                                .hasFeedback(false)
+                                .setShareThumbUrl(data.getShareLeUrl())
+                                .setShareTitle(data.getTitle())
+                                .setShareUrl(data.getShareLink() + "?id=" + dailyReport.getId())
+                                .setShareDescription(dailyReport.getTitle() + dailyReport.getContent())
+                                .show();
+                    }
+
+                    @Override
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
+                    }
+                })
+                .fireFree();
     }
 
     private void requestNewsList(final boolean isRefresh) {
@@ -214,14 +256,14 @@ public class InformationFragment extends BaseFragment {
             mWeekArea.setSelected(false);
             mDate.setTextColor(ContextCompat.getColor(getContext(), R.color.luckyText));
         }
-        if (DateUtil.isInThisMonth(time,mLastTime)){
+        if (DateUtil.isInThisMonth(time, mLastTime)) {
             mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(time)));
-        }else {
+        } else {
             int month = DateUtil.getMonthOfYear(time);
-            if (month<10){
-                mWeek.setText(getContext().getString(R.string._month,"0"+month));
-            }else {
-                mWeek.setText(getContext().getString(R.string._month,String.valueOf(month)));
+            if (month < 10) {
+                mWeek.setText(getContext().getString(R.string._month, "0" + month));
+            } else {
+                mWeek.setText(getContext().getString(R.string._month, String.valueOf(month)));
             }
         }
     }
@@ -280,10 +322,12 @@ public class InformationFragment extends BaseFragment {
         public static final int NONE_STICKY_VIEW = 3;
         private List<DailyReport> mNewsList;
         private Context mContext;
+        private OnShareClickListener mOnShareClickListener;
 
-        public InformationAdapter(Context context) {
+        public InformationAdapter(Context context, OnShareClickListener onShareClickListener) {
             this.mNewsList = new ArrayList<>();
             this.mContext = context;
+            this.mOnShareClickListener = onShareClickListener;
         }
 
         public void addAll(List<DailyReport> detailArrayList) {
@@ -312,7 +356,7 @@ public class InformationFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mNewsList.get(position), isTheDifferentDate((position)), mContext);
+            holder.bindDataWithView(mNewsList.get(position), isTheDifferentDate((position)), mContext, mOnShareClickListener);
             if (isTheDifferentDate(position)) {
                 holder.itemView.setTag(HAS_STICKY_VIEW);
             } else {
@@ -350,24 +394,28 @@ public class InformationFragment extends BaseFragment {
             TextView mTime;
             @BindView(R.id.content)
             TextView mContent;
+            @BindView(R.id.readCount)
+            TextView mReadCount;
+            @BindView(R.id.share)
+            ImageView mShare;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindDataWithView(DailyReport item, boolean theDifferentDate, Context context) {
+            public void bindDataWithView(final DailyReport item, boolean theDifferentDate, Context context, OnShareClickListener onShareClickListener) {
                 if (theDifferentDate) {
                     mDateArea.setVisibility(View.VISIBLE);
                     mWeekArea.setSelected(false);
-                    if (DateUtil.isInThisMonth(item.getCreateTime(),mLastTime)){
+                    if (DateUtil.isInThisMonth(item.getCreateTime(), mLastTime)) {
                         mWeek.setText(getString(R.string.week_, DateUtil.getDayOfWeek(item.getCreateTime())));
-                    }else {
+                    } else {
                         int month = DateUtil.getMonthOfYear(item.getCreateTime());
-                        if (month<10){
-                            mWeek.setText(context.getString(R.string._month,"0"+month));
-                        }else {
-                            mWeek.setText(context.getString(R.string._month,String.valueOf(month)));
+                        if (month < 10) {
+                            mWeek.setText(context.getString(R.string._month, "0" + month));
+                        } else {
+                            mWeek.setText(context.getString(R.string._month, String.valueOf(month)));
                         }
                     }
                     int dayOfMonth = DateUtil.getDayOfMonth(item.getCreateTime());
@@ -379,18 +427,25 @@ public class InformationFragment extends BaseFragment {
                 } else {
                     mDateArea.setVisibility(View.GONE);
                 }
-                if (DateUtil.isToday(mLastTime,item.getCreateTime())){
+                if (DateUtil.isToday(mLastTime, item.getCreateTime())) {
                     mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
-                }else {
-                    mTime.setText(DateUtil.format(item.getCreateTime(),FORMAT_HOUR_MINUTE));
+                } else {
+                    mTime.setText(DateUtil.format(item.getCreateTime(), FORMAT_HOUR_MINUTE));
                 }
+                mReadCount.setText(getString(R.string.read_count_, item.getClicks()));
+                mShare.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mOnShareClickListener.share(item);
+                    }
+                });
                 if (TextUtils.isEmpty(item.getTitle())) {
-                    mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                    mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     mContent.setTextColor(ContextCompat.getColor(context, R.color.luckyText));
                     mContent.setText(Html.fromHtml(item.getContent().toString().trim()));
                 } else {
-                    mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                    mContent.setText(StrUtil.mergeTextWithRatioColorBold(item.getTitle(), Html.fromHtml(item.getContent()).toString().trim(), 0.86f,
+                    mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                    mContent.setText(StrUtil.mergeTextWithRatioColorBold(item.getTitle(), Html.fromHtml(item.getContent()).toString().trim(), 0.93f,
                             ContextCompat.getColor(context, R.color.primaryText), ContextCompat.getColor(context, R.color.luckyText)));
                 }
                 mContent.setMaxLines(3);

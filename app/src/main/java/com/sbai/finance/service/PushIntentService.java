@@ -35,7 +35,6 @@ import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.model.Banner;
-import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
@@ -139,7 +138,7 @@ public class PushIntentService extends GTIntentService {
         int notificationId = (int) pushMessageModel.getCreateTime();
         if (notificationManager != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel notificationChannel = createNotificationChannel(channelId,notificationManager);
+                NotificationChannel notificationChannel = createNotificationChannel(channelId, notificationManager);
             }
             notificationManager.notify(notificationId, builder.build());
         }
@@ -169,10 +168,7 @@ public class PushIntentService extends GTIntentService {
         } else if (data.isBattleMatchSuccess()) {
             if (!Preference.get().isForeground() && data.getData() != null) {
                 intent = new Intent(context, BattleActivity.class);
-                Battle battle = new Battle();
-                battle.setId(data.getData().getId());
-                battle.setBatchCode(data.getData().getBatchCode());
-                intent.putExtra(ExtraKeys.BATTLE, battle);
+                intent.putExtra(ExtraKeys.BATTLE, data.getData());
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             }
         } else if (data.isMissAnswer()) {
@@ -202,7 +198,7 @@ public class PushIntentService extends GTIntentService {
             case PushMessageModel.FEED_BACK_REPLY:
                 intent = new Intent(context, MainActivity.class);
                 intent.putExtra(ExtraKeys.TRAINING, data.getDataId());
-                intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 3);
+                intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_MINE);
                 intent.putExtra(ExtraKeys.PUSH_FEEDBACK, true);
                 break;
             case PushMessageModel.SELF_STUDY_ROOM:
@@ -223,6 +219,10 @@ public class PushIntentService extends GTIntentService {
                 break;
             case PushMessageModel.MODULE:
                 // 暂时保留，先不处理
+                break;
+            case PushMessageModel.H5_LINK:
+                intent = new Intent(context, MainActivity.class);
+                intent.putExtra(ExtraKeys.WEB_PAGE_URL, data.getUrl());
                 break;
 
         }

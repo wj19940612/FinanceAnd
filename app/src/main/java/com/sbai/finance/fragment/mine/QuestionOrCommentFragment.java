@@ -171,7 +171,7 @@ public class QuestionOrCommentFragment extends BaseFragment {
                     @Override
                     public void onGoingViewClick() {
                         Launcher.with(getActivity(), MainActivity.class)
-                                .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.MISS_PAGE_POSITION)
+                                .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_MISS)
                                 .execute();
                         getActivity().finish();
                     }
