@@ -166,6 +166,7 @@ public class InformationFragment extends BaseFragment {
                         }else{
                             shareLinkBuilder.append("?id=");
                         }
+                        shareLinkBuilder.append(dailyReport.getId());
                         ShareDialog.with(getActivity())
                                 .setTitle(getString(R.string.share_to))
                                 .hasFeedback(false)
