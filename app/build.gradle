@@ -117,14 +117,14 @@ android {
         }
 
         // channel use default (prod) configuration
-        tencent {}
-        m360 {}
-        xiaomi {}
-        baidu {}
-        huawei {}
-        vivo {}
-        oppo {}
-        others {}
+//        tencent {}
+//        m360 {}
+//        xiaomi {}
+//        baidu {}
+//        huawei {}
+//        vivo {}
+//        oppo {}
+//        others {}
 //        baiduapk1 {}
 //        baiduapk2 {}
 //        baiduapk3 {}
