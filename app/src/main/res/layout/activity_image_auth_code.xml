@@ -85,6 +85,7 @@
                 tools:text="@string/auth_code_error"/>
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/changeImageAuthCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
