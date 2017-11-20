@@ -15,6 +15,8 @@ import android.widget.RelativeLayout;
 import com.google.gson.JsonObject;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.WeChatActivity;
 import com.sbai.finance.activity.mine.setting.LocationActivity;
 import com.sbai.finance.fragment.dialog.ChooseSexDialogFragment;
@@ -52,7 +54,7 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
 	private static final int REQ_CODE_USER_NAME = 165;
 
 	//地址界面
-	private static final int REQ_CODE_LOCATION = 803;
+	private static final int REQ_CODE_LOCATION = 805;
 
 	private static final int REQ_CODE_CREDIT_APPROVE = 298;
 
@@ -70,22 +72,28 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
 	AutofitTextView mLocation;
 	@BindView(R.id.weChat)
 	IconTextRow mWeChat;
-	@BindView(R.id.logout)
-	AppCompatTextView mLogout;
 	@BindView(R.id.authenticationImage)
 	AppCompatImageView mAuthenticationImage;
 	@BindView(R.id.authentication)
 	LinearLayout mAuthentication;
+	@BindView(R.id.financeEvaluation)
+	IconTextRow mFinanceEvaluation;
+	@BindView(R.id.personalSummary)
+	IconTextRow mPersonalSummary;
+
 
 	private String[] mAgeList;
 
 	private int mSelectAgeListIndex;
+
+	private String[] mEvaluationLevel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_info);
 		ButterKnife.bind(this);
+		mEvaluationLevel = getResources().getStringArray(R.array.evaluationLevel);
 		mAgeList = new String[101];
 		for (int i = 0; i < 101; i++) {
 			mAgeList[i] = ((i + Calendar.getInstance().get(Calendar.YEAR) - 100) + "年");
@@ -121,6 +129,14 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
 			mWeChat.setSubText(userInfo.getWxName());
 			mWeChat.setRightIconVisible(false);
 		}
+
+		int maxLevel = LocalUser.getUser().getUserInfo().getMaxLevel();
+		if (maxLevel > 5) {
+			maxLevel = 5;
+		}
+		mFinanceEvaluation.setSubText(mEvaluationLevel[maxLevel]);
+		//TODO 更新主播个人简介
+		mPersonalSummary.setSubText("");
 	}
 
 	private void showBindWeChatDialog() {
@@ -239,7 +255,7 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
 		super.onBackPressed();
 	}
 
-	@OnClick({R.id.headImageLayout, R.id.nickName, R.id.sex, R.id.age, R.id.location, R.id.authentication, R.id.logout, R.id.weChat})
+	@OnClick({R.id.headImageLayout, R.id.nickName, R.id.sex, R.id.age, R.id.location, R.id.authentication, R.id.weChat,R.id.financeEvaluation})
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.headImageLayout:
@@ -271,10 +287,6 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
 		       umengEventCount(UmengCountEventId.ME_CERTIFICATION);
 		       Launcher.with(getActivity(), CreditApproveActivity.class).executeForResult(REQ_CODE_CREDIT_APPROVE);
                 break;
-			case R.id.logout:
-				umengEventCount(UmengCountEventId.ME_EXIT_LOGIN);
-				logout();
-				break;
 			case R.id.weChat:
 				umengEventCount(UmengCountEventId.ME_BIND_WECHAT);
 				final UserInfo userInfo = LocalUser.getUser().getUserInfo();
@@ -282,7 +294,20 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
 					bindWeChat();
 				}
 				break;
+			case R.id.financeEvaluation:
+				if (LocalUser.getUser().isLogin()) {
+					umengEventCount(UmengCountEventId.ME_FINANCE_TEST);
+					openLevelStartPage();
+				} else {
+					startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQ_CODE_LOGIN);
+				}
+				break;
 		}
+	}
+
+	private void openLevelStartPage() {
+		Launcher.with(getActivity(), EvaluationStartActivity.class).execute();
+		Preference.get().setIsFirstOpenWalletPage(LocalUser.getUser().getPhone());
 	}
 
 	private void bindWeChat() {
@@ -360,6 +385,9 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
 				case REQ_CODE_LOCATION:
 					mLocation.setText(LocalUser.getUser().getUserInfo().getLand());
 					break;
+				case REQ_CODE_LOGIN:
+					openLevelStartPage();
+					break;
 				case REQ_CODE_CREDIT_APPROVE:
 					updateUserCreditStatus(CREDIT_IS_APPROVE_ING);
 					break;
@@ -367,43 +395,6 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
 					break;
 			}
 		}
-	}
-
-	private void logout() {
-		SmartDialog.with(getActivity(), R.string.is_logout_lemi)
-				.setPositive(R.string.ok, new SmartDialog.OnClickListener() {
-					@Override
-					public void onClick(Dialog dialog) {
-						dialog.dismiss();
-						requestLogout();
-					}
-				})
-				.show();
-
-	}
-
-	private void requestLogout() {
-		Client.logout()
-				.setTag(TAG)
-				.setCallback(new Callback<Resp<JsonObject>>() {
-					@Override
-					protected void onRespSuccess(Resp<JsonObject> resp) {
-						if (resp.isSuccess()) {
-							LocalUser.getUser().logout();
-							CookieManger.getInstance().clearRawCookies();
-							WsClient.get().close();
-							sendLogoutSuccessBroadcast();
-							setResult(RESULT_OK);
-							finish();
-						}
-					}
-				})
-				.fire();
-	}
-
-	private void sendLogoutSuccessBroadcast() {
-		LocalBroadcastManager.getInstance(getActivity())
-				.sendBroadcast(new Intent(ACTION_LOGOUT_SUCCESS));
 	}
 
 

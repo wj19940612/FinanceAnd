@@ -78,14 +78,8 @@ public class MineFragment extends BaseFragment {
     IconTextRow mWallet;
     @BindView(R.id.message)
     IconTextRow mMessage;
-    @BindView(R.id.feedback)
-    IconTextRow mFeedback;
     @BindView(R.id.setting)
     IconTextRow mSetting;
-    @BindView(R.id.aboutUs)
-    IconTextRow mAboutUs;
-    @BindView(R.id.financeEvaluation)
-    IconTextRow mFinanceEvaluation;
     @BindView(R.id.mineQuestionsAndAnswers)
     IconTextRow mMineQuestionsAndAnswers;
     @BindView(R.id.mineCollection)
@@ -98,6 +92,9 @@ public class MineFragment extends BaseFragment {
     TextView mScoreProgress;
     @BindView(R.id.lemiScoreArea)
     LinearLayout mLemiScoreArea;
+    @BindView(R.id.mineSubscribe)
+    LinearLayout mMineSubscribe;
+
 
     private UserEachTrainingScoreModel mUserEachTrainingScoreModel;
 
@@ -144,7 +141,6 @@ public class MineFragment extends BaseFragment {
 
     public void refreshNotReadMessageCount() {
         requestNoReadNewsNumber();
-        requestNoReadFeedbackNumber();
     }
 
     @Override
@@ -269,31 +265,9 @@ public class MineFragment extends BaseFragment {
                 }).fireFree();
     }
 
-    private void requestNoReadFeedbackNumber() {
-        Client.getNoReadFeedbackNumber().setTag(TAG)
-                .setCallback(new Callback<Resp<String>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<String> resp) {
-                        if (resp.isSuccess()) {
-                            int count = Integer.parseInt(resp.getData());
-                            updateNoReadFeedbackCount(count);
-                        }
-                    }
-                }).fireFree();
-    }
-
-
     public void updateIngotNumber(UserFundInfo userFundInfo) {
         if (userFundInfo != null) {
             mWallet.setSubText(getString(R.string.my_ingot_, userFundInfo.getYuanbao()));
-        }
-    }
-
-    private void updateNoReadFeedbackCount(int count) {
-        if (count != 0) {
-            mFeedback.setSubTextVisible(View.VISIBLE);
-        } else {
-            mFeedback.setSubTextVisible(View.GONE);
         }
     }
 
@@ -302,18 +276,13 @@ public class MineFragment extends BaseFragment {
             refreshNotReadMessageCount();
             startScheduleJob(UPDATE_MESSAGE_COUNT_TIME);
             mUserName.setText(LocalUser.getUser().getUserInfo().getUserName());
-            int maxLevel = LocalUser.getUser().getUserInfo().getMaxLevel();
-            if (maxLevel > 5) {
-                maxLevel = 5;
-            }
-            mFinanceEvaluation.setSubText(mEvaluationLevel[maxLevel]);
         } else {
             stopScheduleJob();
             mUserName.setText(R.string.to_login);
 //            mFinanceEvaluation.setSubText(R.string.finance_evaluation_hint);
             mWallet.setSubText("");
             mMessage.setSubTextVisible(View.GONE);
-            mFeedback.setSubTextVisible(View.GONE);
+//            mFeedback.setSubTextVisible(View.GONE);
             setNoReadNewsCount(0);
         }
     }
@@ -344,7 +313,7 @@ public class MineFragment extends BaseFragment {
     }
 
     @OnClick({R.id.userInfoArea, R.id.lemiScoreArea, R.id.wallet, R.id.mineQuestionsAndAnswers, R.id.mineCollection,
-            R.id.message, R.id.feedback, R.id.financeEvaluation, R.id.setting, R.id.aboutUs})
+            R.id.message, R.id.setting,R.id.mineSubscribe})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.userInfoArea:
@@ -408,22 +377,6 @@ public class MineFragment extends BaseFragment {
                     openLoginPage();
                 }
                 break;
-            case R.id.feedback:
-                if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventId.ME_FEEDBACK);
-                    Launcher.with(getActivity(), FeedbackActivity.class).execute();
-                } else {
-                    openLoginPage();
-                }
-                break;
-            case R.id.financeEvaluation:
-                if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventId.ME_FINANCE_TEST);
-                    openLevelStartPage();
-                } else {
-                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQ_CODE_LOGIN);
-                }
-                break;
             case R.id.setting:
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.ME_SETTING);
@@ -432,9 +385,12 @@ public class MineFragment extends BaseFragment {
                     openLoginPage();
                 }
                 break;
-            case R.id.aboutUs:
-                umengEventCount(UmengCountEventId.ME_ABOUT_US);
-                Launcher.with(getActivity(), AboutUsActivity.class).execute();
+            case R.id.mineSubscribe:
+                if (LocalUser.getUser().isLogin()) {
+
+                } else {
+                    openLoginPage();
+                }
                 break;
         }
     }
@@ -486,11 +442,6 @@ public class MineFragment extends BaseFragment {
                 .show();
     }
 
-    private void openLevelStartPage() {
-        Launcher.with(getActivity(), EvaluationStartActivity.class).execute();
-        Preference.get().setIsFirstOpenWalletPage(LocalUser.getUser().getPhone());
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -499,9 +450,6 @@ public class MineFragment extends BaseFragment {
                 case REQ_CODE_USER_INFO:
                     updateUserStatus();
                     updateUserImage();
-                    break;
-                case REQ_CODE_LOGIN:
-                    openLevelStartPage();
                     break;
                 case REQ_CODE_OPEN_WALLET_SET_SAFETY_PASSWORD:
                     openWalletPage();

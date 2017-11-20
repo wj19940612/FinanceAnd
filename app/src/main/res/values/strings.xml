@@ -163,6 +163,8 @@
     <string name="copy_success">复制成功</string>
     <string name="install_qq_first">请先安装QQ</string>
     <string name="my_ingot_">我的元宝: %1$d</string>
+    <string name="wait_me_answer">等我答</string>
+    <string name="my_subscribe">我的订阅</string>
 
     <string name="article">文章</string>
 
@@ -212,6 +214,8 @@
     <string name="bind_wechat_info">绑定微信号,登录更便捷,是否绑定?</string>
     <string name="bind">绑定</string>
     <string name="is_logout_lemi">是否要退出登录？</string>
+    <string name="personal_summary">个人简介</string>
+    <string name="set_personal_summary">设置个人简介</string>
     <!--   消息 -->
     <string name="up_load_more">加载更多</string>
 
