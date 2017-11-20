@@ -259,4 +259,5 @@
         <attr name="label_view_width" format="reference|dimension"/>
         <attr name="label_view_height" format="reference|dimension"/>
     </declare-styleable>
+
 </resources>

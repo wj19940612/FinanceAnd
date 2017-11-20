@@ -897,4 +897,9 @@
     <string name="hello_afternoon">下午好，%1$s！</string>
     <string name="hello_evening">晚上好，%1$s！</string>
     <string name="read_count_">阅 %1$d</string>
+
+
+
+    <!--姐说-->
+    <string name="radio">电台</string>
 </resources>
