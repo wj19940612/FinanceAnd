@@ -420,6 +420,11 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.battle.BattleRuleActivity"
                   android:screenOrientation="portrait"/>
+        <!--我的-->
+        <activity android:name=".activity.mine.MySubscribeActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".activity.mine.IntroduceSetActivity"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

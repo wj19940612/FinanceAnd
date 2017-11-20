@@ -44,7 +44,7 @@ public class SettingActivity extends BaseActivity {
         requestNoReadFeedbackNumber();
     }
 
-    @OnClick({R.id.shieldSetting, R.id.newMessageNotification, R.id.appInfo, R.id.securityCenter, R.id.feedback,R.id.aboutUs})
+    @OnClick({R.id.shieldSetting, R.id.newMessageNotification, R.id.appInfo, R.id.securityCenter, R.id.feedback,R.id.aboutUs,R.id.logout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.shieldSetting:

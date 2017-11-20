@@ -93,6 +93,7 @@ public class HomePageFragment extends BaseFragment {
     ImportantNewsView mImportantNewsView;
 
     private boolean mIsVisibleToUser;
+    private boolean mHasEnter;
 
     @Nullable
     @Override
@@ -355,7 +356,8 @@ public class HomePageFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         //fragment在前台显示
-        if (mIsVisibleToUser) {
+        if (mIsVisibleToUser||!mHasEnter) {
+            mHasEnter = true;
             startScheduleJob(TIME_ONE);
             TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
             requestGreetings();

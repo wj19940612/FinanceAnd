@@ -24,6 +24,7 @@ import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.MyCollectionActivity;
 import com.sbai.finance.activity.mine.MyQuestionAndAnswerActivity;
+import com.sbai.finance.activity.mine.MySubscribeActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
@@ -387,7 +388,7 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.mineSubscribe:
                 if (LocalUser.getUser().isLogin()) {
-
+                    Launcher.with(getActivity(), MySubscribeActivity.class).execute();
                 } else {
                     openLoginPage();
                 }
