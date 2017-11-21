@@ -64,7 +64,7 @@ import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public abstract class StockTradeActivity extends BaseActivity {
 
-    protected static final int HAS_ADD_OPITIONAL = 1;
+    protected static final int HAS_ADD_OPTIONAL = 1;
 
     @BindView(R.id.mockTrading)
     protected Button mMockTrading;
@@ -165,7 +165,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         @Override
                         protected void onRespSuccess(Resp<Integer> resp) {
                             Integer result = resp.getData();
-                            if (result != null && result == HAS_ADD_OPITIONAL) {
+                            if (result != null && result == HAS_ADD_OPTIONAL) {
                                 showCancelOptionalOfTitleBar();
                             }
                         }
@@ -367,15 +367,30 @@ public abstract class StockTradeActivity extends BaseActivity {
             } else {
                 mPriceChange.setText(risePrice + "     " + risePercent);
             }
-            mTodayOpen.setText(mStockRTData.getOpenPrice());
-            mHighest.setText(mStockRTData.getHighestPrice());
-            mLowest.setText(mStockRTData.getLowestPrice());
-            mPreClose.setText(mStockRTData.getPreSetPrice());
+            mTodayOpen.setText(formatWithDefault(mStockRTData.getOpenPrice()));
+            mHighest.setText(formatWithDefault(mStockRTData.getHighestPrice()));
+            mLowest.setText(formatWithDefault(mStockRTData.getLowestPrice()));
+            mPreClose.setText(formatWithDefault(mStockRTData.getPreClsPrice()));
+            mVolume.setText(formatWithDefault(mStockRTData.getVolume()));
+            mAmount.setText(formatWithDefault(mStockRTData.getTurnover()));
+            mTurnoverRate.setText(formatWithDefault(mStockRTData.getTurnoverRate()));
+            mPriceEarningRate.setText(formatWithDefault(mStockRTData.getPe()));
+            mVolumeRate.setText(formatWithDefault(mStockRTData.getVolRate()));
+            mAmplitude.setText(formatWithDefault(mStockRTData.getAmplitude()));
+            mEquity.setText(formatWithDefault(mStockRTData.getTotalShares()));
+            mMarketValue.setText(formatWithDefault(mStockRTData.getMarketValue()));
 
             mStockTrendView.setStockRTData(mStockRTData);
         }
         mLastPrice.setTextColor(color);
         mPriceChange.setTextColor(color);
+    }
+
+    private String formatWithDefault(String value) {
+        if (value != null) {
+            return value;
+        }
+        return "--";
     }
 
     private void initTitleBar() {
