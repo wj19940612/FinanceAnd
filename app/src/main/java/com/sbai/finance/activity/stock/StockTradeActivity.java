@@ -67,7 +67,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     protected static final int HAS_ADD_OPITIONAL = 1;
 
     @BindView(R.id.mockTrading)
-    Button mMockTrading;
+    protected Button mMockTrading;
 
     protected abstract ViewPager.OnPageChangeListener createPageChangeListener();
 

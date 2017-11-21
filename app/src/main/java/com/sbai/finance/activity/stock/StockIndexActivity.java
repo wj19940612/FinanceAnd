@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.stock;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -16,6 +17,12 @@ public class StockIndexActivity extends StockTradeActivity {
 
     private SubPageAdapter mSubPageAdapter;
     private int pagePosition;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mMockTrading.setVisibility(View.GONE);
+    }
 
     @Override
     protected void initChartViews() {
