@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.sbai.finance.R;
+import com.sbai.finance.utils.Display;
 import com.sbai.glide.GlideApp;
 
 
@@ -41,9 +42,10 @@ public class HasLabelImageLayout extends RelativeLayout {
 
     private void initAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.HasLabelImageLayout);
+        int  defaultSize = (int) Display.dp2Px(10, getResources());
         mLabelDrawableResId = typedArray.getResourceId(R.styleable.HasLabelImageLayout_label_drawable, -1);
-        mLabelWidth = typedArray.getDimensionPixelSize(R.styleable.HasLabelImageLayout_label_view_width, 5);
-        mLabelHeight = typedArray.getDimensionPixelSize(R.styleable.HasLabelImageLayout_label_view_height, 5);
+        mLabelWidth = typedArray.getDimensionPixelSize(R.styleable.HasLabelImageLayout_label_view_width, defaultSize);
+        mLabelHeight = typedArray.getDimensionPixelSize(R.styleable.HasLabelImageLayout_label_view_height, defaultSize);
         typedArray.recycle();
     }
 
@@ -56,6 +58,7 @@ public class HasLabelImageLayout extends RelativeLayout {
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         mLabelImageView.setImageResource(mLabelDrawableResId);
+        mLabelImageView.setScaleType(ImageView.ScaleType.FIT_XY);
         addView(mLabelImageView, layoutParams);
     }
 
@@ -63,6 +66,7 @@ public class HasLabelImageLayout extends RelativeLayout {
         GlideApp.with(getContext())
                 .load(url)
                 .circleCrop()
+                .placeholder(R.drawable.ic_default_avatar)
                 .into(mCircleImageView);
     }
 

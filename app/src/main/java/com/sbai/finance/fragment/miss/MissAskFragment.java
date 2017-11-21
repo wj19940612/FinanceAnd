@@ -1,10 +1,14 @@
 package com.sbai.finance.fragment.miss;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,15 +43,20 @@ import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.EmptyRecyclerView;
+import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
+import static com.sbai.finance.activity.BaseActivity.ACTION_LOGOUT_SUCCESS;
+import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
 
@@ -63,7 +72,7 @@ public class MissAskFragment extends BaseFragment {
     EmptyRecyclerView mEmptyRecyclerView;
     Unbinder unbinder;
     @BindView(R.id.empty)
-    TextView mEmpty;
+    NestedScrollView mEmpty;
 
 
     private int mMissAskType;
@@ -71,10 +80,44 @@ public class MissAskFragment extends BaseFragment {
     private MissAskAdapter mMissAskAdapter;
     private Long mCreateTime;
     private boolean mLoadMore;
+    private OnSwipeRefreshEnableListener mOnSwipeRefreshEnableListener;
+    private HashSet<Integer> mSet;
 
-    public MissAskFragment() {
-
+    public interface OnSwipeRefreshEnableListener {
+        void onSwipeRefreshEnable(boolean swipeFreshEnable);
     }
+
+    public void setOnSwipeRefreshEnableListener(OnSwipeRefreshEnableListener onSwipeRefreshEnableListener) {
+        mOnSwipeRefreshEnableListener = onSwipeRefreshEnableListener;
+    }
+
+    private BroadcastReceiver mRefreshBroadcastReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+                int rewardId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+                if (rewardId == RewardInfo.TYPE_QUESTION) {
+                    for (int i = 0; i < mMissAskAdapter.getMissAskList().size(); i++) {
+                        for (Question result : mMissAskAdapter.getMissAskList()) {
+                            if (result.getId() == rewardId) {
+                                int questionRewardCount = result.getAwardCount() + 1;
+                                result.setAwardCount(questionRewardCount);
+                                mMissAskAdapter.notifyDataSetChanged();
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())
+                        || ACTION_LOGOUT_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+                    refreshData();
+                }
+            }
+        }
+    };
+
 
     public static MissAskFragment newInstance(int type) {
         MissAskFragment fragment = new MissAskFragment();
@@ -102,38 +145,41 @@ public class MissAskFragment extends BaseFragment {
 
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        registerReceiver();
         initView();
+        requestAskList(true);
+
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        refreshData();
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshBroadcastReceiver);
+        mEmptyRecyclerView.clearOnChildAttachStateChangeListeners();
+        unbinder.unbind();
     }
 
-    private void refreshData() {
+    public void refreshData() {
         mCreateTime = null;
-        requestAskList();
+//        mSet = new HashSet<>();
+        requestAskList(true);
     }
 
-    private void requestAskList() {
+    private void registerReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_REWARD_SUCCESS);
+        filter.addAction(ACTION_LOGIN_SUCCESS);
+        filter.addAction(ACTION_LOGOUT_SUCCESS);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshBroadcastReceiver, filter);
+    }
+
+    private void requestAskList(boolean isRefresh) {
         if (mMissAskType == MISS_ASK_TYPE_HOT) {
-            requestHotQuestionList();
+            requestHotQuestionList(isRefresh);
         } else {
-            requestLatestQuestionList();
+            requestLatestQuestionList(isRefresh);
         }
     }
 
@@ -153,7 +199,12 @@ public class MissAskFragment extends BaseFragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (isSlideToBottom(recyclerView) && mLoadMore) {
-                    requestAskList();
+                    requestAskList(false);
+                }
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
+                if (mOnSwipeRefreshEnableListener != null) {
+                    mOnSwipeRefreshEnableListener.onSwipeRefreshEnable(isTop);
                 }
             }
 
@@ -266,18 +317,18 @@ public class MissAskFragment extends BaseFragment {
         }
     }
 
-    private void requestHotQuestionList() {
+    private void requestHotQuestionList(final boolean isRefresh) {
         Client.getHotQuestionList().setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
                     @Override
                     protected void onRespSuccessData(List<Question> questionList) {
-                        updateLatestQuestionList(questionList);
+                        updateLatestQuestionList(questionList, isRefresh);
                     }
 
                 }).fireFree();
     }
 
-    private void updateLatestQuestionList(List<Question> questionList) {
+    private void updateLatestQuestionList(List<Question> questionList, boolean isRefresh) {
         if (questionList.size() < Client.DEFAULT_PAGE_SIZE) { // load completed
             mLoadMore = false;
         } else {
@@ -287,32 +338,30 @@ public class MissAskFragment extends BaseFragment {
         }
         if (!questionList.isEmpty()) {
             mCreateTime = questionList.get(questionList.size() - 1).getCreateTime();
-            mMissAskAdapter.addAll(questionList);
         }
+        if (isRefresh) {
+            mMissAskAdapter.clear();
+        }
+        mMissAskAdapter.addAll(questionList);
+
+//        for (Question result : questionList) {
+//            if (mSet.add(result.getId())) {
+//                mMissAskAdapter.add(result);
+//            }
+//        }
     }
 
-    private void requestLatestQuestionList() {
+    private void requestLatestQuestionList(final boolean isRefresh) {
         Client.getLatestQuestionList(mCreateTime, Client.DEFAULT_PAGE_SIZE).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
                     @Override
                     protected void onRespSuccessData(List<Question> questionList) {
-                        updateLatestQuestionList(questionList);
+                        updateLatestQuestionList(questionList, isRefresh);
                     }
 
                 }).fire();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mEmptyRecyclerView.clearOnChildAttachStateChangeListeners();
-        unbinder.unbind();
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -337,7 +386,7 @@ public class MissAskFragment extends BaseFragment {
         }
     }
 
-    static class MissAskAdapter extends RecyclerView.Adapter<MissAskAdapter.ViewHolder> {
+    public static class MissAskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private List<Question> mMissAskList;
         private Context mContext;
@@ -378,15 +427,21 @@ public class MissAskFragment extends BaseFragment {
             notifyDataSetChanged();
         }
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_misstalk_answer, null);
-            return new ViewHolder(view);
+        public void add(Question result) {
+            mMissAskList.add(result);
+            notifyDataSetChanged();
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindingData(mContext, mMissAskList.get(position), mCallback, position);
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_misstalk_answer, parent, false);
+            return new ViewHolder(view);
+        }
+
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            ((ViewHolder) holder).bindingData(mContext, mMissAskList.get(position), mCallback, position);
         }
 
         @Override
@@ -409,8 +464,10 @@ public class MissAskFragment extends BaseFragment {
             TextView mSoundTime;
             @BindView(R.id.listenerNumber)
             TextView mListenerNumber;
+            @BindView(R.id.missName)
+            TextView mMissName;
             @BindView(R.id.missAvatar)
-            ImageView mMissAvatar;
+            HasLabelImageLayout mMissAvatar;
             @BindView(R.id.progressBar)
             ProgressBar mProgressBar;
             @BindView(R.id.praiseNumber)
@@ -432,11 +489,8 @@ public class MissAskFragment extends BaseFragment {
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop()
                         .into(mAvatar);
-
-                GlideApp.with(context).load(item.getCustomPortrait())
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .circleCrop()
-                        .into(mMissAvatar);
+                mMissName.setText(item.getCustomName());
+                mMissAvatar.setCircleUrl(item.getCustomPortrait());
 
                 mName.setText(item.getUserName());
                 mAskTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
@@ -535,6 +589,7 @@ public class MissAskFragment extends BaseFragment {
                 }
             }
         }
+
     }
 
 }

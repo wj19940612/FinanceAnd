@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/rootView"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@android:color/white"
-              android:id="@+id/rootView"
               android:orientation="vertical">
 
     <LinearLayout
@@ -89,12 +90,33 @@
                 android:textSize="12sp"
                 tools:text="@string/listener_number"/>
 
-            <ImageView
-                android:id="@+id/missAvatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/ic_default_avatar"/>
+                android:layout_centerVertical="true"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/missName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_toLeftOf="@+id/missAvatar"
+                    android:textColor="@color/unluckyText"
+                    android:textSize="12sp"
+                    tools:text="哈哈哈"/>
+
+                <com.sbai.finance.view.HasLabelImageLayout
+                    android:id="@+id/missAvatar"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_default_avatar"
+                    app:label_drawable="@drawable/ic_label_v"
+                    app:label_view_height="12dp"
+                    app:label_view_width="12dp"/>
+            </LinearLayout>
+
 
         </RelativeLayout>
 
@@ -160,6 +182,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:background="@color/split"/>
+        android:background="@color/background"/>
 
 </LinearLayout>

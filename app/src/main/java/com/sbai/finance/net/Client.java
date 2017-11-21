@@ -2997,7 +2997,16 @@ public class Client {
     /**
      * 点击banner后
      */
-    public static API requestClickBanner(String bannerId){
-        return new API("/user/news/findBannerById.do",new ApiParams().put("id",bannerId));
+    public static API requestClickBanner(String bannerId) {
+        return new API("/user/news/findBannerById.do", new ApiParams().put("id", bannerId));
+    }
+
+    // TODO: 2017/11/21 请求姐说主页电台
+    public static API requestRadioList() {
+        return new API("");
+    }
+
+    public static API requestMissSwitcherList() {
+        return new API("");
     }
 }

@@ -31,6 +31,7 @@
             android:layout_height="wrap_content">
 
             <android.support.design.widget.AppBarLayout
+                android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent">
@@ -38,7 +39,7 @@
                 <android.support.design.widget.CollapsingToolbarLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_scrollFlags="snap|scroll">
+                    app:layout_scrollFlags="scroll">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -47,24 +48,30 @@
 
                         <com.sbai.finance.view.EmptyRecyclerView
                             android:id="@+id/recyclerView"
+                            android:layout_marginBottom="@dimen/common_padding"
+                            android:background="@android:color/white"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
 
                         <com.sbai.finance.view.MissRadioLayout
+                            android:id="@+id/missRadioLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
 
-                        <ViewSwitcher
-                            android:id="@+id/viewSwitcher"
+                        <com.sbai.finance.view.MissRadioViewSwitcher
+                            android:id="@+id/missRadioViewSwitcher"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/common_padding"
+                            android:layout_marginTop="@dimen/common_padding"/>
                     </LinearLayout>
                 </android.support.design.widget.CollapsingToolbarLayout>
 
                 <com.sbai.finance.view.slidingTab.SlidingTabLayout
                     android:id="@+id/slidingTabLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"/>
             </android.support.design.widget.AppBarLayout>
 
             <android.support.v4.view.ViewPager

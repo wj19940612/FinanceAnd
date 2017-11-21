@@ -15,7 +15,7 @@
     <string name="arena">竞技场</string>
     <string name="mine">我的</string>>
 
-
+    <string name="already_load_all">已加载全部</string>
     <!-- EconomicCircle -->
     <string name="comment_number">评论(%1$d)</string>
     <string name="comment_number_string">评论(%1$s)</string>
