@@ -94,8 +94,6 @@ public class StockIndexActivity extends StockTradeActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-//                case 0:
-//                    return mContext.getString(R.string.point);
                 case 0:
                     return mContext.getString(R.string.rise_list);
                 case 1:
@@ -107,8 +105,6 @@ public class StockIndexActivity extends StockTradeActivity {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-//                case 0:
-//                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 0:
                     return PriceLimitRankingFragment.newInstance(0, mExchangeCode);
                 case 1:

@@ -11,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,7 +25,6 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.Prediction;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.model.stock.StockRTData;
@@ -35,6 +35,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.net.stock.StockCallback;
 import com.sbai.finance.net.stock.StockResp;
+import com.sbai.finance.utils.AnimUtils;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
@@ -55,6 +56,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
@@ -66,9 +68,6 @@ public abstract class StockTradeActivity extends BaseActivity {
     protected abstract ViewPager.OnPageChangeListener createPageChangeListener();
 
     protected abstract PagerAdapter createSubPageAdapter();
-
-
-    private static final int REQ_CODE_PUBLISH_VIEWPOINT = 172;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -86,6 +85,27 @@ public abstract class StockTradeActivity extends BaseActivity {
     TextView mHighest;
     @BindView(R.id.lowest)
     TextView mLowest;
+
+    @BindView(R.id.volume)
+    TextView mVolume;
+    @BindView(R.id.amount)
+    TextView mAmount;
+    @BindView(R.id.turnoverRate)
+    TextView mTurnoverRate;
+    @BindView(R.id.priceEarningRate)
+    TextView mPriceEarningRate;
+    @BindView(R.id.volumeRate)
+    TextView mVolumeRate;
+    @BindView(R.id.amplitude)
+    TextView mAmplitude;
+    @BindView(R.id.equity)
+    TextView mEquity;
+    @BindView(R.id.marketValue)
+    TextView mMarketValue;
+    @BindView(R.id.moreMarketDataArea)
+    LinearLayout mMoreMarketDataArea;
+    @BindView(R.id.moreDataDownArrow)
+    ImageView mMoreDataDownArrow;
 
     @BindView(R.id.tabLayout)
     TabLayout mTabLayout;
@@ -106,7 +126,6 @@ public abstract class StockTradeActivity extends BaseActivity {
     LinearLayout mChartArea;
 
     private StockRTData mStockRTData;
-    private Prediction mPrediction;
 
     protected Variety mVariety;
     private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
@@ -143,11 +162,6 @@ public abstract class StockTradeActivity extends BaseActivity {
         mTradeFloatButtons.setOnViewClickListener(new TradeFloatButtons.OnViewClickListener() {
             @Override
             public void onPublishPointButtonClick() {
-                if (LocalUser.getUser().isLogin()) {
-                    requestPrediction();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
             }
 
             @Override
@@ -489,18 +503,6 @@ public abstract class StockTradeActivity extends BaseActivity {
         mSlidingTab.setOnPageChangeListener(createPageChangeListener());
     }
 
-    private void requestPrediction() {
-        Client.getPrediction(mVariety.getBigVarietyTypeCode(), mVariety.getVarietyId())
-                .setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Prediction>, Prediction>() {
-                    @Override
-                    protected void onRespSuccessData(Prediction data) {
-                        mPrediction = data;
-                    }
-                }).fire();
-    }
-
-
     private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
@@ -551,5 +553,16 @@ public abstract class StockTradeActivity extends BaseActivity {
                         mStockKlineView.setDataList(dataList);
                     }
                 }).fire();
+    }
+
+    @OnClick(R.id.moreDataDownArrow)
+    public void onViewClicked() {
+        if (mMoreMarketDataArea.getVisibility() == View.VISIBLE) {
+            mMoreDataDownArrow.setRotation(mMoreDataDownArrow.getRotation() + 180);
+            mMoreMarketDataArea.startAnimation(AnimUtils.createCollapseY(mMoreMarketDataArea, 400));
+        } else {
+            mMoreDataDownArrow.setRotation(mMoreDataDownArrow.getRotation() - 180);
+            mMoreMarketDataArea.startAnimation(AnimUtils.createExpendY(mMoreMarketDataArea, 400));
+        }
     }
 }
