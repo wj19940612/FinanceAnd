@@ -325,10 +325,6 @@
             android:name=".activity.evaluation.HistoryEvaluationResultActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.miss.ReplyActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity
             android:name=".activity.miss.RewardMissActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BaseDialog.Bottom"/>

@@ -2030,8 +2030,8 @@ public class Client {
     /**
      * 添加评论/回复
      *
-     * @param invitationUserId
-     * @param replyParentId
+     * @param invitationUserId  如:提问人的id,训练的id
+     * @param replyParentId    回复哪条的id(不填为评论)
      * @param content
      * @param dataId
      * @return
