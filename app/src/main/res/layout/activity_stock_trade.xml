@@ -14,7 +14,12 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_white"
-        app:customView="@layout/tb_stock_name"/>
+        app:customView="@layout/tb_stock_name"
+        app:rightImage="@drawable/ic_add_optional_of_title"
+        app:rightText="@string/optional"
+        app:rightTextColor="@color/colorPrimary"
+        app:rightTextSize="14sp"
+        app:rightVisible="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -410,10 +415,13 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
     </android.support.design.widget.CoordinatorLayout>
 
-    <com.sbai.finance.view.TradeFloatButtons
-        android:id="@+id/tradeFloatButtons"
+    <Button
+        android:id="@+id/mockTrading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:hasTradeButton="false"/>
+        android:background="@drawable/btn_primary"
+        android:minHeight="49dp"
+        android:text="@string/mock_trading"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"/>
 </LinearLayout>

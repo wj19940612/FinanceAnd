@@ -95,7 +95,7 @@
     <string name="lowest">最低</string>
     <string name="publish_point">发表观点</string>
     <string name="add_optional">加入自选</string>
-    <string name="delete_optional">取消自选</string>
+    <string name="cancel_optional">取消自选</string>
     <string name="whether_to_cancel_optional">是否要取消自选</string>
     <string name="add_option_succeed">添加自选成功</string>
     <string name="delete_option_succeed">取消自选成功</string>
@@ -905,4 +905,5 @@
     <string name="amplitude">振幅</string>
     <string name="equity">总股本</string>
     <string name="marketValue">总市值</string>
+    <string name="mock_trading">模拟交易</string>
 </resources>

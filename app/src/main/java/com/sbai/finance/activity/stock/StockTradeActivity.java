@@ -11,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,7 +47,6 @@ import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomToast;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
-import com.sbai.finance.view.TradeFloatButtons;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.finance.view.stock.StockTrendView;
 import com.umeng.socialize.UMShareAPI;
@@ -60,10 +60,14 @@ import butterknife.OnClick;
 
 import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
-import static com.sbai.finance.view.TradeFloatButtons.HAS_ADD_OPITION;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public abstract class StockTradeActivity extends BaseActivity {
+
+    protected static final int HAS_ADD_OPITIONAL = 1;
+
+    @BindView(R.id.mockTrading)
+    Button mMockTrading;
 
     protected abstract ViewPager.OnPageChangeListener createPageChangeListener();
 
@@ -114,9 +118,6 @@ public abstract class StockTradeActivity extends BaseActivity {
     @BindView(R.id.stockKlineView)
     protected KlineView mStockKlineView;
 
-    @BindView(R.id.tradeFloatButtons)
-    TradeFloatButtons mTradeFloatButtons;
-
     @BindView(R.id.slidingTab)
     SlidingTabLayout mSlidingTab;
     @BindView(R.id.viewPager)
@@ -152,54 +153,41 @@ public abstract class StockTradeActivity extends BaseActivity {
         initChartViews();
         initSlidingTab();
         initTitleBar();
-        initTradeFloatButton();
 
         requestStockRTData();
         requestOptionalStatus();
     }
 
-    private void initTradeFloatButton() {
-        mTradeFloatButtons.setOnViewClickListener(new TradeFloatButtons.OnViewClickListener() {
-            @Override
-            public void onPublishPointButtonClick() {
-            }
-
-            @Override
-            public void onAddOptionalButtonClick() {
-                if (LocalUser.getUser().isLogin()) {
-                    checkOptionalStatus();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-            }
-
-            @Override
-            public void onTradeButtonClick() {
-            }
-        });
-    }
-
     private void requestOptionalStatus() {
         if (LocalUser.getUser().isLogin()) {
-            Client.checkOptional(mVariety.getVarietyId())
-                    .setTag(TAG).setIndeterminate(this)
+            Client.checkOptional(mVariety.getVarietyId()).setTag(TAG)
                     .setCallback(new Callback<Resp<Integer>>() {
                         @Override
                         protected void onRespSuccess(Resp<Integer> resp) {
                             Integer result = resp.getData();
-                            if (result != null) {
-                                boolean hasAddInOption = (result == HAS_ADD_OPITION);
-                                mTradeFloatButtons.setHasAddInOption(hasAddInOption);
+                            if (result != null && result == HAS_ADD_OPITIONAL) {
+                                showCancelOptionalOfTitleBar();
                             }
                         }
                     }).fireFree();
         }
     }
 
+    private void showCancelOptionalOfTitleBar() {
+        mTitleBar.setRightText(R.string.cancel_optional);
+        mTitleBar.setRightTextLeftImage(null);
+    }
+
+    private void showAddOptionalOfTitleBar() {
+        mTitleBar.setRightText(R.string.optional);
+        mTitleBar.setRightTextLeftImage(R.drawable.ic_add_optional_of_title);
+    }
+
     private void checkOptionalStatus() {
-        if (mTradeFloatButtons.isHasAddInOptional()) {
+        if (mTitleBar.getRightText().toString().equals(getString(R.string.cancel_optional))) {
             showDeleteOptionalDialog();
         } else {
+            umengEventCount(UmengCountEventId.DISCOVERY_ADD_SELF_OPTIONAL);
             requestAddOptional();
         }
     }
@@ -211,7 +199,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        requestDeleteOptional();
+                        requestCancelOptional();
                     }
                 })
                 .setTitleMaxLines(1)
@@ -221,14 +209,14 @@ public abstract class StockTradeActivity extends BaseActivity {
                 .show();
     }
 
-    private void requestDeleteOptional() {
+    private void requestCancelOptional() {
         Client.delOptional(mVariety.getVarietyId())
                 .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
-                            mTradeFloatButtons.setHasAddInOption(false);
+                            showAddOptionalOfTitleBar();
                             CustomToast.getInstance().showText(getActivity(), R.string.delete_option_succeed);
                             sendAddOptionalBroadCast(mVariety, false);
                         } else {
@@ -239,7 +227,6 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void requestAddOptional() {
-        umengEventCount(UmengCountEventId.DISCOVERY_ADD_SELF_OPTIONAL);
         Client.addOption(mVariety.getVarietyId())
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -247,7 +234,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<JsonObject> resp) {
                         if (resp.isSuccess()) {
-                            mTradeFloatButtons.setHasAddInOption(true);
+                            showCancelOptionalOfTitleBar();
                             CustomToast.getInstance().showText(StockTradeActivity.this, R.string.add_option_succeed);
                             sendAddOptionalBroadCast(null, true);
                         } else {
@@ -260,7 +247,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         super.onRespFailure(failedResp);
                         // 701 代表已经添加过
                         if (failedResp.getCode() == Resp.CODE_REPEAT_ADD) {
-                            mTradeFloatButtons.setHasAddInOption(true);
+                            showCancelOptionalOfTitleBar();
                         }
                     }
                 }).fire();
@@ -401,42 +388,21 @@ public abstract class StockTradeActivity extends BaseActivity {
         } else {
             exchangeStatus.setText(R.string.market_close);
         }
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LocalUser.getUser().isLogin()) {
+                    checkOptionalStatus();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
+        });
 
         setUpTitleBar(mTitleBar);
     }
 
     public void setUpTitleBar(TitleBar titleBar) {
-        final String shareUrl = String.format(Client.SHARE_URL_STOCK,
-                mVariety.getVarietyType(), mVariety.getVarietyId());
-        final String shareTitle = getString(R.string.wonderful_viewpoint, mVariety.getVarietyName());
-        final String shareDescribe = getString(R.string.share_desc);
-        //2017/9/11 先隐藏分享
-//        titleBar.setOnRightViewClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                umengEventCount(UmengCountEventId.DISCOVERY_SHARE_STOCK);
-//                ShareDialogFragment
-//                        .newInstance()
-//                        .setShareContent(shareTitle, shareDescribe, shareUrl)
-//                        .setListener(new ShareDialogFragment.OnShareDialogCallback() {
-//                            @Override
-//                            public void onSharePlatformClick(ShareDialogFragment.SHARE_PLATFORM platform) {
-//                                switch (platform) {
-//                                    case SINA_WEIBO:
-//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_STOCK_WEIBO);
-//                                        break;
-//                                    case WECHAT_FRIEND:
-//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_STOCK_FRIEND);
-//                                        break;
-//                                    case WECHAT_CIRCLE:
-//                                        umengEventCount(UmengCountEventId.DISCOVERY_SHARE_STOCK_CIRCLE);
-//                                        break;
-//                                }
-//                            }
-//                        })
-//                        .show(getSupportFragmentManager());
-//            }
-//        });
     }
 
     private void initData() {
@@ -555,14 +521,22 @@ public abstract class StockTradeActivity extends BaseActivity {
                 }).fire();
     }
 
-    @OnClick(R.id.moreDataDownArrow)
-    public void onViewClicked() {
-        if (mMoreMarketDataArea.getVisibility() == View.VISIBLE) {
-            mMoreDataDownArrow.setRotation(mMoreDataDownArrow.getRotation() + 180);
-            mMoreMarketDataArea.startAnimation(AnimUtils.createCollapseY(mMoreMarketDataArea, 400));
-        } else {
-            mMoreDataDownArrow.setRotation(mMoreDataDownArrow.getRotation() - 180);
-            mMoreMarketDataArea.startAnimation(AnimUtils.createExpendY(mMoreMarketDataArea, 400));
+    @OnClick({R.id.moreDataDownArrow, R.id.mockTrading})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.moreDataDownArrow:
+                if (mMoreMarketDataArea.getVisibility() == View.VISIBLE) {
+                    mMoreDataDownArrow.setRotation(mMoreDataDownArrow.getRotation() + 180);
+                    mMoreMarketDataArea.startAnimation(AnimUtils.createCollapseY(mMoreMarketDataArea, 400));
+                } else {
+                    mMoreDataDownArrow.setRotation(mMoreDataDownArrow.getRotation() - 180);
+                    mMoreMarketDataArea.startAnimation(AnimUtils.createExpendY(mMoreMarketDataArea, 400));
+                }
+                break;
+            case R.id.mockTrading:
+
+                break;
         }
+
     }
 }
