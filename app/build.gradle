@@ -135,6 +135,10 @@ android {
 //        baiduapk8 {}
 //        baiduapk9 {}
 //        baiduapk10 {}
+//        jiri {}
+        fensitong {}
+        guangdiantong {}
+        fuyi {}
     }
 
     productFlavors.all { flavor ->
