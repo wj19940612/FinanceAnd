@@ -157,12 +157,12 @@
     </style>
 
     <style name="FiveMarketDataStockItem">
-        <item name="android:textColor">#838489</item>
+        <item name="android:textColor">@color/luckyText</item>
         <item name="android:textSize">10sp</item>
     </style>
 
     <style name="FiveMarketDataStockAmount">
-        <item name="android:textColor">#838489</item>
+        <item name="android:textColor">@color/luckyText</item>
         <item name="android:textSize">10sp</item>
         <item name="android:maxLines">1</item>
     </style>
@@ -226,6 +226,14 @@
         <item name="android:ellipsize">end</item>
         <item name="android:maxLength">8</item>
         <item name="android:maxLines">1</item>
+    </style>
+
+    <!--股票交易选择仓位-->
+    <style name="SelectPositionButton">
+        <item name="android:background">@drawable/btn_select_position</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minHeight">30dp</item>
+        <item name="android:textColor">@color/luckyText</item>
     </style>
 
 </resources>

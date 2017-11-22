@@ -549,7 +549,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                 }
                 break;
             case R.id.mockTrading:
-
+                Launcher.with(getActivity(), StockTradeOperateActivity.class).execute();
                 break;
         }
 
