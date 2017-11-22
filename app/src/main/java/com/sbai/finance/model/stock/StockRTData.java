@@ -87,324 +87,276 @@ public class StockRTData implements Parcelable {
     private String settlePrice;
     private String status;
     private String tradeDay;
-    private String turnover;
+    private String turnover; // 成交额
     private String upDropPrice;
-    private double upDropSpeed;
+    private double upDropSpeed; // 涨幅比例
     private String upLimitPrice;
     private long upTime;
     private String upTimeFormat;
-    private String volume;
+    private String volume; // 成交量
+    private String turnoverRate; // 换手率
+    private String pe; // 市盈率
+    private String volRate; // 量比
+    private String totalShares; // 总股本
+    private String marketValue; // 总市值
+    // 振幅 =（最高价-最低价） / 昨收价
 
     public String getAskPrice() {
-        return FinanceUtil.formatWithScale(askPrice);
-    }
-
-    public void setAskPrice(String askPrice) {
-        this.askPrice = askPrice;
+        if (askPrice != null) {
+            return FinanceUtil.formatWithScale(askPrice);
+        }
+        return null;
     }
 
     public String getAskPrice2() {
-        return FinanceUtil.formatWithScale(askPrice2);
-    }
-
-    public void setAskPrice2(String askPrice2) {
-        this.askPrice2 = askPrice2;
+        if (askPrice2 != null) {
+            return FinanceUtil.formatWithScale(askPrice2);
+        }
+        return null;
     }
 
     public String getAskPrice3() {
-        return FinanceUtil.formatWithScale(askPrice3);
-    }
-
-    public void setAskPrice3(String askPrice3) {
-        this.askPrice3 = askPrice3;
+        if (askPrice3 != null) {
+            return FinanceUtil.formatWithScale(askPrice3);
+        }
+        return null;
     }
 
     public String getAskPrice4() {
-        return FinanceUtil.formatWithScale(askPrice4);
-    }
-
-    public void setAskPrice4(String askPrice4) {
-        this.askPrice4 = askPrice4;
+        if (askPrice4 != null) {
+            return FinanceUtil.formatWithScale(askPrice4);
+        }
+        return null;
     }
 
     public String getAskPrice5() {
-        return FinanceUtil.formatWithScale(askPrice5);
-    }
-
-    public void setAskPrice5(String askPrice5) {
-        this.askPrice5 = askPrice5;
+        if (askPrice5 != null) {
+            return FinanceUtil.formatWithScale(askPrice5);
+        }
+        return null;
     }
 
     public String getAskVolume() {
         return askVolume;
     }
 
-    public void setAskVolume(String askVolume) {
-        this.askVolume = askVolume;
-    }
-
     public String getAskVolume2() {
         return askVolume2;
-    }
-
-    public void setAskVolume2(String askVolume2) {
-        this.askVolume2 = askVolume2;
     }
 
     public String getAskVolume3() {
         return askVolume3;
     }
 
-    public void setAskVolume3(String askVolume3) {
-        this.askVolume3 = askVolume3;
-    }
-
     public String getAskVolume4() {
         return askVolume4;
-    }
-
-    public void setAskVolume4(String askVolume4) {
-        this.askVolume4 = askVolume4;
     }
 
     public String getAskVolume5() {
         return askVolume5;
     }
 
-    public void setAskVolume5(String askVolume5) {
-        this.askVolume5 = askVolume5;
-    }
-
     public String getBidPrice() {
-        return FinanceUtil.formatWithScale(bidPrice);
-    }
-
-    public void setBidPrice(String bidPrice) {
-        this.bidPrice = bidPrice;
+        if (bidPrice != null) {
+            return FinanceUtil.formatWithScale(bidPrice);
+        }
+        return null;
     }
 
     public String getBidPrice2() {
-        return FinanceUtil.formatWithScale(bidPrice2);
-    }
-
-    public void setBidPrice2(String bidPrice2) {
-        this.bidPrice2 = bidPrice2;
+        if (bidPrice2 != null) {
+            return FinanceUtil.formatWithScale(bidPrice2);
+        }
+        return null;
     }
 
     public String getBidPrice3() {
-        return FinanceUtil.formatWithScale(bidPrice3);
-    }
-
-    public void setBidPrice3(String bidPrice3) {
-        this.bidPrice3 = bidPrice3;
+        if (bidPrice3 != null) {
+            return FinanceUtil.formatWithScale(bidPrice3);
+        }
+        return null;
     }
 
     public String getBidPrice4() {
-        return FinanceUtil.formatWithScale(bidPrice4);
-    }
-
-    public void setBidPrice4(String bidPrice4) {
-        this.bidPrice4 = bidPrice4;
+        if (bidPrice4 != null) {
+            return FinanceUtil.formatWithScale(bidPrice4);
+        }
+        return null;
     }
 
     public String getBidPrice5() {
-        return FinanceUtil.formatWithScale(bidPrice5);
-    }
-
-    public void setBidPrice5(String bidPrice5) {
-        this.bidPrice5 = bidPrice5;
+        if (bidPrice5 != null) {
+            return FinanceUtil.formatWithScale(bidPrice5);
+        }
+        return null;
     }
 
     public String getBidVolume() {
         return bidVolume;
     }
 
-    public void setBidVolume(String bidVolume) {
-        this.bidVolume = bidVolume;
-    }
-
     public String getBidVolume2() {
         return bidVolume2;
-    }
-
-    public void setBidVolume2(String bidVolume2) {
-        this.bidVolume2 = bidVolume2;
     }
 
     public String getBidVolume3() {
         return bidVolume3;
     }
 
-    public void setBidVolume3(String bidVolume3) {
-        this.bidVolume3 = bidVolume3;
-    }
-
     public String getBidVolume4() {
         return bidVolume4;
-    }
-
-    public void setBidVolume4(String bidVolume4) {
-        this.bidVolume4 = bidVolume4;
     }
 
     public String getBidVolume5() {
         return bidVolume5;
     }
 
-    public void setBidVolume5(String bidVolume5) {
-        this.bidVolume5 = bidVolume5;
-    }
-
     public String getDownLimitPrice() {
         return downLimitPrice;
-    }
-
-    public void setDownLimitPrice(String downLimitPrice) {
-        this.downLimitPrice = downLimitPrice;
     }
 
     public String getExchangeId() {
         return exchangeId;
     }
 
-    public void setExchangeId(String exchangeId) {
-        this.exchangeId = exchangeId;
-    }
-
     public String getHighestPrice() {
-        return FinanceUtil.formatWithScale(highestPrice);
-    }
-
-    public void setHighestPrice(String highestPrice) {
-        this.highestPrice = highestPrice;
+        if (highestPrice != null) {
+            return FinanceUtil.formatWithScale(highestPrice);
+        }
+        return null;
     }
 
     public String getInstrumentId() {
         return instrumentId;
     }
 
-    public void setInstrumentId(String instrumentId) {
-        this.instrumentId = instrumentId;
-    }
-
     public String getLastPrice() {
-        return FinanceUtil.formatWithScale(lastPrice);
-    }
-
-    public void setLastPrice(String lastPrice) {
-        this.lastPrice = lastPrice;
+        if (lastPrice != null) {
+            return FinanceUtil.formatWithScale(lastPrice);
+        }
+        return null;
     }
 
     public String getLowestPrice() {
-        return FinanceUtil.formatWithScale(lowestPrice);
-    }
-
-    public void setLowestPrice(String lowestPrice) {
-        this.lowestPrice = lowestPrice;
+        if (lowestPrice != null) {
+            return FinanceUtil.formatWithScale(lowestPrice);
+        }
+        return null;
     }
 
     public String getOpenPrice() {
-        return FinanceUtil.formatWithScale(openPrice);
-    }
-
-    public void setOpenPrice(String openPrice) {
-        this.openPrice = openPrice;
+        if (openPrice != null) {
+            return FinanceUtil.formatWithScale(openPrice);
+        }
+        return null;
     }
 
     public String getPreClsPrice() {
-        return preClsPrice;
-    }
-
-    public void setPreClsPrice(String preClsPrice) {
-        this.preClsPrice = preClsPrice;
+        if (preClsPrice != null) {
+            return FinanceUtil.formatWithScale(preClsPrice);
+        }
+        return getPreSetPrice();
     }
 
     public String getPreSetPrice() {
         return FinanceUtil.formatWithScale(preSetPrice);
     }
 
-    public void setPreSetPrice(String preSetPrice) {
-        this.preSetPrice = preSetPrice;
-    }
-
     public String getSettlePrice() {
         return settlePrice;
-    }
-
-    public void setSettlePrice(String settlePrice) {
-        this.settlePrice = settlePrice;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getTradeDay() {
         return tradeDay;
     }
 
-    public void setTradeDay(String tradeDay) {
-        this.tradeDay = tradeDay;
-    }
-
     public String getTurnover() {
-        return turnover;
-    }
-
-    public void setTurnover(String turnover) {
-        this.turnover = turnover;
+        if (turnover != null) {
+            return FinanceUtil.addUnitWithoutSeparator(Double.parseDouble(turnover));
+        }
+        return null;
     }
 
     public String getUpDropPrice() {
         return FinanceUtil.formatWithScale(upDropPrice);
     }
 
-    public void setUpDropPrice(String upDropPrice) {
-        this.upDropPrice = upDropPrice;
-    }
-
     public double getUpDropSpeed() {
         return upDropSpeed;
-    }
-
-    public void setUpDropSpeed(double upDropSpeed) {
-        this.upDropSpeed = upDropSpeed;
     }
 
     public String getUpLimitPrice() {
         return upLimitPrice;
     }
 
-    public void setUpLimitPrice(String upLimitPrice) {
-        this.upLimitPrice = upLimitPrice;
-    }
-
     public long getUpTime() {
         return upTime;
-    }
-
-    public void setUpTime(long upTime) {
-        this.upTime = upTime;
     }
 
     public String getUpTimeFormat() {
         return upTimeFormat;
     }
 
-    public void setUpTimeFormat(String upTimeFormat) {
-        this.upTimeFormat = upTimeFormat;
-    }
-
     public String getVolume() {
-        return volume;
+        if (volume != null) {
+            return FinanceUtil.addUnitWithoutSeparator(Double.parseDouble(volume));
+        }
+        return null;
     }
 
-    public void setVolume(String volume) {
-        this.volume = volume;
+    public String getTurnoverRate() {
+        if (turnoverRate != null) {
+            return FinanceUtil.formatToPercentage(Double.parseDouble(turnoverRate));
+        }
+        return null;
+    }
+
+    public String getPe() {
+        if (pe != null) {
+            return FinanceUtil.formatWithScale(pe);
+        }
+        return null;
+    }
+
+    public String getVolRate() {
+        if (volRate != null) {
+            return FinanceUtil.formatWithScale(volRate);
+        }
+        return null;
+    }
+
+    public String getTotalShares() {
+        if (totalShares != null) {
+            return FinanceUtil.addUnitWithoutSeparator(Double.parseDouble(totalShares));
+        }
+        return null;
+    }
+
+    public String getMarketValue() {
+        if (marketValue != null) {
+            return FinanceUtil.addUnitWithoutSeparator(Double.parseDouble(marketValue));
+        }
+        return null;
+    }
+
+    public String getAmplitude() {
+        if (highestPrice != null && lowestPrice != null) {
+            double amplitude = Double.parseDouble(highestPrice) - Double.parseDouble(lowestPrice);
+            if (preClsPrice != null) {
+                if (Double.parseDouble(preClsPrice) != 0) {
+                    return FinanceUtil.formatToPercentage(amplitude / Double.parseDouble(preClsPrice));
+                }
+            } else {
+                if (Double.parseDouble(preSetPrice) != 0) {
+                    return FinanceUtil.formatToPercentage(amplitude / Double.parseDouble(preSetPrice));
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -453,6 +405,11 @@ public class StockRTData implements Parcelable {
         dest.writeLong(this.upTime);
         dest.writeString(this.upTimeFormat);
         dest.writeString(this.volume);
+        dest.writeString(this.turnoverRate);
+        dest.writeString(this.pe);
+        dest.writeString(this.volRate);
+        dest.writeString(this.totalShares);
+        dest.writeString(this.marketValue);
     }
 
     public StockRTData() {
@@ -498,9 +455,14 @@ public class StockRTData implements Parcelable {
         this.upTime = in.readLong();
         this.upTimeFormat = in.readString();
         this.volume = in.readString();
+        this.turnoverRate = in.readString();
+        this.pe = in.readString();
+        this.volRate = in.readString();
+        this.totalShares = in.readString();
+        this.marketValue = in.readString();
     }
 
-    public static final Parcelable.Creator<StockRTData> CREATOR = new Parcelable.Creator<StockRTData>() {
+    public static final Creator<StockRTData> CREATOR = new Creator<StockRTData>() {
         @Override
         public StockRTData createFromParcel(Parcel source) {
             return new StockRTData(source);
@@ -511,49 +473,4 @@ public class StockRTData implements Parcelable {
             return new StockRTData[size];
         }
     };
-
-    @Override
-    public String toString() {
-        return "StockRTData{" +
-                "askPrice='" + askPrice + '\'' +
-                ", askPrice2='" + askPrice2 + '\'' +
-                ", askPrice3='" + askPrice3 + '\'' +
-                ", askPrice4='" + askPrice4 + '\'' +
-                ", askPrice5='" + askPrice5 + '\'' +
-                ", askVolume='" + askVolume + '\'' +
-                ", askVolume2='" + askVolume2 + '\'' +
-                ", askVolume3='" + askVolume3 + '\'' +
-                ", askVolume4='" + askVolume4 + '\'' +
-                ", askVolume5='" + askVolume5 + '\'' +
-                ", bidPrice='" + bidPrice + '\'' +
-                ", bidPrice2='" + bidPrice2 + '\'' +
-                ", bidPrice3='" + bidPrice3 + '\'' +
-                ", bidPrice4='" + bidPrice4 + '\'' +
-                ", bidPrice5='" + bidPrice5 + '\'' +
-                ", bidVolume='" + bidVolume + '\'' +
-                ", bidVolume2='" + bidVolume2 + '\'' +
-                ", bidVolume3='" + bidVolume3 + '\'' +
-                ", bidVolume4='" + bidVolume4 + '\'' +
-                ", bidVolume5='" + bidVolume5 + '\'' +
-                ", downLimitPrice='" + downLimitPrice + '\'' +
-                ", exchangeId='" + exchangeId + '\'' +
-                ", highestPrice='" + highestPrice + '\'' +
-                ", instrumentId='" + instrumentId + '\'' +
-                ", lastPrice='" + lastPrice + '\'' +
-                ", lowestPrice='" + lowestPrice + '\'' +
-                ", openPrice='" + openPrice + '\'' +
-                ", preClsPrice='" + preClsPrice + '\'' +
-                ", preSetPrice='" + preSetPrice + '\'' +
-                ", settlePrice='" + settlePrice + '\'' +
-                ", status='" + status + '\'' +
-                ", tradeDay='" + tradeDay + '\'' +
-                ", turnover='" + turnover + '\'' +
-                ", upDropPrice='" + upDropPrice + '\'' +
-                ", upDropSpeed=" + upDropSpeed +
-                ", upLimitPrice='" + upLimitPrice + '\'' +
-                ", upTime=" + upTime +
-                ", upTimeFormat='" + upTimeFormat + '\'' +
-                ", volume='" + volume + '\'' +
-                '}';
-    }
 }

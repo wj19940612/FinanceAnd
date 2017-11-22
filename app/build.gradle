@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    //compileSdkVersion 27 todo release use this
+    compileSdkVersion 26
     buildToolsVersion '27.0.1'
 
     defaultConfig { // default is prod
