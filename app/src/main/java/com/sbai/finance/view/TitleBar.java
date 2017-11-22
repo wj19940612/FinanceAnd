@@ -273,6 +273,11 @@ public class TitleBar extends RelativeLayout {
         }
     }
 
+    public void setRightTextLeftImage(int rightImageRes) {
+        Drawable drawable = ContextCompat.getDrawable(getContext(), rightImageRes);
+        setRightTextLeftImage(drawable);
+    }
+
     public void setRightTextLeftImage(Drawable rightImage) {
         mRightTextLeftImage = rightImage;
         mRightView.setCompoundDrawablesWithIntrinsicBounds(mRightTextLeftImage, null, null, null);
@@ -322,6 +327,10 @@ public class TitleBar extends RelativeLayout {
 
     public CharSequence getTitle() {
         return mTitle;
+    }
+
+    public CharSequence getRightText() {
+        return mRightText;
     }
 
     public View getCustomView() {
