@@ -52,14 +52,6 @@
                 android:textColor="@color/redPrimary"
                 android:textSize="14sp"
                 tools:text="-0.03\n-0.23%"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="行业名称\n商业银行"
-                android:textColor="@color/unluckyText"/>
         </LinearLayout>
 
         <LinearLayout
