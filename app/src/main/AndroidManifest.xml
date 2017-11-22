@@ -301,6 +301,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"/>
         <activity
+            android:name=".activity.miss.radio.RadioStationPlayActivityActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.miss.QuestionDetailActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"/>
@@ -410,8 +414,9 @@
         <activity
             android:name=".activity.home.BroadcastListActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.battle.BattleRuleActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.battle.BattleRuleActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

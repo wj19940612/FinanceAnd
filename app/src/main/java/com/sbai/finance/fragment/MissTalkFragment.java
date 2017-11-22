@@ -146,24 +146,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
                 .setCallback(new Callback2D<Resp<List<Radio>>, List<Radio>>() {
                     @Override
                     protected void onRespSuccessData(List<Radio> data) {
-                        // TODO: 2017/11/21 模拟数据
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        ArrayList<Radio> radios = new ArrayList<>();
-                        for (int i = 0; i < 10; i++) {
-                            Radio radio = new Radio();
-                            radio.setRadioCover("https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=2151676197,560631824&fm=173&s=18932BD5C2C13F4D2599863503004067&w=599&h=321&img.JPEG");
-                            radio.setRadioLength(1000 * i);
-                            radio.setTime(System.currentTimeMillis());
-                            radio.setRadioTitle(i + "溺水的鱼   头 " + i);
-                            radio.setRadioOwner("丁丁 " + i + " 号 ");
-                            radio.setRadioName("  这是 " + i + " 电台");
-                            radios.add(radio);
-                        }
-                        mMissRadioLayout.setMissRadioList(radios);
+                        mMissRadioLayout.setMissRadioList(data);
                     }
                 })
                 .fireFree();
@@ -226,7 +209,8 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
         mMissRadioLayout.setOnMissRadioPlayListener(new MissRadioLayout.OnMissRadioPlayListener() {
             @Override
             public void onMissRadioPlay(Radio radio, boolean isPlaying) {
-                ToastUtil.show(radio.getRadioName());
+//                ToastUtil.show(radio.getAudioName());
+
             }
         });
 

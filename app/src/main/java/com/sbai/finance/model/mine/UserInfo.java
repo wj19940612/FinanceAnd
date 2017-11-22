@@ -64,6 +64,40 @@ public class UserInfo implements Parcelable {
     private String wxName;//微信昵称
     private String inviteCode; //邀请码
 
+
+
+    //小姐姐登录的信息
+    /**
+     * bisSetNickname : 1
+     * briefingText : 不要删除or停用我 我希望我能默默无闻地为大家服务
+     * customId : 12
+     * deviceId : c17c23dfc4e73acc408f1b812b2358be
+     * lastSensitizeTime : 1511257944000
+     * moneyReward : 0
+     * passEncryptTimes : 2
+     * passSalt : w21inadt
+     * platform : 0
+     * rewardDeviceId :
+     * source : ios
+     * userPass :
+     * userType : 0
+     */
+
+    private int bisSetNickname;
+    private String briefingText;
+    private int customId;
+    private String deviceId;
+    private long lastSensitizeTime;
+    private int moneyReward;
+    private int passEncryptTimes;
+    private String passSalt;
+    private int platform;
+    private String rewardDeviceId;
+    private String source;
+    private String userPass;
+    private int userType;
+
+
     public String getInviteCode() {
         return inviteCode;
     }
@@ -308,7 +342,112 @@ public class UserInfo implements Parcelable {
     public void setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel;
     }
+    public UserInfo() {
+    }
 
+    public int getBisSetNickname() {
+        return bisSetNickname;
+    }
+
+    public void setBisSetNickname(int bisSetNickname) {
+        this.bisSetNickname = bisSetNickname;
+    }
+
+    public String getBriefingText() {
+        return briefingText;
+    }
+
+    public void setBriefingText(String briefingText) {
+        this.briefingText = briefingText;
+    }
+
+    public int getCustomId() {
+        return customId;
+    }
+
+    public void setCustomId(int customId) {
+        this.customId = customId;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public long getLastSensitizeTime() {
+        return lastSensitizeTime;
+    }
+
+    public void setLastSensitizeTime(long lastSensitizeTime) {
+        this.lastSensitizeTime = lastSensitizeTime;
+    }
+
+    public int getMoneyReward() {
+        return moneyReward;
+    }
+
+    public void setMoneyReward(int moneyReward) {
+        this.moneyReward = moneyReward;
+    }
+
+    public int getPassEncryptTimes() {
+        return passEncryptTimes;
+    }
+
+    public void setPassEncryptTimes(int passEncryptTimes) {
+        this.passEncryptTimes = passEncryptTimes;
+    }
+
+    public String getPassSalt() {
+        return passSalt;
+    }
+
+    public void setPassSalt(String passSalt) {
+        this.passSalt = passSalt;
+    }
+
+    public int getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(int platform) {
+        this.platform = platform;
+    }
+
+    public String getRewardDeviceId() {
+        return rewardDeviceId;
+    }
+
+    public void setRewardDeviceId(String rewardDeviceId) {
+        this.rewardDeviceId = rewardDeviceId;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getUserPass() {
+        return userPass;
+    }
+
+    public void setUserPass(String userPass) {
+        this.userPass = userPass;
+    }
+
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
 
     @Override
     public String toString() {
@@ -338,8 +477,25 @@ public class UserInfo implements Parcelable {
                 ", registerRewardIngot=" + registerRewardIngot +
                 ", evaluate=" + evaluate +
                 ", maxLevel=" + maxLevel +
+                ", wxOpenId='" + wxOpenId + '\'' +
+                ", wxName='" + wxName + '\'' +
+                ", inviteCode='" + inviteCode + '\'' +
+                ", bisSetNickname=" + bisSetNickname +
+                ", briefingText='" + briefingText + '\'' +
+                ", customId=" + customId +
+                ", deviceId='" + deviceId + '\'' +
+                ", lastSensitizeTime=" + lastSensitizeTime +
+                ", moneyReward=" + moneyReward +
+                ", passEncryptTimes=" + passEncryptTimes +
+                ", passSalt='" + passSalt + '\'' +
+                ", platform=" + platform +
+                ", rewardDeviceId='" + rewardDeviceId + '\'' +
+                ", source='" + source + '\'' +
+                ", userPass='" + userPass + '\'' +
+                ", userType=" + userType +
                 '}';
     }
+
 
     @Override
     public int describeContents() {
@@ -373,9 +529,22 @@ public class UserInfo implements Parcelable {
         dest.writeInt(this.registerRewardIngot);
         dest.writeInt(this.evaluate);
         dest.writeInt(this.maxLevel);
-    }
-
-    public UserInfo() {
+        dest.writeString(this.wxOpenId);
+        dest.writeString(this.wxName);
+        dest.writeString(this.inviteCode);
+        dest.writeInt(this.bisSetNickname);
+        dest.writeString(this.briefingText);
+        dest.writeInt(this.customId);
+        dest.writeString(this.deviceId);
+        dest.writeLong(this.lastSensitizeTime);
+        dest.writeInt(this.moneyReward);
+        dest.writeInt(this.passEncryptTimes);
+        dest.writeString(this.passSalt);
+        dest.writeInt(this.platform);
+        dest.writeString(this.rewardDeviceId);
+        dest.writeString(this.source);
+        dest.writeString(this.userPass);
+        dest.writeInt(this.userType);
     }
 
     protected UserInfo(Parcel in) {
@@ -404,6 +573,22 @@ public class UserInfo implements Parcelable {
         this.registerRewardIngot = in.readInt();
         this.evaluate = in.readInt();
         this.maxLevel = in.readInt();
+        this.wxOpenId = in.readString();
+        this.wxName = in.readString();
+        this.inviteCode = in.readString();
+        this.bisSetNickname = in.readInt();
+        this.briefingText = in.readString();
+        this.customId = in.readInt();
+        this.deviceId = in.readString();
+        this.lastSensitizeTime = in.readLong();
+        this.moneyReward = in.readInt();
+        this.passEncryptTimes = in.readInt();
+        this.passSalt = in.readString();
+        this.platform = in.readInt();
+        this.rewardDeviceId = in.readString();
+        this.source = in.readString();
+        this.userPass = in.readString();
+        this.userType = in.readInt();
     }
 
     public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {

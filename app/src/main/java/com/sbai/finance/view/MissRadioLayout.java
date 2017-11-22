@@ -14,7 +14,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
@@ -81,22 +80,23 @@ public class MissRadioLayout extends LinearLayout {
         for (int i = 0; i < radioListShowSize; i++) {
             View view = LayoutInflater.from(getContext()).inflate(R.layout.view_miss_radio, null);
             ImageView radioCover = view.findViewById(R.id.radioCover);
-            TextView radioName = view.findViewById(R.id.radioName);
+            TextView voiceName = view.findViewById(R.id.voiceName);
             TextView radioUpdateTime = view.findViewById(R.id.radioUpdateTime);
             TextView radioOwnerName = view.findViewById(R.id.radioOwnerName);
-            TextView radioSpecialName = view.findViewById(R.id.radioSpecialName);
+            TextView radioName = view.findViewById(R.id.radioName);
             final ImageView startPlay = view.findViewById(R.id.startPlay);
             TextView radioLength = view.findViewById(R.id.radioLength);
 
             Radio radio = radioList.get(i);
             GlideApp.with(getContext())
-                    .load(radio.getRadioCover())
+                    .load(radio.getAudioCover())
                     .into(radioCover);
-            radioName.setText(radio.getRadioTitle());
-            radioUpdateTime.setText(DateUtil.formatDefaultStyleTime(radio.getTime()));
-            radioSpecialName.setText(radio.getRadioName());
-            radioOwnerName.setText(radio.getRadioOwner());
-            radioLength.setText(DateUtil.format(radio.getRadioLength(), DateUtil.FORMAT_HOUR_MINUTE));
+            voiceName.setText(radio.getAudioName());
+            radioUpdateTime.setText(DateUtil.formatDefaultStyleTime(radio.getModifyTime()));
+            // TODO: 2017/11/22 缺少电台名称
+//            radioName.setText(radio.getRadioName());
+            radioOwnerName.setText(radio.getRadioHostName());
+            radioLength.setText(DateUtil.format(radio.getAudioTime(), DateUtil.FORMAT_HOUR_MINUTE));
             startPlay.setImageResource(R.drawable.bg_voice_play);
             addView(view, layoutParams);
 

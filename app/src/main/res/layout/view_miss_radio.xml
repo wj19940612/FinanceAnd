@@ -25,7 +25,7 @@
         tools:src="@mipmap/ic_launcher_round"/>
 
     <TextView
-        android:id="@+id/radioName"
+        android:id="@+id/voiceName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/common_padding"
@@ -47,7 +47,7 @@
         android:textColor="@color/unluckyText"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/radioCover"
-        app:layout_constraintTop_toBottomOf="@+id/radioName"
+        app:layout_constraintTop_toBottomOf="@+id/voiceName"
         tools:text="1小时前"/>
 
     <TextView
@@ -60,7 +60,7 @@
         android:textSize="12sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/radioUpdateTime"
         app:layout_constraintStart_toEndOf="@+id/radioUpdateTime"
-        app:layout_constraintTop_toBottomOf="@+id/radioName"
+        app:layout_constraintTop_toBottomOf="@+id/voiceName"
         tools:text="丁丁"/>
 
     <View
@@ -71,10 +71,10 @@
         android:layout_marginTop="15dp"
         android:background="@color/split"
         app:layout_constraintStart_toEndOf="@+id/radioOwnerName"
-        app:layout_constraintTop_toBottomOf="@+id/radioName"/>
+        app:layout_constraintTop_toBottomOf="@+id/voiceName"/>
 
     <TextView
-        android:id="@+id/radioSpecialName"
+        android:id="@+id/radioName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
@@ -83,7 +83,7 @@
         android:textSize="12sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/radioUpdateTime"
         app:layout_constraintStart_toEndOf="@+id/spit"
-        app:layout_constraintTop_toBottomOf="@+id/radioName"
+        app:layout_constraintTop_toBottomOf="@+id/voiceName"
         tools:text="发的顺丰到付"/>
 
     <LinearLayout

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/holo_red_dark"
+    android:minHeight="270dp">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_white"
+        app:rightImage="@drawable/ic_share"
+        app:rightVisible="true"/>
+
+    <ImageView
+        android:id="@+id/radioCover"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleBar"
+        tools:src="@mipmap/ic_launcher"/>
+
+    <LinearLayout
+        android:id="@+id/seekBarLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding"
+        app:layout_constraintTop_toBottomOf="@+id/radioCover">
+
+        <TextView
+            android:id="@+id/progressLength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/split"
+            android:textSize="12sp"
+            tools:text="01:36"/>
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/radioSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/radioTotalLength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/split"
+            android:textSize="12sp"
+            tools:text="01:36"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/play"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="17dp"
+        android:src="@drawable/bg_radio_play"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarLL"/>
+
+    <TextView
+        android:id="@+id/listenNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:drawableLeft="@drawable/ic_radio_headset"
+        android:drawablePadding="6dp"
+        android:gravity="center_vertical"
+        android:paddingRight="@dimen/common_padding"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/play"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarLL"
+        tools:text="15155"/>
+
+</android.support.constraint.ConstraintLayout>

@@ -3001,9 +3001,12 @@ public class Client {
         return new API("/user/news/findBannerById.do", new ApiParams().put("id", bannerId));
     }
 
-    // TODO: 2017/11/21 请求姐说主页电台
+    /**
+     * 小姐姐管理--查询最新的推荐电台(薛松)
+     * @return
+     */
     public static API requestRadioList() {
-        return new API("");
+        return new API("/explain/audioManage/getRecommendLatestAudio.do");
     }
 
     public static API requestMissSwitcherList() {
