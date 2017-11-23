@@ -22,6 +22,7 @@ import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.TimerHandler;
@@ -54,9 +55,11 @@ public class BaseActivity extends BattlePushActivity implements
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            LocalUser.getUser().logout();
-            Launcher.with(getActivity(), MainActivity.class).execute();
-            Launcher.with(getActivity(), LoginActivity.class).execute();
+            if (ACTION_TOKEN_EXPIRED.equalsIgnoreCase(intent.getAction())) {
+                LocalUser.getUser().logout();
+                Launcher.with(getActivity(), MainActivity.class).execute();
+                Launcher.with(getActivity(), LoginActivity.class).execute();
+            }
         }
     };
 
@@ -144,6 +147,8 @@ public class BaseActivity extends BattlePushActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+        Intent intent = new Intent(this, MediaPlayService.class);
+//        bindService()
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(ACTION_TOKEN_EXPIRED));
     }
 
