@@ -12,9 +12,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.FutureIntroduce;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.net.Callback2D;
-import com.sbai.finance.net.Client;
-import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 
@@ -87,19 +84,7 @@ public class IntroduceFragment extends BaseFragment {
     }
 
     private void requestVarietyTradeIntroduce() {
-        Client.getVarietyTradeIntroduce(mVariety.getVarietyId())
-                .setTag(TAG).setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<FutureIntroduce>, FutureIntroduce>() {
-                    @Override
-                    protected void onRespSuccessData(FutureIntroduce data) {
-                        updateFutureIntroduce(data);
-                    }
 
-                    @Override
-                    protected boolean onErrorToast() {
-                        return false;
-                    }
-                }).fireFree();
     }
 
     private void updateFutureIntroduce(FutureIntroduce data) {

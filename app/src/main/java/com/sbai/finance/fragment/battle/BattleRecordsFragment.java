@@ -2,21 +2,24 @@ package com.sbai.finance.fragment.battle;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.sbai.finance.App;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.TradeRecord;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.view.BattleBottomBothInfoView;
-import com.sbai.finance.view.BattleTradeView;
+import com.sbai.finance.utils.StrUtil;
+import com.sbai.finance.view.BattleOperateView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
 
@@ -27,21 +30,25 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by linrongfang on 2017/6/20.
+ * Modified by john on 07/11/2017
+ *
+ * APIs: {@link Client#}
+ *
+ * 对战已经结束的状态下跳转的对战记录界面
  */
-
 public class BattleRecordsFragment extends BaseFragment {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.listView)
     ListView mListView;
-    @BindView(R.id.battleView)
-    BattleBottomBothInfoView mBattleView;
+    @BindView(R.id.battleMessage)
+    TextView mBattleMessage;
+    BattleOperateView.PlayersView mPlayersView;
 
     Unbinder unbinder;
 
-    BattleTradeView.BattleTradeAdapter mBattleTradeAdapter;
+    BattleActivity.OrderRecordListAdapter mBattleTradeAdapter;
 
     private Battle mBattle;
 
@@ -72,24 +79,45 @@ public class BattleRecordsFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initViews();
-    }
-
-    private void initViews() {
         scrollToTop(mTitleBar, mListView);
-        mBattleTradeAdapter = new BattleTradeView.BattleTradeAdapter(getContext());
+        mBattleTradeAdapter = new BattleActivity.OrderRecordListAdapter(getContext());
         mListView.setAdapter(mBattleTradeAdapter);
-        mBattleView.setMode(BattleBottomBothInfoView.Mode.MINE)
-                .initWithModel(mBattle)
-                .setDeadline(mBattle.getGameStatus(), 0)
-                .setProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore(), false)
-                .setWinResult(mBattle.getWinResult());
+
+        mBattleMessage.setText(StrUtil.mergeTextWithColor(mBattle.getReward() + getCoinType() + "  ",
+                getString(R.string.end), ContextCompat.getColor(getContext(), R.color.yellowAssist)));
+
+        View playersView = getView().findViewById(R.id.playersView);
+        mPlayersView = new BattleOperateView.PlayersView(playersView);
+
+        mPlayersView.battleProgress(mBattle.getLaunchScore(), mBattle.getAgainstScore())
+                .ownerPraise(getContext(), mBattle.getLaunchPraise())
+                .challengerPraise(getContext(), mBattle.getAgainstPraise())
+                .ownerAvatar(getContext(), mBattle.getLaunchUserPortrait())
+                .challengerAvatar(getContext(), mBattle.getAgainstUserPortrait())
+                .ownerName(mBattle.getLaunchUserName())
+                .challengerName(mBattle.getAgainstUserName());
+
+        switch (mBattle.getWinResult()) {
+            case Battle.WIN_RESULT_OWNER_WIN:
+                mPlayersView.challengerKo();
+                break;
+            case Battle.WIN_RESULT_CHALLENGER_WIN:
+                mPlayersView.ownerOk();
+                break;
+        }
 
         requestOrderHistory();
     }
 
+    private String getCoinType() {
+        if (mBattle.getCoinType() == Battle.COIN_TYPE_INGOT) {
+            return getString(R.string.ingot);
+        }
+        return getString(R.string.integral);
+    }
+
     private void requestOrderHistory() {
-        Client.getOrderHistory(mBattle.getId())
+        Client.getTradeOperationRecords(mBattle.getId())
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<TradeRecord>>, List<TradeRecord>>() {
                     @Override
@@ -101,7 +129,7 @@ public class BattleRecordsFragment extends BaseFragment {
     }
 
     private void updateTradeHistory(List<TradeRecord> resp) {
-        mBattleTradeAdapter.setUserId(mBattle.getLaunchUser(), mBattle.getAgainstUser());
+        mBattleTradeAdapter.setOwnerId(mBattle.getLaunchUser());
         mBattleTradeAdapter.setRecordList(resp);
         mListView.setSelection(View.FOCUS_DOWN);
     }

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_horizontal"
+              android:orientation="vertical"
+              tools:background="@color/primaryText">
+
+    <LinearLayout
+        android:id="@+id/tradeButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <Button
+            android:id="@+id/buyLong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_battle_buy_long"/>
+
+        <Button
+            android:id="@+id/sellShort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_battle_sell_short"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/noPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="14dp"
+        android:text="@string/no_position"
+        android:textColor="@color/unluckyText"
+        android:textSize="10sp"
+        android:visibility="visible"/>
+
+    <Button
+        android:id="@+id/closePositionBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_battle_close_position"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/holdingInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="14dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/position_direction"
+            android:textColor="@color/unluckyText"
+            android:textSize="10sp"/>
+
+        <TextView
+            android:id="@+id/direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:minWidth="30dp"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buy_price"
+            android:textColor="@color/unluckyText"
+            android:textSize="10sp"/>
+
+        <TextView
+            android:id="@+id/buyPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:minWidth="30dp"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/position_profit"
+            android:textColor="@color/unluckyText"
+            android:textSize="10sp"/>
+
+        <TextView
+            android:id="@+id/profit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:minWidth="30dp"
+            android:textColor="@color/redPrimary"
+            android:textSize="10sp"/>
+    </LinearLayout>
+</LinearLayout>

@@ -77,15 +77,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme.NoTitle.FadeIn"/>
         <activity
-            android:name=".activity.economiccircle.ContentImgActivity"
+            android:name=".activity.ContentImgActivity"
             android:screenOrientation="portrait"/>
 
         <!-- Login & Register -->
         <activity
             android:name=".activity.mine.LoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/PageBottomEnter"/>
+            android:theme="@style/PageBottomEnter"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.mine.InputPhoneActivity"
             android:screenOrientation="portrait"/>
@@ -127,7 +129,6 @@
         <activity
             android:name=".activity.mine.MyQuestionAndAnswerActivity"
             android:screenOrientation="portrait"/>
-        <!-- 明细 -->
         <!-- 选择相册图片 -->
         <activity
             android:name=".activity.mine.ImageSelectActivity"
@@ -192,25 +193,13 @@
             android:name=".activity.mine.fund.WithDrawDetailsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.future.FuturesListActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.home.EventActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.home.OptionalActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.home.SearchOptionalActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.home.TopicActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.future.FutureTradeActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.stock.StockListActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.stock.SearchStockActivity"
@@ -221,10 +210,8 @@
         <activity
             android:name=".activity.stock.StockIndexActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.web.TopicDetailActivity"
-            android:screenOrientation="portrait"/>
         <!-- 观点大神 -->
+
 
         <!-- 交易 H5 -->
         <activity
@@ -273,13 +260,13 @@
 
         <!-- 期货大战 -->
         <activity
-            android:name=".activity.battle.FutureBattleActivity"
+            android:name=".activity.battle.BattleActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.battle.BattleListActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.battle.BattleRecordListActivity"
+            android:name=".activity.battle.BattleRecordResultListActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.battle.CreateBattleActivity"
@@ -290,34 +277,23 @@
         <activity
             android:name=".activity.battle.BattleHisRecordActivity"
             android:screenOrientation="portrait"/>
-
+        <activity
+            android:name=".activity.arena.RewardActivity"
+            android:screenOrientation="portrait"/>
         <!-- alipay -->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind">
-        </activity>
+            android:screenOrientation="behind"/>
         <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind">
-        </activity>
+            android:screenOrientation="behind"/>
 
         <!-- 排行榜 -->
-        <activity
-            android:name=".activity.leaderboard.LeaderBoardsActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.leaderboard.LeaderBoardDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.leaderboard.ProfitBoardListActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.leaderboard.IngotOrSavantLeaderBoardActivity"
-            android:screenOrientation="portrait"/>
+
 
         <!-- 小姐姐 -->
         <activity
@@ -327,8 +303,7 @@
         <activity
             android:name=".activity.miss.QuestionDetailActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing">
-        </activity>
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".activity.miss.SubmitQuestionActivity"
             android:screenOrientation="portrait"
@@ -337,7 +312,6 @@
             android:name=".activity.miss.CommentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BaseDialog.Bottom"/>
-
         <activity
             android:name=".activity.miss.RewardActivity"
             android:screenOrientation="portrait"/>
@@ -357,7 +331,6 @@
             android:name=".activity.miss.ReplyActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
-
         <activity
             android:name=".activity.miss.RewardMissActivity"
             android:screenOrientation="portrait"
@@ -365,10 +338,7 @@
 
         <!-- 发现 -->
         <activity
-            android:name=".activity.discovery.DailyReportDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.discovery.DailyReportActivity"
+            android:name=".activity.web.DailyReportDetailActivity"
             android:screenOrientation="portrait"/>
 
         <!-- 自习室 -->
@@ -377,10 +347,6 @@
             android:screenOrientation="portrait"/>
 
         <!-- 训练 -->
-        <activity
-            android:name=".activity.training.MoreTrainFeedbackActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|stateUnchanged"/>
         <activity
             android:name=".activity.training.CreditIntroduceActivity"
             android:screenOrientation="portrait"
@@ -429,6 +395,30 @@
         <activity
             android:name=".activity.home.AllTrainingListActivity"
             android:screenOrientation="portrait"/>
+        <!-- android:theme="@style/BaseDialog" -->
+        <activity
+            android:name=".activity.arena.ArenaEntityExchangeInfoInputActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseDialog.WindowCloseOnTouchOutside"/>
+        <activity
+            android:name=".activity.arena.ArenaVirtualAwardExchangeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseDialog.WindowCloseOnTouchOutside"/>
+        <activity
+            android:name=".activity.arena.ArenaVirtualAwardNameActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseDialog"/>
+        <activity
+            android:name=".activity.home.StockFutureActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.leaderboard.LeaderBoardsListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.home.BroadcastListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.battle.BattleRuleActivity"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

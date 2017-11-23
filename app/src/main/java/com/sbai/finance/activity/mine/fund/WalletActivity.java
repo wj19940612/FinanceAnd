@@ -83,13 +83,10 @@ public class WalletActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        umengEventCount(UmengCountEventId.WALLET_INGOT_DETAILS);
+                        umengEventCount(UmengCountEventId.WALLET_INGOT);
                         break;
                     case 1:
-                        umengEventCount(UmengCountEventId.WALLET_DETAILS);
-                        break;
-                    case 2:
-                        umengEventCount(UmengCountEventId.WALLET_INTEGRAL_DETAILS);
+                        umengEventCount(UmengCountEventId.WALLET_CASH);
                         break;
                 }
             }
@@ -260,21 +257,21 @@ public class WalletActivity extends BaseActivity {
     }
 
     private void updateUserFundDetail() {
-            AccountFundDetailFragment ingotFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(0);
-            if (ingotFragment != null) {
-                ingotFragment.refreshFundDetail();
-            }
-
-            AccountFundDetailFragment accountCrashFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(1);
-            if (accountCrashFragment != null) {
-                accountCrashFragment.refreshFundDetail();
-            }
-
-            AccountFundDetailFragment scoreFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(2);
-            if (scoreFragment != null) {
-                scoreFragment.refreshFundDetail();
-            }
+        AccountFundDetailFragment ingotFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(0);
+        if (ingotFragment != null) {
+            ingotFragment.refreshFundDetail();
         }
+
+        AccountFundDetailFragment accountCrashFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(1);
+        if (accountCrashFragment != null) {
+            accountCrashFragment.refreshFundDetail();
+        }
+
+        AccountFundDetailFragment scoreFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(2);
+        if (scoreFragment != null) {
+            scoreFragment.refreshFundDetail();
+        }
+    }
 
     private static class FundFragmentAdapter extends FragmentPagerAdapter {
 

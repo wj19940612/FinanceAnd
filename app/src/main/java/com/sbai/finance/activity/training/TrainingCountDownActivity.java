@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.widget.RelativeLayout;
 
-import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
@@ -27,6 +26,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.dialog.TrainingRuleDialog;
+import com.sbai.httplib.ApiError;
 import com.sbai.httplib.BuildConfig;
 
 import java.io.IOException;
@@ -162,9 +162,9 @@ public class TrainingCountDownActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
+                    public void onFailure(ApiError apiError) {
                         mTrainingSubmitList.add(submit);
-                        super.onFailure(volleyError);
+                        super.onFailure(apiError);
                     }
                 }).fireFree();
         String phone = LocalUser.getUser().getPhone();

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <RelativeLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <com.sbai.finance.view.HomeTitleView
+            android:id="@+id/homeTitleView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <com.sbai.finance.view.HomeBanner
+            android:id="@+id/banner"
+            android:layout_width="wrap_content"
+            android:layout_height="95dp"
+            android:layout_below="@id/homeTitleView"
+            android:layout_marginTop="20dp"
+            android:background="@color/white"
+            app:isRectIndicator="true"
+            />
+
+        <com.sbai.finance.view.BusinessBanner
+            android:id="@+id/businessBanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/banner"
+            />
+
+        <com.sbai.finance.view.LeaderBoardView
+            android:id="@+id/leaderBoardView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/businessBanner"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal"
+            />
+
+        <com.sbai.finance.view.SevenHourNewsView
+            android:id="@+id/sevenHourNewsView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/leaderBoardView"
+            android:layout_marginTop="14dp"
+            android:background="@color/white"
+            android:paddingBottom="10dp"
+            />
+
+        <com.sbai.finance.view.ImportantNewsView
+            android:id="@+id/importantNewsView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sevenHourNewsView"
+            android:layout_marginTop="14dp"
+            android:background="@color/white"
+            />
+
+    </RelativeLayout>
+</ScrollView>

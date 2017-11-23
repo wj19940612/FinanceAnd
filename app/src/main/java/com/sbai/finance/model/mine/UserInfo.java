@@ -62,6 +62,15 @@ public class UserInfo implements Parcelable {
     private int maxLevel; //最高测评结果
     private String wxOpenId;//微信openid
     private String wxName;//微信昵称
+    private String inviteCode; //邀请码
+
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
+    }
 
     public String getWxName() {
         return wxName;

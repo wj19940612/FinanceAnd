@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="false" android:state_selected="true">
+        <shape>
+            <corners android:radius="@dimen/four_radius"/>
+            <solid android:color="@color/bgArenaRanking"/>
+        </shape>
+    </item>
+    <item android:state_pressed="false" android:state_selected="false">
+        <shape>
+            <corners android:radius="@dimen/four_radius"/>
+            <solid android:color="#3E3A49"/>
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <corners android:radius="@dimen/four_radius"/>
+            <solid android:color="#803E3A49"/>
+        </shape>
+    </item>
+</selector>

@@ -130,6 +130,7 @@ public class PasswordEditText extends LinearLayout {
         mPassword.setHint(hintRes);
     }
 
+
     private void togglePasswordVisible() {
         if (mShowPassword.isSelected()) {
             mShowPassword.setSelected(false);

@@ -15,6 +15,8 @@ public class FinanceUtil {
     public static final String UNIT_GE = "个";
     private static final int DEFAULT_SCALE = 2;
     private static final RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.HALF_EVEN;
+    public static final int TEN_THOUSAND = 10000;
+    public static final int ONE_HUNDRED_MILLION = 10000_0000;
 
     /**
      * 格式化 double 数据, 并使用‘银行家算法’精确（保留）到小数点后两位
@@ -215,16 +217,20 @@ public class FinanceUtil {
      * @return 处理后的字符串
      */
     public static String formatWithScale(double value, int scale) {
+        return formatWithScale(value, scale, RoundingMode.HALF_EVEN);
+    }
+
+    public static String formatWithScale(double value, int scale, RoundingMode roundingMode) {
         DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
         decimalFormat.setMaximumFractionDigits(scale);
         decimalFormat.setMinimumFractionDigits(scale);
         decimalFormat.setMinimumIntegerDigits(1);
         decimalFormat.setGroupingUsed(false);
-        decimalFormat.setRoundingMode(RoundingMode.HALF_EVEN);
-
+        decimalFormat.setRoundingMode(roundingMode);
         String v = decimalFormat.format(value);
         return v;
     }
+
 
     /**
      * 处理 Double 的大数据减法
@@ -448,35 +454,16 @@ public class FinanceUtil {
      * @return 99%
      */
     public static String formatFloorPercent(double number) {
-        int data = 0;
-        if (number < 1) {
-            data = (int) (number * 100);
-        } else {
-            data = (int) number;
-        }
-        return data + "%";
-    }
-
-
-    /**
-     * @param number 0.995   转换为 100%    0.994  转为 99%
-     * @return
-     */
-    public static String formatPercent(double number) {
-        return formatPercent(number, 0, 0);
+        return formatFloorPercent(number, 0);
     }
 
     /**
-     * @param number                数字
-     * @param maximumFractionDigits 设置数字小数部分允许的最大位数。
-     * @param minimumFractionDigits 设置数字小数部分允许的最小位数。
-     * @return
+     * @param number 0.99545
+     * @param scale
+     * @return 99.54%
      */
-    public static String formatPercent(double number, int maximumFractionDigits, int minimumFractionDigits) {
-        NumberFormat percentInstance = NumberFormat.getPercentInstance();
-        percentInstance.setMaximumFractionDigits(maximumFractionDigits);
-        percentInstance.setMinimumFractionDigits(minimumFractionDigits);
-        return percentInstance.format(number);
+    public static String formatFloorPercent(double number, int scale) {
+        BigDecimal bigDecimal = multiply(number, 100d);
+        return removeNeedlessZero(formatWithScale(bigDecimal.doubleValue(), scale, RoundingMode.DOWN) + "%");
     }
-
 }

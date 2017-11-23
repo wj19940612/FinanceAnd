@@ -49,6 +49,7 @@ public class TitleBar extends RelativeLayout {
     private Paint mPaint;
     private float mSplitLineHeight;
     private Drawable mRightTextRightImage;
+    private int mLeftViewLeftPadding;
 
     public TitleBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -102,7 +103,7 @@ public class TitleBar extends RelativeLayout {
         }
         mSplitLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, HEIGHT_SPLIT_LINE_DP,
                 getResources().getDisplayMetrics());
-
+        mLeftViewLeftPadding = typedArray.getDimensionPixelOffset(R.styleable.TitleBar_leftViewLeftPadding, -1);
         typedArray.recycle();
     }
 
@@ -143,7 +144,10 @@ public class TitleBar extends RelativeLayout {
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
         mLeftView = new TextView(getContext());
         mLeftView.setGravity(Gravity.CENTER);
-        mLeftView.setPadding(paddingHorizontal, 0, paddingHorizontal, 0);
+        if (mLeftViewLeftPadding == -1) {
+            mLeftViewLeftPadding = paddingHorizontal;
+        }
+        mLeftView.setPadding(mLeftViewLeftPadding, 0, paddingHorizontal, 0);
         addView(mLeftView, params);
         if (mBackFeature) {
             setBackButtonIcon(mBackIcon);
@@ -275,7 +279,7 @@ public class TitleBar extends RelativeLayout {
     }
 
     private void setRightTextRightImage(Drawable rightTextRightImage) {
-        if(mRightTextRightImage!=null){
+        if (mRightTextRightImage != null) {
             mRightTextRightImage = rightTextRightImage;
             mRightView.setCompoundDrawablePadding(8);
             mRightView.setCompoundDrawablesWithIntrinsicBounds(null, null, mRightTextRightImage, null);

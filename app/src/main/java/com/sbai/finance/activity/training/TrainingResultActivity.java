@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
@@ -31,6 +30,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.view.training.TrainingAchievementView;
+import com.sbai.httplib.ApiError;
 
 import java.util.List;
 
@@ -135,13 +135,13 @@ public class TrainingResultActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
+                    public void onFailure(ApiError apiError) {
                         if (mSubmitCount < 3) {
                             submitTrainingResult();
                         } else {
                             saveTrainingSubmit();
                         }
-                        super.onFailure(volleyError);
+                        super.onFailure(apiError);
                     }
                 }).fireFree();
 

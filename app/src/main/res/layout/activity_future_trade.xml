@@ -164,24 +164,28 @@
                 </LinearLayout>
             </android.support.design.widget.CollapsingToolbarLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@drawable/bg_trade_split"/>
-
-            <com.sbai.finance.view.slidingTab.SlidingTabLayout
-                android:id="@+id/slidingTab"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"/>
+                android:background="@color/background">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:drawableLeft="@drawable/ic_title_latest"
+                    android:drawablePadding="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
+                    android:text="简介"
+                    android:textColor="@color/luckyText"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="52dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        <include layout="@layout/fragment_introduce"/>
+
     </android.support.design.widget.CoordinatorLayout>
 
     <com.sbai.finance.view.TradeFloatButtons

@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment.future;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -26,10 +26,12 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
-import com.sbai.finance.websocket.market.DataReceiveListener;
-import com.sbai.finance.websocket.market.MarketSubscribe;
-import com.sbai.finance.websocket.market.MarketSubscriber;
+import com.sbai.finance.market.DataReceiveListener;
+import com.sbai.finance.market.MarketSubscribe;
+import com.sbai.finance.market.MarketSubscriber;
+import com.sbai.httplib.ApiError;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -41,7 +43,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static android.R.attr.data;
+import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
+import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 
 public class FutureListFragment extends BaseFragment implements AbsListView.OnScrollListener,
@@ -63,6 +66,15 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     private String mFutureType;
     private int mPage;
     private HashSet<String> mSet;
+    private BroadcastReceiver mBroadcastReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                reset();
+                requestVarietyList();
+            }
+        }
+    };
 
     public static FutureListFragment newInstance(String type) {
         FutureListFragment futureListFragment = new FutureListFragment();
@@ -117,6 +129,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                 }
             }
         });
+        registerNetworkChangeReceiver(getActivity(), mBroadcastReceiver);
     }
 
     @Override
@@ -198,6 +211,7 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        unregisterNetworkChangeReceiver(getActivity(), mBroadcastReceiver);
     }
 
     public void requestVarietyList() {
@@ -209,8 +223,8 @@ public class FutureListFragment extends BaseFragment implements AbsListView.OnSc
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         stopRefreshAnimation();
                     }
 

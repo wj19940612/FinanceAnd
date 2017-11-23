@@ -15,6 +15,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.mine.MissNewsFragment;
 import com.sbai.finance.fragment.mine.SysNewsFragment;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
@@ -53,6 +54,26 @@ public class NewsActivity extends BaseActivity {
     private void initView() {
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setCurrentItem(0, false);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    umengEventCount(UmengCountEventId.ME_NEWS_REPLY);
+                } else {
+                    umengEventCount(UmengCountEventId.ME_NEWS_SYS);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mNewsPagesAdapter = new NewsPagesAdapter(getSupportFragmentManager(), getActivity(),
                 new NoReadNewsCallback() {
                     @Override
@@ -119,7 +140,7 @@ public class NewsActivity extends BaseActivity {
         });
     }
 
-    private void updateTitleBar () {
+    private void updateTitleBar() {
         if (mMissNoReadCount == 0) {
             mTabLayout.getTabItems()[0].setText(getString(R.string.reply));
             if (pagePosition == 0) {

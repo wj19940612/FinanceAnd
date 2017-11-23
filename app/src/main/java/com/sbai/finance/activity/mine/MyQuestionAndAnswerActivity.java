@@ -13,6 +13,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.mine.QuestionOrCommentFragment;
 
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
 import butterknife.BindView;
@@ -22,7 +23,6 @@ import butterknife.ButterKnife;
  * 关于解说  我的问题 和评论
  */
 public class MyQuestionAndAnswerActivity extends BaseActivity {
-
 
 
     @BindView(R.id.slidingTabLayout)
@@ -44,6 +44,26 @@ public class MyQuestionAndAnswerActivity extends BaseActivity {
         mSlidingTabLayout.setSelectedIndicatorPadding(Display.dp2Px(60, getResources()));
         mSlidingTabLayout.setPadding(Display.dp2Px(13, getResources()));
         mViewPager.setAdapter(mMyQuestionAndAnswerFragmentAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    umengEventCount(UmengCountEventId.ME_MY_QUESTION_ASK);
+                } else {
+                    umengEventCount(UmengCountEventId.ME_MY_QUESTION_COMMENT);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mSlidingTabLayout.setViewPager(mViewPager);
     }
 

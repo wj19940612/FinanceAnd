@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:id="@+id/leftRL"
+            android:layout_width="104dp"
+            android:layout_height="186dp"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/leftIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="22dp"
+                android:src="@drawable/home_rank_tycoon"/>
+
+            <TextView
+                android:id="@+id/leftGoneText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/leftIcon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="38dp"
+                android:text="@string/default_user_data"
+                android:textColor="@color/unluckyText"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:id="@+id/leftHead"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:layout_below="@id/leftIcon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:visibility="invisible"/>
+
+            <ImageView
+                android:id="@+id/leftTopIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="92dp"
+                android:src="@drawable/ic_rank_first"
+                android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/leftMobaiBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:layout_below="@id/leftHead"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/home_button_worship"
+                android:visibility="invisible"/>
+
+            <RelativeLayout
+                android:id="@+id/leftLookRankBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/leftHead"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="57dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+
+                <TextView
+                    android:id="@+id/leftTipTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="3dp"
+                    android:drawableRight="@drawable/ic_little_right_arrow"
+                    android:includeFontPadding="false"
+                    android:text="@string/look_my_rank"
+                    android:textColor="@color/unluckyText"
+                    android:textSize="10sp"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:id="@+id/centerRL"
+            android:layout_width="104dp"
+            android:layout_height="186dp"
+            android:layout_centerInParent="true"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/centerIcon"
+                android:layout_width="67dp"
+                android:layout_height="21dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="22dp"
+                android:src="@drawable/home_rank_money"/>
+
+            <TextView
+                android:id="@+id/centerGoneText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/centerIcon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="38dp"
+                android:text="@string/default_user_data"
+                android:textColor="@color/unluckyText"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:id="@+id/centerHead"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:layout_below="@id/centerIcon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:visibility="invisible"/>
+
+            <ImageView
+                android:id="@+id/centerTopIcon"
+                android:layout_width="67dp"
+                android:layout_height="21dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="92dp"
+                android:src="@drawable/ic_rank_first"
+                android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/centerMobaiBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:layout_below="@id/centerHead"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/home_button_worship"
+                android:visibility="invisible"/>
+
+            <RelativeLayout
+                android:id="@+id/centerLookRankBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/centerHead"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="57dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+
+                <TextView
+                    android:id="@+id/centerTipTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="3dp"
+                    android:drawableRight="@drawable/ic_little_right_arrow"
+                    android:includeFontPadding="false"
+                    android:text="@string/look_my_rank"
+                    android:textColor="@color/unluckyText"
+                    android:textSize="10sp"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:id="@+id/rightRL"
+            android:layout_width="104dp"
+            android:layout_height="186dp"
+            android:layout_alignParentRight="true"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/rightIcon"
+                android:layout_width="67dp"
+                android:layout_height="21dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="22dp"
+                android:src="@drawable/home_rank_student"/>
+
+            <TextView
+                android:id="@+id/rightGoneText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rightIcon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="38dp"
+                android:text="@string/default_user_data"
+                android:textColor="@color/unluckyText"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:id="@+id/rightHead"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:layout_below="@id/rightIcon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:visibility="invisible"/>
+
+            <ImageView
+                android:id="@+id/rightTopIcon"
+                android:layout_width="67dp"
+                android:layout_height="21dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="92dp"
+                android:src="@drawable/ic_rank_first"
+                android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/rightMobaiBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:layout_below="@id/rightHead"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/home_button_worship"
+                android:visibility="invisible"/>
+
+            <RelativeLayout
+                android:id="@+id/rightLookRankBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rightHead"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="57dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+
+                <TextView
+                    android:id="@+id/rightTipTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="3dp"
+                    android:drawableRight="@drawable/ic_little_right_arrow"
+                    android:includeFontPadding="false"
+                    android:text="@string/look_my_rank"
+                    android:textColor="@color/unluckyText"
+                    android:textSize="10sp"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</merge>

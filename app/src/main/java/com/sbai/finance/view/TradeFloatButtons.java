@@ -9,6 +9,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -50,7 +51,7 @@ public class TradeFloatButtons extends LinearLayout {
         setOrientation(HORIZONTAL);
         setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
 
-        mTrade = createChildView(false, R.string.trade);
+        mTrade = createChildView(false, R.string.trade, false);
         LayoutParams params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1f;
         addView(mTrade, params);
@@ -61,7 +62,7 @@ public class TradeFloatButtons extends LinearLayout {
         params = new LayoutParams(splitLineWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         addView(splitLine, params);
 
-        mAddOptional = createChildView(false, R.string.add_optional);
+        mAddOptional = createChildView(false, R.string.add_optional, true);
         params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1f;
         addView(mAddOptional, params);
@@ -72,7 +73,7 @@ public class TradeFloatButtons extends LinearLayout {
         params = new LayoutParams(splitLineWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         addView(splitLine, params);
 
-        mPublishPoint = createChildView(true, R.string.publish_point);
+        mPublishPoint = createChildView(true, R.string.publish_point, false);
         params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         //发表观点不能直接去掉
         mPublishPoint.setVisibility(GONE);
@@ -122,9 +123,11 @@ public class TradeFloatButtons extends LinearLayout {
 
     private void updateOptionalStatus() {
         if (mHasAddInOption) {
-            ((TextView) mAddOptional.getChildAt(0)).setText(R.string.delete_optional);
+            mAddOptional.getChildAt(0).setVisibility(GONE);
+            ((TextView) mAddOptional.getChildAt(1)).setText(R.string.delete_optional);
         } else {
-            ((TextView) mAddOptional.getChildAt(0)).setText(R.string.add_optional);
+            mAddOptional.getChildAt(0).setVisibility(VISIBLE);
+            ((TextView) mAddOptional.getChildAt(1)).setText(R.string.add_optional);
         }
     }
 
@@ -149,11 +152,16 @@ public class TradeFloatButtons extends LinearLayout {
         typedArray.recycle();
     }
 
-    private LinearLayout createChildView(boolean isPublish, int textRes) {
+    private LinearLayout createChildView(boolean isPublish, int textRes, boolean hasLeftIcon) {
         LinearLayout layout = new LinearLayout(getContext());
         layout.setGravity(Gravity.CENTER);
         int padding = (int) dp2Px(16);
         layout.setPadding(0, padding, 0, padding);
+        if (hasLeftIcon) {
+            ImageView imageView = new ImageView(getContext());
+            imageView.setImageResource(R.drawable.ic_add_optional);
+            layout.addView(imageView);
+        }
         TextView textView = new TextView(getContext());
         textView.setText(textRes);
         textView.setGravity(Gravity.CENTER);

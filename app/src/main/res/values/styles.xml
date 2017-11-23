@@ -85,6 +85,7 @@
         <item name="android:textColor">@color/luckyText</item>
     </style>
 
+    <!--对战页面行情选择器样式-->
     <style name="BattleTab" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorHeight">0dp</item>
         <item name="tabPaddingStart">14dp</item>
@@ -92,13 +93,15 @@
         <item name="tabTextAppearance">@style/BattleTabText</item>
         <item name="tabMode">fixed</item>
         <item name="tabGravity">fill</item>
-        <item name="tabSelectedTextColor">@color/colorPrimary</item>
+        <item name="tabSelectedTextColor">@android:color/white</item>
+        <item name="tabBackground">@drawable/tab_layout_battle</item>
     </style>
 
     <style name="BattleTabText" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/unluckyText</item>
     </style>
+    <!--对战页面行情选择器样式-->
 
     <style name="BottomDialogAnimation" parent="Animation.AppCompat.Dialog">
         <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
@@ -122,6 +125,10 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="BaseDialog.WindowCloseOnTouchOutside" parent="BaseDialog">
+        <item name="android:windowCloseOnTouchOutside">false</item>
     </style>
 
     <style name="BaseDialog.Bottom">
@@ -166,23 +173,6 @@
         <item name="android:textSize">11sp</item>
     </style>
 
-    <style name="battle_trade_desc">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/unluckyText</item>
-        <item name="android:textSize">10sp</item>
-    </style>
-
-    <style name="battle_trade_info">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:minWidth">30dp</item>
-        <item name="android:textSize">10sp</item>
-    </style>
-
     <style name="reward_money">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/reward_money_text_color</item>
@@ -191,5 +181,46 @@
     </style>
 
     <style name="Widget.GifView" parent="@android:style/Widget"/>
+
+
+    <style name="UserArenaSignEditText" parent="@android:style/TextAppearance">
+        <item name="android:background">@null</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColorHint">@color/split</item>
+        <item name="android:textCursorDrawable">@drawable/color_cursor</item>
+    </style>
+
+    <style name="future_btn">
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingLeft">@dimen/common_padding</item>
+        <item name="android:paddingRight">@dimen/common_padding</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:paddingBottom">9dp</item>
+        <item name="android:textColor">@color/future_text_color</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/btn_future_primary_large_rounded</item>
+    </style>
+
+    <style name="profit_btn">
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingLeft">26dp</item>
+        <item name="android:paddingRight">26dp</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:paddingBottom">9dp</item>
+        <item name="android:textColor">@color/future_text_color</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/btn_future_primary_large_rounded</item>
+    </style>
+
+    <style name="battle_user_nick_name">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLength">8</item>
+        <item name="android:maxLines">1</item>
+    </style>
 
 </resources>

@@ -5,11 +5,11 @@ import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
 import com.sbai.finance.App;
 import com.sbai.finance.BuildConfig;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.httplib.ApiCallback;
+import com.sbai.httplib.ApiError;
 import com.sbai.httplib.ApiHeaders;
 import com.sbai.httplib.ApiIndeterminate;
 import com.sbai.httplib.ApiParams;
@@ -165,9 +165,9 @@ public class API extends RequestManager {
                 }
 
                 @Override
-                public void onFailure(VolleyError volleyError) {
+                public void onFailure(ApiError apiError) {
                     Log.d(TAG, "onFailure: error(default): " +
-                            volleyError == null ? null : volleyError.toString());
+                            apiError == null ? null : apiError.toString());
                 }
             };
             mCallback.setUrl(url);
@@ -184,7 +184,7 @@ public class API extends RequestManager {
         }
 
         enqueue(request);
-        Log.d(TAG, request.toString());
+//        Log.d(TAG, request.toString());
     }
 
     private static class RequestFinishedListener implements ApiCallback.onFinishedListener {

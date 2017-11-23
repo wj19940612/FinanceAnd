@@ -33,7 +33,7 @@ public class StartMatchDialog extends BaseDialog {
 
         setCurrentDialog(DIALOG_START_MATCH);
 
-        View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_fragment_start_match, null);
+        View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_start_match, null);
         final WaveView mMatchLoading = (WaveView) customView.findViewById(R.id.matchLoading);
         customView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,13 +57,15 @@ public class StartMatchDialog extends BaseDialog {
                     Collections.shuffle(heads);
                 }
                 mMatchLoading.setTag(count + 1);
-                GlideApp.with(activity).load(heads.get(count % 20))
-                        .circleCrop()
-                        //if use DataSource.MEMORY_CACHE,the DrawableCrossFadeFactory will not use transition
-                        .skipMemoryCache(true)
-                        .transition(DrawableTransitionOptions.withCrossFade(800))
-                        .into(matchHead);
-                mHandler.postDelayed(this, 1000);
+                if (activity != null && !activity.isFinishing()) {
+                    GlideApp.with(activity).load(heads.get(count % 20))
+                            .circleCrop()
+                            //if use DataSource.MEMORY_CACHE,the DrawableCrossFadeFactory will not use transition
+                            .skipMemoryCache(true)
+                            .transition(DrawableTransitionOptions.withCrossFade(800))
+                            .into(matchHead);
+                    mHandler.postDelayed(this, 1000);
+                }
             }
         }, 0);
 

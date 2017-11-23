@@ -114,6 +114,7 @@ public class RechargeActivity extends BaseActivity {
         initData();
         initView();
         requestUsablePlatformList();
+        requestUserFund();
     }
 
     private void initData() {
@@ -153,7 +154,7 @@ public class RechargeActivity extends BaseActivity {
             mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    umengEventCount(UmengCountEventId.WALLET_EXCHANGE_RULES);
+                    umengEventCount(UmengCountEventId.WALLET_INGOT_RULE);
                     openExchangeRulePage();
                 }
             });
@@ -289,43 +290,40 @@ public class RechargeActivity extends BaseActivity {
 
 
     private void handleUserPayPlatform(List<UsableRechargeWay> usableRechargeWayList) {
-        if (!usableRechargeWayList.isEmpty()) {
+        if (usableRechargeWayList != null && !usableRechargeWayList.isEmpty()) {
             if (mOtherRechargeWay == null || !mOtherRechargeWay.isSelectPayWay()) {
                 mUserSelectRechargeWay = usableRechargeWayList.get(0);
                 mUserSelectRechargeWay.setSelectPayWay(true);
                 mRechargeWayAdapter.notifyItemChanged(0, mUserSelectRechargeWay);
             }
+            for (int i = 0; i < usableRechargeWayList.size(); i++) {
+                UsableRechargeWay usableRechargeWay = usableRechargeWayList.get(i);
+                if (usableRechargeWay.isBalancePay()) {
+                    String name = usableRechargeWay.getName();
+                    if (name.contains(":")) {
+                        name = name.substring(0, name.indexOf(":"));
+                    }
+                    String balanceName = name + ": " + FinanceUtil.formatWithScale(mUserFundCount) + "元";
+                    usableRechargeWay.setName(balanceName);
 
-        }
-
-        for (int i = 0; i < usableRechargeWayList.size(); i++) {
-            UsableRechargeWay usableRechargeWay = usableRechargeWayList.get(i);
-            if (usableRechargeWay.isBalancePay()) {
-                String name = usableRechargeWay.getName();
-                if (name.contains(":")) {
-                    name = name.substring(0, name.indexOf(":"));
+                    mRechargeWayAdapter.notifyItemChanged(i, usableRechargeWay);
+                    mOtherRechargeWay = usableRechargeWay;
+                    mOtherRechargeWayPosition = i;
+                    break;
+                } else if (usableRechargeWay.isIngotPay()) {
+                    String name = usableRechargeWay.getName();
+                    if (name.contains(":")) {
+                        name = name.substring(0, name.indexOf(":"));
+                    }
+                    String balanceName = name + ": " + FinanceUtil.formatWithScale(mUserFundCount, 0);
+                    usableRechargeWay.setName(balanceName);
+                    mRechargeWayAdapter.notifyItemChanged(i, usableRechargeWay);
+                    mOtherRechargeWay = usableRechargeWay;
+                    mOtherRechargeWayPosition = i;
+                    break;
                 }
-                String balanceName = name + ": " + FinanceUtil.formatWithScale(mUserFundCount) + "元";
-                usableRechargeWay.setName(balanceName);
-
-                mRechargeWayAdapter.notifyItemChanged(i, usableRechargeWay);
-                mOtherRechargeWay = usableRechargeWay;
-                mOtherRechargeWayPosition = i;
-                break;
-            } else if (usableRechargeWay.isIngotPay()) {
-                String name = usableRechargeWay.getName();
-                if (name.contains(":")) {
-                    name = name.substring(0, name.indexOf(":"));
-                }
-                String balanceName = name + ": " + FinanceUtil.formatWithScale(mUserFundCount, 0);
-                usableRechargeWay.setName(balanceName);
-                mRechargeWayAdapter.notifyItemChanged(i, usableRechargeWay);
-                mOtherRechargeWay = usableRechargeWay;
-                mOtherRechargeWayPosition = i;
-                break;
             }
         }
-
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -389,7 +387,11 @@ public class RechargeActivity extends BaseActivity {
                 submitRechargeData();
                 break;
             case R.id.connect_service:
-                umengEventCount(UmengCountEventId.RECHARGE_CONTACT_CUSTOMER_SERVICE);
+                if (mRechargeType == AccountFundDetail.TYPE_CRASH) {
+                    umengEventCount(UmengCountEventId.WALLET_CASH_CALL_SERVICE);
+                } else if (mRechargeType == AccountFundDetail.TYPE_INGOT) {
+                    umengEventCount(UmengCountEventId.WALLET_INGOT_CALL_SERVICE);
+                }
                 Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 break;
         }

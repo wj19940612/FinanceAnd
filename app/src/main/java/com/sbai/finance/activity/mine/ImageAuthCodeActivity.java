@@ -26,8 +26,6 @@ import butterknife.OnClick;
 
 public class ImageAuthCodeActivity extends DialogBaseActivity {
 
-    public static final int PAGE_TYPE_FORGET_SECURITY_PSD = 1;
-
     @BindView(R.id.authCodeInput)
     EditText mAuthCodeInput;
     @BindView(R.id.imageAuthCode)
@@ -38,7 +36,6 @@ public class ImageAuthCodeActivity extends DialogBaseActivity {
     TextView mConfirm;
 
     private String mPhone;
-    private int mPageType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +67,6 @@ public class ImageAuthCodeActivity extends DialogBaseActivity {
 
     private void initData(Intent intent) {
         mPhone = intent.getStringExtra(ExtraKeys.PHONE);
-        mPageType = intent.getIntExtra(ExtraKeys.PAGE_TYPE, 0);
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -107,38 +103,20 @@ public class ImageAuthCodeActivity extends DialogBaseActivity {
                 requestImageAuthCode();
                 break;
             case R.id.confirm:
-                if (mPageType == PAGE_TYPE_FORGET_SECURITY_PSD) {
-                    String authCode = mAuthCodeInput.getText().toString().trim();
-                    Client.getAuthCodeForSecurityPsd(mPhone, authCode).setTag(TAG)
-                            .setCallback(new Callback<Resp<JsonObject>>() {
-                                @Override
-                                protected void onRespSuccess(Resp<JsonObject> resp) {
-                                    setResult(RESULT_OK);
-                                    finish();
-                                }
+                String authCode = mAuthCodeInput.getText().toString().trim();
+                Client.getAuthCode(mPhone, authCode).setTag(TAG)
+                        .setCallback(new Callback<Resp<JsonObject>>() {
+                            @Override
+                            protected void onRespSuccess(Resp<JsonObject> resp) {
+                                setResult(RESULT_OK);
+                                finish();
+                            }
 
-                                @Override
-                                protected void onRespFailure(Resp failedResp) {
-                                    mWarnTip.setText(failedResp.getMsg());
-                                }
-                            }).fire();
-
-                } else {
-                    String authCode = mAuthCodeInput.getText().toString().trim();
-                    Client.getAuthCode(mPhone, authCode).setTag(TAG)
-                            .setCallback(new Callback<Resp<JsonObject>>() {
-                                @Override
-                                protected void onRespSuccess(Resp<JsonObject> resp) {
-                                    setResult(RESULT_OK);
-                                    finish();
-                                }
-
-                                @Override
-                                protected void onRespFailure(Resp failedResp) {
-                                    mWarnTip.setText(failedResp.getMsg());
-                                }
-                            }).fire();
-                }
+                            @Override
+                            protected void onRespFailure(Resp failedResp) {
+                                mWarnTip.setText(failedResp.getMsg());
+                            }
+                        }).fire();
                 break;
         }
     }

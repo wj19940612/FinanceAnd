@@ -25,6 +25,7 @@ public class DateUtil {
     public static final String FORMAT_SPECIAL_SLASH_NO_HOUR = "yyyy/MM/dd";
     public static final String FORMAT_HOUR_MINUTE = "HH:mm";
     public static final String FORMAT_DATE_HOUR_MINUTE = "dd日 HH:mm";
+    public static final String FORMAT_DATE_ARENA = "yyyy.MM.dd";
 
 
     private static final String TODAY = "今日";
@@ -123,6 +124,22 @@ public class DateUtil {
                 && calendar.get(Calendar.YEAR) == todayCalendar.get(Calendar.YEAR);
     }
 
+    public static boolean isInThisDay(long time, long today) {
+        Date date = new Date(time);
+        Date todayDate = new Date(today);
+        return isInThisDay(date, todayDate);
+    }
+
+    public static boolean isInThisDay(Date date, Date todayDate) {
+        Calendar todayCalendar = Calendar.getInstance();
+        todayCalendar.setTime(todayDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.DATE) == todayCalendar.get(Calendar.DATE)
+                && calendar.get(Calendar.MONTH) == todayCalendar.get(Calendar.MONTH)
+                && calendar.get(Calendar.YEAR) == todayCalendar.get(Calendar.YEAR);
+    }
+
     public static boolean isInThisYear(long time) {
         Date date = new Date(time);
         return isInThisYear(date);
@@ -194,6 +211,18 @@ public class DateUtil {
                 break;
         }
         return result;
+    }
+
+    public static int getDayOfMonth(long time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int getMonthOfYear(long time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        return calendar.get(Calendar.MONTH) + 1;
     }
 
     public static String format(long timestamp) {
@@ -717,16 +746,34 @@ public class DateUtil {
         }
     }
 
-
     /**
-     * 获取两段时间相差的秒
-     *
-     * @param time1
-     * @param time2
-     * @return
+     * @param timestamp
+     * @return 1-上午 2-下午 3-晚上
      */
-    public static int getDiffSeconds(long time1, long time2) {
-        long diff = time1 - time2;
-        return (int) (diff / 1000);
+    public static int getDayAndNight(long timestamp) {
+        Date date = new Date(timestamp);
+        int hour = date.getHours();
+        if (hour == 12) {
+            if (date.getMinutes() > 0) {
+                return 2;
+            } else {
+                return 1;
+            }
+        }
+
+        if (hour == 18) {
+            if (date.getMinutes() > 0) {
+                return 3;
+            } else {
+                return 2;
+            }
+        }
+        if (hour > 0 && hour < 12) {
+            return 1;
+        } else if (hour > 12 && hour < 18) {
+            return 2;
+        } else {
+            return 3;
+        }
     }
 }

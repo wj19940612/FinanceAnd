@@ -131,7 +131,9 @@ public class MyCollectQuestionFragment extends BaseFragment {
         mListEmptyView.setOnGoingViewClickListener(new ListEmptyView.OnGoingViewClickListener() {
             @Override
             public void onGoingViewClick() {
-                Launcher.with(getActivity(), MainActivity.class).putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 1).execute();
+                Launcher.with(getActivity(), MainActivity.class)
+                        .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_MISS)
+                        .execute();
                 getActivity().finish();
             }
         });

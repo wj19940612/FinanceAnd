@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
@@ -15,28 +16,99 @@
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/customSwipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/ic_futures_versus_bg">
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/bgArenaRankingTab"
             android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_battle_result_record">
+
+                <TextView
+                    android:id="@+id/successRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="40dp"
+                    android:textColor="@color/yellowAssist"
+                    android:textSize="24sp"
+                    tools:text="胜率:82.56%"/>
+
+                <TextView
+                    android:id="@+id/battleCountAndIngot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/successRate"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    tools:text="对局总数:302场  元宝结算：+8093个"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/headerLl"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="@dimen/common_padding"
+                android:layout_marginRight="@dimen/common_padding"
+                android:background="@drawable/bg_arena_ranking_title"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/common_padding"
+                    android:minWidth="76dp"
+                    android:text="@string/battle_result"
+                    android:textColor="@color/arenaRankingTitleTextColor"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/profit"
+                    android:textColor="@color/arenaRankingTitleTextColor"/>
+
+                <TextView
+                    android:layout_width="72dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:gravity="center"
+                    android:text="@string/against_user"
+                    android:textColor="@color/arenaRankingTitleTextColor"/>
+            </LinearLayout>
+
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@null"
-                android:background="@android:color/transparent"/>
+                android:layout_marginLeft="@dimen/common_padding"
+                android:layout_marginRight="@dimen/common_padding"
+                android:background="@android:color/transparent"
+                android:divider="@null"/>
+
             <TextView
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:drawableTop="@drawable/img_no_record_dack"
                 android:adjustViewBounds="true"
+                android:gravity="center_horizontal"
                 android:paddingTop="150dp"
-                android:gravity="center_horizontal"/>
+                android:text="@string/you_not_has_battle"
+                android:textColor="@android:color/white"
+                android:textSize="17sp"
+                android:visibility="gone"/>
         </LinearLayout>
-        
+
     </com.sbai.finance.view.CustomSwipeRefreshLayout>
 
 </LinearLayout>

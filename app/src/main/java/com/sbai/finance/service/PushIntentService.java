@@ -1,11 +1,15 @@
 package com.sbai.finance.service;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
@@ -25,16 +29,17 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.activity.battle.FutureBattleActivity;
-import com.sbai.finance.activity.discovery.DailyReportDetailActivity;
+import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.miss.MissProfileActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
+import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.model.Banner;
-import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.push.PushMessageModel;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.UmengCountEventId;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by ${wangJie} on 2017/5/3.
@@ -114,7 +119,9 @@ public class PushIntentService extends GTIntentService {
         if (pushMessageModel.isBattleMatchSuccess() && Preference.get().isForeground()) {
             return;
         }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+
+        String channelId = getString(R.string.app_name);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId);
         builder.setContentTitle(pushMessageModel.getTitle());
         builder.setContentText(pushMessageModel.getMsg());
         builder.setAutoCancel(true);
@@ -131,22 +138,41 @@ public class PushIntentService extends GTIntentService {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 //        notificationManager.notify(R.string.app_name, builder.build());
         int notificationId = (int) pushMessageModel.getCreateTime();
-        notificationManager.notify(notificationId, builder.build());
+        if (notificationManager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel notificationChannel = createNotificationChannel(channelId, notificationManager);
+            }
+            notificationManager.notify(notificationId, builder.build());
+        }
+    }
+
+    @SuppressLint("InlinedApi")
+    private NotificationChannel createNotificationChannel(String channelId, NotificationManager notificationManager) {
+        NotificationChannel notificationChannel = new NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_DEFAULT);
+        notificationChannel.enableLights(true);   //开启指示灯，如果设备有的话。
+        notificationChannel.enableVibration(true); //开启震动
+        notificationChannel.setLightColor(Color.RED); // 设置指示灯颜色
+        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);//设置是否应在锁定屏幕上显示此频道的通知
+        notificationChannel.setShowBadge(true);  //设置是否显示角标
+        notificationChannel.setBypassDnd(true);  // 设置绕过免打扰模式
+        notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400}); //设置震动频率
+        notificationChannel.setDescription(channelId);
+        notificationManager.createNotificationChannel(notificationChannel);
+        return notificationChannel;
     }
 
     @NonNull
     private PendingIntent setPendingIntent(Context context, PushMessageModel data) {
         Intent intent = null;
         if (data.isDailyReportDetail()) {
+            MobclickAgent.onEvent(context, UmengCountEventId.PUSH_FOCUS_NEWS);
             intent = new Intent(context, DailyReportDetailActivity.class);
             intent.putExtra(DailyReportDetailActivity.EX_ID, data.getDataId());
         } else if (data.isBattleMatchSuccess()) {
+            MobclickAgent.onEvent(context, UmengCountEventId.PUSH_FUTURE_PK);
             if (!Preference.get().isForeground() && data.getData() != null) {
-                intent = new Intent(context, FutureBattleActivity.class);
-                Battle battle = new Battle();
-                battle.setId(data.getData().getId());
-                battle.setBatchCode(data.getData().getBatchCode());
-                intent.putExtra(ExtraKeys.BATTLE, battle);
+                intent = new Intent(context, BattleActivity.class);
+                intent.putExtra(ExtraKeys.BATTLE, data.getData());
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             }
         } else if (data.isMissAnswer()) {
@@ -155,7 +181,8 @@ public class PushIntentService extends GTIntentService {
         }
 
         switch (data.getType()) {
-            case PushMessageModel.PUSH_TYPE_ATTENTION_MISS_ANSWERED_FROM_BACKGROUND:
+            case PushMessageModel.QUESTION_DETAIL:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_FOLLOW_MANUAL);
                 intent = new Intent(context, QuestionDetailActivity.class);
                 try {
                     intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
@@ -165,7 +192,8 @@ public class PushIntentService extends GTIntentService {
                     }
                 }
                 break;
-            case PushMessageModel.PUSH_TYPE_ACTIVITY:
+            case PushMessageModel.ACTIVITY:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_ACTIVITY);
                 intent = new Intent(context, MainActivity.class);
                 Banner banner = new Banner();
                 //返回id 去查询banner
@@ -173,19 +201,23 @@ public class PushIntentService extends GTIntentService {
                 banner.setContent(data.getUrl());
                 intent.putExtra(ExtraKeys.ACTIVITY, banner);
                 break;
-            case PushMessageModel.PUSH_TYPE_FEED_BACK_REPLY:
+            case PushMessageModel.FEED_BACK_REPLY:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_FEEDBACK);
                 intent = new Intent(context, MainActivity.class);
                 intent.putExtra(ExtraKeys.TRAINING, data.getDataId());
-                intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 3);
+                intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_MINE);
                 intent.putExtra(ExtraKeys.PUSH_FEEDBACK, true);
                 break;
-            case PushMessageModel.PUSH_TYPE_SELF_STUDY_ROOM:
+            case PushMessageModel.SELF_STUDY_ROOM:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_STUDY_ROOM);
                 intent = new Intent(context, StudyRoomActivity.class);
                 break;
-            case PushMessageModel.PUSH_TYPE_TRAINING:
+            case PushMessageModel.TRAINING:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_TRAINING);
                 intent = new Intent(context, MainActivity.class);
                 break;
-            case PushMessageModel.PUSH_TYPE_ATTENTION_MISS_ANSWERED:
+            case PushMessageModel.MISS_MESSAGE:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_FOLLOW_AUTOMATIC);
                 intent = new Intent(context, MissProfileActivity.class);
                 try {
                     intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
@@ -195,8 +227,13 @@ public class PushIntentService extends GTIntentService {
                     }
                 }
                 break;
-            case PushMessageModel.PUSH_TYPE_MODULE:
+            case PushMessageModel.MODULE:
+                MobclickAgent.onEvent(context, UmengCountEventId.PUSH_MODULE);
                 // 暂时保留，先不处理
+                break;
+            case PushMessageModel.H5_LINK:
+                intent = new Intent(context, MainActivity.class);
+                intent.putExtra(ExtraKeys.WEB_PAGE_URL, data.getUrl());
                 break;
 
         }

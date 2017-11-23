@@ -23,7 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
@@ -55,6 +54,7 @@ import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.glide.GlideApp;
+import com.sbai.httplib.ApiError;
 
 import java.util.HashSet;
 import java.util.List;
@@ -177,8 +177,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         share(shareTitle, shareDescription, shareUrl, null);
                     }
                 })
@@ -395,7 +395,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private void setStopState() {
         mPlayImage.setImageResource(R.drawable.ic_play);
         mProgressBar.setProgress(0);
-        mSoundTime.setText(getString(R.string._seconds, mQuestionDetail.getSoundTime()));
+        mSoundTime.setText(getString(R.string._seconds, mQuestionDetail != null ? mQuestionDetail.getSoundTime() : 0));
     }
 
     private void setPauseState() {
@@ -435,6 +435,15 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                         mListenerNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
                         mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
                     }
+
+                }
+
+                @Override
+                protected void onRespFailure(Resp failedResp) {
+                    if (failedResp.getCode() == Resp.CODE_LISTENED) {
+                        MissVoiceRecorder.markHeard(question.getId());
+                        mListenerNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
+                    }
                 }
             }).fire();
         }
@@ -469,8 +478,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         stopRefreshAnimation();
                     }
                 }).fire();

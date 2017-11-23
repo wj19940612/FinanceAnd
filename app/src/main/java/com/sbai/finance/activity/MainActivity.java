@@ -7,23 +7,27 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.android.volley.VolleyError;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.fragment.DiscoveryFragment;
+import com.sbai.finance.fragment.ArenaFragment;
+import com.sbai.finance.fragment.HomePageFragment;
+import com.sbai.finance.fragment.InformationAndFocusFragment;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.MissTalkFragment;
-import com.sbai.finance.fragment.TrainingFragment;
 import com.sbai.finance.fragment.dialog.system.StartDialogFragment;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
+import com.sbai.finance.game.WsClient;
+import com.sbai.finance.market.MarketSubscriber;
 import com.sbai.finance.model.ActivityModel;
 import com.sbai.finance.model.AppVersion;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -33,8 +37,7 @@ import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.view.ScrollableViewPager;
-import com.sbai.finance.websocket.WsClient;
-import com.sbai.finance.websocket.market.MarketSubscriber;
+import com.sbai.httplib.ApiError;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +45,11 @@ import butterknife.ButterKnife;
 public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     private static final int REQ_CODE_FEEDBACK_LOGIN = 23333;
+
+    public static final int PAGE_POSITION_MISS = 3;
+    public static final int PAGE_POSITION_MINE = 4;
+    public static final int PAGE_POSITION_INFO_NEWS = 1;
+    public static final int PAGE_POSITION_ARENA = 2;
 
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
@@ -52,14 +60,17 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     private StartDialogFragment mStartDialogFragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void
+    onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
 //        translucentStatusBar();
         checkVersion();
         requestServiceConnectWay();
+        handleIntentData(getIntent());
     }
 
     private void requestStartActivities() {
@@ -83,8 +94,17 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        handleIntentData(intent);
+    }
+
+    private void handleIntentData(Intent intent) {
         int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
         if (0 <= currentItem && currentItem < mViewPager.getChildCount()) {
+            if (intent.getIntExtra(ExtraKeys.PAGE_INDEX, -1) != -1) {
+                //资讯要闻页
+                InformationAndFocusFragment informationFragment = (InformationAndFocusFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_INFO_NEWS);
+                informationFragment.setPage(intent.getIntExtra(ExtraKeys.PAGE_INDEX, -1));
+            }
             mViewPager.setCurrentItem(currentItem, false);
         }
 
@@ -101,26 +121,34 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         //banner用接口去查询  如果url用数据 则是h5直接打开连接
         if (banner != null) {
             if (TextUtils.isEmpty(banner.getId())) {
-                Launcher.with(getActivity(), WebActivity.class)
-                        .putExtra(WebActivity.EX_URL, banner.getContent())
-                        .execute();
+                openWebPage(banner.getContent());
             } else {
                 requestPushBannerInfo(banner);
             }
+        }
+
+        String webPageUrl = intent.getStringExtra(ExtraKeys.WEB_PAGE_URL);
+        if (!TextUtils.isEmpty(webPageUrl)) {
+            umengEventCount(UmengCountEventId.PUSH_INFORMATION);
+            openWebPage(webPageUrl);
         }
     }
 
     private void openActivityPage(Banner banner) {
         if (banner.isH5Style()) {
-            Launcher.with(getActivity(), WebActivity.class)
-                    .putExtra(WebActivity.EX_URL, banner.getContent())
-                    .execute();
+            openWebPage(banner.getContent());
         } else {
             Launcher.with(getActivity(), WebActivity.class)
                     .putExtra(WebActivity.EX_HTML, banner.getContent())
                     .putExtra(WebActivity.EX_TITLE, banner.getTitle())
                     .execute();
         }
+    }
+
+    private void openWebPage(String url) {
+        Launcher.with(getActivity(), WebActivity.class)
+                .putExtra(WebActivity.EX_URL, url)
+                .execute();
     }
 
     private void requestPushBannerInfo(Banner banner) {
@@ -159,19 +187,47 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
                                     .setOnDismissListener(new UpdateVersionDialogFragment.OnDismissListener() {
                                         @Override
                                         public void onDismiss() {
-                                             requestStartActivities();
+                                            requestStartActivities();
                                         }
                                     })
                                     .show(getSupportFragmentManager());
-                        }else {
+                        } else {
                             requestStartActivities();
                         }
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                         requestStartActivities();
+                    }
+                })
+                .fireFree();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (LocalUser.getUser().isLogin()) {
+            requestUserFund();
+        }
+    }
+
+    private void requestUserFund() {
+        Client.requestUserFundInfo()
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
+                    @Override
+                    protected void onRespSuccessData(UserFundInfo data) {
+                        ArenaFragment arenaFragment = (ArenaFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_ARENA);
+                        if (arenaFragment != null) {
+                            arenaFragment.updateIngotNumber(data);
+                        }
+
+                        MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_MINE);
+                        if (mineFragment != null) {
+                            mineFragment.updateIngotNumber(data);
+                        }
                     }
                 })
                 .fireFree();
@@ -207,7 +263,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     private void initView() {
         mMainFragmentsAdapter = new MainFragmentsAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainFragmentsAdapter);
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setScrollable(false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -231,7 +287,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
             public void onTabClick(int position) {
                 mBottomTabs.selectTab(position);
                 mViewPager.setCurrentItem(position, false);
-                if (position == 1) {
+                if (position == PAGE_POSITION_MISS) {
                     umengEventCount(UmengCountEventId.MISS_TALK_NAVIGATION);
                 }
             }
@@ -240,20 +296,23 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     private void refreshNotReadMessageCount() {
         if (LocalUser.getUser().isLogin()) {
-            MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(3);
+            MineFragment mineFragment = (MineFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_MINE);
             if (mineFragment != null) {
                 mineFragment.refreshNotReadMessageCount();
             }
         }
     }
 
-    @Override
-    public void onNoReadNewsNumber(int count) {
-        mBottomTabs.setPointNum(count);
+    public void switchToInformation(int page) {
+        InformationAndFocusFragment informationFragment = (InformationAndFocusFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_INFO_NEWS);
+        informationFragment.setPage(page);
+        mBottomTabs.selectTab(PAGE_POSITION_INFO_NEWS);
+        mViewPager.setCurrentItem(PAGE_POSITION_INFO_NEWS, false);
     }
 
-    public boolean isMissTalkFragment() {
-        return mViewPager.getCurrentItem() == 1;
+    @Override
+    public void onNoReadNewsNumber(int count) {
+        mBottomTabs.setPointNum(PAGE_POSITION_MINE, count);
     }
 
 
@@ -270,12 +329,14 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new TrainingFragment();
+                    return new HomePageFragment();
                 case 1:
-                    return new MissTalkFragment();
+                    return new InformationAndFocusFragment();
                 case 2:
-                    return new DiscoveryFragment();
+                    return new ArenaFragment();
                 case 3:
+                    return new MissTalkFragment();
+                case 4:
                     return new MineFragment();
             }
             return null;
@@ -283,7 +344,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
 
         public Fragment getFragment(int position) {

@@ -36,8 +36,10 @@
                     android:orientation="vertical">
 
                     <RelativeLayout
+                        android:id="@+id/imageArea"
                         android:layout_width="match_parent"
-                        android:layout_height="214dp">
+                        android:layout_height="214dp"
+                        android:visibility="visible">
 
                         <ImageView
                             android:id="@+id/image"
@@ -93,26 +95,40 @@
                             android:textSize="20sp"
                             tools:text="乐米专访：葛卫东，从百万到百亿是怎样达成的"/>
 
-                        <TextView
-                            android:id="@+id/sourceAndTime"
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@android:color/white"
-                            android:paddingBottom="@dimen/common_padding"
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
-                            android:textColor="@color/blackPrimary"
-                            android:textSize="12sp"
-                            tools:text="来源: 若愚"/>
+                            android:orientation="horizontal">
 
-                        <View
-                            android:layout_width="80dp"
-                            android:layout_height="6dp"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
-                            android:background="@color/colorPrimary"/>
+                            <TextView
+                                android:id="@+id/sourceAndTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/white"
+                                android:paddingBottom="@dimen/common_padding"
+                                android:paddingLeft="20dp"
+                                android:paddingRight="20dp"
+                                android:textColor="@color/unluckyText"
+                                android:textSize="12sp"
+                                tools:text="来源: 若愚"/>
+
+                            <TextView
+                                android:id="@+id/click1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:paddingRight="20dp"
+                                android:textColor="@color/unluckyText"
+                                android:textSize="12sp"
+                                tools:text="15次阅读"/>
+                        </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#eeeeee"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

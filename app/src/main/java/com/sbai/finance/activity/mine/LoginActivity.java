@@ -36,8 +36,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.R.id.authCode;
-import static com.sbai.finance.net.Resp.CODE_NO_BIND_WE_CHAT;
 
 public class LoginActivity extends WeChatActivity {
 
@@ -51,7 +49,7 @@ public class LoginActivity extends WeChatActivity {
     EditText mPhoneNumber;
     @BindView(R.id.phoneNumberClear)
     ImageView mPhoneNumberClear;
-    @BindView(authCode)
+    @BindView(R.id.authCode)
     EditText mAuthCode;
     @BindView(R.id.getAuthCode)
     TextView mGetAuthCode;
@@ -92,7 +90,11 @@ public class LoginActivity extends WeChatActivity {
         if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
             mPhoneNumber.setText(LocalUser.getUser().getPhone());
             formatPhoneNumber();
+            mPhoneNumber.clearFocus();
+            mPassword.requestFocus();
             mGetAuthCode.setEnabled(checkObtainAuthCodeEnable());
+        } else {
+            mPhoneNumber.requestFocus();
         }
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
@@ -236,6 +238,38 @@ public class LoginActivity extends WeChatActivity {
         }
     };
 
+
+    private void switchLoginMode() {
+        if (isAuthCodeLogin()) { // 当前是验证码登录 -> 密码登录
+            mPageTitle.setText(R.string.password_login);
+            mLoginSwitchTop.setText(R.string.auth_code_login);
+            mAuthCodeArea.setVisibility(View.GONE);
+            mPassword.setVisibility(View.VISIBLE);
+            mPasswordLoginOperations.setVisibility(View.VISIBLE);
+            mAuthCode.setText("");
+            if (getPhoneNumber().length() == 11) {
+                mPhoneNumber.clearFocus();
+                mPassword.requestFocus();
+            } else {
+                mPhoneNumber.requestFocus();
+            }
+        } else {
+            mPageTitle.setText(R.string.auth_code_login);
+            mLoginSwitchTop.setText(R.string.password_login);
+            mAuthCodeArea.setVisibility(View.VISIBLE);
+            mPassword.setVisibility(View.GONE);
+            mPasswordLoginOperations.setVisibility(View.GONE);
+            mPassword.setPassword("");
+
+            if (getPhoneNumber().length() == 11) {
+                mPhoneNumber.clearFocus();
+                mAuthCode.requestFocus();
+            } else {
+                mPhoneNumber.requestFocus();
+            }
+        }
+    }
+
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable editable) {
@@ -345,7 +379,7 @@ public class LoginActivity extends WeChatActivity {
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
-                        if (failedResp.getCode() == CODE_NO_BIND_WE_CHAT) {
+                        if (failedResp.getCode() == Resp.CODE_NO_BIND_WE_CHAT) {
                             updateBindPhoneViews();
                         }
                     }
@@ -369,24 +403,6 @@ public class LoginActivity extends WeChatActivity {
         mPageTitle.setText(getString(R.string.bind_phone));
         mLoginSwitchTop.setVisibility(View.GONE);
         mWeChatLogin.setVisibility(View.GONE);
-    }
-
-    private void switchLoginMode() {
-        if (isAuthCodeLogin()) { // 当前是验证码登录 -> 密码登录
-            mPageTitle.setText(R.string.password_login);
-            mLoginSwitchTop.setText(R.string.auth_code_login);
-            mAuthCodeArea.setVisibility(View.GONE);
-            mPassword.setVisibility(View.VISIBLE);
-            mPasswordLoginOperations.setVisibility(View.VISIBLE);
-            mAuthCode.setText("");
-        } else {
-            mPageTitle.setText(R.string.auth_code_login);
-            mLoginSwitchTop.setText(R.string.password_login);
-            mAuthCodeArea.setVisibility(View.VISIBLE);
-            mPassword.setVisibility(View.GONE);
-            mPasswordLoginOperations.setVisibility(View.GONE);
-            mPassword.setPassword("");
-        }
     }
 
     private boolean isAuthCodeLogin() {

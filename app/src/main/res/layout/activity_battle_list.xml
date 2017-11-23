@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_white"
-        app:customView="@layout/tb_battle_list"/>
+        app:customView="@layout/tb_battle_list"
+        app:rightImage="@drawable/ic_general_battle_rule"
+        app:rightVisible="true"/>
 
     <com.sbai.finance.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
@@ -30,47 +32,43 @@
                 android:layout_alignParentTop="true"
                 android:background="@android:color/transparent"
                 android:divider="@null"
-                android:dividerHeight="14dp"
                 android:scrollbars="none"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+
+            <LinearLayout
+                android:id="@+id/createAndMatchArea"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="12dp"
-                android:background="@android:color/transparent">
-
-                <LinearLayout
-                    android:id="@+id/createAndMatchArea"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/matchBattle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/btn_match_battle"
-                        android:clickable="true"/>
-
-                    <TextView
-                        android:id="@+id/createBattle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/btn_create_battle"
-                        android:clickable="true"/>
-                </LinearLayout>
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/common_padding"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/currentBattle"
+                    android:id="@+id/matchBattle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/btn_current_battle"
-                    android:clickable="true"
-                    android:visibility="gone"/>
-            </RelativeLayout>
+                    android:background="@drawable/btn_match_battle"
+                    android:clickable="true"/>
+
+                <TextView
+                    android:id="@+id/createBattle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_create_battle"
+                    android:clickable="true"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/currentBattle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="@dimen/common_padding"
+                android:background="@drawable/btn_current_battle"
+                android:visibility="gone"/>
         </RelativeLayout>
     </com.sbai.finance.view.CustomSwipeRefreshLayout>
 </LinearLayout>

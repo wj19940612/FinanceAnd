@@ -3,12 +3,12 @@ package com.sbai.finance.activity.battle;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.sbai.finance.ExtraKeys;
@@ -16,8 +16,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.battle.ChooseFuturesFragment;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.fund.UserFundInfo;
-import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.TitleBar;
@@ -39,7 +37,6 @@ public class ChooseFuturesActivity extends BaseActivity implements ViewPager.OnP
     private FuturePagesAdapter mFuturePagesAdapter;
     private int pagePosition;
     private String mContractsCode;
-    private UserFundInfo mUserFund;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +49,6 @@ public class ChooseFuturesActivity extends BaseActivity implements ViewPager.OnP
 
     private void initData(Intent intent) {
         mContractsCode = intent.getStringExtra(Launcher.EX_PAYLOAD);
-        mUserFund = intent.getParcelableExtra(ExtraKeys.USER_FUND);
     }
 
     private void initView() {
@@ -99,9 +95,8 @@ public class ChooseFuturesActivity extends BaseActivity implements ViewPager.OnP
         Intent intent = new Intent();
 
         //代表来自期货对战列表页，初次创建
-        if (mUserFund != null) {
+        if (TextUtils.isEmpty(mContractsCode)) {
             intent.putExtra(ExtraKeys.VARIETY, variety);
-            intent.putExtra(ExtraKeys.USER_FUND, mUserFund);
             intent.setClass(getActivity(), CreateBattleActivity.class);
             startActivity(intent);
         } else {

@@ -4,12 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,7 +24,7 @@ import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.BattleProgress;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
@@ -35,6 +37,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BattleHisRecordActivity extends BaseActivity implements CustomSwipeRefreshLayout.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+
+
+    public static final int BATTLE_HISTORY_RECORD_TYPE_GENERAL = 0;
+    public static final int BATTLE_HISTORY_RECORD_TYPE_ARENA = 1;
+
     @BindView(R.id.title)
     TitleBar mTitleBar;
     @BindView(R.id.listView)
@@ -47,22 +54,30 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
     private Long mLocation;
     private HashSet<Integer> mSet;
 
+    private int mBattleType;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_record_his);
         ButterKnife.bind(this);
+        mBattleType = getIntent().getIntExtra(ExtraKeys.BATTLE_HISTORY, BATTLE_HISTORY_RECORD_TYPE_GENERAL);
         initView();
         requestVersusData();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     private void initView() {
         mSet = new HashSet<>();
+
+        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.KITKAT) {
+            int margin = (int) Display.dp2Px(10f, getResources());
+//            LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) mListView.getLayoutParams();
+//            layoutParams1.setMargins(margin, 0, margin, 0);
+            mListView.setPadding(margin,0,margin,0);
+//            mListView.setLayoutParams(layoutParams1);
+        }
+
         mVersusRecordListAdapter = new VersusRecordListAdapter(getActivity());
         mCustomSwipeRefreshLayout.setOnRefreshListener(this);
         mCustomSwipeRefreshLayout.setOnLoadMoreListener(this);
@@ -74,29 +89,45 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Battle item = (Battle) parent.getItemAtPosition(position);
                 if (item != null) {
-                    Launcher.with(getActivity(), FutureBattleActivity.class)
+                    Launcher.with(getActivity(), BattleActivity.class)
                             .putExtra(ExtraKeys.BATTLE, item)
                             .execute();
                 }
             }
         });
-        scrollToTop(mTitleBar, mListView);
+
     }
 
     private void requestVersusData() {
-        Client.getBattleHisRecord(mLocation).setTag(TAG)
-                .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
-                    @Override
-                    protected void onRespSuccessData(FutureVersus data) {
-                        updateVersusData(data);
-                    }
+        if (mBattleType == BATTLE_HISTORY_RECORD_TYPE_GENERAL) {
+            Client.getBattleHisRecord(mLocation).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
+                        @Override
+                        protected void onRespSuccessData(FutureVersus data) {
+                            updateVersusData(data);
+                        }
 
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        stopRefreshAnimation();
-                    }
-                }).fireFree();
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            stopRefreshAnimation();
+                        }
+                    }).fireFree();
+        } else {
+            Client.requestArenaAllBattleHistory(mLocation).setTag(TAG)
+                    .setCallback(new Callback2D<Resp<FutureVersus>, FutureVersus>() {
+                        @Override
+                        protected void onRespSuccessData(FutureVersus data) {
+                            updateVersusData(data);
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            stopRefreshAnimation();
+                        }
+                    }).fireFree();
+        }
     }
 
     private void updateVersusData(FutureVersus futureVersus) {
@@ -153,7 +184,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_battle_his, parent, false);
+                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_future_versus_proceed, parent, false);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -164,24 +195,28 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
         }
 
         static class ViewHolder {
+            @BindView(R.id.progress)
+            BattleProgress mProgress;
             @BindView(R.id.createAvatar)
             ImageView mCreateAvatar;
             @BindView(R.id.createKo)
             ImageView mCreateKo;
-            @BindView(R.id.createName)
-            TextView mCreateName;
-            @BindView(R.id.varietyName)
-            TextView mVarietyName;
-            @BindView(R.id.progress)
-            BattleProgress mProgress;
-            @BindView(R.id.depositAndTime)
-            TextView mDepositAndTime;
+            @BindView(R.id.createAvatarRL)
+            FrameLayout mCreateAvatarRL;
             @BindView(R.id.againstAvatar)
             ImageView mAgainstAvatar;
             @BindView(R.id.againstKo)
             ImageView mAgainstKo;
+            @BindView(R.id.againstAvatarFL)
+            FrameLayout mAgainstAvatarFL;
+            @BindView(R.id.createName)
+            TextView mCreateName;
             @BindView(R.id.againstName)
             TextView mAgainstName;
+            @BindView(R.id.varietyName)
+            TextView mVarietyName;
+            @BindView(R.id.rootLL)
+            ConstraintLayout mRootLL;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -189,40 +224,43 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
 
             private void bindDataWithView(final Battle item, Context context) {
                 mVarietyName.setText(item.getVarietyName());
-                GlideApp.with(context).load(item.getLaunchUserPortrait())
+
+                GlideApp.with(context)
                         .load(item.getLaunchUserPortrait())
-                        .placeholder(R.drawable.ic_default_avatar_big)
+                        .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop()
                         .into(mCreateAvatar);
                 mCreateName.setText(item.getLaunchUserName());
-                mProgress.setLeftText(String.valueOf(item.getLaunchScore()));
                 mAgainstName.setText(item.getAgainstUserName());
-                mProgress.setRightText(String.valueOf(item.getAgainstScore()));
                 String reward = "";
                 switch (item.getCoinType()) {
                     case Battle.COIN_TYPE_INGOT:
-                        reward = item.getReward() + context.getString(R.string.ingot);
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.ingot));
                         break;
                     case Battle.COIN_TYPE_CASH:
-                        reward = item.getReward() + context.getString(R.string.cash);
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.cash));
                         break;
                     case Battle.COIN_TYPE_SCORE:
-                        reward = item.getReward() + context.getString(R.string.integral);
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.integral));
                         break;
                 }
+                String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);
+                mVarietyName.setText(varietyReward);
                 switch (item.getGameStatus()) {
                     case Battle.GAME_STATUS_CREATED:
-                        mDepositAndTime.setText(reward + " " + DateUtil.getMinutes(item.getEndline()));
+                        mProgress.setEnabled(true);
+                        mRootLL.setSelected(true);
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         mAgainstAvatar.setImageDrawable(null);
-                        mAgainstAvatar.setImageResource(R.drawable.btn_join_versus);
+                        mAgainstAvatar.setImageResource(R.drawable.btn_join_battle);
                         mAgainstAvatar.setClickable(false);
                         mAgainstName.setText(context.getString(R.string.join_versus));
-                        mProgress.showScoreProgress(0, 0, true);
+                        mProgress.setBattleProfit(0, 0);
                         break;
                     case Battle.GAME_STATUS_STARTED:
-                        mDepositAndTime.setText(reward + " " + context.getString(R.string.versusing));
+                        mProgress.setEnabled(true);
+                        mRootLL.setSelected(true);
                         mCreateKo.setVisibility(View.GONE);
                         mAgainstKo.setVisibility(View.GONE);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
@@ -231,10 +269,11 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                                 .circleCrop()
                                 .into(mAgainstAvatar);
                         mAgainstAvatar.setClickable(false);
-                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.setBattleProfit(item.getLaunchScore(), item.getAgainstScore());
                         break;
                     case Battle.GAME_STATUS_END:
-                        mDepositAndTime.setText(reward + " " + context.getString(R.string.versus_end));
+                        mProgress.setEnabled(false);
+                        mRootLL.setSelected(false);
                         GlideApp.with(context).load(item.getLaunchUserPortrait())
                                 .load(item.getAgainstUserPortrait())
                                 .placeholder(R.drawable.ic_default_avatar_big)
@@ -244,14 +283,14 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                         if (item.getWinResult() == Battle.WIN_RESULT_CHALLENGER_WIN) {
                             mCreateKo.setVisibility(View.VISIBLE);
                             mAgainstKo.setVisibility(View.GONE);
-                        } else if (item.getWinResult() == Battle.WIN_RESULT_CREATOR_WIN) {
+                        } else if (item.getWinResult() == Battle.WIN_RESULT_OWNER_WIN) {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.VISIBLE);
                         } else {
                             mCreateKo.setVisibility(View.GONE);
                             mAgainstKo.setVisibility(View.GONE);
                         }
-                        mProgress.showScoreProgress(item.getLaunchScore(), item.getAgainstScore(), false);
+                        mProgress.setBattleProfit(item.getLaunchScore(), item.getAgainstScore());
                         break;
 
                 }

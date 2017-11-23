@@ -20,8 +20,13 @@ public class PageIndicator extends View {
     private int mInterval;
     private ColorStateList mPoint;
     private ColorStateList mSelectedPoint;
+    //这里点可以是方形或者是圆形
     private int mPointRadius;
+    private int mPointWidth;
+    private int mPointHeight;
     private int mCurrentIndex;
+    //可以是方形或者是圆形
+    private boolean mIsRect;
 
     private static Paint sPaint;
     private static RectF sRect;
@@ -62,6 +67,10 @@ public class PageIndicator extends View {
                 getResources().getDisplayMetrics());
 
         mPointRadius = mDefaultRadius;
+        mPointWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10,
+                getResources().getDisplayMetrics());
+        mPointHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2,
+                getResources().getDisplayMetrics());
 
         mCurrentIndex = 0;
     }
@@ -72,6 +81,9 @@ public class PageIndicator extends View {
         mCount = typedArray.getInt(R.styleable.PageIndicator_indicators, 1);
         mInterval = typedArray.getDimensionPixelSize(R.styleable.PageIndicator_indicatorsInterval, mDefaultInterval);
         mPointRadius = typedArray.getDimensionPixelSize(R.styleable.PageIndicator_pointRadius, mPointRadius);
+        mPointWidth = typedArray.getDimensionPixelSize(R.styleable.PageIndicator_pointWidth, mPointWidth);
+        mPointHeight = typedArray.getDimensionPixelSize(R.styleable.PageIndicator_pointHeight, mPointHeight);
+        mIsRect = typedArray.getBoolean(R.styleable.PageIndicator_isRect, false);
 
         mPoint = typedArray.getColorStateList(R.styleable.PageIndicator_point);
         mSelectedPoint = typedArray.getColorStateList(R.styleable.PageIndicator_selectedPoint);
@@ -90,9 +102,15 @@ public class PageIndicator extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        int width = measureDimension(widthMeasureSpec, mPointRadius * 2 * mCount + (mCount - 1) * mInterval);
-        int height = measureDimension(heightMeasureSpec, mPointRadius * 2);
+        int width;
+        int height;
+        if (mIsRect) {
+            width = measureDimension(widthMeasureSpec, mPointWidth * mCount + (mCount - 1) * mInterval);
+            height = measureDimension(heightMeasureSpec, mPointHeight);
+        } else {
+            width = measureDimension(widthMeasureSpec, mPointRadius * 2 * mCount + (mCount - 1) * mInterval);
+            height = measureDimension(heightMeasureSpec, mPointRadius * 2);
+        }
 
         setMeasuredDimension(width, height);
     }
@@ -123,8 +141,15 @@ public class PageIndicator extends View {
         int top = 0;
 
         for (int i = 0; i < mCount; i++) {
-            int right = left + mPointRadius * 2;
-            int bottom = top + mPointRadius * 2;
+            int right;
+            int bottom;
+            if (mIsRect) {
+                right = left + mPointWidth;
+                bottom = top + mPointHeight;
+            } else {
+                right = left + mPointRadius * 2;
+                bottom = top + mPointRadius * 2;
+            }
 
             if (i == mCurrentIndex) {
                 sPaint.setColor(mSelectedPoint.getColorForState(getDrawableState(), 0));
@@ -133,8 +158,11 @@ public class PageIndicator extends View {
             }
 
             sRect.set(left, top, right, bottom);
-            canvas.drawOval(sRect, sPaint);
-
+            if (mIsRect) {
+                canvas.drawRect(sRect, sPaint);
+            } else {
+                canvas.drawOval(sRect, sPaint);
+            }
             left = right + mInterval;
         }
     }
@@ -172,12 +200,12 @@ public class PageIndicator extends View {
         invalidate();
     }
 
-    public void setPointRadius(int pointRadius) {
-        if (mPointRadius != pointRadius) {
-            mPointRadius = pointRadius;
-            invalidate();
-        }
-    }
+//    public void setPointRadius(int pointRadius) {
+//        if (mPointRadius != pointRadius) {
+//            mPointRadius = pointRadius;
+//            invalidate();
+//        }
+//    }
 
     public void move(int index) {
         if (mInfinite) {

@@ -5,57 +5,6 @@ package com.sbai.finance.utils;
  */
 
 public class UmengCountEventId {
-
-    /**
-     * 期货对战
-     * futurespk0100,对战大厅_充值,0
-     * futurespk0200,对战大厅_查看战绩,0
-     * futurespk0300,对战大厅_决斗规则,0
-     * futurespk0400,对战大厅_匹配对战,0
-     * futurespk0500,对战大厅_创建对战,0
-     * futurespk0600,创建对战_发起对战,0
-     * futurespk0700,对战大厅_当前对战,0
-     * futurespk0800,等待房间_邀请好友,0
-     * futurespk0900,等待房间_快速匹配,0
-     * futurespk1000,等待房间_取消对战,0
-     * futurespk1001,对战中_买多,0
-     * futurespk1002,对战中_卖空,0
-     * futurespk1003,对战中_平仓,0
-     * futurespk1004,对战中_用户头像,0
-     * futurespk1005,观战_点赞,0
-     */
-
-    //对战大厅_充值
-    public static final String BATTLE_HALL_RECHARGE = "futurespk0100";
-    //对战大厅_查看战绩
-    public static final String BATTLE_HALL_CHECK_RECODE = "futurespk0200";
-    //对战大厅_决斗规则
-    public static final String BATTLE_HALL_DUEL_RULES = "futurespk0300";
-    //对战大厅_匹配对战
-    public static final String BATTLE_HALL_MATCH_BATTLE = "futurespk0400";
-    //对战大厅_创建对战
-    public static final String BATTLE_HALL_CREATE_BATTLE = "futurespk0500";
-    //对战大厅_发起对战
-    public static final String BATTLE_HALL_LAUNCH_BATTLE = "futurespk0600";
-    //对战大厅_当前对战
-    public static final String BATTLE_HALL_CURRENT_BATTLE = "futurespk0700";
-    //等待房间_邀请好友
-    public static final String WAITING_ROOM_INVITE_FRIENDS = "futurespk0800";
-    //等待房间_快速匹配
-    public static final String WAITING_ROOM_FAST_MATCH = "futurespk0900";
-    //等待房间_取消对战
-    public static final String WAITING_ROOM_CANCEL_BATTLE = "futurespk1000";
-    //对战中_买多
-    public static final String BATTLE_BULLISH = "futurespk1001";
-    //对战中_卖空
-    public static final String BATTLE_BEARISH = "futurespk1002";
-    //对战中_平仓
-    public static final String BATTLE_CLOSE_POSITION = "futurespk1003";
-    //对战中_用户头像
-    public static final String BATTLE_USER_AVATAR = "futurespk1004";
-    //观战_点赞
-    public static final String WITNESS_BATTLE_PRAISE = "futurespk1005";
-
     /**
      * 钱包
      * wallet0100,钱包_充值,0
@@ -110,23 +59,14 @@ public class UmengCountEventId {
      * virtualwallet0600,聚宝盆_购买兑换确认弹窗_取消,0
      * virtualwallet0700,聚宝盆_购买兑换确认弹窗_确定,0
      */
-
-    //聚宝盆_元宝明细
-    public static final String WALLET_INGOT_DETAILS = "virtualwallet0100";
-    //聚宝盆_积分明细
-    public static final String WALLET_INTEGRAL_DETAILS = "virtualwallet0200";
-    //聚宝盆_兑换规则
-    public static final String WALLET_EXCHANGE_RULES = "virtualwallet0300";
     //聚宝盆_购买元宝
     public static final String WALLET_BUY_INGOT = "virtualwallet0400";
     //聚宝盆_兑换积分
     public static final String WALLET_EXCHANGE_INTEGRAL = "virtualwallet0500";
-    //聚宝盆_购买兑换确认弹窗_取消
-    public static final String WALLET_POPUP_WINDOW_CANCEL = "virtualwallet0600";
-    //聚宝盆_购买兑换确认弹窗_确定
-    public static final String WALLET_POPUP_WINDOW_CONFIRM = "virtualwallet0700";
+
     /**
      * 我的
+     * me0200,修改用户信息,0
      * me0100,头像,0
      * me0400,登录,0
      * me0600,昵称,0
@@ -135,8 +75,22 @@ public class UmengCountEventId {
      * me0603,地区,0
      * me0700,信用,0
      * me0701,实名认证,0
+     * me0207,绑定微信,0
+     * me0208,退出登录,0
+     * me0300,查看学分,0
+     * me0401,钱包,0
+     * me0500,我的问答,0
+     * me0501,我的问答_提问,0
+     * me0502,我的问答_评论,0
+     * me1600,我的收藏,0
+     * me1601,我的收藏_提问,0
+     * me1602,我的收藏_文章,0
      * me0702,消息0
+     * me0703,消息_回复,0
+     * me0704,消息_系统,0
      * me0800,意见反馈,0
+     * me0802,金融测评_开始测试,0
+     * me0803,金融测评_历史结果,0
      * me0801,金融水平初步测评,0
      * me0802,开始测试,0
      * me0803,历史结果,0
@@ -155,6 +109,21 @@ public class UmengCountEventId {
      * me1204,客服微信,0
      * me1205,客服QQ,0
      */
+    public static final String ME_BIND_WECHAT = "me0207";
+    public static final String ME_EXIT_LOGIN = "me0208";
+    public static final String ME_MOD_USER_INFO = "me0200";
+    public static final String ME_SEE_MY_CREDIT = "me0300";
+    public static final String ME_WALLET = "me0401";
+    public static final String ME_MY_QUESTION = "me0500";
+    public static final String ME_MY_QUESTION_ASK = "me0501";
+    public static final String ME_MY_QUESTION_COMMENT = "me0502";
+    public static final String ME_MY_COLLECTION = "me1600";
+    public static final String ME_MY_COLLECTION_ASK = "me1601";
+    public static final String ME_MY_COLLECTION_ARTICLE = "me0602";
+    public static final String ME_NEWS = "me0702";
+    public static final String ME_NEWS_REPLY = "me0702";
+    public static final String ME_NEWS_SYS = "me0702";
+
     public static final String ME_AVATAR = "me0100";
     public static final String ME_LOGIN = "me0400";
     public static final String ME_NICK_NAME = "me0600";
@@ -163,7 +132,6 @@ public class UmengCountEventId {
     public static final String ME_LOCATION = "me0603";
     public static final String ME_CREDIT = "me0700";
     public static final String ME_CERTIFICATION = "me0701";
-    public static final String ME_NEWS = "me0702";
     public static final String ME_FEEDBACK = "me0800";
     public static final String ME_FINANCE_TEST = "me0801";
     public static final String ME_START_TEST = "me0802";
@@ -183,68 +151,8 @@ public class UmengCountEventId {
     public static final String ME_SERVICE_WECHAT = "me1204";
     public static final String ME_SERVICE_QQ = "me1205";
 
-    /**
-     * 发现_乐米日报
-     * news0100,查看日报列表,0
-     * news0200,日报详情详情,0
-     * news0300,日报分享,0
-     * news0400,日报分享_朋友圈,0
-     * news0500,日报分享_微信好友,0
-     * news0600,日报分享_微博,0
-     */
 
-    public static final String REPORT_VIEW_LIST = "news0100";
-    public static final String REPORT_VIEW_DETAIL = "news0200";
-    public static final String REPORT_SHARE = "news0300";
-    public static final String REPORT_SHARE_CIRCLE = "news0400";
-    public static final String REPORT_SHARE_FRIEND = "news0500";
-    public static final String REPORT_SHARE_SINA_WEIBO = "news0600";
-
-    /**
-     * 发现
-     * find0100,自选,0
-     * find0101,添加自选,0
-     * find0200,股票,0
-     * find0201,新闻,0
-     * find0202,财务,0
-     * find0203,股票分享,0
-     * find0204,股票分享_微信好友,0
-     * find0205,股票分享_微博,0
-     * find0206,股票分享_朋友圈,0
-     * find0300,期货,0
-     * find0301,交易,0
-     * find0303,期货分享,0
-     * find0304,期货分享_微信好友,0
-     * find0305,期货分享_微博,0
-     * find0306,期货分享_朋友圈,0
-     * find0400,排行榜,0
-     * find0500,土豪榜,0
-     * find0600,盈利榜,0
-     * find0700,学霸榜,0
-     * find0800,你想要学,0
-     * find0900,换一批,0
-     */
-    public static final String DISCOVERY_SELF_OPTIONAL = "find0100";
     public static final String DISCOVERY_ADD_SELF_OPTIONAL = "find0101";
-    public static final String DISCOVERY_STOCK = "find0200";
-    public static final String DISCOVERY_NEWS = "find0201";
-    public static final String DISCOVERY_FINANCE = "find0202";
-    public static final String DISCOVERY_SHARE_STOCK = "find0203";
-    public static final String DISCOVERY_SHARE_STOCK_FRIEND = "find0204";
-    public static final String DISCOVERY_SHARE_STOCK_WEIBO = "find0205";
-    public static final String DISCOVERY_SHARE_STOCK_CIRCLE = "find0206";
-    public static final String DISCOVERY_FUTURES = "find0300";
-    public static final String DISCOVERY_FUTURES_TRADE = "find0301";
-    public static final String DISCOVERY_SHARE_FUTURES = "find0303";
-    public static final String DISCOVERY_SHARE_FUTURES_FRIEND = "find0304";
-    public static final String DISCOVERY_SHARE_FUTURES_WEIBO = "find0305";
-    public static final String DISCOVERY_SHARE_FUTURES_CIRCLE = "find0306";
-    public static final String DISCOVERY_LEADER_BOARD = "find0400";
-    public static final String DISCOVERY_INGOT_BOARD = "find0500";
-    public static final String DISCOVERY_PROFIT_BOARD = "find0600";
-    public static final String DISCOVERY_SAVANT = "find0700";
-    public static final String DISCOVERY_YOU_WANT_LEARN = "find0800";
-    public static final String DISCOVERY_CHANGE_BATCH = "find0900";
 
     /**
      * 姐说
@@ -295,4 +203,211 @@ public class UmengCountEventId {
     public static final String TRAINING_LEADER_BOARD = "home0201";
     public static final String TRAINING_STUDY_ROOM = "home0202";
     public static final String TRAINING_TEST = "home0300";
+
+
+    /**
+     * 首页
+     * page0100,沪深,0
+     * page0101,沪深_查看全部,0
+     * page0200,期货,0
+     * page0201,期货_查看全部,0
+     * page0300,自选,0
+     * page0301,自选_查看全部,0
+     * page0400,广播,0
+     * page0500,练一练,0
+     * page0600,一日一题,0
+     * page0700,banner,0
+     * page0701,运营位1,0
+     * page0702,运营位2,0
+     * page0703,运营位3,0
+     * find0500,土豪榜,0
+     * find0600,盈利榜,0
+     * find0700,学霸榜,0
+     * page0901,快讯_更多,0
+     * page1000,要闻_更多,0
+     * page1001,要闻收藏,0
+     * page1002,要闻分享_朋友圈,0
+     * page1003,要闻分享_微信好友,0
+     * page1004,要闻分享_微博,0
+     */
+    public static final String PAGE_HU_SHEN = "page0100";
+    public static final String PAGE_HU_SHEN_ALL = "page0101";
+    public static final String PAGE_FUTURE = "page0200";
+    public static final String PAGE_FUTURE_ALL = "page0201";
+    public static final String PAGE_OPTIONAL = "page0300";
+    public static final String PAGE_OPTIONAL_ALL = "page0301";
+    public static final String PAGE_BROADCAST = "page0400";
+    public static final String PAGE_TRAINING = "page0500";
+    public static final String PAGE_STUDY_ROOM = "page0600";
+    public static final String PAGE_BANNER = "page0700";
+    public static final String PAGE_OPERATE_1 = "page0701";
+    public static final String PAGE_OPERATE_2 = "page0702";
+    public static final String PAGE_OPERATE_3 = "page0703";
+    public static final String FIND_INGOT = "find0500";
+    public static final String FIND_PROFIT = "find0600";
+    public static final String FIND_SAVANT = "find0700";
+    public static final String PAGE_INFORMATION_MORE = "page0901";
+    public static final String PAGE_FOCUS_NEWS_MORE = "page1000";
+    public static final String PAGE_FOCUS_NEWS_COLLECT = "page1001";
+    public static final String PAGE_FOCUS_NEWS_SHARE_CIRCLE = "page1002";
+    public static final String PAGE_FOCUS_NEWS_SHARE_FRIEND = "page1003";
+    public static final String PAGE_FOCUS_NEWS_SHARE_SINA = "page1004";
+
+    /**
+     * 行情
+     * find0100,标签_自选,0
+     * find0101,添加自选,0
+     * <p>
+     * find0200,标签_股票,0
+     * find0201,新闻,0
+     * find0202,财务,0
+     * find0203,股票分享,0
+     * find0204,股票分享_微信好友,0
+     * find0205,股票分享_微博,0
+     * find0206,股票分享_朋友圈,0
+     * <p>
+     * find0300,标签_期货,0
+     * find0301,交易,0
+     * find0303,期货分享,0
+     * find0304,期货分享_微信好友,0
+     * find0305,期货分享_微博,0
+     * find0306,期货分享_朋友圈,0
+     */
+    public static final String FIND_OPTIONAL = "find0100";
+    public static final String FIND_OPTIONAL_ADD = "find0101";
+    public static final String FIND_STOCK = "find0200";
+    public static final String FIND_STOCK_NEWS = "find0201";
+    public static final String FIND_STOCK_FINANCE = "find0202";
+    public static final String FIND_STOCK_SHARE = "find0203";
+    public static final String FIND_STOCK_SHARE_FRIEND = "find0204";
+    public static final String FIND_STOCK_SHARE_SINA = "find0205";
+    public static final String FIND_STOCK_SHARE_CIRCLE = "find0206";
+    public static final String FIND_FUTURE = "find0300";
+    public static final String FIND_FUTURE_TRADE = "find0301";
+    public static final String FIND_FUTURE_SHARE = "find0303";
+    public static final String FIND_FUTURE_SHARE_FRIEND = "find0304";
+    public static final String FIND_FUTURE_SHARE_SINA = "find0305";
+    public static final String FIND_FUTURE_SHARE_CIRCLE = "find0306";
+
+    /**
+     * 竞技场_首页
+     * arena0100,竞技场tap,0
+     * arena0200,我的元宝,0
+     * arena0300,知识点,0
+     * arena0400,赏金赛,0
+     * arena0500,普通场,0
+     */
+    public static final String ARENA_TAP = "arena0100";
+    public static final String ARENA_INGOT = "arena0200";
+    public static final String ARENA_KNOWLEDGE = "arena0300";
+    public static final String ARENA_MRPK = "arena0400";
+    public static final String ARENA_FUTURE_PK = "arena0500";
+    /**
+     * 竞技场_赏金赛
+     * mrpk0100,赏金赛_充值,0
+     * mrpk0200,赏金赛_我的战绩,0
+     * mrpk0300,赏金赛_活动规则,0
+     * mrpk0400,赏金赛_排行榜,0
+     * mrpk0500,赏金赛_快速匹配,0
+     * mrpk0600,赏金赛_当前对战,0
+     * mrpk0900,邀请好友_微信好友,0
+     * mrpk1000,邀请好友_朋友圈,0
+     * mrpk1001,赏金赛对战中_买多,0
+     * mrpk1002,赏金赛对战中_卖空,0
+     * mrpk1003,赏金赛对战中_平仓,0
+     * mrpk1004,赏金赛对战中_用户头像,0
+     * mrpk1005,赏金赛观战_点赞,0
+     */
+    public static final String MRPK_RECHARAGE = "mrpk0100";
+    public static final String MRPK_MY_RECORD = "mrpk0200";
+    public static final String MRPK_RULE = "mrpk0300";
+    public static final String MRPK_LEARD_BOARD = "mrpk0400";
+    public static final String MRPK_FAST_MATCH = "mrpk0500";
+    public static final String MRPK_CURRENT_BATTLE = "mrpk0600";
+    public static final String MRPK_INVITE_FRIEND = "mrpk0900";
+    public static final String MRPK_INVITE_CIRCLE = "mrpk1000";
+    public static final String MRPK_BUY = "mrpk1001";
+    public static final String MRPK_SELL = "mrpk1002";
+    public static final String MRPK_CLEAR = "mrpk1003";
+    public static final String MRPK_USER_AVATAR = "mrpk1004";
+    public static final String MRPK_PRAISE = "mrpk1005";
+
+    /**
+     * 竞技场_普通场
+     * futurespk0100,对战大厅_充值,0
+     * futurespk0200,对战大厅_我的战绩,0
+     * futurespk0300,对战大厅_对战规则,0
+     * futurespk0400,对战大厅_匹配对战,0
+     * futurespk0500,对战大厅_创建对战,0
+     * futurespk0600,创建对战_发起对战,0
+     * futurespk0700,对战大厅_当前对战,0
+     * futurespk0900,等待房间_快速匹配,0
+     * futurespk1000,等待房间_取消对战,0
+     * futurespk1001,对战中_买多,0
+     * futurespk1002,对战中_卖空,0
+     * futurespk1003,对战中_平仓,0
+     * futurespk1004,对战中_用户头像,0
+     * futurespk1005,观战_点赞,0
+     */
+
+    public static final String FUTURE_PK_RECHARGE = "futurespk0100";
+    public static final String FUTURE_PK_MY_RECORD = "futurespk0200";
+    public static final String FUTURE_PK_RULE = "futurespk0300";
+    public static final String FUTURE_PK_MATCH = "futurespk0400";
+    public static final String FUTURE_PK_CREATE = "futurespk0500";
+    public static final String FUTURE_PK_LAUNCHER = "futurespk0600";
+    public static final String FUTURE_PK_CURRENT = "futurespk0700";
+    public static final String FUTURE_PK_FAST_MATCH = "futurespk0900";
+    public static final String FUTURE_PK_CANCEL_MATCH = "futurespk1000";
+    public static final String FUTURE_PK_BUY = "futurespk1001";
+    public static final String FUTURE_PK_SELL = "futurespk1002";
+    public static final String FUTURE_PK_CLEAR = "futurespk1003";
+    public static final String FUTURE_PK_USER_AVATAR = "futurespk1004";
+    public static final String FUTURE_PK_PRAISE = "futurespk1005";
+
+    /**
+     * 我的_钱包
+     * purse0100,元宝,0
+     * purse0101,元宝_充值,0
+     * purse0102,元宝充值_规则,0
+     * purse0103,元宝充值_联系客服,0
+     * purse0200,现金,0
+     * purse0201,现金_充值,0
+     * purse0202,现金充值_联系客服,0
+     */
+    public static final String WALLET_INGOT = "purse0100";
+    public static final String WALLET_INGOT_RECHARGE = "purse0101";
+    public static final String WALLET_INGOT_RULE = "purse0102";
+    public static final String WALLET_INGOT_CALL_SERVICE = "purse0103";
+    public static final String WALLET_CASH = "purse0200";
+    public static final String WALLET_CASH_RECHARGE = "purse0201";
+    public static final String WALLET_CASH_CALL_SERVICE = "purse0202";
+
+    /**
+     * Push（主播就是小姐姐）
+     * push0001,自习室自动推送,0
+     * push0002,训练自动推送,0
+     * push0003,活动手动推送,0
+     * push0004,模块手动推送,0
+     * push0005,意见反馈推送,0
+     * push0006,关注的主播手动推送,0
+     * push0007,关注的主播自动推送,0
+     * push0008,主播回答问题自动推送,0
+     * push0009,快讯自动推送,0
+     * push0010,快讯手动推送,0
+     * push0011,要闻手动推送,0
+     * push0012,期货对战消息推送,0
+     */
+    public static final String PUSH_STUDY_ROOM = "push0001";
+    public static final String PUSH_TRAINING = "push0002";
+    public static final String PUSH_ACTIVITY = "push0003";
+    public static final String PUSH_MODULE = "push0004";
+    public static final String PUSH_FEEDBACK = "push0005";
+    public static final String PUSH_FOLLOW_MANUAL = "push0006";
+    public static final String PUSH_FOLLOW_AUTOMATIC = "push0007";
+    public static final String PUSH_ANSWER = "push0008";
+    public static final String PUSH_INFORMATION = "push0009";
+    public static final String PUSH_FOCUS_NEWS = "push0010";
+    public static final String PUSH_FUTURE_PK = "push0011";
 }
+

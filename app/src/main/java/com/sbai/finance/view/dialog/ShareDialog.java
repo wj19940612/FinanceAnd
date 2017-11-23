@@ -3,6 +3,7 @@ package com.sbai.finance.view.dialog;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +62,8 @@ public class ShareDialog {
     private boolean mHasTitle = true;
     private boolean mShareImageOnly;
     private Bitmap mBitmap;
+    //是否调用分享接口
+    private boolean mRequestShareApi;
 
     private OnShareDialogCallback mListener;
 
@@ -269,6 +272,7 @@ public class ShareDialog {
         mHasFeedback = hasFeedback;
         return this;
     }
+
 
     public ShareDialog hasWeiBo(boolean hasWeiBo) {
         mHasWeiBo = hasWeiBo;

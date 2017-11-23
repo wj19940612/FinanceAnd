@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/arenaBackground"
+              android:orientation="vertical">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:titleText="@string/arena"
+        app:titleTextColor="@color/blackPrimary"
+        app:titleTextSize="17sp"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="15dp">
+
+        <ImageView
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_join_versus_normal"/>
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="6dp"
+            tools:src="@drawable/ic_default_avatar"/>
+
+        <TextView
+            android:id="@+id/nameAndIngot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="7dp"
+            android:layout_toRightOf="@+id/avatar"
+            android:lineSpacingExtra="3dp"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            tools:text="麦田里的守望者2\n我的元宝:200"/>
+
+
+        <TextView
+            android:id="@+id/textArenaKnowledge"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_arena_future_knowledge"
+            android:gravity="right"
+            android:paddingBottom="1dp"
+            android:paddingRight="7dp"
+            android:paddingTop="1dp"
+            android:text="@string/knowledge_point"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"/>
+
+        <ImageView
+            android:id="@+id/iconArenaKnowledge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="41dp"
+            android:layout_marginTop="3dp"
+            android:src="@drawable/ic_future_arena_knowledge"/>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="27dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_arena_future_stair"/>
+
+        <ImageView
+            android:id="@+id/stairHalo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="27dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_arena_future_stair_halo"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="228dp"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <com.sbai.finance.view.OnTouchAlphaChangeImageView
+                android:id="@+id/moneyRewardArena"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/common_margin"
+                android:layout_weight="1"
+                android:src="@drawable/ic_future_reward_arena_banner"/>
+
+            <com.sbai.finance.view.OnTouchAlphaChangeImageView
+                android:id="@+id/generalBattleBanner"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/common_margin"
+                android:layout_weight="1"
+                android:src="@drawable/ic_future_general_banner"
+                android:text="@string/ordinary_battle"/>
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

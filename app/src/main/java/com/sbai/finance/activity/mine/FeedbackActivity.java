@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.VolleyError;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.JsonObject;
 import com.sbai.finance.ExtraKeys;
@@ -42,6 +41,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.transform.ThumbTransform;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
+import com.sbai.httplib.ApiError;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -132,8 +132,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                         }
 
                         @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
+                        public void onFailure(ApiError apiError) {
+                            super.onFailure(apiError);
                             stopRefreshAnimation();
                         }
                     })
@@ -149,8 +149,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                         }
 
                         @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
+                        public void onFailure(ApiError apiError) {
+                            super.onFailure(apiError);
                             stopRefreshAnimation();
                         }
                     })
@@ -321,8 +321,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                         }
 
                         @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
+                        public void onFailure(ApiError apiError) {
+                            super.onFailure(apiError);
                         }
                     })
                     .fireFree();
@@ -356,8 +356,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                     }
 
                     @Override
-                    public void onFailure(VolleyError volleyError) {
-                        super.onFailure(volleyError);
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
                     }
                 })
                 .fireFree();
@@ -377,8 +377,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                         }
 
                         @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
+                        public void onFailure(ApiError apiError) {
+                            super.onFailure(apiError);
                             stopRefreshAnimation();
                         }
                     })
@@ -394,8 +394,8 @@ public class FeedbackActivity extends BaseActivity implements SwipeRefreshLayout
                         }
 
                         @Override
-                        public void onFailure(VolleyError volleyError) {
-                            super.onFailure(volleyError);
+                        public void onFailure(ApiError apiError) {
+                            super.onFailure(apiError);
                             stopRefreshAnimation();
                         }
                     })

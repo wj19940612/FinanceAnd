@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/rootView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_futures_versus_bg"
+    android:orientation="vertical">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fitsSystemWindows="true"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_white"
+        app:customView="@layout/tb_product_name"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_margin"
+        android:layout_marginRight="@dimen/common_margin"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/lastPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/common_margin"
+            android:text="0.00"
+            android:textColor="@color/redPrimary"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:id="@+id/priceChange"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="+0.00     +0.00%"
+            android:textColor="@color/redPrimary"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/battleRemainingTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            tools:text="剩余09:53"/>
+    </LinearLayout>
+
+    <com.sbai.finance.view.slidingTab.HackTabLayout
+        android:id="@+id/tabLayout"
+        style="@style/BattleTab"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="@color/primaryText"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@color/primaryText">
+
+        <com.sbai.chart.TrendView
+            android:id="@+id/trendView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+        <com.sbai.chart.KlineView
+            android:id="@+id/klineView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/battleOperateView"
+            android:divider="@null"
+            android:scrollbars="none"/>
+
+        <include
+            layout="@layout/view_battle_praise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="80dp"
+            android:visibility="gone"/>
+
+        <com.sbai.finance.view.BattleOperateView
+            android:id="@+id/battleOperateView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+</LinearLayout>

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.MainActivity;
 
 public class BottomTabs extends LinearLayout {
 
@@ -53,8 +54,8 @@ public class BottomTabs extends LinearLayout {
     }
 
     private void init() {
-        mIcons = new int[]{R.drawable.tab_training, R.drawable.tab_miss, R.drawable.tab_discovery, R.drawable.tab_mine};
-        mTexts = new int[]{R.string.training, R.string.miss_talk, R.string.discovery, R.string.me};
+        mIcons = new int[]{R.drawable.tab_home, R.drawable.tab_information, R.drawable.tab_arena, R.drawable.tab_miss, R.drawable.tab_mine};
+        mTexts = new int[]{R.string.home, R.string.information, R.string.arena, R.string.miss_talk, R.string.mine,};
 
         setOrientation(HORIZONTAL);
         if (mIcons != null && mTexts != null) {
@@ -63,7 +64,7 @@ public class BottomTabs extends LinearLayout {
         for (int i = 0; i < mLength; i++) {
             LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             params.weight = 1;
-            if (i == 3) {
+            if (i == MainActivity.PAGE_POSITION_MINE) {
                 addView(createPointTab(i), params);
                 continue;
             }
@@ -94,8 +95,8 @@ public class BottomTabs extends LinearLayout {
         return text;
     }
 
-    public void setPointNum(int num) {
-        RedPointTextView tabTextView = (RedPointTextView) getChildAt(3);
+    public void setPointNum(int index, int num) {
+        RedPointTextView tabTextView = (RedPointTextView) getChildAt(index);
         tabTextView.setNum(num);
     }
 
