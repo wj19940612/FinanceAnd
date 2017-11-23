@@ -2997,7 +2997,28 @@ public class Client {
     /**
      * 点击banner后
      */
-    public static API requestClickBanner(String bannerId){
-        return new API("/user/news/findBannerById.do",new ApiParams().put("id",bannerId));
+    public static API requestClickBanner(String bannerId) {
+        return new API("/user/news/findBannerById.do", new ApiParams().put("id", bannerId));
+    }
+
+    /**
+     * 电台详情
+     */
+    public static API requestRadioDetail(int radioId) {
+        return new API("/explain/radioManage/queryRadioByRadioId.do", new ApiParams().put("radioId", radioId));
+    }
+
+    /**
+     * 电台音频列表
+     */
+    public static API requestRadioDetailAudio(int radioId){
+        return new API("/explain/audioManage/queryAudioByRadioId.do", new ApiParams().put("radioId", radioId));
+    }
+
+    /**
+     * 主播的电台列表
+     */
+    public static API requestRadiosOfMiss(int customId){
+        return new API("/explain/radioManage/queryByRadioHost.do", new ApiParams().put("customId", customId));
     }
 }

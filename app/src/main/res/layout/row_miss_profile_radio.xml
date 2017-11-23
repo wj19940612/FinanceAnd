@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/common_padding"
+    android:layout_marginRight="@dimen/common_padding"
+    android:layout_marginTop="@dimen/common_padding"
+    android:background="@drawable/bg_subscribe_item"
+    app:cardCornerRadius="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <RelativeLayout
+            android:id="@+id/coverRL"
+            android:layout_width="112dp"
+            android:layout_height="112dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_miss_radio_cover">
+
+            <ImageView
+                android:id="@+id/cover"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/ic_launcher"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="14dp"
+            android:layout_toRightOf="@+id/coverRL"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:textSize="12sp"
+                android:textColor="@color/primaryText"
+                android:includeFontPadding="false"
+                android:text="hello every one you say what to me"/>
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/subtitle"
+                android:layout_marginBottom="10dp"
+                android:textSize="16sp"
+                android:textColor="@color/primaryText"
+                android:maxLines="1"
+                android:text="you know I have no money"/>
+
+            <TextView
+                android:id="@+id/number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/subtitle"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_miss_listen"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textSize="12sp"
+                android:textColor="@color/unluckyText"
+                android:text="5"/>
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/subtitle"
+                android:layout_marginTop="10dp"
+                android:textSize="12sp"
+                android:textColor="@color/unluckyText"
+                android:text="one hour ago"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

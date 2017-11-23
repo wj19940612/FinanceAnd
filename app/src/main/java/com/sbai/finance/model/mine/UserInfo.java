@@ -36,6 +36,9 @@ public class UserInfo implements Parcelable {
     private Integer age;
     private int userSex;     //1 女 2男
 
+    private String briefingText;//个人简介
+    private int customId;//小姐姐Id
+
     private String land;
     private String userPhone;
     private boolean bIsSetNickName;
@@ -184,6 +187,22 @@ public class UserInfo implements Parcelable {
         this.userPortrait = userPortrait;
     }
 
+    public String getBriefingText() {
+        return briefingText;
+    }
+
+    public void setBriefingText(String briefingText) {
+        this.briefingText = briefingText;
+    }
+
+    public int getCustomId() {
+        return customId;
+    }
+
+    public void setCustomId(int customId) {
+        this.customId = customId;
+    }
+
     public void updateLocalUserInfo(UserDetailInfo userDetailInfo) {
         setUserName(userDetailInfo.getUserName());
         setAge(userDetailInfo.getAge());
@@ -194,6 +213,8 @@ public class UserInfo implements Parcelable {
         setStatus(userDetailInfo.getStatus());
         setWxOpenId(userDetailInfo.getWxOpenId());
         setWxName(userDetailInfo.getWxName());
+        setCustomId(userDetailInfo.getCustomId());
+        setBriefingText(userDetailInfo.getBriefingText());
         LocalUser.getUser().setUserInfo(this);
     }
 
@@ -373,6 +394,8 @@ public class UserInfo implements Parcelable {
         dest.writeInt(this.registerRewardIngot);
         dest.writeInt(this.evaluate);
         dest.writeInt(this.maxLevel);
+        dest.writeString(this.briefingText);
+        dest.writeInt(this.customId);
     }
 
     public UserInfo() {
@@ -404,6 +427,8 @@ public class UserInfo implements Parcelable {
         this.registerRewardIngot = in.readInt();
         this.evaluate = in.readInt();
         this.maxLevel = in.readInt();
+        this.customId = in.readInt();
+        this.briefingText = in.readString();
     }
 
     public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {

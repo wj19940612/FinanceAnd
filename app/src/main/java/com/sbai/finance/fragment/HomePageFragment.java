@@ -356,7 +356,7 @@ public class HomePageFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         //fragment在前台显示
-        if (mIsVisibleToUser||!mHasEnter) {
+        if (mIsVisibleToUser || !mHasEnter) {
             mHasEnter = true;
             startScheduleJob(TIME_ONE);
             TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
@@ -397,7 +397,7 @@ public class HomePageFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        if(mIsVisibleToUser) {
+        if (mIsVisibleToUser) {
             stopScheduleJob();
             mHomeTitleView.stopVerticalSrcoll();
             API.cancel(TAG);
@@ -689,6 +689,7 @@ public class HomePageFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
+        mHasEnter = false;
         super.onDestroyView();
         unbinder.unbind();
     }

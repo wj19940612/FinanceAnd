@@ -14,6 +14,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.CommentActivity;
-import com.sbai.finance.activity.miss.MissProfileActivity;
+import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.RewardMissActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
@@ -172,7 +173,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
             public void onItemClick(Miss item) {
                 if (item != null) {
                     MissAudioManager.get().stop();
-                    Launcher.with(getActivity(), MissProfileActivity.class)
+                    Launcher.with(getActivity(), MissProfileDetailActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, item.getId()).execute();
                 }
             }

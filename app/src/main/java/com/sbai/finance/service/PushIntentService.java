@@ -30,7 +30,7 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.battle.BattleActivity;
-import com.sbai.finance.activity.miss.MissProfileActivity;
+import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.web.DailyReportDetailActivity;
@@ -218,7 +218,7 @@ public class PushIntentService extends GTIntentService {
                 break;
             case PushMessageModel.MISS_MESSAGE:
                 MobclickAgent.onEvent(context, UmengCountEventId.PUSH_FOLLOW_AUTOMATIC);
-                intent = new Intent(context, MissProfileActivity.class);
+                intent = new Intent(context, MissProfileDetailActivity.class);
                 try {
                     intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
                 } catch (NumberFormatException e) {

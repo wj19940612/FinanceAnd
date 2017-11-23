@@ -337,6 +337,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/BaseDialog.Bottom"/>
 
+        <activity
+            android:name=".activity.miss.MissProfileDetailActivity"
+            android:screenOrientation="portrait"/>
+
         <!-- 发现 -->
         <activity
             android:name=".activity.web.DailyReportDetailActivity"

@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
-                android:src="@drawable/home_rank_tycoon"/>
+                android:src="@drawable/ic_home_rank_tycoon"/>
 
             <TextView
                 android:id="@+id/leftGoneText"
@@ -60,7 +60,7 @@
                 android:layout_below="@id/leftHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
-                android:background="@drawable/home_button_worship"
+                android:background="@drawable/btn_home_worship"
                 android:visibility="invisible"/>
 
             <RelativeLayout
@@ -106,7 +106,7 @@
                 android:layout_height="21dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
-                android:src="@drawable/home_rank_money"/>
+                android:src="@drawable/ic_home_rank_money"/>
 
             <TextView
                 android:id="@+id/centerGoneText"
@@ -146,7 +146,7 @@
                 android:layout_below="@id/centerHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
-                android:background="@drawable/home_button_worship"
+                android:background="@drawable/btn_home_worship"
                 android:visibility="invisible"/>
 
             <RelativeLayout
@@ -192,7 +192,7 @@
                 android:layout_height="21dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
-                android:src="@drawable/home_rank_student"/>
+                android:src="@drawable/ic_home_rank_student"/>
 
             <TextView
                 android:id="@+id/rightGoneText"
@@ -232,7 +232,7 @@
                 android:layout_below="@id/rightHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="22dp"
-                android:background="@drawable/home_button_worship"
+                android:background="@drawable/btn_home_worship"
                 android:visibility="invisible"/>
 
             <RelativeLayout
