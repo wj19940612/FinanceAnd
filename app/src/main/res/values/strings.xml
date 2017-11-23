@@ -15,7 +15,7 @@
     <string name="arena">竞技场</string>
     <string name="mine">我的</string>>
 
-
+    <string name="already_load_all">已加载全部</string>
     <!-- EconomicCircle -->
     <string name="comment_number">评论(%1$d)</string>
     <string name="comment_number_string">评论(%1$s)</string>
@@ -84,12 +84,6 @@
     <string name="crude_oil_future">期货投资宝</string>
     <string name="quick_trade_offer_by_company">快速交易由“深圳达捷鑫科技有限公司”提供</string>
 
-    <!--Stock-->
-    <string name="ShangHaiStockExchange">上证指数</string>
-    <string name="ShenzhenStockExchange">深证指数</string>
-    <string name="GrowthEnterpriseMarket">创业板指</string>
-    <string name="delist">停牌</string>
-
     <!--event-->
     <string name="no_event_record">还没有大事发生!</string>
     <string name="event_title">大事件</string>
@@ -101,7 +95,7 @@
     <string name="lowest">最低</string>
     <string name="publish_point">发表观点</string>
     <string name="add_optional">加入自选</string>
-    <string name="delete_optional">取消自选</string>
+    <string name="cancel_optional">取消自选</string>
     <string name="whether_to_cancel_optional">是否要取消自选</string>
     <string name="add_option_succeed">添加自选成功</string>
     <string name="delete_option_succeed">取消自选成功</string>
@@ -915,4 +909,23 @@
     <string name="hello_afternoon">下午好，%1$s！</string>
     <string name="hello_evening">晚上好，%1$s！</string>
     <string name="read_count_">阅 %1$d</string>
+
+
+    <!--姐说-->
+    <string name="radio">电台</string>
+
+    <!--Stock-->
+    <string name="ShangHaiStockExchange">上证指数</string>
+    <string name="ShenzhenStockExchange">深证指数</string>
+    <string name="GrowthEnterpriseMarket">创业板指</string>
+    <string name="delist">停牌</string>
+    <string name="volume">成交量</string>
+    <string name="amount">成交额</string>
+    <string name="turnoverRate">换手率</string>
+    <string name="volumeRate">量比</string>
+    <string name="priceEarningRate">市盈率</string>
+    <string name="amplitude">振幅</string>
+    <string name="equity">总股本</string>
+    <string name="marketValue">总市值</string>
+    <string name="mock_trading">模拟交易</string>
 </resources>

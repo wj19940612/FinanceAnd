@@ -3,7 +3,6 @@ package com.sbai.finance.fragment.stock;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -43,7 +42,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(android.R.id.empty)
-    AppCompatTextView mEmpty;
+    TextView mEmpty;
 
     private Unbinder mBind;
 

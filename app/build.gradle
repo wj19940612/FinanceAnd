@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    //compileSdkVersion 27 todo release use this
+    compileSdkVersion 26
     buildToolsVersion '27.0.1'
 
     defaultConfig { // default is prod
@@ -117,13 +118,13 @@ android {
         }
 
         // channel use default (prod) configuration
-        tencent {}
-        m360 {}
-        xiaomi {}
-        baidu {}
-        huawei {}
-        vivo {}
-        oppo {}
+//        tencent {}
+//        m360 {}
+//        xiaomi {}
+//        baidu {}
+//        huawei {}
+//        vivo {}
+//        oppo {}
         others {}
 //        baiduapk1 {}
 //        baiduapk2 {}
@@ -135,6 +136,10 @@ android {
 //        baiduapk8 {}
 //        baiduapk9 {}
 //        baiduapk10 {}
+//        jiri {}
+        fensitong {}
+        guangdiantong {}
+        fuyi {}
     }
 
     productFlavors.all { flavor ->
@@ -180,6 +185,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
+
+
 
 
 

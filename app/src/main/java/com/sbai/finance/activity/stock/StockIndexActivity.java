@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.stock;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -16,6 +17,12 @@ public class StockIndexActivity extends StockTradeActivity {
 
     private SubPageAdapter mSubPageAdapter;
     private int pagePosition;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mMockTrading.setVisibility(View.GONE);
+    }
 
     @Override
     protected void initChartViews() {
@@ -94,8 +101,6 @@ public class StockIndexActivity extends StockTradeActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-//                case 0:
-//                    return mContext.getString(R.string.point);
                 case 0:
                     return mContext.getString(R.string.rise_list);
                 case 1:
@@ -107,8 +112,6 @@ public class StockIndexActivity extends StockTradeActivity {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-//                case 0:
-//                    return ViewpointFragment.newInstance(mVariety.getVarietyId());
                 case 0:
                     return PriceLimitRankingFragment.newInstance(0, mExchangeCode);
                 case 1:

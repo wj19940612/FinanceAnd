@@ -124,7 +124,7 @@ public class TradeFloatButtons extends LinearLayout {
     private void updateOptionalStatus() {
         if (mHasAddInOption) {
             mAddOptional.getChildAt(0).setVisibility(GONE);
-            ((TextView) mAddOptional.getChildAt(1)).setText(R.string.delete_optional);
+            ((TextView) mAddOptional.getChildAt(1)).setText(R.string.cancel_optional);
         } else {
             mAddOptional.getChildAt(0).setVisibility(VISIBLE);
             ((TextView) mAddOptional.getChildAt(1)).setText(R.string.add_optional);

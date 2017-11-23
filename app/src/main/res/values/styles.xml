@@ -70,6 +70,11 @@
         <item name="android:minWidth">50dp</item>
     </style>
 
+    <style name="MarketData.Stock">
+        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <style name="TradeFixedTab" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorHeight">0dp</item>
         <item name="tabPaddingStart">14dp</item>
@@ -222,5 +227,9 @@
         <item name="android:maxLength">8</item>
         <item name="android:maxLines">1</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 </resources>

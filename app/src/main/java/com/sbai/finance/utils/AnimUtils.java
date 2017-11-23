@@ -1,6 +1,9 @@
 package com.sbai.finance.utils;
 
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 
 /**
@@ -19,6 +22,54 @@ public class AnimUtils {
         public void onAnimationRepeat(Animation animation) {
 
         }
+    }
+
+    public static Animation createExpendY(final View view, long duration) {
+        view.measure(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = view.getMeasuredHeight();
+        view.getLayoutParams().height = 0;
+        view.setVisibility(View.VISIBLE);
+        Animation animation = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                super.applyTransformation(interpolatedTime, t);
+                view.getLayoutParams().height = (int) (targetHeight * interpolatedTime);
+                view.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+        animation.setDuration(duration);
+        return animation;
+    }
+
+    public static Animation createCollapseY(final View view, long duration) {
+        view.measure(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = view.getMeasuredHeight();
+        Animation animation = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                super.applyTransformation(interpolatedTime, t);
+                if (interpolatedTime == 1) {
+                    view.setVisibility(View.GONE);
+                } else {
+                    view.getLayoutParams().height = targetHeight - (int) (targetHeight * interpolatedTime);
+                    view.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+        animation.setDuration(duration);
+        return animation;
     }
 
     public static Animation createTransYFromParent(long duration) {
