@@ -2997,7 +2997,55 @@ public class Client {
     /**
      * 点击banner后
      */
-    public static API requestClickBanner(String bannerId){
-        return new API("/user/news/findBannerById.do",new ApiParams().put("id",bannerId));
+    public static API requestClickBanner(String bannerId) {
+        return new API("/user/news/findBannerById.do", new ApiParams().put("id", bannerId));
+    }
+
+    /**
+     * @param positionType
+     * @param userAccount
+     * @param activityCode
+     * @param page
+     * @return
+     */
+    public static API requestTodayBusiness(int positionType, String userAccount, String activityCode, int page) {
+        return new API("/api/stock-or/position/bargain.do", new ApiParams()
+                .put("positionType", positionType)
+                .put("userAccount", userAccount)
+                .put("activityCode", activityCode)
+                .put("page", page));
+    }
+
+    /**
+     * @param positionType
+     * @param userAccount
+     * @param activityCode
+     * @param page
+     * @return
+     */
+    public static API requestHistoryBusiness(int positionType, String userAccount, String activityCode, String startTime, String endTime, int page) {
+        return new API("/api/stock-or/position/bargain.do", new ApiParams()
+                .put("positionType", positionType)
+                .put("userAccount", userAccount)
+                .put("activityCode", activityCode)
+                .put("stime", startTime)
+                .put("etime", endTime)
+                .put("page", page));
+    }
+
+    /**
+     * @param positionType
+     * @param userAccount
+     * @param activityCode
+     * @param page
+     * @return
+     */
+    public static API requestAsset(int positionType, String userAccount, String activityCode) {
+        return new API("/api/stock-or/position/asset.do", new ApiParams()
+                .put("positionType", positionType)
+                .put("userAccount", userAccount)
+                .put("activityCode", activityCode)
+                .put("pageSize", 100000)
+                .put("page", 0));
     }
 }

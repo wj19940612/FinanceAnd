@@ -418,8 +418,19 @@
         <activity
             android:name=".activity.home.BroadcastListActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.battle.BattleRuleActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.battle.BattleRuleActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.trade.trade.StockOrderActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.trade.trade.TodayBusinessActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.trade.trade.HistoryBusinessActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

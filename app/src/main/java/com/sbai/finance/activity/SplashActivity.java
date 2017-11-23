@@ -8,6 +8,9 @@ import com.igexin.sdk.PushManager;
 import com.sbai.finance.BuildConfig;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.trade.trade.HistoryBusinessActivity;
+import com.sbai.finance.activity.trade.trade.StockOrderActivity;
+import com.sbai.finance.activity.trade.trade.TodayBusinessActivity;
 import com.sbai.finance.service.PushIntentService;
 import com.sbai.finance.service.PushService;
 import com.sbai.finance.utils.AppInfo;
@@ -50,11 +53,12 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void gotoMain() {
-        if (Preference.get().isShowGuide()) {
-            startActivity(new Intent(this, GuideActivity.class));
-        } else {
-            startActivity(new Intent(this, MainActivity.class));
-        }
+        startActivity(new Intent(this, StockOrderActivity.class));
+//        if (Preference.get().isShowGuide()) {
+//            startActivity(new Intent(this, GuideActivity.class));
+//        } else {
+//            startActivity(new Intent(this, MainActivity.class));
+//        }
         supportFinishAfterTransition();
     }
 

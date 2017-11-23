@@ -167,7 +167,8 @@ public class TitleBar extends RelativeLayout {
         mRightViewParent.setGravity(Gravity.CENTER);
         mRightViewParent.setPadding(paddingHorizontal, 0, paddingHorizontal, 0);
         mRightView = new TextView(getContext());
-        params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        mRightView.setGravity(Gravity.CENTER);
+        params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         mRightViewParent.addView(mRightView, params);
         params = new LayoutParams(LayoutParams.WRAP_CONTENT, fixedHeight);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);

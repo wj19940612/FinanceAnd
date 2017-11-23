@@ -223,4 +223,15 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <style name="stock_order_title">
+        <item name="android:textColor">@color/unluckyText</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+
+    <style name="fade_in_pop_win">
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowEnterAnimation">@anim/fade_in_quickly</item>
+        <item name="android:windowExitAnimation">@anim/fade_out_quickly</item>
+    </style>
 </resources>

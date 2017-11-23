@@ -253,4 +253,14 @@
         <attr name="bgStartColor" format="reference|color"/>
         <attr name="bgEndColor" format="color|reference"/>
     </declare-styleable>
+
+    <declare-styleable name="LoopView">
+        <attr name="dateLineColor" format="color"/>
+        <attr name="topBottomTextColor" format="color"/>
+        <attr name="centerTextColor" format="color"/>
+        <attr name="dateTextSize" format="dimension"/>
+        <attr name="canLoop" format="boolean"/>
+        <attr name="initPosition" format="integer"/>
+        <attr name="drawItemCount" format="integer"/>
+    </declare-styleable>
 </resources>

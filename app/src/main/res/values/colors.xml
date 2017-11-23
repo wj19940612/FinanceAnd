@@ -10,6 +10,7 @@
     <color name="background">#F5F5F5</color>
     <color name="split">#DDD</color>
     <color name="white">#FFFFFF</color>
+    <color name="eighty_white">#CCFFFFFF</color>
 
     <!--Battle tab-->
     <color name="greyTab">#323232</color>
