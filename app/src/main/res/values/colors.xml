@@ -66,4 +66,5 @@
     <color name="bgArenaRankingSecondColor">#534C63</color>
     <color name="arenaRankingTitleTextColor">#8A839E</color>
 
+    <color name="radioText">#6684A0</color>
 </resources>

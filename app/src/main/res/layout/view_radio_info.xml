@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/titleRl"
+    android:layout_marginLeft="@dimen/common_padding"
+    android:layout_marginRight="@dimen/common_padding"
+    android:background="@drawable/bg_white_rounded"
+    android:paddingBottom="9dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="14dp">
+
+    <com.sbai.finance.view.HasLabelImageLayout
+        android:id="@+id/radioOwnerAvatar"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:label_drawable="@drawable/ic_label_v"/>
+
+    <TextView
+        android:id="@+id/radioOwnerName"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/radioOwnerAvatar"
+        android:gravity="center"
+        tools:text="丁丁"/>
+
+    <ImageView
+        android:id="@+id/radioStartPlaySmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radioOwnerAvatar"
+        android:layout_marginTop="12dp"
+        android:paddingRight="4dp"
+        android:src="@drawable/ic_radio_start_small"/>
+
+    <TextView
+        android:id="@+id/voiceName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radioOwnerAvatar"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/radioStartPlaySmall"
+        android:textColor="@color/blackPrimary"
+        android:textSize="15sp"
+        tools:text="分发多少快乐东方斯卡拉解放路口的"/>
+
+    <com.sbai.finance.view.ShrinkTextLayout
+        android:id="@+id/voiceIntroduce"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/voiceName"
+        android:layout_marginTop="4dp"
+        app:shrinkBtnText="@string/pack_up"
+        app:shrinkBtnTextColor="@color/radioText"
+        app:shrinkBtnTextSize="12sp"
+        app:spreadBtnText="@string/look_more"
+        app:textColor="@color/luckyText"
+        app:textMaxLines="3"
+        app:textSize="12sp"/>
+
+    <View
+        android:id="@+id/split"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/voiceIntroduce"
+        android:layout_marginTop="@dimen/common_padding"
+        android:background="@color/background"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/split"
+        android:layout_marginTop="9dp"
+        android:gravity="center">
+
+        <RelativeLayout
+            android:layout_width="32dp"
+            android:layout_height="32dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/bg_radio_cover"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:id="@+id/radioCover"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerInParent="true"
+                tools:src="@mipmap/ic_launcher"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/radioName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:textColor="@color/blackPrimary"
+            android:textSize="15sp"
+            tools:text="丁丁的电台哈好的好的很好的好的话短短哈哈或多或少兑换"/>
+
+        <TextView
+            android:id="@+id/subscribeStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_radio_subscribe"
+            android:gravity="center"
+            android:minHeight="24dp"
+            android:minWidth="60dp"
+            android:text="@string/subscribe"
+            android:textColor="@color/love_text"
+            android:textSize="12sp"/>
+    </LinearLayout>
+</RelativeLayout>

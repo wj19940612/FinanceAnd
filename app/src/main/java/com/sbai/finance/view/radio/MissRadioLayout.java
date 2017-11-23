@@ -1,4 +1,4 @@
-package com.sbai.finance.view;
+package com.sbai.finance.view.radio;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -32,6 +32,8 @@ public class MissRadioLayout extends LinearLayout {
 
     public interface OnMissRadioPlayListener {
         void onMissRadioPlay(Radio radio, boolean isPlaying);
+
+        void onMissRadioClick(Radio radio);
     }
 
     public MissRadioLayout(Context context) {
@@ -93,8 +95,7 @@ public class MissRadioLayout extends LinearLayout {
                     .into(radioCover);
             voiceName.setText(radio.getAudioName());
             radioUpdateTime.setText(DateUtil.formatDefaultStyleTime(radio.getModifyTime()));
-            // TODO: 2017/11/22 缺少电台名称
-//            radioName.setText(radio.getRadioName());
+            radioName.setText(radio.getRadioName());
             radioOwnerName.setText(radio.getRadioHostName());
             radioLength.setText(DateUtil.format(radio.getAudioTime(), DateUtil.FORMAT_HOUR_MINUTE));
             startPlay.setImageResource(R.drawable.bg_voice_play);
@@ -103,12 +104,22 @@ public class MissRadioLayout extends LinearLayout {
             PlayStatus playStatus = new PlayStatus();
             playStatus.setImageView(startPlay);
             playStatus.setRadio(radio);
+            playStatus.setView(view);
             mPlayStateList.add(playStatus);
         }
 
         for (int i = 0; i < mPlayStateList.size(); i++) {
             final PlayStatus playStatus = mPlayStateList.get(i);
             final ImageView playImageView = playStatus.getImageView();
+            View view = playStatus.getView();
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mOnMissRadioPlayListener != null) {
+                        mOnMissRadioPlayListener.onMissRadioClick(playStatus.getRadio());
+                    }
+                }
+            });
             playImageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -141,6 +152,15 @@ public class MissRadioLayout extends LinearLayout {
     private static class PlayStatus {
         private ImageView mImageView;
         private Radio mRadio;
+        private View mView;
+
+        public View getView() {
+            return mView;
+        }
+
+        public void setView(View view) {
+            mView = view;
+        }
 
         public ImageView getImageView() {
             return mImageView;

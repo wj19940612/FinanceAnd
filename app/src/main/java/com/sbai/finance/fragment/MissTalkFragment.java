@@ -30,6 +30,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.MissProfileActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
 import com.sbai.finance.fragment.miss.MissAskFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
@@ -49,7 +50,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.MissFloatWindow;
-import com.sbai.finance.view.MissRadioLayout;
+import com.sbai.finance.view.radio.MissRadioLayout;
 import com.sbai.finance.view.MissRadioViewSwitcher;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.VerticalSwipeRefreshLayout;
@@ -209,8 +210,14 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
         mMissRadioLayout.setOnMissRadioPlayListener(new MissRadioLayout.OnMissRadioPlayListener() {
             @Override
             public void onMissRadioPlay(Radio radio, boolean isPlaying) {
-//                ToastUtil.show(radio.getAudioName());
+                ToastUtil.show(radio.getAudioName());
+            }
 
+            @Override
+            public void onMissRadioClick(Radio radio) {
+                Launcher.with(getActivity(), RadioStationPlayActivityActivity.class)
+                        .putExtra(ExtraKeys.RADIO, radio)
+                        .execute();
             }
         });
 

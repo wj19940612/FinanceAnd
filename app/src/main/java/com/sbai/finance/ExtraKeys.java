@@ -52,4 +52,5 @@ public interface ExtraKeys {
 
     String WEB_PAGE_URL = "web_page_url";
 
+    String RADIO = "radio";
 }

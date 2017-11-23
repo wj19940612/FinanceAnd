@@ -2030,7 +2030,7 @@ public class Client {
     /**
      * 添加评论/回复
      *
-     * @param invitationUserId  如:提问人的id,训练的id
+     * @param invitationUserId 如:提问人的id,训练的id
      * @param replyParentId    回复哪条的id(不填为评论)
      * @param content
      * @param dataId
@@ -3003,6 +3003,7 @@ public class Client {
 
     /**
      * 小姐姐管理--查询最新的推荐电台(薛松)
+     *
      * @return
      */
     public static API requestRadioList() {
@@ -3011,5 +3012,33 @@ public class Client {
 
     public static API requestMissSwitcherList() {
         return new API("");
+    }
+
+    /**
+     * /explain/radioManage/queryRadioByRadioId.do
+     * GET
+     * 小姐姐管理--查询电台详情(薛松)
+     *
+     * @param radioId
+     * @return
+     */
+    public static API requestRadioDetails(int radioId) {
+        return new API("/explain/radioManage/queryRadioByRadioId.do", new ApiParams().put("radioId", radioId));
+    }
+
+    /**
+     * /user/user/collect.do
+     * POST
+     * 用户-收藏（黄磊）
+     *
+     * @param dataId
+     * @param type  1问答2、日报3、音频4、电台   常量定义在Radio类中
+     * @return
+     */
+    public static API collect(String dataId, int type) {
+        return new API(POST,"/user/user/collect.do",
+                new ApiParams()
+                    .put("dataId",dataId)
+                    .put("type",type));
     }
 }

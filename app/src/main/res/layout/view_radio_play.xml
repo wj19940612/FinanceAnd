@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/voiceCoverRl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:src="@drawable/bg_voice_play_cover"/>
+
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/voiceCover"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            tools:src="@mipmap/ic_launcher"/>
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/seekBarLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/voiceCoverRl"
+        android:layout_marginTop="25dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding"
+        app:layout_constraintTop_toBottomOf="@+id/voiceCoverRl">
+
+        <TextView
+            android:id="@+id/progressLength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/zero"
+            android:textColor="@color/split"
+            android:textSize="12sp"/>
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/radioSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/radioTotalLength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/zero"
+            android:textColor="@color/split"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/play"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_below="@+id/seekBarLL"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/bg_radio_play"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarLL"/>
+
+    <TextView
+        android:id="@+id/listenNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="8dp"
+        android:drawableLeft="@drawable/ic_radio_headset"
+        android:drawablePadding="6dp"
+        android:gravity="center_vertical"
+        android:paddingRight="@dimen/common_padding"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/play"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/play"
+        tools:text="15155"/>
+
+</android.support.constraint.ConstraintLayout>
