@@ -55,4 +55,6 @@ public interface ExtraKeys {
     String RADIO = "radio";
     String IAudio = "IAudio";
     String MEDIA_PROGRESS = "media_progress";
+    String MEDIA_TOTAL_PROGRESS = "media_total_progress";
+    String MEDIA_PLAY_SOURCE = "media_play_source";
 }

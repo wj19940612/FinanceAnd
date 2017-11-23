@@ -45,6 +45,7 @@
             android:label="PushService"
             android:process=":pushservice"/>
         <service android:name=".service.DownloadService"/>
+        <service android:name=".service.MediaPlayService"/>
 
         <!-- meta-data -->
         <meta-data

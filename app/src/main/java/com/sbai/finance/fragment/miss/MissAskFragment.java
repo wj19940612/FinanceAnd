@@ -1,6 +1,5 @@
 package com.sbai.finance.fragment.miss;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -36,6 +35,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissAudioManager;
@@ -85,16 +85,18 @@ public class MissAskFragment extends BaseFragment {
 
     public interface OnSwipeRefreshEnableListener {
         void onSwipeRefreshEnable(boolean swipeFreshEnable);
+
+        void onRadioPlay(boolean radioPlayViewHasHasFocus);
     }
 
     public void setOnSwipeRefreshEnableListener(OnSwipeRefreshEnableListener onSwipeRefreshEnableListener) {
         mOnSwipeRefreshEnableListener = onSwipeRefreshEnableListener;
     }
 
-    private BroadcastReceiver mRefreshBroadcastReceiver = new BroadcastReceiver() {
+    private MediaPlayService.MediaPlayBroadcastReceiver mRefreshBroadcastReceiver = new MediaPlayService.MediaPlayBroadcastReceiver() {
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onOtherReceive(Context context, Intent intent) {
             if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
                 int rewardId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
                 if (rewardId == RewardInfo.TYPE_QUESTION) {
@@ -113,6 +115,42 @@ public class MissAskFragment extends BaseFragment {
                 if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())
                         || ACTION_LOGOUT_SUCCESS.equalsIgnoreCase(intent.getAction())) {
                     refreshData();
+                }
+            }
+        }
+
+        @Override
+        public void onMediaPlayStop(int IAudioId, int source) {
+
+        }
+
+        @Override
+        public void onMediaPlayError(int IAudioId, int source) {
+
+        }
+
+        @Override
+        public void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
+            if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_QUESTION) {
+                if (IAudioId == -1) return;
+                LinearLayoutManager layoutManager = (LinearLayoutManager) mEmptyRecyclerView.getLayoutManager();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                boolean radioPlayHasFocus = false;
+                for (int i = firstVisibleItemPosition; i < lastVisibleItemPosition; i++) {
+                    View view = layoutManager.findViewByPosition(i - firstVisibleItemPosition);
+                    ImageView playImage = (ImageView) view.findViewById(R.id.playImage);
+                    TextView soundTime = (TextView) view.findViewById(R.id.soundTime);
+                    ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+                    playImage.setImageResource(R.drawable.ic_pause);
+                    progressBar.setMax(totalDuration);
+                    int pastTime = MissAudioManager.get().getCurrentPosition();
+                    soundTime.setText(getString(R.string._seconds, (totalDuration - pastTime) / 1000));
+                    progressBar.setProgress(pastTime);
+                    radioPlayHasFocus = true;
+                }
+                if (mOnSwipeRefreshEnableListener != null) {
+                    mOnSwipeRefreshEnableListener.onRadioPlay(radioPlayHasFocus);
                 }
             }
         }
@@ -172,6 +210,11 @@ public class MissAskFragment extends BaseFragment {
         filter.addAction(ACTION_REWARD_SUCCESS);
         filter.addAction(ACTION_LOGIN_SUCCESS);
         filter.addAction(ACTION_LOGOUT_SUCCESS);
+
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_STOP);
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_ERROR);
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PROGRESS);
+
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshBroadcastReceiver, filter);
     }
 

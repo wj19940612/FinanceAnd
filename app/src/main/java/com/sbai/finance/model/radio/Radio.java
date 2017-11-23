@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.sbai.finance.net.Client;
+import com.sbai.finance.utils.MissAudioManager;
 
 /**
  * Created by ${wangJie} on 2017/11/20.
@@ -11,7 +12,7 @@ import com.sbai.finance.net.Client;
  * 姐说主页电台信息
  */
 
-public class Radio implements Parcelable {
+public class Radio implements Parcelable, MissAudioManager.IAudio {
 
     //  /user/user/collect.do 1问答2、日报3、音频4、电台
     private static final int USER_COLLECT_TYPE_QUESTION = 1;
@@ -61,6 +62,26 @@ public class Radio implements Parcelable {
     private int updateUserId;
     private int viewNumber;        //观看人数
     private String radioName;     //电台名称
+
+    public boolean isPlaying;   //自己加的标识
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
+    }
+
+    @Override
+    public int getAudioId() {
+        return id;
+    }
+
+    @Override
+    public String getAudioUrl() {
+        return audio;
+    }
 
     public String getRadioName() {
         return radioName;

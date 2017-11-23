@@ -32,6 +32,7 @@ import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -95,6 +96,10 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         handleIntentData(intent);
+    }
+
+    public MediaPlayService getMediaPlayService() {
+        return mMediaPlayService;
     }
 
     private void handleIntentData(Intent intent) {

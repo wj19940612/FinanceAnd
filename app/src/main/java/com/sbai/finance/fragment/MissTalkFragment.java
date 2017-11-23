@@ -24,8 +24,8 @@ import android.widget.TextView;
 
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
-import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.MissProfileActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
@@ -41,6 +41,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissAudioManager;
@@ -50,10 +51,10 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.MissFloatWindow;
-import com.sbai.finance.view.radio.MissRadioLayout;
 import com.sbai.finance.view.MissRadioViewSwitcher;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.VerticalSwipeRefreshLayout;
+import com.sbai.finance.view.radio.MissRadioLayout;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.glide.GlideApp;
 
@@ -69,7 +70,6 @@ import static com.sbai.finance.activity.BaseActivity.REQ_CODE_LOGIN;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
 public class MissTalkFragment extends BaseFragment implements MissAudioManager.OnAudioListener, MissAskFragment.OnSwipeRefreshEnableListener {
-
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -95,6 +95,9 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
     private MissAskFragmentAdapter mMissAskFragmentAdapter;
     private boolean mSwipeRefreshEnable = true;
     private int mVerticalOffset;
+    private MediaPlayService mMediaPlayService;
+
+    private Radio mRadio;
 
     @Nullable
     @Override
@@ -112,6 +115,7 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
         MissAudioManager.get().addAudioListener(this);
         requestRadioList();
         requestMissSwitcherList();
+        mMediaPlayService = ((MainActivity) getActivity()).getMediaPlayService();
     }
 
     private void requestMissSwitcherList() {
@@ -209,8 +213,21 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 
         mMissRadioLayout.setOnMissRadioPlayListener(new MissRadioLayout.OnMissRadioPlayListener() {
             @Override
-            public void onMissRadioPlay(Radio radio, boolean isPlaying) {
-                ToastUtil.show(radio.getAudioName());
+            public void onMissRadioPlay(Radio radio) {
+                mRadio = radio;
+                if (MissAudioManager.get().isStarted(radio)) {
+                    if (mMediaPlayService != null) {
+                        mMediaPlayService.onPausePlay(radio);
+                    }
+                } else if (MissAudioManager.get().isPaused(radio)) {
+                    if (mMediaPlayService != null) {
+                        mMediaPlayService.onResume();
+                    }
+                } else {
+                    if (mMediaPlayService != null) {
+                        mMediaPlayService.startPlay(radio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
+                    }
+                }
             }
 
             @Override
@@ -259,6 +276,11 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
         if (mSwipeRefreshLayout.isEnabled() != b) {
             mSwipeRefreshLayout.setEnabled(b);
         }
+    }
+
+    @Override
+    public void onRadioPlay(boolean radioPlayViewHasHasFocus) {
+
     }
 
     private void initFloatView() {
@@ -372,9 +394,9 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        if (!isVisibleToUser) {
-            MissAudioManager.get().stop();
-        }
+//        if (!isVisibleToUser) {
+//            MissAudioManager.get().stop();
+//        }
     }
 
     @Override
@@ -445,9 +467,9 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
     @Override
     public void onStop() {
         super.onStop();
-        if (!Preference.get().isForeground()) {
-            MissAudioManager.get().stop();
-        }
+//        if (!Preference.get().isForeground()) {
+//            MissAudioManager.get().stop();
+//        }
     }
 
     @Override

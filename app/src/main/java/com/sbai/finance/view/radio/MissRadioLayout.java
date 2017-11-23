@@ -29,9 +29,11 @@ public class MissRadioLayout extends LinearLayout {
     private static final int DEFAULT_MISS_RADIO_LIST_SIZE = 4;
     private OnMissRadioPlayListener mOnMissRadioPlayListener;
     private ArrayList<PlayStatus> mPlayStateList;
+    private ImageView mPlayImageView;
+    private Radio mRadio;
 
     public interface OnMissRadioPlayListener {
-        void onMissRadioPlay(Radio radio, boolean isPlaying);
+        void onMissRadioPlay(Radio radio);
 
         void onMissRadioClick(Radio radio);
     }
@@ -123,8 +125,9 @@ public class MissRadioLayout extends LinearLayout {
             playImageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mPlayImageView = playImageView;
                     if (mOnMissRadioPlayListener != null) {
-                        mOnMissRadioPlayListener.onMissRadioPlay(playStatus.getRadio(), playImageView.isSelected());
+                        mOnMissRadioPlayListener.onMissRadioPlay(playStatus.getRadio());
                     }
                     playImageView.setSelected(!playImageView.isSelected());
                     unChangePlay(playImageView);
@@ -136,12 +139,31 @@ public class MissRadioLayout extends LinearLayout {
     private void unChangePlay(ImageView playImageView) {
         if (mPlayStateList != null && !mPlayStateList.isEmpty()) {
             for (PlayStatus result : mPlayStateList) {
-                if (playImageView != result.getImageView()) {
+                if (result.getImageView() != playImageView) {
                     result.getImageView().setSelected(false);
                 }
             }
         }
     }
+//
+//    public void setStopPlay(Radio radio) {
+//        if (mPlayImageView != null) {
+//            mPlayImageView.setSelected(false);
+//        }
+//    }
+//
+//    public void setPausePlay(Radio radio) {
+//        if (mPlayImageView != null) {
+//            mPlayImageView.setSelected(false);
+//        }
+//    }
+//
+//    public void setStartPlay(Radio radio) {
+//        if (mPlayImageView != null) {
+//            mPlayImageView.setSelected(true);
+//        }
+//        unChangePlay(null);
+//    }
 
     @Override
     protected void onDetachedFromWindow() {

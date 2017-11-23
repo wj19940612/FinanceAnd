@@ -34,6 +34,7 @@ public class MissAudioManager {
     private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener;
     private volatile boolean mPreparing;
     private volatile boolean mStopPostPrepared;
+    private volatile int mSource; //播放的来源
     private boolean mPaused;
     private String mUuid;
     private IAudio mAudio;
@@ -87,6 +88,11 @@ public class MissAudioManager {
 
     private final String uuid(IAudio audio) {
         return audio.getAudioId() + "@" + audio.getAudioUrl();
+    }
+
+    public void start(IAudio audio, int source) {
+        mSource = source;
+        start(audio);
     }
 
     public void start(IAudio audio) {
@@ -238,6 +244,17 @@ public class MissAudioManager {
             return mMediaPlayer.getCurrentPosition();
         }
         return 0;
+    }
+
+    public long getDuration() {
+        if (mMediaPlayer != null) {
+            return mMediaPlayer.getDuration();
+        }
+        return 0;
+    }
+
+    public boolean isPlaying() {
+        return mMediaPlayer != null && mMediaPlayer.isPlaying();
     }
 
     private static class MyMediaPlayer extends MediaPlayer {
