@@ -229,7 +229,7 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
         setFocusable(true);
         // setOutsideTouchable(true);
         setBackgroundDrawable(new BitmapDrawable());
-        setAnimationStyle(R.style.fade_in_pop_win);
+        setAnimationStyle(R.style.FadeInPopWin);
         setContentView(contentView);
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         setHeight(ViewGroup.LayoutParams.MATCH_PARENT);

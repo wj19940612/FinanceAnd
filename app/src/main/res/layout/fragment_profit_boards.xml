@@ -14,7 +14,7 @@
 
         <TextView
             android:id="@+id/today"
-            style="@style/profit_btn"
+            style="@style/ProfitBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/common_padding"
@@ -23,7 +23,7 @@
 
         <TextView
             android:id="@+id/thisWeek"
-            style="@style/profit_btn"
+            style="@style/ProfitBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/this_week"/>

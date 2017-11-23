@@ -200,7 +200,7 @@
         <item name="android:textCursorDrawable">@drawable/color_cursor</item>
     </style>
 
-    <style name="future_btn">
+    <style name="FutureBtn">
         <item name="android:textSize">12sp</item>
         <item name="android:paddingLeft">@dimen/common_padding</item>
         <item name="android:paddingRight">@dimen/common_padding</item>
@@ -211,7 +211,7 @@
         <item name="android:background">@drawable/btn_future_primary_large_rounded</item>
     </style>
 
-    <style name="profit_btn">
+    <style name="ProfitBtn">
         <item name="android:textSize">12sp</item>
         <item name="android:paddingLeft">26dp</item>
         <item name="android:paddingRight">26dp</item>
@@ -222,7 +222,7 @@
         <item name="android:background">@drawable/btn_future_primary_large_rounded</item>
     </style>
 
-    <style name="battle_user_nick_name">
+    <style name="BattleUserNickName">
         <item name="android:ellipsize">end</item>
         <item name="android:maxLength">8</item>
         <item name="android:maxLines">1</item>
@@ -236,13 +236,13 @@
         <item name="android:textColor">@color/luckyText</item>
     </style>
 
-    <style name="stock_order_title">
+    <style name="StockOrderTitle">
         <item name="android:textColor">@color/unluckyText</item>
         <item name="android:textSize">12sp</item>
     </style>
 
 
-    <style name="fade_in_pop_win">
+    <style name="FadeInPopWin">
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowEnterAnimation">@anim/fade_in_quickly</item>
         <item name="android:windowExitAnimation">@anim/fade_out_quickly</item>

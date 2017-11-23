@@ -20,13 +20,8 @@ import android.widget.PopupWindow;
 
 import com.sbai.finance.R;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * PopWindow for  Pick
@@ -175,7 +170,7 @@ public class StockActivityPickerPopWin extends PopupWindow implements OnClickLis
         setFocusable(true);
         // setOutsideTouchable(true);
         setBackgroundDrawable(new BitmapDrawable());
-        setAnimationStyle(R.style.fade_in_pop_win);
+        setAnimationStyle(R.style.FadeInPopWin);
         setContentView(contentView);
         setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
