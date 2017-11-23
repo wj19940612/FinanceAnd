@@ -30,6 +30,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
+import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
@@ -62,10 +63,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.R.id.listenerNumber;
-import static com.sbai.finance.R.id.playImage;
-import static com.sbai.finance.R.id.progressBar;
-import static com.sbai.finance.R.id.soundTime;
 import static com.sbai.finance.net.Client.SHARE_URL_QUESTION;
 
 
@@ -127,6 +124,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private TextView mRewardNumber;
     private TextView mCommentNumber;
     private TextView mNoComment;
+    private ReplyDialogFragment mReplyDialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -283,10 +281,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         mAskTime = (TextView) header.findViewById(R.id.askTime);
         mQuestion = (TextView) header.findViewById(R.id.question);
         mMissAvatar = (ImageView) header.findViewById(R.id.missAvatar);
-        mPlayImage = (ImageView) header.findViewById(playImage);
-        mProgressBar = (ProgressBar) header.findViewById(progressBar);
-        mSoundTime = (TextView) header.findViewById(soundTime);
-        mListenerNumber = (TextView) header.findViewById(listenerNumber);
+        mPlayImage = (ImageView) header.findViewById(R.id.playImage);
+        mProgressBar = (ProgressBar) header.findViewById(R.id.progressBar);
+        mSoundTime = (TextView) header.findViewById(R.id.soundTime);
+        mListenerNumber = (TextView) header.findViewById(R.id.listenerNumber);
         mPraiseNumber = (TextView) header.findViewById(R.id.praiseNumber);
         mRewardNumber = (TextView) header.findViewById(R.id.rewardNumber);
         mCommentNumber = (TextView) header.findViewById(R.id.commentNumber);
@@ -629,57 +627,23 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
-//        intent.putExtra(Launcher.EX_PAYLOAD, mQuestionReply.getUserModel().getId());
-//        intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionReply.getDataId());
-//        intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionReply.getId());
-//        intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionReply.getUserModel().getUserName());
-
-
+        
         if (item != null) {
-            if (LocalUser.getUser().isLogin()) {
-                Launcher.with(getActivity(), CommentActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, item.getUserModel().getId())//mQuestionReply.getUserModel().getId()
-                        .putExtra(Launcher.EX_PAYLOAD_1, item.getDataId())           // mQuestionReply.getDataId()
-                        .putExtra(Launcher.EX_PAYLOAD_2, item.getId())
-                        .putExtra(Launcher.EX_PAYLOAD_3, item.getUserModel().getUserName())
-                        .executeForResult(REQ_COMMENT);
-
-            } else {
-                stopQuestionVoice();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivityForResult(intent, REQ_COMMENT_LOGIN);
+            if (mReplyDialogFragment == null) {
+                mReplyDialogFragment = ReplyDialogFragment.newInstance(item);
             }
-        }
+            if (!mReplyDialogFragment.isAdded()) {
+                mReplyDialogFragment.show(getSupportFragmentManager());
+            }
 
-//        if (item != null) {
-//            if (mReplyDialogFragment == null) {
-//                mReplyDialogFragment = ReplyDialogFragment.newInstance();
-//            }
-//            mReplyDialogFragment.setItemData(item);
-//            if (!mReplyDialogFragment.isAdded()) {
-//                mReplyDialogFragment.show(getSupportFragmentManager());
-//            }
-//
-//            mReplyDialogFragment.setCallback(new ReplyDialogFragment.Callback() {
-//                @Override
-//                public void onLoginSuccess() {
-//                    stopQuestionVoice();
-//                }
-//
-//                @Override
-//                public void onReplySuccess() {
-//                    mSet.clear();
-//                    mPage = 0;
-//                    mReplayMsgId = null;
-//                    mSwipeRefreshLayout.setLoadMoreEnable(true);
-//                    mListView.removeFooterView(mFootView);
-//                    mFootView = null;
-//                    requestQuestionDetail();
-//                    requestQuestionReplyList(true);
-//                    mListView.setSelection(0);
-//                }
-//            });
-//        }
+            mReplyDialogFragment.setCallback(new ReplyDialogFragment.Callback() {
+                                                 @Override
+                                                 public void onLoginSuccess() {
+                                                     stopQuestionVoice();
+                                                 }
+                                             }
+            );
+        }
     }
 
     @Override
@@ -896,6 +860,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_REWARD_SUCCESS);
         filter.addAction(ACTION_LOGIN_SUCCESS);
+        filter.addAction(CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS);
         LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
         registerReceiver(mRefreshReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
     }
@@ -924,6 +889,18 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
             if (Intent.ACTION_SCREEN_OFF.equalsIgnoreCase(intent.getAction())) {
                 stopQuestionVoice();
+            }
+
+            if (CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+                mSet.clear();
+                mPage = 0;
+                mReplayMsgId = null;
+                mSwipeRefreshLayout.setLoadMoreEnable(true);
+                mListView.removeFooterView(mFootView);
+                mFootView = null;
+                requestQuestionDetail();
+                requestQuestionReplyList(true);
+                mListView.setSelection(0);
             }
         }
     }
