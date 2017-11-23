@@ -43,5 +43,6 @@
 - 学分：Credit
 - 成绩：Grade
 - 竞技场: Arena
+- 电台：radio
 
 

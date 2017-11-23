@@ -7,9 +7,7 @@ import android.content.Intent;
 import com.sbai.finance.activity.CatchCrashActivity;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.Logger;
 import com.sbai.httplib.CookieManger;
-import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 
@@ -24,15 +22,15 @@ public class App extends Application {
 		API.init(sContext.getCacheDir());
 		CookieManger.getInstance().init(sContext.getFilesDir());
 
-		if (!BuildConfig.IS_PROD) {
-			handleUncaughtException();
-			Logger.init();
-		}
-
-		if (BuildConfig.DEBUG) {
-			handleUncaughtException();
-			Config.DEBUG = true;
-		}
+//		if (!BuildConfig.IS_PROD) {
+//			handleUncaughtException();
+//			Logger.init();
+//		}
+//
+//		if (BuildConfig.DEBUG) {
+//			handleUncaughtException();
+//			Config.DEBUG = true;
+//		}
 		//友盟
 		UMShareAPI.get(this);
 	}

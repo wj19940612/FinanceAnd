@@ -2030,8 +2030,8 @@ public class Client {
     /**
      * 添加评论/回复
      *
-     * @param invitationUserId
-     * @param replyParentId
+     * @param invitationUserId 如:提问人的id,训练的id
+     * @param replyParentId    回复哪条的id(不填为评论)
      * @param content
      * @param dataId
      * @return
@@ -2997,7 +2997,67 @@ public class Client {
     /**
      * 点击banner后
      */
-    public static API requestClickBanner(String bannerId){
-        return new API("/user/news/findBannerById.do",new ApiParams().put("id",bannerId));
+    public static API requestClickBanner(String bannerId) {
+        return new API("/user/news/findBannerById.do", new ApiParams().put("id", bannerId));
+    }
+
+    /**
+     * @param positionType
+     * @param userAccount
+     * @param activityCode
+     * @param page
+     * @return
+     */
+    public static API requestTodayBusiness(int positionType, String userAccount, String activityCode, int page) {
+        return new API("/api/stock-or/position/bargain.do", new ApiParams()
+                .put("positionType", positionType)
+                .put("userAccount", userAccount)
+                .put("activityCode", activityCode)
+                .put("page", page));
+    }
+
+    /**
+     * @param positionType
+     * @param userAccount
+     * @param activityCode
+     * @param page
+     * @return
+     */
+    public static API requestHistoryBusiness(int positionType, String userAccount, String activityCode, String startTime, String endTime, int page) {
+        return new API("/api/stock-or/position/bargain.do", new ApiParams()
+                .put("positionType", positionType)
+                .put("userAccount", userAccount)
+                .put("activityCode", activityCode)
+                .put("stime", startTime)
+                .put("etime", endTime)
+                .put("page", page));
+    }
+
+    /**
+     * @param positionType
+     * @param userAccount
+     * @param activityCode
+     * @return
+     */
+    public static API requestAsset(int positionType, String userAccount, String activityCode) {
+        return new API("/api/stock-or/position/asset.do", new ApiParams()
+                .put("positionType", positionType)
+                .put("userAccount", userAccount)
+                .put("activityCode", activityCode)
+                .put("pageSize", 100000)
+                .put("page", 0));
+    }
+
+    /**
+     * 小姐姐管理--查询最新的推荐电台(薛松)
+     *
+     * @return
+     */
+    public static API requestRadioList() {
+        return new API("/explain/audioManage/getRecommendLatestAudio.do");
+    }
+
+    public static API requestMissSwitcherList() {
+        return new API("");
     }
 }

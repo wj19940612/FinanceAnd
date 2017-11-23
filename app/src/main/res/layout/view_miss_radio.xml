@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/background"/>
+
+    <ImageView
+        android:id="@+id/radioCover"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginRight="@dimen/common_padding"
+        android:layout_marginTop="9dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        tools:src="@mipmap/ic_launcher_round"/>
+
+    <TextView
+        android:id="@+id/voiceName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="11dp"
+        android:minHeight="36dp"
+        android:textColor="@color/blackPrimary"
+        app:layout_constraintEnd_toStartOf="@+id/startLL"
+        app:layout_constraintStart_toEndOf="@+id/radioCover"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        tools:text="溺水的鱼的专属电调f发货速度快分\n卡计划的尽快发货都是分开"/>
+
+    <TextView
+        android:id="@+id/radioUpdateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginTop="11dp"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/radioCover"
+        app:layout_constraintTop_toBottomOf="@+id/voiceName"
+        tools:text="1小时前"/>
+
+    <TextView
+        android:id="@+id/radioOwnerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="11dp"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/radioUpdateTime"
+        app:layout_constraintStart_toEndOf="@+id/radioUpdateTime"
+        app:layout_constraintTop_toBottomOf="@+id/voiceName"
+        tools:text="丁丁"/>
+
+    <View
+        android:id="@+id/spit"
+        android:layout_width="0.5dp"
+        android:layout_height="10dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/split"
+        app:layout_constraintStart_toEndOf="@+id/radioOwnerName"
+        app:layout_constraintTop_toBottomOf="@+id/voiceName"/>
+
+    <TextView
+        android:id="@+id/radioName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="11dp"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/radioUpdateTime"
+        app:layout_constraintStart_toEndOf="@+id/spit"
+        app:layout_constraintTop_toBottomOf="@+id/voiceName"
+        tools:text="发的顺丰到付"/>
+
+    <LinearLayout
+        android:id="@+id/startLL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_marginTop="8dp"
+            android:id="@+id/startPlay"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            tools:src="@mipmap/ic_launcher_round"/>
+
+        <TextView
+            android:id="@+id/radioLength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/unluckyText"
+            android:textSize="9sp"
+            tools:text="12“4444"/>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

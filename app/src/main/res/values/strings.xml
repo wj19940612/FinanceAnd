@@ -15,7 +15,7 @@
     <string name="arena">竞技场</string>
     <string name="mine">我的</string>>
 
-
+    <string name="already_load_all">已加载全部</string>
     <!-- EconomicCircle -->
     <string name="comment_number">评论(%1$d)</string>
     <string name="comment_number_string">评论(%1$s)</string>
@@ -891,6 +891,46 @@
     <string name="hello_afternoon">下午好，%1$s！</string>
     <string name="hello_evening">晚上好，%1$s！</string>
     <string name="read_count_">阅 %1$d</string>
+
+    <!--trade-->
+    <string name="today_profit">今日收益</string>
+    <string name="total_fund">总资产</string>
+    <string name="total_position">持仓总市值</string>
+    <string name="position_float">持仓浮动盈亏</string>
+    <string name="enable_fund">可用资金</string>
+    <string name="fetch_fund">可取资金</string>
+    <string name="buy">买入</string>
+    <string name="sell">卖出</string>
+    <string name="stock_simulate_trade">A股模拟交易</string>
+    <string name="position">持仓</string>
+    <string name="entrust">委托</string>
+    <string name="history">历史</string>
+    <string name="stock_game_rule">规则</string>
+    <string name="name_position_value">名称/市值</string>
+    <string name="position_enable_amount">持仓/可卖</string>
+    <string name="last_price_cost_price">现价/成本</string>
+    <string name="float_fund">盈亏</string>
+    <string name="detail">详情</string>
+    <string name="today_business">当日成交</string>
+    <string name="history_business">历史成交</string>
+    <string name="entrust_status">交易状态</string>
+    <string name="stock_name_code">名称/代码</string>
+    <string name="amount_price">数量/价格</string>
+    <string name="business_fund">成交额</string>
+    <string name="business_time">成交时间</string>
+    <string name="stock_withdraw">撤单</string>
+    <string name="wait_business">等待成交</string>
+    <string name="part_business">部分成交</string>
+    <string name="all_business">全部成交</string>
+    <string name="type">类型</string>
+    <string name="start_time">起始时间</string>
+    <string name="end_time">终止时间</string>
+    <string name="tips">温馨提示</string>
+    <string name="is_confirm_withdraw">订单撤销后将无法恢复，是否确定\n撤销该订单?</string>
+    <string name="confirm_withdraw">确定撤单</string>
+
+    <!--姐说-->
+    <string name="radio">电台</string>
 
     <!--Stock-->
     <string name="ShangHaiStockExchange">上证指数</string>

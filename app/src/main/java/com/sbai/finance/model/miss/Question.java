@@ -5,10 +5,9 @@ import android.os.Parcelable;
 
 import com.sbai.finance.utils.MissAudioManager;
 
-public class Question implements Parcelable, MissAudioManager.IAudio{
+public class Question implements Parcelable, MissAudioManager.IAudio {
 
-    public static final int TYPE_HOT = 1;
-    public static final int TYPE_LATEST = 2;
+    private static final int QUESTION_TYPE_LATEST = 0;
 
     /**
      * answerContext : blob:http://var.esongbai.xyz/ed0ea7b6-bd51-4ff1-a631-864d01b9f4c8
@@ -57,15 +56,47 @@ public class Question implements Parcelable, MissAudioManager.IAudio{
     private int replyCount;        //回复数
     private int soundTime;         //语音播放时间
     private int collect;           //是否收藏 0 未收藏 1已收藏
-
+    private int hot;                // 0 最新问答  1、2热门问答
+    private String customName;      //小姐姐名字
     // 我的问答中的数据
     private String content;        //问题内容
     private int dataId;            //问题id
     private int type;              //解说界面自定义的type  0 表示普通的 1 表示出现热门提问标签 2 最新提问
     private String commentId;      //回复的id
 
+    public int end;      // 0 正常数据  1 末尾
+
+    public boolean isLatestQuestion() {
+        return getHot() == QUESTION_TYPE_LATEST;
+    }
+
+
     public boolean isQuestionSolved() {
         return getSolve() == 1;
+    }
+
+    public String getCustomName() {
+        return customName;
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
+    public void setEnd(int end) {
+        this.end = end;
+    }
+
+    public int getHot() {
+        return hot;
+    }
+
+    public void setHot(int hot) {
+        this.hot = hot;
     }
 
     public String getContent() {
@@ -284,6 +315,19 @@ public class Question implements Parcelable, MissAudioManager.IAudio{
         this.collect = collect;
     }
 
+    public Question() {
+    }
+
+    @Override
+    public int getAudioId() {
+        return id;
+    }
+
+    @Override
+    public String getAudioUrl() {
+        return answerContext;
+    }
+
     @Override
     public String toString() {
         return "Question{" +
@@ -310,10 +354,13 @@ public class Question implements Parcelable, MissAudioManager.IAudio{
                 ", replyCount=" + replyCount +
                 ", soundTime=" + soundTime +
                 ", collect=" + collect +
+                ", hot=" + hot +
+                ", customName='" + customName + '\'' +
                 ", content='" + content + '\'' +
                 ", dataId=" + dataId +
                 ", type=" + type +
                 ", commentId='" + commentId + '\'' +
+                ", end=" + end +
                 '}';
     }
 
@@ -347,13 +394,13 @@ public class Question implements Parcelable, MissAudioManager.IAudio{
         dest.writeInt(this.replyCount);
         dest.writeInt(this.soundTime);
         dest.writeInt(this.collect);
+        dest.writeInt(this.hot);
+        dest.writeString(this.customName);
         dest.writeString(this.content);
         dest.writeInt(this.dataId);
         dest.writeInt(this.type);
         dest.writeString(this.commentId);
-    }
-
-    public Question() {
+        dest.writeInt(this.end);
     }
 
     protected Question(Parcel in) {
@@ -380,10 +427,13 @@ public class Question implements Parcelable, MissAudioManager.IAudio{
         this.replyCount = in.readInt();
         this.soundTime = in.readInt();
         this.collect = in.readInt();
+        this.hot = in.readInt();
+        this.customName = in.readString();
         this.content = in.readString();
         this.dataId = in.readInt();
         this.type = in.readInt();
         this.commentId = in.readString();
+        this.end = in.readInt();
     }
 
     public static final Creator<Question> CREATOR = new Creator<Question>() {
@@ -397,14 +447,4 @@ public class Question implements Parcelable, MissAudioManager.IAudio{
             return new Question[size];
         }
     };
-
-    @Override
-    public int getAudioId() {
-        return id;
-    }
-
-    @Override
-    public String getAudioUrl() {
-        return answerContext;
-    }
 }
