@@ -89,12 +89,12 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
     private Long mCreateTime;
     private int mPageSize = 20;
 
-    private HashSet<Integer> mSet;
     private Miss mMiss;
     private Question mPlayIngItem;
 
     OnFragmentRecycleViewScrollListener mOnFragmentRecycleViewScrollListener;
     private RefreshReceiver mRefreshReceiver;
+    private boolean mHasEnter;
 
     @Override
     public void onAudioStart() {
@@ -175,7 +175,7 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
     }
 
     public void refresh() {
-        mSet.clear();
+//        mSet.clear();
         mCreateTime = null;
         mHasMoreData = true;
         mQuestionList.clear();
@@ -265,7 +265,10 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
     @Override
     public void onResume() {
         super.onResume();
-        refresh();
+        if(!mHasEnter) {
+            mHasEnter = true;
+            refresh();
+        }
     }
 
     @Override
@@ -279,7 +282,7 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
 
     private void initView() {
         mQuestionList = new ArrayList<Question>();
-        mSet = new HashSet<>();
+//        mSet = new HashSet<>();
         mQuestionListAdapter = new QuestionListAdapter(mQuestionList, getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mQuestionListAdapter);
@@ -375,7 +378,7 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
                 MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
                 if (audio instanceof Question && MissAudioManager.get().isStarted(audio)) {
                     Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-                    intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, true);
+                    intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, false);
                     intent.putExtra(Launcher.EX_PAYLOAD, ((Question) audio).getId());
                     startActivityForResult(intent, REQ_QUESTION_DETAIL);
 
@@ -495,11 +498,11 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
             }
         }
 
-        for (Question question : questionList) {
-            if (mSet.add(question.getId())) {
-                mQuestionListAdapter.add(question);
-            }
-        }
+//        for (Question question : questionList) {
+//            if (mSet.add(question.getId())) {
+                mQuestionListAdapter.addAll(questionList);
+//            }
+//        }
     }
 
     protected boolean isSlideToBottom(RecyclerView recyclerView) {
@@ -517,6 +520,7 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
     public void onDestroyView() {
         super.onDestroyView();
         stopVoice();
+        mHasEnter = false;
         mBind.unbind();
     }
 
@@ -780,7 +784,7 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
             }
 
             if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-                mSet.clear();
+//                mSet.clear();
                 mCreateTime = null;
                 ((MissProfileDetailActivity) getActivity()).refreshData();
                 requestHerAnswerList(true);

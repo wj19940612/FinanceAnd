@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.miss.RadioInfo;
@@ -30,7 +31,9 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.glide.GlideApp;
+import com.sbai.httplib.ApiError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,10 +113,19 @@ public class MissProfileRadioFragment extends BaseFragment {
     public void refresh() {
         Client.requestRadiosOfMiss(mCustomId).setTag(TAG).setCallback(new Callback2D<Resp<List<RadioInfo>>, List<RadioInfo>>() {
             @Override
+            public void onFailure(ApiError apiError) {
+                super.onFailure(apiError);
+                mEmpty.setVisibility(View.VISIBLE);
+                mRadioAdapter.clear();
+                mRadioAdapter.notifyDataSetChanged();
+            }
+
+            @Override
             protected void onRespSuccessData(List<RadioInfo> data) {
                 if (data != null) {
                     updateRadioData(data);
                 }
+
             }
         }).fireFree();
     }
@@ -164,7 +176,9 @@ public class MissProfileRadioFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.createRadio:
-                //TODO 创建电台的H5
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, Client.CREATE_RADIO_STATION)
+                        .execute();
                 break;
         }
     }

@@ -15,7 +15,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +26,11 @@ import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.CommentActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.activity.miss.RadioStationListActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.fragment.miss.MissAskFragment;
-import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.MissSwitcherModel;
 import com.sbai.finance.model.miss.Question;
@@ -277,13 +274,14 @@ public class MissTalkFragment extends BaseFragment implements MissAudioManager.O
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
-                } else {
-                    MissAudioManager.get().stop();
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivityForResult(intent, REQ_CODE_LOGIN);
-                }
+//                if (LocalUser.getUser().isLogin()) {
+//                    Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+//                } else {
+//                    MissAudioManager.get().stop();
+//                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+//                    startActivityForResult(intent, REQ_CODE_LOGIN);
+//                }
+                Launcher.with(getActivity(), RadioStationListActivity.class).execute();
             }
         });
     }

@@ -45,6 +45,9 @@ public class Client {
     // 竞技场知识点
     public static final String ARENA_KNOWLEDGE = API.getHost() + "/lm/futurespk/point.html";
 
+    // 创建电台
+    public static final String CREATE_RADIO_STATION = API.getHost() + "/lm/banner/addaudio.html";
+
 
     public static String getServiceQQ(String serviceQQ) {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
@@ -2030,7 +2033,7 @@ public class Client {
     /**
      * 添加评论/回复
      *
-     * @param invitationUserId  如:提问人的id,训练的id
+     * @param invitationUserId 如:提问人的id,训练的id
      * @param replyParentId    回复哪条的id(不填为评论)
      * @param content
      * @param dataId
@@ -3002,17 +3005,16 @@ public class Client {
     }
 
     /**
-<<<<<<< HEAD
      * 电台详情
      */
     public static API requestRadioDetail(int radioId) {
-        return new API("/explain/radioManage/queryRadioByRadioId.do", new ApiParams().put("radioId", radioId));
+        return new API("/explain/radioManage/queryRadioByRadioIdForApp.do", new ApiParams().put("radioId", radioId));
     }
 
     /**
      * 电台音频列表
      */
-    public static API requestRadioDetailAudio(int radioId){
+    public static API requestRadioDetailAudio(int radioId) {
         return new API("/explain/audioManage/queryAudioByRadioId.do", new ApiParams().put("radioId", radioId));
     }
 
@@ -3020,10 +3022,12 @@ public class Client {
      * 主播的电台列表
      */
     public static API requestRadiosOfMiss(int customId) {
-        return new API("/explain/radioManage/queryByRadioHost.do", new ApiParams().put("customId", customId));
+        return new API("/explain/radioManage/queryByRadioHostForApp.do", new ApiParams().put("customId", customId));
     }
 
-     /** 小姐姐管理--查询最新的推荐电台(薛松)
+    /**
+     * 小姐姐管理--查询最新的推荐电台(薛松)
+     *
      * @return
      */
     public static API requestRadioList() {
@@ -3032,5 +3036,14 @@ public class Client {
 
     public static API requestMissSwitcherList() {
         return new API("");
+    }
+
+    /**
+     * 订阅电台
+     *
+     * @return
+     */
+    public static API collectRadio(String radioId) {
+        return new API("/user/user/collect.do", new ApiParams().put("type", 4).put("dataId", radioId));
     }
 }

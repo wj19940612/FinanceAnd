@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,15 +20,14 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.miss.AudioInfo;
 import com.sbai.finance.model.miss.RadioInfo;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.VerticalSwipeRefreshLayout;
 import com.sbai.glide.GlideApp;
@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017\11\21 0021.
  */
 
-public class RadioStationDetailActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class RadioStationListActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -54,6 +54,7 @@ public class RadioStationDetailActivity extends BaseActivity implements AdapterV
 
     ImageView mCover;
     TextView mSubscribe;
+    TextView mSubscribed;
     ImageView mAvatar;
     TextView mName;
     TextView mListenerNumber;
@@ -62,20 +63,21 @@ public class RadioStationDetailActivity extends BaseActivity implements AdapterV
 
     private int mRadioStationId;
     private RadioStationAdapter mRadioStationAdapter;
+    private RadioInfo mRadioInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_miss_radio_station_detail);
+        setContentView(R.layout.activity_miss_radio_station_list);
         ButterKnife.bind(this);
 
         initData(getIntent());
-        initHeaderView();
 
         mRadioStationAdapter = new RadioStationAdapter(this);
         mListView.setAdapter(mRadioStationAdapter);
         mListView.setOnItemClickListener(this);
 
+        initHeaderView();
         initSwipeRefreshLayout();
         requestRadioStationDetail();
         requestRadioProgram();
@@ -83,12 +85,16 @@ public class RadioStationDetailActivity extends BaseActivity implements AdapterV
 
     private void initData(Intent intent) {
         mRadioStationId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+        if (mRadioStationId == -1) {
+            mRadioStationId = 2;
+        }
     }
 
     private void initHeaderView() {
         LinearLayout header = (LinearLayout) getLayoutInflater().inflate(R.layout.view_header_radio_station_detail, mRoot, false);
         mCover = header.findViewById(R.id.cover);
         mSubscribe = header.findViewById(R.id.subscribe);
+        mSubscribed = header.findViewById(R.id.subscribed);
         mAvatar = header.findViewById(R.id.avatar);
         mName = header.findViewById(R.id.name);
         mListenerNumber = header.findViewById(R.id.listenerNumber);
@@ -100,6 +106,41 @@ public class RadioStationDetailActivity extends BaseActivity implements AdapterV
             public void onClick(View view) {
                 boolean hasExpand = (boolean) view.getTag();
                 expandOrStopContent(hasExpand);
+            }
+        });
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mRadioInfo == null) {
+                    return;
+                }
+                Client.collectRadio(String.valueOf(mRadioStationId)).setTag(TAG).setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (resp.isSuccess()) {
+                            if (mRadioInfo.getIsSubscriber() == 0) {
+                                mRadioInfo.setIsSubscriber(1);
+                                mSubscribe.setVisibility(View.GONE);
+                                mSubscribed.setVisibility(View.VISIBLE);
+                            } else {
+                                mRadioInfo.setIsSubscriber(0);
+                                mSubscribe.setVisibility(View.VISIBLE);
+                                mSubscribed.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                });
+            }
+        };
+        mSubscribe.setOnClickListener(onClickListener);
+        mSubscribed.setOnClickListener(onClickListener);
+        mName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mRadioInfo == null) {
+                    return;
+                }
+                Launcher.with(RadioStationListActivity.this, MissProfileDetailActivity.class).putExtra(Launcher.EX_PAYLOAD, mRadioInfo.getRadioHost()).execute();
             }
         });
         mListView.addHeaderView(header);
@@ -118,13 +159,30 @@ public class RadioStationDetailActivity extends BaseActivity implements AdapterV
     private void expandOrStopContent(boolean hasExpand) {
         if (hasExpand) {
             //已经展开,收起
-            mBtnLookMore.setText(R.string.pack_up);
-            mContent.setMaxLines(Integer.MAX_VALUE);
-        } else {
             mBtnLookMore.setText(R.string.look_more);
             mContent.setMaxLines(2);
             mContent.setEllipsize(TextUtils.TruncateAt.END);
+            mBtnLookMore.setTag(false);
+        } else if (judgeIsMax()) {
+            mBtnLookMore.setText(R.string.pack_up);
+            mContent.setMaxLines(Integer.MAX_VALUE);
+            mContent.setEllipsize(null);
+            mBtnLookMore.setTag(true);
         }
+    }
+
+    //查看这个TextView
+    private boolean judgeIsMax() {
+        Layout layout = mContent.getLayout();
+        if (layout != null) {
+            int lines = layout.getLineCount();
+            if (lines > 0) {
+                if (layout.getEllipsisCount(lines - 1) > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -140,32 +198,45 @@ public class RadioStationDetailActivity extends BaseActivity implements AdapterV
                     updateRadioDetail(radioInfo);
                 }
             }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
         }).fireFree();
     }
 
     private void updateRadioDetail(RadioInfo radioInfo) {
+        mRadioInfo = radioInfo;
         GlideApp.with(this).load(radioInfo.getRadioCover())
                 .placeholder(R.drawable.ic_default_image)
+                .centerCrop()
                 .into(mCover);
 
-//        GlideApp.with(this).load(radioInfo.get())
-//                .placeholder(R.drawable.ic_default_avatar)
-//                .into(mAvatar);
+        GlideApp.with(this).load(radioInfo.getUserPortrait())
+                .placeholder(R.drawable.ic_default_avatar)
+                .circleCrop()
+                .into(mAvatar);
 
-//        mName.setText(radioInfo.ge);
+        mName.setText(radioInfo.getRadioHostName());
 
-        mSubscribe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO 订阅接口
-            }
-        });
+        mTitleBar.setTitle(radioInfo.getRadioName());
+
+        if (radioInfo.getIsSubscriber() == 0) {
+            //没订阅
+            mSubscribe.setVisibility(View.VISIBLE);
+            mSubscribed.setVisibility(View.GONE);
+        } else {
+            mSubscribe.setVisibility(View.GONE);
+            mSubscribed.setVisibility(View.VISIBLE);
+        }
         mContent.setText(radioInfo.getRadioIntroduction());
-        mListenerNumber.setText(radioInfo.getListenNumber());
+        mListenerNumber.setText(String.valueOf(radioInfo.getListenNumber()));
     }
 
     private void requestRadioProgram() {
-        Client.requestRadioDetail(mRadioStationId).setTag(TAG).setCallback(new Callback2D<Resp<List<AudioInfo>>, List<AudioInfo>>() {
+        Client.requestRadioDetailAudio(mRadioStationId).setTag(TAG).setCallback(new Callback2D<Resp<List<AudioInfo>>, List<AudioInfo>>() {
 
 
             @Override
@@ -178,10 +249,10 @@ public class RadioStationDetailActivity extends BaseActivity implements AdapterV
     }
 
     private void updateAudio(List<AudioInfo> data) {
-        if(mRadioStationAdapter != null){
+        if (mRadioStationAdapter != null) {
             mRadioStationAdapter.clear();
         }
-        for(AudioInfo audioInfo : data){
+        for (AudioInfo audioInfo : data) {
             mRadioStationAdapter.add(audioInfo);
         }
     }
@@ -207,7 +278,7 @@ public class RadioStationDetailActivity extends BaseActivity implements AdapterV
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            viewHolder.bindingData(mContext, getItem(position));
+            viewHolder.bindingData(mContext, getItem(position), position, getCount());
             return convertView;
         }
 
@@ -220,21 +291,27 @@ public class RadioStationDetailActivity extends BaseActivity implements AdapterV
             TextView mListenerNumber;
             @BindView(R.id.time)
             TextView mTime;
+            @BindView(R.id.split)
+            View mSplitView;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(Context context, AudioInfo item) {
+            private void bindingData(Context context, AudioInfo item, int position, int count) {
                 GlideApp.with(context).load(item.getAudioCover())
                         .placeholder(R.drawable.ic_default_image)
+                        .centerCrop()
                         .into(mCover);
 
                 mTitle.setText(item.getAudioName());
 
-                mListenerNumber.setText(item.getViewNumber());
+                mListenerNumber.setText(String.valueOf(item.getViewNumber()));
 
                 mTime.setText(DateUtil.formatDefaultStyleTime(item.getModifyTime()));
+                if (position == count - 1) {
+                    mSplitView.setVisibility(View.GONE);
+                }
             }
         }
     }

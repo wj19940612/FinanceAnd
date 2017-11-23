@@ -336,6 +336,9 @@
         <activity
             android:name=".activity.miss.MissProfileDetailActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.miss.RadioStationListActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- 发现 -->
         <activity

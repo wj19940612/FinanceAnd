@@ -222,7 +222,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         } else {
             mProfileIntroduce.setText(R.string.no_miss_introduce);
         }
-        if (miss.getId() == LocalUser.getUser().getUserInfo().getCustomId()) {
+        if (LocalUser.getUser().getUserInfo() != null && miss.getId() == LocalUser.getUser().getUserInfo().getCustomId()) {
             //是小姐姐自己
             mFollow.setVisibility(View.GONE);
             mNoFollow.setVisibility(View.VISIBLE);
@@ -338,7 +338,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                 break;
             case R.id.noFollow:
                 if (mMiss != null) {
-                    if (mMiss.getId() == LocalUser.getUser().getUserInfo().getCustomId()) {
+                    if (LocalUser.getUser().getUserInfo() != null && mMiss.getId() == LocalUser.getUser().getUserInfo().getCustomId()) {
                         Launcher.with(getActivity(), ModifyUserInfoActivity.class).execute();
                     } else {
                         attention();

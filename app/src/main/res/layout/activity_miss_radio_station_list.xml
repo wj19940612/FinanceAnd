@@ -15,7 +15,6 @@
         app:backFeature="true"
         app:hasBottomSplitLine="true"
         app:splitLineColor="@color/split"
-        app:titleText="@string/wait_me_answer"
         app:titleTextColor="@color/primaryText"/>
 
     <com.sbai.finance.view.VerticalSwipeRefreshLayout
@@ -24,20 +23,12 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/titleBar">
 
-        <LinearLayout
+        <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ListView
-                android:id="@+id/listView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@color/split"
-                android:dividerHeight="1px"
-                android:visibility="visible"/>
-        </LinearLayout>
+            android:divider="@null"
+            android:visibility="visible"/>
     </com.sbai.finance.view.VerticalSwipeRefreshLayout>
 
 
