@@ -2030,8 +2030,8 @@ public class Client {
     /**
      * 添加评论/回复
      *
-     * @param invitationUserId
-     * @param replyParentId
+     * @param invitationUserId 如:提问人的id,训练的id
+     * @param replyParentId    回复哪条的id(不填为评论)
      * @param content
      * @param dataId
      * @return
@@ -3037,7 +3037,6 @@ public class Client {
      * @param positionType
      * @param userAccount
      * @param activityCode
-     * @param page
      * @return
      */
     public static API requestAsset(int positionType, String userAccount, String activityCode) {
@@ -3047,5 +3046,18 @@ public class Client {
                 .put("activityCode", activityCode)
                 .put("pageSize", 100000)
                 .put("page", 0));
+    }
+
+    /**
+     * 小姐姐管理--查询最新的推荐电台(薛松)
+     *
+     * @return
+     */
+    public static API requestRadioList() {
+        return new API("/explain/audioManage/getRecommendLatestAudio.do");
+    }
+
+    public static API requestMissSwitcherList() {
+        return new API("");
     }
 }

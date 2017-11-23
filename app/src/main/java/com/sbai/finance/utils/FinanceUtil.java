@@ -70,11 +70,17 @@ public class FinanceUtil {
         return formatWithScale(bigDecimal.doubleValue(), scale) + "%";
     }
 
+    /**
+     * 格式化 double 数据成百分数格式，不精确（保留）到小数
+     *
+     * @param value
+     * @param scale
+     * @return
+     */
     public static String formatToPercentageReplaceZero(double value, int scale) {
         BigDecimal bigDecimal = multiply(value, 100d);
         return removeNeedlessZero(formatWithScale(bigDecimal.doubleValue(), scale) + "%");
     }
-
 
     /**
      * 当数字大于 10,000 或小于 -10,000 时候，添加‘万’单位，并使用‘银行家算法’精确（保留）到小数点后两位
@@ -128,13 +134,30 @@ public class FinanceUtil {
         return formatWithThousandsSeparator(value);
     }
 
-    public static String addUnit(double value) {
+    /**
+     * 添加单位
+     *
+     * @param value
+     * @return
+     */
+    public static String addUnitWithoutSeparator(double value) {
         if (value > 100000000 || value < -100000000) {
-            return formatWithThousandsSeparatorAndUnit(value, UNIT_YI);
+            return formatWithUnit(value, UNIT_YI);
         } else if (value > 10000 || value < -10000) {
-            return formatWithThousandsSeparatorAndUnit(value, UNIT_WANG);
+            return formatWithUnit(value, UNIT_WANG);
         }
         return formatWithThousandsSeparator(value);
+    }
+
+    private static String formatWithUnit(double value, String unit) {
+        if (unit == UNIT_WANG) {
+            BigDecimal newValue = divide(value, 10000.000);
+            return formatWithScale(newValue.doubleValue()) + unit;
+        } else if (unit == UNIT_YI) {
+            BigDecimal newValue = divide(value, 100000000.000);
+            return formatWithScale(newValue.doubleValue()) + unit;
+        }
+        return String.valueOf(value);
     }
 
     /**
@@ -450,6 +473,8 @@ public class FinanceUtil {
     }
 
     /**
+     * 直接舍去百分化后的小数
+     *
      * @param number 0.9956
      * @return 99%
      */

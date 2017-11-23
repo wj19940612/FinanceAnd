@@ -89,6 +89,12 @@ public class InformationAndFocusFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
     public static class PagerAdapter extends FragmentPagerAdapter {
 
         private Context mContext;

@@ -53,12 +53,11 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void gotoMain() {
-        startActivity(new Intent(this, StockOrderActivity.class));
-//        if (Preference.get().isShowGuide()) {
-//            startActivity(new Intent(this, GuideActivity.class));
-//        } else {
-//            startActivity(new Intent(this, MainActivity.class));
-//        }
+        if (Preference.get().isShowGuide()) {
+            startActivity(new Intent(this, GuideActivity.class));
+        } else {
+            startActivity(new Intent(this, MainActivity.class));
+        }
         supportFinishAfterTransition();
     }
 

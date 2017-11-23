@@ -46,6 +46,8 @@ public class CommentActivity extends BaseActivity {
 	View mCancelArea;
 	private int mInvitationUserId;
 	private int mDataId;
+	private String mReplyParentId;
+	private String mUserName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,8 @@ public class CommentActivity extends BaseActivity {
 	private void initData() {
 		mInvitationUserId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
 		mDataId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+		mReplyParentId = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
+		mUserName = getIntent().getStringExtra(Launcher.EX_PAYLOAD_3);
 	}
 
 
@@ -84,6 +88,9 @@ public class CommentActivity extends BaseActivity {
 	private void initView() {
 		getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.WRAP_CONTENT);
+		if (mUserName != null) {
+			mQuestionComment.setHint(getString(R.string.reply_someBody, mUserName));
+		}
 		mQuestionComment.addTextChangedListener(mValidationWatcher);
 	}
 
@@ -150,7 +157,7 @@ public class CommentActivity extends BaseActivity {
 
 	private void requestPublishComment() {
 		mPublish.setEnabled(false);
-		Client.addComment(mInvitationUserId, null, mQuestionComment.getText().toString().trim(), mDataId)
+		Client.addComment(mInvitationUserId, mReplyParentId, mQuestionComment.getText().toString().trim(), mDataId)
 				.setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIMEOUT_MS, 0, DEFAULT_BACKOFF_MULT))
 				.setTag(TAG)
 				.setIndeterminate(this)

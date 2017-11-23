@@ -33,8 +33,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/network_security_config"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
@@ -302,6 +301,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"/>
         <activity
+            android:name=".activity.miss.radio.RadioStationPlayActivityActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.miss.QuestionDetailActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"/>
@@ -314,9 +317,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/BaseDialog.Bottom"/>
         <activity
-            android:name=".activity.miss.RewardActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.evaluation.EvaluationStartActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -328,10 +328,6 @@
         <activity
             android:name=".activity.evaluation.HistoryEvaluationResultActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.miss.ReplyActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.miss.RewardMissActivity"
             android:screenOrientation="portrait"
@@ -421,7 +417,6 @@
         <activity
             android:name=".activity.battle.BattleRuleActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.trade.trade.StockOrderActivity"
             android:screenOrientation="portrait"/>

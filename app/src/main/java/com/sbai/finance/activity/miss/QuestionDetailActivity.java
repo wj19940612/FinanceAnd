@@ -30,7 +30,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
-import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
@@ -128,7 +127,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private TextView mRewardNumber;
     private TextView mCommentNumber;
     private TextView mNoComment;
-    private ReplyDialogFragment mReplyDialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -631,35 +629,57 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
+//        intent.putExtra(Launcher.EX_PAYLOAD, mQuestionReply.getUserModel().getId());
+//        intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionReply.getDataId());
+//        intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionReply.getId());
+//        intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionReply.getUserModel().getUserName());
+
+
         if (item != null) {
-            if (mReplyDialogFragment == null) {
-                mReplyDialogFragment = ReplyDialogFragment.newInstance();
-            }
-            mReplyDialogFragment.setItemData(item);
-            if (!mReplyDialogFragment.isAdded()) {
-                mReplyDialogFragment.show(getSupportFragmentManager());
-            }
+            if (LocalUser.getUser().isLogin()) {
+                Launcher.with(getActivity(), CommentActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, item.getUserModel().getId())//mQuestionReply.getUserModel().getId()
+                        .putExtra(Launcher.EX_PAYLOAD_1, item.getDataId())           // mQuestionReply.getDataId()
+                        .putExtra(Launcher.EX_PAYLOAD_2, item.getId())
+                        .putExtra(Launcher.EX_PAYLOAD_3, item.getUserModel().getUserName())
+                        .executeForResult(REQ_COMMENT);
 
-            mReplyDialogFragment.setCallback(new ReplyDialogFragment.Callback() {
-                @Override
-                public void onLoginSuccess() {
-                    stopQuestionVoice();
-                }
-
-                @Override
-                public void onReplySuccess() {
-                    mSet.clear();
-                    mPage = 0;
-                    mReplayMsgId = null;
-                    mSwipeRefreshLayout.setLoadMoreEnable(true);
-                    mListView.removeFooterView(mFootView);
-                    mFootView = null;
-                    requestQuestionDetail();
-                    requestQuestionReplyList(true);
-                    mListView.setSelection(0);
-                }
-            });
+            } else {
+                stopQuestionVoice();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivityForResult(intent, REQ_COMMENT_LOGIN);
+            }
         }
+
+//        if (item != null) {
+//            if (mReplyDialogFragment == null) {
+//                mReplyDialogFragment = ReplyDialogFragment.newInstance();
+//            }
+//            mReplyDialogFragment.setItemData(item);
+//            if (!mReplyDialogFragment.isAdded()) {
+//                mReplyDialogFragment.show(getSupportFragmentManager());
+//            }
+//
+//            mReplyDialogFragment.setCallback(new ReplyDialogFragment.Callback() {
+//                @Override
+//                public void onLoginSuccess() {
+//                    stopQuestionVoice();
+//                }
+//
+//                @Override
+//                public void onReplySuccess() {
+//                    mSet.clear();
+//                    mPage = 0;
+//                    mReplayMsgId = null;
+//                    mSwipeRefreshLayout.setLoadMoreEnable(true);
+//                    mListView.removeFooterView(mFootView);
+//                    mFootView = null;
+//                    requestQuestionDetail();
+//                    requestQuestionReplyList(true);
+//                    mListView.setSelection(0);
+//                }
+//            });
+//        }
     }
 
     @Override
