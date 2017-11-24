@@ -21,6 +21,7 @@ import com.sbai.chart.ChartSettings;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.domain.KlineViewData;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.home.OptionalActivity;
@@ -41,6 +42,7 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
+import com.sbai.finance.utils.StockUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -147,7 +149,7 @@ public abstract class StockTradeActivity extends BaseActivity {
         setContentView(R.layout.activity_stock_trade);
         ButterKnife.bind(this);
 
-        initData();
+        initData(getIntent());
 
         initTabLayout();
         initChartViews();
@@ -367,30 +369,26 @@ public abstract class StockTradeActivity extends BaseActivity {
             } else {
                 mPriceChange.setText(risePrice + "     " + risePercent);
             }
-            mTodayOpen.setText(formatWithDefault(mStockRTData.getOpenPrice()));
-            mHighest.setText(formatWithDefault(mStockRTData.getHighestPrice()));
-            mLowest.setText(formatWithDefault(mStockRTData.getLowestPrice()));
-            mPreClose.setText(formatWithDefault(mStockRTData.getPreClsPrice()));
-            mVolume.setText(formatWithDefault(mStockRTData.getVolume()));
-            mAmount.setText(formatWithDefault(mStockRTData.getTurnover()));
-            mTurnoverRate.setText(formatWithDefault(mStockRTData.getTurnoverRate()));
-            mPriceEarningRate.setText(formatWithDefault(mStockRTData.getPe()));
-            mVolumeRate.setText(formatWithDefault(mStockRTData.getVolRate()));
-            mAmplitude.setText(formatWithDefault(mStockRTData.getAmplitude()));
-            mEquity.setText(formatWithDefault(mStockRTData.getTotalShares()));
-            mMarketValue.setText(formatWithDefault(mStockRTData.getMarketValue()));
+
+            mTodayOpen.setText(StockUtil.getStockDecimal(mStockRTData.getOpenPrice()));
+            mHighest.setText(StockUtil.getStockDecimal(mStockRTData.getHighestPrice()));
+            mLowest.setText(StockUtil.getStockDecimal(mStockRTData.getLowestPrice()));
+            mPreClose.setText(StockUtil.getStockDecimal(mStockRTData.getPreClsPrice()));
+
+            mVolume.setText(StockUtil.getStockVolume(mStockRTData.getVolume()));
+            mAmount.setText(StockUtil.getStockAmount(mStockRTData.getTurnover()));
+            mTurnoverRate.setText(StockUtil.getStockPercentage(mStockRTData.getTurnoverRate()));
+            mPriceEarningRate.setText(StockUtil.getStockDecimal(mStockRTData.getPe()));
+
+            mVolumeRate.setText(StockUtil.getStockDecimal(mStockRTData.getVolRate()));
+            mAmplitude.setText(mStockRTData.getAmplitude());
+            mEquity.setText(StockUtil.getStockAmount(mStockRTData.getTotalShares()));
+            mMarketValue.setText(StockUtil.getStockAmount(mStockRTData.getMarketValue()));
 
             mStockTrendView.setStockRTData(mStockRTData);
         }
         mLastPrice.setTextColor(color);
         mPriceChange.setTextColor(color);
-    }
-
-    private String formatWithDefault(String value) {
-        if (value != null) {
-            return value;
-        }
-        return "--";
     }
 
     private void initTitleBar() {
@@ -420,8 +418,8 @@ public abstract class StockTradeActivity extends BaseActivity {
     public void setUpTitleBar(TitleBar titleBar) {
     }
 
-    private void initData() {
-        mVariety = getIntent().getParcelableExtra(Launcher.EX_PAYLOAD);
+    private void initData(Intent intent) {
+        mVariety = intent.getParcelableExtra(Launcher.EX_PAYLOAD);
     }
 
 
@@ -549,7 +547,9 @@ public abstract class StockTradeActivity extends BaseActivity {
                 }
                 break;
             case R.id.mockTrading:
-
+                Launcher.with(getActivity(), StockTradeOperateActivity.class)
+                        .putExtra(ExtraKeys.VARIETY, mVariety)
+                        .execute();
                 break;
         }
 

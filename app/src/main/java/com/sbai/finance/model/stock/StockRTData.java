@@ -75,7 +75,7 @@ public class StockRTData implements Parcelable {
     private String bidVolume3;
     private String bidVolume4;
     private String bidVolume5;
-    private String downLimitPrice;
+    private String downLimitPrice; // 跌停板
     private String exchangeId;
     private String highestPrice;
     private String instrumentId;
@@ -90,7 +90,7 @@ public class StockRTData implements Parcelable {
     private String turnover; // 成交额
     private String upDropPrice;
     private double upDropSpeed; // 涨幅比例
-    private String upLimitPrice;
+    private String upLimitPrice; // 涨停板
     private long upTime;
     private String upTimeFormat;
     private String volume; // 成交量
@@ -101,39 +101,25 @@ public class StockRTData implements Parcelable {
     private String marketValue; // 总市值
     // 振幅 =（最高价-最低价） / 昨收价
 
+
     public String getAskPrice() {
-        if (askPrice != null) {
-            return FinanceUtil.formatWithScale(askPrice);
-        }
-        return null;
+        return askPrice;
     }
 
     public String getAskPrice2() {
-        if (askPrice2 != null) {
-            return FinanceUtil.formatWithScale(askPrice2);
-        }
-        return null;
+        return askPrice2;
     }
 
     public String getAskPrice3() {
-        if (askPrice3 != null) {
-            return FinanceUtil.formatWithScale(askPrice3);
-        }
-        return null;
+        return askPrice3;
     }
 
     public String getAskPrice4() {
-        if (askPrice4 != null) {
-            return FinanceUtil.formatWithScale(askPrice4);
-        }
-        return null;
+        return askPrice4;
     }
 
     public String getAskPrice5() {
-        if (askPrice5 != null) {
-            return FinanceUtil.formatWithScale(askPrice5);
-        }
-        return null;
+        return askPrice5;
     }
 
     public String getAskVolume() {
@@ -157,38 +143,23 @@ public class StockRTData implements Parcelable {
     }
 
     public String getBidPrice() {
-        if (bidPrice != null) {
-            return FinanceUtil.formatWithScale(bidPrice);
-        }
-        return null;
+        return bidPrice;
     }
 
     public String getBidPrice2() {
-        if (bidPrice2 != null) {
-            return FinanceUtil.formatWithScale(bidPrice2);
-        }
-        return null;
+        return bidPrice2;
     }
 
     public String getBidPrice3() {
-        if (bidPrice3 != null) {
-            return FinanceUtil.formatWithScale(bidPrice3);
-        }
-        return null;
+        return bidPrice3;
     }
 
     public String getBidPrice4() {
-        if (bidPrice4 != null) {
-            return FinanceUtil.formatWithScale(bidPrice4);
-        }
-        return null;
+        return bidPrice4;
     }
 
     public String getBidPrice5() {
-        if (bidPrice5 != null) {
-            return FinanceUtil.formatWithScale(bidPrice5);
-        }
-        return null;
+        return bidPrice5;
     }
 
     public String getBidVolume() {
@@ -219,47 +190,35 @@ public class StockRTData implements Parcelable {
         return exchangeId;
     }
 
-    public String getHighestPrice() {
-        if (highestPrice != null) {
-            return FinanceUtil.formatWithScale(highestPrice);
-        }
-        return null;
-    }
-
     public String getInstrumentId() {
         return instrumentId;
     }
 
+    public String getHighestPrice() {
+        return highestPrice;
+    }
+
     public String getLastPrice() {
-        if (lastPrice != null) {
-            return FinanceUtil.formatWithScale(lastPrice);
-        }
-        return null;
+        return lastPrice;
     }
 
     public String getLowestPrice() {
-        if (lowestPrice != null) {
-            return FinanceUtil.formatWithScale(lowestPrice);
-        }
-        return null;
+        return lowestPrice;
     }
 
     public String getOpenPrice() {
-        if (openPrice != null) {
-            return FinanceUtil.formatWithScale(openPrice);
-        }
-        return null;
+        return openPrice;
     }
 
     public String getPreClsPrice() {
         if (preClsPrice != null) {
-            return FinanceUtil.formatWithScale(preClsPrice);
+            return preClsPrice;
         }
         return getPreSetPrice();
     }
 
     public String getPreSetPrice() {
-        return FinanceUtil.formatWithScale(preSetPrice);
+        return preSetPrice;
     }
 
     public String getSettlePrice() {
@@ -275,14 +234,11 @@ public class StockRTData implements Parcelable {
     }
 
     public String getTurnover() {
-        if (turnover != null) {
-            return FinanceUtil.addUnitWithoutSeparator(Double.parseDouble(turnover));
-        }
-        return null;
+        return turnover;
     }
 
     public String getUpDropPrice() {
-        return FinanceUtil.formatWithScale(upDropPrice);
+        return upDropPrice;
     }
 
     public double getUpDropSpeed() {
@@ -302,45 +258,27 @@ public class StockRTData implements Parcelable {
     }
 
     public String getVolume() {
-        if (volume != null) {
-            return FinanceUtil.addUnitWithoutSeparator(Double.parseDouble(volume));
-        }
-        return null;
+        return volume;
     }
 
     public String getTurnoverRate() {
-        if (turnoverRate != null) {
-            return FinanceUtil.formatToPercentage(Double.parseDouble(turnoverRate));
-        }
-        return null;
+        return turnoverRate;
     }
 
     public String getPe() {
-        if (pe != null) {
-            return FinanceUtil.formatWithScale(pe);
-        }
-        return null;
+        return pe;
     }
 
     public String getVolRate() {
-        if (volRate != null) {
-            return FinanceUtil.formatWithScale(volRate);
-        }
-        return null;
+        return volRate;
     }
 
     public String getTotalShares() {
-        if (totalShares != null) {
-            return FinanceUtil.addUnitWithoutSeparator(Double.parseDouble(totalShares));
-        }
-        return null;
+        return totalShares;
     }
 
     public String getMarketValue() {
-        if (marketValue != null) {
-            return FinanceUtil.addUnitWithoutSeparator(Double.parseDouble(marketValue));
-        }
-        return null;
+        return marketValue;
     }
 
     public String getAmplitude() {

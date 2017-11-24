@@ -185,15 +185,11 @@
                 android:text="@string/detail"
                 android:textColor="#53A5F2"
                 android:textSize="15sp"/>
-
-
         </RelativeLayout>
-
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#F6F6F6"/>
-
 </LinearLayout>

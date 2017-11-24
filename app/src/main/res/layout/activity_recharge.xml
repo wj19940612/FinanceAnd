@@ -17,7 +17,7 @@
         android:gravity="center_vertical"
         app:backFeature="true"
         app:hasBottomSplitLine="true"
-        app:rightText="@string/exchange_rule"
+        app:rightText="@string/rule"
         app:rightTextColor="@color/luckyText"
         app:rightTextRightImage="@drawable/ic_exchange_rule"
         app:rightTextSize="14sp"

@@ -184,7 +184,7 @@ public class MineFragment extends BaseFragment {
             if (data.isTrain() || data.isEvaluate()) {
                 mScore.setVisibility(View.VISIBLE);
                 mScore.setText(String.valueOf((int) data.getUserTotalScore()));
-                mScoreProgress.setText(getString(R.string._more_than_number, FinanceUtil.formatFloorPercent(data.getRank())));
+                mScoreProgress.setText(getString(R.string._more_than_number, FinanceUtil.downToIntegerPercentage(data.getRank())));
             } else {
                 mScore.setVisibility(View.VISIBLE);
                 mScore.setText(String.valueOf(0));

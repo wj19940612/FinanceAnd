@@ -139,8 +139,6 @@ public class StrFormatter {
         }
     }
 
-
-
     public static String getFormatCount(int count) {
         String number = String.valueOf(count);
         int length = number.length();

@@ -433,7 +433,7 @@
     <string name="plus_int">+%1$d</string>
     <string name="minus_int">-%1$d</string>
     <!--  聚宝盆  -->
-    <string name="exchange_rule">规则</string>
+    <string name="rule">规则</string>
     <string name="ingot_number">%1$s  元宝</string>
     <string name="integrate_number">%1$s  积分</string>
     <string name="go_recharge">去充值</string>
@@ -949,6 +949,23 @@
     <string name="equity">总股本</string>
     <string name="marketValue">总市值</string>
     <string name="mock_trading">模拟交易</string>
+    <string name="buy_in">买入</string>
+    <string name="sell_out">卖出</string>
+    <string name="buy_volume">买入量</string>
+    <string name="sell_price">卖出价</string>
+    <string name="sell_volume">卖出量</string>
+    <string name="limit_up_x">涨停：</string>
+    <string name="limit_down_x">跌停：</string>
+    <string name="full_position">全仓</string>
+    <string name="half_position">1/2仓</string>
+    <string name="quarter_position">1/4仓</string>
+    <string name="fee_x">手续费：</string>
+    <string name="sell_out_right_now">立即卖出</string>
+    <string name="buy_in_right_now">立即买入</string>
+    <string name="stock_name_and_market_value">名称/市值</string>
+    <string name="holding_and_salable">持仓/可卖</string>
+    <string name="last_price_and_cost">现价/成本</string>
+    <string name="profit_and_loss">盈亏</string>
     <string name="cost_price_describe">成本价=成交价+交易费用，成本价表示您在这个价位卖出不会亏损</string>
     <string name="fetch_fund_describe">当日卖出的股票，资金可用于再次购买，但不可当日取出(T+1到账)</string>
     <string name="know">知道了</string>

@@ -24,6 +24,13 @@
         <attr name="showBack" format="boolean"/>
     </declare-styleable>
 
+    <!--股票价格交易量的加减修改控件-->
+    <declare-styleable name="PlusMinusEditText">
+        <attr name="android:hint"/>
+        <attr name="changeInterval" format="float"/>
+    </declare-styleable>
+
+    <!--大厅底部 tabs-->
     <declare-styleable name="BottomTabs">
         <attr name="textSize" format="dimension"/>
         <attr name="textColor" format="color"/>
@@ -32,6 +39,7 @@
         <attr name="textPaddingBottom" format="dimension"/>
     </declare-styleable>
 
+    <!--密码输入控件-->
     <declare-styleable name="PasswordEditText">
         <attr name="textHint" format="reference|string"/>
         <attr name="hasBottomSplitLine"/>

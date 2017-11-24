@@ -172,8 +172,8 @@ public class HistoryEvaluationResultActivity extends BaseActivity implements Ada
                 mTime.setText(DateUtil.format(item.getCreateTime(), DateUtil.DEFAULT_FORMAT, "yyyy-MM-dd"));
                 mGrade.setText(getTestGrade(item.getLevel()));
                 mAccuracy.setText(context.getString(R.string.accuracy_ranking,
-                        FinanceUtil.formatToPercentageReplaceZero(item.getAllAccuracy(), 2),
-                        FinanceUtil.formatFloorPercent(item.getPassPercent())));
+                        FinanceUtil.formatToPercentageRemoveTailZero(item.getAllAccuracy(), 2),
+                        FinanceUtil.downToIntegerPercentage(item.getPassPercent())));
             }
 
 
