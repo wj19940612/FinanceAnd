@@ -81,7 +81,7 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
         private int colorCancel = Color.parseColor("#999999");
         private int colorConfirm = Color.parseColor("#303F9F");
         private int btnTextSize = 16;//text btnTextSize of cancel and confirm button
-        private int viewTextSize = 25;
+        private int viewTextSize = 20;
 
         public Builder minYear(int minYear) {
             this.minYear = minYear;

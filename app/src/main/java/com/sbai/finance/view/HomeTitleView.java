@@ -23,6 +23,7 @@ import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +32,8 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * Created by Administrator on 2017\10\25 0025.
@@ -51,19 +54,30 @@ public class HomeTitleView extends RelativeLayout {
     public static final String MEIYUANYOU = "CL";
     public static final String MEIHUANGJIN = "GC";
     public static final String HENGZHI = "HSI";
-
-    @BindView(R.id.verticalScrollText)
-    VerticalScrollTextView mVerticalScrollTextView;
-    @BindView(R.id.indexRL)
-    RelativeLayout mIndexRL;
+    @BindView(R.id.titleBg)
+    ImageView mTitleBg;
+    @BindView(R.id.secondBg)
+    ImageView mSecondBg;
     @BindView(R.id.greetingTitle)
     TextView mGreetingTitle;
     @BindView(R.id.broadcastIcon)
     ImageView mBroadcastIcon;
+    @BindView(R.id.verticalScrollText)
+    VerticalScrollTextView mVerticalScrollText;
     @BindView(R.id.broadcastText)
     TextView mBroadcastText;
+    @BindView(R.id.stockBtn)
+    TextView mStockBtn;
+    @BindView(R.id.futureBtn)
+    TextView mFutureBtn;
+    @BindView(R.id.selectBtn)
+    TextView mSelectBtn;
+    @BindView(R.id.lineBottom)
+    View mLineBottom;
     @BindView(R.id.lookAll)
     TextView mLookAll;
+    @BindView(R.id.lookAllBtn)
+    RelativeLayout mLookAllBtn;
     @BindView(R.id.leftIndex)
     TextView mLeftIndex;
     @BindView(R.id.leftIndexValue)
@@ -72,6 +86,18 @@ public class HomeTitleView extends RelativeLayout {
     TextView mLeftLeftIndexPer;
     @BindView(R.id.leftRightIndexPer)
     TextView mLeftRightIndexPer;
+    @BindView(R.id.leftSelectAddIcon)
+    TextView mLeftSelectAddIcon;
+    @BindView(R.id.leftSelectAddText)
+    TextView mLeftSelectAddText;
+    @BindView(R.id.leftSelectRL)
+    RelativeLayout mLeftSelectRL;
+    @BindView(R.id.leftRL)
+    RelativeLayout mLeftRL;
+    @BindView(R.id.centerLine)
+    View mCenterLine;
+    @BindView(R.id.centerLineRL)
+    RelativeLayout mCenterLineRL;
     @BindView(R.id.centerIndex)
     TextView mCenterIndex;
     @BindView(R.id.centerIndexValue)
@@ -80,6 +106,18 @@ public class HomeTitleView extends RelativeLayout {
     TextView mCenterLeftIndexPer;
     @BindView(R.id.centerRightIndexPer)
     TextView mCenterRightIndexPer;
+    @BindView(R.id.centerSelectAddIcon)
+    TextView mCenterSelectAddIcon;
+    @BindView(R.id.centerSelectAddText)
+    TextView mCenterSelectAddText;
+    @BindView(R.id.centerSelectRL)
+    RelativeLayout mCenterSelectRL;
+    @BindView(R.id.centerRL)
+    RelativeLayout mCenterRL;
+    @BindView(R.id.rightLine)
+    View mRightLine;
+    @BindView(R.id.rightLineRL)
+    RelativeLayout mRightLineRL;
     @BindView(R.id.rightIndex)
     TextView mRightIndex;
     @BindView(R.id.rightIndexValue)
@@ -88,32 +126,26 @@ public class HomeTitleView extends RelativeLayout {
     TextView mRightLeftIndexPer;
     @BindView(R.id.rightRightIndexPer)
     TextView mRightRightIndexPer;
-    @BindView(R.id.centerSelectRL)
-    RelativeLayout mCenterSelectRL;
-    @BindView(R.id.leftSelectRL)
-    RelativeLayout mLeftSelectRL;
+    @BindView(R.id.rightSelectAddIcon)
+    TextView mRightSelectAddIcon;
+    @BindView(R.id.rightSelectAddText)
+    TextView mRightSelectAddText;
     @BindView(R.id.rightSelectRL)
     RelativeLayout mRightSelectRL;
-    @BindView(R.id.rightLine)
-    View mRightLine;
-    @BindView(R.id.centerLine)
-    View mCenterLine;
-    @BindView(R.id.stockBtn)
-    TextView mStockBtn;
-    @BindView(R.id.futureBtn)
-    TextView mfutureBtn;
-    @BindView(R.id.selectBtn)
-    TextView mselectBtn;
-    @BindView(R.id.lookAllBtn)
-    RelativeLayout mLookAllBtn;
-    @BindView(R.id.leftRL)
-    RelativeLayout mLeftRL;
-    @BindView(R.id.centerRL)
-    RelativeLayout mCenterRL;
     @BindView(R.id.rightRL)
     RelativeLayout mRightRL;
+    @BindView(R.id.indexRL)
+    RelativeLayout mIndexRL;
+    @BindView(R.id.stockImg)
+    GifImageView mStockImg;
+    @BindView(R.id.simulateTrade)
+    RelativeLayout mSimulateTrade;
+    @BindView(R.id.practice)
+    TextView mPractice;
+    @BindView(R.id.studyRoom)
+    TextView mStudyRoom;
 
-
+    private GifDrawable mGifFromResource;
     private Context mContext;
     private int oldButton;
     private Map<String, FutureData> futureDataMap = new HashMap<String, FutureData>();
@@ -148,7 +180,7 @@ public class HomeTitleView extends RelativeLayout {
 
     public void setOnBroadcastListener(VerticalScrollTextView.OnItemClickListener onBroadcastListener) {
         mOnBroadcastListener = onBroadcastListener;
-        mVerticalScrollTextView.setOnItemClickListener(onBroadcastListener);
+        mVerticalScrollText.setOnItemClickListener(onBroadcastListener);
     }
 
     private OnClickItemListener mOnClickItemListener;
@@ -169,6 +201,8 @@ public class HomeTitleView extends RelativeLayout {
         public void onPractice();
 
         public void onDaySubjuect();
+
+        public void onStockSimulate();
     }
 
     private OnLookAllClickListener mOnLookAllClickListener;
@@ -192,7 +226,7 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     public void stopVerticalSrcoll() {
-        mVerticalScrollTextView.stopAutoScroll();
+        mVerticalScrollText.stopAutoScroll();
     }
 
     public Map<String, FutureData> getFutureDataMap() {
@@ -216,6 +250,20 @@ public class HomeTitleView extends RelativeLayout {
     private void init() {
         LayoutInflater.from(mContext).inflate(R.layout.layout_home_title, this, true);
         ButterKnife.bind(this);
+        initGif();
+    }
+
+    private void initGif() {
+        try {
+            mGifFromResource = new GifDrawable(getResources(), R.drawable.ic_stock_simulate);
+            mStockImg.setImageDrawable(mGifFromResource);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void freeGif() {
+        mGifFromResource.recycle();
     }
 
 //    public void putNewFutureData(FutureData futureData) {
@@ -288,10 +336,10 @@ public class HomeTitleView extends RelativeLayout {
         if (noticeRadios != null && noticeRadios.size() > 1) {
             mBroadcastIcon.setVisibility(View.VISIBLE);
             mBroadcastText.setVisibility(View.GONE);
-            mVerticalScrollTextView.setVisibility(View.VISIBLE);
-            mVerticalScrollTextView.setNoticeRadios(noticeRadios);
+            mVerticalScrollText.setVisibility(View.VISIBLE);
+            mVerticalScrollText.setNoticeRadios(noticeRadios);
         } else if (noticeRadios != null) {
-            mVerticalScrollTextView.setVisibility(View.GONE);
+            mVerticalScrollText.setVisibility(View.GONE);
             mBroadcastIcon.setVisibility(View.VISIBLE);
             mBroadcastText.setVisibility(View.VISIBLE);
             mBroadcastText.setText(noticeRadios.get(0).getTitle());
@@ -309,7 +357,7 @@ public class HomeTitleView extends RelativeLayout {
     //设置名言
     public void setDictum(final List<Dictum> dictums) {
         mBroadcastIcon.setVisibility(View.GONE);
-        mVerticalScrollTextView.setVisibility(View.GONE);
+        mVerticalScrollText.setVisibility(View.GONE);
         mBroadcastText.setVisibility(View.VISIBLE);
         if (dictums != null && dictums.get(0) != null && !TextUtils.isEmpty(dictums.get(0).getContent())) {
             mBroadcastText.setText(dictums.get(0).getContent());
@@ -324,7 +372,7 @@ public class HomeTitleView extends RelativeLayout {
         }
     }
 
-    @OnClick({R.id.stockBtn, R.id.futureBtn, R.id.selectBtn, R.id.centerSelectRL, R.id.leftSelectRL, R.id.rightSelectRL, R.id.lookAllBtn, R.id.practiceBtn, R.id.writeTopicBtn})
+    @OnClick({R.id.stockBtn, R.id.futureBtn, R.id.selectBtn, R.id.centerSelectRL, R.id.leftSelectRL, R.id.rightSelectRL, R.id.lookAllBtn, R.id.practice, R.id.studyRoom, R.id.simulateTrade})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.stockBtn:
@@ -366,12 +414,17 @@ public class HomeTitleView extends RelativeLayout {
                     mOnLookAllClickListener.onLookAll();
                 }
                 break;
-            case R.id.practiceBtn:
+            case R.id.simulateTrade:
+                if (mOnLookAllClickListener != null) {
+                    mOnLookAllClickListener.onStockSimulate();
+                }
+                break;
+            case R.id.practice:
                 if (mOnLookAllClickListener != null) {
                     mOnLookAllClickListener.onPractice();
                 }
                 break;
-            case R.id.writeTopicBtn:
+            case R.id.studyRoom:
                 if (mOnLookAllClickListener != null) {
                     mOnLookAllClickListener.onDaySubjuect();
                 }

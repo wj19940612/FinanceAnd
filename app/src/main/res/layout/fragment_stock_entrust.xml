@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
     <include layout="@layout/layout_stock_entrust_title"/>
 
@@ -22,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
+            android:background="@android:color/white"
             android:drawablePadding="10dp"
             android:drawableTop="@drawable/img_no_message"
             android:gravity="center_horizontal"

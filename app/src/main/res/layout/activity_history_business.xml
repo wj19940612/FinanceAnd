@@ -3,7 +3,7 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/background"
+              android:background="@android:color/white"
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
@@ -21,7 +21,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
             android:orientation="vertical">
 
             <include layout="@layout/layout_stock_business_date"/>
@@ -31,15 +30,13 @@
             <com.sbai.finance.view.EmptyRecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/white"/>
+                android:layout_height="match_parent"/>
 
             <TextView
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:background="@color/background"
                 android:drawablePadding="10dp"
                 android:drawableTop="@drawable/img_no_message"
                 android:gravity="center_horizontal"

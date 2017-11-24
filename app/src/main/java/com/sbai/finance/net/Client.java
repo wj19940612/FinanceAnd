@@ -3049,6 +3049,35 @@ public class Client {
     }
 
     /**
+     * 查询委托记录
+     *
+     * @param positionType
+     * @param userAccount
+     * @param activityCode
+     * @param page
+     * @return
+     */
+    public static API requestEntrust(int positionType, String userAccount, String activityCode, int page) {
+        return new API("/api/stock-or/declare/bargain.do", new ApiParams()
+                .put("positionType", positionType)
+                .put("userAccount", userAccount)
+                .put("activityCode", activityCode)
+                .put("page", page));
+    }
+
+    /**
+     * 撤单
+     *
+     * @param id
+     * @return
+     */
+    public static API requestWithdraw(int id) {
+        return new API("/api/stock-or/declare/cancel.do", new ApiParams()
+                .put("id", id));
+    }
+
+
+    /**
      * 小姐姐管理--查询最新的推荐电台(薛松)
      *
      * @return

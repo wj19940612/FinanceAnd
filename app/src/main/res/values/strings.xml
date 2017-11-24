@@ -60,7 +60,8 @@
     <string name="all_day_news">7x24小时</string>
     <string name="focus_news">要闻</string>
     <string name="week_">星期%1$s</string>
-
+    <string name="practice">练一练</string>
+    <string name="study_room">一日一题</string>
     <!--opinion-->
 
     <!--optional-->
@@ -928,6 +929,7 @@
     <string name="tips">温馨提示</string>
     <string name="is_confirm_withdraw">订单撤销后将无法恢复，是否确定\n撤销该订单?</string>
     <string name="confirm_withdraw">确定撤单</string>
+    <string name="stock_simulate">A股模拟</string>
 
     <!--姐说-->
     <string name="radio">电台</string>
@@ -963,4 +965,7 @@
     <string name="holding_and_salable">持仓/可卖</string>
     <string name="last_price_and_cost">现价/成本</string>
     <string name="profit_and_loss">盈亏</string>
+    <string name="cost_price_describe">成本价=成交价+交易费用，成本价表示您在这个价位卖出不会亏损</string>
+    <string name="fetch_fund_describe">当日卖出的股票，资金可用于再次购买，但不可当日取出(T+1到账)</string>
+    <string name="know">知道了</string>
 </resources>

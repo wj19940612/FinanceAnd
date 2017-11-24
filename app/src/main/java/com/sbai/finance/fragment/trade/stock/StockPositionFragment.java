@@ -11,10 +11,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.stocktrade.Position;
@@ -24,6 +26,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.view.EmptyRecyclerView;
+import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +35,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -46,7 +50,11 @@ public class StockPositionFragment extends BaseFragment {
     @BindView(R.id.empty)
     TextView mEmpty;
     Unbinder unbinder;
+    @BindView(R.id.stockPrompt)
+    ImageView mStockPrompt;
     private PositionAdapter mPositionAdapter;
+    private Map<String, Position> mPositionMap;
+    private PositionRecords mPositionRecords;
 
     @Nullable
     @Override
@@ -59,6 +67,7 @@ public class StockPositionFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mPositionMap = new HashMap<>();
         initView();
         initRecyclerView();
     }
@@ -67,7 +76,19 @@ public class StockPositionFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         requestAsset();
+        startScheduleJob(5 * 1000);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopScheduleJob();
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        requestStockMarketData();
     }
 
     private void requestAsset() {
@@ -76,9 +97,44 @@ public class StockPositionFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<PositionRecords>, PositionRecords>() {
                     @Override
                     protected void onRespSuccessData(PositionRecords data) {
-                        updatePosition(data.getList());
+                        updateAssetAndPosition(data);
                     }
                 }).fireFree();
+    }
+
+    private void updateAssetAndPosition(PositionRecords data) {
+        mPositionMap.clear();
+        mPositionAdapter.clear();
+        mPositionAdapter.addAll(data.getList());
+        for (Position position : data.getList()) {
+            mPositionMap.put(position.getVarietyCode(), position);
+        }
+        if (getActivity() instanceof StockOrderActivity) {
+            StockOrderActivity activity = (StockOrderActivity) getActivity();
+            activity.updateEnableAndFetchFund(data);
+        }
+        requestStockMarketData();
+    }
+
+    private void requestStockMarketData() {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Position> entry : mPositionMap.entrySet()) {
+            sb.append(entry.getKey()).append(",");
+        }
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+            Client.getStockMarketData(sb.toString())
+                    .setCallback(new Callback2D<Resp<List<StockData>>, List<StockData>>() {
+                        @Override
+                        protected void onRespSuccessData(List<StockData> result) {
+                            mPositionAdapter.addStockData(result);
+                            if (getActivity() instanceof StockOrderActivity) {
+                                StockOrderActivity activity = (StockOrderActivity) getActivity();
+                                activity.updateAssetAndPosition(result, mPositionMap);
+                            }
+                        }
+                    }).fireFree();
+        }
     }
 
     private void initView() {
@@ -134,9 +190,19 @@ public class StockPositionFragment extends BaseFragment {
         }
     }
 
-    private void updatePosition(List<Position> data) {
-        mPositionAdapter.clear();
-        mPositionAdapter.addAll(data);
+    @OnClick(R.id.stockPrompt)
+    public void onViewClicked() {
+        showTipDialog();
+    }
+
+    private void showTipDialog() {
+        SmartDialog.single(getActivity())
+                .setTitle(R.string.tips)
+                .setMessage(getString(R.string.cost_price_describe))
+                .setNegative(R.string.know)
+                .setPositiveVisable(View.GONE)
+                .show();
+
     }
 
     static class PositionAdapter extends RecyclerView.Adapter<PositionAdapter.ViewHolder> {
@@ -261,6 +327,8 @@ public class StockPositionFragment extends BaseFragment {
                 mPositionAmount.setTextColor(color);
                 mEnableAmount.setText(String.valueOf(stockPosition.getUsableQty()));
                 mEnableAmount.setTextColor(color);
+                mFloatRate.setTextColor(color);
+                mFloatValue.setTextColor(color);
                 if (TextUtils.isEmpty(lastPriceStr)) {
                     mLastPrice.setText("-.-");
                     mFloatValue.setText("0.00");
@@ -270,9 +338,9 @@ public class StockPositionFragment extends BaseFragment {
                     double difference = Double.valueOf(lastPriceStr) - stockPosition.getAvgBuyPrice();
                     mFloatValue.setText(FinanceUtil.formatWithScale(difference * stockPosition.getTotalQty()));
                     if (difference > 0) {
-                        mFloatRate.setText("+" + FinanceUtil.downToIntegerPercentage(difference / stockPosition.getAvgBuyPrice()));
+                        mFloatRate.setText("+" + FinanceUtil.formatToPercentage(difference / stockPosition.getAvgBuyPrice()));
                     } else if (difference < 0) {
-                        mFloatRate.setText(FinanceUtil.downToIntegerPercentage(difference / stockPosition.getAvgBuyPrice()));
+                        mFloatRate.setText(FinanceUtil.formatToPercentage(difference / stockPosition.getAvgBuyPrice()));
                     } else {
                         mFloatRate.setText("0%");
                     }
@@ -280,6 +348,10 @@ public class StockPositionFragment extends BaseFragment {
                 mLastPrice.setTextColor(color);
                 mCostPrice.setText(String.valueOf(stockPosition.getAvgBuyPrice()));
                 mCostPrice.setTextColor(color);
+                mOperateArea.setVisibility(View.GONE);
+                if (position == index) {
+                    mOperateArea.setVisibility(View.VISIBLE);
+                }
                 mPositionArea.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -295,6 +367,38 @@ public class StockPositionFragment extends BaseFragment {
                         }
                     }
                 });
+                mBuy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        hideOperateView();
+                        if (itemClickListener != null) {
+                            itemClickListener.buy(stockPosition);
+                        }
+                    }
+                });
+                mSell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        hideOperateView();
+                        if (itemClickListener != null) {
+                            itemClickListener.sell(stockPosition);
+                        }
+                    }
+                });
+                mPositionDetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        hideOperateView();
+                        if (itemClickListener != null) {
+                            itemClickListener.detail(stockPosition);
+                        }
+                    }
+                });
+            }
+
+            private void hideOperateView() {
+                mOperateArea.setVisibility(View.GONE);
+                index = -1;
             }
         }
     }

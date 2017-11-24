@@ -51,32 +51,35 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <TextView
+        <com.sbai.finance.view.autofit.AutofitTextView
             android:id="@+id/todayProfit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/common_padding"
             android:layout_weight="3"
+            android:maxLines="1"
             android:text="- -"
             android:textColor="@android:color/white"
             android:textSize="24sp"/>
 
-        <TextView
+        <com.sbai.finance.view.autofit.AutofitTextView
             android:id="@+id/totalFund"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/common_padding"
             android:layout_weight="2"
+            android:maxLines="1"
             android:text="- -"
             android:textColor="@color/eighty_white"
             android:textSize="15sp"
             tool:text="4929894.00"/>
 
-        <TextView
+        <com.sbai.finance.view.autofit.AutofitTextView
             android:id="@+id/totalMarket"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:maxLines="1"
             android:text="- -"
             android:textColor="@color/eighty_white"
             android:textSize="15sp"/>
@@ -115,6 +118,7 @@
             android:gravity="bottom">
 
             <TextView
+                android:id="@+id/fetchFundDescribe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="3dp"
@@ -132,32 +136,35 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <TextView
+        <com.sbai.finance.view.autofit.AutofitTextView
             android:id="@+id/holdingFloat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/common_padding"
             android:layout_weight="3"
+            android:maxLines="1"
             android:text="- -"
             android:textColor="@android:color/white"
             android:textSize="24sp"/>
 
-        <TextView
+        <com.sbai.finance.view.autofit.AutofitTextView
             android:id="@+id/enableFund"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/common_padding"
             android:layout_weight="2"
+            android:maxLines="1"
             android:text="- -"
             android:textColor="@color/eighty_white"
             android:textSize="15sp"
             tool:text="4929894.00"/>
 
-        <TextView
+        <com.sbai.finance.view.autofit.AutofitTextView
             android:id="@+id/fetchFund"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:maxLines="1"
             android:text="- -"
             android:textColor="@color/eighty_white"
             android:textSize="15sp"/>

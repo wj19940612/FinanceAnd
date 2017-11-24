@@ -31,7 +31,7 @@ public class Entrust {
     private String varietyName;
     private int quantity;
     private double bargainPrice;
-    private int price;
+    private double price;
     private double totalBargain;
     private int moiety;
     private int succQuantity;
@@ -85,11 +85,11 @@ public class Entrust {
         this.bargainPrice = bargainPrice;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
