@@ -597,10 +597,8 @@
     <string name="ignot_not_enough">元宝不足</string>
     <string name="praise">赞</string>
     <string name="play_failure">播放失败</string>
-    <string name="subscribe">订阅</string>
+    <string name="just_subscribe">订阅</string>
     <string name="subscribed">已订阅</string>
-    <string name="look_more">查看更多</string>
-    <string name="pack_up">收起</string>
     <string name="i_want_to_race_answer">我要抢答</string>
     <string name="i_want_to_ask">我要提问</string>
     <string name="create_radio_station">创建电台</string>

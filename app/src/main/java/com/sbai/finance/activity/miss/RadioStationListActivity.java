@@ -2,10 +2,12 @@ package com.sbai.finance.activity.miss;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -50,7 +52,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017\11\21 0021.
  */
 
-public class RadioStationListActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class RadioStationListActivity extends BaseActivity implements AdapterView.OnItemClickListener,MissAudioManager.OnAudioListener{
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -59,7 +61,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     @BindView(R.id.swipeRefreshLayout)
     VerticalSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.root)
-    LinearLayout mRoot;
+    RelativeLayout mRoot;
     @BindView(R.id.missFloatWindow)
     MissFloatWindow mMissFloatWindow;
 
@@ -89,8 +91,10 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
         mListView.setAdapter(mRadioStationAdapter);
         mListView.setOnItemClickListener(this);
 
-        initHeaderView();
         initFloatWindow();
+        MissAudioManager.get().addAudioListener(this);
+
+        initHeaderView();
         initSwipeRefreshLayout();
         requestRadioStationDetail();
         requestRadioProgram();
@@ -98,9 +102,6 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
 
     private void initData(Intent intent) {
         mRadioStationId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
-        if (mRadioStationId == -1) {
-            mRadioStationId = 2;
-        }
     }
 
     private void initHeaderView() {
@@ -258,7 +259,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
         mRadioInfo = radioInfo;
         GlideApp.with(this).load(radioInfo.getRadioCover())
                 .placeholder(R.drawable.ic_default_image)
-                .centerCrop()
+                .centerCrop().fallback(getResources().getDrawable(R.drawable.bg_radio_big_cover))
                 .into(mCover);
 
         GlideApp.with(this).load(radioInfo.getUserPortrait())
@@ -309,6 +310,41 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
         super.onDestroy();
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onAudioStart() {
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (audio instanceof Question) {
+            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
+        }
+    }
+
+    @Override
+    public void onAudioPlay() {
+        mMissFloatWindow.startAnim();
+    }
+
+    @Override
+    public void onAudioPause() {
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onAudioResume() {
+        mMissFloatWindow.startAnim();
+    }
+
+    @Override
+    public void onAudioStop() {
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onAudioError() {
+
     }
 
     static class RadioStationAdapter extends ArrayAdapter<AudioInfo> {

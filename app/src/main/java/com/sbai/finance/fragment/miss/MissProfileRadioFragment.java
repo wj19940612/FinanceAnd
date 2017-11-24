@@ -129,7 +129,6 @@ public class MissProfileRadioFragment extends BaseFragment {
                     mEmpty.setVisibility(View.GONE);
                     updateRadioData(data);
                 } else {
-                    mRecyclerView.setVisibility(View.GONE);
                     mEmpty.setVisibility(View.VISIBLE);
                 }
 
