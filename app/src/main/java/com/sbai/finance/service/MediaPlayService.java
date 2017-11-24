@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.utils.MissAudioManager;
@@ -21,11 +22,13 @@ import com.sbai.finance.utils.TimerHandler;
 
 public class MediaPlayService extends Service implements TimerHandler.TimerCallback, MissAudioManager.OnAudioListener {
 
-    private static final int DEFAULT_UPDATE_MEDIA_PROGRESS = 100;
+    private static final String TAG = "MediaPlayService";
+
+    private static final int DEFAULT_UPDATE_MEDIA_PROGRESS = 200;
 
     public static final String BROADCAST_ACTION_MEDIA_START = "broadcast_action_media_start";
     public static final String BROADCAST_ACTION_MEDIA_PLAY = "broadcast_action_media_play";
-    public static final String BROADCAST_ACTION_MEDIA_PAUSE = "BROADCAST_ACTION_MEDIA_PAUSE";
+    public static final String BROADCAST_ACTION_MEDIA_PAUSE = "broadcast_action_media_pause";
     public static final String BROADCAST_ACTION_MEDIA_RESUME = "broadcast_action_media_resume";
     public static final String BROADCAST_ACTION_MEDIA_STOP = "broadcast_action_media_stop";
     public static final String BROADCAST_ACTION_MEDIA_ERROR = "broadcast_action_media_error";
@@ -33,7 +36,8 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
     public static final String BROADCAST_ACTION_MEDIA_PROGRESS = "broadcast_action_media_progress";
 
     public static final int MEDIA_SOURCE_RECOMMEND_RADIO = 1;//音频的来源  推荐电台 或者电台详情
-    public static final int MEDIA_SOURCE_RECOMMEND_QUESTION = 2;//音频的来源  问答或者小姐姐主页
+    public static final int MEDIA_SOURCE_HOT_QUESTION = 2;//音频的来源  最热提问
+    public static final int MEDIA_SOURCE_LATEST_QUESTION = 3;//音频的来源  最新提问
 
 
     private TimerHandler mTimerHandler;
@@ -58,21 +62,23 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
     public void onCreate() {
         super.onCreate();
         mTimerHandler = new TimerHandler(this);
-        MissAudioManager.get().addAudioListener(this);
         mMediaPlayIntent = new Intent();
         mMissAudioManager = MissAudioManager.get();
+        mMissAudioManager.addAudioListener(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (mMissAudioManager == null) {
             mMissAudioManager = MissAudioManager.get();
+            mMissAudioManager.addAudioListener(this);
         }
         return super.onStartCommand(intent, flags, startId);
     }
 
     public void startPlay(MissAudioManager.IAudio iAudio, int source) {
         mSource = source;
+        mIAudio = iAudio;
         if (mMissAudioManager != null) {
             mMissAudioManager.start(iAudio, source);
         }
@@ -92,6 +98,7 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
 
     @Override
     public void onTimeUp(int count) {
+        mMediaPlayIntent.setAction(BROADCAST_ACTION_MEDIA_PROGRESS);
         mMediaPlayIntent.putExtra(ExtraKeys.MEDIA_PROGRESS, mMissAudioManager.getCurrentPosition());
         mMediaPlayIntent.putExtra(ExtraKeys.MEDIA_TOTAL_PROGRESS, mMissAudioManager.getDuration());
         LocalBroadcastManager.getInstance(this).sendBroadcast(mMediaPlayIntent);
@@ -101,26 +108,52 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
     public void onDestroy() {
         super.onDestroy();
         mTimerHandler.removeCallbacksAndMessages(null);
+        MissAudioManager.get().removeAudioListener(this);
+        mMissAudioManager = null;
+        mMediaPlayIntent = null;
     }
 
     @Override
     public void onAudioStart() {
         mTimerHandler.sendEmptyMessageDelayed(DEFAULT_UPDATE_MEDIA_PROGRESS, 0);
+        mMediaPlayIntent.setAction(BROADCAST_ACTION_MEDIA_START);
+        if (mIAudio != null) {
+            mMediaPlayIntent.putExtra(ExtraKeys.IAudio, mIAudio.getAudioId());
+        }
+        mMediaPlayIntent.putExtra(ExtraKeys.MEDIA_PLAY_SOURCE, mSource);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(mMediaPlayIntent);
     }
 
     @Override
     public void onAudioPlay() {
-
+        mMediaPlayIntent.setAction(BROADCAST_ACTION_MEDIA_PLAY);
+        if (mIAudio != null) {
+            mMediaPlayIntent.putExtra(ExtraKeys.IAudio, mIAudio.getAudioId());
+        }
+        mMediaPlayIntent.putExtra(ExtraKeys.MEDIA_PLAY_SOURCE, mSource);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(mMediaPlayIntent);
     }
 
     @Override
     public void onAudioPause() {
-
+        mMediaPlayIntent.setAction(BROADCAST_ACTION_MEDIA_PAUSE);
+        if (mIAudio != null) {
+            mMediaPlayIntent.putExtra(ExtraKeys.IAudio, mIAudio.getAudioId());
+        }
+        mMediaPlayIntent.putExtra(ExtraKeys.MEDIA_PLAY_SOURCE, mSource);
+        mTimerHandler.removeCallbacksAndMessages(null);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(mMediaPlayIntent);
     }
 
     @Override
     public void onAudioResume() {
-
+        mMediaPlayIntent.setAction(BROADCAST_ACTION_MEDIA_RESUME);
+        if (mIAudio != null) {
+            mMediaPlayIntent.putExtra(ExtraKeys.IAudio, mIAudio.getAudioId());
+        }
+        mMediaPlayIntent.putExtra(ExtraKeys.MEDIA_PLAY_SOURCE, mSource);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(mMediaPlayIntent);
+        mTimerHandler.sendEmptyMessageDelayed(DEFAULT_UPDATE_MEDIA_PROGRESS, 0);
     }
 
     @Override
@@ -142,7 +175,7 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
         }
         mMediaPlayIntent.putExtra(ExtraKeys.MEDIA_PLAY_SOURCE, mSource);
         LocalBroadcastManager.getInstance(this).sendBroadcast(mMediaPlayIntent);
-//        mTimerHandler.removeCallbacksAndMessages(null);
+        mTimerHandler.removeCallbacksAndMessages(null);
     }
 
 
@@ -154,16 +187,35 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
                 int IAudioId = intent.getIntExtra(ExtraKeys.IAudio, -1);
                 int source = intent.getIntExtra(ExtraKeys.MEDIA_PLAY_SOURCE, -1);
                 switch (intent.getAction()) {
+                    case BROADCAST_ACTION_MEDIA_START:
+                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_START ");
+                        onMediaPlayStart(IAudioId, source);
+                        break;
+                    case BROADCAST_ACTION_MEDIA_PLAY:
+                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_PLAY ");
+                        onMediaPlay(IAudioId, source);
+                        break;
+                    case BROADCAST_ACTION_MEDIA_RESUME:
+                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_RESUME ");
+                        onMediaPlayResume(IAudioId, source);
+                        break;
+                    case BROADCAST_ACTION_MEDIA_PAUSE:
+                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_PAUSE ");
+                        onMediaPlayPause(IAudioId, source);
+                        break;
                     case BROADCAST_ACTION_MEDIA_STOP:
+                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_STOP ");
                         onMediaPlayStop(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_ERROR:
+                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_ERROR ");
                         onMediaPlayError(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_PROGRESS:
                         int mediaPlayCurrentPosition = intent.getIntExtra(ExtraKeys.MEDIA_PROGRESS, -1);
                         int totalDuration = intent.getIntExtra(ExtraKeys.MEDIA_TOTAL_PROGRESS, 0);
-                        onMediaPlayCurrentPosition(IAudioId, source, mediaPlayCurrentPosition, totalDuration * 1000);
+//                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_PROGRESS "+ mediaPlayCurrentPosition+"  "+totalDuration);
+                        onMediaPlayCurrentPosition(IAudioId, source, mediaPlayCurrentPosition, totalDuration);
                         break;
                     default:
                         onOtherReceive(context, intent);
@@ -174,9 +226,18 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
 
         public abstract void onOtherReceive(Context context, Intent intent);
 
+        public abstract void onMediaPlayStart(int IAudioId, int source);
+
+        public abstract void onMediaPlayResume(int IAudioId, int source);
+
+        public abstract void onMediaPlayPause(int IAudioId, int source);
+
         public abstract void onMediaPlayStop(int IAudioId, int source);
 
         public abstract void onMediaPlayError(int IAudioId, int source);
+
+        public abstract void onMediaPlay(int IAudioId, int source);
+
 
         /**
          * @param IAudioId

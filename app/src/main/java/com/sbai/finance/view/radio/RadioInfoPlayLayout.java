@@ -1,6 +1,7 @@
 package com.sbai.finance.view.radio;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
@@ -14,10 +15,12 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -44,6 +47,19 @@ public class RadioInfoPlayLayout extends LinearLayout {
     private Unbinder mBind;
     private Radio mRadio;
 
+    private OnRadioPlayListener mOnRadioPlayListener;
+
+
+    public interface OnRadioPlayListener {
+        void onRadioPlay();
+
+        void onSeekChange(int progress);
+    }
+
+    public void mOnRadioPlayListener(OnRadioPlayListener onRadioPlayListener) {
+        mOnRadioPlayListener = onRadioPlayListener;
+    }
+
     public RadioInfoPlayLayout(Context context) {
         this(context, null);
     }
@@ -57,7 +73,6 @@ public class RadioInfoPlayLayout extends LinearLayout {
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_radio_play, this, true);
         mBind = ButterKnife.bind(this, view);
-
     }
 
     @Override
@@ -65,6 +80,22 @@ public class RadioInfoPlayLayout extends LinearLayout {
         super.onDetachedFromWindow();
         mBind.unbind();
         mOnSeekBarChangeListener = null;
+    }
+
+    public void setRadioProgress(int progress) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mRadioSeekBar.setProgress(progress, true);
+        } else {
+            mRadioSeekBar.setProgress(progress);
+        }
+    }
+
+    public void setPlayStatus(MissAudioManager.IAudio audio) {
+        if (MissAudioManager.get().isStarted(audio)) {
+            mPlay.setSelected(true);
+        } else {
+            mPlay.setSelected(false);
+        }
     }
 
     public void setRadio(Radio radio) {
@@ -76,13 +107,15 @@ public class RadioInfoPlayLayout extends LinearLayout {
         mRadioTotalLength.setText(DateUtil.format(radio.getAudioTime(), DateUtil.FORMAT_HOUR_MINUTE));
         mListenNumber.setText(String.valueOf(radio.getViewNumber()));
         mRadioSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
-
+        setPlayStatus(radio);
     }
 
     private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-
+            if (mOnRadioPlayListener != null) {
+                mOnRadioPlayListener.onSeekChange(progress);
+            }
         }
 
         @Override
@@ -95,5 +128,12 @@ public class RadioInfoPlayLayout extends LinearLayout {
 
         }
     };
+
+    @OnClick(R.id.play)
+    public void onViewClicked() {
+        if (mOnRadioPlayListener != null) {
+            mOnRadioPlayListener.onRadioPlay();
+        }
+    }
 
 }

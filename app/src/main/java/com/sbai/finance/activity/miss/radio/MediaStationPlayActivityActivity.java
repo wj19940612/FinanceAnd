@@ -1,5 +1,7 @@
 package com.sbai.finance.activity.miss.radio;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -15,7 +17,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.miss.MediaPlayActivity;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.model.radio.RadioDetails;
 import com.sbai.finance.net.Callback2D;
@@ -29,8 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class RadioStationPlayActivityActivity extends BaseActivity {
-
+public class MediaStationPlayActivityActivity extends MediaPlayActivity {
 
     @BindView(R.id.radioPlayLL)
     RadioInfoPlayLayout mRadioPlayLL;
@@ -62,6 +63,7 @@ public class RadioStationPlayActivityActivity extends BaseActivity {
         ButterKnife.bind(this);
         initData();
         initView();
+
     }
 
     @Override
@@ -76,6 +78,7 @@ public class RadioStationPlayActivityActivity extends BaseActivity {
             mRadioInfoLayout.setRadio(mRadio);
             mRadioPlayLL.setRadio(mRadio);
         }
+
     }
 
     private void requestRadioDetails(Radio radio) {
@@ -121,6 +124,46 @@ public class RadioStationPlayActivityActivity extends BaseActivity {
         sOnOffsetChangedListener = null;
     }
 
+    @Override
+    public void onMediaPlayStart(int IAudioId, int source) {
+
+    }
+
+    @Override
+    public void onMediaPlay(int IAudioId, int source) {
+
+    }
+
+    @Override
+    public void onMediaPlayResume(int IAudioId, int source) {
+
+    }
+
+    @Override
+    public void onMediaPlayPause(int IAudioId, int source) {
+
+    }
+
+    @Override
+    protected void onMediaPlayStop(int IAudioId, int source) {
+
+    }
+
+    @Override
+    protected void onMediaPlayError(int IAudioId, int source) {
+
+    }
+
+    @Override
+    public void onOtherReceive(Context context, Intent intent) {
+
+    }
+
+    @Override
+    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
+
+    }
+
     @OnClick({R.id.back, R.id.share})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -143,7 +186,7 @@ public class RadioStationPlayActivityActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ((RadioReviewAdapter.ViewHolder)holder).bindDataWithView();
+            ((RadioReviewAdapter.ViewHolder) holder).bindDataWithView();
         }
 
         @Override

@@ -95,6 +95,10 @@ public class MissAudioManager {
         start(audio);
     }
 
+    public int getSource() {
+        return mSource;
+    }
+
     public void start(IAudio audio) {
         mUuid = uuid(audio);
         mAudio = audio;
@@ -246,8 +250,8 @@ public class MissAudioManager {
         return 0;
     }
 
-    public long getDuration() {
-        if (mMediaPlayer != null) {
+    public int getDuration() {
+        if (mMediaPlayer != null && !mPreparing) {
             return mMediaPlayer.getDuration();
         }
         return 0;

@@ -99,7 +99,6 @@ public class RadioInfoLayout extends LinearLayout {
         mRadio = radio;
         mVoiceName.setText(radio.getAudioName());
         mVoiceIntroduce.setContentText(radio.getAudioIntroduction());
-
     }
 
     public void setRadioDetails(RadioDetails radioDetails) {

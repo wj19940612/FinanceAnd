@@ -1,19 +1,23 @@
 package com.sbai.finance.activity;
 
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.miss.MediaPlayActivity;
 import com.sbai.finance.fragment.ArenaFragment;
 import com.sbai.finance.fragment.HomePageFragment;
 import com.sbai.finance.fragment.InformationAndFocusFragment;
@@ -43,7 +47,7 @@ import com.sbai.httplib.ApiError;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
+public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListener {
 
     private static final int REQ_CODE_FEEDBACK_LOGIN = 23333;
 
@@ -59,12 +63,27 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
 
     private MainFragmentsAdapter mMainFragmentsAdapter;
     private StartDialogFragment mStartDialogFragment;
+    private MediaPlayService mMediaPlayService;
+
+    protected ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mMediaPlayService = ((MediaPlayService.MediaBinder) iBinder).getMediaPlayService();
+            MissTalkFragment fragment = (MissTalkFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_MISS);
+            if (fragment != null) {
+                fragment.setService(mMediaPlayService);
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+        }
+    };
 
     @Override
     protected void
     onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
@@ -72,6 +91,9 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         checkVersion();
         requestServiceConnectWay();
         handleIntentData(getIntent());
+
+        Intent intent = new Intent(this, MediaPlayService.class);
+        bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
     }
 
     private void requestStartActivities() {
@@ -96,10 +118,6 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         handleIntentData(intent);
-    }
-
-    public MediaPlayService getMediaPlayService() {
-        return mMediaPlayService;
     }
 
     private void handleIntentData(Intent intent) {
@@ -218,6 +236,10 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         }
     }
 
+    public MediaPlayService getMediaPlayService() {
+        return mMediaPlayService;
+    }
+
     private void requestUserFund() {
         Client.requestUserFundInfo()
                 .setTag(TAG)
@@ -250,6 +272,8 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     protected void onDestroy() {
         WsClient.get().close();
         MarketSubscriber.get().disconnect();
+        unbindService(mServiceConnection);
+        mServiceConnection = null;
         super.onDestroy();
     }
 
@@ -355,5 +379,35 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
         public Fragment getFragment(int position) {
             return mFragmentManager.findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
         }
+    }
+
+    @Override
+    public void onMediaPlayStart(int IAudioId, int source) {
+
+    }
+
+    @Override
+    public void onMediaPlay(int IAudioId, int source) {
+
+    }
+
+    @Override
+    public void onMediaPlayResume(int IAudioId, int source) {
+
+    }
+
+    @Override
+    public void onMediaPlayPause(int IAudioId, int source) {
+
+    }
+
+    @Override
+    protected void onMediaPlayStop(int IAudioId, int source) {
+
+    }
+
+    @Override
+    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
+
     }
 }

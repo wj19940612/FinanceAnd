@@ -5,9 +5,14 @@ import android.os.Parcelable;
 
 import com.sbai.finance.utils.MissAudioManager;
 
+/**
+ * /explain/question/questionList.do
+ */
 public class Question implements Parcelable, MissAudioManager.IAudio {
 
-    private static final int QUESTION_TYPE_LATEST = 0;
+    public static final int QUESTION_TYPE_LATEST = 0;
+
+    public static final int QUESTION_TYPE_HOT = 1;
 
     /**
      * answerContext : blob:http://var.esongbai.xyz/ed0ea7b6-bd51-4ff1-a631-864d01b9f4c8
@@ -73,6 +78,10 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
 
     public boolean isQuestionSolved() {
         return getSolve() == 1;
+    }
+
+    public int getTotalVoiceLength() {
+        return getSoundTime() * 1000;
     }
 
     public String getCustomName() {

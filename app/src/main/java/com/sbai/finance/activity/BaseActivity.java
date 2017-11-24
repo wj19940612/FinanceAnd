@@ -1,15 +1,11 @@
 package com.sbai.finance.activity;
 
-import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
@@ -27,7 +23,6 @@ import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.TimerHandler;
@@ -55,7 +50,6 @@ public class BaseActivity extends BattlePushActivity implements
 
     private TimerHandler mTimerHandler;
     private RequestProgress mRequestProgress;
-    public MediaPlayService mMediaPlayService;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -68,17 +62,7 @@ public class BaseActivity extends BattlePushActivity implements
         }
     };
 
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            mMediaPlayService = ((MediaPlayService.MediaBinder) iBinder).getMediaPlayService();
-        }
 
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-
-        }
-    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,10 +75,7 @@ public class BaseActivity extends BattlePushActivity implements
             }
         });
         SysTime.getSysTime().sync();
-
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
-        Intent intent = new Intent(this, MediaPlayService.class);
-        bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
     }
 
     private void scrollToTop(View view) {
@@ -185,8 +166,6 @@ public class BaseActivity extends BattlePushActivity implements
         mRequestProgress.dismissAll();
 
         stopScheduleJob();
-        unbindService(mServiceConnection);
-        mServiceConnection = null;
     }
 
     protected FragmentActivity getActivity() {

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:fitsSystemWindows="true"
-    tools:context="com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity">
+    tools:context="com.sbai.finance.activity.miss.radio.MediaStationPlayActivityActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"

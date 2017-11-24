@@ -136,7 +136,7 @@ public class MissRadioLayout extends LinearLayout {
         }
     }
 
-    private void unChangePlay(ImageView playImageView) {
+    public void unChangePlay(ImageView playImageView) {
         if (mPlayStateList != null && !mPlayStateList.isEmpty()) {
             for (PlayStatus result : mPlayStateList) {
                 if (result.getImageView() != playImageView) {

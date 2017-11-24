@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment.miss;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -10,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +28,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.CommentActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.RewardMissActivity;
-import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.fragment.MediaPlayFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
@@ -60,13 +62,13 @@ import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
 
-public class MissAskFragment extends BaseFragment {
+public class MissAskFragment extends MediaPlayFragment {
 
     private static final String MISS_ASK_TYPE = "miss_ask_type";
     private static final int REQ_CODE_COMMENT = 1001;
 
-    public static final int MISS_ASK_TYPE_HOT = 0; //最热提问
-    public static final int MISS_ASK_TYPE_LATEST = 1; //最热提问
+    public static final int MISS_ASK_TYPE_HOT = 1; //最热提问
+    public static final int MISS_ASK_TYPE_LATEST = 0; //最新提问
 
     @BindView(R.id.emptyRecyclerView)
     EmptyRecyclerView mEmptyRecyclerView;
@@ -74,29 +76,68 @@ public class MissAskFragment extends BaseFragment {
     @BindView(R.id.empty)
     NestedScrollView mEmpty;
 
-
     private int mMissAskType;
     private ArrayList<Question> mQuestionList;
     private MissAskAdapter mMissAskAdapter;
     private Long mCreateTime;
     private boolean mLoadMore;
-    private OnSwipeRefreshEnableListener mOnSwipeRefreshEnableListener;
+    private OnMissAskPageListener mOnMissAskPageListener;
     private HashSet<Integer> mSet;
+    private MediaPlayService mMediaPlayService;
 
-    public interface OnSwipeRefreshEnableListener {
+    public void updateQuestion(Question question) {
+        if (mQuestionList != null && !mQuestionList.isEmpty()) {
+            for (Question result : mQuestionList) {
+                if (result != null && question.getId() == result.getId()) {
+                    result.setIsPrise(question.getIsPrise());
+                    result.setPriseCount(question.getPriseCount());
+                    result.setReplyCount(question.getReplyCount());
+                    result.setAwardCount(question.getAwardCount());
+                    result.setListenCount(question.getListenCount());
+                }
+                if (MissAudioManager.get().isStarted(result)) {
+                    startScheduleJob(100);
+                    MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
+                        @Override
+                        public void onCompleted(String url) {
+                            mMissAskAdapter.notifyDataSetChanged();
+                            if (mOnMissAskPageListener != null) {
+                                mOnMissAskPageListener.onHideMissFloatWindow();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    public void setService(MediaPlayService mediaPlayService) {
+        mMediaPlayService = mediaPlayService;
+    }
+
+    public interface OnMissAskPageListener {
         void onSwipeRefreshEnable(boolean swipeFreshEnable);
 
-        void onRadioPlay(boolean radioPlayViewHasHasFocus);
+        void onRadioPlay(Question question, boolean radioPlayViewHasHasFocus);
+
+        void onHideMissFloatWindow();
     }
 
-    public void setOnSwipeRefreshEnableListener(OnSwipeRefreshEnableListener onSwipeRefreshEnableListener) {
-        mOnSwipeRefreshEnableListener = onSwipeRefreshEnableListener;
+    public void notifyFragmentDataSetChange() {
+        if (mMissAskAdapter != null) {
+            mMissAskAdapter.notifyDataSetChanged();
+        }
     }
 
-    private MediaPlayService.MediaPlayBroadcastReceiver mRefreshBroadcastReceiver = new MediaPlayService.MediaPlayBroadcastReceiver() {
+    public void setOnMissAskPageListener(OnMissAskPageListener onMissAskPageListener) {
+        mOnMissAskPageListener = onMissAskPageListener;
+    }
+
+    private BroadcastReceiver mRefreshBroadcastReceiver = new BroadcastReceiver() {
 
         @Override
-        public void onOtherReceive(Context context, Intent intent) {
+        public void onReceive(Context context, Intent intent) {
+
             if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
                 int rewardId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
                 if (rewardId == RewardInfo.TYPE_QUESTION) {
@@ -118,47 +159,12 @@ public class MissAskFragment extends BaseFragment {
                 }
             }
         }
-
-        @Override
-        public void onMediaPlayStop(int IAudioId, int source) {
-
-        }
-
-        @Override
-        public void onMediaPlayError(int IAudioId, int source) {
-
-        }
-
-        @Override
-        public void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
-            if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_QUESTION) {
-                if (IAudioId == -1) return;
-                LinearLayoutManager layoutManager = (LinearLayoutManager) mEmptyRecyclerView.getLayoutManager();
-                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-                boolean radioPlayHasFocus = false;
-                for (int i = firstVisibleItemPosition; i < lastVisibleItemPosition; i++) {
-                    View view = layoutManager.findViewByPosition(i - firstVisibleItemPosition);
-                    ImageView playImage = (ImageView) view.findViewById(R.id.playImage);
-                    TextView soundTime = (TextView) view.findViewById(R.id.soundTime);
-                    ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-                    playImage.setImageResource(R.drawable.ic_pause);
-                    progressBar.setMax(totalDuration);
-                    int pastTime = MissAudioManager.get().getCurrentPosition();
-                    soundTime.setText(getString(R.string._seconds, (totalDuration - pastTime) / 1000));
-                    progressBar.setProgress(pastTime);
-                    radioPlayHasFocus = true;
-                }
-                if (mOnSwipeRefreshEnableListener != null) {
-                    mOnSwipeRefreshEnableListener.onRadioPlay(radioPlayHasFocus);
-                }
-            }
-        }
     };
 
 
-    public static MissAskFragment newInstance(int type) {
+    public static MissAskFragment newInstance(int type, OnMissAskPageListener onMissAskPageListener) {
         MissAskFragment fragment = new MissAskFragment();
+        fragment.mOnMissAskPageListener = onMissAskPageListener;
         Bundle args = new Bundle();
         args.putInt(MISS_ASK_TYPE, type);
         fragment.setArguments(args);
@@ -188,7 +194,75 @@ public class MissAskFragment extends BaseFragment {
         registerReceiver();
         initView();
         requestAskList(true);
+    }
 
+    @Override
+    public void onMediaPlayStart(int IAudioId, int source) {
+        Log.d(TAG, "onMediaPlayStart: ");
+        notifyAdapterDataChanged(source);
+    }
+
+    @Override
+    public void onMediaPlay(int IAudioId, int source) {
+        Log.d(TAG, "onMediaPlay: ");
+        notifyAdapterDataChanged(source);
+    }
+
+    @Override
+    public void onMediaPlayResume(int IAudioId, int source) {
+        Log.d(TAG, "onMediaPlayResume: ");
+        notifyAdapterDataChanged(source);
+    }
+
+    @Override
+    public void onMediaPlayPause(int IAudioId, int source) {
+        notifyAdapterDataChanged(source);
+    }
+
+    @Override
+    protected void onMediaPlayStop(int IAudioId, int source) {
+        notifyAdapterDataChanged(source);
+    }
+
+    private void notifyAdapterDataChanged(int source) {
+        if (mMissAskType == MISS_ASK_TYPE_HOT && source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION) {
+            mMissAskAdapter.notifyDataSetChanged();
+        } else if (mMissAskType == MISS_ASK_TYPE_LATEST && source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION) {
+            mMissAskAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
+//        Log.d(TAG, "onMediaPlayCurrentPosition: "+source+ " "+mMissAskType); // 2 1 或者 3 0
+        if ((mMissAskType == MISS_ASK_TYPE_HOT && source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION)
+                || (mMissAskType == MISS_ASK_TYPE_LATEST && source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION)) {
+            LinearLayoutManager layoutManager = (LinearLayoutManager) mEmptyRecyclerView.getLayoutManager();
+            int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+            int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+            boolean radioPlayHasFocus = false;
+            for (int i = firstVisibleItemPosition; i < lastVisibleItemPosition; i++) {
+                Question question = mQuestionList.get(i);
+                if (question != null && MissAudioManager.get().isStarted(question)) {
+                    View view = layoutManager.findViewByPosition(i - firstVisibleItemPosition);
+                    if (view != null) {
+                        ImageView playImage = view.findViewById(R.id.playImage);
+                        TextView soundTime = view.findViewById(R.id.soundTime);
+                        ProgressBar progressBar = view.findViewById(R.id.progressBar);
+                        playImage.setImageResource(R.drawable.ic_pause);
+                        progressBar.setMax(question.getTotalVoiceLength());
+                        int pastTime = MissAudioManager.get().getCurrentPosition();
+                        soundTime.setText(getString(R.string._seconds, (question.getTotalVoiceLength() - pastTime) / 1000));
+                        progressBar.setProgress(pastTime);
+                    }
+                    radioPlayHasFocus = true;
+                }
+            }
+            Log.d(TAG, "课件: " + radioPlayHasFocus + "  " + (mOnMissAskPageListener != null));
+            if (mOnMissAskPageListener != null) {
+                mOnMissAskPageListener.onRadioPlay(null, radioPlayHasFocus);
+            }
+        }
     }
 
     @Override
@@ -211,19 +285,23 @@ public class MissAskFragment extends BaseFragment {
         filter.addAction(ACTION_LOGIN_SUCCESS);
         filter.addAction(ACTION_LOGOUT_SUCCESS);
 
-        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_STOP);
-        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_ERROR);
-        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PROGRESS);
-
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshBroadcastReceiver, filter);
     }
 
-    private void requestAskList(boolean isRefresh) {
+    private void requestAskList(final boolean isRefresh) {
+        int type = 0;
         if (mMissAskType == MISS_ASK_TYPE_HOT) {
-            requestHotQuestionList(isRefresh);
-        } else {
-            requestLatestQuestionList(isRefresh);
+            type = Question.QUESTION_TYPE_HOT;
         }
+        Client.getMissQuestionList(mCreateTime, Client.DEFAULT_PAGE_SIZE, type).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Question> questionList) {
+                        updateLatestQuestionList(questionList, isRefresh);
+                    }
+
+                }).fire();
+
     }
 
     private void initView() {
@@ -246,8 +324,8 @@ public class MissAskFragment extends BaseFragment {
                 }
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
-                if (mOnSwipeRefreshEnableListener != null) {
-                    mOnSwipeRefreshEnableListener.onSwipeRefreshEnable(isTop);
+                if (mOnMissAskPageListener != null) {
+                    mOnMissAskPageListener.onSwipeRefreshEnable(isTop);
                 }
             }
 
@@ -312,14 +390,22 @@ public class MissAskFragment extends BaseFragment {
             @Override
             public void onPlayClick(final Question item, int position) {
                 umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
-
                 if (MissAudioManager.get().isStarted(item)) {
-                    MissAudioManager.get().pause();
+                    if (mMediaPlayService != null) {
+                        mMediaPlayService.onPausePlay(item);
+                    }
                 } else if (MissAudioManager.get().isPaused(item)) {
-                    MissAudioManager.get().resume();
+                    if (mMediaPlayService != null) {
+                        mMediaPlayService.onResume();
+                    }
                 } else {
-                    updateQuestionListenCount(item);
-                    MissAudioManager.get().start(item);
+                    if (mMediaPlayService != null) {
+                        if (mMissAskType == MISS_ASK_TYPE_HOT) {
+                            mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_HOT_QUESTION);
+                        } else {
+                            mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION);
+                        }
+                    }
                 }
             }
 
@@ -360,16 +446,6 @@ public class MissAskFragment extends BaseFragment {
         }
     }
 
-    private void requestHotQuestionList(final boolean isRefresh) {
-        Client.getHotQuestionList().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
-                    @Override
-                    protected void onRespSuccessData(List<Question> questionList) {
-                        updateLatestQuestionList(questionList, isRefresh);
-                    }
-
-                }).fireFree();
-    }
 
     private void updateLatestQuestionList(List<Question> questionList, boolean isRefresh) {
         if (questionList.size() < Client.DEFAULT_PAGE_SIZE) { // load completed
@@ -392,17 +468,6 @@ public class MissAskFragment extends BaseFragment {
 //                mMissAskAdapter.add(result);
 //            }
 //        }
-    }
-
-    private void requestLatestQuestionList(final boolean isRefresh) {
-        Client.getLatestQuestionList(mCreateTime, Client.DEFAULT_PAGE_SIZE).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
-                    @Override
-                    protected void onRespSuccessData(List<Question> questionList) {
-                        updateLatestQuestionList(questionList, isRefresh);
-                    }
-
-                }).fire();
     }
 
 
