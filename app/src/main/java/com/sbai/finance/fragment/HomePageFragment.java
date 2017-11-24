@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,18 +14,26 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.arena.RewardActivity;
+import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.home.AllTrainingListActivity;
 import com.sbai.finance.activity.home.BroadcastListActivity;
 import com.sbai.finance.activity.home.StockFutureActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsListActivity;
+import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.fund.WalletActivity;
+import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.activity.mine.userinfo.CreditApproveActivity;
+import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
+import com.sbai.finance.activity.training.CreditIntroduceActivity;
+import com.sbai.finance.activity.training.TrainingDetailActivity;
 import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.DailyReport;
@@ -37,6 +46,8 @@ import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.leaderboard.LeaderThreeRank;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.system.Share;
+import com.sbai.finance.model.training.MyTrainingRecord;
+import com.sbai.finance.model.training.UserEachTrainingScoreModel;
 import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -51,6 +62,7 @@ import com.sbai.finance.view.HomeTitleView;
 import com.sbai.finance.view.ImportantNewsView;
 import com.sbai.finance.view.LeaderBoardView;
 import com.sbai.finance.view.SevenHourNewsView;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.VerticalScrollTextView;
 import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.httplib.ApiError;
@@ -99,6 +111,8 @@ public class HomePageFragment extends BaseFragment {
 
     private boolean mIsVisibleToUser;
     private boolean mHasEnter;
+    private UserEachTrainingScoreModel mUserEachTrainingScoreModel;
+    private List<MyTrainingRecord> mMyTrainingRecords;
 
     @Nullable
     @Override
@@ -364,6 +378,7 @@ public class HomePageFragment extends BaseFragment {
             requestLeaderBoardData();
             request7NewsData();
             requestImportantNewsData();
+            requestUserScore();
         }
     }
 
@@ -382,6 +397,7 @@ public class HomePageFragment extends BaseFragment {
             requestLeaderBoardData();
             request7NewsData();
             requestImportantNewsData();
+            requestUserScore();
         } else if (!isVisibleToUser && isAdded()) {
             mIsVisibleToUser = false;
             stopScheduleJob();
@@ -684,61 +700,174 @@ public class HomePageFragment extends BaseFragment {
     }
 
     private void clickBannerAndGotoActivity(Banner information) {
-//        if (information.isH5Style() && !TextUtils.isEmpty(information.getContent())) {
-//            Launcher.with(getActivity(), WebActivity.class)
-//                    .putExtra(WebActivity.EX_URL, information.getContent())
-//                    .execute();
-//        } else {
-//            Launcher.with(getActivity(), WebActivity.class)
-//                    .putExtra(WebActivity.EX_HTML, information.getContent())
-//                    .putExtra(WebActivity.EX_TITLE, information.getTitle())
-//                    .execute();
-//        }
-        if (information.getStyle().equals(Banner.STYLE_H5) && !TextUtils.isEmpty(information.getContent())) {
+        if (information.isH5Style() && !TextUtils.isEmpty(information.getContent())) {
             Launcher.with(getActivity(), WebActivity.class)
                     .putExtra(WebActivity.EX_URL, information.getContent())
                     .execute();
-        }else if(information.getStyle().equals(Banner.STYLE_HTML)){
+        } else {
             Launcher.with(getActivity(), WebActivity.class)
                     .putExtra(WebActivity.EX_HTML, information.getContent())
                     .putExtra(WebActivity.EX_TITLE, information.getTitle())
                     .execute();
-        }else if(information.getStyle().equals(Banner.STYLE_FUNCTIONMODULE)){
-            //功能页面
-            if(information.getJumpSource().equals(Banner.FUNC_SHARE)){
-                //分享
-            }
-            if(information.getJumpSource().equals(Banner.FUNC_REGANDLOGIN)){
-                //注册登录
-                Launcher.with(getActivity(), LoginActivity.class).execute();
-            }
-            if(information.getJumpSource().equals(Banner.FUNC_EVALUATE)){
-                //金融测评
-                if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventId.ME_FINANCE_TEST);
-                    Launcher.with(getActivity(), EvaluationStartActivity.class).execute();
-                    Preference.get().setIsFirstOpenWalletPage(LocalUser.getUser().getPhone());
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
-            }
-            if(information.getJumpSource().equals(Banner.FUNC_SHARE)){
-                //实名认证
-                umengEventCount(UmengCountEventId.ME_CERTIFICATION);
-                Launcher.with(getActivity(), CreditApproveActivity.class).execute();
-            }
-        }else if(information.getStyle().equals(Banner.STYLE_ORIGINALPAGE)){
-            if(information.getJumpSource().equals(Banner.QUESTION_INFO)){
-                //问答详情页
-                Launcher.with(getActivity(), QuestionDetailActivity.class).putExtra(Launcher.EX_PAYLOAD,Integer.valueOf(information.getId())).execute();
-            }
-            if(information.getJumpSource().equals(Banner.EXPLAIN_IDNEX)){
-                //姐说主页
-                ((MainActivity) getActivity()).switchToMissFragment();
+        }
+//        if (information.getStyle().equals(Banner.STYLE_H5) && !TextUtils.isEmpty(information.getContent())) {
+//            Launcher.with(getActivity(), WebActivity.class)
+//                    .putExtra(WebActivity.EX_URL, information.getContent())
+//                    .execute();
+//        } else if (information.getStyle().equals(Banner.STYLE_HTML)) {
+//            Launcher.with(getActivity(), WebActivity.class)
+//                    .putExtra(WebActivity.EX_HTML, information.getContent())
+//                    .putExtra(WebActivity.EX_TITLE, information.getTitle())
+//                    .execute();
+//        } else if (information.getStyle().equals(Banner.STYLE_FUNCTIONMODULE)) {
+//            //功能页面
+//            if (information.getJumpSource().equals(Banner.FUNC_SHARE)) {
+//                //分享
+//            }
+//            if (information.getJumpSource().equals(Banner.FUNC_REGANDLOGIN)) {
+//                //注册登录
+//                openLoginPage();
+//            }
+//            if (information.getJumpSource().equals(Banner.FUNC_EVALUATE)) {
+//                //金融测评
+//                if (LocalUser.getUser().isLogin()) {
+//                    umengEventCount(UmengCountEventId.ME_FINANCE_TEST);
+//                    Launcher.with(getActivity(), EvaluationStartActivity.class).execute();
+//                    Preference.get().setIsFirstOpenWalletPage(LocalUser.getUser().getPhone());
+//                } else {
+//                    openLoginPage();
+//                }
+//            }
+//            if (information.getJumpSource().equals(Banner.FUNC_SHARE)) {
+//                //实名认证
+//                umengEventCount(UmengCountEventId.ME_CERTIFICATION);
+//                Launcher.with(getActivity(), CreditApproveActivity.class).execute();
+//            }
+//        } else if (information.getStyle().equals(Banner.STYLE_ORIGINALPAGE)) {
+//            if (information.getJumpSource().equals(Banner.QUESTION_INFO)) {
+//                //问答详情页
+//                Launcher.with(getActivity(), QuestionDetailActivity.class).putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(information.getId())).execute();
+//            }
+//            if (information.getJumpSource().equals(Banner.EXPLAIN_IDNEX)) {
+//                //姐说主页
+//                ((MainActivity) getActivity()).switchToMissFragment();
+//            }
+//            if (information.getJumpSource().equals(Banner.NEWS_INFO)) {
+//                //要闻详情页
+//                Launcher.with(getActivity(), DailyReportDetailActivity.class)
+//                        .putExtra(DailyReportDetailActivity.EX_ID, information.getJumpId())
+//                        .putExtra(DailyReportDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+//                        .execute();
+//            }
+//            if (information.getJumpSource().equals(Banner.TOPIC)) {
+//                //一日一题
+//                umengEventCount(UmengCountEventId.PAGE_STUDY_ROOM);
+//                Launcher.with(getActivity(), StudyRoomActivity.class).execute();
+//            }
+//            if (information.getJumpSource().equals(Banner.MARKET_INFO)) {
+//                //行情详情页
+//                Launcher.with(getActivity(), StockFutureActivity.class)
+//                        .putExtra(ExtraKeys.PAGE_INDEX, 0)
+//                        .execute();
+//            }
+//            if (information.getJumpSource().equals(Banner.GAME_AWARD)) {
+//                //赏金赛
+//                Launcher.with(getActivity(), RewardActivity.class).execute();
+//            }
+//            if (information.getJumpSource().equals(Banner.MARKET_NORMAL)) {
+//                //普通场
+//                umengEventCount(UmengCountEventId.ARENA_FUTURE_PK);
+//                Launcher.with(getActivity(), BattleListActivity.class).execute();
+//            }
+//            if (information.getJumpSource().equals(Banner.USER_INFO)) {
+//                //用户信息页
+//                umengEventCount(UmengCountEventId.ME_MOD_USER_INFO);
+//                if (LocalUser.getUser().isLogin()) {
+//                    Launcher.with(getActivity(), ModifyUserInfoActivity.class).execute();
+//                } else {
+//                    openLoginPage();
+//                }
+//            }
+//            if (information.getJumpSource().equals(Banner.USER_PURSE)) {
+//                //钱包
+//                umengEventCount(UmengCountEventId.ME_WALLET);
+//                if (LocalUser.getUser().isLogin()) {
+//                    Launcher.with(getActivity(), WalletActivity.class).execute();
+//                    Preference.get().setIsFirstOpenWalletPage(LocalUser.getUser().getPhone());
+//                } else {
+//                    openLoginPage();
+//                }
+//            }
+//            if (information.getJumpSource().equals(Banner.USER_FEEDBACK)) {
+//                //意见反馈
+//                if (LocalUser.getUser().isLogin()) {
+//                    umengEventCount(UmengCountEventId.ME_FEEDBACK);
+//                    Launcher.with(getActivity(), FeedbackActivity.class).execute();
+//                } else {
+//                    openLoginPage();
+//                }
+//            }
+//            if (information.getJumpSource().equals(Banner.APPRAISE)) {
+//                //乐米学分页
+//                if (LocalUser.getUser().isLogin()) {
+//                    if (mUserEachTrainingScoreModel != null) {
+//                        umengEventCount(UmengCountEventId.ME_SEE_MY_CREDIT);
+//                        Launcher.with(getActivity(), CreditIntroduceActivity.class)
+//                                .putExtra(Launcher.EX_PAYLOAD, mUserEachTrainingScoreModel)
+//                                .execute();
+//                    }
+//                } else {
+//                    openLoginPage();
+//                }
+//            }
+//            if (information.getJumpSource().equals(Banner.STOCK) || information.getJumpSource().equals(Banner.K_TRAIN) || information.getJumpSource().equals(Banner.AVERAGE_TRAIN) || information.getJumpSource().equals(Banner.ANNUAL)) {
+//                requestAllTrainingList(information.getJumpId());
+//            }
+//        }
+
+    }
+
+    private void openLoginPage() {
+        Launcher.with(getActivity(), LoginActivity.class).execute();
+    }
+
+    private void requestUserScore() {
+        if (LocalUser.getUser().isLogin()) {
+            Client.requestUserScore()
+                    .setTag(TAG)
+                    .setCallback(new Callback2D<Resp<UserEachTrainingScoreModel>, UserEachTrainingScoreModel>() {
+                        @Override
+                        protected void onRespSuccessData(UserEachTrainingScoreModel data) {
+                            mUserEachTrainingScoreModel = data;
+                        }
+                    })
+                    .fire();
+        }
+    }
+
+    private void requestAllTrainingList(final String id) {
+        Client.getTrainingList().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<MyTrainingRecord>>, List<MyTrainingRecord>>() {
+                    @Override
+                    protected void onRespSuccessData(List<MyTrainingRecord> data) {
+                        dealTypeAndGotoTraining(id, data);
+                    }
+                }).fireFree();
+    }
+
+    private void dealTypeAndGotoTraining(String id, List<MyTrainingRecord> data) {
+        MyTrainingRecord train = null;
+        for (MyTrainingRecord trainingRecord : data) {
+            if (id.equals(String.valueOf(trainingRecord.getTrain().getId()))) {
+                train = trainingRecord;
+                break;
             }
         }
-
-
+        if (train != null) {
+            Launcher.with(getActivity(), TrainingDetailActivity.class)
+                    .putExtra(ExtraKeys.TRAINING, train.getTrain())
+                    .execute();
+        }
     }
 
     @Override
