@@ -1,6 +1,10 @@
 package com.sbai.finance.model.radio;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.sbai.finance.net.Client;
+import com.sbai.finance.utils.MissAudioManager;
 
 /**
  * Created by ${wangJie} on 2017/11/20.
@@ -8,7 +12,13 @@ import com.sbai.finance.net.Client;
  * 姐说主页电台信息
  */
 
-public class Radio {
+public class Radio implements Parcelable, MissAudioManager.IAudio {
+
+    //  /user/user/collect.do 1问答2、日报3、音频4、电台
+    private static final int USER_COLLECT_TYPE_QUESTION = 1;
+    private static final int USER_COLLECT_TYPE_REPORT = 2;
+    public static final int USER_COLLECT_TYPE_VOICE = 3;
+    public static final int USER_COLLECT_TYPE_RADIO = 4;
 
     /**
      * audio : https://esongtest.oss-cn-shanghai.aliyuncs.com/upload/20171012/Free-Converter.com-20170815035134-6148604140.m4a
@@ -51,6 +61,35 @@ public class Radio {
     private int totalPrise;        //点赞
     private int updateUserId;
     private int viewNumber;        //观看人数
+    private String radioName;     //电台名称
+
+    public boolean isPlaying;   //自己加的标识
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
+    }
+
+    @Override
+    public int getAudioId() {
+        return id;
+    }
+
+    @Override
+    public String getAudioUrl() {
+        return audio;
+    }
+
+    public String getRadioName() {
+        return radioName;
+    }
+
+    public void setRadioName(String radioName) {
+        this.radioName = radioName;
+    }
 
     public String getAudio() {
         return audio;
@@ -202,5 +241,99 @@ public class Radio {
 
     public void setViewNumber(int viewNumber) {
         this.viewNumber = viewNumber;
+    }
+
+    public Radio() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.audio);
+        dest.writeInt(this.audioComment);
+        dest.writeString(this.audioCover);
+        dest.writeString(this.audioIntroduction);
+        dest.writeString(this.audioName);
+        dest.writeInt(this.audioTime);
+        dest.writeInt(this.collect);
+        dest.writeLong(this.createTime);
+        dest.writeInt(this.displayStatus);
+        dest.writeInt(this.goldAwardMoney);
+        dest.writeInt(this.id);
+        dest.writeLong(this.modifyTime);
+        dest.writeInt(this.radioHost);
+        dest.writeString(this.radioHostName);
+        dest.writeInt(this.radioId);
+        dest.writeInt(this.reviewStatus);
+        dest.writeInt(this.totalPrise);
+        dest.writeInt(this.updateUserId);
+        dest.writeInt(this.viewNumber);
+        dest.writeString(this.radioName);
+    }
+
+    protected Radio(Parcel in) {
+        this.audio = in.readString();
+        this.audioComment = in.readInt();
+        this.audioCover = in.readString();
+        this.audioIntroduction = in.readString();
+        this.audioName = in.readString();
+        this.audioTime = in.readInt();
+        this.collect = in.readInt();
+        this.createTime = in.readLong();
+        this.displayStatus = in.readInt();
+        this.goldAwardMoney = in.readInt();
+        this.id = in.readInt();
+        this.modifyTime = in.readLong();
+        this.radioHost = in.readInt();
+        this.radioHostName = in.readString();
+        this.radioId = in.readInt();
+        this.reviewStatus = in.readInt();
+        this.totalPrise = in.readInt();
+        this.updateUserId = in.readInt();
+        this.viewNumber = in.readInt();
+        this.radioName = in.readString();
+    }
+
+    public static final Creator<Radio> CREATOR = new Creator<Radio>() {
+        @Override
+        public Radio createFromParcel(Parcel source) {
+            return new Radio(source);
+        }
+
+        @Override
+        public Radio[] newArray(int size) {
+            return new Radio[size];
+        }
+    };
+
+
+    @Override
+    public String toString() {
+        return "Radio{" +
+                "audio='" + audio + '\'' +
+                ", audioComment=" + audioComment +
+                ", audioCover='" + audioCover + '\'' +
+                ", audioIntroduction='" + audioIntroduction + '\'' +
+                ", audioName='" + audioName + '\'' +
+                ", audioTime=" + audioTime +
+                ", collect=" + collect +
+                ", createTime=" + createTime +
+                ", displayStatus=" + displayStatus +
+                ", goldAwardMoney=" + goldAwardMoney +
+                ", id=" + id +
+                ", modifyTime=" + modifyTime +
+                ", radioHost=" + radioHost +
+                ", radioHostName='" + radioHostName + '\'' +
+                ", radioId=" + radioId +
+                ", reviewStatus=" + reviewStatus +
+                ", totalPrise=" + totalPrise +
+                ", updateUserId=" + updateUserId +
+                ", viewNumber=" + viewNumber +
+                ", radioName='" + radioName + '\'' +
+                '}';
     }
 }

@@ -2165,6 +2165,7 @@ public class Client {
      * 获取热门提问列表
      *
      * @return
+     * @deprecated
      */
     public static API getHotQuestionList() {
         return new API("/explain/question/hotQuestionList.do");
@@ -2175,11 +2176,12 @@ public class Client {
      *
      * @return
      */
-    public static API getLatestQuestionList(Long createTime, int pageSize) {
+    public static API getMissQuestionList(Long createTime, int pageSize, int type) {
         return new API("/explain/question/questionList.do",
                 new ApiParams()
                         .put("createTime", createTime)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", pageSize)
+                        .put("type", type));
     }
 
     /**
@@ -3034,8 +3036,43 @@ public class Client {
         return new API("/explain/audioManage/getRecommendLatestAudio.do");
     }
 
+    /**
+     * /admin/topicManage/findByPage.do
+     * 话题--获取话题列表(芮晴晴)
+     *
+     * @return
+     */
+    // TODO: 2017/11/24 接口不对 需要替换 
     public static API requestMissSwitcherList() {
-        return new API("");
+        return new API(POST, "/admin/topicManage/findByPage.do");
+    }
+
+    /**
+     * /explain/radioManage/queryRadioByRadioId.do
+     * GET
+     * 小姐姐管理--查询电台详情(薛松)
+     *
+     * @param radioId
+     * @return
+     */
+    public static API requestRadioDetails(int radioId) {
+        return new API("/explain/radioManage/queryRadioByRadioId.do", new ApiParams().put("radioId", radioId));
+    }
+
+    /**
+     * /user/user/collect.do
+     * POST
+     * 用户-收藏（黄磊）
+     *
+     * @param dataId
+     * @param type   1问答2、日报3、音频4、电台   常量定义在Radio类中
+     * @return
+     */
+    public static API collect(String dataId, int type) {
+        return new API(POST, "/user/user/collect.do",
+                new ApiParams()
+                        .put("dataId", dataId)
+                        .put("type", type));
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.sbai.finance.view;
+package com.sbai.finance.view.radio;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -29,9 +29,13 @@ public class MissRadioLayout extends LinearLayout {
     private static final int DEFAULT_MISS_RADIO_LIST_SIZE = 4;
     private OnMissRadioPlayListener mOnMissRadioPlayListener;
     private ArrayList<PlayStatus> mPlayStateList;
+    private ImageView mPlayImageView;
+    private Radio mRadio;
 
     public interface OnMissRadioPlayListener {
-        void onMissRadioPlay(Radio radio, boolean isPlaying);
+        void onMissRadioPlay(Radio radio);
+
+        void onMissRadioClick(Radio radio);
     }
 
     public MissRadioLayout(Context context) {
@@ -93,8 +97,7 @@ public class MissRadioLayout extends LinearLayout {
                     .into(radioCover);
             voiceName.setText(radio.getAudioName());
             radioUpdateTime.setText(DateUtil.formatDefaultStyleTime(radio.getModifyTime()));
-            // TODO: 2017/11/22 缺少电台名称
-//            radioName.setText(radio.getRadioName());
+            radioName.setText(radio.getRadioName());
             radioOwnerName.setText(radio.getRadioHostName());
             radioLength.setText(DateUtil.format(radio.getAudioTime(), DateUtil.FORMAT_HOUR_MINUTE));
             startPlay.setImageResource(R.drawable.bg_voice_play);
@@ -103,17 +106,28 @@ public class MissRadioLayout extends LinearLayout {
             PlayStatus playStatus = new PlayStatus();
             playStatus.setImageView(startPlay);
             playStatus.setRadio(radio);
+            playStatus.setView(view);
             mPlayStateList.add(playStatus);
         }
 
         for (int i = 0; i < mPlayStateList.size(); i++) {
             final PlayStatus playStatus = mPlayStateList.get(i);
             final ImageView playImageView = playStatus.getImageView();
-            playImageView.setOnClickListener(new OnClickListener() {
+            View view = playStatus.getView();
+            view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mOnMissRadioPlayListener != null) {
-                        mOnMissRadioPlayListener.onMissRadioPlay(playStatus.getRadio(), playImageView.isSelected());
+                        mOnMissRadioPlayListener.onMissRadioClick(playStatus.getRadio());
+                    }
+                }
+            });
+            playImageView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mPlayImageView = playImageView;
+                    if (mOnMissRadioPlayListener != null) {
+                        mOnMissRadioPlayListener.onMissRadioPlay(playStatus.getRadio());
                     }
                     playImageView.setSelected(!playImageView.isSelected());
                     unChangePlay(playImageView);
@@ -122,15 +136,34 @@ public class MissRadioLayout extends LinearLayout {
         }
     }
 
-    private void unChangePlay(ImageView playImageView) {
+    public void unChangePlay(ImageView playImageView) {
         if (mPlayStateList != null && !mPlayStateList.isEmpty()) {
             for (PlayStatus result : mPlayStateList) {
-                if (playImageView != result.getImageView()) {
+                if (result.getImageView() != playImageView) {
                     result.getImageView().setSelected(false);
                 }
             }
         }
     }
+//
+//    public void setStopPlay(Radio radio) {
+//        if (mPlayImageView != null) {
+//            mPlayImageView.setSelected(false);
+//        }
+//    }
+//
+//    public void setPausePlay(Radio radio) {
+//        if (mPlayImageView != null) {
+//            mPlayImageView.setSelected(false);
+//        }
+//    }
+//
+//    public void setStartPlay(Radio radio) {
+//        if (mPlayImageView != null) {
+//            mPlayImageView.setSelected(true);
+//        }
+//        unChangePlay(null);
+//    }
 
     @Override
     protected void onDetachedFromWindow() {
@@ -141,6 +174,15 @@ public class MissRadioLayout extends LinearLayout {
     private static class PlayStatus {
         private ImageView mImageView;
         private Radio mRadio;
+        private View mView;
+
+        public View getView() {
+            return mView;
+        }
+
+        public void setView(View view) {
+            mView = view;
+        }
 
         public ImageView getImageView() {
             return mImageView;

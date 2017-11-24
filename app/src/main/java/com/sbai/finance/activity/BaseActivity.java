@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.game.WsClient;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.API;
@@ -27,7 +28,6 @@ import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.finance.view.SmartDialog;
-import com.sbai.finance.game.WsClient;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
 
@@ -54,11 +54,15 @@ public class BaseActivity extends BattlePushActivity implements
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            LocalUser.getUser().logout();
-            Launcher.with(getActivity(), MainActivity.class).execute();
-            Launcher.with(getActivity(), LoginActivity.class).execute();
+            if (ACTION_TOKEN_EXPIRED.equalsIgnoreCase(intent.getAction())) {
+                LocalUser.getUser().logout();
+                Launcher.with(getActivity(), MainActivity.class).execute();
+                Launcher.with(getActivity(), LoginActivity.class).execute();
+            }
         }
     };
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +75,6 @@ public class BaseActivity extends BattlePushActivity implements
             }
         });
         SysTime.getSysTime().sync();
-
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
 
