@@ -186,7 +186,7 @@ public class HistoryBusinessActivity extends BaseActivity {
                 .colorConfirm(ContextCompat.getColor(getActivity(), R.color.colorPrimary))
                 .btnTextSize(16) // button text size
                 .viewTextSize(10) // pick view text size
-                .minYear(1990) //min year in loop
+                .minYear(1970) //min year in loop
                 .maxYear(2550) // max year in loop
                 .dateChose(date) // date chose when init popwindow
                 .build()

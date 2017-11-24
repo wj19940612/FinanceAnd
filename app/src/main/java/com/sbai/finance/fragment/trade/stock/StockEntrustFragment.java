@@ -19,9 +19,15 @@ import com.sbai.finance.R;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.ImageFloder;
 import com.sbai.finance.model.stocktrade.Entrust;
+import com.sbai.finance.model.stocktrade.Position;
+import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.StockCodeUtil;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.SmartDialog;
 
@@ -45,6 +51,7 @@ public class StockEntrustFragment extends BaseFragment {
     TextView mEmpty;
     Unbinder unbinder;
     private EntrustAdapter mEntrustAdapter;
+    private int mPage;
 
     @Nullable
     @Override
@@ -80,15 +87,53 @@ public class StockEntrustFragment extends BaseFragment {
             }
 
             @Override
-            public void withdraw(Entrust entrust) {
-                showWithdrawDialog(entrust);
+            public void withdraw(int id) {
+                showWithdrawDialog(id);
                 // TODO: 2017-11-21
             }
         });
         mRecyclerView.setAdapter(mEntrustAdapter);
     }
 
-    private void showWithdrawDialog(Entrust entrust) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        requestEntrust();
+    }
+
+    private void requestEntrust() {
+        Client.requestEntrust(Position.TYPE_SIMULATE, "jf100009", null, mPage)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Entrust>>, List<Entrust>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Entrust> data) {
+                        updateEntrust(data);
+                    }
+                }).fireFree();
+    }
+
+    private void requestWithdraw(int id) {
+        Client.requestWithdraw(id)
+                .setTag(TAG)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        requestEntrust();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        ToastUtil.show(failedResp.getMsg());
+                    }
+                }).fireFree();
+    }
+
+    private void updateEntrust(List<Entrust> data) {
+        mEntrustAdapter.clear();
+        mEntrustAdapter.addAll(data);
+    }
+
+    private void showWithdrawDialog(final int id) {
         SmartDialog.single(getActivity())
                 .setTitle(R.string.tips)
                 .setMessage(getString(R.string.is_confirm_withdraw))
@@ -97,6 +142,8 @@ public class StockEntrustFragment extends BaseFragment {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
+                        requestWithdraw(id);
+
                     }
                 }).show();
     }
@@ -129,7 +176,7 @@ public class StockEntrustFragment extends BaseFragment {
 
             void hideOperateView(int index);
 
-            void withdraw(Entrust entrust);
+            void withdraw(int id);
 
         }
 
@@ -244,6 +291,8 @@ public class StockEntrustFragment extends BaseFragment {
                     @Override
                     public void onClick(View view) {
                         if (!mShowOperateView) return;
+                        if (mShowOperateView && entrust.getMoiety() == Entrust.ENTRUST_STATUS_ALL_BUSINESS)
+                            return;
                         if (mOperateArea.getVisibility() == View.VISIBLE) {
                             mOperateArea.setVisibility(View.GONE);
                             index = -1;
@@ -253,6 +302,14 @@ public class StockEntrustFragment extends BaseFragment {
                             }
                             index = position;
                             mOperateArea.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+                mWithdraw.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (itemClickListener != null) {
+                            itemClickListener.withdraw(entrust.getId());
                         }
                     }
                 });

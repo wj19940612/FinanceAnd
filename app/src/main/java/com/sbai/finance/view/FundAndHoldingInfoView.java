@@ -2,6 +2,7 @@ package com.sbai.finance.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.stocktrade.PositionRecords;
 import com.sbai.finance.utils.FinanceUtil;
 
 import butterknife.BindView;
@@ -37,6 +37,8 @@ public class FundAndHoldingInfoView extends LinearLayout {
     TextView mBuy;
     @BindView(R.id.sell)
     TextView mSell;
+    @BindView(R.id.fetchFundDescribe)
+    TextView mFetchFundDescribe;
 
     private OnOrderClickListener mOnOrderClickListener;
 
@@ -45,6 +47,8 @@ public class FundAndHoldingInfoView extends LinearLayout {
         void buy();
 
         void sell();
+
+        void fetchFund();
     }
 
     public FundAndHoldingInfoView(Context context) {
@@ -69,12 +73,49 @@ public class FundAndHoldingInfoView extends LinearLayout {
         mOnOrderClickListener = onOrderClickListener;
     }
 
-    public void setAssetData(PositionRecords data) {
-        mEnableFund.setText(FinanceUtil.formatWithScale(data.getUsableMoney()));
-        mFetchFund.setText(FinanceUtil.formatWithScale(data.getUsableDraw()));
+    public void setTotalFund(double totalFund) {
+        mTotalFund.setText(FinanceUtil.formatWithScale(totalFund));
     }
 
-    @OnClick({R.id.buy, R.id.sell})
+    public void setTotalMarket(double totalMarket) {
+        mTotalMarket.setText(FinanceUtil.formatWithScale(totalMarket));
+    }
+
+    public void setEnableFund(double enableFund) {
+        mEnableFund.setText(FinanceUtil.formatWithScale(enableFund));
+    }
+
+    public void setFetchFund(double fetchFund) {
+        mFetchFund.setText(FinanceUtil.formatWithScale(fetchFund));
+    }
+
+    public void setTodayProfit(double todayProfit) {
+        if (todayProfit == 0) {
+            mTodayProfit.setText("0.00");
+            mTodayProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
+        } else if (todayProfit > 0) {
+            mTodayProfit.setText("+" + FinanceUtil.formatWithScale(todayProfit));
+            mTodayProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
+        } else {
+            mTodayProfit.setText("+" + FinanceUtil.formatWithScale(todayProfit));
+            mTodayProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.greenAssist));
+        }
+    }
+
+    public void setHoldingFloat(double floatProfit) {
+        if (floatProfit == 0) {
+            mHoldingFloat.setText("0.00");
+            mHoldingFloat.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
+        } else if (floatProfit > 0) {
+            mHoldingFloat.setText("+" + FinanceUtil.formatWithScale(floatProfit));
+            mHoldingFloat.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
+        } else {
+            mHoldingFloat.setText(FinanceUtil.formatWithScale(floatProfit));
+            mHoldingFloat.setTextColor(ContextCompat.getColor(getContext(), R.color.greenAssist));
+        }
+    }
+
+    @OnClick({R.id.buy, R.id.sell, R.id.fetchFundDescribe})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.buy:
@@ -87,6 +128,10 @@ public class FundAndHoldingInfoView extends LinearLayout {
                     mOnOrderClickListener.sell();
                 }
                 break;
+            case R.id.fetchFundDescribe:
+                if (mOnOrderClickListener != null) {
+                    mOnOrderClickListener.fetchFund();
+                }
         }
     }
 }

@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 app:canLoop="false"
                 app:dateLineColor="@android:color/transparent"
-                app:dateTextSize="25sp"/>
+                app:dateTextSize="24sp"/>
         </RelativeLayout>
     </LinearLayout>
 

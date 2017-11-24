@@ -20,6 +20,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
+import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.DailyReport;
@@ -229,6 +230,11 @@ public class HomePageFragment extends BaseFragment {
                 umengEventCount(UmengCountEventId.PAGE_STUDY_ROOM);
                 Launcher.with(getActivity(), StudyRoomActivity.class).execute();
                 //点击一日一题
+            }
+
+            @Override
+            public void onStockSimulate() {
+                Launcher.with(getActivity(), StockOrderActivity.class).execute();
             }
         });
         mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener()
@@ -669,9 +675,9 @@ public class HomePageFragment extends BaseFragment {
             protected void onRespSuccessData(Share data) {
                 String shareLink = data.getShareLink();
                 StringBuilder shareLinkBuilder = new StringBuilder(data.getShareLink());
-                if(shareLink.contains("?")){
+                if (shareLink.contains("?")) {
                     shareLinkBuilder.append("&id=");
-                }else{
+                } else {
                     shareLinkBuilder.append("?id=");
                 }
                 shareLinkBuilder.append(dailyReport.getId());
@@ -690,6 +696,7 @@ public class HomePageFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mHomeTitleView.freeGif();
         unbinder.unbind();
     }
 }

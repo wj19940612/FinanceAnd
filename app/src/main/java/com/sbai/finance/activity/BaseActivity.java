@@ -54,9 +54,9 @@ public class BaseActivity extends BattlePushActivity implements
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            LocalUser.getUser().logout();
-            Launcher.with(getActivity(), MainActivity.class).execute();
-            Launcher.with(getActivity(), LoginActivity.class).execute();
+//            LocalUser.getUser().logout();
+//            Launcher.with(getActivity(), MainActivity.class).execute();
+//            Launcher.with(getActivity(), LoginActivity.class).execute();
         }
     };
 

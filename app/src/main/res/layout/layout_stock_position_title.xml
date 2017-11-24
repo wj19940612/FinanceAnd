@@ -11,14 +11,15 @@
         style="@style/StockOrderTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="7"
         android:text="@string/name_position_value"/>
 
     <TextView
         style="@style/StockOrderTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginRight="35dp"
+        android:layout_weight="4"
         android:gravity="right"
         android:text="@string/position_enable_amount"/>
 
@@ -27,17 +28,25 @@
         style="@style/StockOrderTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:drawablePadding="2dp"
-        android:drawableRight="@drawable/ic_stock_prompt"
         android:gravity="right"
         android:text="@string/last_price_cost_price"/>
+
+    <ImageView
+        android:id="@+id/stockPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clickable="true"
+        android:padding="1dp"
+        android:src="@drawable/ic_stock_prompt"/>
 
     <TextView
         style="@style/StockOrderTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="6"
         android:gravity="right"
         android:text="@string/float_fund"/>
 

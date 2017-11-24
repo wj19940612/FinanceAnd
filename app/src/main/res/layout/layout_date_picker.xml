@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:canLoop="false"
-                    app:dateTextSize="25sp"/>
+                    app:dateTextSize="20sp"/>
 
                 <com.sbai.finance.view.picker.LoopView
                     android:id="@+id/picker_month"
@@ -65,7 +65,7 @@
                     android:layout_marginLeft="1dp"
                     android:layout_weight="1"
                     app:canLoop="false"
-                    app:dateTextSize="25sp"/>
+                    app:dateTextSize="20sp"/>
 
                 <com.sbai.finance.view.picker.LoopView
                     android:id="@+id/picker_day"
@@ -74,7 +74,7 @@
                     android:layout_marginLeft="1dp"
                     android:layout_weight="1"
                     app:canLoop="false"
-                    app:dateTextSize="25sp"/>
+                    app:dateTextSize="20sp"/>
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

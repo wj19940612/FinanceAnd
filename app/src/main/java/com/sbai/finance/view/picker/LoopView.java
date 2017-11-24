@@ -90,18 +90,18 @@ public class LoopView extends View {
 
     public LoopView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView(context,attrs);
+        initView(context, attrs);
     }
 
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public LoopView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        initView(context,attrs);
+        initView(context, attrs);
     }
 
 
-    private void initView(Context context,AttributeSet attrs) {
+    private void initView(Context context, AttributeSet attrs) {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.LoopView);
         if (array != null) {
             mTopBottomTextColor = array.getColor(R.styleable.LoopView_topBottomTextColor, 0xffafafaf);
@@ -192,6 +192,12 @@ public class LoopView extends View {
                 mMaxTextHeight = textHeight;
             }
         }
+    }
+
+    private int getTextWidth(String s) {
+        Rect rect = new Rect();
+        mCenterTextPaint.getTextBounds(s, 0, s.length(), rect);
+        return rect.width();
     }
 
     @Override
@@ -294,6 +300,8 @@ public class LoopView extends View {
                 canvas.translate(0.0F, translateY);
                 //scale offset = Math.sin(radian) -> 0 - 1
                 canvas.scale(1.0F, (float) Math.sin(radian));
+                mMaxTextWidth = getTextWidth(itemCount[count]);
+                mPaddingLeftRight = (mWidgetWidth - mMaxTextWidth) / 2;
                 if (translateY <= mTopLineY) {
                     //draw text y between 0 -> mTopLineY,include incomplete text
                     canvas.save();
@@ -367,6 +375,7 @@ public class LoopView extends View {
 
     /**
      * All public method must be called before this method
+     *
      * @param list data list
      */
     public final void setDataList(List<String> list) {
