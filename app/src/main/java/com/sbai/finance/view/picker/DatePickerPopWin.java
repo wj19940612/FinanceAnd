@@ -166,7 +166,7 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
 
     private void initView() {
 
-        contentView = LayoutInflater.from(mContext).inflate(showDayMonthYear ? R.layout.layout_date_picker_inverted : R.layout.layout_date_picker, null);
+        contentView = LayoutInflater.from(mContext).inflate(R.layout.layout_date_picker, null);
         cancelBtn = (Button) contentView.findViewById(R.id.cancel);
         cancelBtn.setTextColor(colorCancel);
         cancelBtn.setTextSize(btnTextSize);
@@ -244,11 +244,11 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
         int yearCount = maxYear - minYear;
 
         for (int i = 0; i < yearCount; i++) {
-            yearList.add(format2LenStr(minYear + i));
+            yearList.add(format2LenStr(minYear + i) + "年");
         }
 
         for (int j = 0; j < 12; j++) {
-            monthList.add(format2LenStr(j + 1));
+            monthList.add(format2LenStr(j + 1) + "月");
         }
 
         yearLoopView.setDataList((ArrayList) yearList);
@@ -274,7 +274,7 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
         dayMaxInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
         for (int i = 0; i < dayMaxInMonth; i++) {
-            dayList.add(format2LenStr(i + 1));
+            dayList.add(format2LenStr(i + 1) + "日");
         }
 
         dayLoopView.setDataList((ArrayList) dayList);
@@ -371,14 +371,7 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                 int year = minYear + yearPos;
                 int month = monthPos + 1;
                 int day = dayPos + 1;
-                StringBuffer sb = new StringBuffer();
-
-                sb.append(String.valueOf(year));
-                sb.append("-");
-                sb.append(format2LenStr(month));
-                sb.append("-");
-                sb.append(format2LenStr(day));
-                mListener.onDatePickCompleted(year, month, day, sb.toString());
+                mListener.onDatePickCompleted(year, month, day);
             }
 
             dismissPopWin();
@@ -436,9 +429,7 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
          * @param year
          * @param month
          * @param day
-         * @param dateDesc yyyy-MM-dd
          */
-        void onDatePickCompleted(int year, int month, int day,
-                                 String dateDesc);
+        void onDatePickCompleted(int year, int month, int day);
     }
 }

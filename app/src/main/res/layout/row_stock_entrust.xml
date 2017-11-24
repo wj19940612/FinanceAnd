@@ -149,35 +149,43 @@
         </LinearLayout>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/operateArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#eef2f6"
         android:orientation="vertical"
         android:visibility="gone">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_stock_position_more"/>
 
-        <TextView
-            android:id="@+id/withdraw"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="20dp"
-            android:drawableLeft="@drawable/ic_withdraw"
-            android:drawablePadding="2dp"
-            android:padding="2dp"
-            android:text="@string/stock_withdraw"
-            android:textColor="#53A5F2"
-            android:textSize="15sp"/>
-    </RelativeLayout>
+            android:background="#eef2f6"
+            android:paddingBottom="15dp"
+            android:paddingLeft="35dp"
+            android:paddingRight="35dp"
+            android:paddingTop="12dp">
+
+
+            <TextView
+                android:id="@+id/withdraw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableLeft="@drawable/ic_withdraw"
+                android:drawablePadding="2dp"
+                android:padding="2dp"
+                android:text="@string/stock_withdraw"
+                android:textColor="#53A5F2"
+                android:textSize="15sp"/>
+
+        </RelativeLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

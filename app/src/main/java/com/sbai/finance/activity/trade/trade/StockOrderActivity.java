@@ -17,11 +17,13 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.fragment.battle.BattleListFragment;
 import com.sbai.finance.fragment.trade.stock.StockBusinessFragment;
 import com.sbai.finance.fragment.trade.stock.StockEntrustFragment;
 import com.sbai.finance.fragment.trade.stock.StockPositionFragment;
 import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.stocktrade.FundAndPosition;
 import com.sbai.finance.model.stocktrade.Position;
@@ -30,6 +32,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.FundAndHoldingInfoView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -168,7 +171,17 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 2017-11-21  
+                Client.getArticleProtocol(ArticleProtocol.PROTOCOL_STOCK_SIMULATE).setTag(TAG)
+                        .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
+                            @Override
+                            protected void onRespSuccessData(ArticleProtocol data) {
+                                Launcher.with(getActivity(), WebActivity.class)
+                                        .putExtra(WebActivity.EX_TITLE, data.getTitle())
+                                        .putExtra(WebActivity.EX_HTML, data.getContent())
+                                        .execute();
+                            }
+
+                        }).fire();
             }
         });
     }

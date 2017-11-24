@@ -111,6 +111,7 @@ public class LoopView extends View {
             mInitPosition = array.getInt(R.styleable.LoopView_initPosition, -1);
             mTextSize = array.getDimensionPixelSize(R.styleable.LoopView_dateTextSize, sp2px(context, 16));
             mDrawItemsCount = array.getInt(R.styleable.LoopView_drawItemCount, 7);
+            mItemHeight = array.getDimension(R.styleable.LoopView_itemHeight, -1);
             array.recycle();
         }
 
@@ -210,8 +211,9 @@ public class LoopView extends View {
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
         Log.i(TAG, "onMeasure -> heightMode:" + heightMode);
-
-        mItemHeight = lineSpacingMultiplier * mMaxTextHeight;
+        if (mItemHeight == -1) {
+            mItemHeight = lineSpacingMultiplier * mMaxTextHeight;
+        }
         //auto calculate the text's left/right value when draw
         mPaddingLeftRight = (mWidgetWidth - mMaxTextWidth) / 2;
         mPaddingTopBottom = (mWidgetHeight - mCircularDiameter) / 2;

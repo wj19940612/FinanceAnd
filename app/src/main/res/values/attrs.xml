@@ -270,6 +270,7 @@
         <attr name="canLoop" format="boolean"/>
         <attr name="initPosition" format="integer"/>
         <attr name="drawItemCount" format="integer"/>
+        <attr name="itemHeight" format="dimension|reference"/>
     </declare-styleable>
     <declare-styleable name="HasLabelImageLayout">
         <attr name="label_drawable" format="reference"/>

@@ -175,8 +175,8 @@ public class HistoryBusinessActivity extends BaseActivity {
         new DatePickerPopWin.Builder(getActivity(),
                 new DatePickerPopWin.OnDatePickedListener() {
                     @Override
-                    public void onDatePickCompleted(int year, int month, int day, String dateDesc) {
-                        time.setText(dateDesc);
+                    public void onDatePickCompleted(int year, int month, int day) {
+                        time.setText(new String(year + "-" + month + "-" + day));
                         refreshData();
                     }
                 })
@@ -185,7 +185,7 @@ public class HistoryBusinessActivity extends BaseActivity {
                 .colorCancel(ContextCompat.getColor(getActivity(), R.color.colorPrimary))
                 .colorConfirm(ContextCompat.getColor(getActivity(), R.color.colorPrimary))
                 .btnTextSize(16) // button text size
-                .viewTextSize(10) // pick view text size
+                .viewTextSize(9) // pick view text size
                 .minYear(1970) //min year in loop
                 .maxYear(2550) // max year in loop
                 .dateChose(date) // date chose when init popwindow
