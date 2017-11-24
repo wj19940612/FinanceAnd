@@ -144,7 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:background="@drawable/bg_white"
-            android:visibility="visible"
+            android:visibility="gone"
             app:hasBottomSplitLine="true"
             app:leftIcon="@drawable/ic_mine_wait_answer"
             app:rightIcon="@drawable/ic_arrow_right_tint"

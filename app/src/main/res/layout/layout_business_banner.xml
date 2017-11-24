@@ -93,7 +93,7 @@
                     android:layout_toLeftOf="@id/topRightImg"
                     android:ellipsize="end"
                     android:includeFontPadding="false"
-                    android:maxLines="1"
+                    android:singleLine="true"
                     android:textColor="@color/primaryText"
                     android:textSize="14sp"
                     />

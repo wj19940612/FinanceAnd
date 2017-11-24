@@ -3046,4 +3046,11 @@ public class Client {
     public static API collectRadio(String radioId) {
         return new API("/user/user/collect.do", new ApiParams().put("type", 4).put("dataId", radioId));
     }
+
+    /**
+     * 修改小姐姐个人简介
+     */
+    public static API modifyProfileIntroduction(String introduction) {
+        return new API("/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
+    }
 }

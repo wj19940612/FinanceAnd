@@ -606,6 +606,7 @@
     <string name="create_radio_station">创建电台</string>
     <string name="edit_profile">编辑资料</string>
     <string name="miss_cant_edit_nick">主播认证后不允许修改昵称</string>
+    <string name="word_day">日</string>
 
     <!--discovery-->
     <string name="daily">乐米日报</string>
