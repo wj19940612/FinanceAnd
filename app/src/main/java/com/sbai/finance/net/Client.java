@@ -3037,14 +3037,13 @@ public class Client {
     }
 
     /**
-     * /admin/topicManage/findByPage.do
-     * 话题--获取话题列表(芮晴晴)
+     * /explain/topicManage/findTopic.do
+     * 获取话题列表(薛松)
      *
      * @return
      */
-    // TODO: 2017/11/24 接口不对 需要替换 
     public static API requestMissSwitcherList() {
-        return new API(POST, "/admin/topicManage/findByPage.do");
+        return new API(POST, "/explain/topicManage/findTopic.do");
     }
 
     /**

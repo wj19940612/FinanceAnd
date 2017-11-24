@@ -115,7 +115,7 @@ public class MissRadioViewSwitcher extends LinearLayout implements TimerHandler.
         if (mMissSwitcherModelList != null && !mMissSwitcherModelList.isEmpty()) {
             int position = mCount % mMissSwitcherModelList.size();
             MissSwitcherModel missSwitcherModel = mMissSwitcherModelList.get(position);
-            ToastUtil.show(missSwitcherModel.getData());
+            ToastUtil.show(missSwitcherModel.getTopicTitle());
         }
     }
 
@@ -124,7 +124,7 @@ public class MissRadioViewSwitcher extends LinearLayout implements TimerHandler.
         mCount = count;
         if (mMissSwitcherModelList != null && !mMissSwitcherModelList.isEmpty()) {
             int position = count % mMissSwitcherModelList.size();
-            mTextSwitcher.setText(mMissSwitcherModelList.get(position).getData());
+            mTextSwitcher.setText(mMissSwitcherModelList.get(position).getTopicTitle());
         }
     }
 

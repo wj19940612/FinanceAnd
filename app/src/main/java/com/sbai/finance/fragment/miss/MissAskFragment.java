@@ -46,7 +46,6 @@ import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.HasLabelImageLayout;
-import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -559,7 +558,7 @@ public class MissAskFragment extends MediaPlayFragment {
 
         static class ViewHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.avatar)
-            ImageView mAvatar;
+            HasLabelImageLayout mAvatar;
             @BindView(R.id.name)
             TextView mName;
             @BindView(R.id.askTime)
@@ -593,12 +592,11 @@ public class MissAskFragment extends MediaPlayFragment {
             }
 
             public void bindingData(final Context context, final Question item, final Callback callback, final int position) {
-                GlideApp.with(context).load(item.getUserPortrait())
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .circleCrop()
-                        .into(mAvatar);
+
                 mMissName.setText(item.getCustomName());
-                mMissAvatar.setCircleUrl(item.getCustomPortrait());
+                mAvatar.setAvatar(item.getUserPortrait(), item.getUserType());
+                mMissAvatar.setAvatar(item.getCustomPortrait(), Question.QUESTION_TYPE_HOT);
+
 
                 mName.setText(item.getUserName());
                 mAskTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));

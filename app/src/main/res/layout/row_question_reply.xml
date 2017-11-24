@@ -3,6 +3,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="@android:color/white"
               android:orientation="vertical">
 
@@ -13,11 +14,14 @@
         android:layout_marginRight="14dp"
         android:layout_marginTop="10dp">
 
-        <ImageView
+        <com.sbai.finance.view.HasLabelImageLayout
             android:id="@+id/avatar"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_default_avatar"/>
+            android:src="@drawable/ic_default_avatar"
+            app:label_drawable="@drawable/ic_label_v"
+            app:label_view_height="12dp"
+            app:label_view_width="12dp"/>
 
         <TextView
             android:id="@+id/userName"

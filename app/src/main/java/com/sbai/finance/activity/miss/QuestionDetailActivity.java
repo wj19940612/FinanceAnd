@@ -50,10 +50,10 @@ import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
-import com.sbai.glide.GlideApp;
 import com.sbai.httplib.ApiError;
 
 import java.util.HashSet;
@@ -107,15 +107,15 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private HashSet<String> mSet;
     private View mFootView;
     private QuestionReplyListAdapter mQuestionReplyListAdapter;
-    private Question mQuestionDetail;
+    private Question mQuestion;
     private RefreshReceiver mRefreshReceiver;
     private Praise mPraise;
     private String mReplayMsgId;
-    private ImageView mAvatar;
+    private HasLabelImageLayout mAvatar;
     private TextView mName;
     private TextView mAskTime;
-    private TextView mQuestion;
-    private ImageView mMissAvatar;
+    private TextView mQuestionContent;
+    private HasLabelImageLayout mMissAvatar;
     private ImageView mPlayImage;
     private ProgressBar mProgressBar;
     private TextView mSoundTime;
@@ -223,7 +223,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 .setCallback(new Callback2D<Resp<Question>, Question>() {
                     @Override
                     protected void onRespSuccessData(Question question) {
-                        mQuestionDetail = question;
+                        mQuestion = question;
                         updateQuestionDetail();
                     }
                 }).fire();
@@ -276,11 +276,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
     private void initHeaderView() {
         LinearLayout header = (LinearLayout) getLayoutInflater().inflate(R.layout.view_header_question_detail, null);
-        mAvatar = (ImageView) header.findViewById(R.id.avatar);
+        mAvatar = header.findViewById(R.id.avatar);
         mName = (TextView) header.findViewById(R.id.name);
         mAskTime = (TextView) header.findViewById(R.id.askTime);
-        mQuestion = (TextView) header.findViewById(R.id.question);
-        mMissAvatar = (ImageView) header.findViewById(R.id.missAvatar);
+        mQuestionContent = (TextView) header.findViewById(R.id.questionContent);
+        mMissAvatar = header.findViewById(R.id.missAvatar);
         mPlayImage = (ImageView) header.findViewById(R.id.playImage);
         mProgressBar = (ProgressBar) header.findViewById(R.id.progressBar);
         mSoundTime = (TextView) header.findViewById(R.id.soundTime);
@@ -293,36 +293,29 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     }
 
     private void updateQuestionDetail() {
-        GlideApp.with(this).load(mQuestionDetail.getUserPortrait())
-                .placeholder(R.drawable.ic_default_avatar)
-                .circleCrop()
-                .into(mAvatar);
+        mAvatar.setAvatar(mQuestion.getUserPortrait(), mQuestion.getUserType());
+        mMissAvatar.setAvatar(mQuestion.getCustomPortrait(), Question.USER_IDENTITY_HOST);
 
-        GlideApp.with(this).load(mQuestionDetail.getCustomPortrait())
-                .placeholder(R.drawable.ic_default_avatar)
-                .circleCrop()
-                .into(mMissAvatar);
+        mName.setText(mQuestion.getUserName());
+        mAskTime.setText(DateUtil.formatDefaultStyleTime(mQuestion.getCreateTime()));
+        mQuestionContent.setText(mQuestion.getQuestionContext());
+        mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(mQuestion.getListenCount())));
+        mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(mQuestion.getPriseCount())));
+        mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(mQuestion.getAwardCount())));
 
-        mName.setText(mQuestionDetail.getUserName());
-        mAskTime.setText(DateUtil.formatDefaultStyleTime(mQuestionDetail.getCreateTime()));
-        mQuestion.setText(mQuestionDetail.getQuestionContext());
-        mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(mQuestionDetail.getListenCount())));
-        mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(mQuestionDetail.getPriseCount())));
-        mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(mQuestionDetail.getAwardCount())));
-
-        if (mQuestionDetail.getIsPrise() == 0) {
+        if (mQuestion.getIsPrise() == 0) {
             mPraiseImage.setImageResource(R.drawable.ic_miss_unpraise);
         } else {
             mPraiseImage.setImageResource(R.drawable.ic_miss_praise);
         }
 
-        if (mQuestionDetail.getCollect() == 0) {
+        if (mQuestion.getCollect() == 0) {
             mCollectImage.setImageResource(R.drawable.ic_miss_uncollect);
         } else {
             mCollectImage.setImageResource(R.drawable.ic_miss_collect);
         }
 
-        if (MissVoiceRecorder.isHeard(mQuestionDetail.getId())) {
+        if (MissVoiceRecorder.isHeard(mQuestion.getId())) {
             mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.unluckyText));
         } else {
             mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -332,7 +325,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             @Override
             public void onClick(View v) {
                 Launcher.with(getActivity(), LookBigPictureActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getUserPortrait())
+                        .putExtra(Launcher.EX_PAYLOAD, mQuestion.getUserPortrait())
                         .putExtra(Launcher.EX_PAYLOAD_2, 0)
                         .execute();
             }
@@ -343,7 +336,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             public void onClick(View v) {
                 stopQuestionVoice();
                 Launcher.with(QuestionDetailActivity.this, MissProfileDetailActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getAnswerCustomId())
+                        .putExtra(Launcher.EX_PAYLOAD, mQuestion.getAnswerCustomId())
                         .execute();
             }
         });
@@ -351,14 +344,14 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         mPlayImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleQuestionVoice(mQuestionDetail);
+                toggleQuestionVoice(mQuestion);
             }
         });
 
         if (MissAudioManager.get().getAudio() instanceof Question) {
             final Question playingQuestion = (Question) MissAudioManager.get().getAudio();
             if (MissAudioManager.get().isStarted(playingQuestion)
-                    && mQuestionDetail.getId() != playingQuestion.getId()) {
+                    && mQuestion.getId() != playingQuestion.getId()) {
                 mMissFloatWindow.setVisibility(View.VISIBLE);
                 mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
                 mMissFloatWindow.startAnim();
@@ -376,12 +369,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             }
         }
 
-        mProgressBar.setMax(mQuestionDetail.getSoundTime() * 1000);
-        if (MissAudioManager.get().isStarted(mQuestionDetail)) {
+        mProgressBar.setMax(mQuestion.getSoundTime() * 1000);
+        if (MissAudioManager.get().isStarted(mQuestion)) {
             setPlayingState();
 
             startScheduleJob(100);
-        } else if (MissAudioManager.get().isPaused(mQuestionDetail)) {
+        } else if (MissAudioManager.get().isPaused(mQuestion)) {
             setPauseState();
         } else {
             setStopState();
@@ -391,20 +384,20 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private void setStopState() {
         mPlayImage.setImageResource(R.drawable.ic_play);
         mProgressBar.setProgress(0);
-        mSoundTime.setText(getString(R.string._seconds, mQuestionDetail != null ? mQuestionDetail.getSoundTime() : 0));
+        mSoundTime.setText(getString(R.string._seconds, mQuestion != null ? mQuestion.getSoundTime() : 0));
     }
 
     private void setPauseState() {
         mPlayImage.setImageResource(R.drawable.ic_play);
         int pastTime = MissAudioManager.get().getCurrentPosition();
-        mSoundTime.setText(getString(R.string._seconds, (mQuestionDetail.getSoundTime() * 1000 - pastTime) / 1000));
+        mSoundTime.setText(getString(R.string._seconds, (mQuestion.getSoundTime() * 1000 - pastTime) / 1000));
         mProgressBar.setProgress(pastTime);
     }
 
     private void setPlayingState() {
         mPlayImage.setImageResource(R.drawable.ic_pause);
         int pastTime = MissAudioManager.get().getCurrentPosition();
-        mSoundTime.setText(getString(R.string._seconds, (mQuestionDetail.getSoundTime() * 1000 - pastTime) / 1000));
+        mSoundTime.setText(getString(R.string._seconds, (mQuestion.getSoundTime() * 1000 - pastTime) / 1000));
         mProgressBar.setProgress(pastTime);
     }
 
@@ -549,10 +542,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     }
 
     private void praise() {
-        if (mQuestionDetail != null) {
+        if (mQuestion != null) {
             if (LocalUser.getUser().isLogin()) {
                 umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
-                Client.praise(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<Praise>, Praise>() {
+                Client.praise(mQuestion.getId()).setCallback(new Callback2D<Resp<Praise>, Praise>() {
 
                     @Override
                     protected void onRespSuccessData(Praise praise) {
@@ -563,10 +556,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                             mPraiseImage.setImageResource(R.drawable.ic_miss_praise);
                         }
 
-                        mQuestionDetail.setIsPrise(praise.getIsPrise());
-                        mQuestionDetail.setPriseCount(praise.getPriseCount());
+                        mQuestion.setIsPrise(praise.getIsPrise());
+                        mQuestion.setPriseCount(praise.getPriseCount());
                         mPraiseNumber.setText(getString(R.string.praise_miss,
-                                StrFormatter.getFormatCount(mQuestionDetail.getPriseCount())));
+                                StrFormatter.getFormatCount(mQuestion.getPriseCount())));
                     }
                 }).fire();
             } else {
@@ -577,9 +570,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     }
 
     private void collect() {
-        if (mQuestionDetail != null) {
+        if (mQuestion != null) {
             if (LocalUser.getUser().isLogin()) {
-                Client.collectQuestion(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<QuestionCollect>, QuestionCollect>() {
+                Client.collectQuestion(mQuestion.getId()).setCallback(new Callback2D<Resp<QuestionCollect>, QuestionCollect>() {
                     @Override
                     protected void onRespSuccessData(QuestionCollect questionCollect) {
                         if (questionCollect.getCollect() == 0) {
@@ -597,11 +590,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     }
 
     private void comment() {
-        if (mQuestionDetail != null) {
+        if (mQuestion != null) {
             if (LocalUser.getUser().isLogin()) {
                 Launcher.with(getActivity(), CommentActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
-                        .putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
+                        .putExtra(Launcher.EX_PAYLOAD, mQuestion.getQuestionUserId())
+                        .putExtra(Launcher.EX_PAYLOAD_1, mQuestion.getId())
                         .executeForResult(REQ_COMMENT);
 
             } else {
@@ -613,7 +606,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     }
 
     private void reward() {
-        if (mQuestionDetail != null) {
+        if (mQuestion != null) {
             if (LocalUser.getUser().isLogin()) {
                 RewardMissActivity.show(getActivity(), mQuestionId, RewardInfo.TYPE_QUESTION);
             } else {
@@ -627,7 +620,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
-        
+
         if (item != null) {
             if (mReplyDialogFragment == null) {
                 mReplyDialogFragment = ReplyDialogFragment.newInstance(item);
@@ -746,7 +739,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
         static class ViewHolder {
             @BindView(R.id.avatar)
-            ImageView mAvatar;
+            HasLabelImageLayout mAvatar;
             @BindView(R.id.userName)
             TextView mUserName;
             @BindView(R.id.opinionContent)
@@ -767,11 +760,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             public void bindingData(final Context context, final QuestionReply.DataBean item) {
                 if (item == null) return;
 
-                if (item.getUserModel() != null) {
-                    GlideApp.with(context).load(item.getUserModel().getUserPortrait())
-                            .placeholder(R.drawable.ic_default_avatar)
-                            .circleCrop()
-                            .into(mAvatar);
+                QuestionReply.DataBean.UserModelBean userModelBean = item.getUserModel();
+                if (userModelBean != null) {
+
+                    int userIdentity = userModelBean.getCustomId() != 0 ? Question.USER_IDENTITY_HOST : Question.USER_IDENTITY_ORDINARY;
+
+                    mAvatar.setAvatar(userModelBean.getUserPortrait(), userIdentity);
 
                     mUserName.setText(item.getUserModel().getUserName());
 
@@ -785,10 +779,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                         }
                     });
                 } else {
-                    GlideApp.with(context).load(R.drawable.ic_default_avatar)
-                            .circleCrop()
-                            .into(mAvatar);
-
+                    mAvatar.setAvatar("", 0);
                     mUserName.setText("");
 
                     mAvatar.setOnClickListener(new View.OnClickListener() {
@@ -846,10 +837,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         }
 
         if (requestCode == REQ_COMMENT_LOGIN && resultCode == RESULT_OK) {
-            if (mQuestionDetail != null) {
+            if (mQuestion != null) {
                 Launcher.with(getActivity(), CommentActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
-                        .putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
+                        .putExtra(Launcher.EX_PAYLOAD, mQuestion.getQuestionUserId())
+                        .putExtra(Launcher.EX_PAYLOAD_1, mQuestion.getId())
                         .executeForResult(REQ_COMMENT);
             }
         }
@@ -871,9 +862,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         public void onReceive(Context context, Intent intent) {
 
             if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-                if (mQuestionDetail != null) {
-                    int rewardCount = mQuestionDetail.getAwardCount() + 1;
-                    mQuestionDetail.setAwardCount(rewardCount);
+                if (mQuestion != null) {
+                    int rewardCount = mQuestion.getAwardCount() + 1;
+                    mQuestion.setAwardCount(rewardCount);
                     mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(rewardCount)));
                 }
             }
@@ -908,8 +899,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        if (mQuestionDetail != null) {
-            intent.putExtra(ExtraKeys.QUESTION, mQuestionDetail);
+        if (mQuestion != null) {
+            intent.putExtra(ExtraKeys.QUESTION, mQuestion);
             intent.putExtra(ExtraKeys.PRAISE, mPraise);
             setResult(RESULT_OK, intent);
         }
