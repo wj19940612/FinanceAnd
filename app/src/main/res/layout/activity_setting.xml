@@ -12,9 +12,9 @@
     <com.sbai.finance.view.TitleBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
-        android:background="@android:color/white"
         app:titleText="@string/setting"
         app:titleTextColor="@color/primaryText"/>
 
@@ -53,9 +53,54 @@
         app:rowTextColor="@color/primaryText"
         app:rowTextSize="15sp"/>
 
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/feedback"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_white"
+        android:visibility="visible"
+        app:hasBottomSplitLine="true"
+        app:leftIcon="@drawable/ic_mine_feedback"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/feedback"
+        app:rowTextColor="@color/primaryText"
+        app:rowTextSize="15sp"
+        app:rowVerticalPadding="0dp"
+        app:splitLineColor="@color/split"
+        app:subTextLeftDrawable="@drawable/ic_new_message"
+        app:subTextVisible="gone"/>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/aboutUs"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@drawable/bg_white"
+        android:visibility="visible"
+        app:leftIcon="@drawable/ic_mine_about_us"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/about_us"
+        app:rowTextColor="@color/primaryText"
+        app:rowTextSize="15sp"
+        app:rowVerticalPadding="0dp"/>
+
     <View
         android:id="@+id/appInfo"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_white"
+        android:gravity="center"
+        android:text="@string/logout"
+        android:textColor="@color/colorPrimary"/>
 </LinearLayout>

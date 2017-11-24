@@ -26,8 +26,9 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.MissProfileActivity;
+import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.activity.miss.RadioStationListActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.activity.miss.radio.MediaStationPlayActivityActivity;
 import com.sbai.finance.fragment.miss.MissAskFragment;
@@ -227,7 +228,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             public void onItemClick(Miss miss, int position) {
                 if (miss != null) {
                     MissAudioManager.get().stop();
-                    Launcher.with(getActivity(), MissProfileActivity.class)
+                    Launcher.with(getActivity(), MissProfileDetailActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, miss.getId()).execute();
                 }
             }
@@ -397,7 +398,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         LinearLayout header = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.view_header_miss_talk_1, null);
         EmptyRecyclerView recyclerView = (EmptyRecyclerView) header.findViewById(R.id.recyclerView);
         TextView emptyView = (TextView) header.findViewById(R.id.missEmpty);
-
         return header;
     }
 

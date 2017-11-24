@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        app:backFeature="true"
+        app:hasBottomSplitLine="true"
+        app:splitLineColor="@color/split"
+        app:titleText="@string/wait_me_answer"
+        app:titleTextColor="@color/primaryText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.sbai.finance.view.slidingTab.SlidingTabLayout
+        android:id="@+id/slidingTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

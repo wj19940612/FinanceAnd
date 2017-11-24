@@ -335,6 +335,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/BaseDialog.Bottom"/>
 
+        <activity
+            android:name=".activity.miss.MissProfileDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.miss.RadioStationListActivity"
+            android:screenOrientation="portrait"/>
+
         <!-- 发现 -->
         <activity
             android:name=".activity.web.DailyReportDetailActivity"
@@ -416,9 +423,13 @@
         <activity
             android:name=".activity.home.BroadcastListActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.battle.BattleRuleActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.battle.BattleRuleActivity"
+                  android:screenOrientation="portrait"/>
+        <!--我的-->
+        <activity android:name=".activity.mine.MySubscribeActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".activity.mine.IntroduceSetActivity"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

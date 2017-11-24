@@ -7,7 +7,7 @@
         android:id="@+id/titleBg"
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:background="@drawable/home_background_blue"/>
+        android:background="@drawable/bg_home_head_background"/>
 
     <ImageView
         android:id="@+id/secondBg"
@@ -37,7 +37,7 @@
             android:id="@+id/broadcastIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/home_icon_horn"
+            android:src="@drawable/btn_home_horn"
             android:layout_centerVertical="true"/>
 
         <com.sbai.finance.view.VerticalScrollTextView
@@ -454,7 +454,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/home_icon_explain"/>
+                    android:src="@drawable/btn_home_explain"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -486,7 +486,7 @@
                     android:layout_height="40dp"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="25dp"
-                    android:src="@drawable/home_icon_subject"/>
+                    android:src="@drawable/btn_home_subject"/>
             </RelativeLayout>
         </RelativeLayout>
 

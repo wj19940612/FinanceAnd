@@ -92,15 +92,8 @@ public class HomePageFragment extends BaseFragment {
     @BindView(R.id.importantNewsView)
     ImportantNewsView mImportantNewsView;
 
-    private MoreClickListener mMoreClickListener;
-
-    public void setMoreClickListener(MoreClickListener moreClickListener) {
-        moreClickListener = moreClickListener;
-    }
-
-    public interface MoreClickListener {
-        public void onMoreClick(int pageSize);
-    }
+    private boolean mIsVisibleToUser;
+    private boolean mHasEnter;
 
     @Nullable
     @Override
@@ -362,23 +355,27 @@ public class HomePageFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        startScheduleJob(TIME_ONE);
-        TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
-        requestGreetings();
-        getRefreshData();
-        requestRadioData();
-        requestBannerData();
-        requestBusniessBannerData();
-        requestLeaderBoardData();
-        request7NewsData();
-        requestImportantNewsData();
-//        MarketSubscriber.get().subscribeAll();
+        //fragment在前台显示
+        if (mIsVisibleToUser || !mHasEnter) {
+            mHasEnter = true;
+            startScheduleJob(TIME_ONE);
+            TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
+            requestGreetings();
+            getRefreshData();
+            requestRadioData();
+            requestBannerData();
+            requestBusniessBannerData();
+            requestLeaderBoardData();
+            request7NewsData();
+            requestImportantNewsData();
+        }
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isAdded()) {
+            mIsVisibleToUser = true;
             startScheduleJob(TIME_ONE);
             TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
             requestGreetings();
@@ -390,6 +387,7 @@ public class HomePageFragment extends BaseFragment {
             request7NewsData();
             requestImportantNewsData();
         } else if (!isVisibleToUser && isAdded()) {
+            mIsVisibleToUser = false;
             stopScheduleJob();
             mHomeTitleView.stopVerticalSrcoll();
             API.cancel(TAG);
@@ -399,9 +397,11 @@ public class HomePageFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        stopScheduleJob();
-        mHomeTitleView.stopVerticalSrcoll();
-        API.cancel(TAG);
+        if (mIsVisibleToUser) {
+            stopScheduleJob();
+            mHomeTitleView.stopVerticalSrcoll();
+            API.cancel(TAG);
+        }
     }
 
     //只更新部分字符,用于轮询数据
@@ -669,9 +669,9 @@ public class HomePageFragment extends BaseFragment {
             protected void onRespSuccessData(Share data) {
                 String shareLink = data.getShareLink();
                 StringBuilder shareLinkBuilder = new StringBuilder(data.getShareLink());
-                if(shareLink.contains("?")){
+                if (shareLink.contains("?")) {
                     shareLinkBuilder.append("&id=");
-                }else{
+                } else {
                     shareLinkBuilder.append("?id=");
                 }
                 shareLinkBuilder.append(dailyReport.getId());
@@ -689,6 +689,7 @@ public class HomePageFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
+        mHasEnter = false;
         super.onDestroyView();
         unbinder.unbind();
     }

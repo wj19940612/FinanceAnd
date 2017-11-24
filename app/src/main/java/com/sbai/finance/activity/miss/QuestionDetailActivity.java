@@ -342,7 +342,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             @Override
             public void onClick(View v) {
                 stopQuestionVoice();
-                Launcher.with(QuestionDetailActivity.this, MissProfileActivity.class)
+                Launcher.with(QuestionDetailActivity.this, MissProfileDetailActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getAnswerCustomId())
                         .execute();
             }

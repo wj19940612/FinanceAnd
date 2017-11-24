@@ -157,6 +157,14 @@
     <string name="copy_success">复制成功</string>
     <string name="install_qq_first">请先安装QQ</string>
     <string name="my_ingot_">我的元宝: %1$d</string>
+    <string name="wait_me_answer">等我答</string>
+    <string name="my_subscribe">我的订阅</string>
+    <string name="wait_answer">待回答</string>
+    <string name="wait_race_answer">待抢答</string>
+    <string name="have_answered">已回答</string>
+    <string name="you_not_has_answer">没有等待你回答的问题</string>
+    <string name="not_has_answer">没有抢答的问题</string>
+    <string name="you_not_has_answer_question">你还没回答问题</string>
 
     <string name="article">文章</string>
 
@@ -206,6 +214,8 @@
     <string name="bind_wechat_info">绑定微信号,登录更便捷,是否绑定?</string>
     <string name="bind">绑定</string>
     <string name="is_logout_lemi">是否要退出登录？</string>
+    <string name="personal_summary">个人简介</string>
+    <string name="set_personal_summary">设置个人简介</string>
     <!--   消息 -->
     <string name="up_load_more">加载更多</string>
 
@@ -587,6 +597,15 @@
     <string name="ignot_not_enough">元宝不足</string>
     <string name="praise">赞</string>
     <string name="play_failure">播放失败</string>
+    <string name="subscribe">订阅</string>
+    <string name="subscribed">已订阅</string>
+    <string name="look_more">查看更多</string>
+    <string name="pack_up">收起</string>
+    <string name="i_want_to_race_answer">我要抢答</string>
+    <string name="i_want_to_ask">我要提问</string>
+    <string name="create_radio_station">创建电台</string>
+    <string name="edit_profile">编辑资料</string>
+    <string name="miss_cant_edit_nick">主播认证后不允许修改昵称</string>
 
     <!--discovery-->
     <string name="daily">乐米日报</string>

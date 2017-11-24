@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingLeft="@dimen/common_padding"
+              android:paddingRight="@dimen/common_padding"
+              android:paddingTop="@dimen/common_padding">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        app:cardCornerRadius="@dimen/common_eight_radius"
+        app:cardElevation="0dp"
+        app:contentPadding="@dimen/common_padding">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_marginBottom="8dp"
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/primary_or_unlucky_text_color"
+                android:textSize="16sp"
+                tools:text="有什么好的选股方法?\n测试啥空当接龙科技时代"/>
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title"
+                android:textColor="@color/user_question_answer_status_text_color"
+                android:textSize="12sp"
+                tools:text="2.3万人点赞  520 人评论 432 赞赏 "/>
+
+            <TextView
+                android:layout_marginTop="2dp"
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/title"
+                android:gravity="center"
+                android:textColor="@color/unluckyText"
+                android:textSize="10sp"
+                tools:text="12:20"/>
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>
