@@ -171,10 +171,6 @@
                 android:text="@string/detail"
                 android:textColor="#53A5F2"
                 android:textSize="15sp"/>
-
-
         </RelativeLayout>
-
     </LinearLayout>
-
 </LinearLayout>

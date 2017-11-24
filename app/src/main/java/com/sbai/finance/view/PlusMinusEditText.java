@@ -62,8 +62,21 @@ public class PlusMinusEditText extends FrameLayout {
         setHint(mHint);
     }
 
-    private void setHint(String hint) {
+    public void setText(CharSequence text) {
+        mEditText.setText(text);
+    }
+
+    public void setHint(String hint) {
         mEditText.setHint(hint);
+    }
+
+    public void setHint(CharSequence hint) {
+        mEditText.setHint(hint);
+    }
+
+    public void setHint(int hintRes) {
+        CharSequence hint = getContext().getText(hintRes);
+        setHint(hint);
     }
 
     @OnClick({R.id.minus, R.id.plus})

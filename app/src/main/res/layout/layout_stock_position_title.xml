@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@color/background"
     android:orientation="horizontal"
-    android:padding="@dimen/common_padding">
+    android:padding="12dp">
 
     <TextView
         style="@style/StockOrderTitle"
@@ -40,5 +40,4 @@
         android:layout_weight="1"
         android:gravity="right"
         android:text="@string/float_fund"/>
-
 </LinearLayout>

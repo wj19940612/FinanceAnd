@@ -270,9 +270,9 @@ public class StockPositionFragment extends BaseFragment {
                     double difference = Double.valueOf(lastPriceStr) - stockPosition.getAvgBuyPrice();
                     mFloatValue.setText(FinanceUtil.formatWithScale(difference * stockPosition.getTotalQty()));
                     if (difference > 0) {
-                        mFloatRate.setText("+" + FinanceUtil.formatFloorPercent(difference / stockPosition.getAvgBuyPrice()));
+                        mFloatRate.setText("+" + FinanceUtil.downToIntegerPercentage(difference / stockPosition.getAvgBuyPrice()));
                     } else if (difference < 0) {
-                        mFloatRate.setText(FinanceUtil.formatFloorPercent(difference / stockPosition.getAvgBuyPrice()));
+                        mFloatRate.setText(FinanceUtil.downToIntegerPercentage(difference / stockPosition.getAvgBuyPrice()));
                     } else {
                         mFloatRate.setText("0%");
                     }

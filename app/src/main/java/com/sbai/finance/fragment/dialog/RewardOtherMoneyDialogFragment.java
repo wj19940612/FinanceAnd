@@ -130,7 +130,7 @@ public class RewardOtherMoneyDialogFragment extends CenterDialogFragment {
                 mWarnTip.setVisibility(View.INVISIBLE);
                 mConfirm.setEnabled(true);
             }
-            mOtherMoneyContent.setText(FinanceUtil.formatWithThousandsSeparatorAndScale(money, 0));
+            mOtherMoneyContent.setText(FinanceUtil.formatWithThousandsSeparator(money, 0));
             mOtherMoneyContent.setSelection(mOtherMoneyContent.getText().length());
         }
 

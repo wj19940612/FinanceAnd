@@ -162,7 +162,7 @@ public class ScoreProgressView extends LinearLayout {
     private void updateTradeGrade(TrainAppraiseAndRemark result) {
         mTradeGradeTextView.setText(getContext().getString(R.string.trade_level,
                 result.getAppraise(),
-                FinanceUtil.formatFloorPercent(mUserEachTrainingScoreModel.getRank())));
+                FinanceUtil.downToIntegerPercentage(mUserEachTrainingScoreModel.getRank())));
     }
 
 

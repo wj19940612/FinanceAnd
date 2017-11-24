@@ -139,7 +139,7 @@ public class AccountFundDetailFragment extends BaseFragment {
             case AccountFundDetail.TYPE_SCORE:
                 mFundName.setText(R.string.mine_score);
                 mFundCount = fund != null ? fund.getCredit() : 0;
-                mFundNumber.setText(FinanceUtil.removeNeedlessZero(FinanceUtil.formatWithScale(mFundCount)));
+                mFundNumber.setText(FinanceUtil.formatWithScaleRemoveTailZero(mFundCount));
                 break;
         }
 

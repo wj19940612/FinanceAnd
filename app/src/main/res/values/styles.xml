@@ -241,7 +241,6 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-
     <style name="FadeInPopWin">
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowEnterAnimation">@anim/fade_in_quickly</item>

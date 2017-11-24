@@ -18,6 +18,8 @@ import com.sbai.chart.TrendView;
 import com.sbai.finance.R;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
+import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.StockUtil;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -164,17 +166,17 @@ public class StockTrendView extends LinearLayout {
 
     public void setStockRTData(StockRTData stockRTData) {
         if (mFivePriceView.getVisibility() == VISIBLE) {
-            mAskPrice1.setText(stockRTData.getAskPrice());
-            mAskPrice2.setText(stockRTData.getAskPrice2());
-            mAskPrice3.setText(stockRTData.getAskPrice3());
-            mAskPrice4.setText(stockRTData.getAskPrice4());
-            mAskPrice5.setText(stockRTData.getAskPrice5());
+            mAskPrice1.setText(StockUtil.getStockDecimal(stockRTData.getAskPrice()));
+            mAskPrice2.setText(StockUtil.getStockDecimal(stockRTData.getAskPrice2()));
+            mAskPrice3.setText(StockUtil.getStockDecimal(stockRTData.getAskPrice3()));
+            mAskPrice4.setText(StockUtil.getStockDecimal(stockRTData.getAskPrice4()));
+            mAskPrice5.setText(StockUtil.getStockDecimal(stockRTData.getAskPrice5()));
 
-            mBidPrice1.setText(stockRTData.getBidPrice());
-            mBidPrice2.setText(stockRTData.getBidPrice2());
-            mBidPrice3.setText(stockRTData.getBidPrice3());
-            mBidPrice4.setText(stockRTData.getBidPrice4());
-            mBidPrice5.setText(stockRTData.getBidPrice5());
+            mBidPrice1.setText(StockUtil.getStockDecimal(stockRTData.getBidPrice()));
+            mBidPrice2.setText(StockUtil.getStockDecimal(stockRTData.getBidPrice2()));
+            mBidPrice3.setText(StockUtil.getStockDecimal(stockRTData.getBidPrice3()));
+            mBidPrice4.setText(StockUtil.getStockDecimal(stockRTData.getBidPrice4()));
+            mBidPrice5.setText(StockUtil.getStockDecimal(stockRTData.getBidPrice5()));
 
             mAskVolume1.setText(getFormattedVolume(stockRTData.getAskVolume()));
             mAskVolume2.setText(getFormattedVolume(stockRTData.getAskVolume2()));
@@ -190,25 +192,28 @@ public class StockTrendView extends LinearLayout {
         }
     }
 
-    private String getFormattedVolume(String ask_volume) {
-        long askVolume = 0;
+    private String getFormattedVolume(String volume) {
+        if (volume == null) {
+            return StockUtil.NULL_VALUE;
+        }
+        long askVolume;
         try {
-            askVolume = Long.valueOf(ask_volume).longValue();
+            askVolume = Long.valueOf(volume).longValue();
         } catch (NumberFormatException e) {
             e.printStackTrace();
-        } finally {
-            askVolume = askVolume / 100;
-            if (askVolume > 10000 || askVolume < -10000) {
-                return formatWithUnit(askVolume);
-            }
-            return String.valueOf(askVolume);
+            return StockUtil.NULL_VALUE;
         }
+        askVolume = askVolume / 100;
+        if (askVolume >= 10000 || askVolume <= -10000) {
+            return formatWithUnit(askVolume);
+        }
+        return String.valueOf(askVolume);
     }
 
     private String formatWithUnit(long askVolume) {
         BigDecimal decimal = BigDecimal.valueOf(askVolume)
-                .divide(new BigDecimal(10000), 1, BigDecimal.ROUND_HALF_EVEN);
-        return decimal.toString() + "万";
+                .divide(new BigDecimal(10000), 1, BigDecimal.ROUND_DOWN);
+        return decimal.toString() + FinanceUtil.UNIT_WANG;
     }
 
     public static class Settings extends ChartSettings {
