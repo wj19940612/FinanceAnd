@@ -36,6 +36,15 @@ public class Entrust {
     private int moiety;
     private int succQuantity;
     private long bargainTime;
+    private long orderTime;
+
+    public long getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(long orderTime) {
+        this.orderTime = orderTime;
+    }
 
     public int getId() {
         return id;

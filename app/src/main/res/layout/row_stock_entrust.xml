@@ -27,6 +27,7 @@
                 android:id="@+id/entrustBs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:ellipsize="end"
                 android:maxLength="6"
                 android:maxLines="1"
@@ -56,6 +57,7 @@
                 android:id="@+id/stockName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
@@ -83,6 +85,7 @@
                 android:id="@+id/entrustAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
@@ -109,6 +112,7 @@
                 android:id="@+id/businessFund"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
@@ -127,6 +131,7 @@
                 android:id="@+id/businessDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
@@ -150,7 +155,7 @@
         android:layout_height="wrap_content"
         android:background="#eef2f6"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="match_parent"
@@ -164,7 +169,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="15dp"
             android:layout_marginTop="20dp"
             android:drawableLeft="@drawable/ic_withdraw"
             android:drawablePadding="2dp"

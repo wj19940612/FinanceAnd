@@ -280,12 +280,17 @@ public class StockEntrustFragment extends BaseFragment {
                     mEntrustAmount.setText(String.valueOf(entrust.getQuantity()));
                     mEntrustPrice.setText(FinanceUtil.formatWithScale(entrust.getPrice(), 3));
                 } else {
-                    mEntrustAmount.setText(String.valueOf(entrust.getSuccQuantity()));
+                    mEntrustAmount.setText(FinanceUtil.formatWithThousandsSeparatorAndScale(entrust.getSuccQuantity(), 0));
                     mEntrustPrice.setText(FinanceUtil.formatWithScale(entrust.getBargainPrice(), 3));
                 }
                 mBusinessFund.setText(FinanceUtil.formatWithScale(entrust.getTotalBargain()));
-                mBusinessDate.setText(DateUtil.format(entrust.getBargainTime(), "MM/dd"));
-                mBusinessTime.setText(DateUtil.format(entrust.getBargainTime(), "HH:mm"));
+                if (mShowOperateView) {
+                    mBusinessDate.setText(DateUtil.format(entrust.getOrderTime(), "MM/dd"));
+                    mBusinessTime.setText(DateUtil.format(entrust.getOrderTime(), "HH:mm"));
+                } else {
+                    mBusinessDate.setText(DateUtil.format(entrust.getBargainTime(), "MM/dd"));
+                    mBusinessTime.setText(DateUtil.format(entrust.getBargainTime(), "HH:mm"));
+                }
 
                 mPositionArea.setOnClickListener(new View.OnClickListener() {
                     @Override
