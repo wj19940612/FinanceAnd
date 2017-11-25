@@ -136,7 +136,12 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
             maxLevel = 5;
         }
         mFinanceEvaluation.setSubText(mEvaluationLevel[maxLevel]);
-        mPersonalSummary.setSubText(userInfo.getBriefingText());
+        if (LocalUser.getUser().isMiss()) {
+            mPersonalSummary.setVisibility(View.VISIBLE);
+            mPersonalSummary.setSubText(userInfo.getBriefingText());
+        } else {
+            mPersonalSummary.setVisibility(View.GONE);
+        }
     }
 
     private void showBindWeChatDialog() {
@@ -266,7 +271,7 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
                 uploadUserImageDialogFragment.show(getSupportFragmentManager());
                 break;
             case R.id.nickName:
-                if (LocalUser.getUser().getUserInfo().getCustomId() != 0) {
+                if (LocalUser.getUser().isMiss()) {
                     //说明是小姐姐，不允许修改昵称
                     ToastUtil.show(R.string.miss_cant_edit_nick);
                     return;

@@ -28,6 +28,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
+import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.fragment.MineFragment;
 import com.sbai.finance.fragment.miss.MissProfileQuestionFragment;
 import com.sbai.finance.fragment.miss.MissProfileRadioFragment;
@@ -222,7 +223,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         } else {
             mProfileIntroduce.setText(R.string.no_miss_introduce);
         }
-        if (LocalUser.getUser().getUserInfo() != null && miss.getId() == LocalUser.getUser().getUserInfo().getCustomId()) {
+        if (LocalUser.getUser().isMiss()) {
             //是小姐姐自己
             mFollow.setVisibility(View.GONE);
             mNoFollow.setVisibility(View.VISIBLE);
@@ -330,7 +331,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         mAppBarLayout.removeOnOffsetChangedListener(mOnOffsetChangedListener);
     }
 
-    @OnClick({R.id.follow, R.id.noFollow})
+    @OnClick({R.id.follow, R.id.noFollow, R.id.avatar})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.follow:
@@ -338,7 +339,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                 break;
             case R.id.noFollow:
                 if (mMiss != null) {
-                    if (LocalUser.getUser().getUserInfo() != null && mMiss.getId() == LocalUser.getUser().getUserInfo().getCustomId()) {
+                    if (LocalUser.getUser().isMiss()) {
                         Launcher.with(getActivity(), ModifyUserInfoActivity.class).execute();
                     } else {
                         attention();
@@ -346,6 +347,20 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                 } else {
                     ToastUtil.show(getString(R.string.no_miss));
                 }
+                break;
+            case R.id.avatar:
+                if (mMiss == null) {
+                    return;
+                }
+                mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Launcher.with(getActivity(), LookBigPictureActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
+                                .putExtra(Launcher.EX_PAYLOAD_2, 0)
+                                .execute();
+                    }
+                });
                 break;
         }
     }

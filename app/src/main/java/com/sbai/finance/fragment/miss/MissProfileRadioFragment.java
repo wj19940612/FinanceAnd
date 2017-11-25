@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -31,6 +32,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.ApiError;
@@ -122,8 +124,12 @@ public class MissProfileRadioFragment extends BaseFragment {
 
             @Override
             protected void onRespSuccessData(List<RadioInfo> data) {
-                if (data != null) {
+                if (data != null && data.size() != 0) {
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    mEmpty.setVisibility(View.GONE);
                     updateRadioData(data);
+                } else {
+                    mEmpty.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -174,7 +180,7 @@ public class MissProfileRadioFragment extends BaseFragment {
 
     @OnClick(R.id.createRadio)
     public void onViewClicked(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.createRadio:
                 Launcher.with(getActivity(), WebActivity.class)
                         .putExtra(WebActivity.EX_URL, Client.CREATE_RADIO_STATION)
@@ -229,7 +235,7 @@ public class MissProfileRadioFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ((ViewHolder) holder).bindingData(mContext, mRadioInfos.get(position), mCallback);
+            ((ViewHolder) holder).bindingData(mContext, mRadioInfos.get(position), mCallback,position,getCount());
         }
 
         @Override
@@ -256,7 +262,11 @@ public class MissProfileRadioFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindingData(Context context, final RadioInfo radioInfo, final CallBack callback) {
+            public void bindingData(Context context, final RadioInfo radioInfo, final CallBack callback, int position, int count) {
+                if(position == count -1 ){
+                    RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mContent.getLayoutParams();
+                    layoutParams.setMargins((int)Display.dp2Px(14,context.getResources()),(int)Display.dp2Px(14,context.getResources()),(int)Display.dp2Px(14,context.getResources()),(int)Display.dp2Px(64,context.getResources()));
+                }
                 GlideApp.with(context).load(radioInfo.getRadioCover())
                         .placeholder(R.drawable.ic_default_image)
                         .circleCrop()

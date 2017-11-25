@@ -8,6 +8,34 @@ public class Banner implements Parcelable {
 
     private static final long serialVersionUID = -7266947195942724446L;
 
+    public static final String FUNC_SHARE = "share";//分享
+    public static final String FUNC_REGANDLOGIN = "regAndLogin";//注册登录
+    public static final String FUNC_EVALUATE = "evaluate";//金融测评
+    public static final String FUNC_CERTIFICATION = "certification";//实名认证
+
+    public static final String STYLE_HTML = "html";
+    public static final String STYLE_H5 = "h5";
+    public static final String STYLE_FUNCTIONMODULE = "functionModule";//功能
+    public static final String STYLE_ORIGINALPAGE = "originalPage";//源生页面
+
+
+    public static final String QUESTION_INFO = "question";//问答详情页
+    public static final String EXPLAIN_IDNEX = "explain";//姐说主页
+    public static final String NEWS_INFO = "news";//要闻详情页
+    public static final String TOPIC = "topic";//一日一题
+    public static final String STOCK = "stock";//股票基础概念
+    public static final String K_TRAIN = "k_train";//单K基础训练
+    public static final String AVERAGE_TRAIN = "average_train";//均线买入信号训练
+    public static final String ANNUAL = "annual";//上市公司年报
+    public static final String MARKET_INFO = "market_info";//行情详情页
+    public static final String GAME_AWARD = "game_award";//赏金场
+    public static final String MARKET_NORMAL = "game_normal";//普通场
+    public static final String USER_INFO = "user_info";//用户信息页
+    public static final String USER_PURSE = "user_purse";//钱包
+    public static final String USER_FEEDBACK = "user_feedback";//意见反馈
+    public static final String APPRAISE = "appraise";//乐米学分页
+
+
     /**
      * 首页banner
      */
@@ -36,7 +64,7 @@ public class Banner implements Parcelable {
     private int index;
     private String operator;
     private int status;
-    private String style;
+    private String style;//html,h5, functionModule功能模块,originalPage原生页面
     private String title;
     private int type;
     private long updateTime;
@@ -47,6 +75,8 @@ public class Banner implements Parcelable {
     private String subTitle;//副标题
     private int userCount;//参与人数
     private String montageData;//活动关键字
+    private String jumpSource;//原生页面要跳到哪个原生页面
+    private String jumpId;//原生页面跳过去带Id传过去
 
     //gift 独有的
     private int clicks; //点击次数
@@ -226,6 +256,22 @@ public class Banner implements Parcelable {
         this.montageData = montageData;
     }
 
+    public String getJumpSource() {
+        return jumpSource;
+    }
+
+    public void setJumpSource(String jumpSource) {
+        this.jumpSource = jumpSource;
+    }
+
+    public String getJumpId() {
+        return jumpId;
+    }
+
+    public void setJumpId(String jumpId) {
+        this.jumpId = jumpId;
+    }
+
     @Override
     public String toString() {
         return "Banner{" +
@@ -277,6 +323,8 @@ public class Banner implements Parcelable {
         dest.writeString(this.montageData);
         dest.writeInt(this.clicks);
         dest.writeString(this.smallPic);
+        dest.writeString(this.jumpSource);
+        dest.writeString(this.jumpId);
     }
 
     protected Banner(Parcel in) {
@@ -301,6 +349,8 @@ public class Banner implements Parcelable {
         this.montageData = in.readString();
         this.clicks = in.readInt();
         this.smallPic = in.readString();
+        this.jumpId = in.readString();
+        this.jumpSource = in.readString();
     }
 
     public static final Creator<Banner> CREATOR = new Creator<Banner>() {

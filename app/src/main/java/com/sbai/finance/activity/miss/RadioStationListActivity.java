@@ -2,12 +2,15 @@ package com.sbai.finance.activity.miss;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +19,26 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.miss.AudioInfo;
+import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.RadioInfo;
+import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissAudioManager;
+import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.VerticalSwipeRefreshLayout;
 import com.sbai.glide.GlideApp;
@@ -41,7 +52,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017\11\21 0021.
  */
 
-public class RadioStationListActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class RadioStationListActivity extends BaseActivity implements AdapterView.OnItemClickListener,MissAudioManager.OnAudioListener{
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -50,7 +61,9 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     @BindView(R.id.swipeRefreshLayout)
     VerticalSwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.root)
-    LinearLayout mRoot;
+    RelativeLayout mRoot;
+    @BindView(R.id.missFloatWindow)
+    MissFloatWindow mMissFloatWindow;
 
     ImageView mCover;
     TextView mSubscribe;
@@ -60,6 +73,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     TextView mListenerNumber;
     TextView mContent;
     TextView mBtnLookMore;
+    RelativeLayout mNameLayout;
 
     private int mRadioStationId;
     private RadioStationAdapter mRadioStationAdapter;
@@ -77,6 +91,9 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
         mListView.setAdapter(mRadioStationAdapter);
         mListView.setOnItemClickListener(this);
 
+        initFloatWindow();
+        MissAudioManager.get().addAudioListener(this);
+
         initHeaderView();
         initSwipeRefreshLayout();
         requestRadioStationDetail();
@@ -85,9 +102,6 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
 
     private void initData(Intent intent) {
         mRadioStationId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
-        if (mRadioStationId == -1) {
-            mRadioStationId = 2;
-        }
     }
 
     private void initHeaderView() {
@@ -100,6 +114,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
         mListenerNumber = header.findViewById(R.id.listenerNumber);
         mContent = header.findViewById(R.id.content);
         mBtnLookMore = header.findViewById(R.id.btnLookMore);
+        mNameLayout = header.findViewById(R.id.nameLayout);
         mBtnLookMore.setTag(false);
         mBtnLookMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,9 +126,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mRadioInfo == null) {
-                    return;
-                }
+                if (mRadioInfo == null) return;
                 Client.collectRadio(String.valueOf(mRadioStationId)).setTag(TAG).setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -129,21 +142,52 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
                             }
                         }
                     }
-                });
+                }).fireFree();
             }
         };
         mSubscribe.setOnClickListener(onClickListener);
         mSubscribed.setOnClickListener(onClickListener);
-        mName.setOnClickListener(new View.OnClickListener() {
+        mNameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mRadioInfo == null) {
-                    return;
-                }
+                if (mRadioInfo == null) return;
                 Launcher.with(RadioStationListActivity.this, MissProfileDetailActivity.class).putExtra(Launcher.EX_PAYLOAD, mRadioInfo.getRadioHost()).execute();
             }
         });
+
+        mCover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mRadioInfo == null) return;
+                Launcher.with(getActivity(), LookBigPictureActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, mRadioInfo.getRadioCover())
+                        .putExtra(Launcher.EX_PAYLOAD_2, 0)
+                        .execute();
+            }
+        });
         mListView.addHeaderView(header);
+    }
+
+    private void initFloatWindow(){
+        if (MissAudioManager.get().getAudio() instanceof Question) {
+            final Question playingQuestion = (Question) MissAudioManager.get().getAudio();
+            if (MissAudioManager.get().isStarted(playingQuestion)) {
+                mMissFloatWindow.setVisibility(View.VISIBLE);
+                mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
+                mMissFloatWindow.startAnim();
+                mMissFloatWindow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
+
+                        Launcher.with(getActivity(), QuestionDetailActivity.class)
+                                .putExtra(ExtraKeys.IS_FROM_MISS_TALK, true)
+                                .putExtra(Launcher.EX_PAYLOAD, playingQuestion.getId())
+                                .execute();
+                    }
+                });
+            }
+        }
     }
 
     private void initSwipeRefreshLayout() {
@@ -187,7 +231,11 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        parent.getItemAtPosition(position);
+        if (position != 0) {
+            //TODO 跳转到电台具体的播放界面
+            RadioInfo radioInfo = (RadioInfo) parent.getItemAtPosition(position);
+            int radioId = radioInfo.getId();
+        }
     }
 
     private void requestRadioStationDetail() {
@@ -211,7 +259,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
         mRadioInfo = radioInfo;
         GlideApp.with(this).load(radioInfo.getRadioCover())
                 .placeholder(R.drawable.ic_default_image)
-                .centerCrop()
+                .centerCrop().fallback(getResources().getDrawable(R.drawable.bg_radio_big_cover))
                 .into(mCover);
 
         GlideApp.with(this).load(radioInfo.getUserPortrait())
@@ -255,6 +303,48 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
         for (AudioInfo audioInfo : data) {
             mRadioStationAdapter.add(audioInfo);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onAudioStart() {
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (audio instanceof Question) {
+            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
+        }
+    }
+
+    @Override
+    public void onAudioPlay() {
+        mMissFloatWindow.startAnim();
+    }
+
+    @Override
+    public void onAudioPause() {
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onAudioResume() {
+        mMissFloatWindow.startAnim();
+    }
+
+    @Override
+    public void onAudioStop() {
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onAudioError() {
+
     }
 
     static class RadioStationAdapter extends ArrayAdapter<AudioInfo> {

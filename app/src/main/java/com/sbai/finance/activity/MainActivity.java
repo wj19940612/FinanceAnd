@@ -32,6 +32,7 @@ import com.sbai.finance.model.AppVersion;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.fund.UserFundInfo;
+import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -337,6 +338,10 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
         informationFragment.setPage(page);
         mBottomTabs.selectTab(PAGE_POSITION_INFO_NEWS);
         mViewPager.setCurrentItem(PAGE_POSITION_INFO_NEWS, false);
+    }
+
+    public void switchToMissFragment() {
+        mViewPager.setCurrentItem(PAGE_POSITION_MISS, false);
     }
 
     @Override
