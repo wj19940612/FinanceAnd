@@ -13,7 +13,6 @@ import com.sbai.httplib.ApiParams;
 public class Client {
 
     private static final int POST = Request.Method.POST;
-    private static final int PUT = Request.Method.PUT;
     public static final int DEFAULT_PAGE_SIZE = 20;
 
     //h5功能介绍网址
@@ -76,7 +75,7 @@ public class Client {
     /**
      * 获取股票账户
      *
-     * @param type 1 实盘 2 模拟 3 活动
+     * @param type         1 实盘 2 模拟 3 活动
      * @param activityCode
      * @return
      */
@@ -85,6 +84,10 @@ public class Client {
                 new ApiParams()
                         .put("type", type)
                         .put("activityCode", activityCode));
+    }
+
+    public static API getStockAccount() {
+        return new API("/api/stock-or/account/info.do");
     }
 
     /**
@@ -3094,19 +3097,10 @@ public class Client {
     }
 
     /**
-     * 获取股票账户列表
-     */
-    public static API requestAccount(int type, String activityCode) {
-        return new API("/api/stock-or/account/info.do", new ApiParams()
-                .put("type", type)
-                .put("activityCode", activityCode));
-    }
-
-    /**
      * 切换账号
      */
     public static API requestSwitchAccount(int id, String account) {
-        return new API(PUT, "/api/stock-or/account/switchover.do", new ApiParams()
+        return new API(POST, "/api/stock-or/account/switchover.do", new ApiParams()
                 .put("id", id)
                 .put("account", account));
     }

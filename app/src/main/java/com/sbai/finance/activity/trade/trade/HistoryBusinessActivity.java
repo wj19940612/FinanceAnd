@@ -14,6 +14,8 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.trade.stock.StockEntrustFragment;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Entrust;
 import com.sbai.finance.model.stocktrade.Position;
 import com.sbai.finance.net.Callback2D;
@@ -54,6 +56,7 @@ public class HistoryBusinessActivity extends BaseActivity {
     private int mPage = 0;
     private boolean mLoadMore = true;
     private StockEntrustFragment.EntrustAdapter mBusinessAdapter;
+    private StockUser mStockUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +66,7 @@ public class HistoryBusinessActivity extends BaseActivity {
         initView();
         initSwipeRefreshView();
         initRecyclerView();
+        mStockUser = LocalUser.getUser().getStockUser();
         requestBusiness(true);
     }
 
@@ -111,7 +115,8 @@ public class HistoryBusinessActivity extends BaseActivity {
     }
 
     private void requestBusiness(final boolean isRefresh) {
-        Client.requestHistoryBusiness(Position.TYPE_SIMULATE_ACTIVITY, "MA100213", "test",
+        if (mStockUser == null) return;
+        Client.requestHistoryBusiness(mStockUser.getType(), mStockUser.getAccount(), mStockUser.getActivityCode(),
                 mStartTime.getText().toString(), mEndTime.getText().toString(), mPage).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Entrust>>, List<Entrust>>() {
                     @Override

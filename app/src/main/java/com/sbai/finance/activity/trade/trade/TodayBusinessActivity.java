@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.fragment.trade.stock.StockEntrustFragment;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Entrust;
 import com.sbai.finance.model.stocktrade.Position;
 import com.sbai.finance.net.Callback2D;
@@ -39,6 +41,7 @@ public class TodayBusinessActivity extends BaseActivity {
     private int mPage = 0;
     private boolean mLoadMore = true;
     private StockEntrustFragment.EntrustAdapter mBusinessAdapter;
+    private StockUser mStockUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +50,7 @@ public class TodayBusinessActivity extends BaseActivity {
         ButterKnife.bind(this);
         initSwipeRefreshView();
         initRecyclerView();
+        mStockUser = LocalUser.getUser().getStockUser();
         requestBusiness(true);
     }
 
@@ -79,7 +83,8 @@ public class TodayBusinessActivity extends BaseActivity {
     }
 
     private void requestBusiness(final boolean isRefresh) {
-        Client.requestTodayBusiness(Position.TYPE_SIMULATE_ACTIVITY, "MA100213", "test", mPage).setTag(TAG)
+        if (mStockUser == null) return;
+        Client.requestTodayBusiness(mStockUser.getType(), mStockUser.getAccount(), mStockUser.getActivityCode(), mPage).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Entrust>>, List<Entrust>>() {
                     @Override
                     protected void onRespSuccessData(List<Entrust> data) {

@@ -1,10 +1,14 @@
 package com.sbai.finance.fragment.trade.stock;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -19,7 +23,9 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.stock.StockData;
+import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Position;
 import com.sbai.finance.model.stocktrade.PositionRecords;
 import com.sbai.finance.net.Callback2D;
@@ -55,6 +61,16 @@ public class StockPositionFragment extends BaseFragment {
     ImageView mStockPrompt;
     private PositionAdapter mPositionAdapter;
     private Map<String, Position> mPositionMap;
+    private StockUser mStockUser;
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equalsIgnoreCase(StockOrderActivity.ACTION_SWITCH_ACCOUNT)) {
+                mStockUser = LocalUser.getUser().getStockUser();
+                requestAsset();
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -70,13 +86,19 @@ public class StockPositionFragment extends BaseFragment {
         mPositionMap = new HashMap<>();
         initView();
         initRecyclerView();
+        initBroadcastReceiver();
+    }
+
+    private void initBroadcastReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(StockOrderActivity.ACTION_SWITCH_ACCOUNT);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, intentFilter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         requestAsset();
-        startScheduleJob(5 * 1000);
     }
 
     @Override
@@ -92,7 +114,9 @@ public class StockPositionFragment extends BaseFragment {
     }
 
     private void requestAsset() {
-        Client.requestAsset(Position.TYPE_SIMULATE_ACTIVITY, "MA100213", "test")
+        if (mStockUser == null) return;
+        startScheduleJob(5 * 1000);
+        Client.requestAsset(mStockUser.getType(), mStockUser.getAccount(), mStockUser.getActivityCode())
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<PositionRecords>, PositionRecords>() {
                     @Override
@@ -101,6 +125,7 @@ public class StockPositionFragment extends BaseFragment {
                     }
                 }).fireFree();
     }
+
 
     private void updateAssetAndPosition(PositionRecords data) {
         mPositionMap.clear();
@@ -177,6 +202,7 @@ public class StockPositionFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
     }
 
     private void hidePriOperateView(int index) {
@@ -336,7 +362,7 @@ public class StockPositionFragment extends BaseFragment {
                     mFloatValue.setText("0.00");
                     mFloatRate.setText("0%");
                 } else {
-                    mLastPrice.setText(lastPriceStr);
+                    mLastPrice.setText(FinanceUtil.formatWithScale(Double.valueOf(lastPriceStr), 3));
                     double difference = Double.valueOf(lastPriceStr) - stockPosition.getAvgBuyPrice();
                     mFloatValue.setText(FinanceUtil.formatWithScale(difference * stockPosition.getTotalQty()));
                     if (difference > 0) {
@@ -348,7 +374,7 @@ public class StockPositionFragment extends BaseFragment {
                     }
                 }
                 mLastPrice.setTextColor(color);
-                mCostPrice.setText(String.valueOf(stockPosition.getAvgBuyPrice()));
+                mCostPrice.setText(FinanceUtil.formatWithScale(stockPosition.getAvgBuyPrice(), 3));
                 mCostPrice.setTextColor(color);
                 mOperateArea.setVisibility(View.GONE);
                 if (position == index) {

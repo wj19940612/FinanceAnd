@@ -18,6 +18,8 @@ public class StockUser implements Parcelable {
 
     public static final int VIRTUAL_TYPE_SCORE = 1; // 积分
 
+    public static final int ACCOUNT_ACTIVE = 1;//激活的账户
+
     /**
      * account : MA104214
      * accountName : 米宝63535
@@ -43,7 +45,7 @@ public class StockUser implements Parcelable {
     private int id;
     private int status;
     private int type;
-    private int usableMoney; // 可用资金
+    private double usableMoney; // 可用资金
     private int userId;
     private int virtualType; // 虚拟账户类型
 
@@ -83,7 +85,7 @@ public class StockUser implements Parcelable {
         return type;
     }
 
-    public int getUsableMoney() {
+    public double getUsableMoney() {
         return usableMoney;
     }
 
@@ -111,7 +113,7 @@ public class StockUser implements Parcelable {
         dest.writeInt(this.id);
         dest.writeInt(this.status);
         dest.writeInt(this.type);
-        dest.writeInt(this.usableMoney);
+        dest.writeDouble(this.usableMoney);
         dest.writeInt(this.userId);
         dest.writeInt(this.virtualType);
     }

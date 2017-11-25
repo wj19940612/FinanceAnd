@@ -35,7 +35,7 @@
                 android:textSize="18sp"
                 tool:text="西部能源"/>
 
-            <com.sbai.finance.view.autofit.AutofitTextView
+            <TextView
                 android:id="@+id/positionValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
             android:gravity="right"
             android:orientation="vertical">
 
-            <com.sbai.finance.view.autofit.AutofitTextView
+            <TextView
                 android:id="@+id/positionAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                 android:textSize="18sp"
                 tool:text="6000"/>
 
-            <com.sbai.finance.view.autofit.AutofitTextView
+            <TextView
                 android:id="@+id/enableAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
             android:gravity="right"
             android:orientation="vertical">
 
-            <com.sbai.finance.view.autofit.AutofitTextView
+            <TextView
                 android:id="@+id/lastPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                 android:textSize="18sp"
                 tool:text="6000"/>
 
-            <com.sbai.finance.view.autofit.AutofitTextView
+            <TextView
                 android:id="@+id/costPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
             android:gravity="right"
             android:orientation="vertical">
 
-            <com.sbai.finance.view.autofit.AutofitTextView
+            <TextView
                 android:id="@+id/floatValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
                 android:textSize="18sp"
                 tool:text="6000"/>
 
-            <com.sbai.finance.view.autofit.AutofitTextView
+            <TextView
                 android:id="@+id/floatRate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
