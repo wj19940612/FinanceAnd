@@ -3,6 +3,9 @@ package com.sbai.finance.activity.stock;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -13,8 +16,10 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.stock.StockRTData;
+import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -22,10 +27,12 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.StockUtil;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.TimerHandler;
+import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.PlusMinusEditText;
 import com.sbai.finance.view.TitleBar;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,11 +40,19 @@ import butterknife.OnClick;
 
 import static com.sbai.finance.utils.StockUtil.NULL_VALUE;
 
+/**
+ * Modified by john on 24/11/2017
+ *
+ * 股票交易操作页面，买入卖出，如果从股票详情页面进入，当前账户为模拟，如果从账户页面进入，依赖于当前保存是什么账户
+ *
+ */
 public class StockTradeOperateActivity extends BaseActivity {
 
     public static final String TRADE_TYPE = "trade_type";
     public static final int TRADE_TYPE_BUY = 80;
     public static final int TRADE_TYPE_SELL = 81;
+
+    public static final String MOCK_TRADE = "mock_trade";
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -109,14 +124,46 @@ public class StockTradeOperateActivity extends BaseActivity {
     @BindView(R.id.listView)
     ListView mListView;
 
-
     private TextView mBuyInTab;
     private TextView mSellOutTab;
 
+    private boolean mIsMockTrade;
     private int mTradeType;
     private Variety mVariety;
     private StockRTData mStockRTData;
     private boolean mInitTradePrice;
+
+    private StockUser mStockUser;
+
+    private TextWatcher mVolumeWatcher = new ValidationWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            boolean tradeButtonEnable = checkTradeButtonEnable();
+            if (tradeButtonEnable != mTradeButton.isEnabled()) {
+                mTradeButton.setEnabled(tradeButtonEnable);
+            }
+
+
+        }
+    };
+
+    private TextWatcher mPriceWatcher = new ValidationWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            boolean tradeButtonEnable = checkTradeButtonEnable();
+            if (tradeButtonEnable != mTradeButton.isEnabled()) {
+                mTradeButton.setEnabled(tradeButtonEnable);
+            }
+
+            
+        }
+    };
+
+    private boolean checkTradeButtonEnable() {
+        String tradePrice = mTradePrice.getText();
+        String tradeVolume = mTradePrice.getText();
+        return !TextUtils.isEmpty(tradePrice) && !TextUtils.isEmpty(tradeVolume);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,10 +173,43 @@ public class StockTradeOperateActivity extends BaseActivity {
         adjustFivePriceViewTextSize();
 
         initData(getIntent());
+
         initTitleBar();
         initTradeViews();
 
         initViewWithVariety();
+
+        if (mIsMockTrade) {
+            StockUser stockUser = LocalUser.getUser().getStockUser();
+            if (stockUser != null && stockUser.getType() == StockUser.ACCOUNT_TYPE_MOCK) {
+                mStockUser = stockUser;
+            } else {
+                requestMockStockUser();
+            }
+        }
+
+        mTradePrice.addTextChangedListener(mPriceWatcher);
+        mTradeVolume.addTextChangedListener(mVolumeWatcher);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTradePrice.removeTextChangedListener(mPriceWatcher);
+        mTradeVolume.removeTextChangedListener(mVolumeWatcher);
+    }
+
+    private void requestMockStockUser() {
+        Client.getStockAccount(StockUser.ACCOUNT_TYPE_MOCK, null)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<StockUser>>, List<StockUser>>() {
+                    @Override
+                    protected void onRespSuccessData(List<StockUser> data) {
+                        if (!data.isEmpty()) {
+                            mStockUser = data.get(0);
+                        }
+                    }
+                }).fireFree();
     }
 
     private void initTradeViews() {
@@ -256,7 +336,7 @@ public class StockTradeOperateActivity extends BaseActivity {
     }
 
     private void updateFivePricesView() {
-        if (mStockRTData.getInstrumentId().equals(mVariety.getVarietyId())) {
+        if (mStockRTData.getInstrumentId().equals(mVariety.getVarietyType())) {
             mAskPrice1.setText(StockUtil.getStockDecimal(mStockRTData.getAskPrice()));
             mAskPrice2.setText(StockUtil.getStockDecimal(mStockRTData.getAskPrice2()));
             mAskPrice3.setText(StockUtil.getStockDecimal(mStockRTData.getAskPrice3()));
@@ -322,6 +402,7 @@ public class StockTradeOperateActivity extends BaseActivity {
     private void initData(Intent intent) {
         mTradeType = intent.getIntExtra(TRADE_TYPE, TRADE_TYPE_BUY);
         mVariety = intent.getParcelableExtra(ExtraKeys.VARIETY);
+        mIsMockTrade = intent.getBooleanExtra(MOCK_TRADE, false);
     }
 
     private void initTitleBar() {
@@ -335,6 +416,31 @@ public class StockTradeOperateActivity extends BaseActivity {
             mBuyInTab.setSelected(false);
             mSellOutTab.setSelected(true);
         }
+        mBuyInTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mBuyInTab.isSelected()) {
+                    mBuyInTab.setSelected(true);
+                    mSellOutTab.setSelected(false);
+                    initTradeViews();
+                    mTradeVolume.setText(null);
+                    unselectPositionSelectors();
+                }
+            }
+        });
+        mSellOutTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mSellOutTab.isSelected()) {
+                    mBuyInTab.setSelected(false);
+                    mSellOutTab.setSelected(true);
+                    initTradeViews();
+                    mTradeVolume.setText(null);
+                    unselectPositionSelectors();
+                }
+            }
+        });
+
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -343,39 +449,66 @@ public class StockTradeOperateActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.askPrice5, R.id.askPrice4, R.id.askPrice3, R.id.askPrice2, R.id.askPrice1, R.id.bidPrice1, R.id.bidPrice2, R.id.bidPrice3, R.id.bidPrice4, R.id.bidPrice5})
+    @OnClick({R.id.ask5, R.id.ask4, R.id.ask3, R.id.ask2, R.id.ask1,
+            R.id.bid1, R.id.bid2, R.id.bid3, R.id.bid4, R.id.bid5,
+            R.id.fullPosition, R.id.halfPosition, R.id.quarterPosition})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.askPrice5:
+            case R.id.ask5:
                 mTradePrice.setText(mAskPrice5.getText().toString());
                 break;
-            case R.id.askPrice4:
+            case R.id.ask4:
                 mTradePrice.setText(mAskPrice4.getText().toString());
                 break;
-            case R.id.askPrice3:
+            case R.id.ask3:
                 mTradePrice.setText(mAskPrice3.getText().toString());
                 break;
-            case R.id.askPrice2:
+            case R.id.ask2:
                 mTradePrice.setText(mAskPrice2.getText().toString());
                 break;
-            case R.id.askPrice1:
+            case R.id.ask1:
                 mTradePrice.setText(mAskPrice1.getText().toString());
                 break;
-            case R.id.bidPrice1:
+            case R.id.bid1:
                 mTradePrice.setText(mBidPrice1.getText().toString());
                 break;
-            case R.id.bidPrice2:
+            case R.id.bid2:
                 mTradePrice.setText(mBidPrice2.getText().toString());
                 break;
-            case R.id.bidPrice3:
+            case R.id.bid3:
                 mTradePrice.setText(mBidPrice3.getText().toString());
                 break;
-            case R.id.bidPrice4:
+            case R.id.bid4:
                 mTradePrice.setText(mBidPrice4.getText().toString());
                 break;
-            case R.id.bidPrice5:
+            case R.id.bid5:
                 mTradePrice.setText(mBidPrice5.getText().toString());
                 break;
+            case R.id.fullPosition:
+                unselectPositionSelectors();
+                mFullPosition.setSelected(true);
+                onPositionSelectorsClick();
+                break;
+            case R.id.halfPosition:
+                unselectPositionSelectors();
+                mHalfPosition.setSelected(true);
+                onPositionSelectorsClick();
+                break;
+            case R.id.quarterPosition:
+                unselectPositionSelectors();
+                mQuarterPosition.setSelected(true);
+                onPositionSelectorsClick();
+                break;
+        }
+    }
+
+    private void onPositionSelectorsClick() {
+        if (mFullPosition.isSelected()) {
+
+        } else if (mHalfPosition.isSelected()) {
+
+        } else if (mQuarterPosition.isSelected()) {
+
         }
     }
 }

@@ -72,6 +72,21 @@ public class Client {
                         .put("smallVarietyTypeCode", smallVarietyTypeCode));
     }
 
+
+    /**
+     * 获取股票账户
+     *
+     * @param type 1 实盘 2 模拟 3 活动
+     * @param activityCode
+     * @return
+     */
+    public static API getStockAccount(int type, String activityCode) {
+        return new API("/api/stock-or/account/info.do",
+                new ApiParams()
+                        .put("type", type)
+                        .put("activityCode", activityCode));
+    }
+
     /**
      * 期货搜索
      */

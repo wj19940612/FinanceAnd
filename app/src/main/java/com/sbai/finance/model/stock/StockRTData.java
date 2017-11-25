@@ -411,4 +411,54 @@ public class StockRTData implements Parcelable {
             return new StockRTData[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "StockRTData{" +
+                "askPrice='" + askPrice + '\'' +
+                ", askPrice2='" + askPrice2 + '\'' +
+                ", askPrice3='" + askPrice3 + '\'' +
+                ", askPrice4='" + askPrice4 + '\'' +
+                ", askPrice5='" + askPrice5 + '\'' +
+                ", askVolume='" + askVolume + '\'' +
+                ", askVolume2='" + askVolume2 + '\'' +
+                ", askVolume3='" + askVolume3 + '\'' +
+                ", askVolume4='" + askVolume4 + '\'' +
+                ", askVolume5='" + askVolume5 + '\'' +
+                ", bidPrice='" + bidPrice + '\'' +
+                ", bidPrice2='" + bidPrice2 + '\'' +
+                ", bidPrice3='" + bidPrice3 + '\'' +
+                ", bidPrice4='" + bidPrice4 + '\'' +
+                ", bidPrice5='" + bidPrice5 + '\'' +
+                ", bidVolume='" + bidVolume + '\'' +
+                ", bidVolume2='" + bidVolume2 + '\'' +
+                ", bidVolume3='" + bidVolume3 + '\'' +
+                ", bidVolume4='" + bidVolume4 + '\'' +
+                ", bidVolume5='" + bidVolume5 + '\'' +
+                ", downLimitPrice='" + downLimitPrice + '\'' +
+                ", exchangeId='" + exchangeId + '\'' +
+                ", highestPrice='" + highestPrice + '\'' +
+                ", instrumentId='" + instrumentId + '\'' +
+                ", lastPrice='" + lastPrice + '\'' +
+                ", lowestPrice='" + lowestPrice + '\'' +
+                ", openPrice='" + openPrice + '\'' +
+                ", preClsPrice='" + preClsPrice + '\'' +
+                ", preSetPrice='" + preSetPrice + '\'' +
+                ", settlePrice='" + settlePrice + '\'' +
+                ", status='" + status + '\'' +
+                ", tradeDay='" + tradeDay + '\'' +
+                ", turnover='" + turnover + '\'' +
+                ", upDropPrice='" + upDropPrice + '\'' +
+                ", upDropSpeed=" + upDropSpeed +
+                ", upLimitPrice='" + upLimitPrice + '\'' +
+                ", upTime=" + upTime +
+                ", upTimeFormat='" + upTimeFormat + '\'' +
+                ", volume='" + volume + '\'' +
+                ", turnoverRate='" + turnoverRate + '\'' +
+                ", pe='" + pe + '\'' +
+                ", volRate='" + volRate + '\'' +
+                ", totalShares='" + totalShares + '\'' +
+                ", marketValue='" + marketValue + '\'' +
+                '}';
+    }
 }
