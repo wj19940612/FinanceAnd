@@ -1,11 +1,15 @@
 package com.sbai.finance.fragment.trade.stock;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,8 +20,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.ImageFloder;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Entrust;
 import com.sbai.finance.model.stocktrade.Position;
 import com.sbai.finance.net.Callback;
@@ -52,6 +59,18 @@ public class StockEntrustFragment extends BaseFragment {
     Unbinder unbinder;
     private EntrustAdapter mEntrustAdapter;
     private int mPage;
+    private boolean mLoadMore;
+
+    private StockUser mStockUser;
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equalsIgnoreCase(StockOrderActivity.ACTION_SWITCH_ACCOUNT)) {
+                mStockUser = LocalUser.getUser().getStockUser();
+                refreshData();
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -64,17 +83,14 @@ public class StockEntrustFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initView();
         initRecyclerView();
+        initBroadcastReceiver();
     }
 
-    private void initView() {
-        mLastAndCostPrice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: 2017-11-21
-            }
-        });
+    private void initBroadcastReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(StockOrderActivity.ACTION_SWITCH_ACCOUNT);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, intentFilter);
     }
 
     private void initRecyclerView() {
@@ -89,48 +105,79 @@ public class StockEntrustFragment extends BaseFragment {
             @Override
             public void withdraw(int id) {
                 showWithdrawDialog(id);
-                // TODO: 2017-11-21
             }
         });
         mRecyclerView.setAdapter(mEntrustAdapter);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                handleRecycleScroll();
+            }
+        });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        requestEntrust();
+    private void refreshData() {
+        mPage = 0;
+        mLoadMore = true;
+        if (isVisible()) {
+            requestEntrust(true);
+        }
     }
 
-    private void requestEntrust() {
-        Client.requestEntrust(Position.TYPE_SIMULATE, "jf100009", null, mPage)
+    private void requestEntrust(final boolean isRefresh) {
+        if (mStockUser == null) return;
+        Client.requestEntrust(mStockUser.getType(), mStockUser.getAccount(), mStockUser.getActivityCode(), mPage)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Entrust>>, List<Entrust>>() {
                     @Override
                     protected void onRespSuccessData(List<Entrust> data) {
-                        updateEntrust(data);
+                        updateEntrust(data, isRefresh);
                     }
                 }).fireFree();
     }
 
     private void requestWithdraw(int id) {
-        Client.requestWithdraw(id, null)
+        Client.requestWithdraw(id, mStockUser.getAccount())
                 .setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        requestEntrust();
+                        refreshData();
                     }
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         ToastUtil.show(failedResp.getMsg());
+                        refreshData();
                     }
                 }).fireFree();
     }
 
-    private void updateEntrust(List<Entrust> data) {
+    private void updateEntrust(List<Entrust> data, boolean isRefresh) {
         mEntrustAdapter.clear();
         mEntrustAdapter.addAll(data);
+
+        if (data == null || data.isEmpty()) {
+            mEmpty.setVisibility(View.VISIBLE);
+        } else {
+            mEmpty.setVisibility(View.GONE);
+            if (isRefresh) {
+                mEntrustAdapter.clear();
+            }
+            if (data.size() < Client.DEFAULT_PAGE_SIZE) {
+                mLoadMore = false;
+            } else {
+                mPage++;
+                mLoadMore = true;
+            }
+            mEntrustAdapter.addAll(data);
+        }
     }
 
     private void showWithdrawDialog(final int id) {
@@ -148,10 +195,22 @@ public class StockEntrustFragment extends BaseFragment {
                 }).show();
     }
 
+    private void handleRecycleScroll() {
+        if (isSlideToBottom(mRecyclerView) && mLoadMore) {
+            requestEntrust(false);
+        }
+    }
+
+    protected boolean isSlideToBottom(RecyclerView recyclerView) {
+        if (recyclerView == null) return false;
+        return recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange();
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
     }
 
     private void hidePriOperateView(int index) {
@@ -291,7 +350,10 @@ public class StockEntrustFragment extends BaseFragment {
                     mBusinessDate.setText(DateUtil.format(entrust.getBargainTime(), "MM/dd"));
                     mBusinessTime.setText(DateUtil.format(entrust.getBargainTime(), "HH:mm"));
                 }
-
+                mOperateArea.setVisibility(View.GONE);
+                if (position == index) {
+                    mOperateArea.setVisibility(View.VISIBLE);
+                }
                 mPositionArea.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

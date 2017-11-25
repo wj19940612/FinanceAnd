@@ -75,7 +75,7 @@ public class Client {
     /**
      * 获取股票账户
      *
-     * @param type 1 实盘 2 模拟 3 活动
+     * @param type         1 实盘 2 模拟 3 活动
      * @param activityCode
      * @return
      */
@@ -84,6 +84,10 @@ public class Client {
                 new ApiParams()
                         .put("type", type)
                         .put("activityCode", activityCode));
+    }
+
+    public static API getStockAccount() {
+        return new API("/api/stock-or/account/info.do");
     }
 
     /**
@@ -3092,6 +3096,14 @@ public class Client {
                 .put("account", account));
     }
 
+    /**
+     * 切换账号
+     */
+    public static API requestSwitchAccount(int id, String account) {
+        return new API(POST, "/api/stock-or/account/switchover.do", new ApiParams()
+                .put("id", id)
+                .put("account", account));
+    }
 
     /**
      * 小姐姐管理--查询最新的推荐电台(薛松)

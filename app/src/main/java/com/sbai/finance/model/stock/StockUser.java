@@ -18,6 +18,8 @@ public class StockUser implements Parcelable {
 
     public static final int VIRTUAL_TYPE_SCORE = 1; // 积分
 
+    public static final int ACCOUNT_ACTIVE = 1;//激活的账户
+
     /**
      * account : MA104214
      * accountName : 米宝63535

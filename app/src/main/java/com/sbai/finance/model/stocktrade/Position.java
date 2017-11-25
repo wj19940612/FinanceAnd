@@ -48,6 +48,15 @@ public class Position {
     private long createTime;
     private long updateTime;
     private double todayAvgPrice;
+    private double todayBargainCount;
+
+    public double getTodayBargainCount() {
+        return todayBargainCount;
+    }
+
+    public void setTodayBargainCount(double todayBargainCount) {
+        this.todayBargainCount = todayBargainCount;
+    }
 
     public int getId() {
         return id;

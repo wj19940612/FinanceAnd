@@ -57,13 +57,13 @@ public class StockActivityPickerPopWin extends PopupWindow implements OnClickLis
         }
 
         //Option
-        private String textCancel = "Cancel";
-        private String textConfirm = "Confirm";
+        private String textCancel = "取消";
+        private String textConfirm = "确定";
         private int dataChoseIndex = 0;
         private int colorCancel = Color.parseColor("#999999");
         private int colorConfirm = Color.parseColor("#303F9F");
         private int btnTextSize = 16;//text btnTextSize of cancel and confirm button
-        private int viewTextSize = 25;
+        private int viewTextSize = 10;
         private List<String> dataList;
 
         public Builder textCancel(String textCancel) {
