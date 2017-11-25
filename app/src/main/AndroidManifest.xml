@@ -303,7 +303,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"/>
         <activity
-            android:name=".activity.miss.radio.MediaStationPlayActivityActivity"
+            android:name=".activity.miss.radio.RadioStationPlayActivityActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
         <activity

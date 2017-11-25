@@ -8,8 +8,8 @@ package com.sbai.finance.model.mine;
 
 public class MyCollect {
     //收藏类型  1 提问 2 乐米日报
-    public static final int COLLECTI_TYPE_QUESTION = 1;
-    public static final int COLLECTI_TYPE_ARTICLE = 2;
+    public static final int COLLECT_TYPE_QUESTION = 1;
+    public static final int COLLECT_TYPE_ARTICLE = 2;
     /**
      * mongoId : 598c7e9e8776e2bc872d2ae2
      * coverUrl : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1505183304405011072.jpg

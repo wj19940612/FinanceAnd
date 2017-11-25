@@ -68,8 +68,6 @@ import static com.sbai.finance.net.Client.SHARE_URL_QUESTION;
 
 public class QuestionDetailActivity extends BaseActivity implements AdapterView.OnItemClickListener, MissAudioManager.OnAudioListener {
 
-    private static final int REQ_COMMENT = 1001;
-    private static final int REQ_COMMENT_LOGIN = 1002;
     private static final int REQ_REWARD_LOGIN = 1003;
 
     public static final int REQ_CODE_QUESTION_DETAIL = 5555;
@@ -595,12 +593,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 Launcher.with(getActivity(), CommentActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, mQuestion.getQuestionUserId())
                         .putExtra(Launcher.EX_PAYLOAD_1, mQuestion.getId())
-                        .executeForResult(REQ_COMMENT);
+                        .executeForResult(CommentActivity.REQ_CODE_COMMENT);
 
             } else {
                 stopQuestionVoice();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivityForResult(intent, REQ_COMMENT_LOGIN);
+                startActivityForResult(intent, CommentActivity.REQ_CODE_COMMENT_LOGIN);
             }
         }
     }
@@ -713,6 +711,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     }
 
     static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
+
         private Context mContext;
 
         private QuestionReplyListAdapter(@NonNull Context context) {
@@ -752,6 +751,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             LinearLayout mReplyArea;
             @BindView(R.id.publishTime)
             TextView mPublishTime;
+            @BindView(R.id.reviewPriceCount)
+            TextView mReviewPriceCount;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -793,6 +794,13 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     });
                 }
 
+                mReviewPriceCount.setText(String.valueOf(item.getReviewPriseCount()));
+                if (item.getReviewPriseStatus() == QuestionReply.DataBean.QUESTION_REVIEW_PRISE) {
+                    mReviewPriceCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_praise, 0, 0, 0);
+                } else {
+                    mReviewPriceCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_unpraise, 0, 0, 0);
+                }
+
                 mPublishTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateDate()));
                 mOpinionContent.setText(item.getContent());
 
@@ -824,7 +832,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_COMMENT && resultCode == RESULT_OK) {
+        if (requestCode == CommentActivity.REQ_CODE_COMMENT && resultCode == RESULT_OK) {
             mSet.clear();
             mPage = 0;
             mReplayMsgId = null;
@@ -836,12 +844,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             mListView.setSelection(0);
         }
 
-        if (requestCode == REQ_COMMENT_LOGIN && resultCode == RESULT_OK) {
+        if (requestCode == CommentActivity.REQ_CODE_COMMENT_LOGIN && resultCode == RESULT_OK) {
             if (mQuestion != null) {
                 Launcher.with(getActivity(), CommentActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, mQuestion.getQuestionUserId())
                         .putExtra(Launcher.EX_PAYLOAD_1, mQuestion.getId())
-                        .executeForResult(REQ_COMMENT);
+                        .executeForResult(CommentActivity.REQ_CODE_COMMENT);
             }
         }
     }

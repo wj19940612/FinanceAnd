@@ -132,6 +132,7 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
         }
         mMediaPlayIntent.putExtra(ExtraKeys.MEDIA_PLAY_SOURCE, mSource);
         LocalBroadcastManager.getInstance(this).sendBroadcast(mMediaPlayIntent);
+        mTimerHandler.sendEmptyMessageDelayed(DEFAULT_UPDATE_MEDIA_PROGRESS, 0);
     }
 
     @Override

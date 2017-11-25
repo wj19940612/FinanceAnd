@@ -40,6 +40,9 @@ public class CommentActivity extends BaseActivity {
 
     public static final String BROADCAST_ACTION_REPLY_SUCCESS = "broadcast_action_reply_success";
 
+    public static final int REQ_CODE_COMMENT = 5091;
+    public static final int REQ_CODE_COMMENT_LOGIN = 1705;
+
     @BindView(R.id.questionComment)
     EditText mQuestionComment;
     @BindView(R.id.wordsNumber)

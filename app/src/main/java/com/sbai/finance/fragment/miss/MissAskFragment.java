@@ -11,7 +11,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +100,7 @@ public class MissAskFragment extends MediaPlayFragment {
                         public void onCompleted(String url) {
                             mMissAskAdapter.notifyDataSetChanged();
                             if (mOnMissAskPageListener != null) {
-                                mOnMissAskPageListener.onHideMissFloatWindow();
+                                mOnMissAskPageListener.onChangeMissFloatWindow(true);
                             }
                         }
                     });
@@ -119,7 +118,7 @@ public class MissAskFragment extends MediaPlayFragment {
 
         void onRadioPlay(Question question, boolean radioPlayViewHasHasFocus);
 
-        void onHideMissFloatWindow();
+        void onChangeMissFloatWindow(boolean hideFloatWindow);
     }
 
     public void notifyFragmentDataSetChange() {
@@ -197,19 +196,19 @@ public class MissAskFragment extends MediaPlayFragment {
 
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
-        Log.d(TAG, "onMediaPlayStart: ");
         notifyAdapterDataChanged(source);
     }
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
-        Log.d(TAG, "onMediaPlay: ");
         notifyAdapterDataChanged(source);
+        if (mOnMissAskPageListener != null) {
+            mOnMissAskPageListener.onChangeMissFloatWindow(false);
+        }
     }
 
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
-        Log.d(TAG, "onMediaPlayResume: ");
         notifyAdapterDataChanged(source);
     }
 
@@ -257,7 +256,6 @@ public class MissAskFragment extends MediaPlayFragment {
                     radioPlayHasFocus = true;
                 }
             }
-            Log.d(TAG, "课件: " + radioPlayHasFocus + "  " + (mOnMissAskPageListener != null));
             if (mOnMissAskPageListener != null) {
                 mOnMissAskPageListener.onRadioPlay(null, radioPlayHasFocus);
             }

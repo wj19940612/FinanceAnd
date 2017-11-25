@@ -2,8 +2,10 @@ package com.sbai.finance.view.radio;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,6 +28,7 @@ import java.util.List;
 
 public class MissRadioLayout extends LinearLayout {
 
+    private static final String TAG = "MissRadioLayout";
     private static final int DEFAULT_MISS_RADIO_LIST_SIZE = 4;
     private OnMissRadioPlayListener mOnMissRadioPlayListener;
     private ArrayList<PlayStatus> mPlayStateList;
@@ -50,7 +53,6 @@ public class MissRadioLayout extends LinearLayout {
         super(context, attrs, defStyleAttr);
 
         init();
-
     }
 
     private void init() {
@@ -58,6 +60,34 @@ public class MissRadioLayout extends LinearLayout {
         setVisibility(GONE);
         setBackgroundColor(Color.WHITE);
         mPlayStateList = new ArrayList<>();
+
+        Rect rect = new Rect();
+
+        getGlobalVisibleRect(rect);
+
+
+//        Point p=new Point();
+//        getWindowManager().getDefaultDisplay().getSize(p);
+//        screenWidth=p.x;
+//        screenHeight=p.y;
+//
+//        Rect  rect=new Rect(0,0,screenWidth,screenHeight );
+//
+//        ImageView imageView = imageViewList.get(i);
+//
+//        int[] location = new int[2];
+//        imageView.getLocationInWindow(location);
+//        System.out.println(Arrays.toString(location));
+
+        // Rect ivRect=new Rect(imageView.getLeft(),imageView.getTop(),imageView.getRight(),imageView.getBottom());
+
+
+//        if (imageView.getLocalVisibleRect(rect)) {/*rect.contains(ivRect)*/
+//            System.out.println("---------控件在屏幕可见区域-----显现-----------------");
+//        } else {
+//            imageView.setImageResource(R.drawable.p);
+//            System.out.println("---------控件已不在屏幕可见区域（已滑出屏幕）-----隐去-----------------");
+//        }
     }
 
     public void setOnMissRadioPlayListener(OnMissRadioPlayListener onMissRadioPlayListener) {
@@ -114,6 +144,17 @@ public class MissRadioLayout extends LinearLayout {
             final PlayStatus playStatus = mPlayStateList.get(i);
             final ImageView playImageView = playStatus.getImageView();
             View view = playStatus.getView();
+
+
+            view.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    Log.d(TAG, "onFocusChange: " + b);
+                }
+            });
+
+
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {

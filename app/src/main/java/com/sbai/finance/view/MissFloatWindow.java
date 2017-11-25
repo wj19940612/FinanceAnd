@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import com.sbai.finance.R;
 import com.sbai.glide.GlideApp;
 
-public class MissFloatWindow extends LinearLayout  {
+public class MissFloatWindow extends LinearLayout {
     private ImageView mMissAvatar;
     private ImageView mAudioAnim;
 
@@ -53,6 +53,7 @@ public class MissFloatWindow extends LinearLayout  {
     }
 
     public void setMissAvatar(String avatarUrl) {
+        // TODO: 2017/11/24 大v标签 
         GlideApp.with(getContext()).load(avatarUrl)
                 .placeholder(R.drawable.ic_default_avatar)
                 .circleCrop()

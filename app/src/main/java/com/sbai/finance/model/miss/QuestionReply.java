@@ -3,11 +3,11 @@ package com.sbai.finance.model.miss;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by lixiaokuan0819 on 2017/8/2.
+ * /user/comment/replyList.do
  */
 
 public class QuestionReply {
@@ -68,6 +68,10 @@ public class QuestionReply {
     }
 
     public static class DataBean implements Parcelable {
+
+        public static final int QUESTION_REVIEW_NOT_PRISE = 0;
+        public static final int QUESTION_REVIEW_PRISE = 1;
+
         /**
          * content : 发表一个评论yoyoyoyoyoyo333333!
          * createDate : 1501664354913
@@ -99,6 +103,27 @@ public class QuestionReply {
         private int star;
         private UserModelBean userModel;
         private List<ReplysBean> replys;
+
+        // TODO: 2017/11/25  需要该评论的点赞状态和点赞数 自己加的数据 ，需要服务器给
+        private int reviewPriseCount;
+        private int reviewPriseStatus;
+
+
+        public int getReviewPriseCount() {
+            return reviewPriseCount;
+        }
+
+        public void setReviewPriseCount(int reviewPriseCount) {
+            this.reviewPriseCount = reviewPriseCount;
+        }
+
+        public int getReviewPriseStatus() {
+            return reviewPriseStatus;
+        }
+
+        public void setReviewPriseStatus(int reviewPriseStatus) {
+            this.reviewPriseStatus = reviewPriseStatus;
+        }
 
         public String getContent() {
             return content;
@@ -706,6 +731,9 @@ public class QuestionReply {
             };
         }
 
+        public DataBean() {
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -726,10 +754,9 @@ public class QuestionReply {
             dest.writeInt(this.replyCount);
             dest.writeInt(this.star);
             dest.writeParcelable(this.userModel, flags);
-            dest.writeList(this.replys);
-        }
-
-        public DataBean() {
+            dest.writeTypedList(this.replys);
+            dest.writeInt(this.reviewPriseCount);
+            dest.writeInt(this.reviewPriseStatus);
         }
 
         protected DataBean(Parcel in) {
@@ -746,8 +773,9 @@ public class QuestionReply {
             this.replyCount = in.readInt();
             this.star = in.readInt();
             this.userModel = in.readParcelable(UserModelBean.class.getClassLoader());
-            this.replys = new ArrayList<ReplysBean>();
-            in.readList(this.replys, ReplysBean.class.getClassLoader());
+            this.replys = in.createTypedArrayList(ReplysBean.CREATOR);
+            this.reviewPriseCount = in.readInt();
+            this.reviewPriseStatus = in.readInt();
         }
 
         public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {

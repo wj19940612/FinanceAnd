@@ -48,6 +48,9 @@ public class Client {
     // 创建电台
     public static final String CREATE_RADIO_STATION = API.getHost() + "/lm/banner/addaudio.html";
 
+    //姐说话题详情页
+    public static final String MISS_TOP_DETAILS_H5_URL = API.getHost() + "/lm/topic/index.html?id=%d";
+
 
     public static String getServiceQQ(String serviceQQ) {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
@@ -3081,5 +3084,22 @@ public class Client {
      */
     public static API collectRadio(String radioId) {
         return new API("/user/user/collect.do", new ApiParams().put("type", 4).put("dataId", radioId));
+    }
+
+
+    /**
+     * /explain/comment/queryAudioComment.do
+     * POST
+     * [App]电台--评论列表(薛松)
+     *
+     * @param page
+     * @param radioId 电台id
+     * @param audioId 音频id
+     */
+    public static API requestRadioReplyList(int page, int radioId, int audioId) {
+        return new API("/explain/comment/queryAudioComment.do",
+                new ApiParams()
+                        .put("radioId", radioId)
+                        .put("audioId", audioId));
     }
 }

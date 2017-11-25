@@ -25,11 +25,19 @@ public abstract class MediaPlayActivity extends BaseActivity {
     }
 
     private void registerBroadcast() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMediaPlayBroadcastReceiver, getIntentFilter());
+    }
+
+    protected IntentFilter getIntentFilter() {
         IntentFilter filter = new IntentFilter();
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_START);
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_RESUME);
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PAUSE);
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_STOP);
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_ERROR);
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PROGRESS);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMediaPlayBroadcastReceiver, filter);
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PLAY);
+        return filter;
     }
 
     @Override
@@ -48,11 +56,11 @@ public abstract class MediaPlayActivity extends BaseActivity {
 
     protected abstract void onMediaPlayStop(int IAudioId, int source);
 
-    protected  void onMediaPlayError(int IAudioId, int source){
+    protected void onMediaPlayError(int IAudioId, int source) {
         ToastUtil.show(R.string.play_failure);
     }
 
-    public  void onOtherReceive(Context context, Intent intent){
+    public void onOtherReceive(Context context, Intent intent) {
 
     }
 

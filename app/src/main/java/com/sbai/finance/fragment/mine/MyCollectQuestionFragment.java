@@ -140,7 +140,7 @@ public class MyCollectQuestionFragment extends BaseFragment {
     }
 
     private void requestMyQuestionCollect() {
-        Client.requestMyCollection(MyCollect.COLLECTI_TYPE_QUESTION, mPage)
+        Client.requestMyCollection(MyCollect.COLLECT_TYPE_QUESTION, mPage)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<MyCollect>>, List<MyCollect>>() {

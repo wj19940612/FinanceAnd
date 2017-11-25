@@ -15,6 +15,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +29,8 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
-import com.sbai.finance.activity.miss.RadioStationListActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
-import com.sbai.finance.activity.miss.radio.MediaStationPlayActivityActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
 import com.sbai.finance.fragment.miss.MissAskFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
@@ -113,20 +113,24 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        requestMissList();
+    public void onMediaPlayStart(int IAudioId, int source) {
+        changeFloatWindowView();
+        notifyFragmentDataSetChange(source);
     }
 
-    @Override
-    public void onMediaPlayStart(int IAudioId, int source) {
+    private void changeFloatWindowView() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
         if (audio instanceof Question) {
             mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
         } else if (audio instanceof Radio) {
             mMissFloatWindow.setMissAvatar(((Radio) audio).getAudioCover());
         }
-        notifyFragmentDataSetChange(source);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requestMissList();
     }
 
     @Override
@@ -154,11 +158,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         notifyFragmentDataSetChange(source);
     }
 
-
-    @Override
-    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
-
-    }
 
     public void setService(MediaPlayService mediaPlayService) {
         mMediaPlayService = mediaPlayService;
@@ -250,16 +249,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         mSlidingTabLayout.setViewPager(mViewPager);
 
 
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                mVerticalOffset = verticalOffset;
-                boolean b = mVerticalOffset >= 0 && mSwipeRefreshEnable;
-                if (mSwipeRefreshLayout.isEnabled() != b) {
-                    mSwipeRefreshLayout.setEnabled(b);
-                }
-            }
-        });
+        mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
 
         mMissRadioLayout.setOnMissRadioPlayListener(new MissRadioLayout.OnMissRadioPlayListener() {
             @Override
@@ -282,12 +272,29 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
             @Override
             public void onMissRadioClick(Radio radio) {
-                Launcher.with(getActivity(), MediaStationPlayActivityActivity.class)
+                Launcher.with(getActivity(), RadioStationPlayActivityActivity.class)
                         .putExtra(ExtraKeys.RADIO, radio)
                         .execute();
             }
         });
     }
+
+    private AppBarLayout.OnOffsetChangedListener mOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
+
+        @Override
+        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+            Log.d(TAG, "onOffsetChanged: " + verticalOffset);
+            mVerticalOffset = verticalOffset;
+            boolean b = mVerticalOffset >= 0 && mSwipeRefreshEnable;
+            if (mSwipeRefreshLayout.isEnabled() != b) {
+                mSwipeRefreshLayout.setEnabled(b);
+            }
+//            if (verticalOffset < -450 && verticalOffset > -1000) {
+//                boolean playViewIsShow = mMissRadioLayout.getPlayViewIsShow();
+//                Log.d(TAG, "onOffsetChanged: " + playViewIsShow);
+//            }
+        }
+    };
 
     @Override
     public void onStart() {
@@ -380,9 +387,12 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     }
 
     @Override
-    public void onHideMissFloatWindow() {
-        mMissFloatWindow.setVisibility(View.GONE);
-        mMissFloatWindow.stopAnim();
+    public void onChangeMissFloatWindow(boolean hideFloatWindow) {
+        if (hideFloatWindow) {
+            mMissFloatWindow.setVisibility(View.GONE);
+            mMissFloatWindow.stopAnim();
+        }
+        changeFloatWindowView();
     }
 
 
@@ -429,13 +439,13 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 //            }
 //        }
 
-        if (visibleItemsStarted && mMissFloatWindow.getVisibility() == View.VISIBLE) {
-            mMissFloatWindow.setVisibility(View.GONE);
-        }
-
-        if (!visibleItemsStarted && mMissFloatWindow.getVisibility() == View.GONE) {
-            mMissFloatWindow.setVisibility(View.VISIBLE);
-        }
+//        if (visibleItemsStarted && mMissFloatWindow.getVisibility() == View.VISIBLE) {
+//            mMissFloatWindow.setVisibility(View.GONE);
+//        }
+//
+//        if (!visibleItemsStarted && mMissFloatWindow.getVisibility() == View.GONE) {
+//            mMissFloatWindow.setVisibility(View.VISIBLE);
+//        }
     }
 
     private void requestMissList() {

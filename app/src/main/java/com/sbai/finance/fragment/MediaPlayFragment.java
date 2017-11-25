@@ -23,11 +23,20 @@ public abstract class MediaPlayFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMediaPlayBroadcastReceiver, getIntentFilter());
+    }
+
+    public IntentFilter getIntentFilter() {
         IntentFilter filter = new IntentFilter();
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_START);
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_RESUME);
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PAUSE);
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_STOP);
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_ERROR);
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PROGRESS);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMediaPlayBroadcastReceiver, filter);
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PLAY);
+        return filter;
     }
 
     public MediaPlayService getMediaPlayService() {
@@ -52,7 +61,9 @@ public abstract class MediaPlayFragment extends BaseFragment {
 
     }
 
-    protected abstract void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration);
+    protected  void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration){
+
+    }
 
 
     private MediaPlayService.MediaPlayBroadcastReceiver mMediaPlayBroadcastReceiver = new MediaPlayService.MediaPlayBroadcastReceiver() {
