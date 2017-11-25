@@ -15,7 +15,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,7 +120,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     private void changeFloatWindowView() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
         if (audio instanceof Question) {
-            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
+            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait(),((Question) audio).getUserType());
         } else if (audio instanceof Radio) {
             mMissFloatWindow.setMissAvatar(((Radio) audio).getAudioCover());
         }
@@ -283,7 +282,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
         @Override
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-            Log.d(TAG, "onOffsetChanged: " + verticalOffset);
             mVerticalOffset = verticalOffset;
             boolean b = mVerticalOffset >= 0 && mSwipeRefreshEnable;
             if (mSwipeRefreshLayout.isEnabled() != b) {

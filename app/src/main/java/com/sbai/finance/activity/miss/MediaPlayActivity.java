@@ -1,9 +1,12 @@
 package com.sbai.finance.activity.miss;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -18,6 +21,20 @@ import com.sbai.finance.utils.ToastUtil;
  */
 
 public abstract class MediaPlayActivity extends BaseActivity {
+
+    protected MediaPlayService mMediaPlayService;
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mMediaPlayService = ((MediaPlayService.MediaBinder) iBinder).getMediaPlayService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -351,7 +351,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             if (MissAudioManager.get().isStarted(playingQuestion)
                     && mQuestion.getId() != playingQuestion.getId()) {
                 mMissFloatWindow.setVisibility(View.VISIBLE);
-                mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
+                mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait(),playingQuestion.getUserType());
                 mMissFloatWindow.startAnim();
                 mMissFloatWindow.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -645,7 +645,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 setPlayingState();
                 mMissFloatWindow.setVisibility(View.GONE);
             } else {
-                mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
+                mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait(), playingQuestion.getUserType());
                 mMissFloatWindow.setVisibility(View.VISIBLE);
             }
         }

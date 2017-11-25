@@ -106,6 +106,7 @@ public class RadioInfoLayout extends LinearLayout {
         mRadioDetails = radioDetails;
         mRadioOwnerAvatar.setCircleUrl(radioDetails.getUserPortrait());
         mRadioOwnerName.setText(radioDetails.getRadioHostName());
+        mRadioName.setText(radioDetails.getRadioName());
         GlideApp.with(getContext())
                 .load(radioDetails.getRadioCover())
                 .into(mRadioCover);
@@ -178,5 +179,4 @@ public class RadioInfoLayout extends LinearLayout {
                     .fireFree();
         }
     }
-
 }

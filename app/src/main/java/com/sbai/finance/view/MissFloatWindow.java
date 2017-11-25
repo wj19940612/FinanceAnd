@@ -1,5 +1,6 @@
 package com.sbai.finance.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.AnimationDrawable;
@@ -7,14 +8,15 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
-import com.sbai.glide.GlideApp;
+import com.sbai.finance.model.miss.Question;
 
 public class MissFloatWindow extends LinearLayout {
-    private ImageView mMissAvatar;
+    private HasLabelImageLayout mMissAvatar;
     private ImageView mAudioAnim;
 
     public MissFloatWindow(Context context) {
@@ -33,8 +35,9 @@ public class MissFloatWindow extends LinearLayout {
         setGravity(Gravity.CENTER_VERTICAL);
         setMinimumHeight((int) dp2Px(40f, getResources()));
 
-        mMissAvatar = new ImageView(getContext());
-        mMissAvatar.setImageResource(R.drawable.ic_default_avatar);
+//        mMissAvatar = new ImageView(getContext());
+//        mMissAvatar.setImageResource(R.drawable.ic_default_avatar);
+        mMissAvatar = new HasLabelImageLayout(getContext());
 
         mAudioAnim = new ImageView(getContext());
         mAudioAnim.setBackgroundResource(R.drawable.bg_miss_voice_float);
@@ -50,14 +53,25 @@ public class MissFloatWindow extends LinearLayout {
         params = new LayoutParams(side, side);
         params.setMargins(margin, 0, margin, 0);
         addView(mAudioAnim, params);
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: 2017/11/25 处理跳转
+            }
+        });
     }
 
     public void setMissAvatar(String avatarUrl) {
-        // TODO: 2017/11/24 大v标签 
-        GlideApp.with(getContext()).load(avatarUrl)
-                .placeholder(R.drawable.ic_default_avatar)
-                .circleCrop()
-                .into(mMissAvatar);
+        // TODO: 2017/11/24 大v标签
+        if (getContext() == null || ((Activity) getContext()).isFinishing()) {
+            return;
+        }
+        setMissAvatar(avatarUrl, Question.USER_IDENTITY_ORDINARY);
+    }
+
+    public void setMissAvatar(String avatarUrl, int userIdentity) {
+        mMissAvatar.setAvatar(avatarUrl, userIdentity);
     }
 
     public void startAnim() {
@@ -73,4 +87,5 @@ public class MissFloatWindow extends LinearLayout {
     public float dp2Px(float value, Resources res) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, res.getDisplayMetrics());
     }
+
 }

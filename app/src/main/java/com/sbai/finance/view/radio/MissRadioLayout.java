@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -129,7 +128,8 @@ public class MissRadioLayout extends LinearLayout {
             radioUpdateTime.setText(DateUtil.formatDefaultStyleTime(radio.getModifyTime()));
             radioName.setText(radio.getRadioName());
             radioOwnerName.setText(radio.getRadioHostName());
-            radioLength.setText(DateUtil.format(radio.getAudioTime(), DateUtil.FORMAT_HOUR_MINUTE));
+            radioLength.setText(DateUtil.format((radio.getAudioTime() * 1000), DateUtil.FORMAT_HOUR_MINUTE_SECOND));
+            radioLength.setText(DateUtil.formatMediaLength(radio.getAudioTime()));
             startPlay.setImageResource(R.drawable.bg_voice_play);
             addView(view, layoutParams);
 
@@ -144,15 +144,6 @@ public class MissRadioLayout extends LinearLayout {
             final PlayStatus playStatus = mPlayStateList.get(i);
             final ImageView playImageView = playStatus.getImageView();
             View view = playStatus.getView();
-
-
-            view.setOnFocusChangeListener(new OnFocusChangeListener() {
-
-                @Override
-                public void onFocusChange(View view, boolean b) {
-                    Log.d(TAG, "onFocusChange: " + b);
-                }
-            });
 
 
             view.setOnClickListener(new OnClickListener() {

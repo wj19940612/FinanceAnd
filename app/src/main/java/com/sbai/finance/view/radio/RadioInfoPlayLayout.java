@@ -29,6 +29,7 @@ import butterknife.Unbinder;
  */
 
 public class RadioInfoPlayLayout extends LinearLayout {
+    private static final String TAG = "RadioInfoPlayLayout";
 
     @BindView(R.id.voiceCover)
     ImageView mVoiceCover;
@@ -56,7 +57,7 @@ public class RadioInfoPlayLayout extends LinearLayout {
         void onSeekChange(int progress);
     }
 
-    public void mOnRadioPlayListener(OnRadioPlayListener onRadioPlayListener) {
+    public void setOnRadioPlayListener(OnRadioPlayListener onRadioPlayListener) {
         mOnRadioPlayListener = onRadioPlayListener;
     }
 
@@ -98,16 +99,29 @@ public class RadioInfoPlayLayout extends LinearLayout {
         }
     }
 
+    public void setMediaPlayProgress(int mediaPlayCurrentPosition, int totalDuration) {
+        if (totalDuration != 0) {
+            mRadioSeekBar.setMax(totalDuration);
+            setRadioProgress(mediaPlayCurrentPosition);
+            mProgressLength.setText(DateUtil.format(mediaPlayCurrentPosition / 1000 * 1000, DateUtil.FORMAT_MINUTE_SECOND));
+        }
+    }
+
     public void setRadio(Radio radio) {
         mRadio = radio;
         GlideApp.with(getContext())
                 .load(radio.getAudioCover())
                 .circleCrop()
                 .into(mVoiceCover);
-        mRadioTotalLength.setText(DateUtil.format(radio.getAudioTime(), DateUtil.FORMAT_HOUR_MINUTE));
+        mRadioTotalLength.setText(DateUtil.formatMediaLength(radio.getAudioTime()));
         mListenNumber.setText(String.valueOf(radio.getViewNumber()));
         mRadioSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
         setPlayStatus(radio);
+    }
+
+    public void onPlayStop() {
+        mPlay.setSelected(false);
+//        mProgressLength.setText(R.string.start_time);
     }
 
     private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -131,6 +145,11 @@ public class RadioInfoPlayLayout extends LinearLayout {
 
     @OnClick(R.id.play)
     public void onViewClicked() {
+        if (mPlay.isSelected()) {
+            mPlay.setSelected(false);
+        } else {
+            mPlay.setSelected(true);
+        }
         if (mOnRadioPlayListener != null) {
             mOnRadioPlayListener.onRadioPlay();
         }

@@ -1,5 +1,6 @@
 package com.sbai.finance.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.TextUtils;
@@ -82,6 +83,9 @@ public class HasLabelImageLayout extends RelativeLayout {
             mLabelImageView.setVisibility(VISIBLE);
         } else {
             mLabelImageView.setVisibility(GONE);
+        }
+        if (getContext() == null || ((Activity) getContext()).isFinishing()) {
+            return;
         }
         GlideApp.with(getContext())
                 .load(!TextUtils.isEmpty(avatarUrl)?avatarUrl:R.drawable.ic_default_avatar)

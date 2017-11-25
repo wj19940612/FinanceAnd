@@ -24,6 +24,8 @@ public class DateUtil {
     public static final String FORMAT_SPECIAL_SLASH = "yyyy/MM/dd HH:mm";
     public static final String FORMAT_SPECIAL_SLASH_NO_HOUR = "yyyy/MM/dd";
     public static final String FORMAT_HOUR_MINUTE = "HH:mm";
+    public static final String FORMAT_HOUR_MINUTE_SECOND = "HH:mm:ss";
+    public static final String FORMAT_MINUTE_SECOND = "mm:ss";
     public static final String FORMAT_DATE_HOUR_MINUTE = "dd日 HH:mm";
     public static final String FORMAT_DATE_ARENA = "yyyy.MM.dd";
 
@@ -775,5 +777,13 @@ public class DateUtil {
         } else {
             return 3;
         }
+    }
+
+    /**
+     * @param time 音乐时长
+     * @return
+     */
+    public static String formatMediaLength(int time) {
+        return DateUtil.format(time * 1000, FORMAT_MINUTE_SECOND);
     }
 }

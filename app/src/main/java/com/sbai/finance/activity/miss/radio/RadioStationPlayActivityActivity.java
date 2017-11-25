@@ -1,10 +1,14 @@
 package com.sbai.finance.activity.miss.radio;
 
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -38,6 +42,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissAudioManager;
@@ -103,17 +108,33 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     private RadioReviewAdapter mRadioReviewAdapter;
     private int mPage;
 
+    protected MediaPlayService mMediaPlayService;
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mMediaPlayService = ((MediaPlayService.MediaBinder) iBinder).getMediaPlayService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio_station_play_activity);
-        setSupportActionBar(mToolbar);
         ButterKnife.bind(this);
+        setSupportActionBar(mToolbar);
         translucentStatusBar();
 
         mSet = new HashSet<>();
         initData();
         initView();
+
+        Intent intent = new Intent(getActivity(), MediaPlayService.class);
+        bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -131,7 +152,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
 //                .fireFree();
 
         // TODO: 2017/11/25 接口没好
-        Client.getQuestionReplyList(1, 570, 0, 40, null)
+        Client.getQuestionReplyList(1, 570, mPage, Client.DEFAULT_PAGE_SIZE, null)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
                     @Override
@@ -176,6 +197,15 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
             mRadioInfoLayout.setRadio(mRadio);
             mRadioPlayLL.setRadio(mRadio);
         }
+        mRadioPlayLL.setPlayStatus(mRadio);
+
+        MissAudioManager missAudioManager = MissAudioManager.get();
+        if (missAudioManager.getAudio() instanceof Question) {
+            mMissFloatWindow.startAnim();
+            mMissFloatWindow.setVisibility(View.VISIBLE);
+            Question question = (Question) missAudioManager.getAudio();
+            mMissFloatWindow.setMissAvatar(question.getCustomPortrait(), question.getUserType());
+        }
     }
 
     private void requestRadioDetails(Radio radio) {
@@ -188,6 +218,11 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                         @Override
                         protected void onRespSuccessData(RadioDetails data) {
                             mRadioInfoLayout.setRadioDetails(data);
+                            if (MissAudioManager.get().isPlaying() && MissAudioManager.get().getAudio() instanceof Radio) {
+                                if (mRadioDetails != null) {
+                                    mMissFloatWindow.setMissAvatar(data.getUserPortrait(), Question.QUESTION_TYPE_HOT);
+                                }
+                            }
                             updateRadioDetail(data);
                         }
 
@@ -201,6 +236,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     }
 
     private void initView() {
+        mCollapsingToolbarLayout.setTitle("");
         mAppBarLayout.addOnOffsetChangedListener(sOnOffsetChangedListener);
         if (mRadio != null) {
             GlideApp.with(getActivity())
@@ -273,9 +309,29 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
             }
         });
 
-        mMissFloatWindow.setOnClickListener(new View.OnClickListener() {
+        mRadioPlayLL.setOnRadioPlayListener(new RadioInfoPlayLayout.OnRadioPlayListener() {
             @Override
-            public void onClick(View view) {
+            public void onRadioPlay() {
+                if (mRadioDetails != null) {
+                    mMissFloatWindow.setMissAvatar(mRadioDetails.getUserPortrait(), Question.QUESTION_TYPE_HOT);
+                }
+                if (MissAudioManager.get().isStarted(mRadio)) {
+                    if (mMediaPlayService != null) {
+                        mMediaPlayService.onPausePlay(mRadio);
+                    }
+                } else if (MissAudioManager.get().isPaused(mRadio)) {
+                    if (mMediaPlayService != null) {
+                        mMediaPlayService.onResume();
+                    }
+                } else {
+                    if (mMediaPlayService != null) {
+                        mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
+                    }
+                }
+            }
+
+            @Override
+            public void onSeekChange(int progress) {
 
             }
         });
@@ -306,6 +362,12 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                     mTitle.setText("");
                 }
             }
+
+            if (verticalOffset < -400) {
+                if (MissAudioManager.get().isStarted(mRadio) && mMissFloatWindow.getVisibility() == View.GONE) {
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                }
+            }
         }
     };
 
@@ -314,6 +376,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         super.onDestroy();
         mAppBarLayout.removeOnOffsetChangedListener(sOnOffsetChangedListener);
         sOnOffsetChangedListener = null;
+        unbindService(mServiceConnection);
     }
 
     @Override
@@ -325,32 +388,39 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
 
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
-
+        changeFloatWindowView();
+        mMissFloatWindow.startAnim();
     }
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
-
+        mMissFloatWindow.startAnim();
     }
 
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
-
+        mMissFloatWindow.startAnim();
     }
 
     @Override
     public void onMediaPlayPause(int IAudioId, int source) {
-
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
     }
 
     @Override
     protected void onMediaPlayStop(int IAudioId, int source) {
-
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+            mRadioPlayLL.onPlayStop();
+        }
     }
 
     @Override
     protected void onMediaPlayError(int IAudioId, int source) {
-
+        mMissFloatWindow.clearAnimation();
+        mMissFloatWindow.setVisibility(View.GONE);
     }
 
     @Override
@@ -362,7 +432,18 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
 
     @Override
     protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+            mRadioPlayLL.setMediaPlayProgress(mediaPlayCurrentPosition, totalDuration);
+        }
+    }
 
+    private void changeFloatWindowView() {
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (audio instanceof Question) {
+            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait(), ((Question) audio).getUserType());
+        } else if (audio instanceof Radio) {
+            mMissFloatWindow.setMissAvatar(((Radio) audio).getAudioCover());
+        }
     }
 
 
@@ -414,8 +495,8 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     private void openCommentPage() {
         // TODO: 2017/11/25 评论  缺少接口
         Launcher.with(getActivity(), CommentActivity.class)
-                .putExtra(Launcher.EX_PAYLOAD,1075)
-                .putExtra(Launcher.EX_PAYLOAD_1,570)
+                .putExtra(Launcher.EX_PAYLOAD, 1075)
+                .putExtra(Launcher.EX_PAYLOAD_1, 570)
                 .executeForResult(CommentActivity.REQ_CODE_COMMENT);
     }
 
