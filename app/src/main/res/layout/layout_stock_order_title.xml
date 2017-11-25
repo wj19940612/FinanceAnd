@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:background="@android:color/transparent"
-              android:gravity="center_horizontal"
+              android:layout_height="match_parent"
+              android:background="@color/blackPrimary"
+              android:gravity="center"
               android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginTop="2dp"
         android:layout_marginBottom="1dp"
+        android:layout_marginTop="2dp"
         android:layout_weight="1"
-        android:gravity="bottom"
+        android:gravity="center"
         android:text="@string/stock_simulate_trade"
         android:textColor="@android:color/white"
         android:textSize="15sp"/>
@@ -29,6 +29,7 @@
         android:paddingRight="3dp"
         android:text="个人排位赛"
         android:textColor="@android:color/white"
-        android:textSize="10sp"/>
+        android:textSize="10sp"
+        android:visibility="gone"/>
 
 </LinearLayout>

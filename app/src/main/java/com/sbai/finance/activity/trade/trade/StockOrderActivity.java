@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.trade.trade;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -25,14 +26,17 @@ import com.sbai.finance.fragment.trade.stock.StockPositionFragment;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.stock.StockData;
+import com.sbai.finance.model.stocktrade.AccountInfo;
 import com.sbai.finance.model.stocktrade.FundAndPosition;
 import com.sbai.finance.model.stocktrade.Position;
 import com.sbai.finance.model.stocktrade.PositionRecords;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.FundAndHoldingInfoView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -64,10 +68,13 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.appBarLayout)
     AppBarLayout mAppBarLayout;
+    private TextView mStockGame;
     private int mAppBarVerticalOffset = -1;
     private PagerAdapter mPagerAdapter;
     private boolean mSwipeEnabled = true;
     private PositionRecords mPositionRecords;
+    private AccountInfo mCurrentAccount;
+    private int mAccountType;
 
     AppBarLayout.OnOffsetChangedListener mOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
         @Override
@@ -87,11 +94,47 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         ButterKnife.bind(this);
         translucentStatusBar();
         mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
+        initData(getIntent());
         initTitleBar();
         initFundInfoView();
         initViewPager();
         initSwipeView();
         initTabView();
+        requestAccountList();
+        requestSwitchAccount();
+    }
+
+    private void initData(Intent intent) {
+//        mAccountType = intent.getIntExtra()
+    }
+
+    private void requestAccountList() {
+        Client.requestAccount(Position.TYPE_SIMULATE, null)
+                .setCallback(new Callback2D<Resp<List<AccountInfo>>, List<AccountInfo>>() {
+                    @Override
+                    protected void onRespSuccessData(List<AccountInfo> data) {
+                        updateAccountList(data);
+                    }
+                }).fireFree();
+    }
+
+    private void requestSwitchAccount() {
+        Client.requestSwitchAccount(115, "account=MN100106")
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        ToastUtil.show(resp.getMsg());
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        super.onRespFailure(failedResp);
+                        ToastUtil.show(failedResp.getMsg());
+                    }
+                }).fireFree();
+    }
+
+    private void updateAccountList(List<AccountInfo> data) {
     }
 
     private void initSwipeView() {
@@ -102,6 +145,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
             }
         });
     }
+
 
     public void updateAssetAndPosition(List<StockData> result, Map<String, Position> positionMap) {
         double totalMarket = 0.00;

@@ -308,7 +308,6 @@ public class StockPositionFragment extends BaseFragment {
 
             public void bindDataWithView(final Position stockPosition, Map<String, String> lastPriceMap,
                                          final ItemClickListener itemClickListener, final Context context, final int position) {
-                resetTextSize();
                 int color = ContextCompat.getColor(context, R.color.blackPrimary);
                 String lastPriceStr = lastPriceMap.get(stockPosition.getVarietyCode());
                 if (!TextUtils.isEmpty(lastPriceStr)) {
@@ -404,25 +403,6 @@ public class StockPositionFragment extends BaseFragment {
                 index = -1;
             }
 
-            private void resetTextSize() {
-                mStockName.setText(null);
-                mStockName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                mPositionAmount.setText(null);
-                mPositionAmount.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                mLastPrice.setText(null);
-                mLastPrice.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                mFloatValue.setText(null);
-                mFloatValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                mPositionValue.setText(null);
-                mPositionValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                mEnableAmount.setText(null);
-                mEnableAmount.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                mCostPrice.setText(null);
-                mCostPrice.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                mFloatRate.setText(null);
-                mFloatRate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-
-            }
         }
 
     }
