@@ -233,7 +233,7 @@
         <item name="android:background">@drawable/btn_select_position</item>
         <item name="android:gravity">center</item>
         <item name="android:minHeight">30dp</item>
-        <item name="android:textColor">@color/luckyText</item>
+        <item name="android:textColor">@color/position_selector_text</item>
     </style>
 
     <style name="StockOrderTitle">

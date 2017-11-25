@@ -68,7 +68,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     protected static final int HAS_ADD_OPTIONAL = 1;
 
-    @BindView(R.id.mockTrading)
+    @BindView(R.id.mockTrade)
     protected Button mMockTrading;
 
     protected abstract ViewPager.OnPageChangeListener createPageChangeListener();
@@ -367,7 +367,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                 color = ContextCompat.getColor(getActivity(), R.color.unluckyText);
                 mPriceChange.setText(R.string.delist);
             } else {
-                mPriceChange.setText(risePrice + "     " + risePercent);
+                mPriceChange.setText(risePrice + "\n" + risePercent);
             }
 
             mTodayOpen.setText(StockUtil.getStockDecimal(mStockRTData.getOpenPrice()));
@@ -534,7 +534,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                 }).fire();
     }
 
-    @OnClick({R.id.moreDataDownArrow, R.id.mockTrading})
+    @OnClick({R.id.moreDataDownArrow, R.id.mockTrade})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.moreDataDownArrow:
@@ -546,10 +546,15 @@ public abstract class StockTradeActivity extends BaseActivity {
                     mMoreMarketDataArea.startAnimation(AnimUtils.createExpendY(mMoreMarketDataArea, 400));
                 }
                 break;
-            case R.id.mockTrading:
-                Launcher.with(getActivity(), StockTradeOperateActivity.class)
-                        .putExtra(ExtraKeys.VARIETY, mVariety)
-                        .execute();
+            case R.id.mockTrade:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), StockTradeOperateActivity.class)
+                            .putExtra(ExtraKeys.VARIETY, mVariety)
+                            .putExtra(StockTradeOperateActivity.MOCK_TRADE, true)
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
         }
 

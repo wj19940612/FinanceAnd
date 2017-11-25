@@ -29,7 +29,7 @@
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:gravity="center"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:textColor="@color/primaryText"
         android:textSize="15sp"
         tools:hint="@string/buy_price"/>

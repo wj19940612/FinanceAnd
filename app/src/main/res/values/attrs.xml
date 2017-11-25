@@ -28,6 +28,10 @@
     <declare-styleable name="PlusMinusEditText">
         <attr name="android:hint"/>
         <attr name="changeInterval" format="float"/>
+        <attr name="inputType" format="enum">
+            <enum name="decimal" value="0"/>
+            <enum name="number" value="1"/>
+        </attr>
     </declare-styleable>
 
     <!--大厅底部 tabs-->
