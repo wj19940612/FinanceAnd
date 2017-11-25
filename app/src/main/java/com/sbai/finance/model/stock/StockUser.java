@@ -39,11 +39,11 @@ public class StockUser implements Parcelable {
     private int active;
     private String activityCode;
     private String expiryDate; // 该账户过期时间
-    private int fund; // 原始资金
+    private double fund; // 原始资金
     private int id;
     private int status;
     private int type;
-    private int usableMoney; // 可用资金
+    private double usableMoney; // 可用资金
     private int userId;
     private int virtualType; // 虚拟账户类型
 
@@ -67,7 +67,7 @@ public class StockUser implements Parcelable {
         return expiryDate;
     }
 
-    public int getFund() {
+    public double getFund() {
         return fund;
     }
 
@@ -83,7 +83,7 @@ public class StockUser implements Parcelable {
         return type;
     }
 
-    public int getUsableMoney() {
+    public double getUsableMoney() {
         return usableMoney;
     }
 
@@ -107,11 +107,11 @@ public class StockUser implements Parcelable {
         dest.writeInt(this.active);
         dest.writeString(this.activityCode);
         dest.writeString(this.expiryDate);
-        dest.writeInt(this.fund);
+        dest.writeDouble(this.fund);
         dest.writeInt(this.id);
         dest.writeInt(this.status);
         dest.writeInt(this.type);
-        dest.writeInt(this.usableMoney);
+        dest.writeDouble(this.usableMoney);
         dest.writeInt(this.userId);
         dest.writeInt(this.virtualType);
     }
@@ -125,11 +125,11 @@ public class StockUser implements Parcelable {
         this.active = in.readInt();
         this.activityCode = in.readString();
         this.expiryDate = in.readString();
-        this.fund = in.readInt();
+        this.fund = in.readDouble();
         this.id = in.readInt();
         this.status = in.readInt();
         this.type = in.readInt();
-        this.usableMoney = in.readInt();
+        this.usableMoney = in.readDouble();
         this.userId = in.readInt();
         this.virtualType = in.readInt();
     }
