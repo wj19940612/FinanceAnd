@@ -27,11 +27,12 @@
                 android:id="@+id/stockName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
                 android:ellipsize="end"
                 android:maxLength="6"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
-                android:textSize="17sp"
+                android:textSize="18sp"
                 tool:text="西部能源"/>
 
             <com.sbai.finance.view.autofit.AutofitTextView
@@ -57,8 +58,9 @@
                 android:id="@+id/positionAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
                 android:textColor="@color/blackPrimary"
-                android:textSize="17sp"
+                android:textSize="18sp"
                 tool:text="6000"/>
 
             <com.sbai.finance.view.autofit.AutofitTextView
@@ -84,9 +86,10 @@
                 android:id="@+id/lastPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
-                android:textSize="17sp"
+                android:textSize="18sp"
                 tool:text="6000"/>
 
             <com.sbai.finance.view.autofit.AutofitTextView
@@ -111,9 +114,10 @@
                 android:id="@+id/floatValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
-                android:textSize="17sp"
+                android:textSize="18sp"
                 tool:text="6000"/>
 
             <com.sbai.finance.view.autofit.AutofitTextView

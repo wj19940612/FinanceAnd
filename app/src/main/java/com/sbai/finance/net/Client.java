@@ -3086,9 +3086,10 @@ public class Client {
      * @param id
      * @return
      */
-    public static API requestWithdraw(int id) {
-        return new API("/api/stock-or/declare/cancel.do", new ApiParams()
-                .put("id", id));
+    public static API requestWithdraw(int id, String account) {
+        return new API(POST, "/api/stock-or/declare/cancel.do", new ApiParams()
+                .put("id", id)
+                .put("account", account));
     }
 
 

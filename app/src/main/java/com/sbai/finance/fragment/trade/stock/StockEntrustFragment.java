@@ -113,7 +113,7 @@ public class StockEntrustFragment extends BaseFragment {
     }
 
     private void requestWithdraw(int id) {
-        Client.requestWithdraw(id)
+        Client.requestWithdraw(id, null)
                 .setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -221,7 +221,7 @@ public class StockEntrustFragment extends BaseFragment {
             @BindView(R.id.positionArea)
             LinearLayout mPositionArea;
             @BindView(R.id.operateArea)
-            RelativeLayout mOperateArea;
+            LinearLayout mOperateArea;
             @BindView(R.id.entrustBs)
             TextView mEntrustBs;
             @BindView(R.id.entrustStatus)
@@ -280,12 +280,17 @@ public class StockEntrustFragment extends BaseFragment {
                     mEntrustAmount.setText(String.valueOf(entrust.getQuantity()));
                     mEntrustPrice.setText(FinanceUtil.formatWithScale(entrust.getPrice(), 3));
                 } else {
-                    mEntrustAmount.setText(String.valueOf(entrust.getSuccQuantity()));
+                    mEntrustAmount.setText(FinanceUtil.formatWithThousandsSeparator(entrust.getSuccQuantity(), 0));
                     mEntrustPrice.setText(FinanceUtil.formatWithScale(entrust.getBargainPrice(), 3));
                 }
                 mBusinessFund.setText(FinanceUtil.formatWithScale(entrust.getTotalBargain()));
-                mBusinessDate.setText(DateUtil.format(entrust.getBargainTime(), "MM/dd"));
-                mBusinessTime.setText(DateUtil.format(entrust.getBargainTime(), "HH:mm"));
+                if (mShowOperateView) {
+                    mBusinessDate.setText(DateUtil.format(entrust.getOrderTime(), "MM/dd"));
+                    mBusinessTime.setText(DateUtil.format(entrust.getOrderTime(), "HH:mm"));
+                } else {
+                    mBusinessDate.setText(DateUtil.format(entrust.getBargainTime(), "MM/dd"));
+                    mBusinessTime.setText(DateUtil.format(entrust.getBargainTime(), "HH:mm"));
+                }
 
                 mPositionArea.setOnClickListener(new View.OnClickListener() {
                     @Override

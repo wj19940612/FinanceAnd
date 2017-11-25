@@ -919,6 +919,7 @@
     <string name="amount_price">数量/价格</string>
     <string name="business_fund">成交额</string>
     <string name="business_time">成交时间</string>
+    <string name="entrust_time">委托时间</string>
     <string name="stock_withdraw">撤单</string>
     <string name="wait_business">等待成交</string>
     <string name="part_business">部分成交</string>

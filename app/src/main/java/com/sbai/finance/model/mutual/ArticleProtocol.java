@@ -10,6 +10,7 @@ public class ArticleProtocol {
     public static final int PROTOCOL_EXCHANGE = 4;
     public static final int PROTOCOL_BATTLE = 5;
     public static final int PROTOCOL_RECHARGE_SERVICE = 6;
+    public static final int PROTOCOL_STOCK_SIMULATE = 7;
 
     /**
      * content : 如影随形
