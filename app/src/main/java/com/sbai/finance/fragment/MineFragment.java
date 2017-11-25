@@ -95,6 +95,8 @@ public class MineFragment extends BaseFragment {
     LinearLayout mLemiScoreArea;
     @BindView(R.id.mineSubscribe)
     LinearLayout mMineSubscribe;
+    @BindView(R.id.waitMeAnswer)
+    IconTextRow mWaitMeAnswer;
 
 
     private UserEachTrainingScoreModel mUserEachTrainingScoreModel;
@@ -273,6 +275,7 @@ public class MineFragment extends BaseFragment {
     }
 
     private void updateUserStatus() {
+        refreshWaitMeAnswer();
         if (LocalUser.getUser().isLogin()) {
             refreshNotReadMessageCount();
             startScheduleJob(UPDATE_MESSAGE_COUNT_TIME);
@@ -285,6 +288,15 @@ public class MineFragment extends BaseFragment {
             mMessage.setSubTextVisible(View.GONE);
 //            mFeedback.setSubTextVisible(View.GONE);
             setNoReadNewsCount(0);
+        }
+    }
+
+    private void refreshWaitMeAnswer() {
+        if (LocalUser.getUser().isMiss()) {
+            //是小姐姐
+            mWaitMeAnswer.setVisibility(View.VISIBLE);
+        } else {
+            mWaitMeAnswer.setVisibility(View.GONE);
         }
     }
 
@@ -314,7 +326,7 @@ public class MineFragment extends BaseFragment {
     }
 
     @OnClick({R.id.userInfoArea, R.id.lemiScoreArea, R.id.wallet, R.id.mineQuestionsAndAnswers, R.id.mineCollection,
-            R.id.message, R.id.setting,R.id.mineSubscribe})
+            R.id.message, R.id.setting, R.id.mineSubscribe})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.userInfoArea:

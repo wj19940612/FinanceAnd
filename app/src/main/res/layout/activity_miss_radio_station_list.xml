@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
@@ -31,5 +31,13 @@
             android:visibility="visible"/>
     </com.sbai.finance.view.VerticalSwipeRefreshLayout>
 
-
-</LinearLayout>
+    <com.sbai.finance.view.MissFloatWindow
+        android:id="@+id/missFloatWindow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="54dp"
+        android:layout_marginRight="14dp"
+        android:visibility="gone"/>
+</RelativeLayout>

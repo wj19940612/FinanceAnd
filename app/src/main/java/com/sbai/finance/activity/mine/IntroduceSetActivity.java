@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -64,10 +65,9 @@ public class IntroduceSetActivity extends BaseActivity {
         }
     };
 
-    private void requestReplyIntroduce() {
-//        umengEventCount(UmengCountEventId.MISS_TALK_REPLY_COMMENT);
-        //TODO 提交个人简介接口
-        Client.getQuestionMessageList()
+    private void publishIntroduce() {
+        if (TextUtils.isEmpty(mIntroduce.getText())) return;
+        Client.modifyProfileIntroduction(mIntroduce.getText().toString())
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
@@ -89,7 +89,7 @@ public class IntroduceSetActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.publish:
-                requestReplyIntroduce();
+                publishIntroduce();
                 break;
         }
     }

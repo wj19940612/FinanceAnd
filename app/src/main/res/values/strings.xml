@@ -597,12 +597,15 @@
     <string name="ignot_not_enough">元宝不足</string>
     <string name="praise">赞</string>
     <string name="play_failure">播放失败</string>
+
+    <string name="just_subscribe">订阅</string>
     <string name="subscribed">已订阅</string>
     <string name="i_want_to_race_answer">我要抢答</string>
     <string name="i_want_to_ask">我要提问</string>
     <string name="create_radio_station">创建电台</string>
     <string name="edit_profile">编辑资料</string>
     <string name="miss_cant_edit_nick">主播认证后不允许修改昵称</string>
+    <string name="word_day">日</string>
 
     <!--discovery-->
     <string name="daily">乐米日报</string>

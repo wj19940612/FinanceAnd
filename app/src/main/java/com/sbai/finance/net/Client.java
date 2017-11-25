@@ -3102,4 +3102,13 @@ public class Client {
                         .put("radioId", radioId)
                         .put("audioId", audioId));
     }
+        /**
+         * 修改小姐姐个人简介
+         */
+
+    public static API modifyProfileIntroduction(String introduction) {
+        return new API("/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
+    }
+
+
 }
