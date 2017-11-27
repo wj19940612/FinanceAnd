@@ -3125,4 +3125,11 @@ public class Client {
         return new API("/user/comment/priseReply.do", new ApiParams().put("replyId", replyId));
     }
 
+    /**
+     * 对收藏的东西已读
+     */
+    public static API readCollect(int dataId){
+        return new API(POST,"/user/user/readCollect.do", new ApiParams().put("id", dataId));
+    }
+
 }

@@ -192,6 +192,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                             mMissFloatWindow.setVisibility(View.GONE);
                         }
                     }
+
                 }
             }
 

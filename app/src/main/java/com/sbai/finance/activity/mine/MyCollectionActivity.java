@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.fragment.MyCollectAudioFragment;
 import com.sbai.finance.fragment.mine.ArticleCollectionFragment;
 import com.sbai.finance.fragment.mine.MyCollectQuestionFragment;
 import com.sbai.finance.utils.Display;
@@ -42,7 +43,7 @@ public class MyCollectionActivity extends BaseActivity {
         mTitleBar.setTitle(R.string.my_collection);
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-        mSlidingTabLayout.setSelectedIndicatorPadding(Display.dp2Px(60, getResources()));
+        mSlidingTabLayout.setSelectedIndicatorPadding(Display.dp2Px(45, getResources()));
         mSlidingTabLayout.setPadding(Display.dp2Px(13, getResources()));
         mMyCollectionFragmentPagerAdapter = new MyCollectionFragmentPagerAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(mMyCollectionFragmentPagerAdapter);
@@ -88,6 +89,8 @@ public class MyCollectionActivity extends BaseActivity {
                     return new MyCollectQuestionFragment();
                 case 1:
                     return new ArticleCollectionFragment();
+                case 2:
+                    return new MyCollectAudioFragment();
             }
             return null;
         }
@@ -99,13 +102,15 @@ public class MyCollectionActivity extends BaseActivity {
                     return mContext.getString(R.string.question);
                 case 1:
                     return mContext.getString(R.string.article);
+                case 2:
+                    return mContext.getString(R.string.audio);
             }
             return super.getPageTitle(position);
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
     }
 

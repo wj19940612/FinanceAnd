@@ -814,6 +814,11 @@
     <string name="you_not_has_comment_collection">暂无提问收藏</string>
     <string name="collect_favorite_miss_take_here">在这里收藏喜欢的姐说问答</string>
     <string name="look_miss">查看姐说</string>
+
+    <string name="you_not_has_audio_collection">暂无音频收藏</string>
+    <string name="collect_favorite_audio_here">在这里收藏喜欢的音频</string>
+    <string name="look_audio">查看音频</string>
+    <string name="audio">音频</string>
     <!--我的回复-->
     <string name="not_has_reply_news">暂无回复消息</string>
     <string name="there_show_miss_answers_and_others_comment">在这里会显示小姐姐的回答\n和TA人的评论回复消息</string>

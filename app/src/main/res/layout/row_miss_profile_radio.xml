@@ -23,6 +23,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
+            android:visibility="invisible"
             android:background="@drawable/bg_miss_radio_cover">
 
             <ImageView

@@ -38,6 +38,7 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
     public static final int MEDIA_SOURCE_RECOMMEND_RADIO = 1;//音频的来源  推荐电台 或者电台详情
     public static final int MEDIA_SOURCE_HOT_QUESTION = 2;//音频的来源  最热提问
     public static final int MEDIA_SOURCE_LATEST_QUESTION = 3;//音频的来源  最新提问
+    public static final int MEDIA_SOURCE_MISS_PROFILE = 4;//音频的来源  小姐姐个人主页
 
 
     private TimerHandler mTimerHandler;
@@ -121,13 +122,13 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
 
     @Override
     public void onAudioStart() {
-        mTimerHandler.sendEmptyMessageDelayed(DEFAULT_UPDATE_MEDIA_PROGRESS, 0);
         mMediaPlayIntent.setAction(BROADCAST_ACTION_MEDIA_START);
         if (mIAudio != null) {
             mMediaPlayIntent.putExtra(ExtraKeys.IAudio, mIAudio.getAudioId());
         }
         mMediaPlayIntent.putExtra(ExtraKeys.MEDIA_PLAY_SOURCE, mSource);
         LocalBroadcastManager.getInstance(this).sendBroadcast(mMediaPlayIntent);
+        mTimerHandler.sendEmptyMessageDelayed(DEFAULT_UPDATE_MEDIA_PROGRESS, 0);
     }
 
     @Override
@@ -195,27 +196,27 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
                 int source = intent.getIntExtra(ExtraKeys.MEDIA_PLAY_SOURCE, -1);
                 switch (intent.getAction()) {
                     case BROADCAST_ACTION_MEDIA_START:
-                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_START ");
+                        Log.e(TAG, "onReceive: BROADCAST_ACTION_MEDIA_START ");
                         onMediaPlayStart(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_PLAY:
-                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_PLAY ");
+                        Log.e(TAG, "onReceive: BROADCAST_ACTION_MEDIA_PLAY ");
                         onMediaPlay(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_RESUME:
-                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_RESUME ");
+                        Log.e(TAG, "onReceive: BROADCAST_ACTION_MEDIA_RESUME ");
                         onMediaPlayResume(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_PAUSE:
-                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_PAUSE ");
+                        Log.e(TAG, "onReceive: BROADCAST_ACTION_MEDIA_PAUSE ");
                         onMediaPlayPause(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_STOP:
-                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_STOP ");
+                        Log.e(TAG, "onReceive: BROADCAST_ACTION_MEDIA_STOP ");
                         onMediaPlayStop(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_ERROR:
-                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_ERROR ");
+                        Log.e(TAG, "onReceive: BROADCAST_ACTION_MEDIA_ERROR ");
                         onMediaPlayError(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_PROGRESS:
