@@ -114,7 +114,6 @@ public class MissRadioViewSwitcher extends LinearLayout implements TimerHandler.
     }
 
     private void openRadioDetailsPage() {
-        // TODO: 2017/11/24 打开h5页面
         if (mMissSwitcherModelList != null && !mMissSwitcherModelList.isEmpty()) {
             int position = mCount % mMissSwitcherModelList.size();
             MissSwitcherModel missSwitcherModel = mMissSwitcherModelList.get(position);

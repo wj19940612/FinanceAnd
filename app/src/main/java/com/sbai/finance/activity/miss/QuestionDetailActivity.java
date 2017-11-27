@@ -101,7 +101,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     MissFloatWindow mMissFloatWindow;
 
     private int mQuestionId;
-    private boolean mIsFromMissTalk;
 
     private int mType = 1;
     private int mPageSize = 20;
@@ -385,7 +384,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     private void initData(Intent intent) {
         mQuestionId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
         mReplayMsgId = intent.getStringExtra(Launcher.EX_PAYLOAD_1); // 来消息，把他人的回复置顶
-        mIsFromMissTalk = intent.getBooleanExtra(ExtraKeys.IS_FROM_MISS_TALK, false);
+//        mIsFromMissTalk = intent.getBooleanExtra(ExtraKeys.IS_FROM_MISS_TALK, false);
     }
 
     private void initHeaderView() {
@@ -500,11 +499,11 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                     }
                 }
             }
-        }
-        if (mPlayThisVoice) {
-            mMissFloatWindow.setVisibility(View.GONE);
-        } else {
-            mMissFloatWindow.setVisibility(View.VISIBLE);
+            if (mPlayThisVoice) {
+                mMissFloatWindow.setVisibility(View.GONE);
+            } else {
+                mMissFloatWindow.setVisibility(View.VISIBLE);
+            }
         }
 
         mMissFloatWindow.setOnMissFloatWindowClickListener(new MissFloatWindow.OnMissFloatWindowClickListener() {

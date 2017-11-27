@@ -82,6 +82,7 @@ public class MissAskFragment extends MediaPlayFragment {
     private OnMissAskPageListener mOnMissAskPageListener;
     private HashSet<Integer> mSet;
     private MediaPlayService mMediaPlayService;
+    private int mSelectPosition;
 
     public void updateQuestion(Question question) {
         if (mQuestionList != null && !mQuestionList.isEmpty()) {
@@ -111,6 +112,10 @@ public class MissAskFragment extends MediaPlayFragment {
 
     public void setService(MediaPlayService mediaPlayService) {
         mMediaPlayService = mediaPlayService;
+    }
+
+    public void setSelectFragment(int position) {
+        mSelectPosition = position;
     }
 
     public interface OnMissAskPageListener {
@@ -233,8 +238,10 @@ public class MissAskFragment extends MediaPlayFragment {
     @Override
     protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
 //        Log.d(TAG, "onMediaPlayCurrentPosition: "+source+ " "+mMissAskType); // 2 1 或者 3 0
-        if ((mMissAskType == MISS_ASK_TYPE_HOT && source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION)
-                || (mMissAskType == MISS_ASK_TYPE_LATEST && source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION)) {
+//        if ((mMissAskType == MISS_ASK_TYPE_HOT && source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION)
+//                || (mMissAskType == MISS_ASK_TYPE_LATEST && source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION)) {
+        if (source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION || source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION) {
+            if (mSelectPosition == -1) return;
             LinearLayoutManager layoutManager = (LinearLayoutManager) mEmptyRecyclerView.getLayoutManager();
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
             int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
@@ -242,7 +249,8 @@ public class MissAskFragment extends MediaPlayFragment {
             for (int i = firstVisibleItemPosition; i < lastVisibleItemPosition; i++) {
                 Question question = mQuestionList.get(i);
                 if (question != null && MissAudioManager.get().isStarted(question)) {
-                    View view = layoutManager.findViewByPosition(i - firstVisibleItemPosition);
+//                    View view = layoutManager.findViewByPosition(i - firstVisibleItemPosition);
+                    View view = mEmptyRecyclerView.getChildAt(i - firstVisibleItemPosition);
                     if (view != null) {
                         ImageView playImage = view.findViewById(R.id.playImage);
                         TextView soundTime = view.findViewById(R.id.soundTime);
@@ -254,10 +262,11 @@ public class MissAskFragment extends MediaPlayFragment {
                         progressBar.setProgress(pastTime);
                     }
                     radioPlayHasFocus = true;
+                    break;
                 }
             }
-            if (mOnMissAskPageListener != null) {
-                mOnMissAskPageListener.onRadioPlay(null, radioPlayHasFocus,source);
+            if (mOnMissAskPageListener != null && mSelectPosition != -1) {
+                mOnMissAskPageListener.onRadioPlay(null, radioPlayHasFocus, source);
             }
         }
     }
@@ -386,7 +395,7 @@ public class MissAskFragment extends MediaPlayFragment {
 
             @Override
             public void onPlayClick(final Question item, int position) {
-                if(item!=null){
+                if (item != null) {
                     umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
                     if (MissAudioManager.get().isStarted(item)) {
                         if (mMediaPlayService != null) {

@@ -51,9 +51,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:maxHeight="2dp"
+            android:progressDrawable="@drawable/radio_seek_bar"
             android:thumb="@drawable/bg_radio_seek_thumb"/>
 
-        <!--android:progressDrawable="@drawable/radio_seek_bar"-->
+
         <TextView
             android:id="@+id/radioTotalLength"
             android:layout_width="wrap_content"

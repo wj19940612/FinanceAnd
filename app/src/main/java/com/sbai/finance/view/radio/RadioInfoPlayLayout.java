@@ -155,12 +155,8 @@ public class RadioInfoPlayLayout extends LinearLayout {
     public void onPlayStop() {
         mPlay.setSelected(false);
         mVoiceCover.clearAnimation();
-        mRadioSeekBar.setProgress(0);
+        setRadioProgress(0);
         mProgressLength.setText(R.string.start_time);
-
-//        mRotateAnimation.cancel();
-//        mVoiceAnimator.end();
-//        mProgressLength.setText(R.string.start_time);
     }
 
     private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {

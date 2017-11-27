@@ -230,7 +230,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position != 0) {
             Radio radioInfo = (Radio) parent.getItemAtPosition(position);
-            Launcher.with(this, RadioStationPlayActivityActivity.class).putExtra(ExtraKeys.RADIO, radioInfo).execute();
+            Launcher.with(this, RadioStationPlayActivityActivity.class).putExtra(ExtraKeys.RADIO, radioInfo).executeForResult(222);
         }
     }
 

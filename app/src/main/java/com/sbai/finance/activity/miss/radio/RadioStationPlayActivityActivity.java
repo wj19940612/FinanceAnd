@@ -200,23 +200,26 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     private void initMissFloatWindow(Radio radio) {
         MissAudioManager missAudioManager = MissAudioManager.get();
         MissAudioManager.IAudio audio = missAudioManager.getAudio();
-        if (audio instanceof Question) {
-            mMissFloatWindow.startAnim();
-            mMissFloatWindow.setVisibility(View.VISIBLE);
-            Question question = (Question) audio;
-            mMissFloatWindow.setMissAvatar(question.getCustomPortrait(), question.getUserType());
-            mPlayThisVoice = true;
-        } else if (audio instanceof Radio) {
-            if (mRadio == null || mRadio.getId() != ((Radio) audio).getId()) {
+        if (missAudioManager.isPlaying()) {
+            if (audio instanceof Question) {
                 mMissFloatWindow.startAnim();
                 mMissFloatWindow.setVisibility(View.VISIBLE);
+                Question question = (Question) audio;
+                mMissFloatWindow.setMissAvatar(question.getCustomPortrait(), question.getUserType());
+                mPlayThisVoice = true;
+            } else if (audio instanceof Radio) {
                 Radio playRadio = (Radio) audio;
                 mMissFloatWindow.setMissAvatar(playRadio.getUserPortrait(), Question.QUESTION_TYPE_HOT);
-                mPlayThisVoice = true;
-            } else {
-                mPlayThisVoice = false;
+                mMissFloatWindow.startAnim();
+                if (mRadio != null && mRadio.getId() == ((Radio) audio).getId()) {
+                    mMissFloatWindow.setVisibility(View.GONE);
+                    mPlayThisVoice = true;
+                    mRadioPlayLL.startAnimation();
+                } else {
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                    mPlayThisVoice = false;
+                }
             }
-        } else {
         }
     }
 
@@ -238,6 +241,12 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                             updateRadioDetail(data);
                         }
 
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            if (mSwipeRefreshLayout.isRefreshing())
+                                mSwipeRefreshLayout.setRefreshing(false);
+                        }
                     })
                     .fireFree();
         }
@@ -293,12 +302,6 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
             }
         });
 
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefreshLayout.setRefreshing(true);
-            }
-        });
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -331,9 +334,9 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         mRadioPlayLL.setOnRadioPlayListener(new RadioInfoPlayLayout.OnRadioPlayListener() {
             @Override
             public void onRadioPlay() {
-                if (mRadioDetails != null) {
-                    mMissFloatWindow.setMissAvatar(mRadioDetails.getUserPortrait(), Question.QUESTION_TYPE_HOT);
-                }
+//                if (mRadioDetails != null) {
+//                    mMissFloatWindow.setMissAvatar(mRadioDetails.getUserPortrait(), Question.QUESTION_TYPE_HOT);
+//                }
                 if (MissAudioManager.get().isStarted(mRadio)) {
                     if (mMediaPlayService != null) {
                         mMediaPlayService.onPausePlay(mRadio);
@@ -356,10 +359,6 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                 }
             }
         });
-
-        if (MissAudioManager.get().isStarted(mRadio)) {
-            mRadioPlayLL.startAnimation();
-        }
     }
 
     private void refreshRadioReviewData() {
@@ -423,24 +422,26 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
         changeFloatWindowView();
-        mRadioPlayLL.startAnimation();
     }
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
         mMissFloatWindow.startAnim();
-        mRadioPlayLL.startAnimation();
-
+        mRadioPlayLL.setPlayStatus(mRadio);
+        changeFloatWindowView();
     }
 
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
         mMissFloatWindow.startAnim();
+        mRadioPlayLL.setPlayStatus(mRadio);
         mRadioPlayLL.startAnimation();
+        changeFloatWindowView();
     }
 
     @Override
     public void onMediaPlayPause(int IAudioId, int source) {
+        mRadioPlayLL.setPlayStatus(mRadio);
         mMissFloatWindow.stopAnim();
         mRadioPlayLL.stopAnimation();
         mMissFloatWindow.setVisibility(View.GONE);
@@ -483,7 +484,16 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         if (audio instanceof Question) {
             mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait(), ((Question) audio).getUserType());
         } else if (audio instanceof Radio) {
-            mMissFloatWindow.setMissAvatar(((Radio) audio).getAudioCover());
+            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait(), Question.QUESTION_TYPE_HOT);
+            if (mRadio.getId() == audio.getAudioId()) {
+                if (mRadioDetails != null) {
+                    mMissFloatWindow.setMissAvatar(mRadioDetails.getUserPortrait(), Question.QUESTION_TYPE_HOT);
+                }
+                mPlayThisVoice = true;
+                mRadioPlayLL.startAnimation();
+            } else {
+                mRadioPlayLL.stopAnimation();
+            }
         }
     }
 
@@ -659,7 +669,14 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                 mReviewPriceCount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        Client.praiseMissReply(item.getId())
+                                .setCallback(new Callback2D<Resp<Praise>, Praise>() {
+                                    @Override
+                                    protected void onRespSuccessData(Praise data) {
+                                        setReviewPrice(data.getPriseCount(), data.getIsPrise());
+                                    }
+                                })
+                                .fireFree();
                     }
                 });
                 mRootView.setOnClickListener(new View.OnClickListener() {
