@@ -32,7 +32,6 @@ import com.sbai.finance.model.AppVersion;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.fund.UserFundInfo;
-import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.system.ServiceConnectWay;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -120,6 +119,8 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
         super.onNewIntent(intent);
         handleIntentData(intent);
     }
+
+
 
     private void handleIntentData(Intent intent) {
         int currentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);

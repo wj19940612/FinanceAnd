@@ -11,7 +11,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +100,7 @@ public class MissAskFragment extends MediaPlayFragment {
                         public void onCompleted(String url) {
                             mMissAskAdapter.notifyDataSetChanged();
                             if (mOnMissAskPageListener != null) {
-                                mOnMissAskPageListener.onHideMissFloatWindow();
+                                mOnMissAskPageListener.onChangeMissFloatWindow(true);
                             }
                         }
                     });
@@ -117,9 +116,9 @@ public class MissAskFragment extends MediaPlayFragment {
     public interface OnMissAskPageListener {
         void onSwipeRefreshEnable(boolean swipeFreshEnable);
 
-        void onRadioPlay(Question question, boolean radioPlayViewHasHasFocus);
+        void onRadioPlay(Question question, boolean radioPlayViewHasHasFocus, int source);
 
-        void onHideMissFloatWindow();
+        void onChangeMissFloatWindow(boolean hideFloatWindow);
     }
 
     public void notifyFragmentDataSetChange() {
@@ -197,19 +196,19 @@ public class MissAskFragment extends MediaPlayFragment {
 
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
-        Log.d(TAG, "onMediaPlayStart: ");
         notifyAdapterDataChanged(source);
     }
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
-        Log.d(TAG, "onMediaPlay: ");
         notifyAdapterDataChanged(source);
+        if (mOnMissAskPageListener != null) {
+            mOnMissAskPageListener.onChangeMissFloatWindow(false);
+        }
     }
 
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
-        Log.d(TAG, "onMediaPlayResume: ");
         notifyAdapterDataChanged(source);
     }
 
@@ -257,9 +256,8 @@ public class MissAskFragment extends MediaPlayFragment {
                     radioPlayHasFocus = true;
                 }
             }
-            Log.d(TAG, "课件: " + radioPlayHasFocus + "  " + (mOnMissAskPageListener != null));
             if (mOnMissAskPageListener != null) {
-                mOnMissAskPageListener.onRadioPlay(null, radioPlayHasFocus);
+                mOnMissAskPageListener.onRadioPlay(null, radioPlayHasFocus,source);
             }
         }
     }
@@ -388,21 +386,23 @@ public class MissAskFragment extends MediaPlayFragment {
 
             @Override
             public void onPlayClick(final Question item, int position) {
-                umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
-                if (MissAudioManager.get().isStarted(item)) {
-                    if (mMediaPlayService != null) {
-                        mMediaPlayService.onPausePlay(item);
-                    }
-                } else if (MissAudioManager.get().isPaused(item)) {
-                    if (mMediaPlayService != null) {
-                        mMediaPlayService.onResume();
-                    }
-                } else {
-                    if (mMediaPlayService != null) {
-                        if (mMissAskType == MISS_ASK_TYPE_HOT) {
-                            mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_HOT_QUESTION);
-                        } else {
-                            mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION);
+                if(item!=null){
+                    umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
+                    if (MissAudioManager.get().isStarted(item)) {
+                        if (mMediaPlayService != null) {
+                            mMediaPlayService.onPausePlay(item);
+                        }
+                    } else if (MissAudioManager.get().isPaused(item)) {
+                        if (mMediaPlayService != null) {
+                            mMediaPlayService.onResume();
+                        }
+                    } else {
+                        if (mMediaPlayService != null) {
+                            if (mMissAskType == MISS_ASK_TYPE_HOT) {
+                                mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_HOT_QUESTION);
+                            } else {
+                                mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION);
+                            }
                         }
                     }
                 }

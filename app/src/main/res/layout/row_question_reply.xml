@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="@android:color/white"
+              android:id="@+id/rootView"
               android:orientation="vertical">
 
     <RelativeLayout
@@ -48,7 +49,6 @@
         tools:text="穿梭时间的画面的钟,从反方向开始移动.所有回忆对着我进攻,我的伤口被你拆封.誓言太沉重泪被纵容,脸上汹涌失控."/>
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/replyArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,7 +57,8 @@
         android:layout_marginTop="4dp"
         android:background="@drawable/bg_questions"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/replyName"
@@ -84,15 +85,34 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="54dp"
         android:layout_marginRight="14dp"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/publishTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:textColor="@color/unluckyText"
             android:textSize="10sp"
             tools:text="10:00"/>
 
+        <TextView
+            android:id="@+id/reviewPriceCount"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/btn_login_switch"
+            android:drawableLeft="@drawable/ic_miss_unpraise"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:minWidth="46dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textSize="10sp"
+            tools:text="1222222222"/>
     </RelativeLayout>
 </LinearLayout>

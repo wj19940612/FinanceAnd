@@ -90,6 +90,12 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
         }
     }
 
+    public void seekTo(int progress) {
+        if (mMissAudioManager != null) {
+            mMissAudioManager.setSeekProgress(progress);
+        }
+    }
+
     public void onResume() {
         if (mMissAudioManager != null) {
             mMissAudioManager.resume();
@@ -132,6 +138,7 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
         }
         mMediaPlayIntent.putExtra(ExtraKeys.MEDIA_PLAY_SOURCE, mSource);
         LocalBroadcastManager.getInstance(this).sendBroadcast(mMediaPlayIntent);
+        mTimerHandler.sendEmptyMessageDelayed(DEFAULT_UPDATE_MEDIA_PROGRESS, 0);
     }
 
     @Override

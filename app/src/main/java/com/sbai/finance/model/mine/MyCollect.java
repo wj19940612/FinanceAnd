@@ -8,9 +8,9 @@ package com.sbai.finance.model.mine;
 
 public class MyCollect {
     //收藏类型  1 提问 2 乐米日报 3 音频 4电台
-    public static final int COLLECTI_TYPE_QUESTION = 1;
-    public static final int COLLECTI_TYPE_ARTICLE = 2;
-    public static final int COLLECTI_TYPE_AUDIO= 3;
+    public static final int COLLECT_TYPE_QUESTION = 1;
+    public static final int COLLECT_TYPE_ARTICLE = 2;
+    public static final int COLLECTI_TYPE_AUDIO = 3;
     public static final int COLLECTI_TYPE_RADIO = 4;
     /**
      * mongoId : 598c7e9e8776e2bc872d2ae2
@@ -56,7 +56,7 @@ public class MyCollect {
     private String audio;            //音频
     private String audioCover;       //音频封面
     private String audioName;        //音频名称
-//    private int radioHost;         //音频主播，与电台主播命名重复
+    //    private int radioHost;         //音频主播，与电台主播命名重复
     private int radioHostName;       //主播昵称
 
 

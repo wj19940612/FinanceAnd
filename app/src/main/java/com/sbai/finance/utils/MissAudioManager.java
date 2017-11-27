@@ -257,6 +257,12 @@ public class MissAudioManager {
         return 0;
     }
 
+    public void setSeekProgress(int progress) {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.seekTo(progress);
+        }
+    }
+
     public boolean isPlaying() {
         return mMediaPlayer != null && mMediaPlayer.isPlaying();
     }
@@ -278,6 +284,7 @@ public class MissAudioManager {
         int getAudioId();
 
         String getAudioUrl();
+
     }
 
     public interface OnAudioListener {

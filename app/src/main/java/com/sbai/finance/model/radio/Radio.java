@@ -63,16 +63,6 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
     private int viewNumber;        //观看人数
     private String radioName;     //电台名称
 
-    public boolean isPlaying;   //自己加的标识
-
-    public boolean isPlaying() {
-        return isPlaying;
-    }
-
-    public void setPlaying(boolean playing) {
-        isPlaying = playing;
-    }
-
     @Override
     public int getAudioId() {
         return id;

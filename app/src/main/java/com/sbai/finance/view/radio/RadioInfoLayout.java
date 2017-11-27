@@ -13,8 +13,10 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.MissProfileActivity;
+import com.sbai.finance.activity.miss.MissProfileDetailActivity;
+import com.sbai.finance.activity.miss.RadioStationListActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.model.radio.RadioDetails;
 import com.sbai.finance.net.Callback;
@@ -40,6 +42,8 @@ import butterknife.Unbinder;
 
 public class RadioInfoLayout extends LinearLayout {
 
+    @BindView(R.id.radioOwnerAvatar)
+    HasLabelImageLayout mRadioOwnerAvatar;
     @BindView(R.id.radioOwnerName)
     TextView mRadioOwnerName;
     @BindView(R.id.radioStartPlaySmall)
@@ -56,8 +60,6 @@ public class RadioInfoLayout extends LinearLayout {
     TextView mRadioName;
     @BindView(R.id.subscribeStatus)
     TextView mSubscribeStatus;
-    @BindView(R.id.radioOwnerAvatar)
-    HasLabelImageLayout mRadioOwnerAvatar;
     private Unbinder mBind;
 
     private RadioDetails mRadioDetails;
@@ -103,14 +105,18 @@ public class RadioInfoLayout extends LinearLayout {
 
     public void setRadioDetails(RadioDetails radioDetails) {
         mRadioDetails = radioDetails;
-        mRadioOwnerAvatar.setCircleUrl(radioDetails.getUserPortrait());
+        mRadioOwnerAvatar.setAvatar(radioDetails.getUserPortrait(), Question.USER_IDENTITY_HOST);
         mRadioOwnerName.setText(radioDetails.getRadioHostName());
+        mRadioName.setText(radioDetails.getRadioName());
         GlideApp.with(getContext())
                 .load(radioDetails.getRadioCover())
                 .into(mRadioCover);
         if (radioDetails.getIsSubscriber() == 1) {
             mSubscribeStatus.setSelected(false);
             mSubscribeStatus.setText(R.string.already_subscribe);
+        } else {
+            mSubscribeStatus.setSelected(true);
+            mSubscribeStatus.setText(R.string.subscribe);
         }
     }
 
@@ -130,7 +136,11 @@ public class RadioInfoLayout extends LinearLayout {
         switch (view.getId()) {
             case R.id.radioOwnerAvatar:
             case R.id.radioOwnerName:
-                Launcher.with(getContext(), MissProfileActivity.class).execute();
+                if (mRadio != null) {
+                    Launcher.with(getContext(), MissProfileDetailActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mRadio.getRadioHost())
+                            .execute();
+                }
                 break;
             case R.id.radioStartPlaySmall:
                 // TODO: 2017/11/22 暂时不处理
@@ -140,7 +150,11 @@ public class RadioInfoLayout extends LinearLayout {
                 break;
             case R.id.radioName:
             case R.id.radioCover:
-                // TODO: 2017/11/22 电台列表
+                if (mRadio != null) {
+                    Launcher.with(getContext(), RadioStationListActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mRadio.getRadioId())
+                            .execute();
+                }
                 break;
             case R.id.subscribeStatus:
                 if (LocalUser.getUser().isLogin()) {
@@ -166,5 +180,4 @@ public class RadioInfoLayout extends LinearLayout {
                     .fireFree();
         }
     }
-
 }

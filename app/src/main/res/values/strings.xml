@@ -914,12 +914,13 @@
 
     <!--姐说-->
     <string name="radio">电台</string>
-    
+
     <!--电台-->
     <string name="look_more">查看更多</string>
     <string name="pack_up">收起</string>
     <string name="subscribe">+订阅</string>
     <string name="already_subscribe">已订阅</string>
+    <string name="start_time">00:00</string>
 
     <!--Stock-->
     <string name="ShangHaiStockExchange">上证指数</string>

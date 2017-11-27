@@ -3,11 +3,11 @@ package com.sbai.finance.model.miss;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by lixiaokuan0819 on 2017/8/2.
+ * /user/comment/replyList.do
  */
 
 public class QuestionReply {
@@ -68,6 +68,10 @@ public class QuestionReply {
     }
 
     public static class DataBean implements Parcelable {
+
+        public static final int QUESTION_REVIEW_NOT_PRISE = 0;
+        public static final int QUESTION_REVIEW_PRISE = 1;
+
         /**
          * content : 发表一个评论yoyoyoyoyoyo333333!
          * createDate : 1501664354913
@@ -99,6 +103,25 @@ public class QuestionReply {
         private int star;
         private UserModelBean userModel;
         private List<ReplysBean> replys;
+
+        private int priseCount;
+        private boolean isPrise;
+
+        public boolean isPrise() {
+            return isPrise;
+        }
+
+        public void setPrise(boolean prise) {
+            isPrise = prise;
+        }
+
+        public int getPriseCount() {
+            return priseCount;
+        }
+
+        public void setPriseCount(int priseCount) {
+            this.priseCount = priseCount;
+        }
 
         public String getContent() {
             return content;
@@ -706,6 +729,9 @@ public class QuestionReply {
             };
         }
 
+        public DataBean() {
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -726,10 +752,7 @@ public class QuestionReply {
             dest.writeInt(this.replyCount);
             dest.writeInt(this.star);
             dest.writeParcelable(this.userModel, flags);
-            dest.writeList(this.replys);
-        }
-
-        public DataBean() {
+            dest.writeTypedList(this.replys);
         }
 
         protected DataBean(Parcel in) {
@@ -746,8 +769,7 @@ public class QuestionReply {
             this.replyCount = in.readInt();
             this.star = in.readInt();
             this.userModel = in.readParcelable(UserModelBean.class.getClassLoader());
-            this.replys = new ArrayList<ReplysBean>();
-            in.readList(this.replys, ReplysBean.class.getClassLoader());
+            this.replys = in.createTypedArrayList(ReplysBean.CREATOR);
         }
 
         public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {

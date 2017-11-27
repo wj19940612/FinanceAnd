@@ -5,8 +5,12 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -29,6 +33,7 @@ import butterknife.Unbinder;
  */
 
 public class RadioInfoPlayLayout extends LinearLayout {
+    private static final String TAG = "RadioInfoPlayLayout";
 
     @BindView(R.id.voiceCover)
     ImageView mVoiceCover;
@@ -47,7 +52,10 @@ public class RadioInfoPlayLayout extends LinearLayout {
     private Unbinder mBind;
     private Radio mRadio;
 
+    private RotateAnimation mRotateAnimation;
+
     private OnRadioPlayListener mOnRadioPlayListener;
+//    private ObjectAnimator mVoiceAnimator;
 
 
     public interface OnRadioPlayListener {
@@ -56,7 +64,7 @@ public class RadioInfoPlayLayout extends LinearLayout {
         void onSeekChange(int progress);
     }
 
-    public void mOnRadioPlayListener(OnRadioPlayListener onRadioPlayListener) {
+    public void setOnRadioPlayListener(OnRadioPlayListener onRadioPlayListener) {
         mOnRadioPlayListener = onRadioPlayListener;
     }
 
@@ -73,13 +81,40 @@ public class RadioInfoPlayLayout extends LinearLayout {
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_radio_play, this, true);
         mBind = ButterKnife.bind(this, view);
+        createVoicePlayRotateAnimation();
+    }
+
+    private void createVoicePlayRotateAnimation() {
+        mRotateAnimation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        LinearInterpolator lin = new LinearInterpolator();
+        mRotateAnimation.setInterpolator(lin);
+        mRotateAnimation.setDuration(5000);
+        mRotateAnimation.setRepeatCount(-1);
+        mRotateAnimation.setFillAfter(false);
+        mRotateAnimation.setStartOffset(10);
+//        mVoiceAnimator = ObjectAnimator.ofFloat(mVoiceCover, "rotation", 0.0F, 359.0F);
+//        mVoiceAnimator.setRepeatCount(-1);
+//        mVoiceAnimator.setDuration(5000);
+//        mVoiceAnimator.setInterpolator(new LinearInterpolator());
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mBind.unbind();
+        mVoiceCover.clearAnimation();
         mOnSeekBarChangeListener = null;
+        mRotateAnimation = null;
+        mBind.unbind();
+    }
+
+    public void startAnimation() {
+        mVoiceCover.startAnimation(mRotateAnimation);
+//        mVoiceAnimator.start();
+    }
+
+    public void stopAnimation() {
+        mRotateAnimation.cancel();
+//        mVoiceAnimator.end();
     }
 
     public void setRadioProgress(int progress) {
@@ -98,22 +133,42 @@ public class RadioInfoPlayLayout extends LinearLayout {
         }
     }
 
+    public void setMediaPlayProgress(int mediaPlayCurrentPosition, int totalDuration) {
+        if (totalDuration != 0) {
+            mRadioSeekBar.setMax(totalDuration);
+            setRadioProgress(mediaPlayCurrentPosition);
+            mProgressLength.setText(DateUtil.format(mediaPlayCurrentPosition / 1000 * 1000, DateUtil.FORMAT_MINUTE_SECOND));
+        }
+    }
+
     public void setRadio(Radio radio) {
         mRadio = radio;
         GlideApp.with(getContext())
                 .load(radio.getAudioCover())
                 .circleCrop()
                 .into(mVoiceCover);
-        mRadioTotalLength.setText(DateUtil.format(radio.getAudioTime(), DateUtil.FORMAT_HOUR_MINUTE));
+        mRadioTotalLength.setText(DateUtil.formatMediaLength(radio.getAudioTime()));
         mListenNumber.setText(String.valueOf(radio.getViewNumber()));
         mRadioSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
         setPlayStatus(radio);
     }
 
+    public void onPlayStop() {
+        Log.d(TAG, "onPlayStop: ");
+        mPlay.setSelected(false);
+        mVoiceCover.clearAnimation();
+        mRadioSeekBar.setProgress(0);
+        mProgressLength.setText(R.string.start_time);
+
+//        mRotateAnimation.cancel();
+//        mVoiceAnimator.end();
+//        mProgressLength.setText(R.string.start_time);
+    }
+
     private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-            if (mOnRadioPlayListener != null) {
+            if (mOnRadioPlayListener != null && b) {
                 mOnRadioPlayListener.onSeekChange(progress);
             }
         }
@@ -131,6 +186,11 @@ public class RadioInfoPlayLayout extends LinearLayout {
 
     @OnClick(R.id.play)
     public void onViewClicked() {
+        if (mPlay.isSelected()) {
+            mPlay.setSelected(false);
+        } else {
+            mPlay.setSelected(true);
+        }
         if (mOnRadioPlayListener != null) {
             mOnRadioPlayListener.onRadioPlay();
         }

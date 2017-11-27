@@ -1,9 +1,12 @@
 package com.sbai.finance.activity.miss;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -18,6 +21,20 @@ import com.sbai.finance.utils.ToastUtil;
  */
 
 public abstract class MediaPlayActivity extends BaseActivity {
+
+    protected MediaPlayService mMediaPlayService;
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mMediaPlayService = ((MediaPlayService.MediaBinder) iBinder).getMediaPlayService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,11 +42,19 @@ public abstract class MediaPlayActivity extends BaseActivity {
     }
 
     private void registerBroadcast() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMediaPlayBroadcastReceiver, getIntentFilter());
+    }
+
+    protected IntentFilter getIntentFilter() {
         IntentFilter filter = new IntentFilter();
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_START);
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_RESUME);
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PAUSE);
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_STOP);
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_ERROR);
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PROGRESS);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMediaPlayBroadcastReceiver, filter);
+        filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PLAY);
+        return filter;
     }
 
     @Override
@@ -48,11 +73,11 @@ public abstract class MediaPlayActivity extends BaseActivity {
 
     protected abstract void onMediaPlayStop(int IAudioId, int source);
 
-    protected  void onMediaPlayError(int IAudioId, int source){
+    protected void onMediaPlayError(int IAudioId, int source) {
         ToastUtil.show(R.string.play_failure);
     }
 
-    public  void onOtherReceive(Context context, Intent intent){
+    public void onOtherReceive(Context context, Intent intent) {
 
     }
 

@@ -16,10 +16,12 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.model.miss.MissSwitcherModel;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.TimerHandler;
-import com.sbai.finance.utils.ToastUtil;
 
 import java.util.List;
 
@@ -112,10 +114,15 @@ public class MissRadioViewSwitcher extends LinearLayout implements TimerHandler.
     }
 
     private void openRadioDetailsPage() {
+        // TODO: 2017/11/24 打开h5页面
         if (mMissSwitcherModelList != null && !mMissSwitcherModelList.isEmpty()) {
             int position = mCount % mMissSwitcherModelList.size();
             MissSwitcherModel missSwitcherModel = mMissSwitcherModelList.get(position);
-            ToastUtil.show(missSwitcherModel.getTopicTitle());
+            if (missSwitcherModel != null) {
+                Launcher.with(getContext(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, String.format(Client.MISS_TOP_DETAILS_H5_URL, missSwitcherModel.getId()))
+                        .execute();
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package com.sbai.finance.view.radio;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import java.util.List;
 
 public class MissRadioLayout extends LinearLayout {
 
+    private static final String TAG = "MissRadioLayout";
     private static final int DEFAULT_MISS_RADIO_LIST_SIZE = 4;
     private OnMissRadioPlayListener mOnMissRadioPlayListener;
     private ArrayList<PlayStatus> mPlayStateList;
@@ -50,7 +53,6 @@ public class MissRadioLayout extends LinearLayout {
         super(context, attrs, defStyleAttr);
 
         init();
-
     }
 
     private void init() {
@@ -58,6 +60,34 @@ public class MissRadioLayout extends LinearLayout {
         setVisibility(GONE);
         setBackgroundColor(Color.WHITE);
         mPlayStateList = new ArrayList<>();
+
+        Rect rect = new Rect();
+
+        getGlobalVisibleRect(rect);
+
+
+//        Point p=new Point();
+//        getWindowManager().getDefaultDisplay().getSize(p);
+//        screenWidth=p.x;
+//        screenHeight=p.y;
+//
+//        Rect  rect=new Rect(0,0,screenWidth,screenHeight );
+//
+//        ImageView imageView = imageViewList.get(i);
+//
+//        int[] location = new int[2];
+//        imageView.getLocationInWindow(location);
+//        System.out.println(Arrays.toString(location));
+
+        // Rect ivRect=new Rect(imageView.getLeft(),imageView.getTop(),imageView.getRight(),imageView.getBottom());
+
+
+//        if (imageView.getLocalVisibleRect(rect)) {/*rect.contains(ivRect)*/
+//            System.out.println("---------控件在屏幕可见区域-----显现-----------------");
+//        } else {
+//            imageView.setImageResource(R.drawable.p);
+//            System.out.println("---------控件已不在屏幕可见区域（已滑出屏幕）-----隐去-----------------");
+//        }
     }
 
     public void setOnMissRadioPlayListener(OnMissRadioPlayListener onMissRadioPlayListener) {
@@ -99,7 +129,8 @@ public class MissRadioLayout extends LinearLayout {
             radioUpdateTime.setText(DateUtil.formatDefaultStyleTime(radio.getModifyTime()));
             radioName.setText(radio.getRadioName());
             radioOwnerName.setText(radio.getRadioHostName());
-            radioLength.setText(DateUtil.format(radio.getAudioTime(), DateUtil.FORMAT_HOUR_MINUTE));
+            radioLength.setText(DateUtil.format((radio.getAudioTime() * 1000), DateUtil.FORMAT_HOUR_MINUTE_SECOND));
+            radioLength.setText(DateUtil.formatMediaLength(radio.getAudioTime()));
             startPlay.setImageResource(R.drawable.bg_voice_play);
             addView(view, layoutParams);
 
@@ -114,6 +145,8 @@ public class MissRadioLayout extends LinearLayout {
             final PlayStatus playStatus = mPlayStateList.get(i);
             final ImageView playImageView = playStatus.getImageView();
             View view = playStatus.getView();
+
+
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -145,25 +178,23 @@ public class MissRadioLayout extends LinearLayout {
             }
         }
     }
-//
-//    public void setStopPlay(Radio radio) {
-//        if (mPlayImageView != null) {
-//            mPlayImageView.setSelected(false);
-//        }
-//    }
-//
-//    public void setPausePlay(Radio radio) {
-//        if (mPlayImageView != null) {
-//            mPlayImageView.setSelected(false);
-//        }
-//    }
-//
-//    public void setStartPlay(Radio radio) {
-//        if (mPlayImageView != null) {
-//            mPlayImageView.setSelected(true);
-//        }
-//        unChangePlay(null);
-//    }
+
+    public void updatePlayStatus() {
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (audio instanceof Radio) {
+            if (MissAudioManager.get().isPlaying()) {
+                for (int i = 0; i < mPlayStateList.size(); i++) {
+                    PlayStatus playStatus = mPlayStateList.get(i);
+                    Radio radio = playStatus.getRadio();
+                    if (radio.getId() == audio.getAudioId()) {
+                        playStatus.getImageView().setSelected(true);
+                    }
+                }
+            }else {
+                unChangePlay(null);
+            }
+        }
+    }
 
     @Override
     protected void onDetachedFromWindow() {
