@@ -256,6 +256,7 @@ public class HomeTitleView extends RelativeLayout {
     private void initGif() {
         try {
             mGifFromResource = new GifDrawable(getResources(), R.drawable.ic_stock_simulate);
+            mGifFromResource.setLoopCount(0);
             mStockImg.setImageDrawable(mGifFromResource);
         } catch (IOException e) {
             e.printStackTrace();
