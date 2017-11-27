@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -54,7 +55,7 @@ public class StockPositionFragment extends BaseFragment {
     @BindView(R.id.recyclerView)
     EmptyRecyclerView mRecyclerView;
     @BindView(R.id.empty)
-    TextView mEmpty;
+    NestedScrollView mEmpty;
     Unbinder unbinder;
     @BindView(R.id.stockPrompt)
     ImageView mStockPrompt;
@@ -238,6 +239,7 @@ public class StockPositionFragment extends BaseFragment {
         private Map<String, String> mLastPriceMap;
         private Context mContext;
         private int mIndex = -1;
+        private boolean mRefreshData;
         private ItemClickListener mItemClickListener;
 
         interface ItemClickListener {
@@ -269,6 +271,7 @@ public class StockPositionFragment extends BaseFragment {
 
         public void clear() {
             mPositionList.clear();
+            mRefreshData = true;
             notifyDataSetChanged();
         }
 
@@ -374,12 +377,13 @@ public class StockPositionFragment extends BaseFragment {
                 mCostPrice.setText(FinanceUtil.formatWithScale(stockPosition.getAvgBuyPrice(), 3));
                 mCostPrice.setTextColor(color);
                 mOperateArea.setVisibility(View.GONE);
-                if (position == mIndex) {
+                if (position == mIndex && !mRefreshData) {
                     mOperateArea.setVisibility(View.VISIBLE);
                 }
                 mPositionArea.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        mRefreshData = false;
                         if (mOperateArea.getVisibility() == View.VISIBLE) {
                             mOperateArea.setVisibility(View.GONE);
                             mIndex = -1;

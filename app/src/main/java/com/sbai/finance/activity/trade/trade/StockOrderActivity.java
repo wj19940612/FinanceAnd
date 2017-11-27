@@ -251,7 +251,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
                 totalMarket += position.getTotalQty() * lastPrice;
                 floatProfit += position.getTotalQty() * (lastPrice - position.getAvgBuyPrice());
                 todayProfit += (lastPrice - Double.valueOf(data.getPreClsPrice())) * (position.getTodayBargainCount() - todayBusinessAmount + position.getUsableQty())
-                        + (lastPrice - position.getAvgBuyPrice()) * todayBusinessAmount;
+                        + (lastPrice - position.getTodayAvgPrice()) * todayBusinessAmount;
             }
         }
         mFundInfo.setTotalMarket(totalMarket);

@@ -10,23 +10,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.ImageFloder;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Entrust;
-import com.sbai.finance.model.stocktrade.Position;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -55,7 +53,7 @@ public class StockEntrustFragment extends BaseFragment {
     @BindView(R.id.recyclerView)
     EmptyRecyclerView mRecyclerView;
     @BindView(R.id.empty)
-    TextView mEmpty;
+    NestedScrollView mEmpty;
     Unbinder unbinder;
     private EntrustAdapter mEntrustAdapter;
     private int mPage;
@@ -234,6 +232,7 @@ public class StockEntrustFragment extends BaseFragment {
         private int index = -1;
         private ItemClickListener mItemClickListener;
         private boolean mShowOperateView = true;
+        private boolean mRefreshData;
 
         interface ItemClickListener {
 
@@ -261,6 +260,7 @@ public class StockEntrustFragment extends BaseFragment {
 
         public void clear() {
             mPositionList.clear();
+            mRefreshData = true;
             notifyDataSetChanged();
         }
 
@@ -355,12 +355,13 @@ public class StockEntrustFragment extends BaseFragment {
                     mBusinessTime.setText(DateUtil.format(entrust.getBargainTime(), "HH:mm"));
                 }
                 mOperateArea.setVisibility(View.GONE);
-                if (position == index) {
+                if (position == index && !mRefreshData) {
                     mOperateArea.setVisibility(View.VISIBLE);
                 }
                 mPositionArea.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        mRefreshData = false;
                         if (!mShowOperateView) return;
                         if (mShowOperateView && entrust.getMoiety() == Entrust.ENTRUST_STATUS_ALL_BUSINESS)
                             return;

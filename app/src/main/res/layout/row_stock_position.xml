@@ -32,7 +32,8 @@
                 android:maxLength="6"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
-                android:textSize="18sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:autoSizeMaxTextSize="18sp"
                 app:sizeToFit="true"
                 tool:text="西部能源"/>
@@ -66,7 +67,8 @@
                 android:layout_marginBottom="1dp"
                 android:gravity="right"
                 android:textColor="@color/blackPrimary"
-                android:textSize="18sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:autoSizeMaxTextSize="18sp"
                 app:sizeToFit="true"
                 tool:text="6000"/>
@@ -101,7 +103,8 @@
                 android:gravity="right"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
-                android:textSize="18sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:autoSizeMaxTextSize="18sp"
                 app:sizeToFit="true"
                 tool:text="6000"/>
@@ -136,7 +139,8 @@
                 android:gravity="right"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
-                android:textSize="18sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:autoSizeMaxTextSize="18sp"
                 app:sizeToFit="true"
                 tool:text="6000"/>

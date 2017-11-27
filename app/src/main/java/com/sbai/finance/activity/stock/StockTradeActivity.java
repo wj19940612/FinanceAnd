@@ -550,7 +550,6 @@ public abstract class StockTradeActivity extends BaseActivity {
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), StockTradeOperateActivity.class)
                             .putExtra(ExtraKeys.VARIETY, mVariety)
-                            .putExtra(StockTradeOperateActivity.MOCK_TRADE, true)
                             .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();

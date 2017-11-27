@@ -1,38 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/background"
-                android:paddingLeft="33dp"
-                android:paddingRight="33dp"
-                android:paddingTop="33dp">
+
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:scrollbars="none">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:paddingLeft="33dp"
+        android:paddingRight="33dp"
+        android:paddingTop="33dp">
 
 
-    <TextView
-        android:id="@+id/todayBusiness"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:layout_alignParentLeft="true"
-        android:background="@drawable/bg_white"
-        android:drawableTop="@drawable/ic_stock_today_business"
-        android:gravity="center"
-        android:paddingBottom="25dp"
-        android:paddingTop="30dp"
-        android:text="@string/today_business"
-        android:textColor="@color/luckyText"
-        android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/todayBusiness"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/bg_white"
+            android:drawableTop="@drawable/ic_stock_today_business"
+            android:gravity="center"
+            android:paddingBottom="25dp"
+            android:paddingTop="30dp"
+            android:text="@string/today_business"
+            android:textColor="@color/luckyText"
+            android:textSize="15sp"/>
 
-    <TextView
-        android:id="@+id/historyBusiness"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/bg_white"
-        android:drawableTop="@drawable/ic_stock_history_business"
-        android:gravity="center"
-        android:paddingBottom="25dp"
-        android:paddingTop="30dp"
-        android:text="@string/history_business"
-        android:textColor="@color/luckyText"
-        android:textSize="15sp"/>
-</RelativeLayout>
+        <TextView
+            android:id="@+id/historyBusiness"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_white"
+            android:drawableTop="@drawable/ic_stock_history_business"
+            android:gravity="center"
+            android:paddingBottom="25dp"
+            android:paddingTop="30dp"
+            android:text="@string/history_business"
+            android:textColor="@color/luckyText"
+            android:textSize="15sp"/>
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>
