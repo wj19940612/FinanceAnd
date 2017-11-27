@@ -16,9 +16,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.stock.StockTradeOperateActivity;
 import com.sbai.finance.fragment.battle.BattleListFragment;
 import com.sbai.finance.fragment.trade.stock.StockBusinessFragment;
 import com.sbai.finance.fragment.trade.stock.StockEntrustFragment;
@@ -49,6 +51,10 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE;
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_BUY;
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_SELL;
 
 /**
  * 股票订单页
@@ -161,12 +167,16 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         mFundInfo.setOnOrderClickListener(new FundAndHoldingInfoView.OnOrderClickListener() {
             @Override
             public void buy() {
-                // TODO: 2017-11-21
+                Launcher.with(getActivity(), StockTradeOperateActivity.class)
+                        .putExtra(TRADE_TYPE, TRADE_TYPE_BUY)
+                        .execute();
             }
 
             @Override
             public void sell() {
-                // TODO: 2017-11-21
+                Launcher.with(getActivity(), StockTradeOperateActivity.class)
+                        .putExtra(TRADE_TYPE, TRADE_TYPE_SELL)
+                        .execute();
             }
 
             @Override

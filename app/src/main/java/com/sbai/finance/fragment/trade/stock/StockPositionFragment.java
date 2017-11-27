@@ -20,10 +20,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.stock.StockDetailActivity;
+import com.sbai.finance.activity.stock.StockTradeActivity;
+import com.sbai.finance.activity.stock.StockTradeOperateActivity;
 import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Position;
@@ -32,6 +37,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.SmartDialog;
 
@@ -44,6 +50,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE;
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_BUY;
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_SELL;
 
 /**
  * 股票持仓
@@ -88,7 +98,6 @@ public class StockPositionFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mPositionMap = new HashMap<>();
-        initView();
         initRecyclerView();
         initBroadcastReceiver();
     }
@@ -165,15 +174,6 @@ public class StockPositionFragment extends BaseFragment {
         }
     }
 
-    private void initView() {
-        mLastAndCostPrice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: 2017-11-21  
-            }
-        });
-    }
-
     private void initRecyclerView() {
         mRecyclerView.setEmptyView(mEmpty);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -185,20 +185,49 @@ public class StockPositionFragment extends BaseFragment {
 
             @Override
             public void buy(Position position) {
-                // TODO: 2017-11-21
+                requestStockInfo(position, 1);
             }
 
             @Override
             public void sell(Position position) {
-                // TODO: 2017-11-21
+                requestStockInfo(position, 2);
             }
 
             @Override
             public void detail(Position position) {
-                // TODO: 2017-11-21
+                requestStockInfo(position, 3);
             }
         });
         mRecyclerView.setAdapter(mPositionAdapter);
+    }
+
+    private void requestStockInfo(Position position, final int type) {
+        Client.getStockInfo(position.getVarietyCode())
+                .setCallback(new Callback2D<Resp<Variety>, Variety>() {
+                    @Override
+                    protected void onRespSuccessData(Variety data) {
+                        switch (type) {
+                            case 1:
+                                Launcher.with(getActivity(), StockTradeOperateActivity.class)
+                                        .putExtra(TRADE_TYPE, TRADE_TYPE_BUY)
+                                        .putExtra(ExtraKeys.VARIETY, data)
+                                        .execute();
+                                break;
+                            case 2:
+                                Launcher.with(getActivity(), StockTradeOperateActivity.class)
+                                        .putExtra(TRADE_TYPE, TRADE_TYPE_SELL)
+                                        .putExtra(ExtraKeys.VARIETY, data)
+                                        .execute();
+                                break;
+                            case 3:
+                                Launcher.with(getActivity(), StockDetailActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD, data)
+                                        .execute();
+                        }
+                    }
+                })
+                .fire();
+
     }
 
     @Override
