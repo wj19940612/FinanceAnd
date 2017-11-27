@@ -200,6 +200,11 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        StockUser newUser = LocalUser.getUser().getStockUser();
+        if (newUser != null && mCurrentStockUser != null
+                && !newUser.getAccount().equalsIgnoreCase(mCurrentStockUser.getAccount())) {
+            setCurrentStockUser(newUser);
+        }
         registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 

@@ -209,12 +209,6 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
 
     private void showActivityPickerDialog() {
         if (mStockUsers == null || mStockUsers.isEmpty()) return;
-        for (StockUser stockUser : mStockUsers) {
-            if (stockUser.getAccount().equalsIgnoreCase(mStockUser.getAccount())) {
-                mStockUser = stockUser;
-                break;
-            }
-        }
         ArrayList<String> arrayList = new ArrayList<>();
         for (StockUser stockUser : mStockUsers) {
             arrayList.add(stockUser.getAccountName());
