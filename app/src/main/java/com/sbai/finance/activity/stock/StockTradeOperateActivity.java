@@ -109,7 +109,7 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
         if (stockUser != null) {
             refreshStockUser(stockUser);
         } else {
-            requestStockUser(String.valueOf(StockUser.ACCOUNT_TYPE_MOCK), null);
+            requestStockUser(null, null);
         }
 
         requestStockRTData();
