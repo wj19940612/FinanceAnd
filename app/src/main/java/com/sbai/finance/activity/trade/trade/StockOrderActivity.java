@@ -93,17 +93,12 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         ButterKnife.bind(this);
         translucentStatusBar();
         mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
-        initData(getIntent());
         initTitleBar();
         initFundInfoView();
         initViewPager();
         initSwipeView();
         initTabView();
         requestStockAccount();
-    }
-
-    private void initData(Intent intent) {
-//        mStockUserType = intent.getIntExtra(ExtraKeys.STOCK_USER, StockUser.ACCOUNT_TYPE_ACTI);
     }
 
     private void initViewPager() {
@@ -202,7 +197,11 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     private void setCurrentStockUser(StockUser stockUser) {
         if (stockUser != null) {
             mStockGame.setText(stockUser.getAccountName());
+            if (mCurrentStockUser != null && !mCurrentStockUser.getAccount().equalsIgnoreCase(stockUser.getAccount())) {
+                mFundInfo.resetView();
+            }
         }
+        mCurrentStockUser = stockUser;
         LocalUser.getUser().setStockUser(stockUser);
         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_SWITCH_ACCOUNT));
     }
@@ -232,25 +231,32 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
             }
         }
         if (mCurrentStockUser == null) {
-            mCurrentStockUser = data.get(0);
+            setCurrentStockUser(data.get(0));
             requestSwitchAccount(mCurrentStockUser);
+        } else {
+            setCurrentStockUser(mCurrentStockUser);
         }
-        setCurrentStockUser(mCurrentStockUser);
 
     }
 
     public void updateAssetAndPosition(List<StockData> result, Map<String, Position> positionMap) {
         double totalMarket = 0.00;
         double floatProfit = 0.00;
+        double todayProfit = 0.00;
         for (StockData data : result) {
             Position position = positionMap.get(data.getInstrumentId());
             if (position != null) {
-                totalMarket += position.getTotalQty() * Double.valueOf(data.getLastPrice());
-                floatProfit += position.getTotalQty() * (Double.valueOf(data.getLastPrice()) - position.getAvgBuyPrice());
+                double lastPrice = Double.valueOf(data.getLastPrice());
+                int todayBusinessAmount = position.getTotalQty() - position.getUsableQty();
+                totalMarket += position.getTotalQty() * lastPrice;
+                floatProfit += position.getTotalQty() * (lastPrice - position.getAvgBuyPrice());
+                todayProfit += (lastPrice - Double.valueOf(data.getPreClsPrice())) * (position.getTodayBargainCount() - todayBusinessAmount + position.getUsableQty())
+                        + (lastPrice - position.getAvgBuyPrice()) * todayBusinessAmount;
             }
         }
         mFundInfo.setTotalMarket(totalMarket);
         mFundInfo.setHoldingFloat(floatProfit);
+        mFundInfo.setTodayProfit(todayProfit);
         if (mPositionRecords != null) {
             mFundInfo.setTotalFund(mPositionRecords.getUsableMoney() + totalMarket);
         }

@@ -125,9 +125,12 @@ public class StockEntrustFragment extends BaseFragment {
     private void refreshData() {
         mPage = 0;
         mLoadMore = true;
-        if (isVisible()) {
-            requestEntrust(true);
-        }
+        requestEntrust(true);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     private void requestEntrust(final boolean isRefresh) {
@@ -149,6 +152,7 @@ public class StockEntrustFragment extends BaseFragment {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         refreshData();
+
                     }
 
                     @Override
@@ -336,13 +340,13 @@ public class StockEntrustFragment extends BaseFragment {
                 mStockName.setText(entrust.getVarietyName());
                 mStockCode.setText(entrust.getVarietyCode() + "." + StockCodeUtil.getExchangeType(entrust.getVarietyCode()));
                 if (mShowOperateView) {
-                    mEntrustAmount.setText(String.valueOf(entrust.getQuantity()));
+                    mEntrustAmount.setText(FinanceUtil.formatWithThousandsSeparator(entrust.getQuantity(), 0));
                     mEntrustPrice.setText(FinanceUtil.formatWithScale(entrust.getPrice(), 3));
                 } else {
                     mEntrustAmount.setText(FinanceUtil.formatWithThousandsSeparator(entrust.getSuccQuantity(), 0));
                     mEntrustPrice.setText(FinanceUtil.formatWithScale(entrust.getBargainPrice(), 3));
                 }
-                mBusinessFund.setText(FinanceUtil.formatWithScale(entrust.getTotalBargain()));
+                mBusinessFund.setText(FinanceUtil.formatWithThousandsSeparator(entrust.getTotalBargain(), 2));
                 if (mShowOperateView) {
                     mBusinessDate.setText(DateUtil.format(entrust.getOrderTime(), "MM/dd"));
                     mBusinessTime.setText(DateUtil.format(entrust.getOrderTime(), "HH:mm"));

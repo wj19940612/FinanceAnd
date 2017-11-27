@@ -27,7 +27,16 @@ public class StockData {
     private double upDropSpeed;
     private long upTime;
     private String upTimeFormat;
+    private String preClsPrice;
     private String status;
+
+    public String getPreClsPrice() {
+        return preClsPrice;
+    }
+
+    public void setPreClsPrice(String preClsPrice) {
+        this.preClsPrice = preClsPrice;
+    }
 
     public String getName() {
         return name;

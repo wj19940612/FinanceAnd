@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,18 +11,17 @@
     <LinearLayout
         android:id="@+id/positionArea"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="65dp"
         android:orientation="horizontal"
         android:paddingBottom="6dp"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
         android:paddingTop="10dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:orientation="vertical">
+            android:layout_weight="2.5">
 
             <TextView
                 android:id="@+id/entrustBs"
@@ -38,115 +38,130 @@
 
             <com.sbai.finance.view.autofit.AutofitTextView
                 android:id="@+id/entrustStatus"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
+                app:autoSizeMaxTextSize="14sp"
                 tool:text="722.00"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:orientation="vertical">
+            android:layout_marginRight="10dp"
+            android:layout_weight="3">
 
             <com.sbai.finance.view.autofit.AutofitTextView
                 android:id="@+id/stockName"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
                 android:textStyle="bold"
+                app:autoSizeMaxTextSize="14sp"
                 tool:text="6000"/>
 
             <com.sbai.finance.view.autofit.AutofitTextView
                 android:id="@+id/stockCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
+                app:autoSizeMaxTextSize="14sp"
                 tool:text="722.00"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:orientation="vertical">
+            android:layout_weight="3">
 
             <com.sbai.finance.view.autofit.AutofitTextView
                 android:id="@+id/entrustAmount"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="14sp"
                 tool:text="6000"/>
 
             <com.sbai.finance.view.autofit.AutofitTextView
                 android:id="@+id/entrustPrice"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
+                app:autoSizeMaxTextSize="14sp"
                 tool:text="722.00"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:orientation="vertical">
+            android:layout_weight="3">
 
             <com.sbai.finance.view.autofit.AutofitTextView
                 android:id="@+id/businessFund"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_marginBottom="5dp"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="14sp"
                 tool:text="6000"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:gravity="right"
-            android:orientation="vertical">
+            android:gravity="right">
 
             <com.sbai.finance.view.autofit.AutofitTextView
                 android:id="@+id/businessDate"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
+                android:gravity="right"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="14sp"
                 tool:text="6000"/>
 
             <com.sbai.finance.view.autofit.AutofitTextView
                 android:id="@+id/businessTime"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="right"
                 android:maxLines="1"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
+                app:autoSizeMaxTextSize="14sp"
                 tool:text="722.00"/>
 
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout

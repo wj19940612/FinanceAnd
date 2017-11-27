@@ -969,4 +969,5 @@
     <string name="cost_price_describe">成本价=成交价+交易费用，成本价表示您在这个价位卖出不会亏损</string>
     <string name="fetch_fund_describe">当日卖出的股票，资金可用于再次购买，但不可当日取出(T+1到账)</string>
     <string name="know">知道了</string>
+    <string name="no_this_data">- -</string>
 </resources>
