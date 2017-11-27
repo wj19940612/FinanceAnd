@@ -69,9 +69,7 @@ public class PlusMinusEditText extends FrameLayout {
     }
 
     private void setInputType(int inputType) {
-        if (inputType == 0) {
-            mEditText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        } else {
+        if (inputType == 1) {
             mEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
     }

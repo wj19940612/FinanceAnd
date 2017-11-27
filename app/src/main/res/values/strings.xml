@@ -970,4 +970,5 @@
     <string name="fetch_fund_describe">当日卖出的股票，资金可用于再次购买，但不可当日取出(T+1到账)</string>
     <string name="know">知道了</string>
     <string name="no_this_data">- -</string>
+    <string name="volume_can_buy_x">可买%1$d</string>
 </resources>

@@ -42,9 +42,8 @@ import static com.sbai.finance.utils.StockUtil.NULL_VALUE;
 
 /**
  * Modified by john on 24/11/2017
- *
+ * <p>
  * 股票交易操作页面，买入卖出，如果从股票详情页面进入，当前账户为模拟，如果从账户页面进入，依赖于当前保存是什么账户
- *
  */
 public class StockTradeOperateActivity extends BaseActivity {
 
@@ -52,7 +51,8 @@ public class StockTradeOperateActivity extends BaseActivity {
     public static final int TRADE_TYPE_BUY = 80;
     public static final int TRADE_TYPE_SELL = 81;
 
-    public static final String MOCK_TRADE = "mock_trade";
+    private static final int MINIMUM_FEE = 5;
+    private static final float FEE_RATE = 0.003f;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -127,13 +127,14 @@ public class StockTradeOperateActivity extends BaseActivity {
     private TextView mBuyInTab;
     private TextView mSellOutTab;
 
-    private boolean mIsMockTrade;
     private int mTradeType;
     private Variety mVariety;
     private StockRTData mStockRTData;
     private boolean mInitTradePrice;
 
     private StockUser mStockUser;
+    private int mSharesCanBuy;
+    private int mShareCanSell;
 
     private TextWatcher mVolumeWatcher = new ValidationWatcher() {
         @Override
@@ -142,8 +143,6 @@ public class StockTradeOperateActivity extends BaseActivity {
             if (tradeButtonEnable != mTradeButton.isEnabled()) {
                 mTradeButton.setEnabled(tradeButtonEnable);
             }
-
-
         }
     };
 
@@ -155,13 +154,45 @@ public class StockTradeOperateActivity extends BaseActivity {
                 mTradeButton.setEnabled(tradeButtonEnable);
             }
 
-            
+            updateTradeVolumeView();
         }
     };
 
+    private void updateTradeVolumeView() {
+        String tradePrice = mTradePrice.getText();
+
+        if (mBuyInTab.isSelected()) { // 买入
+            if (!TextUtils.isEmpty(tradePrice) && mStockUser != null) {
+                double availableFund = mStockUser.getUsableMoney();
+                double buyPrice = Double.parseDouble(tradePrice);
+                mSharesCanBuy = calculateSharesCanBuy(availableFund, buyPrice); // 可买股数
+                mTradeVolume.setHint(getString(R.string.volume_can_buy_x, mSharesCanBuy));
+                String fee = FinanceUtil.formatWithScale(mSharesCanBuy * buyPrice * FEE_RATE);
+                mFee.setText(StrUtil.mergeTextWithColor(getString(R.string.fee_x), fee,
+                        ContextCompat.getColor(getActivity(), R.color.redPrimary)));
+            } else {
+                mTradeVolume.setHint(R.string.buy_volume);
+                mFee.setText(StrUtil.mergeTextWithColor(getString(R.string.fee_x), NULL_VALUE,
+                        ContextCompat.getColor(getActivity(), R.color.redPrimary)));
+            }
+        } else {
+
+        }
+    }
+
+    private int calculateSharesCanBuy(double availableFund, double buyPrice) {
+        int totalShares = (int) (availableFund / buyPrice);
+        totalShares -= totalShares % 100;
+        double fee = Math.max(totalShares * buyPrice * FEE_RATE, MINIMUM_FEE);
+        availableFund -= fee;
+        int sharesCanBuy = (int) (availableFund / buyPrice);
+        sharesCanBuy -= sharesCanBuy % 100;
+        return sharesCanBuy;
+    }
+
     private boolean checkTradeButtonEnable() {
         String tradePrice = mTradePrice.getText();
-        String tradeVolume = mTradePrice.getText();
+        String tradeVolume = mTradeVolume.getText();
         return !TextUtils.isEmpty(tradePrice) && !TextUtils.isEmpty(tradeVolume);
     }
 
@@ -179,18 +210,19 @@ public class StockTradeOperateActivity extends BaseActivity {
 
         initViewWithVariety();
 
-        if (mIsMockTrade) {
-            StockUser stockUser = LocalUser.getUser().getStockUser();
-            if (stockUser != null && stockUser.getType() == StockUser.ACCOUNT_TYPE_MOCK) {
-                mStockUser = stockUser;
-            } else {
-                requestMockStockUser();
-            }
+        StockUser stockUser = LocalUser.getUser().getStockUser();
+        if (stockUser != null) {
+            mStockUser = stockUser;
+            updateTradeVolumeView();
+            
+        } else {
+            requestMockStockUser();
         }
 
         mTradePrice.addTextChangedListener(mPriceWatcher);
         mTradeVolume.addTextChangedListener(mVolumeWatcher);
     }
+
 
     @Override
     protected void onDestroy() {
@@ -207,6 +239,8 @@ public class StockTradeOperateActivity extends BaseActivity {
                     protected void onRespSuccessData(List<StockUser> data) {
                         if (!data.isEmpty()) {
                             mStockUser = data.get(0);
+                            LocalUser.getUser().setStockUser(mStockUser);
+                            updateTradeVolumeView();
                         }
                     }
                 }).fireFree();
@@ -402,7 +436,6 @@ public class StockTradeOperateActivity extends BaseActivity {
     private void initData(Intent intent) {
         mTradeType = intent.getIntExtra(TRADE_TYPE, TRADE_TYPE_BUY);
         mVariety = intent.getParcelableExtra(ExtraKeys.VARIETY);
-        mIsMockTrade = intent.getBooleanExtra(MOCK_TRADE, false);
     }
 
     private void initTitleBar() {
@@ -422,9 +455,10 @@ public class StockTradeOperateActivity extends BaseActivity {
                 if (!mBuyInTab.isSelected()) {
                     mBuyInTab.setSelected(true);
                     mSellOutTab.setSelected(false);
-                    initTradeViews();
                     mTradeVolume.setText(null);
+                    initTradeViews();
                     unselectPositionSelectors();
+                    updateTradeVolumeView();
                 }
             }
         });
@@ -434,9 +468,10 @@ public class StockTradeOperateActivity extends BaseActivity {
                 if (!mSellOutTab.isSelected()) {
                     mBuyInTab.setSelected(false);
                     mSellOutTab.setSelected(true);
-                    initTradeViews();
                     mTradeVolume.setText(null);
+                    initTradeViews();
                     unselectPositionSelectors();
+                    updateTradeVolumeView();
                 }
             }
         });
@@ -487,28 +522,45 @@ public class StockTradeOperateActivity extends BaseActivity {
             case R.id.fullPosition:
                 unselectPositionSelectors();
                 mFullPosition.setSelected(true);
-                onPositionSelectorsClick();
+                onPositionSelectorsSelected();
                 break;
             case R.id.halfPosition:
                 unselectPositionSelectors();
                 mHalfPosition.setSelected(true);
-                onPositionSelectorsClick();
+                onPositionSelectorsSelected();
                 break;
             case R.id.quarterPosition:
                 unselectPositionSelectors();
                 mQuarterPosition.setSelected(true);
-                onPositionSelectorsClick();
+                onPositionSelectorsSelected();
                 break;
         }
     }
 
-    private void onPositionSelectorsClick() {
+    private void onPositionSelectorsSelected() {
         if (mFullPosition.isSelected()) {
-
+            int selectShares = mSharesCanBuy;
+            if (selectShares >= 100) {
+                mTradeVolume.setText(String.valueOf(selectShares));
+            } else {
+                mTradeVolume.setText(null);
+            }
         } else if (mHalfPosition.isSelected()) {
-
+            int selectShares = mSharesCanBuy / 2;
+            selectShares -= selectShares % 100;
+            if (selectShares >= 100) {
+                mTradeVolume.setText(String.valueOf(selectShares));
+            } else {
+                mTradeVolume.setText(null);
+            }
         } else if (mQuarterPosition.isSelected()) {
-
+            int selectShares = mSharesCanBuy / 4;
+            selectShares -= selectShares % 100;
+            if (selectShares >= 100) {
+                mTradeVolume.setText(String.valueOf(selectShares));
+            } else {
+                mTradeVolume.setText(null);
+            }
         }
     }
 }
