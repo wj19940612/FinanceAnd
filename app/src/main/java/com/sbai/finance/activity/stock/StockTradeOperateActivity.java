@@ -84,6 +84,7 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
     private StockTradeAdapter mStockTradeAdapter;
 
     private int mTradeType;
+    private boolean mShowPickerDialog;
     private Variety mVariety;
     private StockRTData mStockRTData;
 
@@ -131,6 +132,7 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
                 @Override
                 public void onClick(View view) {
                     if (mStockUsers == null) {
+                        mShowPickerDialog = true;
                         requestStockUser(null, null);
                     } else {
                         showActivityPickerDialog();
@@ -399,6 +401,7 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
                     @Override
                     protected void onRespSuccessData(PositionRecords data) {
                         mHoldingPositionsAdapter.setPositionList(data.getList());
+                        requestStockHoldingListMarketData();
                     }
                 }).fireFree();
     }
@@ -428,6 +431,10 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
                     protected void onRespSuccessData(List<StockUser> data) {
                         if (!data.isEmpty()) {
                             updateStockAccount(data);
+                        }
+                        if (mShowPickerDialog) {
+                            mShowPickerDialog = false;
+                            showActivityPickerDialog();
                         }
                     }
                 }).fireFree();
