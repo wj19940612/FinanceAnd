@@ -51,13 +51,16 @@ public class MyCollect {
     private int radioHost;            //电台主播
     private String radioIntroduction; //电台简介
     private String radioName;         //电台名称
+    private int listenNumber;         //听众人数
 
     //收藏的音频
     private String audio;            //音频
     private String audioCover;       //音频封面
     private String audioName;        //音频名称
     //    private int radioHost;         //音频主播，与电台主播命名重复
-    private int radioHostName;       //主播昵称
+    private String radioHostName;       //主播昵称
+
+    private int isRead;         //是否阅读最新消息
 
 
     //问题是否被解决
@@ -250,12 +253,28 @@ public class MyCollect {
         this.audioName = audioName;
     }
 
-    public int getRadioHostName() {
+    public String getRadioHostName() {
         return radioHostName;
     }
 
-    public void setRadioHostName(int radioHostName) {
+    public void setRadioHostName(String radioHostName) {
         this.radioHostName = radioHostName;
+    }
+
+    public int getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(int isRead) {
+        this.isRead = isRead;
+    }
+
+    public int getListenNumber() {
+        return listenNumber;
+    }
+
+    public void setListenNumber(int listenNumber) {
+        this.listenNumber = listenNumber;
     }
 
     @Override

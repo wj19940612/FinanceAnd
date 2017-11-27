@@ -23,6 +23,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
@@ -270,6 +274,8 @@ public class MissProfileRadioFragment extends BaseFragment {
             TextView mTime;
             @BindView(R.id.content)
             CardView mContent;
+            @BindView(R.id.coverRL)
+            RelativeLayout mCoverRL;
 
             ViewHolder(View view) {
                 super(view);
@@ -283,7 +289,19 @@ public class MissProfileRadioFragment extends BaseFragment {
                 }
                 GlideApp.with(context).load(radioInfo.getRadioCover())
                         .placeholder(R.drawable.ic_default_image)
-                        .circleCrop()
+                        .circleCrop().listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        mCoverRL.setVisibility(View.INVISIBLE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        mCoverRL.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                })
                         .into(mCover);
 
                 mTitle.setText(radioInfo.getRadioName());

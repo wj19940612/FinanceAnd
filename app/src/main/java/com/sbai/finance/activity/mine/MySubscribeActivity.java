@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.mine;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,14 +19,21 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.miss.RadioStationListActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
 import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.ImageTextUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.ApiError;
@@ -57,16 +65,24 @@ public class MySubscribeActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         mSubscribeAdapter = new SubscribeAdapter(this);
-        mListView.setEmptyView(mEmpty);
+//        mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mSubscribeAdapter);
-       initSwipeRefreshLayout();
+        initSwipeRefreshLayout();
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MyCollect myCollect = (MyCollect) parent.getAdapter().getItem(position);
+                MyCollect radioInfo = (MyCollect) parent.getAdapter().getItem(position);
+                requestClickNewInfo(radioInfo);
+                Launcher.with(MySubscribeActivity.this, RadioStationListActivity.class).putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(radioInfo.getDataId())).execute();
 
             }
         });
+        requestSubscribeList(true);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
         requestSubscribeList(true);
     }
 
@@ -162,6 +178,10 @@ public class MySubscribeActivity extends BaseActivity {
         }
     }
 
+    private void requestClickNewInfo(MyCollect radioInfo) {
+        Client.readCollect(radioInfo.getId()).setTag(TAG).fire();
+    }
+
     public static class SubscribeAdapter extends ArrayAdapter<MyCollect> {
         public SubscribeAdapter(@NonNull Context context) {
             super(context, 0);
@@ -198,6 +218,8 @@ public class MySubscribeActivity extends BaseActivity {
             View mIconView;
             @BindView(R.id.content)
             RelativeLayout mContent;
+            @BindView(R.id.coverRL)
+            RelativeLayout mCoverRL;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -206,12 +228,29 @@ public class MySubscribeActivity extends BaseActivity {
             private void bindDataWithView(MyCollect radioInfo, Context context) {
                 GlideApp.with(context).load(radioInfo.getRadioCover())
                         .placeholder(R.drawable.ic_default_image)
-                        .circleCrop()
+                        .circleCrop().listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        mCoverRL.setVisibility(View.INVISIBLE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        mCoverRL.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                })
                         .into(mCover);
                 mTitle.setText(radioInfo.getRadioName());
                 setSpanIconText(mSubtitle, radioInfo.getRadioIntroduction(), context);
-//                mNumber.setText(String.valueOf(radioInfo.getListenNumber()));
+                mNumber.setText(String.valueOf(radioInfo.getListenNumber()));
                 mTime.setText(DateUtil.formatDefaultStyleTime(radioInfo.getCreateTime()));
+                if (radioInfo.getIsRead() != 0) {
+                    mIconView.setVisibility(View.GONE);
+                } else {
+                    mIconView.setVisibility(View.VISIBLE);
+                }
             }
 
             private void setSpanIconText(TextView textView, String str, Context context) {
