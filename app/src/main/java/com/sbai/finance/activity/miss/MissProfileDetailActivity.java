@@ -108,13 +108,13 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
     private boolean mSwipEnabled = true;
     private int mAppBarVerticalOffset = -1;
     private Miss mMiss;
-    private MediaPlayService mMediaPlayService;
+    public MediaPlayService mMediaPlayService;
 
     protected ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mMediaPlayService = ((MediaPlayService.MediaBinder) iBinder).getMediaPlayService();
-            MissProfileQuestionFragment fragment = (MissProfileQuestionFragment) mProfileFragmentAdapter.getFragment(FRAGMENT_QUESTION);
+            MissProfileQuestionFragment fragment = getMissProfileQuestionFragment();
             if (fragment != null) {
                 fragment.setService(mMediaPlayService);
             }
@@ -124,6 +124,10 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         public void onServiceDisconnected(ComponentName componentName) {
         }
     };
+
+    public MediaPlayService getMediaPlayService(){
+        return mMediaPlayService;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -184,6 +188,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
             }
         });
 
+        mViewPager.setCurrentItem(0);
         initTitleBar();
     }
 
@@ -359,6 +364,8 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unbindService(mServiceConnection);
+        mServiceConnection = null;
         mAppBarLayout.removeOnOffsetChangedListener(mOnOffsetChangedListener);
     }
 

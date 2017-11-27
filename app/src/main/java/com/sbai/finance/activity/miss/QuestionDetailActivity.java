@@ -167,9 +167,9 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                         mMissFloatWindow.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    if (MissAudioManager.get().isStarted(mQuestion) && mMissFloatWindow.getVisibility() == View.VISIBLE) {
-                        mMissFloatWindow.setVisibility(View.GONE);
-                    }
+//                    if (MissAudioManager.get().isStarted(mQuestion) && mMissFloatWindow.getVisibility() == View.VISIBLE) {
+//                        mMissFloatWindow.setVisibility(View.GONE);
+//                    }
                 }
             }
 
@@ -967,11 +967,12 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
             setResult(RESULT_OK, intent);
         }
 
-        if (mIsFromMissTalk) {
-            stopScheduleJob();
-        } else {
-            stopQuestionVoice();
-        }
+        stopScheduleJob();
+//        if (mIsFromMissTalk) {
+//            stopScheduleJob();
+//        } else {
+//            stopQuestionVoice();
+//        }
 
         super.onBackPressed();
     }

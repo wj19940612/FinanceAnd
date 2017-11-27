@@ -32,6 +32,7 @@ import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.RewardMissActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.fragment.MediaPlayFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.Praise;
@@ -70,7 +71,7 @@ import static com.sbai.finance.activity.miss.MissProfileDetailActivity.CUSTOM_ID
  * Created by Administrator on 2017\11\22 0022.
  */
 
-public class MissProfileQuestionFragment extends BaseFragment implements MissAudioManager.OnAudioListener {
+public class MissProfileQuestionFragment extends MediaPlayFragment {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -94,54 +95,9 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
     private Question mPlayIngItem;
 
     OnFragmentRecycleViewScrollListener mOnFragmentRecycleViewScrollListener;
-    private RefreshReceiver mRefreshReceiver;
     private boolean mHasEnter;
 
     private MediaPlayService mMediaPlayService;
-
-    @Override
-    public void onAudioStart() {
-        mQuestionListAdapter.notifyDataSetChanged();
-        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-        if (audio instanceof Question) {
-            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
-        }
-    }
-
-    @Override
-    public void onAudioPlay() {
-        startScheduleJob(100);
-        mMissFloatWindow.startAnim();
-    }
-
-    @Override
-    public void onAudioPause() {
-        stopScheduleJob();
-
-        mMissFloatWindow.stopAnim();
-        mMissFloatWindow.setVisibility(View.GONE);
-        mQuestionListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onAudioResume() {
-        startScheduleJob(100);
-
-        mMissFloatWindow.startAnim();
-        mQuestionListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onAudioStop() {
-        mMissFloatWindow.stopAnim();
-        mMissFloatWindow.setVisibility(View.GONE);
-        stopVoice();
-    }
-
-    @Override
-    public void onAudioError() {
-        ToastUtil.show(R.string.play_failure);
-    }
 
     @OnClick(R.id.ask)
     public void onViewClicked(View view) {
@@ -173,7 +129,7 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
         return missProfileQuestionFragment;
     }
 
-    public void setService(MediaPlayService mediaPlayService){
+    public void setService(MediaPlayService mediaPlayService) {
         mMediaPlayService = mediaPlayService;
     }
 
@@ -252,6 +208,9 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
         if (context instanceof MissProfileDetailActivity) {
             mOnFragmentRecycleViewScrollListener = (OnFragmentRecycleViewScrollListener) context;
         }
+        if (mMediaPlayService == null && context instanceof MissProfileDetailActivity) {
+            mMediaPlayService = ((MissProfileDetailActivity) context).getMediaPlayService();
+        }
     }
 
     @Override
@@ -274,7 +233,91 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
-        registerRefreshReceiver();
+    }
+
+    @Override
+    public IntentFilter getIntentFilter() {
+        IntentFilter intentFilter = super.getIntentFilter();
+        intentFilter.addAction(ACTION_REWARD_SUCCESS);
+        intentFilter.addAction(ACTION_LOGIN_SUCCESS);
+        return intentFilter;
+    }
+
+    @Override
+    public void onMediaPlayStart(int IAudioId, int source) {
+        mQuestionListAdapter.notifyDataSetChanged();
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (audio instanceof Question) {
+            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait(),((Question)audio).getUserType());
+        }
+    }
+
+    @Override
+    public void onMediaPlay(int IAudioId, int source) {
+        startScheduleJob(100);
+        mMissFloatWindow.startAnim();
+    }
+
+    @Override
+    public void onMediaPlayResume(int IAudioId, int source) {
+        startScheduleJob(100);
+
+        mMissFloatWindow.startAnim();
+        mQuestionListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMediaPlayPause(int IAudioId, int source) {
+        stopScheduleJob();
+
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
+        mQuestionListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onMediaPlayStop(int IAudioId, int source) {
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
+        stopVoice();
+    }
+
+    @Override
+    public void onOtherReceive(Context context, Intent intent) {
+        if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_MISS) {
+                if (mMiss != null) {
+                    int rewardCount = mMiss.getTotalAward() + 1;
+                    mMiss.setTotalAward(rewardCount);
+                }
+            }
+        }
+
+        if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
+                if (mMiss != null) {
+                    int rewardCount = mMiss.getTotalAward() + 1;
+                    mMiss.setTotalAward(rewardCount);
+                }
+
+                for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
+                    Question question = mQuestionList.get(i);
+                    if (question != null) {
+                        if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
+                            int questionRewardCount = question.getAwardCount() + 1;
+                            question.setAwardCount(questionRewardCount);
+                            mQuestionListAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+        }
+
+        if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            mCreateTime = null;
+            ((MissProfileDetailActivity) getActivity()).refreshData();
+            requestHerAnswerList(true);
+        }
     }
 
     @Override
@@ -289,15 +332,11 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshReceiver);
-        getActivity().unregisterReceiver(mRefreshReceiver);
-        MissAudioManager.get().removeAudioListener(this);
     }
 
 
     private void initView() {
         mQuestionList = new ArrayList<Question>();
-//        mSet = new HashSet<>();
         mQuestionListAdapter = new QuestionListAdapter(mQuestionList, getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mQuestionListAdapter);
@@ -322,7 +361,6 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
         });
 
         MissAudioManager.get().stop();
-        MissAudioManager.get().addAudioListener(this);
 
         mQuestionListAdapter.setCallback(new QuestionListAdapter.Callback() {
             @Override
@@ -405,16 +443,18 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
 
     private void toggleQuestionVoice(Question item) {
         if (MissAudioManager.get().isStarted(item)) {
-            MissAudioManager.get().pause();
-            mQuestionListAdapter.notifyDataSetChanged();
-            stopScheduleJob();
+            if (mMediaPlayService != null) {
+                mMediaPlayService.onPausePlay(item);
+            }
         } else if (MissAudioManager.get().isPaused(item)) {
-            MissAudioManager.get().resume();
-            mQuestionListAdapter.notifyDataSetChanged();
-            startScheduleJob(100);
+            if (mMediaPlayService != null) {
+                mMediaPlayService.onResume();
+            }
         } else {
             updateQuestionListenCount(item);
-            MissAudioManager.get().start(item);
+            if (mMediaPlayService != null) {
+                mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_MISS_PROFILE);
+            }
         }
     }
 
@@ -542,9 +582,6 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
     @Override
     public void onStop() {
         super.onStop();
-        if (!Preference.get().isForeground()) {
-            stopVoice();
-        }
     }
 
     static class QuestionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -752,61 +789,6 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
                         }
                     }
                 });
-            }
-        }
-    }
-
-    private void registerRefreshReceiver() {
-        mRefreshReceiver = new RefreshReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_REWARD_SUCCESS);
-        filter.addAction(ACTION_LOGIN_SUCCESS);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshReceiver, filter);
-        getActivity().registerReceiver(mRefreshReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
-    }
-
-    private class RefreshReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-                if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_MISS) {
-                    if (mMiss != null) {
-                        int rewardCount = mMiss.getTotalAward() + 1;
-                        mMiss.setTotalAward(rewardCount);
-                    }
-                }
-            }
-
-            if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-                if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
-                    if (mMiss != null) {
-                        int rewardCount = mMiss.getTotalAward() + 1;
-                        mMiss.setTotalAward(rewardCount);
-                    }
-
-                    for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
-                        Question question = mQuestionList.get(i);
-                        if (question != null) {
-                            if (question.getId() == intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1)) {
-                                int questionRewardCount = question.getAwardCount() + 1;
-                                question.setAwardCount(questionRewardCount);
-                                mQuestionListAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-//                mSet.clear();
-                mCreateTime = null;
-                ((MissProfileDetailActivity) getActivity()).refreshData();
-                requestHerAnswerList(true);
-            }
-
-            if (Intent.ACTION_SCREEN_OFF.equalsIgnoreCase(intent.getAction())) {
-                stopVoice();
             }
         }
     }
