@@ -27,6 +27,12 @@ public abstract class MediaPlayFragment extends BaseFragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMediaPlayBroadcastReceiver, getIntentFilter());
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMediaPlayBroadcastReceiver);
+    }
+
     public IntentFilter getIntentFilter() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_START);
@@ -61,7 +67,7 @@ public abstract class MediaPlayFragment extends BaseFragment {
 
     }
 
-    protected  void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration){
+    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
 
     }
 

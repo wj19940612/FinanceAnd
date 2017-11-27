@@ -177,11 +177,19 @@ public class Preference {
     }
 
     public void setAnswerIds(String answerIds) {
-        apply(Key.MISS_TALK_ANSWERS, answerIds);
+        String key = Key.MISS_TALK_ANSWERS;
+        if (LocalUser.getUser().isLogin()) {
+            key = LocalUser.getUser().getUserInfo().getUserPhone() + key;
+        }
+        apply(key, answerIds);
     }
 
     public String getAnswerIds() {
-        return mPrefs.getString(Key.MISS_TALK_ANSWERS, null);
+        String key = Key.MISS_TALK_ANSWERS;
+        if (LocalUser.getUser().isLogin()) {
+            key = LocalUser.getUser().getUserInfo().getUserPhone() + key;
+        }
+        return mPrefs.getString(key, null);
     }
 
     public void setUserHasLookTrainDetail(String key, boolean hasLookTrainDetail) {
@@ -207,18 +215,23 @@ public class Preference {
     public void setMyStudyData(int id, String data) {
         apply(id + Key.MY_STUDY, data);
     }
+
     public String getLeaderBoardData(String type) {
         return mPrefs.getString(type, null);
     }
-    public void setLeaderBoardData(String type,String data) {
+
+    public void setLeaderBoardData(String type, String data) {
         apply(type, data);
     }
+
     public String getProfitBoardData(String type) {
         return mPrefs.getString(type, null);
     }
-    public void setProfitBoardData(String type,String data) {
+
+    public void setProfitBoardData(String type, String data) {
         apply(type, data);
     }
+
     public boolean isFirstTrain(int trainId) {
         return mPrefs.getBoolean(Key.IS_FIRST_TRAIN + trainId, true);
     }

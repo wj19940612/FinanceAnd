@@ -12,8 +12,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
 import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.radio.Radio;
+import com.sbai.finance.service.MediaPlayService;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissAudioManager;
 
 public class MissFloatWindow extends LinearLayout {
@@ -22,7 +28,7 @@ public class MissFloatWindow extends LinearLayout {
     private OnMissFloatWindowClickListener mOnMissFloatWindowClickListener;
 
     public interface OnMissFloatWindowClickListener {
-        void onClick();
+        void onClick(int source);
     }
 
     public void setOnMissFloatWindowClickListener(OnMissFloatWindowClickListener onMissFloatWindowClickListener) {
@@ -69,22 +75,26 @@ public class MissFloatWindow extends LinearLayout {
             public void onClick(View view) {
                 MissAudioManager missAudioManager = MissAudioManager.get();
                 MissAudioManager.IAudio audio = missAudioManager.getAudio();
-                if (audio != null) {
-                    if (audio instanceof Question) {
-
-                    }
-
+                if (audio instanceof Question) {
                     if (mOnMissFloatWindowClickListener != null) {
-                        mOnMissFloatWindowClickListener.onClick();
+                        mOnMissFloatWindowClickListener.onClick(MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION);
                     }
+                    Launcher.with(getContext(), QuestionDetailActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, ((Question) audio).getId())
+                            .execute();
+                } else if (audio instanceof Radio) {
+                    if (mOnMissFloatWindowClickListener != null) {
+                        mOnMissFloatWindowClickListener.onClick(MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
+                    }
+                    Launcher.with(getContext(), RadioStationPlayActivityActivity.class)
+                            .putExtra(ExtraKeys.RADIO, (Radio) audio)
+                            .execute();
                 }
-
             }
         });
     }
 
     public void setMissAvatar(String avatarUrl) {
-        // TODO: 2017/11/24 大v标签
         if (getContext() == null || ((Activity) getContext()).isFinishing()) {
             return;
         }

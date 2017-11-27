@@ -33,7 +33,8 @@ public class MissRadioLayout extends LinearLayout {
     private OnMissRadioPlayListener mOnMissRadioPlayListener;
     private ArrayList<PlayStatus> mPlayStateList;
     private ImageView mPlayImageView;
-    private Radio mRadio;
+    private Radio mPlayRadio;
+    private TextView mRadioTextView;
 
     public interface OnMissRadioPlayListener {
         void onMissRadioPlay(Radio radio);
@@ -65,29 +66,6 @@ public class MissRadioLayout extends LinearLayout {
 
         getGlobalVisibleRect(rect);
 
-
-//        Point p=new Point();
-//        getWindowManager().getDefaultDisplay().getSize(p);
-//        screenWidth=p.x;
-//        screenHeight=p.y;
-//
-//        Rect  rect=new Rect(0,0,screenWidth,screenHeight );
-//
-//        ImageView imageView = imageViewList.get(i);
-//
-//        int[] location = new int[2];
-//        imageView.getLocationInWindow(location);
-//        System.out.println(Arrays.toString(location));
-
-        // Rect ivRect=new Rect(imageView.getLeft(),imageView.getTop(),imageView.getRight(),imageView.getBottom());
-
-
-//        if (imageView.getLocalVisibleRect(rect)) {/*rect.contains(ivRect)*/
-//            System.out.println("---------控件在屏幕可见区域-----显现-----------------");
-//        } else {
-//            imageView.setImageResource(R.drawable.p);
-//            System.out.println("---------控件已不在屏幕可见区域（已滑出屏幕）-----隐去-----------------");
-//        }
     }
 
     public void setOnMissRadioPlayListener(OnMissRadioPlayListener onMissRadioPlayListener) {
@@ -101,7 +79,6 @@ public class MissRadioLayout extends LinearLayout {
         setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
 
         LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-//        layoutParams.setMargins(0, (int) Display.dp2Px(3, getResources()), 0, (int) Display.dp2Px(12, getResources()));
         ImageView imageView = new ImageView(getContext());
         imageView.setImageResource(R.drawable.ic_miss_radio_title);
         addView(imageView, layoutParams);
@@ -129,7 +106,6 @@ public class MissRadioLayout extends LinearLayout {
             radioUpdateTime.setText(DateUtil.formatDefaultStyleTime(radio.getModifyTime()));
             radioName.setText(radio.getRadioName());
             radioOwnerName.setText(radio.getRadioHostName());
-            radioLength.setText(DateUtil.format((radio.getAudioTime() * 1000), DateUtil.FORMAT_HOUR_MINUTE_SECOND));
             radioLength.setText(DateUtil.formatMediaLength(radio.getAudioTime()));
             startPlay.setImageResource(R.drawable.bg_voice_play);
             addView(view, layoutParams);
@@ -138,6 +114,7 @@ public class MissRadioLayout extends LinearLayout {
             playStatus.setImageView(startPlay);
             playStatus.setRadio(radio);
             playStatus.setView(view);
+            playStatus.setRadioTextView(radioLength);
             mPlayStateList.add(playStatus);
         }
 
@@ -145,7 +122,6 @@ public class MissRadioLayout extends LinearLayout {
             final PlayStatus playStatus = mPlayStateList.get(i);
             final ImageView playImageView = playStatus.getImageView();
             View view = playStatus.getView();
-
 
             view.setOnClickListener(new OnClickListener() {
                 @Override
@@ -158,12 +134,12 @@ public class MissRadioLayout extends LinearLayout {
             playImageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mPlayRadio = playStatus.getRadio();
+                    mRadioTextView = playStatus.getRadioTextView();
                     mPlayImageView = playImageView;
                     if (mOnMissRadioPlayListener != null) {
                         mOnMissRadioPlayListener.onMissRadioPlay(playStatus.getRadio());
                     }
-                    playImageView.setSelected(!playImageView.isSelected());
-                    unChangePlay(playImageView);
                 }
             });
         }
@@ -174,9 +150,31 @@ public class MissRadioLayout extends LinearLayout {
             for (PlayStatus result : mPlayStateList) {
                 if (result.getImageView() != playImageView) {
                     result.getImageView().setSelected(false);
+                    result.getRadioTextView().setText(DateUtil.formatMediaLength(result.getRadio().getAudioTime()));
                 }
             }
         }
+    }
+
+    public void updatePlayView() {
+        unChangePlay(null);
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (audio instanceof Radio) {
+            if (MissAudioManager.get().isPlaying()) {
+                for (int i = 0; i < mPlayStateList.size(); i++) {
+                    PlayStatus playStatus = mPlayStateList.get(i);
+                    Radio radio = playStatus.getRadio();
+                    if (radio.getId() == audio.getAudioId()) {
+                        mPlayImageView = playStatus.getImageView();
+                        mPlayImageView.setSelected(true);
+                        mRadioTextView = playStatus.getRadioTextView();
+                        mPlayRadio = radio;
+                        break;
+                    }
+                }
+            }
+        }
+        unChangePlay(mPlayImageView);
     }
 
     public void updatePlayStatus() {
@@ -188,11 +186,52 @@ public class MissRadioLayout extends LinearLayout {
                     Radio radio = playStatus.getRadio();
                     if (radio.getId() == audio.getAudioId()) {
                         playStatus.getImageView().setSelected(true);
+                        mRadioTextView = playStatus.getRadioTextView();
+                        mPlayRadio = radio;
+                        break;
                     }
                 }
-            }else {
+            } else {
                 unChangePlay(null);
             }
+        }
+    }
+
+    public void setPlayRadio(int mediaPlayCurrentPosition, int totalDuration) {
+        if (totalDuration == 0) return;
+        if (mRadioTextView == null) {
+            updatePlayStatus();
+        }
+        if (mRadioTextView != null) {
+            if (mPlayRadio != null) {
+                int scaleTime = totalDuration - mediaPlayCurrentPosition;
+                mRadioTextView.setText(DateUtil.format(scaleTime, DateUtil.FORMAT_MINUTE_SECOND));
+            }
+        }
+    }
+
+    public void onMediaPause() {
+        if (mPlayImageView != null) {
+            mPlayImageView.setSelected(false);
+        } else {
+            unChangePlay(null);
+        }
+    }
+
+    public void onMediaResume() {
+        if (mPlayImageView != null) {
+            mPlayImageView.setSelected(true);
+        }
+    }
+
+    public void onMediaStop() {
+        if (mRadioTextView != null) {
+            if (mPlayRadio != null) {
+                mRadioTextView.setText(DateUtil.formatMediaLength(mPlayRadio.getAudioTime()));
+            }
+        }
+        if (mPlayImageView != null) {
+            mPlayImageView.setSelected(false);
         }
     }
 
@@ -206,6 +245,15 @@ public class MissRadioLayout extends LinearLayout {
         private ImageView mImageView;
         private Radio mRadio;
         private View mView;
+        private TextView mRadioTextView;
+
+        public TextView getRadioTextView() {
+            return mRadioTextView;
+        }
+
+        public void setRadioTextView(TextView radioTextView) {
+            mRadioTextView = radioTextView;
+        }
 
         public View getView() {
             return mView;

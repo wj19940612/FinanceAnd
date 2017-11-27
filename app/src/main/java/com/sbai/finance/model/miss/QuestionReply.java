@@ -105,14 +105,15 @@ public class QuestionReply {
         private List<ReplysBean> replys;
 
         private int priseCount;
-        private boolean isPrise;
+        private int isPrise;
 
-        public boolean isPrise() {
+
+        public int getIsPrise() {
             return isPrise;
         }
 
-        public void setPrise(boolean prise) {
-            isPrise = prise;
+        public void setIsPrise(int isPrise) {
+            this.isPrise = isPrise;
         }
 
         public int getPriseCount() {
@@ -753,6 +754,8 @@ public class QuestionReply {
             dest.writeInt(this.star);
             dest.writeParcelable(this.userModel, flags);
             dest.writeTypedList(this.replys);
+            dest.writeInt(this.priseCount);
+            dest.writeInt(this.isPrise);
         }
 
         protected DataBean(Parcel in) {
@@ -770,6 +773,8 @@ public class QuestionReply {
             this.star = in.readInt();
             this.userModel = in.readParcelable(UserModelBean.class.getClassLoader());
             this.replys = in.createTypedArrayList(ReplysBean.CREATOR);
+            this.priseCount = in.readInt();
+            this.isPrise = in.readInt();
         }
 
         public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {

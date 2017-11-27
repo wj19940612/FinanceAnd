@@ -114,11 +114,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         requestMissSwitcherList();
     }
 
-    @Override
-    public void onMediaPlayStart(int IAudioId, int source) {
-        changeFloatWindowView();
-        notifyFragmentDataSetChange(source);
-    }
 
     private void changeFloatWindowView() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
@@ -134,17 +129,46 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         super.onResume();
         requestMissList();
         mMissRadioLayout.updatePlayStatus();
+        updateRadioFloatWindow();
+    }
+
+    private void updateRadioFloatWindow() {
+        if (MissAudioManager.get().isPlaying()) {
+            MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+            if (audio != null && audio instanceof Radio) {
+                mMissFloatWindow.startAnim();
+                mMissFloatWindow.setVisibility(View.VISIBLE);
+                mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait(), Question.QUESTION_TYPE_HOT);
+            }
+        }
     }
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
         mMissFloatWindow.startAnim();
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+            updateRadioFloatWindow();
+            mMissRadioLayout.updatePlayView();
+        }
+    }
+
+    @Override
+    public void onMediaPlayStart(int IAudioId, int source) {
+        changeFloatWindowView();
+        notifyFragmentDataSetChange(source);
+        if(source==MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO){
+            mMissRadioLayout.onMediaResume();
+        }
     }
 
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
         mMissFloatWindow.startAnim();
         notifyFragmentDataSetChange(source);
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+            updateRadioFloatWindow();
+            mMissRadioLayout.onMediaResume();
+        }
     }
 
     @Override
@@ -152,6 +176,9 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
         notifyFragmentDataSetChange(source);
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+            mMissRadioLayout.onMediaPause();
+        }
     }
 
     @Override
@@ -160,7 +187,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         mMissFloatWindow.setVisibility(View.GONE);
         notifyFragmentDataSetChange(source);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
-            mMissRadioLayout.unChangePlay(null);
+            mMissRadioLayout.onMediaStop();
         }
     }
 
@@ -168,7 +195,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
         super.onMediaPlayCurrentPosition(IAudioId, source, mediaPlayCurrentPosition, totalDuration);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
-//            mMissRadioLayout.setMediaPlayProgress();
+            mMissRadioLayout.setPlayRadio(mediaPlayCurrentPosition, totalDuration);
         }
     }
 
@@ -272,7 +299,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
                 if (MissAudioManager.get().isPlaying()) {
                     mIsNotPlayPage = (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION && position == 1)
                             || (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION && position == 0);
-                    if(mIsNotPlayPage){
+                    if (mIsNotPlayPage) {
                         mMissFloatWindow.setVisibility(View.VISIBLE);
                     }
                 }
@@ -350,14 +377,21 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             @Override
             public void onClick(View v) {
                 MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-                if (audio instanceof Question && MissAudioManager.get().isStarted(audio)) {
-                    Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-                    intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, true);
-                    intent.putExtra(Launcher.EX_PAYLOAD, ((Question) audio).getId());
-                    startActivityForResult(intent, REQ_QUESTION_DETAIL);
+                if (audio != null && MissAudioManager.get().isStarted(audio)) {
+                    if (audio instanceof Question) {
+                        Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
+                        intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, true);
+                        intent.putExtra(Launcher.EX_PAYLOAD, ((Question) audio).getId());
+                        startActivityForResult(intent, REQ_QUESTION_DETAIL);
 
-                    umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
+                        umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
+                    } else {
+                        Launcher.with(getContext(), RadioStationPlayActivityActivity.class)
+                                .putExtra(ExtraKeys.RADIO, (Radio) audio)
+                                .execute();
+                    }
                 }
+
             }
         });
     }

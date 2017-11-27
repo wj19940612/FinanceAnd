@@ -125,4 +125,5 @@ public abstract class MediaPlayActivity extends BaseActivity {
             MediaPlayActivity.this.onMediaPlayCurrentPosition(IAudioId, source, mediaPlayCurrentPosition, totalDuration);
         }
     };
+
 }

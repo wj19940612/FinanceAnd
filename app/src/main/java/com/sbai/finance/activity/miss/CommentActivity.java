@@ -40,6 +40,9 @@ public class CommentActivity extends BaseActivity {
 
     public static final String BROADCAST_ACTION_REPLY_SUCCESS = "broadcast_action_reply_success";
 
+    public static final int COMMENT_TYPE_RADIO = 3;
+    public static final int COMMENT_TYPE_QUESTION = 1;  //评论的类型：4话题,3电台
+
     public static final int REQ_CODE_COMMENT = 5091;
     public static final int REQ_CODE_COMMENT_LOGIN = 1705;
 
@@ -56,6 +59,10 @@ public class CommentActivity extends BaseActivity {
     private String mReplyParentId;
     private String mUserName;
 
+    private int mAudioId;
+    private int mCommentType;
+    private int mRadioId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,10 +73,15 @@ public class CommentActivity extends BaseActivity {
     }
 
     private void initData() {
+        Intent intent = getIntent();
         mInvitationUserId = getIntent().getIntExtra(Launcher.EX_PAYLOAD, -1);
         mDataId = getIntent().getIntExtra(Launcher.EX_PAYLOAD_1, -1);
         mReplyParentId = getIntent().getStringExtra(Launcher.EX_PAYLOAD_2);
         mUserName = getIntent().getStringExtra(Launcher.EX_PAYLOAD_3);
+
+        mCommentType = intent.getIntExtra(ExtraKeys.COMMENT_SOURCE, COMMENT_TYPE_QUESTION);
+        mAudioId = intent.getIntExtra(ExtraKeys.IAudio, -1);
+        mRadioId = intent.getIntExtra(ExtraKeys.RADIO, 0);
     }
 
 
@@ -164,7 +176,8 @@ public class CommentActivity extends BaseActivity {
 
     private void requestPublishComment() {
         mPublish.setEnabled(false);
-        Client.addComment(mInvitationUserId, mReplyParentId, mQuestionComment.getText().toString().trim(), mDataId)
+        String content = mQuestionComment.getText().toString().trim();
+        Client.addComment(mInvitationUserId, mReplyParentId, mCommentType, content, mDataId, mAudioId, mRadioId)
                 .setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIMEOUT_MS, 0, DEFAULT_BACKOFF_MULT))
                 .setTag(TAG)
                 .setIndeterminate(this)

@@ -9,6 +9,8 @@ import com.sbai.finance.net.Client;
 
 public class RadioDetails {
 
+    public static final int COLLECT = 1;
+
     /**
      * createTime : 1510911789000
      * id : 2
@@ -46,6 +48,15 @@ public class RadioDetails {
     private int subscribe;      //订阅数
     private int updateUserId;
     private String userPortrait;
+    private int collect;    //1:收藏,0：未收藏;
+
+    public int getCollect() {
+        return collect;
+    }
+
+    public void setCollect(int collect) {
+        this.collect = collect;
+    }
 
     public long getCreateTime() {
         return createTime;
