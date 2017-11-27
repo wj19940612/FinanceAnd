@@ -182,7 +182,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     }
 
     private void requestStockAccount() {
-        Client.getStockAccount().setTag(TAG)
+        Client.getStockAccount(null, null).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<StockUser>>, List<StockUser>>() {
                     @Override
                     protected void onRespSuccessData(List<StockUser> data) {
@@ -245,8 +245,8 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         for (StockData data : result) {
             Position position = positionMap.get(data.getInstrumentId());
             if (position != null) {
-                totalMarket += position.getTotalQty() * Double.valueOf(data.getLastPrice());
-                floatProfit += position.getTotalQty() * (Double.valueOf(data.getLastPrice()) - position.getAvgBuyPrice());
+                totalMarket += position.getTotalQty() * Double.valueOf(data.getFormattedLastPrice());
+                floatProfit += position.getTotalQty() * (Double.valueOf(data.getFormattedLastPrice()) - position.getAvgBuyPrice());
             }
         }
         mFundInfo.setTotalMarket(totalMarket);

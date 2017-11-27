@@ -62,7 +62,7 @@ public class FinanceUtil {
      */
     public static String formatToPercentage(double value) {
         BigDecimal bigDecimal = multiply(value, 100d);
-        return formatWithScale(bigDecimal.doubleValue(), 2) + "%";
+        return formatWithScale(bigDecimal.doubleValue(), DEFAULT_SCALE) + "%";
     }
 
     /**
@@ -195,7 +195,7 @@ public class FinanceUtil {
      * @param value
      * @return
      */
-    public static String formatWithScale(String value) {
+    public static String formatWithScale(String value, int scale) {
         double v = 0;
         if (!TextUtils.isEmpty(value)) {
             try {
@@ -204,7 +204,17 @@ public class FinanceUtil {
                 e.printStackTrace();
             }
         }
-        return formatWithScale(v, DEFAULT_SCALE);
+        return formatWithScale(v, scale);
+    }
+
+    /**
+     * 格式化 String 数据, 并使用‘银行家算法’精确（保留）到小数点后两位
+     *
+     * @param value
+     * @return
+     */
+    public static String formatWithScale(String value) {
+        return formatWithScale(value, DEFAULT_SCALE);
     }
 
     /**

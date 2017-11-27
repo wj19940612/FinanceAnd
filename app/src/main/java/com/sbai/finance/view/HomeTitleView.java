@@ -731,7 +731,7 @@ public class HomeTitleView extends RelativeLayout {
         int greyColor = ContextCompat.getColor(mContext, R.color.unluckyText);
         int color;
         String rateChange = FinanceUtil.formatToPercentage(data.getUpDropSpeed());
-        String ratePrice = data.getUpDropPrice();
+        String ratePrice = data.getFormattedUpDropPrice();
         if (rateChange.startsWith("-")) {
             color = greenColor;
         } else {
@@ -748,7 +748,7 @@ public class HomeTitleView extends RelativeLayout {
 //            rightIndexPer.setTextColor(greyColor);
 //        } else {
         indexValue.setTextColor(color);
-        indexValue.setText(data.getLastPrice());
+        indexValue.setText(data.getFormattedLastPrice());
         leftIndexPer.setText(ratePrice);
         rightIndexPer.setText(rateChange);
         leftIndexPer.setTextColor(color);

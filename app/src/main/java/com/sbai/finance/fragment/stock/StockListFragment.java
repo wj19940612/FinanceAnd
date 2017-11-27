@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
@@ -279,7 +278,7 @@ public class StockListFragment extends BaseFragment
         SpannableString spannableString;
         for (StockData stockData : data) {
             String rateChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
-            String ratePrice = stockData.getUpDropPrice();
+            String ratePrice = stockData.getFormattedUpDropPrice();
             if (rateChange.startsWith("-")) {
                 color = greenColor;
             } else {
@@ -290,19 +289,19 @@ public class StockListFragment extends BaseFragment
             variety = (Variety) mShangHai.getTag();
             if (variety != null && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
-                        "\n" + stockData.getLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, color);
+                        "\n" + stockData.getFormattedLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, color);
                 mShangHai.setText(spannableString);
             }
             variety = (Variety) mShenZhen.getTag();
             if (variety != null && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
-                        "\n" + stockData.getLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, color);
+                        "\n" + stockData.getFormattedLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, color);
                 mShenZhen.setText(spannableString);
             }
             variety = (Variety) mBoard.getTag();
             if (variety != null && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
                 spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
-                        "\n" + stockData.getLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, color);
+                        "\n" + stockData.getFormattedLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, color);
                 mBoard.setText(spannableString);
             }
         }
@@ -442,7 +441,7 @@ public class StockListFragment extends BaseFragment
 
                 StockData stockData = map.get(item.getVarietyType());
                 if (stockData != null) {
-                    mLastPrice.setText(stockData.getLastPrice());
+                    mLastPrice.setText(stockData.getFormattedLastPrice());
                     if (stockData.isDelist()) {
                         mRate.setEnabled(false);
                         mRate.setText(R.string.delist);

@@ -12,7 +12,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,7 +115,7 @@ public class StockPositionFragment extends BaseFragment {
     private void requestAsset() {
         if (mStockUser == null) return;
         startScheduleJob(5 * 1000);
-        Client.requestAsset(mStockUser.getType(), mStockUser.getAccount(), mStockUser.getActivityCode())
+        Client.getStockHoldingList(mStockUser.getType(), mStockUser.getAccount(), mStockUser.getActivityCode())
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<PositionRecords>, PositionRecords>() {
                     @Override
@@ -272,13 +271,13 @@ public class StockPositionFragment extends BaseFragment {
 
         public void addStockData(List<StockData> stockDataList) {
             for (StockData data : stockDataList) {
-                mLastPriceMap.put(data.getInstrumentId(), data.getLastPrice());
+                mLastPriceMap.put(data.getInstrumentId(), data.getFormattedLastPrice());
             }
             notifyDataSetChanged();
         }
 
         public void addStockData(StockData stockData) {
-            mLastPriceMap.put(stockData.getInstrumentId(), stockData.getLastPrice());
+            mLastPriceMap.put(stockData.getInstrumentId(), stockData.getFormattedLastPrice());
             notifyDataSetChanged();
         }
 

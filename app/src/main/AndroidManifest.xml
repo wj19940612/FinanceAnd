@@ -214,6 +214,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.stock.StockTradeOperateActivity"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait"/>
 
         <!-- 交易 H5 -->

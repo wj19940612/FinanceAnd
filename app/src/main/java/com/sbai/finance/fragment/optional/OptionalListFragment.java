@@ -38,7 +38,6 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
-import com.sbai.finance.view.slidingListView.SlideItem;
 import com.sbai.finance.view.slidingListView.SlideListView;
 
 import java.math.BigDecimal;
@@ -394,7 +393,7 @@ public class OptionalListFragment extends BaseFragment implements
                     //      mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_shares),null,null,null);
                     StockData stockData = stockMap.get(item.getVarietyType());
                     if (stockData != null) {
-                        mLastPrice.setText(stockData.getLastPrice());
+                        mLastPrice.setText(stockData.getFormattedLastPrice());
                         if (stockData.isDelist()) {
                             mRate.setEnabled(false);
                             mRate.setText(R.string.delist);

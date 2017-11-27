@@ -5,12 +5,7 @@ package com.sbai.finance.model.stocktrade;
  */
 
 public class Position {
-    /**
-     * 1实盘 2模拟盘 3活动模拟盘
-     */
-    public static final int TYPE_ACTUAL = 1;
-    public static final int TYPE_SIMULATE = 2;
-    public static final int TYPE_SIMULATE_ACTIVITY = 3;
+
     /**
      * id : 1
      * version : 1
@@ -40,15 +35,15 @@ public class Position {
     private String market;
     private String varietyCode;
     private String varietyName;
-    private double avgBuyPrice;
-    private int totalQty;
-    private int usableQty;
+    private double avgBuyPrice; // 平均买入价，成本
+    private int totalQty; // 总持仓数量
+    private int usableQty; // 可用持仓数量
     private Object activityCode;
-    private int frozenQty;
+    private int frozenQty; // 冻结持仓数量
     private long createTime;
     private long updateTime;
-    private double todayAvgPrice;
-    private double todayBargainCount;
+    private double todayAvgPrice; // 该股票品种今日平均成交价 (买入)
+    private double todayBargainCount; // 该股票品种今日成交的数量 (买入)
 
     public double getTodayBargainCount() {
         return todayBargainCount;

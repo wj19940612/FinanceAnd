@@ -128,7 +128,6 @@
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
                 tool:text="722.00"/>
-
         </LinearLayout>
     </LinearLayout>
 

@@ -73,21 +73,17 @@ public class Client {
 
 
     /**
-     * 获取股票账户
+     * 获取股票账户, 什么都不传默认是所有
      *
      * @param type         1 实盘 2 模拟 3 活动
      * @param activityCode
      * @return
      */
-    public static API getStockAccount(int type, String activityCode) {
+    public static API getStockAccount(String type, String activityCode) {
         return new API("/api/stock-or/account/info.do",
                 new ApiParams()
                         .put("type", type)
                         .put("activityCode", activityCode));
-    }
-
-    public static API getStockAccount() {
-        return new API("/api/stock-or/account/info.do");
     }
 
     /**
@@ -3053,18 +3049,46 @@ public class Client {
     }
 
     /**
+     * 获取股票持仓数据
+     *
      * @param positionType
      * @param userAccount
      * @param activityCode
      * @return
      */
-    public static API requestAsset(int positionType, String userAccount, String activityCode) {
+    public static API getStockHoldingList(int positionType, String userAccount, String activityCode) {
         return new API("/api/stock-or/position/asset.do", new ApiParams()
                 .put("positionType", positionType)
                 .put("userAccount", userAccount)
                 .put("activityCode", activityCode)
                 .put("pageSize", 100000)
                 .put("page", 0));
+    }
+
+    /**
+     * 股票下单
+     *
+     * @param type
+     * @param account
+     * @param activityCode
+     * @param varietyType
+     * @param varietyName
+     * @param buyVolume
+     * @param buyPrice
+     * @return
+     */
+    public static API markStockOrder(int type, String account, String activityCode, String varietyType,
+                                     String varietyName, int buyVolume, double buyPrice, String uuid) {
+        return new API("", new ApiParams()
+        .put("positionType", type).
+                        put("userAccount", account)
+        .put("activityCode", activityCode)
+        .put("varietyCode", varietyType)
+        .put("varietyName", varietyName)
+        .put("quantity", buyVolume)
+        .put("price", buyPrice)
+        .put("deputeType", 8)
+        .put("signId", uuid));
     }
 
     /**
@@ -3117,4 +3141,5 @@ public class Client {
     public static API requestMissSwitcherList() {
         return new API("");
     }
+
 }

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_weight="0.7"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/stockNameCode"
+                tools:text="鲁信创投 SH600783"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_grey_border"
+                android:gravity="center"
+                android:hint="证券代码 / 名称 / 拼音"
+                android:minHeight="40dp"
+                android:textColor="@color/primaryText"
+                android:textSize="15sp"/>
+
+            <com.sbai.finance.view.PlusMinusEditText
+                android:id="@+id/tradePrice"
+                app:changeInterval="0.01"
+                app:inputType="decimal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:hint="@string/buy_price"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/limitUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/limit_up_x"
+                    android:textColor="@color/luckyText"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/limitDown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/limit_down_x"
+                    android:textColor="@color/luckyText"
+                    android:textSize="12sp"/>
+            </RelativeLayout>
+
+            <com.sbai.finance.view.PlusMinusEditText
+                android:id="@+id/tradeVolume"
+                app:changeInterval="100"
+                app:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/buy_volume"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/fullPosition"
+                    style="@style/SelectPositionButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/full_position"/>
+
+                <TextView
+                    android:id="@+id/halfPosition"
+                    style="@style/SelectPositionButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/half_position"/>
+
+                <TextView
+                    android:id="@+id/quarterPosition"
+                    style="@style/SelectPositionButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/quarter_position"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/fee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/fee_x"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <include
+            android:id="@+id/fivePriceView"
+            layout="@layout/view_five_price"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.388"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/tradeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_primary"
+        android:enabled="false"
+        android:minHeight="44dp"
+        android:text="@string/sell_out_right_now"
+        android:textColor="@android:color/white"
+        android:textSize="17sp"/>
+</LinearLayout>

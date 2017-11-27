@@ -20,10 +20,21 @@ public class StockUtil {
      * @return
      */
     public static String getStockDecimal(String price) {
+        return getStockDecimal(price, 2);
+    }
+
+    /**
+     * 一般小数数据, 带 scale
+     *
+     * @param price
+     * @param scale
+     * @return
+     */
+    public static String getStockDecimal(String price, int scale) {
         if (TextUtils.isEmpty(price)) {
             return NULL_VALUE;
         }
-        return FinanceUtil.formatWithScale(price);
+        return FinanceUtil.formatWithScale(price, scale);
     }
 
     /**

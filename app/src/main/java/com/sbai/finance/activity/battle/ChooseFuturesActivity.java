@@ -64,7 +64,6 @@ public class ChooseFuturesActivity extends BaseActivity implements ViewPager.OnP
         mTabLayout.setPadding(Display.dp2Px(13, getResources()));
         mTabLayout.setViewPager(mViewPager);
         mTitleBar.setOnTitleBarClickListener(this);
-
     }
 
     @Override

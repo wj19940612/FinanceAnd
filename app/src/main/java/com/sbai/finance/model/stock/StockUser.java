@@ -44,7 +44,7 @@ public class StockUser implements Parcelable {
     private double fund; // 原始资金
     private int id;
     private int status;
-    private int type;
+    private int type; // 账户类型，1 实盘，2 模拟账户，3 活动账户
     private double usableMoney; // 可用资金
     private int userId;
     private int virtualType; // 虚拟账户类型
