@@ -1,8 +1,12 @@
 package com.sbai.finance.activity.miss;
 
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -30,6 +34,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.fragment.MineFragment;
+import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.miss.MissProfileQuestionFragment;
 import com.sbai.finance.fragment.miss.MissProfileRadioFragment;
 import com.sbai.finance.model.LocalUser;
@@ -40,6 +45,7 @@ import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
@@ -63,6 +69,8 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
     public static final String CUSTOM_ID = "custom_id";
 
     public static final int REQ_SUBMIT_QUESTION_LOGIN = 1001;
+    public static final int FRAGMENT_QUESTION = 0;
+    public static final int FRAGMENT_RADIO = 1;
 
     @BindView(R.id.avatar)
     ImageView mAvatar;
@@ -100,6 +108,22 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
     private boolean mSwipEnabled = true;
     private int mAppBarVerticalOffset = -1;
     private Miss mMiss;
+    private MediaPlayService mMediaPlayService;
+
+    protected ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mMediaPlayService = ((MediaPlayService.MediaBinder) iBinder).getMediaPlayService();
+            MissProfileQuestionFragment fragment = (MissProfileQuestionFragment) mProfileFragmentAdapter.getFragment(FRAGMENT_QUESTION);
+            if (fragment != null) {
+                fragment.setService(mMediaPlayService);
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,6 +133,8 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         translucentStatusBar();
         initData(getIntent());
         initView();
+        Intent intent = new Intent(this, MediaPlayService.class);
+        bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -162,11 +188,11 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
     }
 
     private MissProfileQuestionFragment getMissProfileQuestionFragment() {
-        return (MissProfileQuestionFragment) mProfileFragmentAdapter.getFragment(0);
+        return (MissProfileQuestionFragment) mProfileFragmentAdapter.getFragment(FRAGMENT_QUESTION);
     }
 
     private MissProfileRadioFragment getMissProfileRadioFragment() {
-        return (MissProfileRadioFragment) mProfileFragmentAdapter.getFragment(1);
+        return (MissProfileRadioFragment) mProfileFragmentAdapter.getFragment(FRAGMENT_RADIO);
     }
 
     private void initTitleBar() {
@@ -267,6 +293,11 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         MissProfileQuestionFragment missProfileQuestionFragment = getMissProfileQuestionFragment();
         if (missProfileQuestionFragment != null) {
             missProfileQuestionFragment.setMiss(miss);
+        }
+
+        MissProfileRadioFragment missProfileRadioFragment = getMissProfileRadioFragment();
+        if (missProfileRadioFragment != null) {
+            missProfileRadioFragment.setMiss(miss);
         }
     }
 
@@ -407,9 +438,9 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0:
+                case FRAGMENT_QUESTION:
                     return MissProfileQuestionFragment.newInstance(mCustomId);
-                case 1:
+                case FRAGMENT_RADIO:
                     return MissProfileRadioFragment.newInstance(mCustomId);
             }
             return null;
@@ -423,9 +454,9 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case 0:
+                case FRAGMENT_QUESTION:
                     return "问答";
-                case 1:
+                case FRAGMENT_RADIO:
                     return "电台";
             }
             return super.getPageTitle(position);

@@ -1,8 +1,6 @@
 package com.sbai.finance.activity.mine;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +18,17 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.training.TrainingDetailActivity;
-import com.sbai.finance.model.SubscribeModel;
-import com.sbai.finance.model.training.MyTrainingRecord;
-import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.model.mine.MyCollect;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.ImageTextUtil;
+import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.glide.GlideApp;
+import com.sbai.httplib.ApiError;
 
 import java.util.List;
 
@@ -40,13 +41,14 @@ import butterknife.ButterKnife;
 
 public class MySubscribeActivity extends BaseActivity {
     @BindView(android.R.id.list)
-    ListView mList;
+    ListView mListView;
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    CustomSwipeRefreshLayout mSwipeRefreshLayout;
 
     private SubscribeAdapter mSubscribeAdapter;
+    private int mPage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,40 +57,112 @@ public class MySubscribeActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         mSubscribeAdapter = new SubscribeAdapter(this);
-        mList.setEmptyView(mEmpty);
-        mList.setAdapter(mSubscribeAdapter);
+        mListView.setEmptyView(mEmpty);
+        mListView.setAdapter(mSubscribeAdapter);
+       initSwipeRefreshLayout();
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MyCollect myCollect = (MyCollect) parent.getAdapter().getItem(position);
+
+            }
+        });
+        requestSubscribeList(true);
+    }
+
+    private void initSwipeRefreshLayout() {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestSubscribeList();
+                mPage = 0;
+                mSwipeRefreshLayout.setLoadMoreEnable(true);
+                requestSubscribeList(true);
             }
         });
-        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SubscribeModel subscribeModel = (SubscribeModel) parent.getAdapter().getItem(position);
-
+            public void onLoadMore() {
+                mListView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        requestSubscribeList(false);
+                    }
+                }, 1000);
             }
         });
-        requestSubscribeList();
     }
 
-    private void requestSubscribeList(){
-        //TODO 获取数据
-        List<SubscribeModel> subscribeModels;
+    private void requestSubscribeList(final boolean isRefresh) {
+        Client.requestMyCollection(MyCollect.COLLECTI_TYPE_RADIO, mPage).setTag(TAG).setCallback(new Callback2D<Resp<List<MyCollect>>, List<MyCollect>>() {
+            @Override
+            protected void onRespSuccessData(List<MyCollect> data) {
+                if (data.size() == 0 && mPage == 0) {
+                    stopRefreshAnimation();
+                    mEmpty.setVisibility(View.VISIBLE);
+                } else {
+                    mEmpty.setVisibility(View.GONE);
+                    updateSubscribeList(data, isRefresh);
+                }
+            }
+
+            @Override
+            public void onFailure(ApiError apiError) {
+                super.onFailure(apiError);
+                stopRefreshAnimation();
+                if (mPage == 0) {
+                    mEmpty.setVisibility(View.VISIBLE);
+                    mSubscribeAdapter.clear();
+                    mSubscribeAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }).fire();
     }
 
-    private void setSpanIconText(TextView textView , String str){
-        SpannableString ss = new SpannableString(str);
+    private void updateSubscribeList(List<MyCollect> data, boolean isRefresh) {
+        if (data == null) {
+            stopRefreshAnimation();
+            return;
+        }
 
-        Drawable drawable = getResources().getDrawable(R.drawable.battle_banner);
-        drawable.setBounds(0,0,30,30);
-        ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
-        ss.setSpan(span, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-        textView.setText(ss);
+        if (data.size() < Client.DEFAULT_PAGE_SIZE) {
+            mSwipeRefreshLayout.setLoadMoreEnable(false);
+        } else {
+            mSwipeRefreshLayout.setLoadMoreEnable(true);
+            mPage++;
+        }
+
+        if (isRefresh) {
+            if (mSubscribeAdapter != null) {
+                mSubscribeAdapter.clear();
+            }
+        }
+
+        stopRefreshAnimation();
+
+        for (MyCollect collect : data) {
+            mSubscribeAdapter.add(collect);
+        }
+
     }
 
-    public static class SubscribeAdapter extends ArrayAdapter<SubscribeModel> {
+    private void stopRefreshAnimation() {
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+
+        if (mSwipeRefreshLayout.isLoading()) {
+            mSwipeRefreshLayout.setLoading(false);
+        }
+    }
+
+    public static class SubscribeAdapter extends ArrayAdapter<MyCollect> {
         public SubscribeAdapter(@NonNull Context context) {
             super(context, 0);
         }
@@ -129,9 +203,22 @@ public class MySubscribeActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindDataWithView(SubscribeModel item, Context context) {
+            private void bindDataWithView(MyCollect radioInfo, Context context) {
+                GlideApp.with(context).load(radioInfo.getRadioCover())
+                        .placeholder(R.drawable.ic_default_image)
+                        .circleCrop()
+                        .into(mCover);
+                mTitle.setText(radioInfo.getRadioName());
+                setSpanIconText(mSubtitle, radioInfo.getRadioIntroduction(), context);
+//                mNumber.setText(String.valueOf(radioInfo.getListenNumber()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(radioInfo.getCreateTime()));
+            }
 
-
+            private void setSpanIconText(TextView textView, String str, Context context) {
+                SpannableString ss = new SpannableString("  " + str);
+                ImageTextUtil.CenterImageSpan span = new ImageTextUtil.CenterImageSpan(context, R.drawable.ic_miss_profile_play_small);
+                ss.setSpan(span, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                textView.setText(ss);
             }
         }
     }

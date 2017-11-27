@@ -41,6 +41,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissAudioManager;
@@ -79,7 +80,7 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
     @BindView(R.id.missFloatWindow)
     MissFloatWindow mMissFloatWindow;
     @BindView(R.id.ask)
-    Button ask;
+    Button mAsk;
 
     private QuestionListAdapter mQuestionListAdapter;
     private List<Question> mQuestionList;
@@ -95,6 +96,8 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
     OnFragmentRecycleViewScrollListener mOnFragmentRecycleViewScrollListener;
     private RefreshReceiver mRefreshReceiver;
     private boolean mHasEnter;
+
+    private MediaPlayService mMediaPlayService;
 
     @Override
     public void onAudioStart() {
@@ -170,8 +173,20 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
         return missProfileQuestionFragment;
     }
 
+    public void setService(MediaPlayService mediaPlayService){
+        mMediaPlayService = mediaPlayService;
+    }
+
     public void setMiss(Miss miss) {
         mMiss = miss;
+        if (miss != null) {
+            if (LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getCustomId() == miss.getId()) {
+                //是自己的个人主页，隐藏我要提问按钮
+                mAsk.setVisibility(View.GONE);
+            } else {
+                mAsk.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     public void refresh() {
@@ -265,7 +280,7 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
     @Override
     public void onResume() {
         super.onResume();
-        if(!mHasEnter) {
+        if (!mHasEnter) {
             mHasEnter = true;
             refresh();
         }
@@ -500,7 +515,7 @@ public class MissProfileQuestionFragment extends BaseFragment implements MissAud
 
 //        for (Question question : questionList) {
 //            if (mSet.add(question.getId())) {
-                mQuestionListAdapter.addAll(questionList);
+        mQuestionListAdapter.addAll(questionList);
 //            }
 //        }
     }

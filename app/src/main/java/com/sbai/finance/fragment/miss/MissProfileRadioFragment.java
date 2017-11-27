@@ -27,12 +27,15 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.RadioInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.ImageTextUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.ApiError;
@@ -74,6 +77,17 @@ public class MissProfileRadioFragment extends BaseFragment {
         bundle.putInt(CUSTOM_ID, customId);
         missProfileRadioFragment.setArguments(bundle);
         return missProfileRadioFragment;
+    }
+
+    public void setMiss(Miss miss){
+        if (miss != null) {
+            if (LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getCustomId() == miss.getId()) {
+                //是自己的个人主页，显示创建电台按钮
+                mCreateRadio.setVisibility(View.VISIBLE);
+            } else {
+                mCreateRadio.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -289,48 +303,10 @@ public class MissProfileRadioFragment extends BaseFragment {
 
             private void setSpanIconText(TextView textView, String str, Context context) {
                 SpannableString ss = new SpannableString("  " + str);
-                CenterImageSpan span = new CenterImageSpan(context, R.drawable.ic_miss_profile_play_small);
+                ImageTextUtil.CenterImageSpan span = new ImageTextUtil.CenterImageSpan(context, R.drawable.ic_miss_profile_play_small);
                 ss.setSpan(span, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
                 textView.setText(ss);
             }
-        }
-    }
-
-    public static class CenterImageSpan extends ImageSpan {
-        public CenterImageSpan(Context arg0, int drawable) {
-            super(arg0, drawable);
-        }
-
-        public int getSize(Paint paint, CharSequence text, int start, int end,
-                           Paint.FontMetricsInt fm) {
-            Drawable d = getDrawable();
-            Rect rect = d.getBounds();
-            if (fm != null) {
-                Paint.FontMetricsInt fmPaint = paint.getFontMetricsInt();
-                int fontHeight = fmPaint.bottom - fmPaint.top;
-                int drHeight = rect.bottom - rect.top;
-
-                int top = drHeight / 2 - fontHeight / 4;
-                int bottom = drHeight / 2 + fontHeight / 4;
-
-                fm.ascent = -bottom;
-                fm.top = -bottom;
-                fm.bottom = top;
-                fm.descent = top;
-            }
-            return rect.right;
-        }
-
-        @Override
-        public void draw(Canvas canvas, CharSequence text, int start, int end,
-                         float x, int top, int y, int bottom, Paint paint) {
-            Drawable b = getDrawable();
-            canvas.save();
-            int transY = 0;
-            transY = ((bottom - top) - b.getBounds().bottom) / 2 + top;
-            canvas.translate(x, transY);
-            b.draw(canvas);
-            canvas.restore();
         }
     }
 }
