@@ -5,8 +5,12 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -48,7 +52,10 @@ public class RadioInfoPlayLayout extends LinearLayout {
     private Unbinder mBind;
     private Radio mRadio;
 
+    private RotateAnimation mRotateAnimation;
+
     private OnRadioPlayListener mOnRadioPlayListener;
+//    private ObjectAnimator mVoiceAnimator;
 
 
     public interface OnRadioPlayListener {
@@ -74,13 +81,40 @@ public class RadioInfoPlayLayout extends LinearLayout {
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_radio_play, this, true);
         mBind = ButterKnife.bind(this, view);
+        createVoicePlayRotateAnimation();
+    }
+
+    private void createVoicePlayRotateAnimation() {
+        mRotateAnimation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        LinearInterpolator lin = new LinearInterpolator();
+        mRotateAnimation.setInterpolator(lin);
+        mRotateAnimation.setDuration(5000);
+        mRotateAnimation.setRepeatCount(-1);
+        mRotateAnimation.setFillAfter(false);
+        mRotateAnimation.setStartOffset(10);
+//        mVoiceAnimator = ObjectAnimator.ofFloat(mVoiceCover, "rotation", 0.0F, 359.0F);
+//        mVoiceAnimator.setRepeatCount(-1);
+//        mVoiceAnimator.setDuration(5000);
+//        mVoiceAnimator.setInterpolator(new LinearInterpolator());
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        mBind.unbind();
+        mVoiceCover.clearAnimation();
         mOnSeekBarChangeListener = null;
+        mRotateAnimation = null;
+        mBind.unbind();
+    }
+
+    public void startAnimation() {
+        mVoiceCover.startAnimation(mRotateAnimation);
+//        mVoiceAnimator.start();
+    }
+
+    public void stopAnimation() {
+        mRotateAnimation.cancel();
+//        mVoiceAnimator.end();
     }
 
     public void setRadioProgress(int progress) {
@@ -120,14 +154,21 @@ public class RadioInfoPlayLayout extends LinearLayout {
     }
 
     public void onPlayStop() {
+        Log.d(TAG, "onPlayStop: ");
         mPlay.setSelected(false);
+        mVoiceCover.clearAnimation();
+        mRadioSeekBar.setProgress(0);
+        mProgressLength.setText(R.string.start_time);
+
+//        mRotateAnimation.cancel();
+//        mVoiceAnimator.end();
 //        mProgressLength.setText(R.string.start_time);
     }
 
     private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-            if (mOnRadioPlayListener != null) {
+            if (mOnRadioPlayListener != null && b) {
                 mOnRadioPlayListener.onSeekChange(progress);
             }
         }

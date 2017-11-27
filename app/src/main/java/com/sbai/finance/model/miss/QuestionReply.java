@@ -104,25 +104,23 @@ public class QuestionReply {
         private UserModelBean userModel;
         private List<ReplysBean> replys;
 
-        // TODO: 2017/11/25  需要该评论的点赞状态和点赞数 自己加的数据 ，需要服务器给
-        private int reviewPriseCount;
-        private int reviewPriseStatus;
+        private int priseCount;
+        private boolean isPrise;
 
-
-        public int getReviewPriseCount() {
-            return reviewPriseCount;
+        public boolean isPrise() {
+            return isPrise;
         }
 
-        public void setReviewPriseCount(int reviewPriseCount) {
-            this.reviewPriseCount = reviewPriseCount;
+        public void setPrise(boolean prise) {
+            isPrise = prise;
         }
 
-        public int getReviewPriseStatus() {
-            return reviewPriseStatus;
+        public int getPriseCount() {
+            return priseCount;
         }
 
-        public void setReviewPriseStatus(int reviewPriseStatus) {
-            this.reviewPriseStatus = reviewPriseStatus;
+        public void setPriseCount(int priseCount) {
+            this.priseCount = priseCount;
         }
 
         public String getContent() {
@@ -755,8 +753,6 @@ public class QuestionReply {
             dest.writeInt(this.star);
             dest.writeParcelable(this.userModel, flags);
             dest.writeTypedList(this.replys);
-            dest.writeInt(this.reviewPriseCount);
-            dest.writeInt(this.reviewPriseStatus);
         }
 
         protected DataBean(Parcel in) {
@@ -774,8 +770,6 @@ public class QuestionReply {
             this.star = in.readInt();
             this.userModel = in.readParcelable(UserModelBean.class.getClassLoader());
             this.replys = in.createTypedArrayList(ReplysBean.CREATOR);
-            this.reviewPriseCount = in.readInt();
-            this.reviewPriseStatus = in.readInt();
         }
 
         public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {

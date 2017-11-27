@@ -109,14 +109,15 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/white"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
             </android.support.design.widget.CoordinatorLayout>
 
             <com.sbai.finance.view.MissFloatWindow
                 android:id="@+id/missFloatWindow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
                 android:layout_marginBottom="@dimen/common_padding"
                 android:background="@android:color/transparent"
                 android:visibility="gone"/>

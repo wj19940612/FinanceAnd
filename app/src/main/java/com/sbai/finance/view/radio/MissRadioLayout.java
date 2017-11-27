@@ -15,6 +15,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
@@ -177,25 +178,23 @@ public class MissRadioLayout extends LinearLayout {
             }
         }
     }
-//
-//    public void setStopPlay(Radio radio) {
-//        if (mPlayImageView != null) {
-//            mPlayImageView.setSelected(false);
-//        }
-//    }
-//
-//    public void setPausePlay(Radio radio) {
-//        if (mPlayImageView != null) {
-//            mPlayImageView.setSelected(false);
-//        }
-//    }
-//
-//    public void setStartPlay(Radio radio) {
-//        if (mPlayImageView != null) {
-//            mPlayImageView.setSelected(true);
-//        }
-//        unChangePlay(null);
-//    }
+
+    public void updatePlayStatus() {
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (audio instanceof Radio) {
+            if (MissAudioManager.get().isPlaying()) {
+                for (int i = 0; i < mPlayStateList.size(); i++) {
+                    PlayStatus playStatus = mPlayStateList.get(i);
+                    Radio radio = playStatus.getRadio();
+                    if (radio.getId() == audio.getAudioId()) {
+                        playStatus.getImageView().setSelected(true);
+                    }
+                }
+            }else {
+                unChangePlay(null);
+            }
+        }
+    }
 
     @Override
     protected void onDetachedFromWindow() {

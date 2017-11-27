@@ -150,6 +150,11 @@ public class MissProfileActivity extends BaseActivity implements
                     mTitleBar.setTitleAlpha(alpha);
                 }
             }
+
+            @Override
+            public int scrollStateChange(int scrollState) {
+                return 0;
+            }
         });
 
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {

@@ -93,6 +93,9 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
     private Radio mRadio;
     private MediaPlayService mMediaPlayService;
+    private int mPosition;
+    private boolean mIsNotPlayPage;
+
 
     @Nullable
     @Override
@@ -120,7 +123,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     private void changeFloatWindowView() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
         if (audio instanceof Question) {
-            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait(),((Question) audio).getUserType());
+            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait(), ((Question) audio).getUserType());
         } else if (audio instanceof Radio) {
             mMissFloatWindow.setMissAvatar(((Radio) audio).getAudioCover());
         }
@@ -130,6 +133,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     public void onResume() {
         super.onResume();
         requestMissList();
+        mMissRadioLayout.updatePlayStatus();
     }
 
     @Override
@@ -155,8 +159,18 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
         notifyFragmentDataSetChange(source);
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+            mMissRadioLayout.unChangePlay(null);
+        }
     }
 
+    @Override
+    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
+        super.onMediaPlayCurrentPosition(IAudioId, source, mediaPlayCurrentPosition, totalDuration);
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+//            mMissRadioLayout.setMediaPlayProgress();
+        }
+    }
 
     public void setService(MediaPlayService mediaPlayService) {
         mMediaPlayService = mediaPlayService;
@@ -246,6 +260,29 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         mSlidingTabLayout.setTabViewTextSize(16);
         mSlidingTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.sliding_tab_text));
         mSlidingTabLayout.setViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mPosition = position;
+                if (MissAudioManager.get().isPlaying()) {
+                    mIsNotPlayPage = (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION && position == 1)
+                            || (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION && position == 0);
+                    if(mIsNotPlayPage){
+                        mMissFloatWindow.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
 
         mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
@@ -370,16 +407,19 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     }
 
     @Override
-    public void onRadioPlay(Question question, boolean radioPlayViewHasHasFocus) {
+    public void onRadioPlay(Question question, boolean radioPlayViewHasHasFocus, int source) {
         if (mRadio != null) {
             mMissRadioLayout.unChangePlay(null);
             mRadio = null;
         }
-        if (radioPlayViewHasHasFocus && mMissFloatWindow.getVisibility() == View.VISIBLE) {
+        if (radioPlayViewHasHasFocus
+                && mMissFloatWindow.getVisibility() == View.VISIBLE
+                && !mIsNotPlayPage) {
             mMissFloatWindow.setVisibility(View.GONE);
         }
 
-        if (!radioPlayViewHasHasFocus && mMissFloatWindow.getVisibility() == View.GONE) {
+        if (!radioPlayViewHasHasFocus
+                && mMissFloatWindow.getVisibility() == View.GONE) {
             mMissFloatWindow.setVisibility(View.VISIBLE);
         }
     }

@@ -90,6 +90,12 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
         }
     }
 
+    public void seekTo(int progress) {
+        if (mMissAudioManager != null) {
+            mMissAudioManager.setSeekProgress(progress);
+        }
+    }
+
     public void onResume() {
         if (mMissAudioManager != null) {
             mMissAudioManager.resume();

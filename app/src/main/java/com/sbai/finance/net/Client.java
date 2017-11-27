@@ -3100,15 +3100,25 @@ public class Client {
         return new API("/explain/comment/queryAudioComment.do",
                 new ApiParams()
                         .put("radioId", radioId)
-                        .put("audioId", audioId));
+                        .put("audioId", audioId)
+                        .put("page", page)
+                        .put("pageSize", DEFAULT_PAGE_SIZE));
     }
-        /**
-         * 修改小姐姐个人简介
-         */
+
+    /**
+     * 修改小姐姐个人简介
+     */
 
     public static API modifyProfileIntroduction(String introduction) {
         return new API("/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
     }
 
+    /**
+     * @param replyId
+     * @return
+     */
+    public static API praiseMissReply(String replyId) {
+        return new API("/user/comment/priseReply.do", new ApiParams().put("replyId", replyId));
+    }
 
 }

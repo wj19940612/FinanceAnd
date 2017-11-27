@@ -116,7 +116,7 @@ public class MissAskFragment extends MediaPlayFragment {
     public interface OnMissAskPageListener {
         void onSwipeRefreshEnable(boolean swipeFreshEnable);
 
-        void onRadioPlay(Question question, boolean radioPlayViewHasHasFocus);
+        void onRadioPlay(Question question, boolean radioPlayViewHasHasFocus, int source);
 
         void onChangeMissFloatWindow(boolean hideFloatWindow);
     }
@@ -257,7 +257,7 @@ public class MissAskFragment extends MediaPlayFragment {
                 }
             }
             if (mOnMissAskPageListener != null) {
-                mOnMissAskPageListener.onRadioPlay(null, radioPlayHasFocus);
+                mOnMissAskPageListener.onRadioPlay(null, radioPlayHasFocus,source);
             }
         }
     }
@@ -386,21 +386,23 @@ public class MissAskFragment extends MediaPlayFragment {
 
             @Override
             public void onPlayClick(final Question item, int position) {
-                umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
-                if (MissAudioManager.get().isStarted(item)) {
-                    if (mMediaPlayService != null) {
-                        mMediaPlayService.onPausePlay(item);
-                    }
-                } else if (MissAudioManager.get().isPaused(item)) {
-                    if (mMediaPlayService != null) {
-                        mMediaPlayService.onResume();
-                    }
-                } else {
-                    if (mMediaPlayService != null) {
-                        if (mMissAskType == MISS_ASK_TYPE_HOT) {
-                            mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_HOT_QUESTION);
-                        } else {
-                            mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION);
+                if(item!=null){
+                    umengEventCount(UmengCountEventId.MISS_TALK_VOICE);
+                    if (MissAudioManager.get().isStarted(item)) {
+                        if (mMediaPlayService != null) {
+                            mMediaPlayService.onPausePlay(item);
+                        }
+                    } else if (MissAudioManager.get().isPaused(item)) {
+                        if (mMediaPlayService != null) {
+                            mMediaPlayService.onResume();
+                        }
+                    } else {
+                        if (mMediaPlayService != null) {
+                            if (mMissAskType == MISS_ASK_TYPE_HOT) {
+                                mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_HOT_QUESTION);
+                            } else {
+                                mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION);
+                            }
                         }
                     }
                 }

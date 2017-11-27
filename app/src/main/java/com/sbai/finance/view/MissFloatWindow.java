@@ -14,10 +14,20 @@ import android.widget.LinearLayout;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.utils.MissAudioManager;
 
 public class MissFloatWindow extends LinearLayout {
     private HasLabelImageLayout mMissAvatar;
     private ImageView mAudioAnim;
+    private OnMissFloatWindowClickListener mOnMissFloatWindowClickListener;
+
+    public interface OnMissFloatWindowClickListener {
+        void onClick();
+    }
+
+    public void setOnMissFloatWindowClickListener(OnMissFloatWindowClickListener onMissFloatWindowClickListener) {
+        this.mOnMissFloatWindowClickListener = onMissFloatWindowClickListener;
+    }
 
     public MissFloatWindow(Context context) {
         super(context);
@@ -57,7 +67,18 @@ public class MissFloatWindow extends LinearLayout {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 2017/11/25 处理跳转
+                MissAudioManager missAudioManager = MissAudioManager.get();
+                MissAudioManager.IAudio audio = missAudioManager.getAudio();
+                if (audio != null) {
+                    if (audio instanceof Question) {
+
+                    }
+
+                    if (mOnMissFloatWindowClickListener != null) {
+                        mOnMissFloatWindowClickListener.onClick();
+                    }
+                }
+
             }
         });
     }

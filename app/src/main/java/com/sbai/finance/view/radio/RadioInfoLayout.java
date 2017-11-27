@@ -16,6 +16,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.RadioStationListActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.model.radio.RadioDetails;
 import com.sbai.finance.net.Callback;
@@ -104,7 +105,7 @@ public class RadioInfoLayout extends LinearLayout {
 
     public void setRadioDetails(RadioDetails radioDetails) {
         mRadioDetails = radioDetails;
-        mRadioOwnerAvatar.setCircleUrl(radioDetails.getUserPortrait());
+        mRadioOwnerAvatar.setAvatar(radioDetails.getUserPortrait(), Question.USER_IDENTITY_HOST);
         mRadioOwnerName.setText(radioDetails.getRadioHostName());
         mRadioName.setText(radioDetails.getRadioName());
         GlideApp.with(getContext())
