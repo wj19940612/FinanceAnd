@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.PlusMinusEditText;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 
 import java.math.BigDecimal;
@@ -123,6 +125,8 @@ public class StockTradeOperateActivity extends BaseActivity {
     TextView mLastAndCostPrice;
     @BindView(R.id.listView)
     ListView mListView;
+    @BindView(R.id.stockPrompt)
+    ImageView mStockPrompt;
 
     private TextView mBuyInTab;
     private TextView mSellOutTab;
@@ -214,7 +218,7 @@ public class StockTradeOperateActivity extends BaseActivity {
         if (stockUser != null) {
             mStockUser = stockUser;
             updateTradeVolumeView();
-            
+
         } else {
             requestMockStockUser();
         }
@@ -486,7 +490,7 @@ public class StockTradeOperateActivity extends BaseActivity {
 
     @OnClick({R.id.ask5, R.id.ask4, R.id.ask3, R.id.ask2, R.id.ask1,
             R.id.bid1, R.id.bid2, R.id.bid3, R.id.bid4, R.id.bid5,
-            R.id.fullPosition, R.id.halfPosition, R.id.quarterPosition})
+            R.id.fullPosition, R.id.halfPosition, R.id.quarterPosition, R.id.stockPrompt})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ask5:
@@ -534,7 +538,20 @@ public class StockTradeOperateActivity extends BaseActivity {
                 mQuarterPosition.setSelected(true);
                 onPositionSelectorsSelected();
                 break;
+            case R.id.stockPrompt:
+                showTipDialog();
+                break;
         }
+    }
+
+    private void showTipDialog() {
+        SmartDialog.single(getActivity())
+                .setTitle(R.string.tips)
+                .setMessage(getString(R.string.cost_price_describe))
+                .setNegative(R.string.know)
+                .setPositiveVisable(View.GONE)
+                .show();
+
     }
 
     private void onPositionSelectorsSelected() {
