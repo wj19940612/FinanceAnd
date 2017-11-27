@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.RadioInfo;
@@ -48,7 +49,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017\11\21 0021.
  */
 
-public class RadioStationListActivity extends BaseActivity implements AdapterView.OnItemClickListener,MissAudioManager.OnAudioListener{
+public class RadioStationListActivity extends BaseActivity implements AdapterView.OnItemClickListener, MissAudioManager.OnAudioListener {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -164,7 +165,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
         mListView.addHeaderView(header);
     }
 
-    private void initFloatWindow(){
+    private void initFloatWindow() {
         if (MissAudioManager.get().getAudio() instanceof Question) {
             final Question playingQuestion = (Question) MissAudioManager.get().getAudio();
             if (MissAudioManager.get().isStarted(playingQuestion)) {
@@ -228,9 +229,8 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position != 0) {
-            //TODO 跳转到电台具体的播放界面
             Radio radioInfo = (Radio) parent.getItemAtPosition(position);
-            int radioId = radioInfo.getId();
+            Launcher.with(this, RadioStationPlayActivityActivity.class).putExtra(ExtraKeys.RADIO, radioInfo).execute();
         }
     }
 

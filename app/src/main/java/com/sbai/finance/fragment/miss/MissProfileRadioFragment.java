@@ -27,9 +27,12 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
+import com.sbai.finance.activity.miss.RadioStationListActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
@@ -184,7 +187,7 @@ public class MissProfileRadioFragment extends BaseFragment {
         mRadioAdapter.setCallback(new RadioAdapter.CallBack() {
             @Override
             public void onItemClick(RadioInfo radioInfo) {
-                //TODO 点击跳转电台节目详情
+                Launcher.with(getActivity(), RadioStationListActivity.class).putExtra(Launcher.EX_PAYLOAD, radioInfo.getId()).execute();
             }
         });
 
