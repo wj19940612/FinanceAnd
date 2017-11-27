@@ -36,6 +36,7 @@ import com.sbai.finance.model.stocktrade.PositionRecords;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.AnimUtils;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.EmptyRecyclerView;
@@ -414,14 +415,14 @@ public class StockPositionFragment extends BaseFragment {
                     public void onClick(View view) {
                         mRefreshData = false;
                         if (mOperateArea.getVisibility() == View.VISIBLE) {
-                            mOperateArea.setVisibility(View.GONE);
+                            mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 200));
                             mIndex = -1;
                         } else {
                             if (itemClickListener != null && mIndex > -1) {
                                 itemClickListener.hideOperateView(mIndex);
                             }
                             mIndex = position;
-                            mOperateArea.setVisibility(View.VISIBLE);
+                            mOperateArea.startAnimation(AnimUtils.createExpendY(mOperateArea, 200));
                         }
                     }
                 });

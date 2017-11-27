@@ -29,6 +29,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.AnimUtils;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.StockCodeUtil;
@@ -366,14 +367,14 @@ public class StockEntrustFragment extends BaseFragment {
                         if (mShowOperateView && entrust.getMoiety() == Entrust.ENTRUST_STATUS_ALL_BUSINESS)
                             return;
                         if (mOperateArea.getVisibility() == View.VISIBLE) {
-                            mOperateArea.setVisibility(View.GONE);
+                            mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 200));
                             index = -1;
                         } else {
                             if (itemClickListener != null && index > -1) {
                                 itemClickListener.hideOperateView(index);
                             }
                             index = position;
-                            mOperateArea.setVisibility(View.VISIBLE);
+                            mOperateArea.startAnimation(AnimUtils.createExpendY(mOperateArea, 200));
                         }
                     }
                 });
