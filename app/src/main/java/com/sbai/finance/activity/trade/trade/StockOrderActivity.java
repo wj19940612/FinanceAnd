@@ -265,8 +265,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
             }
         }
         if (mCurrentStockUser == null) {
-            setCurrentStockUser(data.get(0));
-            requestSwitchAccount(mCurrentStockUser);
+            requestSwitchAccount(data.get(0));
         } else {
             setCurrentStockUser(mCurrentStockUser);
         }

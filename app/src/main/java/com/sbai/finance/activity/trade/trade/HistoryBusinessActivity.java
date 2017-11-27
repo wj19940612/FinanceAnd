@@ -1,9 +1,11 @@
 package com.sbai.finance.activity.trade.trade;
 
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,12 +21,14 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Entrust;
 import com.sbai.finance.model.stocktrade.Position;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.picker.DatePickerPopWin;
 
 import java.util.List;
@@ -66,7 +70,11 @@ public class HistoryBusinessActivity extends BaseActivity {
         @Override
         protected void onNetworkChanged(int availableNetworkType) {
             if (availableNetworkType > Network.NET_NONE) {
-                refreshData();
+                if (mStockUser == null) {
+                    requestStockAccount();
+                } else {
+                    refreshData();
+                }
             }
         }
     };
@@ -137,6 +145,55 @@ public class HistoryBusinessActivity extends BaseActivity {
                 handleRecycleScroll();
             }
         });
+    }
+
+    private void requestSwitchAccount(final StockUser stockUser) {
+        Client.requestSwitchAccount(stockUser.getId(), stockUser.getAccount())
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        setCurrentStockUser(stockUser);
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        super.onRespFailure(failedResp);
+                        ToastUtil.show(failedResp.getMsg());
+                    }
+                }).fireFree();
+    }
+
+    private void requestStockAccount() {
+        Client.getStockAccount().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<StockUser>>, List<StockUser>>() {
+                    @Override
+                    protected void onRespSuccessData(List<StockUser> data) {
+                        if (!data.isEmpty()) {
+                            updateStockAccount(data);
+                        }
+                    }
+                }).fireFree();
+    }
+
+    private void updateStockAccount(List<StockUser> data) {
+        for (StockUser stockUser : data) {
+            if (stockUser.getActive() == StockUser.ACCOUNT_ACTIVE) {
+                mStockUser = stockUser;
+                break;
+            }
+        }
+        if (mStockUser == null) {
+            requestSwitchAccount(data.get(0));
+        } else {
+            setCurrentStockUser(mStockUser);
+        }
+
+    }
+
+    private void setCurrentStockUser(StockUser stockUser) {
+        mStockUser = stockUser;
+        LocalUser.getUser().setStockUser(stockUser);
+        refreshData();
     }
 
     private void requestBusiness(final boolean isRefresh) {
