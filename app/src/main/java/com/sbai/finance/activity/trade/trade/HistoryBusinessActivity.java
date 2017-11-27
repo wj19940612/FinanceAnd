@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.trade.trade;
 
+import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +24,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.view.picker.DatePickerPopWin;
 
 import java.util.List;
@@ -30,6 +32,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
+import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 /**
  * 历史成交
@@ -57,6 +62,14 @@ public class HistoryBusinessActivity extends BaseActivity {
     private boolean mLoadMore = true;
     private StockEntrustFragment.EntrustAdapter mBusinessAdapter;
     private StockUser mStockUser;
+    private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                refreshData();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +81,18 @@ public class HistoryBusinessActivity extends BaseActivity {
         initRecyclerView();
         mStockUser = LocalUser.getUser().getStockUser();
         requestBusiness(true);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 
     private void initView() {

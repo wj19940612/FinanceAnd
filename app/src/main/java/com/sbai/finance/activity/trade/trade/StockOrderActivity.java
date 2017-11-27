@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.trade.trade;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.FundAndHoldingInfoView;
 import com.sbai.finance.view.SmartDialog;
@@ -55,6 +57,8 @@ import butterknife.ButterKnife;
 import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE;
 import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_BUY;
 import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_SELL;
+import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
+import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 /**
  * 股票订单页
@@ -81,6 +85,14 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     private PositionRecords mPositionRecords;
     private StockUser mCurrentStockUser;
     private List<StockUser> mStockUsers;
+    private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                requestStockAccount();
+            }
+        }
+    };
     AppBarLayout.OnOffsetChangedListener mOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
         @Override
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -184,6 +196,18 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
                 showFetchFundDescribeDialog();
             }
         });
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 
     private void requestStockAccount() {
