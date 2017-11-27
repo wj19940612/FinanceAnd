@@ -234,7 +234,11 @@ public class HomePageFragment extends BaseFragment {
 
             @Override
             public void onStockSimulate() {
-                Launcher.with(getActivity(), StockOrderActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), StockOrderActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
         mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener()

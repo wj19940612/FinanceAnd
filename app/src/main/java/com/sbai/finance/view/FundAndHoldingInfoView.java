@@ -41,6 +41,7 @@ public class FundAndHoldingInfoView extends LinearLayout {
     TextView mFetchFundDescribe;
 
     private OnOrderClickListener mOnOrderClickListener;
+    private Context mContext;
 
     public interface OnOrderClickListener {
 
@@ -67,6 +68,7 @@ public class FundAndHoldingInfoView extends LinearLayout {
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.layout_fund_holding_info, this, true);
         ButterKnife.bind(this);
+        mContext = context;
     }
 
     public void setOnOrderClickListener(OnOrderClickListener onOrderClickListener) {
@@ -97,7 +99,7 @@ public class FundAndHoldingInfoView extends LinearLayout {
             mTodayProfit.setText("+" + FinanceUtil.formatWithScale(todayProfit));
             mTodayProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
         } else {
-            mTodayProfit.setText("+" + FinanceUtil.formatWithScale(todayProfit));
+            mTodayProfit.setText(FinanceUtil.formatWithScale(todayProfit));
             mTodayProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.greenAssist));
         }
     }
@@ -113,6 +115,24 @@ public class FundAndHoldingInfoView extends LinearLayout {
             mHoldingFloat.setText(FinanceUtil.formatWithScale(floatProfit));
             mHoldingFloat.setTextColor(ContextCompat.getColor(getContext(), R.color.greenAssist));
         }
+    }
+
+    public void resetView() {
+        String str = mContext.getString(R.string.no_this_data);
+        int whiteColor = ContextCompat.getColor(mContext, android.R.color.white);
+        int eightyWhite = ContextCompat.getColor(mContext, R.color.eighty_white);
+        mTodayProfit.setText(str);
+        mTodayProfit.setTextColor(whiteColor);
+        mTotalFund.setText(str);
+        mTotalFund.setTextColor(eightyWhite);
+        mTotalMarket.setText(str);
+        mTotalMarket.setTextColor(eightyWhite);
+        mHoldingFloat.setText(str);
+        mHoldingFloat.setTextColor(whiteColor);
+        mEnableFund.setText(str);
+        mEnableFund.setTextColor(eightyWhite);
+        mFetchFund.setText(str);
+        mFetchFund.setTextColor(eightyWhite);
     }
 
     @OnClick({R.id.buy, R.id.sell, R.id.fetchFundDescribe})

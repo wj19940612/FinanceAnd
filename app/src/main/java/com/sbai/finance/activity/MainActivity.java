@@ -60,8 +60,7 @@ public class MainActivity extends BaseActivity implements OnNoReadNewsListener {
     private StartDialogFragment mStartDialogFragment;
 
     @Override
-    protected void
-    onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: ");
         setContentView(R.layout.activity_main);

@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.trade.trade;
 
+import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,16 +15,21 @@ import com.sbai.finance.fragment.trade.stock.StockEntrustFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Entrust;
-import com.sbai.finance.model.stocktrade.Position;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Network;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.EmptyRecyclerView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
+import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 /**
  * 当日成交
@@ -42,6 +48,18 @@ public class TodayBusinessActivity extends BaseActivity {
     private boolean mLoadMore = true;
     private StockEntrustFragment.EntrustAdapter mBusinessAdapter;
     private StockUser mStockUser;
+    private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                if (mStockUser == null) {
+                    requestStockAccount();
+                } else {
+                    refreshData();
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +70,18 @@ public class TodayBusinessActivity extends BaseActivity {
         initRecyclerView();
         mStockUser = LocalUser.getUser().getStockUser();
         requestBusiness(true);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 
     private void initSwipeRefreshView() {
@@ -80,6 +110,55 @@ public class TodayBusinessActivity extends BaseActivity {
                 handleRecycleScroll();
             }
         });
+    }
+
+    private void requestSwitchAccount(final StockUser stockUser) {
+        Client.requestSwitchAccount(stockUser.getId(), stockUser.getAccount())
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        setCurrentStockUser(stockUser);
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        super.onRespFailure(failedResp);
+                        ToastUtil.show(failedResp.getMsg());
+                    }
+                }).fireFree();
+    }
+
+    private void requestStockAccount() {
+        Client.getStockAccount(null, null).setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<StockUser>>, List<StockUser>>() {
+                    @Override
+                    protected void onRespSuccessData(List<StockUser> data) {
+                        if (!data.isEmpty()) {
+                            updateStockAccount(data);
+                        }
+                    }
+                }).fireFree();
+    }
+
+    private void updateStockAccount(List<StockUser> data) {
+        for (StockUser stockUser : data) {
+            if (stockUser.getActive() == StockUser.ACCOUNT_ACTIVE) {
+                mStockUser = stockUser;
+                break;
+            }
+        }
+        if (mStockUser == null) {
+            requestSwitchAccount(data.get(0));
+        } else {
+            setCurrentStockUser(mStockUser);
+        }
+
+    }
+
+    private void setCurrentStockUser(StockUser stockUser) {
+        mStockUser = stockUser;
+        LocalUser.getUser().setStockUser(stockUser);
+        refreshData();
     }
 
     private void requestBusiness(final boolean isRefresh) {

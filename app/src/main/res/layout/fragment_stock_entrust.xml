@@ -18,17 +18,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <TextView
+        <android.support.v4.widget.NestedScrollView
             android:id="@+id/empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/white"
-            android:drawablePadding="10dp"
-            android:drawableTop="@drawable/img_no_message"
-            android:gravity="center_horizontal"
-            android:paddingTop="50dp"
-            android:text="@string/now_not_has_data"
-            android:visibility="gone"/>
+            android:scrollbars="none"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/white"
+                android:drawablePadding="10dp"
+                android:drawableTop="@drawable/img_no_message"
+                android:gravity="center_horizontal"
+                android:paddingTop="50dp"
+                android:text="@string/now_not_has_data"/>
+
+        </android.support.v4.widget.NestedScrollView>
+
     </LinearLayout>
 </LinearLayout>

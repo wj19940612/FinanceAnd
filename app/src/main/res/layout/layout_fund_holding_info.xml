@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -60,7 +61,8 @@
             android:maxLines="1"
             android:text="- -"
             android:textColor="@android:color/white"
-            android:textSize="24sp"/>
+            android:textSize="24sp"
+            app:autoSizeMaxTextSize="24sp"/>
 
         <com.sbai.finance.view.autofit.AutofitTextView
             android:id="@+id/totalFund"
@@ -72,6 +74,7 @@
             android:text="- -"
             android:textColor="@color/eighty_white"
             android:textSize="15sp"
+            app:autoSizeMaxTextSize="15sp"
             tool:text="4929894.00"/>
 
         <com.sbai.finance.view.autofit.AutofitTextView
@@ -82,7 +85,8 @@
             android:maxLines="1"
             android:text="- -"
             android:textColor="@color/eighty_white"
-            android:textSize="15sp"/>
+            android:textSize="15sp"
+            app:autoSizeMaxTextSize="15sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -145,7 +149,8 @@
             android:maxLines="1"
             android:text="- -"
             android:textColor="@android:color/white"
-            android:textSize="24sp"/>
+            android:textSize="24sp"
+            app:autoSizeMaxTextSize="24sp"/>
 
         <com.sbai.finance.view.autofit.AutofitTextView
             android:id="@+id/enableFund"
@@ -157,6 +162,7 @@
             android:text="- -"
             android:textColor="@color/eighty_white"
             android:textSize="15sp"
+            app:autoSizeMaxTextSize="15sp"
             tool:text="4929894.00"/>
 
         <com.sbai.finance.view.autofit.AutofitTextView
@@ -167,7 +173,8 @@
             android:maxLines="1"
             android:text="- -"
             android:textColor="@color/eighty_white"
-            android:textSize="15sp"/>
+            android:textSize="15sp"
+            app:autoSizeMaxTextSize="15sp"/>
     </LinearLayout>
 
     <LinearLayout

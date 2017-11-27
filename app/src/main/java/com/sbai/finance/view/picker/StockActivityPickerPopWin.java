@@ -222,31 +222,32 @@ public class StockActivityPickerPopWin extends PopupWindow implements OnClickLis
      */
     public void dismissPopWin() {
 
-        TranslateAnimation trans = new TranslateAnimation(
-                Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0,
-                Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
-
-        trans.setDuration(400);
-        trans.setInterpolator(new AccelerateInterpolator());
-        trans.setAnimationListener(new AnimationListener() {
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-                dismiss();
-            }
-        });
-
-        pickerContainerV.startAnimation(trans);
+//        TranslateAnimation trans = new TranslateAnimation(
+//                Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0,
+//                Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
+//
+//        trans.setDuration(400);
+//        trans.setInterpolator(new AccelerateInterpolator());
+//        trans.setAnimationListener(new AnimationListener() {
+//
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//
+//                dismiss();
+//            }
+//        });
+//
+//        pickerContainerV.startAnimation(trans);
+        dismiss();
     }
 
     @Override
@@ -255,10 +256,10 @@ public class StockActivityPickerPopWin extends PopupWindow implements OnClickLis
         if (v == contentView || v == cancelBtn) {
             dismissPopWin();
         } else if (v == confirmBtn) {
+            dismissPopWin();
             if (null != mListener) {
                 mListener.onPickCompleted(loopPos);
             }
-            dismissPopWin();
         }
     }
 

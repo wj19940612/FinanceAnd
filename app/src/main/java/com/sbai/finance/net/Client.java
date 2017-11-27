@@ -3079,7 +3079,7 @@ public class Client {
      */
     public static API markStockOrder(int type, String account, String activityCode, String varietyType,
                                      String varietyName, int buyVolume, double buyPrice, String uuid) {
-        return new API("", new ApiParams()
+        return new API(POST, "", new ApiParams()
         .put("positionType", type).
                         put("userAccount", account)
         .put("activityCode", activityCode)

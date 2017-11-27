@@ -10,27 +10,26 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.ImageFloder;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Entrust;
-import com.sbai.finance.model.stocktrade.Position;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.AnimUtils;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.StockCodeUtil;
@@ -55,7 +54,7 @@ public class StockEntrustFragment extends BaseFragment {
     @BindView(R.id.recyclerView)
     EmptyRecyclerView mRecyclerView;
     @BindView(R.id.empty)
-    TextView mEmpty;
+    NestedScrollView mEmpty;
     Unbinder unbinder;
     private EntrustAdapter mEntrustAdapter;
     private int mPage;
@@ -125,9 +124,12 @@ public class StockEntrustFragment extends BaseFragment {
     private void refreshData() {
         mPage = 0;
         mLoadMore = true;
-        if (isVisible()) {
-            requestEntrust(true);
-        }
+        requestEntrust(true);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     private void requestEntrust(final boolean isRefresh) {
@@ -149,6 +151,7 @@ public class StockEntrustFragment extends BaseFragment {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         refreshData();
+
                     }
 
                     @Override
@@ -230,6 +233,7 @@ public class StockEntrustFragment extends BaseFragment {
         private int index = -1;
         private ItemClickListener mItemClickListener;
         private boolean mShowOperateView = true;
+        private boolean mRefreshData;
 
         interface ItemClickListener {
 
@@ -257,6 +261,7 @@ public class StockEntrustFragment extends BaseFragment {
 
         public void clear() {
             mPositionList.clear();
+            mRefreshData = true;
             notifyDataSetChanged();
         }
 
@@ -336,13 +341,13 @@ public class StockEntrustFragment extends BaseFragment {
                 mStockName.setText(entrust.getVarietyName());
                 mStockCode.setText(entrust.getVarietyCode() + "." + StockCodeUtil.getExchangeType(entrust.getVarietyCode()));
                 if (mShowOperateView) {
-                    mEntrustAmount.setText(String.valueOf(entrust.getQuantity()));
+                    mEntrustAmount.setText(FinanceUtil.formatWithThousandsSeparator(entrust.getQuantity(), 0));
                     mEntrustPrice.setText(FinanceUtil.formatWithScale(entrust.getPrice(), 3));
                 } else {
                     mEntrustAmount.setText(FinanceUtil.formatWithThousandsSeparator(entrust.getSuccQuantity(), 0));
                     mEntrustPrice.setText(FinanceUtil.formatWithScale(entrust.getBargainPrice(), 3));
                 }
-                mBusinessFund.setText(FinanceUtil.formatWithScale(entrust.getTotalBargain()));
+                mBusinessFund.setText(FinanceUtil.formatWithThousandsSeparator(entrust.getTotalBargain(), 2));
                 if (mShowOperateView) {
                     mBusinessDate.setText(DateUtil.format(entrust.getOrderTime(), "MM/dd"));
                     mBusinessTime.setText(DateUtil.format(entrust.getOrderTime(), "HH:mm"));
@@ -351,24 +356,25 @@ public class StockEntrustFragment extends BaseFragment {
                     mBusinessTime.setText(DateUtil.format(entrust.getBargainTime(), "HH:mm"));
                 }
                 mOperateArea.setVisibility(View.GONE);
-                if (position == index) {
+                if (position == index && !mRefreshData) {
                     mOperateArea.setVisibility(View.VISIBLE);
                 }
                 mPositionArea.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        mRefreshData = false;
                         if (!mShowOperateView) return;
                         if (mShowOperateView && entrust.getMoiety() == Entrust.ENTRUST_STATUS_ALL_BUSINESS)
                             return;
                         if (mOperateArea.getVisibility() == View.VISIBLE) {
-                            mOperateArea.setVisibility(View.GONE);
+                            mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 200));
                             index = -1;
                         } else {
                             if (itemClickListener != null && index > -1) {
                                 itemClickListener.hideOperateView(index);
                             }
                             index = position;
-                            mOperateArea.setVisibility(View.VISIBLE);
+                            mOperateArea.startAnimation(AnimUtils.createExpendY(mOperateArea, 200));
                         }
                     }
                 });

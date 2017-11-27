@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.trade.trade;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,9 +17,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.stock.StockTradeOperateActivity;
 import com.sbai.finance.fragment.battle.BattleListFragment;
 import com.sbai.finance.fragment.trade.stock.StockBusinessFragment;
 import com.sbai.finance.fragment.trade.stock.StockEntrustFragment;
@@ -36,6 +39,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.FundAndHoldingInfoView;
 import com.sbai.finance.view.SmartDialog;
@@ -49,6 +53,12 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE;
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_BUY;
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_SELL;
+import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
+import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 /**
  * 股票订单页
@@ -75,6 +85,14 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     private PositionRecords mPositionRecords;
     private StockUser mCurrentStockUser;
     private List<StockUser> mStockUsers;
+    private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                requestStockAccount();
+            }
+        }
+    };
     AppBarLayout.OnOffsetChangedListener mOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
         @Override
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -93,17 +111,12 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         ButterKnife.bind(this);
         translucentStatusBar();
         mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
-        initData(getIntent());
         initTitleBar();
         initFundInfoView();
         initViewPager();
         initSwipeView();
         initTabView();
         requestStockAccount();
-    }
-
-    private void initData(Intent intent) {
-//        mStockUserType = intent.getIntExtra(ExtraKeys.STOCK_USER, StockUser.ACCOUNT_TYPE_ACTI);
     }
 
     private void initViewPager() {
@@ -166,12 +179,16 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         mFundInfo.setOnOrderClickListener(new FundAndHoldingInfoView.OnOrderClickListener() {
             @Override
             public void buy() {
-                // TODO: 2017-11-21
+                Launcher.with(getActivity(), StockTradeOperateActivity.class)
+                        .putExtra(TRADE_TYPE, TRADE_TYPE_BUY)
+                        .execute();
             }
 
             @Override
             public void sell() {
-                // TODO: 2017-11-21
+                Launcher.with(getActivity(), StockTradeOperateActivity.class)
+                        .putExtra(TRADE_TYPE, TRADE_TYPE_SELL)
+                        .execute();
             }
 
             @Override
@@ -179,6 +196,18 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
                 showFetchFundDescribeDialog();
             }
         });
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 
     private void requestStockAccount() {
@@ -202,7 +231,11 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     private void setCurrentStockUser(StockUser stockUser) {
         if (stockUser != null) {
             mStockGame.setText(stockUser.getAccountName());
+            if (mCurrentStockUser != null && !mCurrentStockUser.getAccount().equalsIgnoreCase(stockUser.getAccount())) {
+                mFundInfo.resetView();
+            }
         }
+        mCurrentStockUser = stockUser;
         LocalUser.getUser().setStockUser(stockUser);
         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_SWITCH_ACCOUNT));
     }
@@ -232,25 +265,31 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
             }
         }
         if (mCurrentStockUser == null) {
-            mCurrentStockUser = data.get(0);
-            requestSwitchAccount(mCurrentStockUser);
+            requestSwitchAccount(data.get(0));
+        } else {
+            setCurrentStockUser(mCurrentStockUser);
         }
-        setCurrentStockUser(mCurrentStockUser);
 
     }
 
     public void updateAssetAndPosition(List<StockData> result, Map<String, Position> positionMap) {
         double totalMarket = 0.00;
         double floatProfit = 0.00;
+        double todayProfit = 0.00;
         for (StockData data : result) {
             Position position = positionMap.get(data.getInstrumentId());
             if (position != null) {
-                totalMarket += position.getTotalQty() * Double.valueOf(data.getFormattedLastPrice());
-                floatProfit += position.getTotalQty() * (Double.valueOf(data.getFormattedLastPrice()) - position.getAvgBuyPrice());
+                double lastPrice = Double.valueOf(data.getLastPrice());
+                int todayBusinessAmount = position.getTotalQty() - position.getUsableQty();
+                totalMarket += position.getTotalQty() * lastPrice;
+                floatProfit += position.getTotalQty() * (lastPrice - position.getAvgBuyPrice());
+                todayProfit += (lastPrice - Double.valueOf(data.getPreClsPrice())) * (position.getTodayBargainCount() - todayBusinessAmount + position.getUsableQty())
+                        + (lastPrice - position.getTodayAvgPrice()) * todayBusinessAmount;
             }
         }
         mFundInfo.setTotalMarket(totalMarket);
         mFundInfo.setHoldingFloat(floatProfit);
+        mFundInfo.setTodayProfit(todayProfit);
         if (mPositionRecords != null) {
             mFundInfo.setTotalFund(mPositionRecords.getUsableMoney() + totalMarket);
         }
