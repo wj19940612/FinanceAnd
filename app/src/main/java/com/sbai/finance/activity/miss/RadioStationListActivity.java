@@ -2,15 +2,12 @@ package com.sbai.finance.activity.miss;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +23,6 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
-import com.sbai.finance.model.miss.AudioInfo;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.RadioInfo;
 import com.sbai.finance.model.radio.Radio;
@@ -233,7 +229,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position != 0) {
             //TODO 跳转到电台具体的播放界面
-            RadioInfo radioInfo = (RadioInfo) parent.getItemAtPosition(position);
+            Radio radioInfo = (Radio) parent.getItemAtPosition(position);
             int radioId = radioInfo.getId();
         }
     }
@@ -284,11 +280,11 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     }
 
     private void requestRadioProgram() {
-        Client.requestRadioDetailAudio(mRadioStationId).setTag(TAG).setCallback(new Callback2D<Resp<List<AudioInfo>>, List<AudioInfo>>() {
+        Client.requestRadioDetailAudio(mRadioStationId).setTag(TAG).setCallback(new Callback2D<Resp<List<Radio>>, List<Radio>>() {
 
 
             @Override
-            protected void onRespSuccessData(List<AudioInfo> data) {
+            protected void onRespSuccessData(List<Radio> data) {
                 if (data != null) {
                     updateAudio(data);
                 }
@@ -296,11 +292,11 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
         }).fireFree();
     }
 
-    private void updateAudio(List<AudioInfo> data) {
+    private void updateAudio(List<Radio> data) {
         if (mRadioStationAdapter != null) {
             mRadioStationAdapter.clear();
         }
-        for (AudioInfo audioInfo : data) {
+        for (Radio audioInfo : data) {
             mRadioStationAdapter.add(audioInfo);
         }
     }
@@ -347,7 +343,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
 
     }
 
-    static class RadioStationAdapter extends ArrayAdapter<AudioInfo> {
+    static class RadioStationAdapter extends ArrayAdapter<Radio> {
         private Context mContext;
 
         private RadioStationAdapter(@NonNull Context context) {
@@ -388,7 +384,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(Context context, AudioInfo item, int position, int count) {
+            private void bindingData(Context context, Radio item, int position, int count) {
                 GlideApp.with(context).load(item.getAudioCover())
                         .placeholder(R.drawable.ic_default_image)
                         .centerCrop()
