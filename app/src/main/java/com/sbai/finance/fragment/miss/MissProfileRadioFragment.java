@@ -27,17 +27,22 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.RadioStationListActivity;
-import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.fragment.MediaPlayFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
+import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.RadioInfo;
+import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.ImageTextUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissAudioManager;
+import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.ApiError;
 
@@ -55,7 +60,7 @@ import static com.sbai.finance.activity.miss.MissProfileDetailActivity.CUSTOM_ID
  * Created by Administrator on 2017\11\23 0023.
  */
 
-public class MissProfileRadioFragment extends BaseFragment {
+public class MissProfileRadioFragment extends MediaPlayFragment {
 
     Unbinder mBind;
     @BindView(R.id.recyclerView)
@@ -64,6 +69,8 @@ public class MissProfileRadioFragment extends BaseFragment {
     AppCompatTextView mEmpty;
     @BindView(R.id.createRadio)
     Button mCreateRadio;
+
+    MissFloatWindow mMissFloatWindow;
 
     private int mCustomId;
     private List<RadioInfo> mRadioInfos;
@@ -80,7 +87,7 @@ public class MissProfileRadioFragment extends BaseFragment {
         return missProfileRadioFragment;
     }
 
-    public void setMiss(Miss miss){
+    public void setMiss(Miss miss) {
         if (miss != null) {
             if (LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getCustomId() == miss.getId()) {
                 //是自己的个人主页，显示创建电台按钮
@@ -96,6 +103,7 @@ public class MissProfileRadioFragment extends BaseFragment {
         super.onAttach(context);
         if (context instanceof MissProfileDetailActivity) {
             mOnFragmentRecycleViewScrollListener = (MissProfileQuestionFragment.OnFragmentRecycleViewScrollListener) context;
+            mMissFloatWindow =  ((MissProfileDetailActivity) context).getFloatWindow();
         }
     }
 
@@ -125,6 +133,7 @@ public class MissProfileRadioFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         refresh();
+        updateFloatState();
     }
 
     public void refresh() {
@@ -189,10 +198,61 @@ public class MissProfileRadioFragment extends BaseFragment {
 
     }
 
+    private void updateFloatState(){
+        if (MissAudioManager.get().isPlaying()) {
+            MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+            if (audio != null) {
+                if (audio instanceof Radio) {
+                    mMissFloatWindow.startAnim();
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                    mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+                } else if (audio instanceof Question) {
+                    if (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_MISS_PROFILE) {
+                        mMissFloatWindow.startAnim();
+                        mMissFloatWindow.setVisibility(View.VISIBLE);
+                        mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
+                    }
+                }
+            }
+
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mBind.unbind();
+    }
+
+    @Override
+    public void onMediaPlayStart(int IAudioId, int source) {
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (audio instanceof Question) {
+            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
+        }
+    }
+
+    @Override
+    public void onMediaPlay(int IAudioId, int source) {
+        mMissFloatWindow.startAnim();
+    }
+
+    @Override
+    public void onMediaPlayResume(int IAudioId, int source) {
+        mMissFloatWindow.setVisibility(View.VISIBLE);
+        mMissFloatWindow.startAnim();
+    }
+
+    @Override
+    public void onMediaPlayPause(int IAudioId, int source) {
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onMediaPlayStop(int IAudioId, int source) {
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.createRadio)
@@ -252,7 +312,7 @@ public class MissProfileRadioFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ((ViewHolder) holder).bindingData(mContext, mRadioInfos.get(position), mCallback,position,getCount());
+            ((ViewHolder) holder).bindingData(mContext, mRadioInfos.get(position), mCallback, position, getCount());
         }
 
         @Override
@@ -282,9 +342,9 @@ public class MissProfileRadioFragment extends BaseFragment {
             }
 
             public void bindingData(Context context, final RadioInfo radioInfo, final CallBack callback, int position, int count) {
-                if(position == count -1 ){
+                if (position == count - 1) {
                     RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mContent.getLayoutParams();
-                    layoutParams.setMargins((int)Display.dp2Px(14,context.getResources()),(int)Display.dp2Px(14,context.getResources()),(int)Display.dp2Px(14,context.getResources()),(int)Display.dp2Px(64,context.getResources()));
+                    layoutParams.setMargins((int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(64, context.getResources()));
                 }
                 GlideApp.with(context).load(radioInfo.getRadioCover())
                         .placeholder(R.drawable.ic_default_image)

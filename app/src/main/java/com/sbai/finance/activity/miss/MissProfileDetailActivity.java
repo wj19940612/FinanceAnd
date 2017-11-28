@@ -21,7 +21,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,12 +32,9 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
-import com.sbai.finance.fragment.MineFragment;
-import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.miss.MissProfileQuestionFragment;
 import com.sbai.finance.fragment.miss.MissProfileRadioFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.model.miss.Attention;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.Question;
@@ -48,12 +44,11 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
-import com.sbai.finance.view.slidingTab.SlidingTabTitle;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.ApiError;
 
@@ -100,6 +95,12 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.empty)
     LinearLayout mEmpty;
+    @BindView(R.id.back)
+    ImageView mBack;
+    @BindView(R.id.grantBack)
+    View mGrantBack;
+    @BindView(R.id.missFloatWindow)
+    MissFloatWindow mMissFloatWindow;
 
 
     private ProfileFragmentAdapter mProfileFragmentAdapter;
@@ -125,8 +126,12 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         }
     };
 
-    public MediaPlayService getMediaPlayService(){
+    public MediaPlayService getMediaPlayService() {
         return mMediaPlayService;
+    }
+
+    public MissFloatWindow getFloatWindow(){
+        return mMissFloatWindow;
     }
 
     @Override
@@ -349,6 +354,28 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
             if (mSwipeRefreshLayout.isEnabled() != b) {
                 mSwipeRefreshLayout.setEnabled(b);
             }
+
+            if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
+                if (mMiss != null)
+                    mTitleBar.setTitle(mMiss.getName());
+                mBack.setVisibility(View.GONE);
+            } else {
+                if (!TextUtils.isEmpty(mTitleBar.getTitle())) {
+                    mTitleBar.setTitle("");
+                }
+                mBack.setVisibility(View.VISIBLE);
+            }
+
+            if (verticalOffset <= -100) {
+                float alpha = ((float) Math.abs(verticalOffset)) / appBarLayout.getTotalScrollRange();
+                if (mGrantBack.getVisibility() == View.GONE)
+                    mGrantBack.setVisibility(View.VISIBLE);
+                mGrantBack.setAlpha(alpha);
+            } else {
+                if (mGrantBack.getVisibility() == View.VISIBLE)
+                    mGrantBack.setVisibility(View.GONE);
+            }
+
         }
     };
 

@@ -31,6 +31,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissAudioManager;
@@ -101,6 +102,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     protected void onResume() {
         super.onResume();
         refreshData();
+        initFloatWindow();
     }
 
     private void initData(Intent intent) {
@@ -181,24 +183,22 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     }
 
     private void initFloatWindow() {
-        if (MissAudioManager.get().getAudio() instanceof Question) {
-            final Question playingQuestion = (Question) MissAudioManager.get().getAudio();
-            if (MissAudioManager.get().isStarted(playingQuestion)) {
-                mMissFloatWindow.setVisibility(View.VISIBLE);
-                mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
-                mMissFloatWindow.startAnim();
-                mMissFloatWindow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
-
-                        Launcher.with(getActivity(), QuestionDetailActivity.class)
-                                .putExtra(ExtraKeys.IS_FROM_MISS_TALK, true)
-                                .putExtra(Launcher.EX_PAYLOAD, playingQuestion.getId())
-                                .execute();
+        if (MissAudioManager.get().isPlaying()) {
+            MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+            if (audio != null) {
+                if (audio instanceof Radio) {
+                    mMissFloatWindow.startAnim();
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                    mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+                } else if (audio instanceof Question) {
+                    if (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_MISS_PROFILE) {
+                        mMissFloatWindow.startAnim();
+                        mMissFloatWindow.setVisibility(View.VISIBLE);
+                        mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
                     }
-                });
+                }
             }
+
         }
     }
 
@@ -350,6 +350,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
 
     @Override
     public void onAudioResume() {
+        mMissFloatWindow.setVisibility(View.VISIBLE);
         mMissFloatWindow.startAnim();
     }
 

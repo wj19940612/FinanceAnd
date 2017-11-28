@@ -26,15 +26,21 @@
                     android:id="@+id/collapsingToolbarLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_miss_profile"
                     app:contentScrim="@android:color/transparent"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                    <ImageView
+                        android:id="@+id/back"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/bg_miss_profile"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="210dp"
                         android:layout_marginTop="79dp"
+                        android:minHeight="210dp"
                         android:orientation="vertical"
                         android:visibility="visible"
                         app:layout_collapseMode="pin">
@@ -73,10 +79,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:paddingLeft="14dp"
-                            android:paddingRight="14dp"
                             android:layout_marginTop="8dp"
                             android:gravity="center"
+                            android:paddingLeft="14dp"
+                            android:paddingRight="14dp"
                             android:textColor="@color/white"
                             android:textSize="12sp"
                             />
@@ -107,9 +113,9 @@
                                 android:paddingLeft="7dp"
                                 android:paddingRight="13dp"
                                 android:paddingTop="4dp"
+                                android:text="@string/attention"
                                 android:textColor="@color/white"
                                 android:textSize="12sp"
-                                android:text="@string/attention"
                                 android:visibility="visible"/>
 
                             <TextView
@@ -119,9 +125,9 @@
                                 android:layout_marginLeft="9dp"
                                 android:background="@drawable/btn_radio_station_unsubscribe"
                                 android:gravity="center"
+                                android:text="@string/is_attention"
                                 android:textColor="@color/white"
                                 android:textSize="12sp"
-                                android:text="@string/is_attention"
                                 android:visibility="gone"/>
 
                         </LinearLayout>
@@ -129,12 +135,19 @@
 
                     </LinearLayout>
 
+                    <View
+                        android:id="@+id/grantBack"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorPrimary"
+                        android:visibility="gone"/>
+
                     <android.support.v7.widget.Toolbar
                         android:id="@+id/toolBar"
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
-                        app:layout_collapseMode="pin"
-                        android:layout_marginTop="25dp">
+                        android:layout_marginTop="25dp"
+                        app:layout_collapseMode="pin">
 
                         <com.sbai.finance.view.TitleBar
                             android:id="@+id/titleBar"
@@ -145,9 +158,11 @@
                             app:backIcon="@drawable/ic_tb_back_white"
                             app:leftViewLeftPadding="0dp"
                             app:rightImage="@drawable/ic_share"
-                            app:rightVisible="true"/>
+                            app:rightVisible="true"
+                            app:titleTextColor="@color/white"/>
 
                     </android.support.v7.widget.Toolbar>
+
                 </android.support.design.widget.CollapsingToolbarLayout>
 
                 <com.sbai.finance.view.slidingTab.SlidingTabLayout
@@ -169,9 +184,9 @@
                 android:id="@+id/empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:gravity="center_horizontal"
-                android:visibility="gone">
+                android:visibility="gone"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -185,6 +200,16 @@
             </LinearLayout>
 
         </android.support.design.widget.CoordinatorLayout>
+
+        <com.sbai.finance.view.MissFloatWindow
+            android:id="@+id/missFloatWindow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="54dp"
+            android:layout_marginRight="14dp"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

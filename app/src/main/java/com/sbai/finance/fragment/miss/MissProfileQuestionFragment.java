@@ -33,6 +33,7 @@ import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -71,10 +72,11 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
     Unbinder mBind;
-    @BindView(R.id.missFloatWindow)
-    MissFloatWindow mMissFloatWindow;
     @BindView(R.id.ask)
     Button mAsk;
+
+
+    MissFloatWindow mMissFloatWindow;
 
     private QuestionListAdapter mQuestionListAdapter;
     private List<Question> mQuestionList;
@@ -194,12 +196,32 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         }
     }
 
+    private void updateFloatStatus() {
+        if (MissAudioManager.get().isPlaying()) {
+            MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+            if (audio != null) {
+                if (audio instanceof Radio) {
+                    mMissFloatWindow.startAnim();
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                    mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+                } else if (audio instanceof Question) {
+                    if (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_MISS_PROFILE) {
+                        mMissFloatWindow.startAnim();
+                        mMissFloatWindow.setVisibility(View.VISIBLE);
+                        mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
+                    }
+                }
+            }
+
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof MissProfileDetailActivity) {
             mOnFragmentRecycleViewScrollListener = (OnFragmentRecycleViewScrollListener) context;
+            mMissFloatWindow =  ((MissProfileDetailActivity) context).getFloatWindow();
         }
         if (mMediaPlayService == null && context instanceof MissProfileDetailActivity) {
             mMediaPlayService = ((MissProfileDetailActivity) context).getMediaPlayService();
@@ -270,6 +292,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
 
     @Override
     protected void onMediaPlayStop(int IAudioId, int source) {
+        stopScheduleJob();
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
         mQuestionListAdapter.notifyDataSetChanged();
@@ -320,6 +343,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
             mHasEnter = true;
             refresh();
         }
+        updateFloatStatus();
     }
 
     @Override
@@ -416,20 +440,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
     }
 
     private void initFloatView() {
-        mMissFloatWindow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-                if (audio instanceof Question && MissAudioManager.get().isStarted(audio)) {
-                    Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-                    intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, false);
-                    intent.putExtra(Launcher.EX_PAYLOAD, ((Question) audio).getId());
-                    startActivityForResult(intent, REQ_QUESTION_DETAIL);
 
-                    umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
-                }
-            }
-        });
     }
 
     private void toggleQuestionVoice(Question item) {
@@ -554,6 +565,10 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
             if (MissAudioManager.get().isStarted(question)) {
                 mMissFloatWindow.setMissAvatar(question.getCustomPortrait());
                 startScheduleJob(100);
+                break;
+            }
+            if (MissAudioManager.get().isPaused(question)) {
+                mMissFloatWindow.setMissAvatar(question.getCustomPortrait());
                 break;
             }
         }

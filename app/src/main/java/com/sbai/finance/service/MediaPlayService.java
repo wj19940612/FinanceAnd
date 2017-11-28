@@ -196,27 +196,27 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
                 int source = intent.getIntExtra(ExtraKeys.MEDIA_PLAY_SOURCE, -1);
                 switch (intent.getAction()) {
                     case BROADCAST_ACTION_MEDIA_START:
-                        Log.e(TAG, "onReceive: BROADCAST_ACTION_MEDIA_START ");
+                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_START ");
                         onMediaPlayStart(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_PLAY:
-                        Log.e(TAG, "onReceive: BROADCAST_ACTION_MEDIA_PLAY ");
+                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_PLAY ");
                         onMediaPlay(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_RESUME:
-                        Log.e(TAG, "onReceive: BROADCAST_ACTION_MEDIA_RESUME ");
+                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_RESUME ");
                         onMediaPlayResume(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_PAUSE:
-                        Log.e(TAG, "onReceive: BROADCAST_ACTION_MEDIA_PAUSE ");
+                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_PAUSE ");
                         onMediaPlayPause(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_STOP:
-                        Log.e(TAG, "onReceive: BROADCAST_ACTION_MEDIA_STOP ");
+                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_STOP ");
                         onMediaPlayStop(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_ERROR:
-                        Log.e(TAG, "onReceive: BROADCAST_ACTION_MEDIA_ERROR ");
+                        Log.d(TAG, "onReceive: BROADCAST_ACTION_MEDIA_ERROR ");
                         onMediaPlayError(IAudioId, source);
                         break;
                     case BROADCAST_ACTION_MEDIA_PROGRESS:
