@@ -3080,15 +3080,15 @@ public class Client {
     public static API markStockOrder(int type, String account, String activityCode, String varietyType,
                                      String varietyName, int buyVolume, double buyPrice, String uuid) {
         return new API(POST, "", new ApiParams()
-        .put("positionType", type).
+                .put("positionType", type).
                         put("userAccount", account)
-        .put("activityCode", activityCode)
-        .put("varietyCode", varietyType)
-        .put("varietyName", varietyName)
-        .put("quantity", buyVolume)
-        .put("price", buyPrice)
-        .put("deputeType", 8)
-        .put("signId", uuid));
+                .put("activityCode", activityCode)
+                .put("varietyCode", varietyType)
+                .put("varietyName", varietyName)
+                .put("quantity", buyVolume)
+                .put("price", buyPrice)
+                .put("deputeType", 8)
+                .put("signId", uuid));
     }
 
     /**
@@ -3105,7 +3105,8 @@ public class Client {
                 .put("positionType", positionType)
                 .put("userAccount", userAccount)
                 .put("activityCode", activityCode)
-                .put("page", page));
+                .put("page", page)
+                .put("pageSize", 10000));
     }
 
     /**

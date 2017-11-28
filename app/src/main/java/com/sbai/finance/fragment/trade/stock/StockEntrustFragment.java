@@ -32,7 +32,6 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AnimUtils;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.StockCodeUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.SmartDialog;
@@ -57,8 +56,6 @@ public class StockEntrustFragment extends BaseFragment {
     NestedScrollView mEmpty;
     Unbinder unbinder;
     private EntrustAdapter mEntrustAdapter;
-    private int mPage;
-    private boolean mLoadMore;
 
     private StockUser mStockUser;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -66,7 +63,7 @@ public class StockEntrustFragment extends BaseFragment {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equalsIgnoreCase(StockOrderActivity.ACTION_SWITCH_ACCOUNT)) {
                 mStockUser = LocalUser.getUser().getStockUser();
-                refreshData();
+                requestEntrust(true);
             }
         }
     };
@@ -84,6 +81,35 @@ public class StockEntrustFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         initRecyclerView();
         initBroadcastReceiver();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requestEntrust(false);
+        startScheduleJob(5 * 1000);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            startScheduleJob(5 * 1000);
+        } else {
+            stopScheduleJob();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopScheduleJob();
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        requestEntrust(false);
     }
 
     private void initBroadcastReceiver() {
@@ -107,39 +133,16 @@ public class StockEntrustFragment extends BaseFragment {
             }
         });
         mRecyclerView.setAdapter(mEntrustAdapter);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                handleRecycleScroll();
-            }
-        });
     }
 
-    private void refreshData() {
-        mPage = 0;
-        mLoadMore = true;
-        requestEntrust(true);
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-    }
-
-    private void requestEntrust(final boolean isRefresh) {
+    private void requestEntrust(final boolean manualRefresh) {
         if (mStockUser == null) return;
-        Client.requestEntrust(mStockUser.getType(), mStockUser.getAccount(), mStockUser.getActivityCode(), mPage)
+        Client.requestEntrust(mStockUser.getType(), mStockUser.getAccount(), mStockUser.getActivityCode(), 0)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Entrust>>, List<Entrust>>() {
                     @Override
                     protected void onRespSuccessData(List<Entrust> data) {
-                        updateEntrust(data, isRefresh);
+                        updateEntrust(data, manualRefresh);
                     }
                 }).fireFree();
     }
@@ -150,36 +153,26 @@ public class StockEntrustFragment extends BaseFragment {
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        refreshData();
+                        requestEntrust(false);
 
                     }
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         ToastUtil.show(failedResp.getMsg());
-                        refreshData();
+                        requestEntrust(false);
                     }
                 }).fireFree();
     }
 
-    private void updateEntrust(List<Entrust> data, boolean isRefresh) {
+    private void updateEntrust(List<Entrust> data, boolean manualRefresh) {
+        mEntrustAdapter.setManualRefresh(manualRefresh);
         mEntrustAdapter.clear();
         mEntrustAdapter.addAll(data);
-
         if (data == null || data.isEmpty()) {
             mEmpty.setVisibility(View.VISIBLE);
         } else {
             mEmpty.setVisibility(View.GONE);
-            if (isRefresh) {
-                mEntrustAdapter.clear();
-            }
-            if (data.size() < Client.DEFAULT_PAGE_SIZE) {
-                mLoadMore = false;
-            } else {
-                mPage++;
-                mLoadMore = true;
-            }
-            mEntrustAdapter.addAll(data);
         }
     }
 
@@ -198,16 +191,6 @@ public class StockEntrustFragment extends BaseFragment {
                 }).show();
     }
 
-    private void handleRecycleScroll() {
-        if (isSlideToBottom(mRecyclerView) && mLoadMore) {
-            requestEntrust(false);
-        }
-    }
-
-    protected boolean isSlideToBottom(RecyclerView recyclerView) {
-        if (recyclerView == null) return false;
-        return recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange();
-    }
 
     @Override
     public void onDestroyView() {
@@ -228,12 +211,12 @@ public class StockEntrustFragment extends BaseFragment {
     }
 
     public static class EntrustAdapter extends RecyclerView.Adapter<EntrustAdapter.ViewHolder> {
-        private List<Entrust> mPositionList;
+        private List<Entrust> mEntrustList;
         private Context mContext;
         private int index = -1;
         private ItemClickListener mItemClickListener;
         private boolean mShowOperateView = true;
-        private boolean mRefreshData;
+        private boolean mManualRefresh;
 
         interface ItemClickListener {
 
@@ -250,19 +233,22 @@ public class StockEntrustFragment extends BaseFragment {
 
         EntrustAdapter(Context context, ItemClickListener itemClickListener) {
             mContext = context;
-            mPositionList = new ArrayList<>();
+            mEntrustList = new ArrayList<>();
             mItemClickListener = itemClickListener;
         }
 
         public void addAll(List<Entrust> entrusts) {
-            mPositionList.addAll(entrusts);
+            mEntrustList.addAll(entrusts);
             notifyDataSetChanged();
         }
 
         public void clear() {
-            mPositionList.clear();
-            mRefreshData = true;
+            mEntrustList.clear();
             notifyDataSetChanged();
+        }
+
+        public void setManualRefresh(boolean manualRefresh) {
+            this.mManualRefresh = manualRefresh;
         }
 
         @Override
@@ -273,12 +259,12 @@ public class StockEntrustFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mPositionList.get(position), mItemClickListener, mContext, position);
+            holder.bindDataWithView(mEntrustList.get(position), mItemClickListener, mContext, position);
         }
 
         @Override
         public int getItemCount() {
-            return mPositionList.size();
+            return mEntrustList.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
@@ -356,13 +342,14 @@ public class StockEntrustFragment extends BaseFragment {
                     mBusinessTime.setText(DateUtil.format(entrust.getBargainTime(), "HH:mm"));
                 }
                 mOperateArea.setVisibility(View.GONE);
-                if (position == index && !mRefreshData) {
-                    mOperateArea.setVisibility(View.VISIBLE);
+                if (index > -1 && mEntrustList.size() > index && mEntrustList.get(index) != null) {
+                    if (!mManualRefresh && position == index && mEntrustList.get(index).getId() == entrust.getId()) {
+                        mOperateArea.setVisibility(View.VISIBLE);
+                    }
                 }
                 mPositionArea.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mRefreshData = false;
                         if (!mShowOperateView) return;
                         if (mShowOperateView && entrust.getMoiety() == Entrust.ENTRUST_STATUS_ALL_BUSINESS)
                             return;
