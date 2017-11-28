@@ -796,7 +796,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
 
     private void showRealNameIsCheckingDialog() {
         SmartDialog.single(getActivity(), getString(R.string.you_is_real_name_wait_please_wait))
-                .setPositiveVisable(View.GONE)
+                .setPositiveVisible(View.GONE)
                 .setNegative(R.string.i_see)
                 .show();
     }

@@ -15,12 +15,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.StockTradeOperateActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.local.StockOrder;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.net.Callback;
@@ -32,6 +32,9 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.TextViewUtils;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.PlusMinusEditText;
+import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TotalPricePopup;
+import com.sbai.finance.view.dialog.TradeConfirmDialog;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -54,8 +57,9 @@ public class StockTradeOperateFragment extends BaseFragment {
     private static final int MINIMUM_FEE = 5;
     private static final float FEE_RATE = 0.003f;
 
-    public interface OnTradeSuccessListener {
+    public interface OnTradeListener {
         void onStockTradeSuccess();
+        void onStockTradeFailure(String msg);
     }
 
     @BindView(R.id.stockNameCode)
@@ -127,8 +131,9 @@ public class StockTradeOperateFragment extends BaseFragment {
     private Variety mVariety;
     private boolean mHasInitPrice;
     private int mSharesCanTrade;
+    private TotalPricePopup mTotalPricePopup;
 
-    private OnTradeSuccessListener mOnTradeSuccessListener;
+    private OnTradeListener mOnTradeListener;
 
     private TextWatcher mVolumeWatcher = new ValidationWatcher() {
         @Override
@@ -137,8 +142,40 @@ public class StockTradeOperateFragment extends BaseFragment {
             if (tradeButtonEnable != mTradeButton.isEnabled()) {
                 mTradeButton.setEnabled(tradeButtonEnable);
             }
+
+            updateFee();
+            updateTotalPrice();
         }
     };
+
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mTotalPricePopup != null) {
+                mTotalPricePopup.dismiss();
+            }
+        }
+    };
+
+    private void updateTotalPrice() {
+        String tradePrice = mTradePrice.getText();
+        String tradeVolume = mTradeVolume.getText();
+        if (!TextUtils.isEmpty(tradePrice) && !TextUtils.isEmpty(tradeVolume)) {
+            if (mTotalPricePopup == null) {
+                mTotalPricePopup = new TotalPricePopup(getActivity());
+            }
+            double buyPrice = Double.parseDouble(tradePrice);
+            double buyVolume = Double.parseDouble(tradeVolume);
+            mTradeVolume.removeCallbacks(mRunnable);
+            mTotalPricePopup.setTotalPrice(FinanceUtil.formatWithScale(buyPrice * buyVolume));
+            mTotalPricePopup.showAbove(mTradeVolume);
+            mTradeVolume.postDelayed(mRunnable, 2000);
+        } else {
+            if (mTotalPricePopup != null) {
+                mTotalPricePopup.dismiss();
+            }
+        }
+    }
 
     private TextWatcher mPriceWatcher = new ValidationWatcher() {
         @Override
@@ -147,11 +184,14 @@ public class StockTradeOperateFragment extends BaseFragment {
             if (tradeButtonEnable != mTradeButton.isEnabled()) {
                 mTradeButton.setEnabled(tradeButtonEnable);
             }
-            updateTradeVolume();
+
+            updateMaxTradeVolume();
+            updateFee();
+            updateTotalPrice();
         }
     };
 
-    public void updateTradeVolume() {
+    public void updateMaxTradeVolume() {
         String tradePrice = mTradePrice.getText();
         StockUser stockUser = LocalUser.getUser().getStockUser();
         if (mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY) { // 买入
@@ -160,16 +200,28 @@ public class StockTradeOperateFragment extends BaseFragment {
                 double buyPrice = Double.parseDouble(tradePrice);
                 mSharesCanTrade = calculateSharesCanBuy(availableFund, buyPrice); // 可买股数
                 mTradeVolume.setHint(getString(R.string.volume_can_buy_x, mSharesCanTrade));
-                String fee = FinanceUtil.formatWithScale(mSharesCanTrade * buyPrice * FEE_RATE);
-                mFee.setText(StrUtil.mergeTextWithColor(getString(R.string.fee_x), fee,
-                        ContextCompat.getColor(getActivity(), R.color.redPrimary)));
             } else {
                 mTradeVolume.setHint(R.string.buy_volume);
-                mFee.setText(StrUtil.mergeTextWithColor(getString(R.string.fee_x), NULL_VALUE,
-                        ContextCompat.getColor(getActivity(), R.color.redPrimary)));
             }
         } else {
 
+        }
+    }
+
+    private void updateFee() {
+        if (mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY) {
+            String tradePrice = mTradePrice.getText();
+            String tradeVolume = mTradeVolume.getText();
+            if (!TextUtils.isEmpty(tradePrice) && !TextUtils.isEmpty(tradeVolume)) {
+                double buyPrice = Double.parseDouble(tradePrice);
+                double buyVolume = Double.parseDouble(tradeVolume);
+                String fee = FinanceUtil.formatWithScale(Math.max(buyVolume * buyPrice * FEE_RATE, MINIMUM_FEE));
+                mFee.setText(StrUtil.mergeTextWithColor(getString(R.string.fee_x), fee,
+                        ContextCompat.getColor(getActivity(), R.color.redPrimary)));
+            } else {
+                mFee.setText(StrUtil.mergeTextWithColor(getString(R.string.fee_x), NULL_VALUE,
+                        ContextCompat.getColor(getActivity(), R.color.redPrimary)));
+            }
         }
     }
 
@@ -246,8 +298,8 @@ public class StockTradeOperateFragment extends BaseFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnTradeSuccessListener) {
-            mOnTradeSuccessListener = (OnTradeSuccessListener) context;
+        if (context instanceof OnTradeListener) {
+            mOnTradeListener = (OnTradeListener) context;
         }
     }
 
@@ -292,7 +344,6 @@ public class StockTradeOperateFragment extends BaseFragment {
             mStockNameCode.setText(null);
             clearMarketData();
         }
-
     }
 
     private String getFormattedVolume(String ask_volume) {
@@ -353,6 +404,12 @@ public class StockTradeOperateFragment extends BaseFragment {
         mBidVolume3.setText(StockUtil.NULL_VALUE);
         mBidVolume4.setText(StockUtil.NULL_VALUE);
         mBidVolume5.setText(StockUtil.NULL_VALUE);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mTradeVolume.removeCallbacks(mRunnable);
     }
 
     @Override
@@ -426,16 +483,43 @@ public class StockTradeOperateFragment extends BaseFragment {
             int buyVolume = Integer.parseInt(mTradeVolume.getText());
             double buyPrice = Double.parseDouble(mTradePrice.getText());
             String uuid = UUID.randomUUID().toString().replace("-", "");
-            Client.markStockOrder(stockUser.getType(), stockUser.getAccount(), stockUser.getActivityCode(),
-                    mVariety.getVarietyType(), mVariety.getVarietyName(), buyVolume, buyPrice, uuid)
-                    .setCallback(new Callback<Resp<JsonObject>>() {
+
+            final StockOrder stockOrder = new StockOrder.Builder()
+                    .positionType(stockUser.getType())
+                    .userAccount(stockUser.getAccount())
+                    .activityCode(stockUser.getActivityCode())
+                    .varietyCode(mVariety.getVarietyType())
+                    .varietyName(mVariety.getVarietyName())
+                    .quantity(buyVolume)
+                    .price(buyPrice)
+                    .deputeType(StockOrder.DEPUTE_TYPE_ENTRUST_BUY)
+                    .signId(uuid).build();
+
+            TradeConfirmDialog.with(getActivity(), stockOrder)
+                    .setOnConfirmClickListener(new TradeConfirmDialog.OnConfirmClickListener() {
                         @Override
-                        protected void onRespSuccess(Resp resp) {
-                            if (mOnTradeSuccessListener != null) {
-                                mOnTradeSuccessListener.onStockTradeSuccess();
-                            }
+                        public void onConfirmClick(final SmartDialog dialog) {
+                            Client.markStockOrder(stockOrder)
+                                    .setCallback(new Callback<Resp>() {
+                                        @Override
+                                        protected void onRespSuccess(Resp resp) {
+                                            dialog.dismiss();
+                                            resetPositionSelectors();
+
+                                            if (mOnTradeListener != null) {
+                                                mOnTradeListener.onStockTradeSuccess();
+                                            }
+                                        }
+
+                                        @Override
+                                        protected void onRespFailure(Resp failedResp) {
+                                            if (mOnTradeListener != null) {
+                                                mOnTradeListener.onStockTradeFailure(failedResp.getMsg());
+                                            }
+                                        }
+                                    }).fire();
                         }
-                    }).fire();
+                    }).show();
         } else {
 
         }
@@ -446,31 +530,26 @@ public class StockTradeOperateFragment extends BaseFragment {
             int selectShares = mSharesCanTrade;
             if (selectShares >= 100) {
                 mTradeVolume.setText(String.valueOf(selectShares));
-            } else {
-                mTradeVolume.setText(null);
             }
         } else if (mHalfPosition.isSelected()) {
             int selectShares = mSharesCanTrade / 2;
             selectShares -= selectShares % 100;
             if (selectShares >= 100) {
                 mTradeVolume.setText(String.valueOf(selectShares));
-            } else {
-                mTradeVolume.setText(null);
             }
         } else if (mQuarterPosition.isSelected()) {
             int selectShares = mSharesCanTrade / 4;
             selectShares -= selectShares % 100;
             if (selectShares >= 100) {
                 mTradeVolume.setText(String.valueOf(selectShares));
-            } else {
-                mTradeVolume.setText(null);
             }
         }
     }
 
-    private void resetPositionSelectors() {
+    public void resetPositionSelectors() {
         mFullPosition.setSelected(false);
         mHalfPosition.setSelected(false);
         mQuarterPosition.setSelected(false);
+        mTradeVolume.setText(null);
     }
 }

@@ -231,7 +231,7 @@ public class SmartDialog {
         return this;
     }
 
-    public SmartDialog setPositiveVisable(int positiveVisible) {
+    public SmartDialog setPositiveVisible(int positiveVisible) {
         mPositiveVisible = positiveVisible;
         return this;
     }

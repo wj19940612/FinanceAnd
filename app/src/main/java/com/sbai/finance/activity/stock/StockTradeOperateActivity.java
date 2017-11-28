@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.StockUtil;
 import com.sbai.finance.utils.TextViewUtils;
 import com.sbai.finance.utils.TimerHandler;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ import butterknife.ButterKnife;
  * <p>
  * 股票交易操作页面，买入卖出，如果从股票详情页面进入，当前账户为模拟，如果从账户页面进入，依赖于当前保存是什么账户
  */
-public class StockTradeOperateActivity extends BaseActivity implements StockTradeOperateFragment.OnTradeSuccessListener {
+public class StockTradeOperateActivity extends BaseActivity implements StockTradeOperateFragment.OnTradeListener {
 
     public static final String TRADE_TYPE = "trade_type";
     public static final int TRADE_TYPE_BUY = 80;
@@ -76,8 +78,6 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
     private Variety mVariety;
     private StockRTData mStockRTData;
 
-    private StockUser mStockUser;
-
     private HoldingPositionsAdapter mHoldingPositionsAdapter;
 
     @Override
@@ -93,11 +93,10 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
 
         StockUser stockUser = LocalUser.getUser().getStockUser();
         if (stockUser != null) {
-            mStockUser = stockUser;
-            updateTradeVolume();
+            updateMaxTradeVolume();
             requestStockHoldingList();
         } else {
-            requestStockUser(String.valueOf(StockUser.ACCOUNT_TYPE_MOCK), null);
+            requestStockUser();
         }
 
         requestStockRTData();
@@ -113,11 +112,11 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
         mListView.setAdapter(mHoldingPositionsAdapter);
     }
 
-    private void updateTradeVolume() {
+    private void updateMaxTradeVolume() {
         for (int i = 0; i < mStockTradeAdapter.getCount(); i++) {
             Fragment fragment = mStockTradeAdapter.getFragment(i);
             if (fragment instanceof StockTradeOperateFragment) {
-                ((StockTradeOperateFragment) fragment).updateTradeVolume();
+                ((StockTradeOperateFragment) fragment).updateMaxTradeVolume();
             }
         }
     }
@@ -148,10 +147,22 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
 
     @Override
     public void onStockTradeSuccess() {
+        SmartDialog.with(getActivity(), R.string.buy_success)
+                .setTitle(R.string.tips)
+                .setNegativeVisible(View.GONE)
+                .show();
+
         StockUser stockUser = LocalUser.getUser().getStockUser();
         if (stockUser != null) {
-            requestStockUser(String.valueOf(stockUser.getType()), stockUser.getActivityCode());
+            requestStockUser();
         }
+    }
+
+    @Override
+    public void onStockTradeFailure(String msg) {
+        SmartDialog.with(getActivity(), msg)
+                .setNegativeVisible(View.GONE)
+                .show();
     }
 
     private class StockTradeAdapter extends FragmentPagerAdapter {
@@ -244,7 +255,7 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_stock_position, parent);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.row_stock_position, null);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -316,8 +327,9 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
     }
 
     private void requestStockHoldingList() {
-        Client.getStockHoldingList(mStockUser.getType(), mStockUser.getAccount(),
-                mStockUser.getActivityCode()).setTag(TAG)
+        StockUser stockUser = LocalUser.getUser().getStockUser();
+        Client.getStockHoldingList(stockUser.getType(), stockUser.getAccount(),
+                stockUser.getActivityCode()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<PositionRecords>, PositionRecords>() {
                     @Override
                     protected void onRespSuccessData(PositionRecords data) {
@@ -327,17 +339,18 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
     }
 
 
-    private void requestStockUser(String accountType, String activityCode) {
-        Client.getStockAccount(accountType, activityCode)
+    private void requestStockUser() {
+        Client.getStockAccountList()
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<StockUser>>, List<StockUser>>() {
                     @Override
                     protected void onRespSuccessData(List<StockUser> data) {
-                        if (!data.isEmpty()) {
-                            mStockUser = data.get(0);
-                            LocalUser.getUser().setStockUser(mStockUser);
-                            updateTradeVolume();
-                            requestStockHoldingList();
+                        for (StockUser stockUser : data) {
+                            if (stockUser.getActive() == StockUser.ACCOUNT_ACTIVE) {
+                                LocalUser.getUser().setStockUser(stockUser);
+                                updateMaxTradeVolume();
+                                requestStockHoldingList();
+                            }
                         }
                     }
                 }).fireFree();

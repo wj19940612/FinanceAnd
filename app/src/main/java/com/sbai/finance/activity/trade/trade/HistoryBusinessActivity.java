@@ -159,7 +159,7 @@ public class HistoryBusinessActivity extends BaseActivity {
     }
 
     private void requestStockAccount() {
-        Client.getStockAccount(null, null).setTag(TAG)
+        Client.getStockAccountList().setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<StockUser>>, List<StockUser>>() {
                     @Override
                     protected void onRespSuccessData(List<StockUser> data) {

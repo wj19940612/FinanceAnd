@@ -959,7 +959,6 @@
     <string name="full_position">全仓</string>
     <string name="half_position">1/2仓</string>
     <string name="quarter_position">1/4仓</string>
-    <string name="fee_x">手续费：</string>
     <string name="sell_out_right_now">立即卖出</string>
     <string name="buy_in_right_now">立即买入</string>
     <string name="stock_name_and_market_value">名称/市值</string>
@@ -971,4 +970,16 @@
     <string name="know">知道了</string>
     <string name="no_this_data">- -</string>
     <string name="volume_can_buy_x">可买%1$d</string>
+    <string name="entrust_buy_confirm">委托买入确认</string>
+    <string name="entrust_sell_confirm">委托卖出确认</string>
+    <string name="direction_x">方向：</string>
+    <string name="stock_x">股票：</string>
+    <string name="price_x">价格：</string>
+    <string name="volume_x">数量：</string>
+    <string name="fee_x">手续费：</string>
+    <string name="total_value_x">总价：</string>
+    <string name="yuan">元</string>
+    <string name="about_x_yuan_without_fee">约%1$s元，不含手续费</string>
+    <string name="buy_success">买入成功</string>
+    <string name="sell_success">卖出成功</string>
 </resources>
