@@ -118,8 +118,9 @@ public class MissRadioViewSwitcher extends LinearLayout implements TimerHandler.
             int position = mCount % mMissSwitcherModelList.size();
             MissSwitcherModel missSwitcherModel = mMissSwitcherModelList.get(position);
             if (missSwitcherModel != null) {
+                String format = String.format(Client.MISS_TOP_DETAILS_H5_URL, missSwitcherModel.getId());
                 Launcher.with(getContext(), WebActivity.class)
-                        .putExtra(WebActivity.EX_URL, String.format(Client.MISS_TOP_DETAILS_H5_URL, missSwitcherModel.getId()))
+                        .putExtra(WebActivity.EX_URL, String.format(Client.MISS_TOP_DETAILS_H5_URL, String.valueOf(missSwitcherModel.getId())))
                         .execute();
             }
         }

@@ -296,12 +296,6 @@
 
         <!-- 排行榜 -->
 
-
-        <!-- 小姐姐 -->
-        <activity
-            android:name=".activity.miss.MissProfileActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".activity.miss.radio.RadioStationPlayActivityActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

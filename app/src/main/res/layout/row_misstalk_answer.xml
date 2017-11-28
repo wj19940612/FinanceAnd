@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/primaryText"
-            android:textSize="17sp"
+            android:textSize="15sp"
             tools:text="有没有什么好的选股方法?"/>
 
         <RelativeLayout
@@ -67,8 +67,8 @@
 
             <ImageView
                 android:id="@+id/playImage"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginRight="8dp"
                 android:src="@drawable/ic_play"/>
 

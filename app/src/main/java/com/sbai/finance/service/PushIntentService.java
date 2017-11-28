@@ -216,7 +216,7 @@ public class PushIntentService extends GTIntentService {
                 MobclickAgent.onEvent(context, UmengCountEventId.PUSH_TRAINING);
                 intent = new Intent(context, MainActivity.class);
                 break;
-            case PushMessageModel.MISS_MESSAGE:
+            case PushMessageModel.MISS_HOME_PAGE:
                 MobclickAgent.onEvent(context, UmengCountEventId.PUSH_FOLLOW_AUTOMATIC);
                 intent = new Intent(context, MissProfileDetailActivity.class);
                 try {

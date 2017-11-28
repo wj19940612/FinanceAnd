@@ -79,8 +79,8 @@
 
                     <ImageView
                         android:id="@+id/playImage"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:layout_marginRight="8dp"
                         android:src="@drawable/ic_play"/>
 
@@ -91,7 +91,7 @@
                         android:layout_marginTop="4dp"
                         android:layout_toRightOf="@+id/playImage"
                         android:textColor="@color/unluckyText"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         tools:text="@string/voice_time"/>
 
                     <TextView
@@ -99,16 +99,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/soundTime"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="2dp"
                         android:layout_toRightOf="@+id/playImage"
                         android:textColor="@color/unluckyText"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         tools:text="@string/listener_number"/>
 
                     <com.sbai.finance.view.HasLabelImageLayout
                         android:id="@+id/missAvatar"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:layout_alignParentRight="true"/>
 
                 </RelativeLayout>

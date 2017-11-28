@@ -1,7 +1,6 @@
 package com.sbai.finance.activity.miss;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +28,6 @@ import android.widget.TextView;
 
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
-import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
@@ -110,7 +107,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     private View mFootView;
     private QuestionReplyListAdapter mQuestionReplyListAdapter;
     private Question mQuestion;
-    private RefreshReceiver mRefreshReceiver;
     private Praise mPraise;
     private String mReplayMsgId;
     private HasLabelImageLayout mAvatar;
@@ -159,8 +155,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         requestQuestionReplyList(true);
 
         initSwipeRefreshLayout();
-
-        registerRefreshReceiver();
 
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
@@ -313,9 +307,17 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     public void onDestroy() {
         super.onDestroy();
         unbindService(mServiceConnection);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
     }
 
+    @Override
+    protected IntentFilter getIntentFilter() {
+        IntentFilter filter = super.getIntentFilter();
+        filter.addAction(ACTION_REWARD_SUCCESS);
+        filter.addAction(ACTION_LOGIN_SUCCESS);
+        filter.addAction(CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        return filter;
+    }
 
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
@@ -378,6 +380,43 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
             int pastTime = MissAudioManager.get().getCurrentPosition();
             mSoundTime.setText(getString(R.string._seconds, (mQuestion.getSoundTime() * 1000 - pastTime) / 1000));
             mProgressBar.setProgress(pastTime);
+        }
+    }
+
+    @Override
+    public void onOtherReceive(Context context, Intent intent) {
+        super.onOtherReceive(context, intent);
+        if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            if (mQuestion != null) {
+                int rewardCount = mQuestion.getAwardCount() + 1;
+                mQuestion.setAwardCount(rewardCount);
+                mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(rewardCount)));
+            }
+        }
+
+        if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            mSet.clear();
+            mPage = 0;
+            mReplayMsgId = null;
+            mListView.removeFooterView(mFootView);
+            mFootView = null;
+            requestQuestionReplyList(true);
+        }
+
+        if (Intent.ACTION_SCREEN_OFF.equalsIgnoreCase(intent.getAction())) {
+            stopQuestionVoice();
+        }
+
+        if (CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            mSet.clear();
+            mPage = 0;
+            mReplayMsgId = null;
+            mSwipeRefreshLayout.setLoadMoreEnable(true);
+            mListView.removeFooterView(mFootView);
+            mFootView = null;
+            requestQuestionDetail();
+            requestQuestionReplyList(true);
+            mListView.setSelection(0);
         }
     }
 
@@ -588,9 +627,9 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     @Override
     protected void onStop() {
         super.onStop();
-        if (!Preference.get().isForeground()) {
-            stopQuestionVoice();
-        }
+//        if (!Preference.get().isForeground()) {
+//            stopQuestionVoice();
+//        }
     }
 
     private void requestQuestionReplyList(final boolean isRefresh) {
@@ -865,14 +904,19 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                 mReviewPriceCount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Client.praiseMissReply(item.getId())
-                                .setCallback(new Callback2D<Resp<Praise>, Praise>() {
-                                    @Override
-                                    protected void onRespSuccessData(Praise data) {
-                                        setPrice(data.getPriseCount(), data.getIsPrise());
-                                    }
-                                })
-                                .fireFree();
+                        if (LocalUser.getUser().isLogin()) {
+                            Client.praiseMissReply(item.getId())
+                                    .setCallback(new Callback2D<Resp<Praise>, Praise>() {
+                                        @Override
+                                        protected void onRespSuccessData(Praise data) {
+                                            setPrice(data.getPriseCount(), data.getIsPrise());
+                                        }
+                                    })
+                                    .fireFree();
+                        } else {
+                            Launcher.with(context, LoginActivity.class).execute();
+                        }
+
                     }
                 });
 
@@ -937,57 +981,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                         .executeForResult(CommentActivity.REQ_CODE_COMMENT);
             }
         }
-    }
-
-    private void registerRefreshReceiver() {
-        mRefreshReceiver = new RefreshReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_REWARD_SUCCESS);
-        filter.addAction(ACTION_LOGIN_SUCCESS);
-        filter.addAction(CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
-    }
-
-    private class RefreshReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-                if (mQuestion != null) {
-                    int rewardCount = mQuestion.getAwardCount() + 1;
-                    mQuestion.setAwardCount(rewardCount);
-                    mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(rewardCount)));
-                }
-            }
-
-            if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-                mSet.clear();
-                mPage = 0;
-                mReplayMsgId = null;
-                mListView.removeFooterView(mFootView);
-                mFootView = null;
-                requestQuestionReplyList(true);
-            }
-
-            if (Intent.ACTION_SCREEN_OFF.equalsIgnoreCase(intent.getAction())) {
-                stopQuestionVoice();
-            }
-
-            if (CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-                mSet.clear();
-                mPage = 0;
-                mReplayMsgId = null;
-                mSwipeRefreshLayout.setLoadMoreEnable(true);
-                mListView.removeFooterView(mFootView);
-                mFootView = null;
-                requestQuestionDetail();
-                requestQuestionReplyList(true);
-                mListView.setSelection(0);
-            }
-        }
-
     }
 
     @Override
