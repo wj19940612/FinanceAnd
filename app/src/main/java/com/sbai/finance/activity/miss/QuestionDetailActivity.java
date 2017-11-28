@@ -540,10 +540,10 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                     mPlayThisVoice = false;
                 } else {
                     if (MissAudioManager.get().isStarted(audio)) {
+                        mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
+                        mMissFloatWindow.startAnim();
                         if (mQuestion.getId() != ((Question) audio).getId()) {
                             mPlayThisVoice = false;
-                            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
-                            mMissFloatWindow.startAnim();
                             mMissFloatWindow.setVisibility(View.VISIBLE);
                         } else {
                             mPlayThisVoice = true;
