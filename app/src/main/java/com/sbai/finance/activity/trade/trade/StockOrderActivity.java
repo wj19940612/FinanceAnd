@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
@@ -84,6 +85,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     private PositionRecords mPositionRecords;
     private StockUser mCurrentStockUser;
     private List<StockUser> mStockUsers;
+    private int mPageIndex;
     private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
         @Override
         protected void onNetworkChanged(int availableNetworkType) {
@@ -110,12 +112,17 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         ButterKnife.bind(this);
         translucentStatusBar();
         mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
+        initData(getIntent());
         initTitleBar();
         initFundInfoView();
         initViewPager();
         initSwipeView();
         initTabView();
         requestStockAccount();
+    }
+
+    private void initData(Intent intent) {
+        mPageIndex = intent.getIntExtra(ExtraKeys.PAGE_INDEX, 0);
     }
 
     private void initViewPager() {
@@ -134,6 +141,9 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         mTabLayout.setViewPager(mViewPager);
         mTabLayout.setTabViewTextSize(16);
         mTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.sliding_tab_text));
+        if (mPageIndex > 0 && mPageIndex < 3) {
+            mTabLayout.setTabIndex(mPageIndex);
+        }
     }
 
     private void initSwipeView() {

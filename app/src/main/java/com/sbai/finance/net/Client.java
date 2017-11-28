@@ -3084,7 +3084,8 @@ public class Client {
                 .put("positionType", positionType)
                 .put("userAccount", userAccount)
                 .put("activityCode", activityCode)
-                .put("page", page));
+                .put("page", page)
+                .put("pageSize", 10000));
     }
 
     /**

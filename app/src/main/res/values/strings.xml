@@ -922,6 +922,7 @@
     <string name="entrust_time">委托时间</string>
     <string name="stock_withdraw">撤单</string>
     <string name="wait_business">等待成交</string>
+    <string name="wait_withdraw">等待撤单</string>
     <string name="part_business">部分成交</string>
     <string name="all_business">全部成交</string>
     <string name="type">类型</string>
