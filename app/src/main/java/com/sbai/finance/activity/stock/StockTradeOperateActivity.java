@@ -122,14 +122,12 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
     private void initTitleBar() {
         View customView = mTitleBar.getCustomView();
         mStockAccountName = customView.findViewById(R.id.stockGame);
-        if (mStockAccountName != null) {
-            mStockAccountName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    requestStockAccountsAndShowPickDialog();
-                }
-            });
-        }
+        mStockAccountName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requestStockAccountsAndShowPickDialog();
+            }
+        });
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

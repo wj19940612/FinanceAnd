@@ -406,14 +406,15 @@ public class StockTradeOperateFragment extends BaseFragment {
         mBidVolume5.setText(StockUtil.NULL_VALUE);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mTradeVolume.removeCallbacks(mRunnable);
-    }
+
 
     @Override
     public void onDestroyView() {
+        mTradeVolume.removeCallbacks(mRunnable);
+
+        mTradePrice.removeTextChangedListener(mPriceWatcher);
+        mTradeVolume.removeTextChangedListener(mVolumeWatcher);
+
         super.onDestroyView();
         unbinder.unbind();
     }
