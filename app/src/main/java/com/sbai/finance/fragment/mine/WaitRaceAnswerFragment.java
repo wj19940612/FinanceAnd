@@ -15,12 +15,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.Answer;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.ListEmptyView;
 
@@ -47,10 +49,15 @@ public class WaitRaceAnswerFragment extends BaseFragment {
     private RaceAnswerAdapter mRaceAnswerAdapter;
     private int mPage;
     private int mAnswerType = 1;
+    private WaitForMeAnswerActivity.NoReadNewsCallback mNoReadNewsCallback;
 
-    public static WaitAnswerFragment newInstance() {
-        WaitAnswerFragment fragment = new WaitAnswerFragment();
+    public static WaitRaceAnswerFragment newInstance() {
+        WaitRaceAnswerFragment fragment = new WaitRaceAnswerFragment();
         return fragment;
+    }
+
+    public void setNoReadCountListener(WaitForMeAnswerActivity.NoReadNewsCallback noReadCountListener) {
+        mNoReadNewsCallback = noReadCountListener;
     }
 
     @Override
@@ -96,12 +103,6 @@ public class WaitRaceAnswerFragment extends BaseFragment {
                 refreshData();
             }
         });
-        mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
-            @Override
-            public void onLoadMore() {
-//                requestMineQuestionOrComment(false);
-            }
-        });
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -120,19 +121,20 @@ public class WaitRaceAnswerFragment extends BaseFragment {
 
     private void refreshData() {
         mPage = 0;
-        mSwipeRefreshLayout.setLoadMoreEnable(true);
+        mSwipeRefreshLayout.setLoadMoreEnable(false);
         requestWaitForMeAnswer(true);
     }
 
     private void requestWaitForMeAnswer(final boolean isRefreshing) {
-        //TODO 待抢答请求
-        Client.requestMineQuestionOrComment(1, mPage)
+        Client.waitMeAnswer(WaitForMeAnswerActivity.WAIT_RACE_ANSWER)
                 .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
+                .setCallback(new Callback2D<Resp<List<Answer>>, List<Answer>>() {
                     @Override
-                    protected void onRespSuccessData(List<Question> data) {
-//                        updateAnswerList(data, isRefreshing);
+                    protected void onRespSuccessData(List<Answer> data) {
+                        updateRaceList(data);
+                        if (mNoReadNewsCallback != null) {
+                            mNoReadNewsCallback.noReadNews(data.size());
+                        }
                     }
 
                     @Override
@@ -142,6 +144,11 @@ public class WaitRaceAnswerFragment extends BaseFragment {
                     }
                 })
                 .fire();
+    }
+
+    private void updateRaceList(List<Answer> data) {
+        mRaceAnswerAdapter.clear();
+        mRaceAnswerAdapter.addAll(data);
     }
 
     private void stopRefreshAnimation() {
@@ -155,6 +162,7 @@ public class WaitRaceAnswerFragment extends BaseFragment {
 
     private void initListEmptyView() {
         mListEmptyView.setContentText(R.string.not_has_answer);
+        mListEmptyView.setGoingBtnGone();
     }
 
     @Override
@@ -186,7 +194,7 @@ public class WaitRaceAnswerFragment extends BaseFragment {
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             ViewHolder viewHolder = null;
             if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_mine_wait_answer, parent, false);
+                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_mine_race_answer, parent, false);
                 viewHolder = new ViewHolder(convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -199,8 +207,6 @@ public class WaitRaceAnswerFragment extends BaseFragment {
         static class ViewHolder {
             @BindView(R.id.title)
             AppCompatTextView mTitle;
-            @BindView(R.id.content)
-            TextView mContent;
             @BindView(R.id.time)
             TextView mTime;
             @BindView(R.id.btnRaceAnswer)
@@ -219,6 +225,9 @@ public class WaitRaceAnswerFragment extends BaseFragment {
                         }
                     }
                 });
+
+                mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
+                mTitle.setText(item.getQuestionContext());
             }
         }
     }

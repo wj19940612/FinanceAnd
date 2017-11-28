@@ -1,7 +1,6 @@
 package com.sbai.finance.fragment.mine;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,11 +17,9 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.activity.miss.QuestionDetailActivity;
-import com.sbai.finance.activity.miss.SubmitQuestionActivity;
+import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.Answer;
-import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -46,13 +43,6 @@ public class WaitAnswerFragment extends BaseFragment {
 
     private static final String ANSWER_TYPE = "answer_type";
 
-    //待回答
-    public static final int TYPE_WAIT_FOR_ANSWER = 1;
-    //待抢答
-    public static final int TYPE_WAIT_FOR_RACE_ANSWER = 2;
-    //已回答
-    public static final int TYPE_WAIT_FOR_HAVE_ANSWER = 3;
-
     private Unbinder mBind;
     @BindView(android.R.id.list)
     ListView mListView;
@@ -64,13 +54,18 @@ public class WaitAnswerFragment extends BaseFragment {
     private AnswerAdapter mAnswerAdapter;
     private int mPage;
     private int mAnswerType = 1;
+    private WaitForMeAnswerActivity.NoReadNewsCallback mNoReadNewsCallback;
 
     public static WaitAnswerFragment newInstance(int type) {
         WaitAnswerFragment fragment = new WaitAnswerFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(ANSWER_TYPE, 1);
+        bundle.putInt(ANSWER_TYPE, type);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    public void setNoReadCountListener(WaitForMeAnswerActivity.NoReadNewsCallback noReadCountListener) {
+        mNoReadNewsCallback = noReadCountListener;
     }
 
     @Override
@@ -113,12 +108,6 @@ public class WaitAnswerFragment extends BaseFragment {
                 refreshData();
             }
         });
-        mSwipeRefreshLayout.setOnLoadMoreListener(new CustomSwipeRefreshLayout.OnLoadMoreListener() {
-            @Override
-            public void onLoadMore() {
-//                requestMineQuestionOrComment(false);
-            }
-        });
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -137,19 +126,20 @@ public class WaitAnswerFragment extends BaseFragment {
 
     private void refreshData() {
         mPage = 0;
-        mSwipeRefreshLayout.setLoadMoreEnable(true);
-        requestWaitForMeAnswer(true);
+        mSwipeRefreshLayout.setLoadMoreEnable(false);
+        requestWaitForMeAnswer();
     }
 
-    private void requestWaitForMeAnswer(final boolean isRefreshing) {
-        //TODO 待回答请求
-        Client.requestMineQuestionOrComment(1, mPage)
+    private void requestWaitForMeAnswer() {
+        Client.waitMeAnswer(mAnswerType)
                 .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
+                .setCallback(new Callback2D<Resp<List<Answer>>, List<Answer>>() {
                     @Override
-                    protected void onRespSuccessData(List<Question> data) {
-//                        updateAnswerList(data, isRefreshing);
+                    protected void onRespSuccessData(List<Answer> data) {
+                        updateAnswerList(data);
+                        if (mNoReadNewsCallback != null) {
+                            mNoReadNewsCallback.noReadNews(data.size());
+                        }
                     }
 
                     @Override
@@ -157,8 +147,12 @@ public class WaitAnswerFragment extends BaseFragment {
                         super.onFinish();
                         stopRefreshAnimation();
                     }
-                })
-                .fire();
+                }).fire();
+    }
+
+    private void updateAnswerList(List<Answer> data) {
+        mAnswerAdapter.clear();
+        mAnswerAdapter.addAll(data);
     }
 
     private void stopRefreshAnimation() {
@@ -172,11 +166,13 @@ public class WaitAnswerFragment extends BaseFragment {
 
     private void initListEmptyView() {
         switch (mAnswerType) {
-            case TYPE_WAIT_FOR_ANSWER:
+            case WaitForMeAnswerActivity.WAIT_ME_ANSWER:
                 mListEmptyView.setContentText(R.string.you_not_has_answer);
+                mListEmptyView.setGoingBtnGone();
                 break;
-            case TYPE_WAIT_FOR_HAVE_ANSWER:
+            case WaitForMeAnswerActivity.HAVE_ANSWER:
                 mListEmptyView.setContentText(R.string.you_not_has_answer_question);
+                mListEmptyView.setGoingBtnGone();
                 break;
         }
 
@@ -219,8 +215,6 @@ public class WaitAnswerFragment extends BaseFragment {
         static class ViewHolder {
             @BindView(R.id.title)
             AppCompatTextView mTitle;
-            @BindView(R.id.content)
-            TextView mContent;
             @BindView(R.id.time)
             TextView mTime;
 
@@ -230,26 +224,8 @@ public class WaitAnswerFragment extends BaseFragment {
 
             public void bindDataWithView(Answer answer, Context context, int answerType) {
                 if (answer == null) return;
-
-//                mTime.setText(DateUtil.formatDefaultStyleTime(question.getCreateTime()));
-//                if (question.isQuestionSolved()) {
-//                    mContent.setSelected(true);
-//                    mTitle.setEnabled(true);
-//                    String priseCount = FinanceUtil.formatTenThousandNumber(question.getPriseCount());
-//                    String replyCount = FinanceUtil.formatTenThousandNumber(question.getReplyCount());
-//                    String awardCount = FinanceUtil.formatTenThousandNumber(question.getAwardCount());
-//                    if (questionType == TYPE_QUESTION) {
-//                        mContent.setText(context.getString(R.string.question_replay_content_award, priseCount, replyCount, awardCount));
-//                    } else {
-//                        mContent.setText(context.getString(R.string.question_replay_content, replyCount));
-//                    }
-//                } else {
-//                    mContent.setSelected(false);
-//                    mTitle.setEnabled(false);
-//                    mContent.setText(context.getString(R.string.miss_is_answering));
-//                }
-//
-//                mTitle.setText(question.getContent());
+                mTime.setText(DateUtil.formatDefaultStyleTime(answer.getCreateTime()));
+                mTitle.setText(answer.getQuestionContext());
             }
         }
     }

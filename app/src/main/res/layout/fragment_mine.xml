@@ -152,7 +152,11 @@
             app:rowTextColor="@color/primaryText"
             app:rowTextSize="15sp"
             app:rowVerticalPadding="0dp"
-            app:splitLineColor="@color/split"/>
+            app:splitLineColor="@color/split"
+            app:subTextBackground="@drawable/bg_not_read_news"
+            app:subTextColor="@android:color/white"
+            app:subTextSize="10sp"
+            app:subTextVisible="gone"/>
 
         <com.sbai.finance.view.IconTextRow
             android:id="@+id/mineCollection"

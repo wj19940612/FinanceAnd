@@ -59,6 +59,7 @@ public class MyCollect {
     private String audioName;        //音频名称
     //    private int radioHost;         //音频主播，与电台主播命名重复
     private String radioHostName;       //主播昵称
+    private int show;             // 1-显示 0-1下架
 
     private int isRead;         //是否阅读最新消息
 
@@ -275,6 +276,14 @@ public class MyCollect {
 
     public void setListenNumber(int listenNumber) {
         this.listenNumber = listenNumber;
+    }
+
+    public int getShow() {
+        return show;
+    }
+
+    public void setShow(int show) {
+        this.show = show;
     }
 
     @Override

@@ -27,6 +27,11 @@ import butterknife.ButterKnife;
  */
 
 public class WaitForMeAnswerActivity extends BaseActivity {
+
+    public static final int WAIT_ME_ANSWER = 1;
+    public static final int WAIT_RACE_ANSWER = 2;
+    public static final int HAVE_ANSWER = 3;
+
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.slidingTabLayout)
@@ -35,6 +40,14 @@ public class WaitForMeAnswerActivity extends BaseActivity {
     ViewPager mViewPager;
 
     private WaitForMeAnswerFragmentAdapter mWaitForMeAnswerFragmentAdapter;
+    private int mWaitAnswerCount;
+    private int mRaceAnswerCount;
+    private int mHaveAnswerCount;
+    private int pagePosition;
+
+    public interface NoReadNewsCallback {
+        void noReadNews(int count);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,10 +55,32 @@ public class WaitForMeAnswerActivity extends BaseActivity {
         setContentView(R.layout.activity_wait_for_me_answer);
         ButterKnife.bind(this);
 
-        mWaitForMeAnswerFragmentAdapter = new WaitForMeAnswerFragmentAdapter(getSupportFragmentManager(), this);
+        mWaitForMeAnswerFragmentAdapter = new WaitForMeAnswerFragmentAdapter(getSupportFragmentManager(), this, new NoReadNewsCallback() {
+            @Override
+            public void noReadNews(int count) {
+                if (mSlidingTabLayout.getTabItems().length < 1) return;
+                mWaitAnswerCount = count;
+                updateTitleBar();
+            }
+        },
+                new NoReadNewsCallback() {
+                    @Override
+                    public void noReadNews(int count) {
+                        if (mSlidingTabLayout.getTabItems().length < 2) return;
+                        mRaceAnswerCount = count;
+                        updateTitleBar();
+                    }
+                }, new NoReadNewsCallback() {
+            @Override
+            public void noReadNews(int count) {
+                mHaveAnswerCount = count;
+                updateTitleBar();
+            }
+        });
+        mViewPager.setOffscreenPageLimit(2);
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-        mSlidingTabLayout.setSelectedIndicatorPadding(Display.dp2Px(60, getResources()));
+        mSlidingTabLayout.setSelectedIndicatorPadding(Display.dp2Px(45, getResources()));
         mSlidingTabLayout.setPadding(Display.dp2Px(13, getResources()));
         mViewPager.setAdapter(mWaitForMeAnswerFragmentAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -56,7 +91,8 @@ public class WaitForMeAnswerActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-
+                pagePosition = position;
+                updateTitleBar();
             }
 
             @Override
@@ -67,25 +103,57 @@ public class WaitForMeAnswerActivity extends BaseActivity {
         mSlidingTabLayout.setViewPager(mViewPager);
     }
 
+    private void updateTitleBar() {
+        if (mWaitAnswerCount == 0) {
+            mSlidingTabLayout.getTabItems()[0].setText(getString(R.string.wait_answer));
+        } else {
+            mSlidingTabLayout.getTabItems()[0].setText(getString(R.string.wait_answer_, mWaitAnswerCount));
+        }
+
+        if (mRaceAnswerCount == 0) {
+            mSlidingTabLayout.getTabItems()[1].setText(getString(R.string.wait_race_answer));
+        } else {
+            mSlidingTabLayout.getTabItems()[1].setText(getString(R.string.wait_race_answer_, mRaceAnswerCount));
+        }
+
+        if (mHaveAnswerCount == 0) {
+            mSlidingTabLayout.getTabItems()[2].setText(getString(R.string.have_answered));
+        } else {
+            mSlidingTabLayout.getTabItems()[2].setText(getString(R.string.have_answered_, mHaveAnswerCount));
+        }
+    }
+
     static class WaitForMeAnswerFragmentAdapter extends FragmentPagerAdapter {
         private FragmentManager mFragmentManager;
         private Context mContext;
+        private NoReadNewsCallback mWaitAnswerCallback;
+        private NoReadNewsCallback mRaceAnswerCallback;
+        private NoReadNewsCallback mHaveAnswerCallback;
 
-        public WaitForMeAnswerFragmentAdapter(FragmentManager fm, Context context) {
+        public WaitForMeAnswerFragmentAdapter(FragmentManager fm, Context context, NoReadNewsCallback waitAnswerCallback, NoReadNewsCallback raceAnswerCallback, NoReadNewsCallback haveAnswerCallback) {
             super(fm);
             mFragmentManager = fm;
             mContext = context;
+            mWaitAnswerCallback = waitAnswerCallback;
+            mRaceAnswerCallback = raceAnswerCallback;
+            mHaveAnswerCallback = haveAnswerCallback;
         }
 
         @Override
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return WaitAnswerFragment.newInstance(WaitAnswerFragment.TYPE_WAIT_FOR_ANSWER);
+                    WaitAnswerFragment waitAnswerFragment = WaitAnswerFragment.newInstance(WAIT_ME_ANSWER);
+                    waitAnswerFragment.setNoReadCountListener(mWaitAnswerCallback);
+                    return waitAnswerFragment;
                 case 1:
-                    return WaitRaceAnswerFragment.newInstance();
+                    WaitRaceAnswerFragment waitRaceAnswerFragment = WaitRaceAnswerFragment.newInstance();
+                    waitRaceAnswerFragment.setNoReadCountListener(mRaceAnswerCallback);
+                    return waitRaceAnswerFragment;
                 case 2:
-                    return WaitAnswerFragment.newInstance(WaitAnswerFragment.TYPE_WAIT_FOR_HAVE_ANSWER);
+                    WaitAnswerFragment haveAnswerFragment = WaitAnswerFragment.newInstance(HAVE_ANSWER);
+                    haveAnswerFragment.setNoReadCountListener(mHaveAnswerCallback);
+                    return haveAnswerFragment;
             }
             return null;
         }
