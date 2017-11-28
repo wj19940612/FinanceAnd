@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -58,7 +57,7 @@ import com.sbai.finance.view.RedPointTipTextView;
 public class SlidingTabLayout extends HorizontalScrollView {
 
     private static final String TAG = "SlidingTabLayout";
-    private int mTabTextViewColoor;
+    private ColorStateList mTabTextViewColor;
 
     /**
      * Allows complete control over the colors drawn in the tab layout. Set with
@@ -107,7 +106,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     public SlidingTabLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        mTabTextViewColoor = ContextCompat.getColor(getContext(), R.color.sliding_tab_text);
+        mTabTextViewColor = ContextCompat.getColorStateList(getContext(), R.color.sliding_tab_text);
 
         // Disable the Scroll Bar
         setHorizontalScrollBarEnabled(false);
@@ -221,11 +220,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
      * 设置tab中文字的颜色
      * create by wj
      *
-     * @param textColor
+     * @param textColorRes
      */
 
-    public void setTabViewTextColor(@ColorInt int textColor) {
-        mTabTextViewColoor = textColor;
+    public void setTabViewTextColor(int textColorRes) {
+        mTabTextViewColor = ContextCompat.getColorStateList(getContext(), textColorRes);
     }
 
     public void setTabViewTextColor(ColorStateList textColor) {
@@ -248,7 +247,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
      */
     protected TextView createDefaultTabView(Context context) {
         TextView textView = new TextView(context);
-        textView.setTextColor(mTabTextViewColoor);
+        textView.setTextColor(mTabTextViewColor);
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
         textView.setTypeface(Typeface.DEFAULT);

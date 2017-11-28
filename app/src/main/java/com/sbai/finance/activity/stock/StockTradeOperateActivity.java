@@ -27,7 +27,6 @@ import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.stock.StockTradeOperateFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.local.StockOrder;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.stock.StockRTData;

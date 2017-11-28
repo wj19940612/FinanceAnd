@@ -69,7 +69,7 @@ public class WalletActivity extends BaseActivity {
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(30, getResources()));
         mTabLayout.setPadding(Display.dp2Px(12, getResources()));
-        mTabLayout.setTabViewTextColor(Color.WHITE);
+        mTabLayout.setTabViewTextColor(android.R.color.white);
         mTabLayout.setSelectedIndicatorColors(Color.WHITE);
         mTabLayout.setHasBottomBorder(false);
         mTabLayout.setViewPager(mViewPager);
