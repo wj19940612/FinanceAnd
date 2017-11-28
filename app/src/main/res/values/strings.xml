@@ -160,8 +160,11 @@
     <string name="wait_me_answer">等我答</string>
     <string name="my_subscribe">我的订阅</string>
     <string name="wait_answer">待回答</string>
+    <string name="wait_answer_">待回答(%1$d)</string>
     <string name="wait_race_answer">待抢答</string>
+    <string name="wait_race_answer_">待抢答(%1$d)</string>
     <string name="have_answered">已回答</string>
+    <string name="have_answered_">已回答(%1$d)</string>
     <string name="you_not_has_answer">没有等待你回答的问题</string>
     <string name="not_has_answer">没有抢答的问题</string>
     <string name="you_not_has_answer_question">你还没回答问题</string>
@@ -606,6 +609,7 @@
     <string name="edit_profile">编辑资料</string>
     <string name="miss_cant_edit_nick">主播认证后不允许修改昵称</string>
     <string name="word_day">日</string>
+    <string name="audio_have_undercarriage">该音频已下架</string>
 
     <!--discovery-->
     <string name="daily">乐米日报</string>

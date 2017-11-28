@@ -23,6 +23,7 @@ import com.sbai.finance.activity.mine.MyCollectionActivity;
 import com.sbai.finance.activity.mine.MyQuestionAndAnswerActivity;
 import com.sbai.finance.activity.mine.MySubscribeActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
+import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
@@ -34,6 +35,7 @@ import com.sbai.finance.model.mine.NotReadMessageNumberModel;
 import com.sbai.finance.model.mine.UserIdentityCardInfo;
 import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.model.training.UserEachTrainingScoreModel;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -140,6 +142,7 @@ public class MineFragment extends BaseFragment {
 
     public void refreshNotReadMessageCount() {
         requestNoReadNewsNumber();
+        requestNoReadAnswerNumber();
     }
 
     @Override
@@ -264,6 +267,26 @@ public class MineFragment extends BaseFragment {
                 }).fireFree();
     }
 
+    private void requestNoReadAnswerNumber() {
+        Client.waitMeAnswerNum().setTag(TAG).setCallback(new Callback<Resp<Object>>() {
+            @Override
+            protected void onRespSuccess(Resp<Object> resp) {
+                double noReadCount = (double) resp.getData();
+                if (noReadCount != 0) {
+                    mWaitMeAnswer.setSubTextVisible(View.VISIBLE);
+                    if (noReadCount <= 99) {
+                        mWaitMeAnswer.setSubTextSize(11);
+                        mWaitMeAnswer.setSubText(String.valueOf((int)noReadCount));
+                    } else {
+                        mWaitMeAnswer.setSubTextSize(9);
+                        mWaitMeAnswer.setSubText("99+");
+                    }
+                    setNoReadAnswerCount((int)noReadCount);
+                }
+            }
+        }).fire();
+    }
+
     public void updateIngotNumber(UserFundInfo userFundInfo) {
         if (userFundInfo != null) {
             mWallet.setSubText(getString(R.string.my_ingot_, userFundInfo.getYuanbao()));
@@ -308,6 +331,12 @@ public class MineFragment extends BaseFragment {
         }
     }
 
+    private void setNoReadAnswerCount(int count) {
+        if (getActivity() instanceof OnNoReadNewsListener) {
+            ((OnNoReadNewsListener) getActivity()).onNoReadNewsNumber(count);
+        }
+    }
+
     private void updateUserImage() {
         if (LocalUser.getUser().isLogin()) {
             GlideApp.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
@@ -322,7 +351,7 @@ public class MineFragment extends BaseFragment {
     }
 
     @OnClick({R.id.userInfoArea, R.id.lemiScoreArea, R.id.wallet, R.id.mineQuestionsAndAnswers, R.id.mineCollection,
-            R.id.message, R.id.setting, R.id.mineSubscribe})
+            R.id.message, R.id.setting, R.id.mineSubscribe, R.id.waitMeAnswer})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.userInfoArea:
@@ -400,6 +429,9 @@ public class MineFragment extends BaseFragment {
                 } else {
                     openLoginPage();
                 }
+                break;
+            case R.id.waitMeAnswer:
+                Launcher.with(getActivity(), WaitForMeAnswerActivity.class).execute();
                 break;
         }
     }

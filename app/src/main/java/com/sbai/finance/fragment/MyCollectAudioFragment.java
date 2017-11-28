@@ -123,7 +123,7 @@ public class MyCollectAudioFragment extends BaseFragment {
         requestMyAudioCollect();
     }
 
-    private void requestMyAudioCollect(){
+    private void requestMyAudioCollect() {
         Client.requestMyCollection(MyCollect.COLLECTI_TYPE_AUDIO, mPage)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -161,7 +161,7 @@ public class MyCollectAudioFragment extends BaseFragment {
         }
     }
 
-    private void stopRefreshAnimation(){
+    private void stopRefreshAnimation() {
         if (mSwipeRefreshLayout.isLoading()) {
             mSwipeRefreshLayout.setLoading(false);
         }
@@ -218,7 +218,7 @@ public class MyCollectAudioFragment extends BaseFragment {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), mContext,position,getCount());
+            viewHolder.bindDataWithView(getItem(position), mContext, position, getCount());
             return convertView;
         }
 
@@ -239,7 +239,7 @@ public class MyCollectAudioFragment extends BaseFragment {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindDataWithView(MyCollect item, Context context, int position, int count){
+            private void bindDataWithView(MyCollect item, Context context, int position, int count) {
                 GlideApp.with(context).load(item.getAudioCover())
                         .placeholder(R.drawable.ic_default_image)
                         .centerCrop()
@@ -249,7 +249,7 @@ public class MyCollectAudioFragment extends BaseFragment {
 
                 mHostName.setText(String.valueOf(item.getRadioHostName()));
 
-//                mStatus.setText(); //该音频已下架
+                mStatus.setVisibility(item.getShow() == 1 ? View.GONE : View.VISIBLE); //该音频已下架
                 if (position == count - 1) {
                     mSplit.setVisibility(View.GONE);
                 }

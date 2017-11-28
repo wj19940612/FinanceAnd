@@ -3147,4 +3147,19 @@ public class Client {
         return new API(POST, "/user/user/readCollect.do", new ApiParams().put("id", dataId));
     }
 
+    /**
+     * 等我答，待抢答，已回答
+     */
+    public static API waitMeAnswer(int type){
+        return new API("/user/user/waitMeAnswer.do", new ApiParams().put("type", type));
+    }
+
+    /**
+     * 等我答所有的条数
+     */
+    public static API waitMeAnswerNum(){
+        return new API("/user/user/waitMeAnswerNum.do");
+
+    }
+
 }

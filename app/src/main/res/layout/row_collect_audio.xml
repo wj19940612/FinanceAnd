@@ -55,7 +55,9 @@
             android:layout_alignBottom="@+id/cover"
             android:layout_alignParentRight="true"
             android:textColor="@color/unluckyText"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            android:text="@string/audio_have_undercarriage"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <View
