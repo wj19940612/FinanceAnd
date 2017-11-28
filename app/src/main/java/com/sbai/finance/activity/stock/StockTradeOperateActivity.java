@@ -42,6 +42,7 @@ import com.sbai.finance.utils.StockUtil;
 import com.sbai.finance.utils.TextViewUtils;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.picker.StockActivityPickerPopWin;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
@@ -52,6 +53,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -231,6 +233,21 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
                 .dataList(arrayList)
                 .build()
                 .showPopWin(getActivity());
+    }
+
+    @OnClick(R.id.stockPrompt)
+    public void onViewClicked() {
+        showTipDialog();
+    }
+
+    private void showTipDialog() {
+        SmartDialog.single(getActivity())
+                .setTitle(R.string.tips)
+                .setMessage(getString(R.string.cost_price_describe))
+                .setNegative(R.string.know)
+                .setPositiveVisable(View.GONE)
+                .show();
+
     }
 
     private class StockTradeAdapter extends FragmentPagerAdapter {
