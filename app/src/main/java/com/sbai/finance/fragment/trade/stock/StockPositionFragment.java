@@ -24,8 +24,12 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.StockDetailActivity;
+<<<<<<< HEAD
 import com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
+=======
+import com.sbai.finance.activity.stock.StockTradeOperateActivity;
+>>>>>>> 032939b302a08f85de30060cf240a1c2d6b294c4
 import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
@@ -54,10 +58,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+<<<<<<< HEAD
 import static android.app.Activity.RESULT_OK;
 import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE;
 import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE_BUY;
 import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE_SELL;
+=======
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE;
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_BUY;
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_SELL;
+>>>>>>> 032939b302a08f85de30060cf240a1c2d6b294c4
 
 /**
  * 股票持仓

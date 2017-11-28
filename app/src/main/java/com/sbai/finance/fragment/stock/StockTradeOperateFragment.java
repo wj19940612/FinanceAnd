@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity;
+import com.sbai.finance.activity.stock.StockTradeOperateActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
@@ -197,7 +197,7 @@ public class StockTradeOperateFragment extends BaseFragment {
     public void updateMaxBuyableVolume() {
         String tradePrice = mTradePrice.getText();
         StockUser stockUser = LocalUser.getUser().getStockUser();
-        if (mTradeType == StockPostTradeSuccessOperateActivity.TRADE_TYPE_BUY) { // 买入
+        if (mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY) { // 买入
             if (!TextUtils.isEmpty(tradePrice) && stockUser != null) {
                 double availableFund = stockUser.getUsableMoney();
                 double buyPrice = Double.parseDouble(tradePrice);
@@ -210,14 +210,14 @@ public class StockTradeOperateFragment extends BaseFragment {
     }
 
     public void updateMaxSalableVolume(int salableVolume) {
-        if (mTradeType == StockPostTradeSuccessOperateActivity.TRADE_TYPE_SELL) {
+        if (mTradeType == StockTradeOperateActivity.TRADE_TYPE_SELL) {
             mMaxTradeVolume = salableVolume;
             mTradeVolume.setHint(getString(R.string.volume_can_sell_x, mMaxTradeVolume));
         }
     }
 
     private void updateFee() {
-        if (mTradeType == StockPostTradeSuccessOperateActivity.TRADE_TYPE_BUY) {
+        if (mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY) {
             String tradePrice = mTradePrice.getText();
             String tradeVolume = mTradeVolume.getText();
             if (!TextUtils.isEmpty(tradePrice) && !TextUtils.isEmpty(tradeVolume)) {
@@ -237,7 +237,7 @@ public class StockTradeOperateFragment extends BaseFragment {
         if (mVariety == null) return;
 
         if (mStockRTData == null || !mStockRTData.getInstrumentId().equals(mVariety.getVarietyType())) {
-            if (mTradeType == StockPostTradeSuccessOperateActivity.TRADE_TYPE_BUY) {
+            if (mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY) {
                 mTradePrice.setText(StockUtil.getStockDecimal(stockRTData.getAskPrice()));
             } else {
                 mTradePrice.setText(StockUtil.getStockDecimal(stockRTData.getBidPrice()));
@@ -337,7 +337,7 @@ public class StockTradeOperateFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         TextViewUtils.setTextViewSize(getView().findViewById(R.id.fivePriceView), 12);
-        if (mTradeType == StockPostTradeSuccessOperateActivity.TRADE_TYPE_BUY) {
+        if (mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY) {
             mTradePrice.setHint(R.string.buy_price);
             mTradeVolume.setHint(R.string.buy_volume);
             mTradeButton.setText(R.string.buy_in_right_now);
@@ -505,7 +505,7 @@ public class StockTradeOperateFragment extends BaseFragment {
 
     private void doTrade() {
         StockUser stockUser = LocalUser.getUser().getStockUser();
-        int deputeType = mTradeType == StockPostTradeSuccessOperateActivity.TRADE_TYPE_BUY ?
+        int deputeType = mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY ?
                 StockOrder.DEPUTE_TYPE_ENTRUST_BUY : StockOrder.DEPUTE_TYPE_ENTRUST_SELL;
         int volume = Integer.parseInt(mTradeVolume.getText());
         double price = Double.parseDouble(mTradePrice.getText());
