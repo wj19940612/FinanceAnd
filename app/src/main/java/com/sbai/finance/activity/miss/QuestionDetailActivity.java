@@ -486,7 +486,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         mMissAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopQuestionVoice();
                 Launcher.with(QuestionDetailActivity.this, MissProfileDetailActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, mQuestion.getAnswerCustomId())
                         .execute();

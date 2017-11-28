@@ -312,7 +312,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             @Override
             public void onItemClick(Miss miss, int position) {
                 if (miss != null) {
-                    MissAudioManager.get().stop();
                     Launcher.with(getActivity(), MissProfileDetailActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, miss.getId()).execute();
                 }
