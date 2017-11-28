@@ -26,6 +26,7 @@ import com.sbai.finance.fragment.battle.BattleListFragment;
 import com.sbai.finance.fragment.trade.stock.StockBusinessFragment;
 import com.sbai.finance.fragment.trade.stock.StockEntrustFragment;
 import com.sbai.finance.fragment.trade.stock.StockPositionFragment;
+import com.sbai.finance.model.ImageFloder;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.mutual.ArticleProtocol;
@@ -66,6 +67,7 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 public class StockOrderActivity extends BaseActivity implements BattleListFragment.OnFragmentRecycleViewScrollListener {
     public static final String ACTION_SWITCH_ACCOUNT = "233";
+    public static final int REQUEST_CODE_ORDER = 250;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.fundInfo)
@@ -190,14 +192,14 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
             public void buy() {
                 Launcher.with(getActivity(), StockPostTradeSuccessOperateActivity.class)
                         .putExtra(TRADE_TYPE, TRADE_TYPE_BUY)
-                        .execute();
+                        .executeForResult(REQUEST_CODE_ORDER);
             }
 
             @Override
             public void sell() {
                 Launcher.with(getActivity(), StockPostTradeSuccessOperateActivity.class)
                         .putExtra(TRADE_TYPE, TRADE_TYPE_SELL)
-                        .execute();
+                        .executeForResult(REQUEST_CODE_ORDER);
             }
 
             @Override
@@ -222,6 +224,14 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     protected void onPause() {
         super.onPause();
         unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ORDER && requestCode == RESULT_OK) {
+            setTabIndex(1);
+        }
     }
 
     private void requestStockAccount() {
@@ -282,6 +292,13 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
             requestSwitchAccount(data.get(0));
         } else {
             setCurrentStockUser(mCurrentStockUser);
+        }
+    }
+
+    public void setTabIndex(int pageIndex) {
+        if (pageIndex > 0 && pageIndex < 3) {
+            mTabLayout.setTabIndex(pageIndex);
+            requestStockAccount();
         }
     }
 

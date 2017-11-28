@@ -355,7 +355,7 @@ public class StockEntrustFragment extends BaseFragment {
                     @Override
                     public void onClick(View view) {
                         if (!mShowOperateView) return;
-                        if (mShowOperateView && entrust.getMoiety() == Entrust.ENTRUST_STATUS_ALL_BUSINESS)
+                        if (mShowOperateView && (entrust.getMoiety() == Entrust.ENTRUST_STATUS_ALL_BUSINESS || entrust.getMoiety() == Entrust.ENTRUST_STATUS_WAIT_WITHDRAW))
                             return;
                         if (mOperateArea.getVisibility() == View.VISIBLE) {
                             mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 200));

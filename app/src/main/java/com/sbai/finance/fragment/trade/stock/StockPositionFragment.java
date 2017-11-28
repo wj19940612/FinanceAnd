@@ -1,5 +1,6 @@
 package com.sbai.finance.fragment.trade.stock;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,10 +25,12 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity;
+import com.sbai.finance.activity.stock.StockTradeActivity;
 import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.local.StockOrder;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Position;
@@ -51,6 +54,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static android.app.Activity.RESULT_OK;
 import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE;
 import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE_BUY;
 import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE_SELL;
@@ -60,6 +64,7 @@ import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivi
  */
 
 public class StockPositionFragment extends BaseFragment {
+    public static final int REQUEST_CODE_ORDER = 222;
     @BindView(R.id.lastAndCostPrice)
     TextView mLastAndCostPrice;
     @BindView(R.id.recyclerView)
@@ -207,23 +212,26 @@ public class StockPositionFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<Variety>, Variety>() {
                     @Override
                     protected void onRespSuccessData(Variety data) {
+                        Intent intent = null;
                         switch (type) {
                             case 1:
-                                Launcher.with(getActivity(), StockPostTradeSuccessOperateActivity.class)
-                                        .putExtra(TRADE_TYPE, TRADE_TYPE_BUY)
-                                        .putExtra(ExtraKeys.VARIETY, data)
-                                        .execute();
+                                intent = new Intent(getActivity(), StockPostTradeSuccessOperateActivity.class);
+                                intent.putExtra(TRADE_TYPE, TRADE_TYPE_BUY);
+                                intent.putExtra(ExtraKeys.VARIETY, data);
+                                startActivityForResult(intent, REQUEST_CODE_ORDER);
                                 break;
                             case 2:
-                                Launcher.with(getActivity(), StockPostTradeSuccessOperateActivity.class)
-                                        .putExtra(TRADE_TYPE, TRADE_TYPE_SELL)
-                                        .putExtra(ExtraKeys.VARIETY, data)
-                                        .execute();
+                                intent = new Intent(getActivity(), StockPostTradeSuccessOperateActivity.class);
+                                intent.putExtra(TRADE_TYPE, TRADE_TYPE_SELL);
+                                intent.putExtra(ExtraKeys.VARIETY, data);
+                                startActivityForResult(intent, REQUEST_CODE_ORDER);
                                 break;
                             case 3:
-                                Launcher.with(getActivity(), StockDetailActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD, data)
-                                        .execute();
+                                intent = new Intent(getActivity(), StockTradeActivity.class);
+                                intent.putExtra(TRADE_TYPE, TRADE_TYPE_SELL);
+                                intent.putExtra(Launcher.EX_PAYLOAD, data);
+                                startActivityForResult(intent, REQUEST_CODE_ORDER);
+                                break;
                         }
                     }
                 })
@@ -236,6 +244,19 @@ public class StockPositionFragment extends BaseFragment {
         super.onDestroyView();
         unbinder.unbind();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ORDER && resultCode == RESULT_OK) {
+            if (getActivity() instanceof StockOrderActivity) {
+                StockOrderActivity activity = (StockOrderActivity) getActivity();
+                if (activity != null) {
+                    activity.setTabIndex(1);
+                }
+            }
+        }
     }
 
     private void hidePriOperateView(int index) {
