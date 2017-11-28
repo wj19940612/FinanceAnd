@@ -9,6 +9,7 @@ import com.sbai.finance.utils.MissAudioManager;
 /**
  * Created by ${wangJie} on 2017/11/20.
  * {@link Client# /explain/audioManage/getRecommendLatestAudio.do}
+ * /explain/audioManage/queryAudioByAudioIdForApp.do
  * 姐说主页电台信息
  */
 
@@ -52,7 +53,7 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
     private long createTime;
     private int displayStatus;      //显示状态
     private int goldAwardMoney;     //打赏（元宝）
-    private int id;
+    private int id;                 //音频id
     private long modifyTime;
     private int radioHost;          //主播
     private String radioHostName;  //主播名
@@ -68,10 +69,14 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
      * userPortrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/upload/20171120/useri1511172165802.png
      */
 
-    private String radioCover;
+    private String radioCover;  //电台封面
     private long reviewTime;
-    private String userPortrait;
+    private String userPortrait; //用户头像
+    /**
+     * deleted : 0
+     */
 
+    private int deleted;
 
     @Override
     public int getAudioId() {
@@ -359,5 +364,13 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
 
     public void setUserPortrait(String userPortrait) {
         this.userPortrait = userPortrait;
+    }
+
+    public int getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
     }
 }

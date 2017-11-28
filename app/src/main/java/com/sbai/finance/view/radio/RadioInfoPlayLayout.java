@@ -142,14 +142,16 @@ public class RadioInfoPlayLayout extends LinearLayout {
 
     public void setRadio(Radio radio) {
         mRadio = radio;
-        GlideApp.with(getContext())
-                .load(radio.getAudioCover())
-                .circleCrop()
-                .into(mVoiceCover);
-        mRadioTotalLength.setText(DateUtil.formatMediaLength(radio.getAudioTime()));
-        mListenNumber.setText(String.valueOf(radio.getViewNumber()));
-        mRadioSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
-        setPlayStatus(radio);
+        if (radio != null) {
+            GlideApp.with(getContext())
+                    .load(radio.getAudioCover())
+                    .circleCrop()
+                    .into(mVoiceCover);
+            mRadioTotalLength.setText(DateUtil.formatMediaLength(radio.getAudioTime()));
+            mListenNumber.setText(String.valueOf(radio.getViewNumber()));
+            mRadioSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
+            setPlayStatus(radio);
+        }
     }
 
     public void onPlayStop() {

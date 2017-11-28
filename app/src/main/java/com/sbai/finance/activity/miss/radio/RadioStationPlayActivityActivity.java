@@ -100,7 +100,6 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     TextView mRadioCollect;
 
     private Radio mRadio;
-    private RadioDetails mRadioDetails;
 
     private boolean mLoadMore;
     private ReplyDialogFragment mReplyDialogFragment;
@@ -144,8 +143,9 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        requestRadioDetails(mRadio);
+        requestAudioDetails();
         requestRadioReplyList(false);
+        requestRadioDetails();
     }
 
     private void requestRadioReplyList(final boolean showToast) {
@@ -192,18 +192,40 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         }
     }
 
+    private void requestRadioDetails() {
+        if (mRadio != null) {
+            Client.requestRadioDetails(mRadio.getRadioId())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<RadioDetails>, RadioDetails>() {
+
+                        @Override
+                        protected void onRespSuccessData(RadioDetails radioDetails) {
+                            mRadioInfoLayout.setRadioDetails(radioDetails);
+                        }
+                    })
+                    .fireFree();
+        }
+    }
+
     private void initData() {
         mRadio = getIntent().getParcelableExtra(ExtraKeys.RADIO);
         mVoiceId = getIntent().getIntExtra(ExtraKeys.IAudio, -1);
+        if (mVoiceId == -1 && mRadio != null) {
+            mVoiceId = mRadio.getId();
+        }
+    }
+
+    private void updateAudio() {
         if (mRadio != null) {
             mRadioInfoLayout.setRadio(mRadio);
             mRadioPlayLL.setRadio(mRadio);
             mRadioPlayLL.setPlayStatus(mRadio);
+            initMissFloatWindow();
         }
-        initMissFloatWindow(mRadio);
     }
 
-    private void initMissFloatWindow(Radio radio) {
+    private void initMissFloatWindow() {
         MissAudioManager missAudioManager = MissAudioManager.get();
         MissAudioManager.IAudio audio = missAudioManager.getAudio();
         if (missAudioManager.isPlaying()) {
@@ -229,38 +251,34 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         }
     }
 
-    private void requestRadioDetails(Radio radio) {
-        if (radio != null) {
-            Client.requestRadioDetails(radio.getRadioId())
-                    .setTag(TAG)
-                    .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<RadioDetails>, RadioDetails>() {
+    private void requestAudioDetails() {
+        Client.requestVoiceDetails(mVoiceId)
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Radio>, Radio>() {
 
-                        @Override
-                        protected void onRespSuccessData(RadioDetails data) {
-                            mRadioInfoLayout.setRadioDetails(data);
-                            if (MissAudioManager.get().isPlaying() && MissAudioManager.get().getAudio() instanceof Radio) {
-                                if (mRadioDetails != null) {
-                                    mMissFloatWindow.setMissAvatar(data.getUserPortrait(), Question.QUESTION_TYPE_HOT);
-                                }
-                            }
-                            updateRadioDetail(data);
+                    @Override
+                    protected void onRespSuccessData(Radio radio) {
+                        if (MissAudioManager.get().isPlaying() && MissAudioManager.get().getAudio() instanceof Radio) {
+                            mMissFloatWindow.setMissAvatar(radio.getUserPortrait(), Question.QUESTION_TYPE_HOT);
                         }
+                        updateRadioDetail(radio);
+                    }
 
-                        @Override
-                        public void onFinish() {
-                            super.onFinish();
-                            if (mSwipeRefreshLayout.isRefreshing())
-                                mSwipeRefreshLayout.setRefreshing(false);
-                        }
-                    })
-                    .fireFree();
-        }
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        updateAudio();
+                        if (mSwipeRefreshLayout.isRefreshing())
+                            mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                })
+                .fireFree();
     }
 
-    private void updateRadioDetail(RadioDetails radioDetails) {
-        mRadioDetails = radioDetails;
-        mRadioCollect.setSelected(radioDetails.getCollect() == RadioDetails.COLLECT);
+    private void updateRadioDetail(Radio radio) {
+        mRadio = radio;
+        mRadioCollect.setSelected(radio.getCollect() == RadioDetails.COLLECT);
     }
 
     private void initView() {
@@ -340,9 +358,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         mRadioPlayLL.setOnRadioPlayListener(new RadioInfoPlayLayout.OnRadioPlayListener() {
             @Override
             public void onRadioPlay() {
-//                if (mRadioDetails != null) {
-//                    mMissFloatWindow.setMissAvatar(mRadioDetails.getUserPortrait(), Question.QUESTION_TYPE_HOT);
-//                }
+                if (mRadio == null) return;
                 if (MissAudioManager.get().isStarted(mRadio)) {
                     if (mMediaPlayService != null) {
                         mMediaPlayService.onPausePlay(mRadio);
@@ -371,7 +387,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         mSet.clear();
         mPage = 0;
         requestRadioReplyList(true);
-        requestRadioDetails(mRadio);
+        requestAudioDetails();
     }
 
     private AppBarLayout.OnOffsetChangedListener sOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
@@ -496,8 +512,8 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         } else if (audio instanceof Radio) {
             mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait(), Question.QUESTION_TYPE_HOT);
             if (mRadio.getId() == audio.getAudioId()) {
-                if (mRadioDetails != null) {
-                    mMissFloatWindow.setMissAvatar(mRadioDetails.getUserPortrait(), Question.QUESTION_TYPE_HOT);
+                if (mRadio != null) {
+                    mMissFloatWindow.setMissAvatar(mRadio.getUserPortrait(), Question.QUESTION_TYPE_HOT);
                 }
                 mPlayThisVoice = true;
                 mRadioPlayLL.startAnimation();
@@ -531,13 +547,12 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     }
 
     private void radioShare() {
-        if (mRadioDetails != null) {
-            int voiceId = mRadio != null ? mRadio.getAudioId() : mVoiceId;
+        if (mRadio != null) {
             ShareDialog.with(getActivity())
-                    .setShareUrl(String.format(Client.SHARE_URL_RADIO, mRadioDetails.getId(), voiceId))
-                    .setShareTitle(mRadioDetails.getRadioName())
-                    .setShareDescription(mRadioDetails.getRadioIntroduction())
-                    .setShareThumbUrl(mRadioDetails.getRadioCover())
+                    .setShareUrl(String.format(Client.SHARE_URL_RADIO, mRadio.getRadioId(), mRadio.getId()))
+                    .setShareTitle(mRadio.getAudioName())
+                    .setShareDescription(mRadio.getAudioIntroduction())
+                    .setShareThumbUrl(mRadio.getAudioCover())
                     .setListener(new ShareDialog.OnShareDialogCallback() {
                         @Override
                         public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
@@ -554,14 +569,14 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     }
 
     private void radioCollect() {
-        if (mRadioDetails != null) {
-            Client.collect(String.valueOf(mRadioDetails.getId()), Radio.USER_COLLECT_TYPE_VOICE)
+        if (mRadio != null) {
+            Client.collect(String.valueOf(mRadio.getId()), Radio.USER_COLLECT_TYPE_VOICE)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
                             ToastUtil.show(resp.getMsg());
-                            mRadioDetails.setCollect(mRadioDetails.getCollect() == RadioDetails.COLLECT ? 0 : RadioDetails.COLLECT);
-                            mRadioCollect.setSelected(mRadioDetails.getCollect() == RadioDetails.COLLECT);
+                            mRadio.setCollect(mRadio.getCollect() == RadioDetails.COLLECT ? 0 : RadioDetails.COLLECT);
+                            mRadioCollect.setSelected(mRadio.getCollect() == RadioDetails.COLLECT);
                         }
                     })
                     .fireFree();

@@ -63,9 +63,9 @@ public class RadioInfoLayout extends LinearLayout {
     TextView mSubscribeStatus;
     private Unbinder mBind;
 
-    private RadioDetails mRadioDetails;
     private Radio mRadio;
     private TextView mReviewTextView;
+    private RadioDetails mRadioDetails;
 
     public RadioInfoLayout(Context context) {
         this(context, null);
@@ -102,16 +102,16 @@ public class RadioInfoLayout extends LinearLayout {
         mRadio = radio;
         mVoiceName.setText(radio.getAudioName());
         mVoiceIntroduce.setContentText(radio.getAudioIntroduction());
+        mRadioOwnerAvatar.setAvatar(radio.getUserPortrait(), Question.USER_IDENTITY_HOST);
+        mRadioOwnerName.setText(radio.getRadioHostName());
+        mRadioName.setText(radio.getRadioName());
+        GlideApp.with(getContext())
+                .load(radio.getRadioCover())
+                .into(mRadioCover);
     }
 
     public void setRadioDetails(RadioDetails radioDetails) {
         mRadioDetails = radioDetails;
-        mRadioOwnerAvatar.setAvatar(radioDetails.getUserPortrait(), Question.USER_IDENTITY_HOST);
-        mRadioOwnerName.setText(radioDetails.getRadioHostName());
-        mRadioName.setText(radioDetails.getRadioName());
-        GlideApp.with(getContext())
-                .load(radioDetails.getRadioCover())
-                .into(mRadioCover);
         updateRadioSubscriber();
     }
 
@@ -145,20 +145,20 @@ public class RadioInfoLayout extends LinearLayout {
                 break;
             case R.id.radioName:
             case R.id.radioCover:
-                if (mRadioDetails != null) {
+                if (mRadio != null) {
                     if (getContext() instanceof Activity) {
                         Activity activity = (Activity) getContext();
                         if (activity.getCallingActivity() != null &&
                                 activity.getCallingActivity().getClassName().equalsIgnoreCase(RadioStationListActivity.class.getName())) {
                             activity.finish();
-                        }else {
+                        } else {
                             Launcher.with(getContext(), RadioStationListActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, mRadioDetails.getId())
+                                    .putExtra(Launcher.EX_PAYLOAD, mRadio.getRadioId())
                                     .executeForResult(555);
                         }
                     } else {
                         Launcher.with(getContext(), RadioStationListActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mRadioDetails.getId())
+                                .putExtra(Launcher.EX_PAYLOAD, mRadio.getRadioId())
                                 .executeForResult(555);
                     }
                 }
@@ -174,7 +174,7 @@ public class RadioInfoLayout extends LinearLayout {
     }
 
     private void collectRadio() {
-        if (mRadio != null) {
+        if (mRadioDetails != null) {
             Client.collect(String.valueOf(mRadio.getRadioId()), Radio.USER_COLLECT_TYPE_RADIO)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override

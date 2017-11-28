@@ -3068,6 +3068,19 @@ public class Client {
     }
 
     /**
+     * P
+     * /explain/audioManage/queryAudioByAudioIdForApp.do
+     * POST
+     * [App]音频--通过音频id查音频详情(薛松)
+     *
+     * @param audioId
+     * @return
+     */
+    public static API requestVoiceDetails(int audioId) {
+        return new API("/explain/audioManage/queryAudioByAudioIdForApp.do", new ApiParams().put("audioId", audioId));
+    }
+
+    /**
      * /user/user/collect.do
      * POST
      * 用户-收藏（黄磊）

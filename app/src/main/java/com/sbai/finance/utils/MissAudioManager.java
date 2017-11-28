@@ -237,6 +237,7 @@ public class MissAudioManager {
     }
 
     public boolean isStarted(IAudio audio) {
+        if (audio == null) return false;
         if (mMediaPlayer != null) {
             return uuid(audio).equals(mUuid) && !mPaused && !mStopPostPrepared;
         }
