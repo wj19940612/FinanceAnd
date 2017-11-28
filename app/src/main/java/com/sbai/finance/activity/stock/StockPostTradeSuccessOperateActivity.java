@@ -266,7 +266,9 @@ public class StockPostTradeSuccessOperateActivity extends BaseActivity implement
             setResult(RESULT_OK);
             finish();
         } else {
-            
+            Launcher.with(getActivity(), StockOrderActivity.class)
+                    .putExtra(ExtraKeys.PAGE_INDEX, 1).execute();
+            finish();
         }
     }
 
