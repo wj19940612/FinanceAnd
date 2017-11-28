@@ -323,7 +323,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     public void onMediaPlayStart(int IAudioId, int source) {
         if (MissAudioManager.get().getAudio() instanceof Question) {
             Question playingQuestion = (Question) MissAudioManager.get().getAudio();
-            mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait(), playingQuestion.getUserType());
+            mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
         }
     }
 
@@ -332,7 +332,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         if (MissAudioManager.get().getAudio() instanceof Question) {
             Question playingQuestion = (Question) MissAudioManager.get().getAudio();
             if (playingQuestion.getId() == mQuestionId) {
-                mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait(), playingQuestion.getUserType());
+                mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
                 mPlayThisVoice = true;
                 setPlayingState();
                 mMissFloatWindow.setVisibility(View.GONE);
@@ -519,7 +519,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                 mPlayThisVoice = false;
                 mMissFloatWindow.startAnim();
                 mMissFloatWindow.setVisibility(View.VISIBLE);
-                mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait(), Question.QUESTION_TYPE_HOT);
+                mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
             } else if (audio instanceof Question) {
                 if (question == null) {
                     mPlayThisVoice = false;
@@ -527,7 +527,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                     if (MissAudioManager.get().isStarted(audio)) {
                         if (mQuestion.getId() != ((Question) audio).getId()) {
                             mPlayThisVoice = false;
-                            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait(), ((Question) audio).getUserType());
+                            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
                             mMissFloatWindow.startAnim();
                             mMissFloatWindow.setVisibility(View.VISIBLE);
                         } else {

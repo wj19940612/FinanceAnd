@@ -98,10 +98,10 @@ public class MissFloatWindow extends LinearLayout {
         if (getContext() == null || ((Activity) getContext()).isFinishing()) {
             return;
         }
-        setMissAvatar(avatarUrl, Question.USER_IDENTITY_ORDINARY);
+        setMissAvatar(avatarUrl, Question.USER_IDENTITY_HOST);
     }
 
-    public void setMissAvatar(String avatarUrl, int userIdentity) {
+    private void setMissAvatar(String avatarUrl, int userIdentity) {
         mMissAvatar.setAvatar(avatarUrl, userIdentity);
     }
 
