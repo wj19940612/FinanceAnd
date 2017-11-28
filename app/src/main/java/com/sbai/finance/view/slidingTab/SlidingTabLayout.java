@@ -358,6 +358,17 @@ public class SlidingTabLayout extends HorizontalScrollView {
         }
     }
 
+    public void setSelectTab(int index) {
+        if (index < getTabStrip().getChildCount()) {
+            for (int i = 0; i < getTabStrip().getChildCount(); i++) {
+                TextView textView = (TextView) getTabStrip().getChildAt(i);
+                textView.setSelected(false);
+            }
+            TextView textView = (TextView) getTabStrip().getChildAt(index);
+            textView.setSelected(true);
+        }
+    }
+
     private class InternalViewPagerListener implements ViewPager.OnPageChangeListener {
         private int mScrollState;
 
