@@ -49,8 +49,10 @@ public class Client {
     public static final String CREATE_RADIO_STATION = API.getHost() + "/lm/banner/addaudio.html";
 
     //姐说话题详情页
-    public static final String MISS_TOP_DETAILS_H5_URL = API.getHost() + "/lm/topic/index.html?id=%d";
+    public static final String MISS_TOP_DETAILS_H5_URL = API.getHost() + "/lm/topic/index.html?id=%s";
 
+    //音频详情分享
+    public static final String SHARE_URL_RADIO = API.getHost() + "/lm/share_audio/index.html?radioId=%d&audioId=%d";
 
     public static String getServiceQQ(String serviceQQ) {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
@@ -3054,7 +3056,7 @@ public class Client {
     }
 
     /**
-     * /explain/radioManage/queryRadioByRadioId.do
+     * /explain/radioManage/queryRadioByRadioIdForApp.do
      * GET
      * 小姐姐管理--查询电台详情(薛松)
      *
@@ -3062,7 +3064,7 @@ public class Client {
      * @return
      */
     public static API requestRadioDetails(int radioId) {
-        return new API("/explain/radioManage/queryRadioByRadioId.do", new ApiParams().put("radioId", radioId));
+        return new API("/explain/radioManage/queryRadioByRadioIdForApp.do", new ApiParams().put("radioId", radioId));
     }
 
     /**
@@ -3128,8 +3130,8 @@ public class Client {
     /**
      * 对收藏的东西已读
      */
-    public static API readCollect(int dataId){
-        return new API(POST,"/user/user/readCollect.do", new ApiParams().put("id", dataId));
+    public static API readCollect(int dataId) {
+        return new API(POST, "/user/user/readCollect.do", new ApiParams().put("id", dataId));
     }
 
 }

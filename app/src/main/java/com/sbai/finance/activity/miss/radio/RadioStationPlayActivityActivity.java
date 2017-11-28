@@ -52,6 +52,7 @@ import com.sbai.finance.utils.RenderScriptGaussianBlur;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.finance.view.MissFloatWindow;
+import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.finance.view.radio.RadioInfoLayout;
 import com.sbai.finance.view.radio.RadioInfoPlayLayout;
 import com.sbai.glide.GlideApp;
@@ -122,6 +123,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         public void onServiceDisconnected(ComponentName componentName) {
         }
     };
+    private int mVoiceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,15 +145,18 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     protected void onPostResume() {
         super.onPostResume();
         requestRadioDetails(mRadio);
-        requestRadioReplyList();
+        requestRadioReplyList(false);
     }
 
-    private void requestRadioReplyList() {
+    private void requestRadioReplyList(final boolean showToast) {
         Client.requestRadioReplyList(mPage, mRadio.getRadioId(), mRadio.getAudioId())
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
                     @Override
                     protected void onRespSuccessData(QuestionReply questionReply) {
+                        if (showToast) {
+                            ToastUtil.show("刷新成功");
+                        }
                         if (questionReply.getData() != null) {
                             updateRadioReply(questionReply.getData(), questionReply.getResultCount());
                         }
@@ -189,6 +194,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
 
     private void initData() {
         mRadio = getIntent().getParcelableExtra(ExtraKeys.RADIO);
+        mVoiceId = getIntent().getIntExtra(ExtraKeys.IAudio, -1);
         if (mRadio != null) {
             mRadioInfoLayout.setRadio(mRadio);
             mRadioPlayLL.setRadio(mRadio);
@@ -321,7 +327,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (mLoadMore && recycleIsScrollBottom(recyclerView)) {
-                    requestRadioReplyList();
+                    requestRadioReplyList(false);
                 }
             }
 
@@ -364,7 +370,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     private void refreshRadioReviewData() {
         mSet.clear();
         mPage = 0;
-        requestRadioReplyList();
+        requestRadioReplyList(true);
         requestRadioDetails(mRadio);
     }
 
@@ -416,6 +422,8 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     protected IntentFilter getIntentFilter() {
         IntentFilter intentFilter = super.getIntentFilter();
         intentFilter.addAction(CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS);
+        intentFilter.addAction(LoginActivity.ACTION_LOGIN_SUCCESS);
+        intentFilter.addAction(LoginActivity.ACTION_LOGOUT_SUCCESS);
         return intentFilter;
     }
 
@@ -467,7 +475,9 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
 
     @Override
     public void onOtherReceive(Context context, Intent intent) {
-        if (CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+        if (CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS.equalsIgnoreCase(intent.getAction())
+                || LoginActivity.ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())
+                || LoginActivity.ACTION_LOGOUT_SUCCESS.equalsIgnoreCase(intent.getAction())) {
             refreshRadioReviewData();
         }
     }
@@ -505,14 +515,41 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                 onBackPressed();
                 break;
             case R.id.share:
-                // TODO: 2017/11/23 分享
+                radioShare();
                 break;
             case R.id.review:
                 commentRadio();
                 break;
             case R.id.radioCollect:
-                radioCollect();
+                if (LocalUser.getUser().isLogin()) {
+                    radioCollect();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
                 break;
+        }
+    }
+
+    private void radioShare() {
+        if (mRadioDetails != null) {
+            int voiceId = mRadio != null ? mRadio.getAudioId() : mVoiceId;
+            ShareDialog.with(getActivity())
+                    .setShareUrl(String.format(Client.SHARE_URL_RADIO, mRadioDetails.getId(), voiceId))
+                    .setShareTitle(mRadioDetails.getRadioName())
+                    .setShareDescription(mRadioDetails.getRadioIntroduction())
+                    .setShareThumbUrl(mRadioDetails.getRadioCover())
+                    .setListener(new ShareDialog.OnShareDialogCallback() {
+                        @Override
+                        public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
+                            Client.share().fireFree();
+                        }
+
+                        @Override
+                        public void onFeedbackClick(View view) {
+
+                        }
+                    })
+                    .show();
         }
     }
 
@@ -669,14 +706,18 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                 mReviewPriceCount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Client.praiseMissReply(item.getId())
-                                .setCallback(new Callback2D<Resp<Praise>, Praise>() {
-                                    @Override
-                                    protected void onRespSuccessData(Praise data) {
-                                        setReviewPrice(data.getPriseCount(), data.getIsPrise());
-                                    }
-                                })
-                                .fireFree();
+                        if (LocalUser.getUser().isLogin()) {
+                            Client.praiseMissReply(item.getId())
+                                    .setCallback(new Callback2D<Resp<Praise>, Praise>() {
+                                        @Override
+                                        protected void onRespSuccessData(Praise data) {
+                                            setReviewPrice(data.getPriseCount(), data.getIsPrise());
+                                        }
+                                    })
+                                    .fireFree();
+                        } else {
+                            Launcher.with(context, LoginActivity.class).execute();
+                        }
                     }
                 });
                 mRootView.setOnClickListener(new View.OnClickListener() {

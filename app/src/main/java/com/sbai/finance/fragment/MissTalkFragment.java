@@ -3,6 +3,7 @@ package com.sbai.finance.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -35,6 +36,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.MissSwitcherModel;
 import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -61,6 +63,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
+import static com.sbai.finance.activity.BaseActivity.ACTION_LOGOUT_SUCCESS;
+import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_CODE_LOGIN;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
@@ -144,6 +149,15 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     }
 
     @Override
+    public IntentFilter getIntentFilter() {
+        IntentFilter intentFilter = super.getIntentFilter();
+        intentFilter.addAction(ACTION_LOGIN_SUCCESS);
+        intentFilter.addAction(ACTION_LOGOUT_SUCCESS);
+        intentFilter.addAction(ACTION_REWARD_SUCCESS);
+        return intentFilter;
+    }
+
+    @Override
     public void onMediaPlay(int IAudioId, int source) {
         mMissFloatWindow.startAnim();
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
@@ -189,6 +203,39 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         notifyFragmentDataSetChange(source);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
             mMissRadioLayout.onMediaStop();
+        }
+    }
+
+    @Override
+    public void onOtherReceive(Context context, Intent intent) {
+        super.onOtherReceive(context, intent);
+        if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())
+                || ACTION_LOGOUT_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            MissAskFragment missHotQuestionFragment = getMissHotQuestionFragment();
+            if (missHotQuestionFragment != null) {
+                missHotQuestionFragment.refreshData();
+            }
+
+            MissAskFragment missLatestQuestionFragment = getMissLatestQuestionFragment();
+            if (missLatestQuestionFragment != null) {
+                missLatestQuestionFragment.refreshData();
+            }
+        }
+
+        if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            int rewardId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+            if (rewardId == RewardInfo.TYPE_QUESTION) {
+                MissAskFragment missHotQuestionFragment = getMissHotQuestionFragment();
+                if (missHotQuestionFragment != null) {
+                    missHotQuestionFragment.updateRewardInfo(rewardId);
+                }
+
+                MissAskFragment missLatestQuestionFragment = getMissLatestQuestionFragment();
+                if (missLatestQuestionFragment != null) {
+                    missLatestQuestionFragment.updateRewardInfo(rewardId);
+                }
+            }
+
         }
     }
 

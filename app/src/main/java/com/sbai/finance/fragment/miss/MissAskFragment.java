@@ -1,13 +1,10 @@
 package com.sbai.finance.fragment.miss;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,9 +51,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
-import static com.sbai.finance.activity.BaseActivity.ACTION_LOGOUT_SUCCESS;
-import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
 
@@ -136,34 +130,6 @@ public class MissAskFragment extends MediaPlayFragment {
         mOnMissAskPageListener = onMissAskPageListener;
     }
 
-    private BroadcastReceiver mRefreshBroadcastReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-                int rewardId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
-                if (rewardId == RewardInfo.TYPE_QUESTION) {
-                    for (int i = 0; i < mMissAskAdapter.getMissAskList().size(); i++) {
-                        for (Question result : mMissAskAdapter.getMissAskList()) {
-                            if (result.getId() == rewardId) {
-                                int questionRewardCount = result.getAwardCount() + 1;
-                                result.setAwardCount(questionRewardCount);
-                                mMissAskAdapter.notifyDataSetChanged();
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())
-                        || ACTION_LOGOUT_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-                    refreshData();
-                }
-            }
-        }
-    };
-
 
     public static MissAskFragment newInstance(int type, OnMissAskPageListener onMissAskPageListener) {
         MissAskFragment fragment = new MissAskFragment();
@@ -194,10 +160,10 @@ public class MissAskFragment extends MediaPlayFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        registerReceiver();
         initView();
         requestAskList(true);
     }
+
 
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
@@ -272,9 +238,26 @@ public class MissAskFragment extends MediaPlayFragment {
     }
 
     @Override
+    public void onOtherReceive(Context context, Intent intent) {
+        super.onOtherReceive(context, intent);
+    }
+
+    public void updateRewardInfo(int rewardId) {
+        for (int i = 0; i < mMissAskAdapter.getMissAskList().size(); i++) {
+            for (Question result : mMissAskAdapter.getMissAskList()) {
+                if (result.getId() == rewardId) {
+                    int questionRewardCount = result.getAwardCount() + 1;
+                    result.setAwardCount(questionRewardCount);
+                    mMissAskAdapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRefreshBroadcastReceiver);
         mEmptyRecyclerView.clearOnChildAttachStateChangeListeners();
         unbinder.unbind();
     }
@@ -283,15 +266,6 @@ public class MissAskFragment extends MediaPlayFragment {
         mCreateTime = null;
 //        mSet = new HashSet<>();
         requestAskList(true);
-    }
-
-    private void registerReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_REWARD_SUCCESS);
-        filter.addAction(ACTION_LOGIN_SUCCESS);
-        filter.addAction(ACTION_LOGOUT_SUCCESS);
-
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRefreshBroadcastReceiver, filter);
     }
 
     private void requestAskList(final boolean isRefresh) {
