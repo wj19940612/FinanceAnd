@@ -27,6 +27,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.RadioStationListActivity;
+
 import com.sbai.finance.fragment.MediaPlayFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
@@ -190,7 +191,9 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
         mRadioAdapter.setCallback(new RadioAdapter.CallBack() {
             @Override
             public void onItemClick(RadioInfo radioInfo) {
-                Launcher.with(getActivity(), RadioStationListActivity.class).putExtra(Launcher.EX_PAYLOAD, radioInfo.getId()).execute();
+                Launcher.with(getActivity(), RadioStationListActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, radioInfo.getId())
+                        .execute();
             }
         });
 

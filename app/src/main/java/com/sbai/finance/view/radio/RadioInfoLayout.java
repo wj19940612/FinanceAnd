@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
@@ -154,12 +155,12 @@ public class RadioInfoLayout extends LinearLayout {
                             activity.finish();
                         } else {
                             Launcher.with(getContext(), RadioStationListActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, mRadio.getRadioId())
+                                    .putExtra(ExtraKeys.RADIO, mRadio)
                                     .executeForResult(555);
                         }
                     } else {
                         Launcher.with(getContext(), RadioStationListActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mRadio.getRadioId())
+                                .putExtra(ExtraKeys.RADIO, mRadio)
                                 .executeForResult(555);
                     }
                 }
