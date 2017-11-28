@@ -970,6 +970,7 @@
     <string name="know">知道了</string>
     <string name="no_this_data">- -</string>
     <string name="volume_can_buy_x">可买%1$d</string>
+    <string name="volume_can_sell_x">可卖%1$d</string>
     <string name="entrust_buy_confirm">委托买入确认</string>
     <string name="entrust_sell_confirm">委托卖出确认</string>
     <string name="direction_x">方向：</string>
@@ -980,6 +981,8 @@
     <string name="total_value_x">总价：</string>
     <string name="yuan">元</string>
     <string name="about_x_yuan_without_fee">约%1$s元，不含手续费</string>
-    <string name="buy_success">买入成功</string>
-    <string name="sell_success">卖出成功</string>
+    <string name="buy_success">成功买入, 可在[订单]查看</string>
+    <string name="sell_success">成功卖出，可在[订单]查看</string>
+    <string name="stay_current_page">留在当前页</string>
+    <string name="check_orders">查看订单</string>
 </resources>

@@ -47,7 +47,7 @@ public class TradeConfirmDialog {
     public static TradeConfirmDialog with(Activity activity, StockOrder stockOrder) {
         TradeConfirmDialog confirmDialog = new TradeConfirmDialog();
         confirmDialog.mActivity = activity;
-        confirmDialog.mSmartDialog = SmartDialog.with(activity);
+        confirmDialog.mSmartDialog = SmartDialog.single(activity);
         confirmDialog.mView = LayoutInflater.from(activity).inflate(R.layout.dialog_trade_confirm, null);
         confirmDialog.mSmartDialog.setCustomView(confirmDialog.mView);
         confirmDialog.mStockOrder = stockOrder;

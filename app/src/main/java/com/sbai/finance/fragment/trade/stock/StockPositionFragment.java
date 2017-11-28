@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.StockDetailActivity;
-import com.sbai.finance.activity.stock.StockTradeOperateActivity;
+import com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity;
 import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
@@ -51,9 +51,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE;
-import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_BUY;
-import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_SELL;
+import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE;
+import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE_BUY;
+import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE_SELL;
 
 /**
  * 股票持仓
@@ -209,13 +209,13 @@ public class StockPositionFragment extends BaseFragment {
                     protected void onRespSuccessData(Variety data) {
                         switch (type) {
                             case 1:
-                                Launcher.with(getActivity(), StockTradeOperateActivity.class)
+                                Launcher.with(getActivity(), StockPostTradeSuccessOperateActivity.class)
                                         .putExtra(TRADE_TYPE, TRADE_TYPE_BUY)
                                         .putExtra(ExtraKeys.VARIETY, data)
                                         .execute();
                                 break;
                             case 2:
-                                Launcher.with(getActivity(), StockTradeOperateActivity.class)
+                                Launcher.with(getActivity(), StockPostTradeSuccessOperateActivity.class)
                                         .putExtra(TRADE_TYPE, TRADE_TYPE_SELL)
                                         .putExtra(ExtraKeys.VARIETY, data)
                                         .execute();

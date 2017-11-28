@@ -548,7 +548,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                 break;
             case R.id.mockTrade:
                 if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), StockTradeOperateActivity.class)
+                    Launcher.with(getActivity(), StockPostTradeSuccessOperateActivity.class)
                             .putExtra(ExtraKeys.VARIETY, mVariety)
                             .execute();
                 } else {

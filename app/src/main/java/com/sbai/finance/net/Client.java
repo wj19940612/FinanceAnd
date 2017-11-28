@@ -3063,6 +3063,8 @@ public class Client {
 
     /**
      * 股票下单
+     * @param stockOrder
+     * @return
      */
     public static API markStockOrder(StockOrder stockOrder) {
         return new API(POST, "/api/stock-or/declare/bid.do", new ApiParams(StockOrder.class, stockOrder));

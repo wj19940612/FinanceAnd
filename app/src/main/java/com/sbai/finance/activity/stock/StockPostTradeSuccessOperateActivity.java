@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,6 +23,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.stock.StockTradeOperateFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
@@ -60,7 +62,7 @@ import butterknife.OnClick;
  * <p>
  * 股票交易操作页面，买入卖出，如果从股票详情页面进入，当前账户为模拟，如果从账户页面进入，依赖于当前保存是什么账户
  */
-public class StockTradeOperateActivity extends BaseActivity implements StockTradeOperateFragment.OnTradeListener {
+public class StockPostTradeSuccessOperateActivity extends BaseActivity implements StockTradeOperateFragment.OnPostTradeSuccessListener {
 
     public static final String TRADE_TYPE = "trade_type";
     public static final int TRADE_TYPE_BUY = 80;
@@ -85,8 +87,8 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
     private StockTradeAdapter mStockTradeAdapter;
 
     private int mTradeType;
-    private Variety mVariety;
     private StockRTData mStockRTData;
+    private Variety mVariety;
 
     private HoldingPositionsAdapter mHoldingPositionsAdapter;
 
@@ -115,7 +117,7 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
     private void refreshStockUser(StockUser stockUser) {
         LocalUser.getUser().setStockUser(stockUser);
         mStockAccountName.setText(stockUser.getAccountName());
-        updateMaxTradeVolume();
+        updateMaxBuyableVolume();
         requestStockHoldingList();
     }
 
@@ -167,14 +169,61 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
     private void iniListView() {
         mHoldingPositionsAdapter = new HoldingPositionsAdapter(getActivity());
         mListView.setAdapter(mHoldingPositionsAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                Object item = adapterView.getAdapter().getItem(pos);
+                if (item instanceof Position) {
+                    requestNewStockInfo(((Position) item).getVarietyCode());
+                }
+            }
+        });
     }
 
-    private void updateMaxTradeVolume() {
+    private void requestNewStockInfo(String varietyCode) {
+        Client.getStockInfo(varietyCode).setTag(TAG)
+                .setCallback(new Callback2D<Resp<Variety>, Variety>() {
+                    @Override
+                    protected void onRespSuccessData(Variety data) {
+                        mVariety = data;
+                        updateWithVariety();
+                        requestStockRTData();
+                        updateMaxBuyableVolume();
+                        requestStockHoldingList();
+                    }
+                }).fire();
+    }
+
+    private void updateWithVariety() {
         for (int i = 0; i < mStockTradeAdapter.getCount(); i++) {
             Fragment fragment = mStockTradeAdapter.getFragment(i);
             if (fragment instanceof StockTradeOperateFragment) {
-                ((StockTradeOperateFragment) fragment).updateMaxTradeVolume();
+                ((StockTradeOperateFragment) fragment).updateWithVariety(mVariety);
             }
+        }
+    }
+
+    private void updateMaxBuyableVolume() {
+        Fragment fragment = mStockTradeAdapter.getFragment(0);
+        if (fragment instanceof StockTradeOperateFragment) {
+            ((StockTradeOperateFragment) fragment).updateMaxBuyableVolume();
+        }
+    }
+
+    private void updateMaxSalableVolume() {
+        List<Position> positionList = mHoldingPositionsAdapter.getPositionList();
+        if (positionList.isEmpty()) return;
+
+        int salableVolume = 0;
+        for (Position position : positionList) {
+            if (mVariety.getVarietyType().equals(position.getVarietyCode())) {
+                salableVolume = position.getUsableQty();
+                break;
+            }
+        }
+        Fragment fragment = mStockTradeAdapter.getFragment(1);
+        if (fragment instanceof StockTradeOperateFragment) {
+            ((StockTradeOperateFragment) fragment).updateMaxSalableVolume(salableVolume);
         }
     }
 
@@ -203,12 +252,7 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
     }
 
     @Override
-    public void onStockTradeSuccess() {
-        SmartDialog.with(getActivity(), R.string.buy_success)
-                .setTitle(R.string.tips)
-                .setNegativeVisible(View.GONE)
-                .show();
-
+    public void onPostTradeSuccess() {
         StockUser stockUser = LocalUser.getUser().getStockUser();
         if (stockUser != null) {
             requestStockUser();
@@ -216,10 +260,14 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
     }
 
     @Override
-    public void onStockTradeFailure(String msg) {
-        SmartDialog.with(getActivity(), msg)
-                .setNegativeVisible(View.GONE)
-                .show();
+    public void onCheckOrderClick() {
+        if (getCallingActivity() != null
+                && getCallingActivity().getClassName().equals(StockOrderActivity.class.getName())) {
+            setResult(RESULT_OK);
+            finish();
+        } else {
+            
+        }
     }
 
     private void showActivityPickerDialog(final List<StockUser> stockUserList) {
@@ -436,6 +484,7 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
                     protected void onRespSuccessData(PositionRecords data) {
                         mHoldingPositionsAdapter.setPositionList(data.getList());
                         requestStockHoldingListMarketData();
+                        updateMaxSalableVolume();
                     }
                 }).fireFree();
     }
