@@ -27,6 +27,7 @@ import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.stock.StockTradeOperateFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.local.StockOrder;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.stock.StockRTData;
@@ -266,8 +267,10 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
             setResult(RESULT_OK);
             finish();
         } else {
-            Launcher.with(getActivity(), StockOrderActivity.class)
-                    .putExtra(ExtraKeys.PAGE_INDEX, 1).execute();
+            Intent intent = new Intent(getActivity(), StockOrderActivity.class);
+            intent.putExtra(ExtraKeys.PAGE_INDEX, 1);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
             finish();
         }
     }

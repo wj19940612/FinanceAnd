@@ -153,14 +153,14 @@ public class StockEntrustFragment extends BaseFragment {
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        requestEntrust(false);
+                        requestEntrust(true);
 
                     }
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         ToastUtil.show(failedResp.getMsg());
-                        requestEntrust(false);
+                        requestEntrust(true);
                     }
                 }).fireFree();
     }

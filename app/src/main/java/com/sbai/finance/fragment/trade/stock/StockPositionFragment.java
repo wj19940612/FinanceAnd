@@ -1,6 +1,5 @@
 package com.sbai.finance.fragment.trade.stock;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,17 +23,12 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.StockDetailActivity;
-<<<<<<< HEAD
-import com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity;
 import com.sbai.finance.activity.stock.StockTradeActivity;
-=======
 import com.sbai.finance.activity.stock.StockTradeOperateActivity;
->>>>>>> 032939b302a08f85de30060cf240a1c2d6b294c4
 import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.local.StockOrder;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Position;
@@ -58,16 +52,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-<<<<<<< HEAD
 import static android.app.Activity.RESULT_OK;
-import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE;
-import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE_BUY;
-import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE_SELL;
-=======
 import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE;
 import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_BUY;
 import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_SELL;
->>>>>>> 032939b302a08f85de30060cf240a1c2d6b294c4
 
 /**
  * 股票持仓
@@ -225,19 +213,19 @@ public class StockPositionFragment extends BaseFragment {
                         Intent intent = null;
                         switch (type) {
                             case 1:
-                                intent = new Intent(getActivity(), StockPostTradeSuccessOperateActivity.class);
+                                intent = new Intent(getActivity(), StockTradeOperateActivity.class);
                                 intent.putExtra(TRADE_TYPE, TRADE_TYPE_BUY);
                                 intent.putExtra(ExtraKeys.VARIETY, data);
                                 startActivityForResult(intent, REQUEST_CODE_ORDER);
                                 break;
                             case 2:
-                                intent = new Intent(getActivity(), StockPostTradeSuccessOperateActivity.class);
+                                intent = new Intent(getActivity(), StockTradeOperateActivity.class);
                                 intent.putExtra(TRADE_TYPE, TRADE_TYPE_SELL);
                                 intent.putExtra(ExtraKeys.VARIETY, data);
                                 startActivityForResult(intent, REQUEST_CODE_ORDER);
                                 break;
                             case 3:
-                                intent = new Intent(getActivity(), StockTradeActivity.class);
+                                intent = new Intent(getActivity(), StockDetailActivity.class);
                                 intent.putExtra(TRADE_TYPE, TRADE_TYPE_SELL);
                                 intent.putExtra(Launcher.EX_PAYLOAD, data);
                                 startActivityForResult(intent, REQUEST_CODE_ORDER);

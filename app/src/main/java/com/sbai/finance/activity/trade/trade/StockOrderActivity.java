@@ -229,7 +229,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_ORDER && requestCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE_ORDER && resultCode == RESULT_OK) {
             setTabIndex(1);
         }
     }
