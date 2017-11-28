@@ -308,6 +308,10 @@ public class StockEntrustFragment extends BaseFragment {
                     mEntrustBs.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
                 }
                 switch (entrust.getMoiety()) {
+                    case Entrust.ENTRUST_STATUS_WAIT_WITHDRAW:
+                        mEntrustStatus.setVisibility(View.VISIBLE);
+                        mEntrustStatus.setText(context.getString(R.string.wait_withdraw));
+                        break;
                     case Entrust.ENTRUST_STATUS_NO_BUSINESS:
                         mEntrustStatus.setVisibility(View.VISIBLE);
                         mEntrustStatus.setText(context.getString(R.string.wait_business));

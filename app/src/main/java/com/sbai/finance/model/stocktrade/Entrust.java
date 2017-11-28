@@ -5,7 +5,8 @@ package com.sbai.finance.model.stocktrade;
  */
 
 public class Entrust {
-    // 1 已报待成 2部成 3已成
+    // 0 等待撤单 1 已报待成 2部成 3已成
+    public static final int ENTRUST_STATUS_WAIT_WITHDRAW = 0;
     public static final int ENTRUST_STATUS_NO_BUSINESS = 1;
     public static final int ENTRUST_STATUS_PART_BUSINESS = 2;
     public static final int ENTRUST_STATUS_ALL_BUSINESS = 3;
