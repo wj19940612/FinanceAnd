@@ -21,7 +21,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,6 +46,7 @@ import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.glide.GlideApp;
@@ -99,6 +99,8 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
     ImageView mBack;
     @BindView(R.id.grantBack)
     View mGrantBack;
+    @BindView(R.id.missFloatWindow)
+    MissFloatWindow mMissFloatWindow;
 
 
     private ProfileFragmentAdapter mProfileFragmentAdapter;
@@ -126,6 +128,10 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
 
     public MediaPlayService getMediaPlayService() {
         return mMediaPlayService;
+    }
+
+    public MissFloatWindow getFloatWindow(){
+        return mMissFloatWindow;
     }
 
     @Override

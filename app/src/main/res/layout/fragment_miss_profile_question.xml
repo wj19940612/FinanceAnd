@@ -37,14 +37,14 @@
         android:textSize="15sp"
         android:visibility="gone"/>
 
-    <com.sbai.finance.view.MissFloatWindow
-        android:id="@+id/missFloatWindow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="54dp"
-        android:layout_marginRight="14dp"
-        android:visibility="gone"/>
+    <!--<com.sbai.finance.view.MissFloatWindow-->
+        <!--android:id="@+id/missFloatWindow"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginBottom="54dp"-->
+        <!--android:layout_marginRight="14dp"-->
+        <!--android:visibility="gone"/>-->
 
 </RelativeLayout>
