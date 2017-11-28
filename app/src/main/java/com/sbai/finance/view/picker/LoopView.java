@@ -557,12 +557,11 @@ public class LoopView extends View {
             int i = (int) ((velocity * 10F) / 1000F);
             mTotalScrollY = mTotalScrollY - i;
             if (!mCanLoop) {
-                float itemHeight = lineSpacingMultiplier * mMaxTextHeight;
-                if (mTotalScrollY <= (int) ((float) (-mInitPosition) * itemHeight)) {
+                if (mTotalScrollY <= (int) ((float) (-mInitPosition) * mItemHeight)) {
                     velocity = 40F;
-                    mTotalScrollY = (int) ((float) (-mInitPosition) * itemHeight);
-                } else if (mTotalScrollY >= (int) ((float) (mDataList.size() - 1 - mInitPosition) * itemHeight)) {
-                    mTotalScrollY = (int) ((float) (mDataList.size() - 1 - mInitPosition) * itemHeight);
+                    mTotalScrollY = (int) ((float) (-mInitPosition) * mItemHeight);
+                } else if (mTotalScrollY >= (int) ((float) (mDataList.size() - 1 - mInitPosition) * mItemHeight)) {
+                    mTotalScrollY = (int) ((float) (mDataList.size() - 1 - mInitPosition) * mItemHeight);
                     velocity = -40F;
                 }
             }
