@@ -30,20 +30,20 @@ public class Display {
         return displayMetrics;
     }
 
-    public static float getScreenWidth() {
+    public static int getScreenWidth() {
         DisplayMetrics displayMetrics = getDisplayMetrics();
         if (displayMetrics != null && displayMetrics.widthPixels != 0) {
             return displayMetrics.widthPixels;
         }
-        return 1080f;
+        return 1080;
     }
 
-    public static float getScreenHeight() {
+    public static int getScreenHeight() {
         DisplayMetrics displayMetrics = getDisplayMetrics();
         if (displayMetrics != null && displayMetrics.heightPixels != 0) {
             return displayMetrics.heightPixels;
         }
-        return 1920f;
+        return 1920;
     }
 
 }

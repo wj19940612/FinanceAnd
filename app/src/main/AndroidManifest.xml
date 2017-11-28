@@ -203,6 +203,8 @@
         <activity
             android:name=".activity.future.FutureTradeActivity"
             android:screenOrientation="portrait"/>
+
+        <!--Stock-->
         <activity
             android:name=".activity.stock.SearchStockActivity"
             android:screenOrientation="portrait"/>
@@ -212,8 +214,10 @@
         <activity
             android:name=".activity.stock.StockIndexActivity"
             android:screenOrientation="portrait"/>
-        <!-- 观点大神 -->
-
+        <activity
+            android:name=".activity.stock.StockTradeOperateActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"/>
 
         <!-- 交易 H5 -->
         <activity
@@ -420,6 +424,15 @@
         <activity
             android:name=".activity.battle.BattleRuleActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.trade.trade.StockOrderActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.trade.trade.TodayBusinessActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.trade.trade.HistoryBusinessActivity"
+            android:screenOrientation="portrait"/>
         <!--我的-->
         <activity
             android:name=".activity.mine.MySubscribeActivity"
@@ -431,5 +444,4 @@
             android:name=".activity.mine.WaitForMeAnswerActivity"
             android:screenOrientation="portrait"/>
     </application>
-
 </manifest>

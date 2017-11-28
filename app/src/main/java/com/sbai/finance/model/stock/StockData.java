@@ -1,5 +1,7 @@
 package com.sbai.finance.model.stock;
 
+import android.text.TextUtils;
+
 import com.sbai.finance.utils.FinanceUtil;
 
 /**
@@ -27,71 +29,63 @@ public class StockData {
     private double upDropSpeed;
     private long upTime;
     private String upTimeFormat;
+    private String preClsPrice;
     private String status;
+
+    public String getPreClsPrice() {
+        return preClsPrice;
+    }
+
+    public void setPreClsPrice(String preClsPrice) {
+        this.preClsPrice = preClsPrice;
+    }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getInstrumentId() {
         return instrumentId;
     }
 
-    public void setInstrumentId(String instrumentId) {
-        this.instrumentId = instrumentId;
-    }
-
-    public String getLastPrice() {
+    public String getFormattedLastPrice() {
+        if (TextUtils.isEmpty(lastPrice)) {
+            return "--";
+        }
         return FinanceUtil.formatWithScale(lastPrice);
     }
 
-    public void setLastPrice(String lastPrice) {
-        this.lastPrice = lastPrice;
+    public String getLastPrice() {
+        return lastPrice;
     }
 
     public String getTradeDay() {
         return tradeDay;
     }
 
-    public void setTradeDay(String tradeDay) {
-        this.tradeDay = tradeDay;
-    }
-
-    public String getUpDropPrice() {
+    public String getFormattedUpDropPrice() {
+        if (TextUtils.isEmpty(upDropPrice)) {
+            return "--";
+        }
         return FinanceUtil.formatWithScale(upDropPrice);
     }
 
-    public void setUpDropPrice(String upDropPrice) {
-        this.upDropPrice = upDropPrice;
+    public String getUpDropPrice() {
+        return upDropPrice;
     }
 
     public double getUpDropSpeed() {
         return upDropSpeed;
     }
 
-    public void setUpDropSpeed(double upDropSpeed) {
-        this.upDropSpeed = upDropSpeed;
-    }
-
     public long getUpTime() {
         return upTime;
-    }
-
-    public void setUpTime(long upTime) {
-        this.upTime = upTime;
     }
 
     public String getUpTimeFormat() {
         return upTimeFormat;
     }
 
-    public void setUpTimeFormat(String upTimeFormat) {
-        this.upTimeFormat = upTimeFormat;
-    }
 
     public boolean isDelist() {
         return status.equals(StockRTData.STATUS_DELIST);

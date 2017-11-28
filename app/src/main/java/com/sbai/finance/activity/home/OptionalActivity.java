@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Logger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -407,7 +406,7 @@ public class OptionalActivity extends BaseActivity implements
                     //      mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_shares),null,null,null);
                     StockData stockData = stockMap.get(item.getVarietyType());
                     if (stockData != null) {
-                        mLastPrice.setText(stockData.getLastPrice());
+                        mLastPrice.setText(stockData.getFormattedLastPrice());
                         if (stockData.isDelist()) {
                             mRate.setEnabled(false);
                             mRate.setText(R.string.delist);

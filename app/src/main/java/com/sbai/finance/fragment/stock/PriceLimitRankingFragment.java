@@ -223,7 +223,7 @@ public class PriceLimitRankingFragment extends BaseFragment {
                         mRate.setText("+" + priceLimit);
                     }
                 }
-                mLastPrice.setText(item.getLastPrice());
+                mLastPrice.setText(item.getFormattedLastPrice());
                 mRootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

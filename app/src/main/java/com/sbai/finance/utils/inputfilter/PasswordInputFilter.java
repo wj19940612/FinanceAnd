@@ -1,4 +1,4 @@
-package com.sbai.finance.utils;
+package com.sbai.finance.utils.inputfilter;
 
 import android.text.InputFilter;
 import android.text.Spanned;

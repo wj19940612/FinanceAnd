@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/positionArea"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:paddingBottom="6dp"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding"
+        android:paddingTop="10dp">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="7">
+
+            <com.sbai.finance.view.autofit.AutofitTextView
+                android:id="@+id/stockName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:ellipsize="end"
+                android:maxLength="6"
+                android:maxLines="1"
+                android:textColor="@color/blackPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="18sp"
+                app:sizeToFit="true"
+                tool:text="西部能源"/>
+
+            <com.sbai.finance.view.autofit.AutofitTextView
+                android:id="@+id/positionValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:maxLines="1"
+                android:textColor="@color/blackPrimary"
+                android:textSize="14sp"
+                app:autoSizeMaxTextSize="14sp"
+                app:sizeToFit="true"
+                tool:text="722.00"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="35dp"
+            android:layout_weight="4"
+            android:gravity="right">
+
+            <com.sbai.finance.view.autofit.AutofitTextView
+                android:id="@+id/positionAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:gravity="right"
+                android:maxLines="1"
+                android:textColor="@color/blackPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="18sp"
+                app:sizeToFit="true"
+                tool:text="6000"/>
+
+            <com.sbai.finance.view.autofit.AutofitTextView
+                android:id="@+id/enableAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="right"
+                android:maxLines="1"
+                android:textColor="@color/blackPrimary"
+                android:textSize="14sp"
+                app:autoSizeMaxTextSize="14sp"
+                app:sizeToFit="true"
+                tool:text="722.00"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
+            android:layout_weight="4"
+            android:gravity="right">
+
+            <com.sbai.finance.view.autofit.AutofitTextView
+                android:id="@+id/lastPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:gravity="right"
+                android:maxLines="1"
+                android:textColor="@color/blackPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="18sp"
+                app:sizeToFit="true"
+                tool:text="6000"/>
+
+            <com.sbai.finance.view.autofit.AutofitTextView
+                android:id="@+id/costPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="right"
+                android:maxLines="1"
+                android:textColor="@color/blackPrimary"
+                android:textSize="14sp"
+                app:autoSizeMaxTextSize="14sp"
+                app:sizeToFit="true"
+                tool:text="722.00"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:gravity="right"
+            android:orientation="vertical">
+
+            <com.sbai.finance.view.autofit.AutofitTextView
+                android:id="@+id/floatValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:gravity="right"
+                android:maxLines="1"
+                android:textColor="@color/blackPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="18sp"
+                app:sizeToFit="true"
+                tool:text="6000"/>
+
+            <com.sbai.finance.view.autofit.AutofitTextView
+                android:id="@+id/floatRate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="right"
+                android:maxLines="1"
+                android:textColor="@color/blackPrimary"
+                android:textSize="14sp"
+                app:autoSizeMaxTextSize="14sp"
+                app:sizeToFit="true"
+                tool:text="722.00"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/operateArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_stock_position_more"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#eef2f6"
+            android:paddingBottom="15dp"
+            android:paddingLeft="35dp"
+            android:paddingRight="35dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:id="@+id/buy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:drawableLeft="@drawable/ic_stock_buy"
+                android:drawablePadding="2dp"
+                android:padding="2dp"
+                android:text="@string/buy"
+                android:textColor="#53A5F2"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/sell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableLeft="@drawable/ic_stock_sell"
+                android:drawablePadding="2dp"
+                android:padding="2dp"
+                android:text="@string/sell"
+                android:textColor="#53A5F2"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/positionDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:drawableLeft="@drawable/ic_stock_details"
+                android:drawablePadding="2dp"
+                android:padding="2dp"
+                android:text="@string/detail"
+                android:textColor="#53A5F2"
+                android:textSize="15sp"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#F6F6F6"/>
+</LinearLayout>

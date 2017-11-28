@@ -14,7 +14,7 @@
 
         <TextView
             android:id="@+id/futureForeign"
-            style="@style/future_btn"
+            style="@style/FutureBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/common_padding"
@@ -23,7 +23,7 @@
 
         <TextView
             android:id="@+id/futureChina"
-            style="@style/future_btn"
+            style="@style/FutureBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/future_china"/>

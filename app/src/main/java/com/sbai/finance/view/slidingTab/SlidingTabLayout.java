@@ -147,6 +147,12 @@ public class SlidingTabLayout extends HorizontalScrollView {
         mTabStrip.setSelectedIndicatorColors(colors);
     }
 
+    public void setTabIndex(final int index) {
+        if (index < getTabStrip().getChildCount()) {
+            getTabStrip().getChildAt(index).performClick();
+        }
+    }
+
     /**
      * Sets the padding to be used for controlling the selected tab width.
      * Add by JohnZ

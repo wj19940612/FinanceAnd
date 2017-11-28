@@ -24,6 +24,17 @@
         <attr name="showBack" format="boolean"/>
     </declare-styleable>
 
+    <!--股票价格交易量的加减修改控件-->
+    <declare-styleable name="PlusMinusEditText">
+        <attr name="android:hint"/>
+        <attr name="changeInterval" format="float"/>
+        <attr name="inputType" format="enum">
+            <enum name="decimal" value="0"/>
+            <enum name="number" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <!--大厅底部 tabs-->
     <declare-styleable name="BottomTabs">
         <attr name="textSize" format="dimension"/>
         <attr name="textColor" format="color"/>
@@ -32,6 +43,7 @@
         <attr name="textPaddingBottom" format="dimension"/>
     </declare-styleable>
 
+    <!--密码输入控件-->
     <declare-styleable name="PasswordEditText">
         <attr name="textHint" format="reference|string"/>
         <attr name="hasBottomSplitLine"/>
@@ -254,6 +266,16 @@
         <attr name="bgEndColor" format="color|reference"/>
     </declare-styleable>
 
+    <declare-styleable name="LoopView">
+        <attr name="dateLineColor" format="color"/>
+        <attr name="topBottomTextColor" format="color"/>
+        <attr name="centerTextColor" format="color"/>
+        <attr name="dateTextSize" format="dimension"/>
+        <attr name="canLoop" format="boolean"/>
+        <attr name="initPosition" format="integer"/>
+        <attr name="drawItemCount" format="integer"/>
+        <attr name="itemHeight" format="dimension|reference"/>
+    </declare-styleable>
     <declare-styleable name="HasLabelImageLayout">
         <attr name="label_drawable" format="reference"/>
         <attr name="label_view_width" format="reference|dimension"/>

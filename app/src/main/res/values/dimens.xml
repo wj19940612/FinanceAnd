@@ -3,6 +3,7 @@
 
     <dimen name="common_radius">3dp</dimen>
     <dimen name="four_radius">4dp</dimen>
+    <dimen name="two_radius">2dp</dimen>
     <dimen name="eight_radius">8dp</dimen>
     <dimen name="sixteen_radius">16dp</dimen>
     <dimen name="common_height">44dp</dimen>

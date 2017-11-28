@@ -29,10 +29,10 @@ public class FutureVersus {
 
     public String getBattleWinRate() {
         if (totalCount == 0) {
-            return FinanceUtil.formatFloorPercent(0);
+            return FinanceUtil.downToIntegerPercentage(0);
         }
         double winRate = FinanceUtil.divide(getWinCount(), getTotalCount(), 5).doubleValue();
-        return FinanceUtil.formatFloorPercent(winRate, 2);
+        return FinanceUtil.downToPercentageRemoveTailZero(winRate, 2);
     }
 
     public int getEnd() {
