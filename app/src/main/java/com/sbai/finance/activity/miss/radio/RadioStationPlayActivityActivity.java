@@ -557,7 +557,9 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                     .setListener(new ShareDialog.OnShareDialogCallback() {
                         @Override
                         public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
-                            Client.share().fireFree();
+                            if (LocalUser.getUser().isLogin()) {
+                                Client.share().fireFree();
+                            }
                         }
 
                         @Override

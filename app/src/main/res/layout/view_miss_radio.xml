@@ -56,6 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="11dp"
+        android:maxLines="1"
         android:textColor="@color/unluckyText"
         android:textSize="12sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/radioUpdateTime"
@@ -79,6 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="11dp"
+        android:maxLines="1"
         android:textColor="@color/unluckyText"
         android:textSize="12sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/radioUpdateTime"
@@ -98,10 +100,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_marginTop="8dp"
             android:id="@+id/startPlay"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_marginTop="8dp"
             tools:src="@mipmap/ic_launcher_round"/>
 
         <TextView
