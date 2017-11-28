@@ -102,7 +102,7 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_trade_operate);
         ButterKnife.bind(this);
-
+        translucentStatusBar();
         initData(getIntent());
         initTitleBar();
         initSlidingTab();
