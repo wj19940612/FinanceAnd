@@ -93,12 +93,22 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
 
         initHeaderView();
         initSwipeRefreshLayout();
-        requestRadioStationDetail();
-        requestRadioProgram();
+        refreshData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshData();
     }
 
     private void initData(Intent intent) {
         mRadioStationId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+    }
+
+    private void refreshData(){
+        requestRadioStationDetail();
+        requestRadioProgram();
     }
 
     private void initHeaderView() {
