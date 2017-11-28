@@ -339,7 +339,7 @@ public class StockEntrustFragment extends BaseFragment {
                         break;
                 }
                 mStockName.setText(entrust.getVarietyName());
-                mStockCode.setText(entrust.getVarietyCode() + "." + StockCodeUtil.getExchangeType(entrust.getVarietyCode()));
+                mStockCode.setText(entrust.getVarietyCode());
                 if (mShowOperateView) {
                     mEntrustAmount.setText(FinanceUtil.formatWithThousandsSeparator(entrust.getQuantity(), 0));
                     mEntrustPrice.setText(FinanceUtil.formatWithScale(entrust.getPrice(), 3));
