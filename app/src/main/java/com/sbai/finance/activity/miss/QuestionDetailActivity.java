@@ -321,25 +321,14 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
 
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
-        if (MissAudioManager.get().getAudio() instanceof Question) {
-            Question playingQuestion = (Question) MissAudioManager.get().getAudio();
-            mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
-        }
+        updateThisPlayStatus();
+        updateMissFloatView();
     }
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
-        if (MissAudioManager.get().getAudio() instanceof Question) {
-            Question playingQuestion = (Question) MissAudioManager.get().getAudio();
-            if (playingQuestion.getId() == mQuestionId) {
-                mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
-                mPlayThisVoice = true;
-                setPlayingState();
-                mMissFloatWindow.setVisibility(View.GONE);
-            } else {
-                mMissFloatWindow.setVisibility(View.VISIBLE);
-            }
-        }
+        updateThisPlayStatus();
+        updateMissFloatView();
     }
 
     @Override
@@ -372,6 +361,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     protected void onMediaPlayStop(int IAudioId, int source) {
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
+        setStopState();
     }
 
     @Override
@@ -423,7 +413,32 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     private void initData(Intent intent) {
         mQuestionId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
         mReplayMsgId = intent.getStringExtra(Launcher.EX_PAYLOAD_1); // 来消息，把他人的回复置顶
-//        mIsFromMissTalk = intent.getBooleanExtra(ExtraKeys.IS_FROM_MISS_TALK, false);
+    }
+
+    private void updateThisPlayStatus() {
+        if (MissAudioManager.get().isPlaying()) {
+            if (MissAudioManager.get().getAudio() instanceof Question) {
+                Question playingQuestion = (Question) MissAudioManager.get().getAudio();
+                if (playingQuestion.getId() == mQuestionId) {
+                    mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
+                    mPlayThisVoice = true;
+                    setPlayingState();
+                    mMissFloatWindow.setVisibility(View.GONE);
+                } else {
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    private void updateMissFloatView() {
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (audio instanceof Question) {
+            Question playingQuestion = (Question) audio;
+            mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
+        } else if (audio instanceof Radio) {
+            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+        }
     }
 
     private void initHeaderView() {

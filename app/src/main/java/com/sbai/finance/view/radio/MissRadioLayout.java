@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
@@ -179,8 +180,8 @@ public class MissRadioLayout extends LinearLayout {
 
     public void updatePlayStatus() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-        if (audio instanceof Radio) {
-            if (MissAudioManager.get().isPlaying()) {
+        if (MissAudioManager.get().isPlaying()) {
+            if (audio instanceof Radio) {
                 for (int i = 0; i < mPlayStateList.size(); i++) {
                     PlayStatus playStatus = mPlayStateList.get(i);
                     Radio radio = playStatus.getRadio();
@@ -191,7 +192,7 @@ public class MissRadioLayout extends LinearLayout {
                         break;
                     }
                 }
-            } else {
+            } else if (audio instanceof Question) {
                 unChangePlay(null);
             }
         }

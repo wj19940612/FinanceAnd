@@ -92,6 +92,7 @@ public class RadioInfoLayout extends LinearLayout {
         mReviewTextView.setPadding(padding, 15, 15, 0);
         mReviewTextView.setBackgroundColor(Color.WHITE);
         mReviewTextView.setCompoundDrawablePadding((int) Display.dp2Px(4, getResources()));
+        mReviewTextView.setText(getContext().getString(R.string.comment_number_string, StrFormatter.getFormatCount(0)));
         addView(mReviewTextView, layoutParams);
 
         mSubscribeStatus.setSelected(true);
