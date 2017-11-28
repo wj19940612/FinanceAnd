@@ -206,7 +206,9 @@ public class MissAskFragment extends MediaPlayFragment {
 //        Log.d(TAG, "onMediaPlayCurrentPosition: "+source+ " "+mMissAskType); // 2 1 或者 3 0
 //        if ((mMissAskType == MISS_ASK_TYPE_HOT && source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION)
 //                || (mMissAskType == MISS_ASK_TYPE_LATEST && source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION)) {
-        if (source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION || source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION) {
+        if (source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION ||
+                source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION ||
+                source == MediaPlayService.MEDIA_SOURCE_MISS_PROFILE) {
             if (mSelectPosition == -1) return;
             LinearLayoutManager layoutManager = (LinearLayoutManager) mEmptyRecyclerView.getLayoutManager();
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();

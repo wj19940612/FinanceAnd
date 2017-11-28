@@ -16,7 +16,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,11 +141,20 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     private void updateRadioFloatWindow() {
         if (MissAudioManager.get().isPlaying()) {
             MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-            if (audio != null && audio instanceof Radio) {
-                mMissFloatWindow.startAnim();
-                mMissFloatWindow.setVisibility(View.VISIBLE);
-                mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+            if (audio != null) {
+                if (audio instanceof Radio) {
+                    mMissFloatWindow.startAnim();
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                    mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+                } else if (audio instanceof Question) {
+                    if (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_MISS_PROFILE) {
+                        mMissFloatWindow.startAnim();
+                        mMissFloatWindow.setVisibility(View.VISIBLE);
+                        mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
+                    }
+                }
             }
+
         }
     }
 

@@ -291,9 +291,14 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            //后台有可能传入gif图片 会抛出android.renderscript.RSIllegalArgumentException: USAGE_SHARED cannot be used with a Bitmap that has a null config.
                             if (resource != null) {
-                                Bitmap gaussianBlur = new RenderScriptGaussianBlur(getActivity()).gaussianBlur(25, resource);
-                                mBg.setImageBitmap(gaussianBlur);
+                                try {
+                                    Bitmap gaussianBlur = new RenderScriptGaussianBlur(getActivity()).gaussianBlur(25, resource);
+                                    mBg.setImageBitmap(gaussianBlur);
+                                }catch (Exception e){
+                                    GlideApp.with(getActivity()).load(mRadio.getAudioCover()).into(mBg);
+                                }
                             } else {
                                 GlideApp.with(getActivity()).load(mRadio.getAudioCover()).into(mBg);
                             }
