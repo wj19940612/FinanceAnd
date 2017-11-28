@@ -1,6 +1,5 @@
 package com.sbai.finance.fragment.miss;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -8,11 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +21,12 @@ import android.widget.TextView;
 
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
-import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.RewardMissActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
-import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.fragment.MediaPlayFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
@@ -48,13 +43,11 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.httplib.ApiError;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -248,7 +241,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         mQuestionListAdapter.notifyDataSetChanged();
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
         if (audio instanceof Question) {
-            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait(),((Question)audio).getUserType());
+            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
         }
     }
 

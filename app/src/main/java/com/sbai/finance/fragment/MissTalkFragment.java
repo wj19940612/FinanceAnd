@@ -16,6 +16,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,9 +124,10 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     private void changeFloatWindowView() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
         if (audio instanceof Question) {
-            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait(), ((Question) audio).getUserType());
+            Question playQuestion = (Question) audio;
+            mMissFloatWindow.setMissAvatar(playQuestion.getCustomPortrait());
         } else if (audio instanceof Radio) {
-            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait(), Question.QUESTION_TYPE_HOT);
+            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
         }
     }
 
@@ -143,7 +145,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             if (audio != null && audio instanceof Radio) {
                 mMissFloatWindow.startAnim();
                 mMissFloatWindow.setVisibility(View.VISIBLE);
-                mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait(), Question.QUESTION_TYPE_HOT);
+                mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
             }
         }
     }
@@ -160,6 +162,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     @Override
     public void onMediaPlay(int IAudioId, int source) {
         mMissFloatWindow.startAnim();
+        changeFloatWindowView();
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
             updateRadioFloatWindow();
             mMissRadioLayout.updatePlayView();
@@ -324,15 +327,12 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setCurrentItem(0, false);
         mViewPager.setAdapter(mMissAskFragmentAdapter);
-//        mViewPager.setCurrentItem(0, false);
-
-//        mViewPager.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                setVisibleFragmentLabel(0);
-//            }
-//        });
-
+        mViewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                setVisibleFragmentLabel(0);
+            }
+        });
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mSlidingTabLayout.setPadding(Display.dp2Px(15, getResources()));

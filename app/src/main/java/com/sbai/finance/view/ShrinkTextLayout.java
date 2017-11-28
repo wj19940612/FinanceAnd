@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -20,7 +21,7 @@ import com.sbai.finance.utils.Display;
  */
 
 public class ShrinkTextLayout extends LinearLayout {
-
+    private static final String TAG = "ShrinkTextLayout";
     private int mTextSize;
     private int mTextColor;
     private int mTextMaxLines;
@@ -97,6 +98,7 @@ public class ShrinkTextLayout extends LinearLayout {
 
     public void setContentText(CharSequence contentText) {
         mContentText.setText(contentText);
+        mContentText.setMaxLines(Integer.MAX_VALUE);
         mContentText.post(new Runnable() {
             @Override
             public void run() {

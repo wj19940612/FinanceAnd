@@ -214,6 +214,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         if (mVoiceId == -1 && mRadio != null) {
             mVoiceId = mRadio.getId();
         }
+        updateAudio();
     }
 
     private void updateAudio() {
@@ -233,11 +234,11 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                 mMissFloatWindow.startAnim();
                 mMissFloatWindow.setVisibility(View.VISIBLE);
                 Question question = (Question) audio;
-                mMissFloatWindow.setMissAvatar(question.getCustomPortrait(), question.getUserType());
+                mMissFloatWindow.setMissAvatar(question.getCustomPortrait());
                 mPlayThisVoice = true;
             } else if (audio instanceof Radio) {
                 Radio playRadio = (Radio) audio;
-                mMissFloatWindow.setMissAvatar(playRadio.getUserPortrait(), Question.QUESTION_TYPE_HOT);
+                mMissFloatWindow.setMissAvatar(playRadio.getUserPortrait());
                 mMissFloatWindow.startAnim();
                 if (mRadio != null && mRadio.getId() == ((Radio) audio).getId()) {
                     mMissFloatWindow.setVisibility(View.GONE);
@@ -260,15 +261,14 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                     @Override
                     protected void onRespSuccessData(Radio radio) {
                         if (MissAudioManager.get().isPlaying() && MissAudioManager.get().getAudio() instanceof Radio) {
-                            mMissFloatWindow.setMissAvatar(radio.getUserPortrait(), Question.QUESTION_TYPE_HOT);
+                            mMissFloatWindow.setMissAvatar(radio.getUserPortrait());
                         }
-                        updateRadioDetail(radio);
+                        updateAudioDetail(radio);
                     }
 
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        updateAudio();
                         if (mSwipeRefreshLayout.isRefreshing())
                             mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -276,9 +276,10 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                 .fireFree();
     }
 
-    private void updateRadioDetail(Radio radio) {
+    private void updateAudioDetail(Radio radio) {
         mRadio = radio;
         mRadioCollect.setSelected(radio.getCollect() == RadioDetails.COLLECT);
+        updateAudio();
     }
 
     private void initView() {
@@ -508,12 +509,12 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     private void changeFloatWindowView() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
         if (audio instanceof Question) {
-            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait(), ((Question) audio).getUserType());
+            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
         } else if (audio instanceof Radio) {
-            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait(), Question.QUESTION_TYPE_HOT);
+            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
             if (mRadio.getId() == audio.getAudioId()) {
                 if (mRadio != null) {
-                    mMissFloatWindow.setMissAvatar(mRadio.getUserPortrait(), Question.QUESTION_TYPE_HOT);
+                    mMissFloatWindow.setMissAvatar(mRadio.getUserPortrait());
                 }
                 mPlayThisVoice = true;
                 mRadioPlayLL.startAnimation();
