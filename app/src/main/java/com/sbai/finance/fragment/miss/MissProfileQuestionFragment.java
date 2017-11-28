@@ -272,7 +272,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
     protected void onMediaPlayStop(int IAudioId, int source) {
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
-        stopVoice();
+        mQuestionListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -352,8 +352,6 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                 }
             }
         });
-
-        MissAudioManager.get().stop();
 
         mQuestionListAdapter.setCallback(new QuestionListAdapter.Callback() {
             @Override
@@ -546,11 +544,18 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
             }
         }
 
-//        for (Question question : questionList) {
-//            if (mSet.add(question.getId())) {
+        resumeLastPlayUI(questionList);
+
         mQuestionListAdapter.addAll(questionList);
-//            }
-//        }
+    }
+
+    private void resumeLastPlayUI(List<Question> questionList) {
+        for (Question question : questionList) {
+            if (MissAudioManager.get().isStarted(question)) {
+                startScheduleJob(100);
+                break;
+            }
+        }
     }
 
     protected boolean isSlideToBottom(RecyclerView recyclerView) {
@@ -567,7 +572,6 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        stopVoice();
         mHasEnter = false;
         mBind.unbind();
     }

@@ -142,7 +142,9 @@ public class MineFragment extends BaseFragment {
 
     public void refreshNotReadMessageCount() {
         requestNoReadNewsNumber();
-        requestNoReadAnswerNumber();
+        if (LocalUser.getUser().isMiss()) {
+            requestNoReadAnswerNumber();
+        }
     }
 
     @Override
@@ -276,12 +278,12 @@ public class MineFragment extends BaseFragment {
                     mWaitMeAnswer.setSubTextVisible(View.VISIBLE);
                     if (noReadCount <= 99) {
                         mWaitMeAnswer.setSubTextSize(11);
-                        mWaitMeAnswer.setSubText(String.valueOf((int)noReadCount));
+                        mWaitMeAnswer.setSubText(String.valueOf((int) noReadCount));
                     } else {
                         mWaitMeAnswer.setSubTextSize(9);
                         mWaitMeAnswer.setSubText("99+");
                     }
-                    setNoReadAnswerCount((int)noReadCount);
+                    setNoReadAnswerCount((int) noReadCount);
                 }
             }
         }).fire();
