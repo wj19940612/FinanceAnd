@@ -94,7 +94,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     private Radio mRadio;
     private MediaPlayService mMediaPlayService;
     private int mPosition;
-    private boolean mIsNotPlayPage;
+    private boolean mPlayPage;
 
 
     @Nullable
@@ -114,18 +114,13 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         requestMissSwitcherList();
     }
 
-    @Override
-    public void onMediaPlayStart(int IAudioId, int source) {
-        changeFloatWindowView();
-        notifyFragmentDataSetChange(source);
-    }
 
     private void changeFloatWindowView() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
         if (audio instanceof Question) {
             mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait(), ((Question) audio).getUserType());
         } else if (audio instanceof Radio) {
-            mMissFloatWindow.setMissAvatar(((Radio) audio).getAudioCover());
+            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait(), Question.QUESTION_TYPE_HOT);
         }
     }
 
@@ -134,17 +129,47 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         super.onResume();
         requestMissList();
         mMissRadioLayout.updatePlayStatus();
+        updateRadioFloatWindow();
+    }
+
+    private void updateRadioFloatWindow() {
+        if (MissAudioManager.get().isPlaying()) {
+            MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+            if (audio != null && audio instanceof Radio) {
+                mMissFloatWindow.startAnim();
+                mMissFloatWindow.setVisibility(View.VISIBLE);
+                mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait(), Question.QUESTION_TYPE_HOT);
+            }
+        }
     }
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
         mMissFloatWindow.startAnim();
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+            updateRadioFloatWindow();
+            mMissRadioLayout.updatePlayView();
+        }
+        notifyFragmentDataSetChange(source);
+    }
+
+    @Override
+    public void onMediaPlayStart(int IAudioId, int source) {
+        changeFloatWindowView();
+        notifyFragmentDataSetChange(source);
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+            mMissRadioLayout.onMediaResume();
+        }
     }
 
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
         mMissFloatWindow.startAnim();
         notifyFragmentDataSetChange(source);
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+            updateRadioFloatWindow();
+            mMissRadioLayout.onMediaResume();
+        }
     }
 
     @Override
@@ -152,6 +177,9 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
         notifyFragmentDataSetChange(source);
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+            mMissRadioLayout.onMediaPause();
+        }
     }
 
     @Override
@@ -160,7 +188,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         mMissFloatWindow.setVisibility(View.GONE);
         notifyFragmentDataSetChange(source);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
-            mMissRadioLayout.unChangePlay(null);
+            mMissRadioLayout.onMediaStop();
         }
     }
 
@@ -168,7 +196,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
         super.onMediaPlayCurrentPosition(IAudioId, source, mediaPlayCurrentPosition, totalDuration);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
-//            mMissRadioLayout.setMediaPlayProgress();
+            mMissRadioLayout.setPlayRadio(mediaPlayCurrentPosition, totalDuration);
         }
     }
 
@@ -185,13 +213,11 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     }
 
     private void notifyFragmentDataSetChange(int source) {
-        if (source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION ||
-                source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION) {
+        if (source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION || source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION) {
             MissAskFragment missHotAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(0);
             if (missHotAskFragment != null) {
                 missHotAskFragment.notifyFragmentDataSetChange();
             }
-
             MissAskFragment missLatestAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(1);
             if (missLatestAskFragment != null) {
                 missLatestAskFragment.notifyFragmentDataSetChange();
@@ -246,11 +272,19 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             }
         });
 
+
         mMissAskFragmentAdapter = new MissAskFragmentAdapter(getChildFragmentManager(), getActivity(), this);
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setCurrentItem(0, false);
         mViewPager.setAdapter(mMissAskFragmentAdapter);
+//        mViewPager.setCurrentItem(0, false);
 
+//        mViewPager.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                setVisibleFragmentLabel(0);
+//            }
+//        });
 
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
@@ -268,14 +302,9 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
             @Override
             public void onPageSelected(int position) {
+                // 在提问页面需要更新数据 然后回调，用来区分那个页面可见
                 mPosition = position;
-                if (MissAudioManager.get().isPlaying()) {
-                    mIsNotPlayPage = (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION && position == 1)
-                            || (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION && position == 0);
-                    if(mIsNotPlayPage){
-                        mMissFloatWindow.setVisibility(View.VISIBLE);
-                    }
-                }
+                setVisibleFragmentLabel(position);
             }
 
             @Override
@@ -315,6 +344,19 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         });
     }
 
+    private void setVisibleFragmentLabel(int position) {
+        MissAskFragment missAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(position);
+        if (missAskFragment != null) {
+            missAskFragment.setSelectFragment(position);
+        }
+
+        int other = position == 0 ? 1 : 0;
+        MissAskFragment otherMissAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(other);
+        if (otherMissAskFragment != null) {
+            otherMissAskFragment.setSelectFragment(-1);
+        }
+    }
+
     private AppBarLayout.OnOffsetChangedListener mOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
 
         @Override
@@ -350,14 +392,21 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             @Override
             public void onClick(View v) {
                 MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-                if (audio instanceof Question && MissAudioManager.get().isStarted(audio)) {
-                    Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-                    intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, true);
-                    intent.putExtra(Launcher.EX_PAYLOAD, ((Question) audio).getId());
-                    startActivityForResult(intent, REQ_QUESTION_DETAIL);
+                if (audio != null && MissAudioManager.get().isStarted(audio)) {
+                    if (audio instanceof Question) {
+                        Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
+                        intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, true);
+                        intent.putExtra(Launcher.EX_PAYLOAD, ((Question) audio).getId());
+                        startActivityForResult(intent, REQ_QUESTION_DETAIL);
 
-                    umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
+                        umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
+                    } else {
+                        Launcher.with(getContext(), RadioStationPlayActivityActivity.class)
+                                .putExtra(ExtraKeys.RADIO, (Radio) audio)
+                                .execute();
+                    }
                 }
+
             }
         });
     }
@@ -412,9 +461,11 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             mMissRadioLayout.unChangePlay(null);
             mRadio = null;
         }
+
+        mPlayPage = (source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION && mPosition == 0)
+                || (source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION && mPosition == 1);
         if (radioPlayViewHasHasFocus
-                && mMissFloatWindow.getVisibility() == View.VISIBLE
-                && !mIsNotPlayPage) {
+                && mMissFloatWindow.getVisibility() == View.VISIBLE) {
             mMissFloatWindow.setVisibility(View.GONE);
         }
 
@@ -447,43 +498,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         EmptyRecyclerView recyclerView = (EmptyRecyclerView) header.findViewById(R.id.recyclerView);
         TextView emptyView = (TextView) header.findViewById(R.id.missEmpty);
         return header;
-    }
-
-
-    @Override
-    public void onTimeUp(int count) {
-//        int firstVisiblePosition = mListView.getFirstVisiblePosition();
-//        int lastVisiblePosition = mListView.getLastVisiblePosition();
-        boolean visibleItemsStarted = false;
-
-//        for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
-//            // Skip header && footer
-//            if (i == 0 || i - 1 >= mQuestionListAdapter.getCount()) continue;
-//
-//            Question question = mQuestionListAdapter.getItem(i - 1);
-//            if (question == null) return;
-//
-//            if (MissAudioManager.get().isStarted(question)) {
-//                View view = mListView.getChildAt(i - firstVisiblePosition);
-//                ImageView playImage = (ImageView) view.findViewById(R.id.playImage);
-//                TextView soundTime = (TextView) view.findViewById(R.id.soundTime);
-//                ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-//                playImage.setImageResource(R.drawable.ic_pause);
-//                progressBar.setMax(question.getSoundTime() * 1000);
-//                int pastTime = MissAudioManager.get().getCurrentPosition();
-//                soundTime.setText(getString(R.string._seconds, (question.getSoundTime() * 1000 - pastTime) / 1000));
-//                progressBar.setProgress(pastTime);
-//                visibleItemsStarted = true;
-//            }
-//        }
-
-//        if (visibleItemsStarted && mMissFloatWindow.getVisibility() == View.VISIBLE) {
-//            mMissFloatWindow.setVisibility(View.GONE);
-//        }
-//
-//        if (!visibleItemsStarted && mMissFloatWindow.getVisibility() == View.GONE) {
-//            mMissFloatWindow.setVisibility(View.VISIBLE);
-//        }
     }
 
     private void requestMissList() {

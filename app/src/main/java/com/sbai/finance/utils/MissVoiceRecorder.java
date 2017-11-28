@@ -29,7 +29,6 @@ public class MissVoiceRecorder {
         }
         sIntegerQueue.add(id);
         String ids = sGson.toJson(sIntegerQueue);
-        // TODO: 2017/11/22 需要去掉个人闲置
         Preference.get().setAnswerIds(ids);
     }
 

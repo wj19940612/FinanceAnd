@@ -2040,15 +2040,19 @@ public class Client {
      * @param replyParentId    回复哪条的id(不填为评论)
      * @param content
      * @param dataId
+     * @param type             评论的类型：4话题,3电台  1 普通的提问
      * @return
      */
-    public static API addComment(int invitationUserId, String replyParentId, String content, int dataId) {
+    public static API addComment(int invitationUserId, String replyParentId, int type, String content,
+                                 int dataId, int audioId, int radioId) {
         return new API(POST, "/user/comment/insertComment.do", new ApiParams()
                 .put("invitationUserId", invitationUserId)
                 .put("replyParentId", replyParentId)
-                .put("type", 1)
+                .put("type", type)
                 .put("content", content)
-                .put("dataId", dataId));
+                .put("dataId", dataId)
+                .put("audioId", audioId)
+                .put("radioId", radioId));
     }
 
     /**
@@ -3046,7 +3050,7 @@ public class Client {
      * @return
      */
     public static API requestMissSwitcherList() {
-        return new API(POST, "/explain/topicManage/findTopic.do");
+        return new API(POST, "/explain/topic/findTopic.do");
     }
 
     /**

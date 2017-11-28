@@ -5,7 +5,6 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -154,15 +153,10 @@ public class RadioInfoPlayLayout extends LinearLayout {
     }
 
     public void onPlayStop() {
-        Log.d(TAG, "onPlayStop: ");
         mPlay.setSelected(false);
         mVoiceCover.clearAnimation();
-        mRadioSeekBar.setProgress(0);
+        setRadioProgress(0);
         mProgressLength.setText(R.string.start_time);
-
-//        mRotateAnimation.cancel();
-//        mVoiceAnimator.end();
-//        mProgressLength.setText(R.string.start_time);
     }
 
     private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {

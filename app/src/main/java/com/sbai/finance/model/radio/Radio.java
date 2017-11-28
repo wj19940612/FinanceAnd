@@ -62,6 +62,16 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
     private int updateUserId;
     private int viewNumber;        //观看人数
     private String radioName;     //电台名称
+    /**
+     * radioCover : http://news.xinhuanet.com/politics/2017-11/20/129744796_15111383153861n.jpg
+     * reviewTime : 1511690767000
+     * userPortrait : https://esongtest.oss-cn-shanghai.aliyuncs.com/upload/20171120/useri1511172165802.png
+     */
+
+    private String radioCover;
+    private long reviewTime;
+    private String userPortrait;
+
 
     @Override
     public int getAudioId() {
@@ -325,5 +335,29 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
                 ", viewNumber=" + viewNumber +
                 ", radioName='" + radioName + '\'' +
                 '}';
+    }
+
+    public String getRadioCover() {
+        return radioCover;
+    }
+
+    public void setRadioCover(String radioCover) {
+        this.radioCover = radioCover;
+    }
+
+    public long getReviewTime() {
+        return reviewTime;
+    }
+
+    public void setReviewTime(long reviewTime) {
+        this.reviewTime = reviewTime;
+    }
+
+    public String getUserPortrait() {
+        return userPortrait;
+    }
+
+    public void setUserPortrait(String userPortrait) {
+        this.userPortrait = userPortrait;
     }
 }

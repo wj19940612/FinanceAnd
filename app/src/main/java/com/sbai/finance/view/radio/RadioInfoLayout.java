@@ -1,5 +1,6 @@
 package com.sbai.finance.view.radio;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
@@ -111,13 +112,7 @@ public class RadioInfoLayout extends LinearLayout {
         GlideApp.with(getContext())
                 .load(radioDetails.getRadioCover())
                 .into(mRadioCover);
-        if (radioDetails.getIsSubscriber() == 1) {
-            mSubscribeStatus.setSelected(false);
-            mSubscribeStatus.setText(R.string.already_subscribe);
-        } else {
-            mSubscribeStatus.setSelected(true);
-            mSubscribeStatus.setText(R.string.subscribe);
-        }
+        updateRadioSubscriber();
     }
 
     public void setReviewNumber(int count) {
@@ -150,10 +145,22 @@ public class RadioInfoLayout extends LinearLayout {
                 break;
             case R.id.radioName:
             case R.id.radioCover:
-                if (mRadio != null) {
-                    Launcher.with(getContext(), RadioStationListActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, mRadio.getRadioId())
-                            .execute();
+                if (mRadioDetails != null) {
+                    if (getContext() instanceof Activity) {
+                        Activity activity = (Activity) getContext();
+                        if (activity.getCallingActivity() != null &&
+                                activity.getCallingActivity().getClassName().equalsIgnoreCase(RadioStationListActivity.class.getName())) {
+                            activity.finish();
+                        }else {
+                            Launcher.with(getContext(), RadioStationListActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, mRadioDetails.getId())
+                                    .executeForResult(555);
+                        }
+                    } else {
+                        Launcher.with(getContext(), RadioStationListActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, mRadioDetails.getId())
+                                .executeForResult(555);
+                    }
                 }
                 break;
             case R.id.subscribeStatus:
@@ -173,11 +180,29 @@ public class RadioInfoLayout extends LinearLayout {
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
                             ToastUtil.show(resp.getMsg());
-                            mSubscribeStatus.setSelected(false);
-                            mSubscribeStatus.setText(R.string.already_subscribe);
+                            if (mRadioDetails != null) {
+                                if (mRadioDetails.getIsSubscriber() == 1) {
+                                    mRadioDetails.setIsSubscriber(0);
+                                } else {
+                                    mRadioDetails.setIsSubscriber(1);
+                                }
+                            }
+                            updateRadioSubscriber();
                         }
                     })
                     .fireFree();
+        }
+    }
+
+    private void updateRadioSubscriber() {
+        if (mRadioDetails != null) {
+            if (mRadioDetails.getIsSubscriber() == 1) {
+                mSubscribeStatus.setSelected(false);
+                mSubscribeStatus.setText(R.string.already_subscribe);
+            } else {
+                mSubscribeStatus.setSelected(true);
+                mSubscribeStatus.setText(R.string.subscribe);
+            }
         }
     }
 }

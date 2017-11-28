@@ -15,6 +15,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.CommentActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.QuestionReply;
+import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
@@ -49,10 +50,16 @@ public class ReplyDialogFragment extends BottomDialogFragment {
     Unbinder unbinder;
 
     private QuestionReply.DataBean mQuestionReply;
+    private Radio mRadio;
 
     public static ReplyDialogFragment newInstance(QuestionReply.DataBean questionReply) {
+        return newInstance(questionReply, null);
+    }
+
+    public static ReplyDialogFragment newInstance(QuestionReply.DataBean questionReply, Radio radio) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(ExtraKeys.QUESTION, questionReply);
+        bundle.putParcelable(ExtraKeys.RADIO, radio);
         ReplyDialogFragment replyDialogFragment = new ReplyDialogFragment();
         replyDialogFragment.setArguments(bundle);
         return replyDialogFragment;
@@ -63,6 +70,7 @@ public class ReplyDialogFragment extends BottomDialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mQuestionReply = getArguments().getParcelable(ExtraKeys.QUESTION);
+            mRadio = getArguments().getParcelable(ExtraKeys.RADIO);
         }
     }
 
@@ -93,6 +101,11 @@ public class ReplyDialogFragment extends BottomDialogFragment {
                         intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionReply.getDataId());
                         intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionReply.getId());
                         intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionReply.getUserModel().getUserName());
+                        if (mRadio != null) {
+                            intent.putExtra(ExtraKeys.RADIO, mRadio.getRadioId());
+                            intent.putExtra(ExtraKeys.IAudio, mRadio.getAudioId());
+                            intent.putExtra(ExtraKeys.COMMENT_SOURCE, CommentActivity.COMMENT_TYPE_RADIO);
+                        }
                         startActivityForResult(intent, REQ_REPLY);
                     } else {
                         if (mCallback != null) {

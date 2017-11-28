@@ -34,6 +34,7 @@ import com.sbai.finance.activity.miss.MediaPlayActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.radio.Radio;
@@ -107,6 +108,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     private ArrayList<QuestionReply.DataBean> mQuestionReplyList;
     private RadioReviewAdapter mRadioReviewAdapter;
     private int mPage;
+    private boolean mPlayThisVoice;
 
     protected MediaPlayService mMediaPlayService;
 
@@ -145,10 +147,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     }
 
     private void requestRadioReplyList() {
-        // TODO: 2017/11/27 暂无数据
-        Client.requestRadioReplyList(mPage, 1, 1)
-//        Client.requestRadioReplyList(mPage, mRadio.getRadioId(), mRadio.getAudioId())
-//        Client.getQuestionReplyList(1, 570, mPage, Client.DEFAULT_PAGE_SIZE, null)
+        Client.requestRadioReplyList(mPage, mRadio.getRadioId(), mRadio.getAudioId())
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
                     @Override
@@ -193,15 +192,34 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         if (mRadio != null) {
             mRadioInfoLayout.setRadio(mRadio);
             mRadioPlayLL.setRadio(mRadio);
+            mRadioPlayLL.setPlayStatus(mRadio);
         }
-        mRadioPlayLL.setPlayStatus(mRadio);
+        initMissFloatWindow(mRadio);
+    }
 
+    private void initMissFloatWindow(Radio radio) {
         MissAudioManager missAudioManager = MissAudioManager.get();
-        if (missAudioManager.getAudio() instanceof Question) {
-            mMissFloatWindow.startAnim();
-            mMissFloatWindow.setVisibility(View.VISIBLE);
-            Question question = (Question) missAudioManager.getAudio();
-            mMissFloatWindow.setMissAvatar(question.getCustomPortrait(), question.getUserType());
+        MissAudioManager.IAudio audio = missAudioManager.getAudio();
+        if (missAudioManager.isPlaying()) {
+            if (audio instanceof Question) {
+                mMissFloatWindow.startAnim();
+                mMissFloatWindow.setVisibility(View.VISIBLE);
+                Question question = (Question) audio;
+                mMissFloatWindow.setMissAvatar(question.getCustomPortrait(), question.getUserType());
+                mPlayThisVoice = true;
+            } else if (audio instanceof Radio) {
+                Radio playRadio = (Radio) audio;
+                mMissFloatWindow.setMissAvatar(playRadio.getUserPortrait(), Question.QUESTION_TYPE_HOT);
+                mMissFloatWindow.startAnim();
+                if (mRadio != null && mRadio.getId() == ((Radio) audio).getId()) {
+                    mMissFloatWindow.setVisibility(View.GONE);
+                    mPlayThisVoice = true;
+                    mRadioPlayLL.startAnimation();
+                } else {
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                    mPlayThisVoice = false;
+                }
+            }
         }
     }
 
@@ -223,6 +241,12 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                             updateRadioDetail(data);
                         }
 
+                        @Override
+                        public void onFinish() {
+                            super.onFinish();
+                            if (mSwipeRefreshLayout.isRefreshing())
+                                mSwipeRefreshLayout.setRefreshing(false);
+                        }
                     })
                     .fireFree();
         }
@@ -230,6 +254,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
 
     private void updateRadioDetail(RadioDetails radioDetails) {
         mRadioDetails = radioDetails;
+        mRadioCollect.setSelected(radioDetails.getCollect() == RadioDetails.COLLECT);
     }
 
     private void initView() {
@@ -260,7 +285,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
             public void onItemClick(QuestionReply.DataBean dataBean, int position) {
                 if (dataBean != null) {
                     if (mReplyDialogFragment == null) {
-                        mReplyDialogFragment = ReplyDialogFragment.newInstance(dataBean);
+                        mReplyDialogFragment = ReplyDialogFragment.newInstance(dataBean, mRadio);
                     }
                     if (!mReplyDialogFragment.isAdded()) {
                         mReplyDialogFragment.show(getSupportFragmentManager());
@@ -277,12 +302,6 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
             }
         });
 
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefreshLayout.setRefreshing(true);
-            }
-        });
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -315,9 +334,9 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         mRadioPlayLL.setOnRadioPlayListener(new RadioInfoPlayLayout.OnRadioPlayListener() {
             @Override
             public void onRadioPlay() {
-                if (mRadioDetails != null) {
-                    mMissFloatWindow.setMissAvatar(mRadioDetails.getUserPortrait(), Question.QUESTION_TYPE_HOT);
-                }
+//                if (mRadioDetails != null) {
+//                    mMissFloatWindow.setMissAvatar(mRadioDetails.getUserPortrait(), Question.QUESTION_TYPE_HOT);
+//                }
                 if (MissAudioManager.get().isStarted(mRadio)) {
                     if (mMediaPlayService != null) {
                         mMediaPlayService.onPausePlay(mRadio);
@@ -340,10 +359,6 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                 }
             }
         });
-
-        if (MissAudioManager.get().isStarted(mRadio)) {
-            mRadioPlayLL.startAnimation();
-        }
     }
 
     private void refreshRadioReviewData() {
@@ -407,23 +422,26 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
         changeFloatWindowView();
-        mRadioPlayLL.startAnimation();
     }
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
         mMissFloatWindow.startAnim();
-        mRadioPlayLL.startAnimation();
+        mRadioPlayLL.setPlayStatus(mRadio);
+        changeFloatWindowView();
     }
 
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
         mMissFloatWindow.startAnim();
+        mRadioPlayLL.setPlayStatus(mRadio);
         mRadioPlayLL.startAnimation();
+        changeFloatWindowView();
     }
 
     @Override
     public void onMediaPlayPause(int IAudioId, int source) {
+        mRadioPlayLL.setPlayStatus(mRadio);
         mMissFloatWindow.stopAnim();
         mRadioPlayLL.stopAnimation();
         mMissFloatWindow.setVisibility(View.GONE);
@@ -456,7 +474,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
 
     @Override
     protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
-        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO && mPlayThisVoice) {
             mRadioPlayLL.setMediaPlayProgress(mediaPlayCurrentPosition, totalDuration);
         }
     }
@@ -466,7 +484,16 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         if (audio instanceof Question) {
             mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait(), ((Question) audio).getUserType());
         } else if (audio instanceof Radio) {
-            mMissFloatWindow.setMissAvatar(((Radio) audio).getAudioCover());
+            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait(), Question.QUESTION_TYPE_HOT);
+            if (mRadio.getId() == audio.getAudioId()) {
+                if (mRadioDetails != null) {
+                    mMissFloatWindow.setMissAvatar(mRadioDetails.getUserPortrait(), Question.QUESTION_TYPE_HOT);
+                }
+                mPlayThisVoice = true;
+                mRadioPlayLL.startAnimation();
+            } else {
+                mRadioPlayLL.stopAnimation();
+            }
         }
     }
 
@@ -490,14 +517,14 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     }
 
     private void radioCollect() {
-        if (mRadio != null) {
-            Client.collect(String.valueOf(mRadio.getId()), Radio.USER_COLLECT_TYPE_VOICE)
+        if (mRadioDetails != null) {
+            Client.collect(String.valueOf(mRadioDetails.getId()), Radio.USER_COLLECT_TYPE_VOICE)
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
                             ToastUtil.show(resp.getMsg());
-                            // TODO: 2017/11/25 缺少状态
-                            mReview.setSelected(true);
+                            mRadioDetails.setCollect(mRadioDetails.getCollect() == RadioDetails.COLLECT ? 0 : RadioDetails.COLLECT);
+                            mRadioCollect.setSelected(mRadioDetails.getCollect() == RadioDetails.COLLECT);
                         }
                     })
                     .fireFree();
@@ -505,10 +532,9 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     }
 
     private void commentRadio() {
-        if (mRadioDetails != null) {
+        if (mRadio != null) {
             if (LocalUser.getUser().isLogin()) {
                 openCommentPage();
-
             } else {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivityForResult(intent, CommentActivity.REQ_CODE_COMMENT_LOGIN);
@@ -517,10 +543,10 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     }
 
     private void openCommentPage() {
-        // TODO: 2017/11/25 评论  缺少接口
         Launcher.with(getActivity(), CommentActivity.class)
-                .putExtra(Launcher.EX_PAYLOAD, 1075)
-                .putExtra(Launcher.EX_PAYLOAD_1, 570)
+                .putExtra(ExtraKeys.RADIO, mRadio.getRadioId())
+                .putExtra(ExtraKeys.IAudio, mRadio.getAudioId())
+                .putExtra(ExtraKeys.COMMENT_SOURCE, CommentActivity.COMMENT_TYPE_RADIO)
                 .executeForResult(CommentActivity.REQ_CODE_COMMENT);
     }
 
@@ -638,12 +664,19 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                     });
                 }
 
-                setReviewPrice(item.getPriseCount(), item.isPrise());
+                setReviewPrice(item.getPriseCount(), item.getIsPrise());
 
                 mReviewPriceCount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        Client.praiseMissReply(item.getId())
+                                .setCallback(new Callback2D<Resp<Praise>, Praise>() {
+                                    @Override
+                                    protected void onRespSuccessData(Praise data) {
+                                        setReviewPrice(data.getPriseCount(), data.getIsPrise());
+                                    }
+                                })
+                                .fireFree();
                     }
                 });
                 mRootView.setOnClickListener(new View.OnClickListener() {
@@ -681,9 +714,9 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                 }
             }
 
-            private void setReviewPrice(int priseCount, boolean prise) {
+            private void setReviewPrice(int priseCount, int prise) {
                 mReviewPriceCount.setText(String.valueOf(priseCount));
-                if (!prise) {
+                if (prise == Praise.IS_PRAISE) {
                     mReviewPriceCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_praise, 0, 0, 0);
                 } else {
                     mReviewPriceCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_unpraise, 0, 0, 0);

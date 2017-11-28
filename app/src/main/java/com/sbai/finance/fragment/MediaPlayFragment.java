@@ -67,7 +67,7 @@ public abstract class MediaPlayFragment extends BaseFragment {
 
     }
 
-    protected  void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration){
+    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
 
     }
 
