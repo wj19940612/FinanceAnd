@@ -213,7 +213,7 @@
             android:name=".activity.stock.StockIndexActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.stock.StockPostTradeSuccessOperateActivity"
+            android:name=".activity.stock.StockTradeOperateActivity"
             android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait"/>
 

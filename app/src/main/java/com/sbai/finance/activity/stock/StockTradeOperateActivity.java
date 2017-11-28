@@ -62,7 +62,7 @@ import butterknife.OnClick;
  * <p>
  * 股票交易操作页面，买入卖出，如果从股票详情页面进入，当前账户为模拟，如果从账户页面进入，依赖于当前保存是什么账户
  */
-public class StockPostTradeSuccessOperateActivity extends BaseActivity implements StockTradeOperateFragment.OnPostTradeSuccessListener {
+public class StockTradeOperateActivity extends BaseActivity implements StockTradeOperateFragment.OnPostTradeSuccessListener {
 
     public static final String TRADE_TYPE = "trade_type";
     public static final int TRADE_TYPE_BUY = 80;
@@ -212,7 +212,7 @@ public class StockPostTradeSuccessOperateActivity extends BaseActivity implement
 
     private void updateMaxSalableVolume() {
         List<Position> positionList = mHoldingPositionsAdapter.getPositionList();
-        if (positionList.isEmpty()) return;
+        if (positionList.isEmpty() || mVariety == null) return;
 
         int salableVolume = 0;
         for (Position position : positionList) {

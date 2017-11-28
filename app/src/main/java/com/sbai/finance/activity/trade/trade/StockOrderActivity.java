@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity;
+import com.sbai.finance.activity.stock.StockTradeOperateActivity;
 import com.sbai.finance.fragment.battle.BattleListFragment;
 import com.sbai.finance.fragment.trade.stock.StockBusinessFragment;
 import com.sbai.finance.fragment.trade.stock.StockEntrustFragment;
@@ -53,9 +53,9 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE;
-import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE_BUY;
-import static com.sbai.finance.activity.stock.StockPostTradeSuccessOperateActivity.TRADE_TYPE_SELL;
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE;
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_BUY;
+import static com.sbai.finance.activity.stock.StockTradeOperateActivity.TRADE_TYPE_SELL;
 import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
@@ -178,14 +178,14 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         mFundInfo.setOnOrderClickListener(new FundAndHoldingInfoView.OnOrderClickListener() {
             @Override
             public void buy() {
-                Launcher.with(getActivity(), StockPostTradeSuccessOperateActivity.class)
+                Launcher.with(getActivity(), StockTradeOperateActivity.class)
                         .putExtra(TRADE_TYPE, TRADE_TYPE_BUY)
                         .execute();
             }
 
             @Override
             public void sell() {
-                Launcher.with(getActivity(), StockPostTradeSuccessOperateActivity.class)
+                Launcher.with(getActivity(), StockTradeOperateActivity.class)
                         .putExtra(TRADE_TYPE, TRADE_TYPE_SELL)
                         .execute();
             }
