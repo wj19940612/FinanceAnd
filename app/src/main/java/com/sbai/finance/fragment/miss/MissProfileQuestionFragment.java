@@ -558,6 +558,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                 break;
             }
             if (MissAudioManager.get().isPaused(question)) {
+                mMissFloatWindow.setMissAvatar(question.getCustomPortrait());
                 break;
             }
         }
