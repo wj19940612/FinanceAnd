@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.StockDetailActivity;
-import com.sbai.finance.activity.stock.StockTradeActivity;
 import com.sbai.finance.activity.stock.StockTradeOperateActivity;
 import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -260,7 +259,7 @@ public class StockPositionFragment extends BaseFragment {
                 .setTitle(R.string.tips)
                 .setMessage(getString(R.string.cost_price_describe))
                 .setNegative(R.string.know)
-                .setPositiveVisable(View.GONE)
+                .setPositiveVisible(View.GONE)
                 .show();
 
     }

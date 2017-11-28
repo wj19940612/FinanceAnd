@@ -215,7 +215,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     }
 
     private void requestStockAccount() {
-        Client.getStockAccount(null, null).setTag(TAG)
+        Client.getStockAccountList().setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<StockUser>>, List<StockUser>>() {
                     @Override
                     protected void onRespSuccessData(List<StockUser> data) {
@@ -314,7 +314,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
                 .setTitle(R.string.tips)
                 .setMessage(getString(R.string.fetch_fund_describe))
                 .setNegative(R.string.know)
-                .setPositiveVisable(View.GONE)
+                .setPositiveVisible(View.GONE)
                 .show();
     }
 

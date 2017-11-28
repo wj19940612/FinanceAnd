@@ -6,6 +6,7 @@ import com.sbai.finance.App;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.levelevaluation.QuestionAnswer;
+import com.sbai.finance.model.local.StockOrder;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.httplib.ApiParams;
 
@@ -73,17 +74,12 @@ public class Client {
 
 
     /**
-     * 获取股票账户, 什么都不传默认是所有
+     * 获取股票账户列表
      *
-     * @param type         1 实盘 2 模拟 3 活动
-     * @param activityCode
      * @return
      */
-    public static API getStockAccount(String type, String activityCode) {
-        return new API("/api/stock-or/account/info.do",
-                new ApiParams()
-                        .put("type", type)
-                        .put("activityCode", activityCode));
+    public static API getStockAccountList() {
+        return new API("/api/stock-or/account/info.do");
     }
 
     /**
@@ -3067,28 +3063,9 @@ public class Client {
 
     /**
      * 股票下单
-     *
-     * @param type
-     * @param account
-     * @param activityCode
-     * @param varietyType
-     * @param varietyName
-     * @param buyVolume
-     * @param buyPrice
-     * @return
      */
-    public static API markStockOrder(int type, String account, String activityCode, String varietyType,
-                                     String varietyName, int buyVolume, double buyPrice, String uuid) {
-        return new API(POST, "", new ApiParams()
-                .put("positionType", type).
-                        put("userAccount", account)
-                .put("activityCode", activityCode)
-                .put("varietyCode", varietyType)
-                .put("varietyName", varietyName)
-                .put("quantity", buyVolume)
-                .put("price", buyPrice)
-                .put("deputeType", 8)
-                .put("signId", uuid));
+    public static API markStockOrder(StockOrder stockOrder) {
+        return new API(POST, "/api/stock-or/declare/bid.do", new ApiParams(StockOrder.class, stockOrder));
     }
 
     /**
