@@ -341,14 +341,10 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         });
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-//        mSlidingTabLayout.setPadding(Display.dp2Px(15, getResources()));
         mSlidingTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(60, getResources()));
         mSlidingTabLayout.setSelectedIndicatorHeight(2);
-//        mSlidingTabLayout.setTabViewTextSize(16);
-        mSlidingTabLayout.setCustomTabView(R.layout.layout_miss_question, R.id.tabText);
-//        mSlidingTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.primary_or_unlucky_text_color));
         mSlidingTabLayout.setViewPager(mViewPager);
-        mSlidingTabLayout.setSelectTab(0);
+        mSlidingTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.primary_or_unlucky_text_color));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -358,7 +354,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             @Override
             public void onPageSelected(int position) {
                 // 在提问页面需要更新数据 然后回调，用来区分那个页面可见
-                mSlidingTabLayout.setSelectTab(position);
                 mPosition = position;
                 setVisibleFragmentLabel(position);
             }
