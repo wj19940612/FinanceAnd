@@ -270,6 +270,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
 
     @Override
     protected void onMediaPlayStop(int IAudioId, int source) {
+        stopScheduleJob();
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
         mQuestionListAdapter.notifyDataSetChanged();
@@ -553,6 +554,10 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         for (Question question : questionList) {
             if (MissAudioManager.get().isStarted(question)) {
                 mMissFloatWindow.setMissAvatar(question.getCustomPortrait());
+                startScheduleJob(100);
+                break;
+            }
+            if (MissAudioManager.get().isPaused(question)) {
                 startScheduleJob(100);
                 break;
             }
