@@ -552,6 +552,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
     private void resumeLastPlayUI(List<Question> questionList) {
         for (Question question : questionList) {
             if (MissAudioManager.get().isStarted(question)) {
+                mMissFloatWindow.setMissAvatar(question.getCustomPortrait());
                 startScheduleJob(100);
                 break;
             }
