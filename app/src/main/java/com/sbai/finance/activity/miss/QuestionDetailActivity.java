@@ -1,19 +1,22 @@
 package com.sbai.finance.activity.miss;
 
-import android.content.BroadcastReceiver;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -25,34 +28,34 @@ import android.widget.TextView;
 
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
-import com.sbai.finance.Preference;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
+import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.QuestionCollect;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
+import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
-import com.sbai.glide.GlideApp;
 import com.sbai.httplib.ApiError;
 
 import java.util.HashSet;
@@ -62,17 +65,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.R.id.listenerNumber;
-import static com.sbai.finance.R.id.playImage;
-import static com.sbai.finance.R.id.progressBar;
-import static com.sbai.finance.R.id.soundTime;
 import static com.sbai.finance.net.Client.SHARE_URL_QUESTION;
 
 
-public class QuestionDetailActivity extends BaseActivity implements AdapterView.OnItemClickListener, MissAudioManager.OnAudioListener {
+public class QuestionDetailActivity extends MediaPlayActivity implements AdapterView.OnItemClickListener {
 
-    private static final int REQ_COMMENT = 1001;
-    private static final int REQ_COMMENT_LOGIN = 1002;
     private static final int REQ_REWARD_LOGIN = 1003;
 
     public static final int REQ_CODE_QUESTION_DETAIL = 5555;
@@ -101,7 +98,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     MissFloatWindow mMissFloatWindow;
 
     private int mQuestionId;
-    private boolean mIsFromMissTalk;
 
     private int mType = 1;
     private int mPageSize = 20;
@@ -110,15 +106,14 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private HashSet<String> mSet;
     private View mFootView;
     private QuestionReplyListAdapter mQuestionReplyListAdapter;
-    private Question mQuestionDetail;
-    private RefreshReceiver mRefreshReceiver;
+    private Question mQuestion;
     private Praise mPraise;
     private String mReplayMsgId;
-    private ImageView mAvatar;
+    private HasLabelImageLayout mAvatar;
     private TextView mName;
     private TextView mAskTime;
-    private TextView mQuestion;
-    private ImageView mMissAvatar;
+    private TextView mQuestionContent;
+    private HasLabelImageLayout mMissAvatar;
     private ImageView mPlayImage;
     private ProgressBar mProgressBar;
     private TextView mSoundTime;
@@ -127,6 +122,22 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     private TextView mRewardNumber;
     private TextView mCommentNumber;
     private TextView mNoComment;
+    private ReplyDialogFragment mReplyDialogFragment;
+
+    protected MediaPlayService mMediaPlayService;
+    private boolean mPlayThisVoice;
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mMediaPlayService = ((MediaPlayService.MediaBinder) iBinder).getMediaPlayService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,22 +146,15 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         ButterKnife.bind(this);
 
         initData(getIntent());
+        initView();
         mSet = new HashSet<>();
 
         initHeaderView();
-
-        mQuestionReplyListAdapter = new QuestionReplyListAdapter(this);
-        mListView.setAdapter(mQuestionReplyListAdapter);
-        mListView.setOnItemClickListener(this);
 
         requestQuestionDetail();
         requestQuestionReplyList(true);
 
         initSwipeRefreshLayout();
-
-        registerRefreshReceiver();
-
-        MissAudioManager.get().addAudioListener(this);
 
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +162,43 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 requestShareData();
             }
         });
+    }
+
+    private void initView() {
+        mQuestionReplyListAdapter = new QuestionReplyListAdapter(this);
+        mListView.setAdapter(mQuestionReplyListAdapter);
+        mListView.setOnItemClickListener(this);
+
+        mSwipeRefreshLayout.setOnScrollListener(new CustomSwipeRefreshLayout.OnScrollListener() {
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                if (mPlayThisVoice) {
+                    if (firstVisibleItem != 0) {
+                        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+                        if (audio != null && MissAudioManager.get().isStarted(audio)
+                                && mMissFloatWindow.getVisibility() == View.GONE) {
+                            mMissFloatWindow.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        if (mMissFloatWindow.getVisibility() == View.VISIBLE) {
+                            mMissFloatWindow.setVisibility(View.GONE);
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public int scrollStateChange(int scrollState) {
+                return 0;
+            }
+        });
+
+        Intent serviceIntent = new Intent(getActivity(), MediaPlayService.class);
+        bindService(serviceIntent, mServiceConnection, Service.BIND_AUTO_CREATE);
+
+        initMissFloatWindow(null);
     }
 
     private void requestShareData() {
@@ -225,7 +266,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                 .setCallback(new Callback2D<Resp<Question>, Question>() {
                     @Override
                     protected void onRespSuccessData(Question question) {
-                        mQuestionDetail = question;
+                        mQuestion = question;
                         updateQuestionDetail();
                     }
                 }).fire();
@@ -265,28 +306,152 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
-        getActivity().unregisterReceiver(mRefreshReceiver);
-        MissAudioManager.get().removeAudioListener(this);
+        unbindService(mServiceConnection);
+    }
+
+    @Override
+    protected IntentFilter getIntentFilter() {
+        IntentFilter filter = super.getIntentFilter();
+        filter.addAction(ACTION_REWARD_SUCCESS);
+        filter.addAction(ACTION_LOGIN_SUCCESS);
+        filter.addAction(CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        return filter;
+    }
+
+    @Override
+    public void onMediaPlayStart(int IAudioId, int source) {
+        updateThisPlayStatus();
+        updateMissFloatView();
+    }
+
+    @Override
+    public void onMediaPlay(int IAudioId, int source) {
+        updateThisPlayStatus();
+        updateMissFloatView();
+    }
+
+    @Override
+    public void onMediaPlayResume(int IAudioId, int source) {
+        if (MissAudioManager.get().getAudio() instanceof Question) {
+            Question playingQuestion = (Question) MissAudioManager.get().getAudio();
+            if (playingQuestion.getId() == mQuestionId) {
+                setPlayingState();
+            } else {
+                mMissFloatWindow.setVisibility(View.VISIBLE);
+                mMissFloatWindow.startAnim();
+            }
+        }
+    }
+
+    @Override
+    public void onMediaPlayPause(int IAudioId, int source) {
+        if (MissAudioManager.get().getAudio() instanceof Question) {
+            Question playingQuestion = (Question) MissAudioManager.get().getAudio();
+            if (playingQuestion.getId() == mQuestionId) {
+                setPauseState();
+            } else {
+                mMissFloatWindow.stopAnim();
+                mMissFloatWindow.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    protected void onMediaPlayStop(int IAudioId, int source) {
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
+        setStopState();
+    }
+
+    @Override
+    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
+        if (mQuestion != null && mQuestion.getId() == IAudioId) {
+            int pastTime = MissAudioManager.get().getCurrentPosition();
+            mSoundTime.setText(getString(R.string._seconds, (mQuestion.getSoundTime() * 1000 - pastTime) / 1000));
+            mProgressBar.setProgress(pastTime);
+        }
+    }
+
+    @Override
+    public void onOtherReceive(Context context, Intent intent) {
+        super.onOtherReceive(context, intent);
+        if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            if (mQuestion != null) {
+                int rewardCount = mQuestion.getAwardCount() + 1;
+                mQuestion.setAwardCount(rewardCount);
+                mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(rewardCount)));
+            }
+        }
+
+        if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            mSet.clear();
+            mPage = 0;
+            mReplayMsgId = null;
+            mListView.removeFooterView(mFootView);
+            mFootView = null;
+            requestQuestionReplyList(true);
+        }
+
+        if (Intent.ACTION_SCREEN_OFF.equalsIgnoreCase(intent.getAction())) {
+            stopQuestionVoice();
+        }
+
+        if (CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            mSet.clear();
+            mPage = 0;
+            mReplayMsgId = null;
+            mSwipeRefreshLayout.setLoadMoreEnable(true);
+            mListView.removeFooterView(mFootView);
+            mFootView = null;
+            requestQuestionDetail();
+            requestQuestionReplyList(true);
+            mListView.setSelection(0);
+        }
     }
 
     private void initData(Intent intent) {
         mQuestionId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
         mReplayMsgId = intent.getStringExtra(Launcher.EX_PAYLOAD_1); // 来消息，把他人的回复置顶
-        mIsFromMissTalk = intent.getBooleanExtra(ExtraKeys.IS_FROM_MISS_TALK, false);
+    }
+
+    private void updateThisPlayStatus() {
+        if (MissAudioManager.get().isPlaying()) {
+            if (MissAudioManager.get().getAudio() instanceof Question) {
+                Question playingQuestion = (Question) MissAudioManager.get().getAudio();
+                if (playingQuestion.getId() == mQuestionId) {
+                    mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
+                    mPlayThisVoice = true;
+                    setPlayingState();
+                    mMissFloatWindow.setVisibility(View.GONE);
+                } else {
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    private void updateMissFloatView() {
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (audio instanceof Question) {
+            Question playingQuestion = (Question) audio;
+            mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
+        } else if (audio instanceof Radio) {
+            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+        }
     }
 
     private void initHeaderView() {
         LinearLayout header = (LinearLayout) getLayoutInflater().inflate(R.layout.view_header_question_detail, null);
-        mAvatar = (ImageView) header.findViewById(R.id.avatar);
+        mAvatar = header.findViewById(R.id.avatar);
         mName = (TextView) header.findViewById(R.id.name);
         mAskTime = (TextView) header.findViewById(R.id.askTime);
-        mQuestion = (TextView) header.findViewById(R.id.question);
-        mMissAvatar = (ImageView) header.findViewById(R.id.missAvatar);
-        mPlayImage = (ImageView) header.findViewById(playImage);
-        mProgressBar = (ProgressBar) header.findViewById(progressBar);
-        mSoundTime = (TextView) header.findViewById(soundTime);
-        mListenerNumber = (TextView) header.findViewById(listenerNumber);
+        mQuestionContent = (TextView) header.findViewById(R.id.questionContent);
+        mMissAvatar = header.findViewById(R.id.missAvatar);
+        mPlayImage = (ImageView) header.findViewById(R.id.playImage);
+        mProgressBar = (ProgressBar) header.findViewById(R.id.progressBar);
+        mSoundTime = (TextView) header.findViewById(R.id.soundTime);
+        mListenerNumber = (TextView) header.findViewById(R.id.listenerNumber);
         mPraiseNumber = (TextView) header.findViewById(R.id.praiseNumber);
         mRewardNumber = (TextView) header.findViewById(R.id.rewardNumber);
         mCommentNumber = (TextView) header.findViewById(R.id.commentNumber);
@@ -295,36 +460,29 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     }
 
     private void updateQuestionDetail() {
-        GlideApp.with(this).load(mQuestionDetail.getUserPortrait())
-                .placeholder(R.drawable.ic_default_avatar)
-                .circleCrop()
-                .into(mAvatar);
+        mAvatar.setAvatar(mQuestion.getUserPortrait(), mQuestion.getUserType());
+        mMissAvatar.setAvatar(mQuestion.getCustomPortrait(), Question.USER_IDENTITY_HOST);
 
-        GlideApp.with(this).load(mQuestionDetail.getCustomPortrait())
-                .placeholder(R.drawable.ic_default_avatar)
-                .circleCrop()
-                .into(mMissAvatar);
+        mName.setText(mQuestion.getUserName());
+        mAskTime.setText(DateUtil.formatDefaultStyleTime(mQuestion.getCreateTime()));
+        mQuestionContent.setText(mQuestion.getQuestionContext());
+        mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(mQuestion.getListenCount())));
+        mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(mQuestion.getPriseCount())));
+        mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(mQuestion.getAwardCount())));
 
-        mName.setText(mQuestionDetail.getUserName());
-        mAskTime.setText(DateUtil.formatDefaultStyleTime(mQuestionDetail.getCreateTime()));
-        mQuestion.setText(mQuestionDetail.getQuestionContext());
-        mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(mQuestionDetail.getListenCount())));
-        mPraiseNumber.setText(getString(R.string.praise_miss, StrFormatter.getFormatCount(mQuestionDetail.getPriseCount())));
-        mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(mQuestionDetail.getAwardCount())));
-
-        if (mQuestionDetail.getIsPrise() == 0) {
+        if (mQuestion.getIsPrise() == 0) {
             mPraiseImage.setImageResource(R.drawable.ic_miss_unpraise);
         } else {
             mPraiseImage.setImageResource(R.drawable.ic_miss_praise);
         }
 
-        if (mQuestionDetail.getCollect() == 0) {
+        if (mQuestion.getCollect() == 0) {
             mCollectImage.setImageResource(R.drawable.ic_miss_uncollect);
         } else {
             mCollectImage.setImageResource(R.drawable.ic_miss_collect);
         }
 
-        if (MissVoiceRecorder.isHeard(mQuestionDetail.getId())) {
+        if (MissVoiceRecorder.isHeard(mQuestion.getId())) {
             mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.unluckyText));
         } else {
             mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -334,7 +492,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             @Override
             public void onClick(View v) {
                 Launcher.with(getActivity(), LookBigPictureActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getUserPortrait())
+                        .putExtra(Launcher.EX_PAYLOAD, mQuestion.getUserPortrait())
                         .putExtra(Launcher.EX_PAYLOAD_2, 0)
                         .execute();
             }
@@ -343,9 +501,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         mMissAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopQuestionVoice();
-                Launcher.with(QuestionDetailActivity.this, MissProfileActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getAnswerCustomId())
+                Launcher.with(QuestionDetailActivity.this, MissProfileDetailActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, mQuestion.getAnswerCustomId())
                         .execute();
             }
         });
@@ -353,72 +510,101 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         mPlayImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleQuestionVoice(mQuestionDetail);
+                toggleQuestionVoice(mQuestion);
             }
         });
 
-        if (MissAudioManager.get().getAudio() instanceof Question) {
-            final Question playingQuestion = (Question) MissAudioManager.get().getAudio();
-            if (MissAudioManager.get().isStarted(playingQuestion)
-                    && mQuestionDetail.getId() != playingQuestion.getId()) {
-                mMissFloatWindow.setVisibility(View.VISIBLE);
-                mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
-                mMissFloatWindow.startAnim();
-                mMissFloatWindow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
+        initMissFloatWindow(mQuestion);
 
-                        Launcher.with(getActivity(), QuestionDetailActivity.class)
-                                .putExtra(ExtraKeys.IS_FROM_MISS_TALK, true)
-                                .putExtra(Launcher.EX_PAYLOAD, playingQuestion.getId())
-                                .execute();
-                    }
-                });
-            }
-        }
-
-        mProgressBar.setMax(mQuestionDetail.getSoundTime() * 1000);
-        if (MissAudioManager.get().isStarted(mQuestionDetail)) {
+        mProgressBar.setMax(mQuestion.getSoundTime() * 1000);
+        if (MissAudioManager.get().isStarted(mQuestion)) {
             setPlayingState();
-
-            startScheduleJob(100);
-        } else if (MissAudioManager.get().isPaused(mQuestionDetail)) {
+        } else if (MissAudioManager.get().isPaused(mQuestion)) {
             setPauseState();
         } else {
             setStopState();
         }
     }
 
+    private void initMissFloatWindow(Question question) {
+        final MissAudioManager missAudioManager = MissAudioManager.get();
+        if (missAudioManager.isPlaying()) {
+            MissAudioManager.IAudio audio = missAudioManager.getAudio();
+            if (audio instanceof Radio) {
+                mPlayThisVoice = false;
+                mMissFloatWindow.startAnim();
+                mMissFloatWindow.setVisibility(View.VISIBLE);
+                mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+            } else if (audio instanceof Question) {
+                if (question == null) {
+                    mPlayThisVoice = false;
+                } else {
+                    if (MissAudioManager.get().isStarted(audio)) {
+                        if (mQuestion.getId() != ((Question) audio).getId()) {
+                            mPlayThisVoice = false;
+                            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
+                            mMissFloatWindow.startAnim();
+                            mMissFloatWindow.setVisibility(View.VISIBLE);
+                        } else {
+                            mPlayThisVoice = true;
+                        }
+
+                    }
+                }
+            }
+            if (mPlayThisVoice) {
+                mMissFloatWindow.setVisibility(View.GONE);
+            } else {
+                mMissFloatWindow.setVisibility(View.VISIBLE);
+            }
+        }
+
+        mMissFloatWindow.setOnMissFloatWindowClickListener(new MissFloatWindow.OnMissFloatWindowClickListener() {
+            @Override
+            public void onClick(int source) {
+                if (source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION || source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION) {
+                    umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
+                }
+            }
+        });
+    }
+
     private void setStopState() {
         mPlayImage.setImageResource(R.drawable.ic_play);
         mProgressBar.setProgress(0);
-        mSoundTime.setText(getString(R.string._seconds, mQuestionDetail != null ? mQuestionDetail.getSoundTime() : 0));
+        mSoundTime.setText(getString(R.string._seconds, mQuestion != null ? mQuestion.getSoundTime() : 0));
     }
 
     private void setPauseState() {
         mPlayImage.setImageResource(R.drawable.ic_play);
         int pastTime = MissAudioManager.get().getCurrentPosition();
-        mSoundTime.setText(getString(R.string._seconds, (mQuestionDetail.getSoundTime() * 1000 - pastTime) / 1000));
+        mSoundTime.setText(getString(R.string._seconds, (mQuestion.getSoundTime() * 1000 - pastTime) / 1000));
         mProgressBar.setProgress(pastTime);
     }
 
     private void setPlayingState() {
         mPlayImage.setImageResource(R.drawable.ic_pause);
         int pastTime = MissAudioManager.get().getCurrentPosition();
-        mSoundTime.setText(getString(R.string._seconds, (mQuestionDetail.getSoundTime() * 1000 - pastTime) / 1000));
+        mSoundTime.setText(getString(R.string._seconds, (mQuestion.getSoundTime() * 1000 - pastTime) / 1000));
         mProgressBar.setProgress(pastTime);
     }
 
+
     private void toggleQuestionVoice(final Question question) {
         if (MissAudioManager.get().isStarted(question)) {
-            MissAudioManager.get().pause();
+            if (mMediaPlayService != null) {
+                mMediaPlayService.onPausePlay(question);
+            }
         } else if (MissAudioManager.get().isPaused(question)) {
-            MissAudioManager.get().resume();
-            startScheduleJob(100);
+            if (mMediaPlayService != null) {
+                mMediaPlayService.onResume();
+            }
         } else {
             updateQuestionListenCount(question);
-            MissAudioManager.get().start(question);
+            if (mMediaPlayService != null) {
+                int source = question.isLatestQuestion() ? MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION : MediaPlayService.MEDIA_SOURCE_HOT_QUESTION;
+                mMediaPlayService.startPlay(question, source);
+            }
         }
     }
 
@@ -447,10 +633,6 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
         }
     }
 
-    @Override
-    public void onTimeUp(int count) {
-        setPlayingState();
-    }
 
     public void stopQuestionVoice() {
         MissAudioManager.get().stop();
@@ -459,9 +641,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     @Override
     protected void onStop() {
         super.onStop();
-        if (!Preference.get().isForeground()) {
-            stopQuestionVoice();
-        }
+//        if (!Preference.get().isForeground()) {
+//            stopQuestionVoice();
+//        }
     }
 
     private void requestQuestionReplyList(final boolean isRefresh) {
@@ -551,10 +733,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     }
 
     private void praise() {
-        if (mQuestionDetail != null) {
+        if (mQuestion != null) {
             if (LocalUser.getUser().isLogin()) {
                 umengEventCount(UmengCountEventId.MISS_TALK_PRAISE);
-                Client.praise(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<Praise>, Praise>() {
+                Client.praise(mQuestion.getId()).setCallback(new Callback2D<Resp<Praise>, Praise>() {
 
                     @Override
                     protected void onRespSuccessData(Praise praise) {
@@ -565,10 +747,10 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                             mPraiseImage.setImageResource(R.drawable.ic_miss_praise);
                         }
 
-                        mQuestionDetail.setIsPrise(praise.getIsPrise());
-                        mQuestionDetail.setPriseCount(praise.getPriseCount());
+                        mQuestion.setIsPrise(praise.getIsPrise());
+                        mQuestion.setPriseCount(praise.getPriseCount());
                         mPraiseNumber.setText(getString(R.string.praise_miss,
-                                StrFormatter.getFormatCount(mQuestionDetail.getPriseCount())));
+                                StrFormatter.getFormatCount(mQuestion.getPriseCount())));
                     }
                 }).fire();
             } else {
@@ -579,9 +761,9 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     }
 
     private void collect() {
-        if (mQuestionDetail != null) {
+        if (mQuestion != null) {
             if (LocalUser.getUser().isLogin()) {
-                Client.collectQuestion(mQuestionDetail.getId()).setCallback(new Callback2D<Resp<QuestionCollect>, QuestionCollect>() {
+                Client.collectQuestion(mQuestion.getId()).setCallback(new Callback2D<Resp<QuestionCollect>, QuestionCollect>() {
                     @Override
                     protected void onRespSuccessData(QuestionCollect questionCollect) {
                         if (questionCollect.getCollect() == 0) {
@@ -599,23 +781,23 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     }
 
     private void comment() {
-        if (mQuestionDetail != null) {
+        if (mQuestion != null) {
             if (LocalUser.getUser().isLogin()) {
                 Launcher.with(getActivity(), CommentActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
-                        .putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
-                        .executeForResult(REQ_COMMENT);
+                        .putExtra(Launcher.EX_PAYLOAD, mQuestion.getQuestionUserId())
+                        .putExtra(Launcher.EX_PAYLOAD_1, mQuestion.getId())
+                        .executeForResult(CommentActivity.REQ_CODE_COMMENT);
 
             } else {
                 stopQuestionVoice();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivityForResult(intent, REQ_COMMENT_LOGIN);
+                startActivityForResult(intent, CommentActivity.REQ_CODE_COMMENT_LOGIN);
             }
         }
     }
 
     private void reward() {
-        if (mQuestionDetail != null) {
+        if (mQuestion != null) {
             if (LocalUser.getUser().isLogin()) {
                 RewardMissActivity.show(getActivity(), mQuestionId, RewardInfo.TYPE_QUESTION);
             } else {
@@ -629,133 +811,27 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
-//        intent.putExtra(Launcher.EX_PAYLOAD, mQuestionReply.getUserModel().getId());
-//        intent.putExtra(Launcher.EX_PAYLOAD_1, mQuestionReply.getDataId());
-//        intent.putExtra(Launcher.EX_PAYLOAD_2, mQuestionReply.getId());
-//        intent.putExtra(Launcher.EX_PAYLOAD_3, mQuestionReply.getUserModel().getUserName());
-
 
         if (item != null) {
-            if (LocalUser.getUser().isLogin()) {
-                Launcher.with(getActivity(), CommentActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, item.getUserModel().getId())//mQuestionReply.getUserModel().getId()
-                        .putExtra(Launcher.EX_PAYLOAD_1, item.getDataId())           // mQuestionReply.getDataId()
-                        .putExtra(Launcher.EX_PAYLOAD_2, item.getId())
-                        .putExtra(Launcher.EX_PAYLOAD_3, item.getUserModel().getUserName())
-                        .executeForResult(REQ_COMMENT);
-
-            } else {
-                stopQuestionVoice();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivityForResult(intent, REQ_COMMENT_LOGIN);
+            if (mReplyDialogFragment == null) {
+                mReplyDialogFragment = ReplyDialogFragment.newInstance(item);
             }
-        }
-
-//        if (item != null) {
-//            if (mReplyDialogFragment == null) {
-//                mReplyDialogFragment = ReplyDialogFragment.newInstance();
-//            }
-//            mReplyDialogFragment.setItemData(item);
-//            if (!mReplyDialogFragment.isAdded()) {
-//                mReplyDialogFragment.show(getSupportFragmentManager());
-//            }
-//
-//            mReplyDialogFragment.setCallback(new ReplyDialogFragment.Callback() {
-//                @Override
-//                public void onLoginSuccess() {
-//                    stopQuestionVoice();
-//                }
-//
-//                @Override
-//                public void onReplySuccess() {
-//                    mSet.clear();
-//                    mPage = 0;
-//                    mReplayMsgId = null;
-//                    mSwipeRefreshLayout.setLoadMoreEnable(true);
-//                    mListView.removeFooterView(mFootView);
-//                    mFootView = null;
-//                    requestQuestionDetail();
-//                    requestQuestionReplyList(true);
-//                    mListView.setSelection(0);
-//                }
-//            });
-//        }
-    }
-
-    @Override
-    public void onAudioStart() {
-        if (MissAudioManager.get().getAudio() instanceof Question) {
-            Question playingQuestion = (Question) MissAudioManager.get().getAudio();
-            if (playingQuestion.getId() == mQuestionId) {
-                setPlayingState();
-                mMissFloatWindow.setVisibility(View.GONE);
-            } else {
-                mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
-                mMissFloatWindow.setVisibility(View.VISIBLE);
+            if (!mReplyDialogFragment.isAdded()) {
+                mReplyDialogFragment.show(getSupportFragmentManager());
             }
-        }
-    }
 
-    @Override
-    public void onAudioPlay() {
-        if (MissAudioManager.get().getAudio() instanceof Question) {
-            Question playingQuestion = (Question) MissAudioManager.get().getAudio();
-            if (playingQuestion.getId() == mQuestionId) {
-                startScheduleJob(100);
-            } else {
-                mMissFloatWindow.startAnim();
-            }
+            mReplyDialogFragment.setCallback(new ReplyDialogFragment.Callback() {
+                                                 @Override
+                                                 public void onLoginSuccess() {
+                                                     stopQuestionVoice();
+                                                 }
+                                             }
+            );
         }
-    }
-
-    @Override
-    public void onAudioPause() {
-        if (MissAudioManager.get().getAudio() instanceof Question) {
-            Question playingQuestion = (Question) MissAudioManager.get().getAudio();
-            if (playingQuestion.getId() == mQuestionId) {
-                setPauseState();
-                stopScheduleJob();
-            } else {
-                mMissFloatWindow.stopAnim();
-                mMissFloatWindow.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    @Override
-    public void onAudioResume() {
-        if (MissAudioManager.get().getAudio() instanceof Question) {
-            Question playingQuestion = (Question) MissAudioManager.get().getAudio();
-            if (playingQuestion.getId() == mQuestionId) {
-                setPlayingState();
-                startScheduleJob(100);
-            } else {
-                mMissFloatWindow.setVisibility(View.VISIBLE);
-                mMissFloatWindow.startAnim();
-            }
-        }
-    }
-
-    @Override
-    public void onAudioStop() {
-        if (MissAudioManager.get().getAudio() instanceof Question) {
-            Question playingQuestion = (Question) MissAudioManager.get().getAudio();
-            if (playingQuestion.getId() == mQuestionId) {
-                setStopState();
-                stopScheduleJob();
-            } else {
-                mMissFloatWindow.stopAnim();
-                mMissFloatWindow.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    @Override
-    public void onAudioError() {
-        ToastUtil.show(R.string.play_failure);
     }
 
     static class QuestionReplyListAdapter extends ArrayAdapter<QuestionReply.DataBean> {
+
         private Context mContext;
 
         private QuestionReplyListAdapter(@NonNull Context context) {
@@ -782,7 +858,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
 
         static class ViewHolder {
             @BindView(R.id.avatar)
-            ImageView mAvatar;
+            HasLabelImageLayout mAvatar;
             @BindView(R.id.userName)
             TextView mUserName;
             @BindView(R.id.opinionContent)
@@ -795,6 +871,8 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             LinearLayout mReplyArea;
             @BindView(R.id.publishTime)
             TextView mPublishTime;
+            @BindView(R.id.reviewPriceCount)
+            TextView mReviewPriceCount;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -803,11 +881,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             public void bindingData(final Context context, final QuestionReply.DataBean item) {
                 if (item == null) return;
 
-                if (item.getUserModel() != null) {
-                    GlideApp.with(context).load(item.getUserModel().getUserPortrait())
-                            .placeholder(R.drawable.ic_default_avatar)
-                            .circleCrop()
-                            .into(mAvatar);
+                QuestionReply.DataBean.UserModelBean userModelBean = item.getUserModel();
+                if (userModelBean != null) {
+
+                    int userIdentity = userModelBean.getCustomId() != 0 ? Question.USER_IDENTITY_HOST : Question.USER_IDENTITY_ORDINARY;
+
+                    mAvatar.setAvatar(userModelBean.getUserPortrait(), userIdentity);
 
                     mUserName.setText(item.getUserModel().getUserName());
 
@@ -821,10 +900,7 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                         }
                     });
                 } else {
-                    GlideApp.with(context).load(R.drawable.ic_default_avatar)
-                            .circleCrop()
-                            .into(mAvatar);
-
+                    mAvatar.setAvatar("", 0);
                     mUserName.setText("");
 
                     mAvatar.setOnClickListener(new View.OnClickListener() {
@@ -837,6 +913,26 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                         }
                     });
                 }
+
+                setPrice(item.getPriseCount(), item.getIsPrise());
+                mReviewPriceCount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (LocalUser.getUser().isLogin()) {
+                            Client.praiseMissReply(item.getId())
+                                    .setCallback(new Callback2D<Resp<Praise>, Praise>() {
+                                        @Override
+                                        protected void onRespSuccessData(Praise data) {
+                                            setPrice(data.getPriseCount(), data.getIsPrise());
+                                        }
+                                    })
+                                    .fireFree();
+                        } else {
+                            Launcher.with(context, LoginActivity.class).execute();
+                        }
+
+                    }
+                });
 
                 mPublishTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateDate()));
                 mOpinionContent.setText(item.getContent());
@@ -863,13 +959,23 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
                     mReplyArea.setVisibility(View.GONE);
                 }
             }
+
+            private void setPrice(int priseCount, int prise) {
+                mReviewPriceCount.setText(String.valueOf(priseCount));
+                if (prise == Praise.IS_PRAISE) {
+                    mReviewPriceCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_praise, 0, 0, 0);
+                } else {
+                    mReviewPriceCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_unpraise, 0, 0, 0);
+                }
+
+            }
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_COMMENT && resultCode == RESULT_OK) {
+        if (requestCode == CommentActivity.REQ_CODE_COMMENT && resultCode == RESULT_OK) {
             mSet.clear();
             mPage = 0;
             mReplayMsgId = null;
@@ -881,49 +987,12 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
             mListView.setSelection(0);
         }
 
-        if (requestCode == REQ_COMMENT_LOGIN && resultCode == RESULT_OK) {
-            if (mQuestionDetail != null) {
+        if (requestCode == CommentActivity.REQ_CODE_COMMENT_LOGIN && resultCode == RESULT_OK) {
+            if (mQuestion != null) {
                 Launcher.with(getActivity(), CommentActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mQuestionDetail.getQuestionUserId())
-                        .putExtra(Launcher.EX_PAYLOAD_1, mQuestionDetail.getId())
-                        .executeForResult(REQ_COMMENT);
-            }
-        }
-    }
-
-    private void registerRefreshReceiver() {
-        mRefreshReceiver = new RefreshReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_REWARD_SUCCESS);
-        filter.addAction(ACTION_LOGIN_SUCCESS);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
-        registerReceiver(mRefreshReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
-    }
-
-    private class RefreshReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-                if (mQuestionDetail != null) {
-                    int rewardCount = mQuestionDetail.getAwardCount() + 1;
-                    mQuestionDetail.setAwardCount(rewardCount);
-                    mRewardNumber.setText(getString(R.string.reward_miss, StrFormatter.getFormatCount(rewardCount)));
-                }
-            }
-
-            if (ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-                mSet.clear();
-                mPage = 0;
-                mReplayMsgId = null;
-                mListView.removeFooterView(mFootView);
-                mFootView = null;
-                requestQuestionReplyList(true);
-            }
-
-            if (Intent.ACTION_SCREEN_OFF.equalsIgnoreCase(intent.getAction())) {
-                stopQuestionVoice();
+                        .putExtra(Launcher.EX_PAYLOAD, mQuestion.getQuestionUserId())
+                        .putExtra(Launcher.EX_PAYLOAD_1, mQuestion.getId())
+                        .executeForResult(CommentActivity.REQ_CODE_COMMENT);
             }
         }
     }
@@ -931,18 +1000,11 @@ public class QuestionDetailActivity extends BaseActivity implements AdapterView.
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        if (mQuestionDetail != null) {
-            intent.putExtra(ExtraKeys.QUESTION, mQuestionDetail);
+        if (mQuestion != null) {
+            intent.putExtra(ExtraKeys.QUESTION, mQuestion);
             intent.putExtra(ExtraKeys.PRAISE, mPraise);
             setResult(RESULT_OK, intent);
         }
-
-        if (mIsFromMissTalk) {
-            stopScheduleJob();
-        } else {
-            stopQuestionVoice();
-        }
-
         super.onBackPressed();
     }
 }

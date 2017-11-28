@@ -46,6 +46,14 @@ public class Client {
     // 竞技场知识点
     public static final String ARENA_KNOWLEDGE = API.getHost() + "/lm/futurespk/point.html";
 
+    // 创建电台
+    public static final String CREATE_RADIO_STATION = API.getHost() + "/lm/banner/addaudio.html";
+
+    //姐说话题详情页
+    public static final String MISS_TOP_DETAILS_H5_URL = API.getHost() + "/lm/topic/index.html?id=%s";
+
+    //音频详情分享
+    public static final String SHARE_URL_RADIO = API.getHost() + "/lm/share_audio/index.html?radioId=%d&audioId=%d";
 
     public static String getServiceQQ(String serviceQQ) {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
@@ -2045,15 +2053,19 @@ public class Client {
      * @param replyParentId    回复哪条的id(不填为评论)
      * @param content
      * @param dataId
+     * @param type             评论的类型：4话题,3电台  1 普通的提问
      * @return
      */
-    public static API addComment(int invitationUserId, String replyParentId, String content, int dataId) {
+    public static API addComment(int invitationUserId, String replyParentId, int type, String content,
+                                 int dataId, int audioId, int radioId) {
         return new API(POST, "/user/comment/insertComment.do", new ApiParams()
                 .put("invitationUserId", invitationUserId)
                 .put("replyParentId", replyParentId)
-                .put("type", 1)
+                .put("type", type)
                 .put("content", content)
-                .put("dataId", dataId));
+                .put("dataId", dataId)
+                .put("audioId", audioId)
+                .put("radioId", radioId));
     }
 
     /**
@@ -2173,6 +2185,7 @@ public class Client {
      * 获取热门提问列表
      *
      * @return
+     * @deprecated
      */
     public static API getHotQuestionList() {
         return new API("/explain/question/hotQuestionList.do");
@@ -2183,11 +2196,12 @@ public class Client {
      *
      * @return
      */
-    public static API getLatestQuestionList(Long createTime, int pageSize) {
+    public static API getMissQuestionList(Long createTime, int pageSize, int type) {
         return new API("/explain/question/questionList.do",
                 new ApiParams()
                         .put("createTime", createTime)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", pageSize)
+                        .put("type", type));
     }
 
     /**
@@ -3013,6 +3027,8 @@ public class Client {
     }
 
     /**
+     * <<<<<<< HEAD
+     *
      * @param positionType
      * @param userAccount
      * @param activityCode
@@ -3063,6 +3079,7 @@ public class Client {
 
     /**
      * 股票下单
+     *
      * @param stockOrder
      * @return
      */
@@ -3110,6 +3127,28 @@ public class Client {
     }
 
     /**
+     * 电台详情
+     */
+
+    public static API requestRadioDetail(int radioId) {
+        return new API("/explain/radioManage/queryRadioByRadioIdForApp.do", new ApiParams().put("radioId", radioId));
+    }
+
+    /**
+     * 电台音频列表
+     */
+    public static API requestRadioDetailAudio(int radioId) {
+        return new API("/explain/audioManage/queryAudioByRadioId.do", new ApiParams().put("radioId", radioId));
+    }
+
+    /**
+     * 主播的电台列表
+     */
+    public static API requestRadiosOfMiss(int customId) {
+        return new API("/explain/radioManage/queryByRadioHostForApp.do", new ApiParams().put("customId", customId));
+    }
+
+    /**
      * 小姐姐管理--查询最新的推荐电台(薛松)
      *
      * @return
@@ -3118,8 +3157,120 @@ public class Client {
         return new API("/explain/audioManage/getRecommendLatestAudio.do");
     }
 
+    /**
+     * /explain/topicManage/findTopic.do
+     * 获取话题列表(薛松)
+     *
+     * @return
+     */
     public static API requestMissSwitcherList() {
-        return new API("");
+        return new API(POST, "/explain/topic/findTopic.do");
     }
 
+    /**
+     * /explain/radioManage/queryRadioByRadioIdForApp.do
+     * GET
+     * 小姐姐管理--查询电台详情(薛松)
+     *
+     * @param radioId
+     * @return
+     */
+    public static API requestRadioDetails(int radioId) {
+        return new API("/explain/radioManage/queryRadioByRadioIdForApp.do", new ApiParams().put("radioId", radioId));
+    }
+
+    /**
+     * P
+     * /explain/audioManage/queryAudioByAudioIdForApp.do
+     * POST
+     * [App]音频--通过音频id查音频详情(薛松)
+     *
+     * @param audioId
+     * @return
+     */
+    public static API requestVoiceDetails(int audioId) {
+        return new API("/explain/audioManage/queryAudioByAudioIdForApp.do", new ApiParams().put("audioId", audioId));
+    }
+
+    /**
+     * /user/user/collect.do
+     * POST
+     * 用户-收藏（黄磊）
+     *
+     * @param dataId
+     * @param type   1问答2、日报3、音频4、电台   常量定义在Radio类中
+     * @return
+     */
+    public static API collect(String dataId, int type) {
+        return new API(POST, "/user/user/collect.do",
+                new ApiParams()
+                        .put("dataId", dataId)
+                        .put("type", type));
+    }
+
+    /**
+     * 订阅电台
+     *
+     * @return
+     */
+    public static API collectRadio(String radioId) {
+        return new API("/user/user/collect.do", new ApiParams().put("type", 4).put("dataId", radioId));
+    }
+
+
+    /**
+     * /explain/comment/queryAudioComment.do
+     * POST
+     * [App]电台--评论列表(薛松)
+     *
+     * @param page
+     * @param radioId 电台id
+     * @param audioId 音频id
+     */
+    public static API requestRadioReplyList(int page, int radioId, int audioId) {
+        return new API("/explain/comment/queryAudioComment.do",
+                new ApiParams()
+                        .put("radioId", radioId)
+                        .put("audioId", audioId)
+                        .put("page", page)
+                        .put("pageSize", DEFAULT_PAGE_SIZE));
+    }
+
+    /**
+     * 修改小姐姐个人简介
+     */
+
+    public static API modifyProfileIntroduction(String introduction) {
+        return new API("/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
+    }
+
+    /**
+     * @param replyId
+     * @return
+     */
+    public static API praiseMissReply(String replyId) {
+        return new API("/user/comment/priseReply.do", new ApiParams().put("replyId", replyId));
+    }
+
+    /**
+     * 对收藏的东西已读
+     */
+    public static API readCollect(int dataId) {
+        return new API(POST, "/user/user/readCollect.do", new ApiParams().put("id", dataId));
+    }
+
+    /**
+     * 等我答，待抢答，已回答
+     */
+    public static API waitMeAnswer(int type) {
+        return new API("/user/user/waitMeAnswer.do", new ApiParams().put("type", type));
+    }
+
+    /**
+     * 等我答所有的条数
+     */
+    public static API waitMeAnswerNum() {
+        return new API("/user/user/waitMeAnswerNum.do");
+
+    }
 }

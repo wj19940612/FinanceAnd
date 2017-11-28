@@ -79,6 +79,15 @@ public class LocalUser {
         saveToPreference();
     }
 
+    /**
+     * 是否为小姐姐的账号
+     */
+    public boolean isMiss() {
+        if (mUserInfo == null) return false;
+        if (mUserInfo.getCustomId() == 0) return false;
+        return true;
+    }
+
     @Override
     public String toString() {
         return "LocalUser{" +

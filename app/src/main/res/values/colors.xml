@@ -42,6 +42,7 @@
     <color name="walletRechargeText">#EEB000</color>
     <color name="bank_card_hint">#BFBFBF</color>
     <color name="yellowColor2">#FEC022</color>
+    <color name="blueBlack">#6684A0</color>
 
     <!--gradient-->
     <color name="backgroundGradientStart">#69B2FF</color>
@@ -67,4 +68,5 @@
     <color name="bgArenaRankingSecondColor">#534C63</color>
     <color name="arenaRankingTitleTextColor">#8A839E</color>
 
+    <color name="radioText">#6684A0</color>
 </resources>

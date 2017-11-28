@@ -282,4 +282,13 @@
         <attr name="label_view_height" format="reference|dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="ShrinkTextLayout">
+        <attr name="contentTextSize" format="dimension|reference"/>
+        <attr name="contentTextColor" format="color|reference"/>
+        <attr name="textMaxLines" format="integer"/>
+        <attr name="shrinkBtnText" format="reference|string"/>
+        <attr name="spreadBtnText" format="reference|string"/>
+        <attr name="shrinkBtnTextSize" format="dimension|reference"/>
+        <attr name="shrinkBtnTextColor" format="color|reference"/>
+    </declare-styleable>
 </resources>

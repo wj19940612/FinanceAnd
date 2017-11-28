@@ -8,7 +8,7 @@
         android:id="@+id/titleBg"
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:background="@drawable/home_background_blue"/>
+        android:background="@drawable/bg_home_head_background"/>
 
     <ImageView
         android:id="@+id/secondBg"
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:src="@drawable/home_icon_horn"/>
+            android:src="@drawable/btn_home_horn"/>
 
         <com.sbai.finance.view.VerticalScrollTextView
             android:id="@+id/verticalScrollText"

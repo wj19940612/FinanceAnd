@@ -1,12 +1,15 @@
 package com.sbai.finance.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.sbai.finance.R;
+import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.utils.Display;
 import com.sbai.glide.GlideApp;
 
@@ -42,8 +45,8 @@ public class HasLabelImageLayout extends RelativeLayout {
 
     private void initAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.HasLabelImageLayout);
-        int  defaultSize = (int) Display.dp2Px(10, getResources());
-        mLabelDrawableResId = typedArray.getResourceId(R.styleable.HasLabelImageLayout_label_drawable, -1);
+        int defaultSize = (int) Display.dp2Px(10, getResources());
+        mLabelDrawableResId = typedArray.getResourceId(R.styleable.HasLabelImageLayout_label_drawable, R.drawable.ic_label_v);
         mLabelWidth = typedArray.getDimensionPixelSize(R.styleable.HasLabelImageLayout_label_view_width, defaultSize);
         mLabelHeight = typedArray.getDimensionPixelSize(R.styleable.HasLabelImageLayout_label_view_height, defaultSize);
         typedArray.recycle();
@@ -59,6 +62,7 @@ public class HasLabelImageLayout extends RelativeLayout {
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         mLabelImageView.setImageResource(mLabelDrawableResId);
         mLabelImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        mLabelImageView.setVisibility(GONE);
         addView(mLabelImageView, layoutParams);
     }
 
@@ -72,5 +76,21 @@ public class HasLabelImageLayout extends RelativeLayout {
 
     public void setLabelDrawableResId(int resId) {
         mLabelImageView.setImageResource(resId);
+    }
+
+    public void setAvatar(String avatarUrl, int userIdentity) {
+        if (userIdentity == Question.USER_IDENTITY_HOST) {
+            mLabelImageView.setVisibility(VISIBLE);
+        } else {
+            mLabelImageView.setVisibility(GONE);
+        }
+        if (getContext() == null || ((Activity) getContext()).isFinishing()) {
+            return;
+        }
+        GlideApp.with(getContext())
+                .load(!TextUtils.isEmpty(avatarUrl)?avatarUrl:R.drawable.ic_default_avatar)
+                .circleCrop()
+                .placeholder(R.drawable.ic_default_avatar)
+                .into(mCircleImageView);
     }
 }

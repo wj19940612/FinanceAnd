@@ -48,6 +48,10 @@ public class UserDetailInfo {
     private String userPhone;
     //用户头像
     private String userPortrait;
+
+    private String briefingText;//个人简介
+    private int customId;//小姐姐Id
+
     /**
      * chinaSex : 女
      * userSex : 1
@@ -243,6 +247,22 @@ public class UserDetailInfo {
 
     public void setUserSex(int userSex) {
         this.userSex = userSex;
+    }
+
+    public String getBriefingText() {
+        return briefingText;
+    }
+
+    public void setBriefingText(String briefingText) {
+        this.briefingText = briefingText;
+    }
+
+    public int getCustomId() {
+        return customId;
+    }
+
+    public void setCustomId(int customId) {
+        this.customId = customId;
     }
 
     @Override

@@ -9,7 +9,7 @@
         android:layout_height="19dp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
-        android:src="@drawable/home_title_focus"
+        android:src="@drawable/ic_home_title_focus"
         />
 
     <TextView

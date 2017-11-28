@@ -158,6 +158,17 @@
     <string name="copy_success">复制成功</string>
     <string name="install_qq_first">请先安装QQ</string>
     <string name="my_ingot_">我的元宝: %1$d</string>
+    <string name="wait_me_answer">等我答</string>
+    <string name="my_subscribe">我的订阅</string>
+    <string name="wait_answer">待回答</string>
+    <string name="wait_answer_">待回答(%1$d)</string>
+    <string name="wait_race_answer">待抢答</string>
+    <string name="wait_race_answer_">待抢答(%1$d)</string>
+    <string name="have_answered">已回答</string>
+    <string name="have_answered_">已回答(%1$d)</string>
+    <string name="you_not_has_answer">没有等待你回答的问题</string>
+    <string name="not_has_answer">没有抢答的问题</string>
+    <string name="you_not_has_answer_question">你还没回答问题</string>
 
     <string name="article">文章</string>
 
@@ -207,6 +218,8 @@
     <string name="bind_wechat_info">绑定微信号,登录更便捷,是否绑定?</string>
     <string name="bind">绑定</string>
     <string name="is_logout_lemi">是否要退出登录？</string>
+    <string name="personal_summary">个人简介</string>
+    <string name="set_personal_summary">设置个人简介</string>
     <!--   消息 -->
     <string name="up_load_more">加载更多</string>
 
@@ -589,6 +602,16 @@
     <string name="praise">赞</string>
     <string name="play_failure">播放失败</string>
 
+    <string name="just_subscribe">订阅</string>
+    <string name="subscribed">已订阅</string>
+    <string name="i_want_to_race_answer">我要抢答</string>
+    <string name="i_want_to_ask">我要提问</string>
+    <string name="create_radio_station">创建电台</string>
+    <string name="edit_profile">编辑资料</string>
+    <string name="miss_cant_edit_nick">主播认证后不允许修改昵称</string>
+    <string name="word_day">日</string>
+    <string name="audio_have_undercarriage">该音频已下架</string>
+
     <!--discovery-->
     <string name="daily">乐米日报</string>
     <string name="no_report">暂无日报</string>
@@ -796,6 +819,11 @@
     <string name="you_not_has_comment_collection">暂无提问收藏</string>
     <string name="collect_favorite_miss_take_here">在这里收藏喜欢的姐说问答</string>
     <string name="look_miss">查看姐说</string>
+
+    <string name="you_not_has_audio_collection">暂无音频收藏</string>
+    <string name="collect_favorite_audio_here">在这里收藏喜欢的音频</string>
+    <string name="look_audio">查看音频</string>
+    <string name="audio">音频</string>
     <!--我的回复-->
     <string name="not_has_reply_news">暂无回复消息</string>
     <string name="there_show_miss_answers_and_others_comment">在这里会显示小姐姐的回答\n和TA人的评论回复消息</string>
@@ -926,7 +954,7 @@
     <string name="part_business">部分成交</string>
     <string name="all_business">全部成交</string>
     <string name="type">类型</string>
-    <string name="start_time">起始时间</string>
+    <string name="start_time_stock">起始时间</string>
     <string name="end_time">终止时间</string>
     <string name="tips">温馨提示</string>
     <string name="is_confirm_withdraw">订单撤销后将无法恢复，是否确定\n撤销该订单?</string>
@@ -935,6 +963,13 @@
 
     <!--姐说-->
     <string name="radio">电台</string>
+
+    <!--电台-->
+    <string name="look_more">查看更多</string>
+    <string name="pack_up">收起</string>
+    <string name="subscribe">+订阅</string>
+    <string name="already_subscribe">已订阅</string>
+    <string name="start_time">00:00</string>
 
     <!--Stock-->
     <string name="ShangHaiStockExchange">上证指数</string>
@@ -986,4 +1021,5 @@
     <string name="sell_success">成功卖出，可在[订单]查看</string>
     <string name="stay_current_page">留在当前页</string>
     <string name="check_orders">查看订单</string>
+    <string name="zero">0</string>
 </resources>

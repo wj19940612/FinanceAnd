@@ -1,5 +1,6 @@
 package com.sbai.finance.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.AnimationDrawable;
@@ -7,15 +8,32 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.glide.GlideApp;
+import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
+import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.radio.Radio;
+import com.sbai.finance.service.MediaPlayService;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissAudioManager;
 
-public class MissFloatWindow extends LinearLayout  {
-    private ImageView mMissAvatar;
+public class MissFloatWindow extends LinearLayout {
+    private HasLabelImageLayout mMissAvatar;
     private ImageView mAudioAnim;
+    private OnMissFloatWindowClickListener mOnMissFloatWindowClickListener;
+
+    public interface OnMissFloatWindowClickListener {
+        void onClick(int source);
+    }
+
+    public void setOnMissFloatWindowClickListener(OnMissFloatWindowClickListener onMissFloatWindowClickListener) {
+        this.mOnMissFloatWindowClickListener = onMissFloatWindowClickListener;
+    }
 
     public MissFloatWindow(Context context) {
         super(context);
@@ -33,8 +51,9 @@ public class MissFloatWindow extends LinearLayout  {
         setGravity(Gravity.CENTER_VERTICAL);
         setMinimumHeight((int) dp2Px(40f, getResources()));
 
-        mMissAvatar = new ImageView(getContext());
-        mMissAvatar.setImageResource(R.drawable.ic_default_avatar);
+//        mMissAvatar = new ImageView(getContext());
+//        mMissAvatar.setImageResource(R.drawable.ic_default_avatar);
+        mMissAvatar = new HasLabelImageLayout(getContext());
 
         mAudioAnim = new ImageView(getContext());
         mAudioAnim.setBackgroundResource(R.drawable.bg_miss_voice_float);
@@ -50,13 +69,40 @@ public class MissFloatWindow extends LinearLayout  {
         params = new LayoutParams(side, side);
         params.setMargins(margin, 0, margin, 0);
         addView(mAudioAnim, params);
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MissAudioManager missAudioManager = MissAudioManager.get();
+                MissAudioManager.IAudio audio = missAudioManager.getAudio();
+                if (audio instanceof Question) {
+                    if (mOnMissFloatWindowClickListener != null) {
+                        mOnMissFloatWindowClickListener.onClick(MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION);
+                    }
+                    Launcher.with(getContext(), QuestionDetailActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, ((Question) audio).getId())
+                            .execute();
+                } else if (audio instanceof Radio) {
+                    if (mOnMissFloatWindowClickListener != null) {
+                        mOnMissFloatWindowClickListener.onClick(MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
+                    }
+                    Launcher.with(getContext(), RadioStationPlayActivityActivity.class)
+                            .putExtra(ExtraKeys.RADIO, (Radio) audio)
+                            .execute();
+                }
+            }
+        });
     }
 
     public void setMissAvatar(String avatarUrl) {
-        GlideApp.with(getContext()).load(avatarUrl)
-                .placeholder(R.drawable.ic_default_avatar)
-                .circleCrop()
-                .into(mMissAvatar);
+        if (getContext() == null || ((Activity) getContext()).isFinishing()) {
+            return;
+        }
+        setMissAvatar(avatarUrl, Question.USER_IDENTITY_HOST);
+    }
+
+    private void setMissAvatar(String avatarUrl, int userIdentity) {
+        mMissAvatar.setAvatar(avatarUrl, userIdentity);
     }
 
     public void startAnim() {
@@ -72,4 +118,5 @@ public class MissFloatWindow extends LinearLayout  {
     public float dp2Px(float value, Resources res) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, res.getDisplayMetrics());
     }
+
 }

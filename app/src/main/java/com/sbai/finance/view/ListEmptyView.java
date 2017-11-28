@@ -179,4 +179,8 @@ public class ListEmptyView extends LinearLayout {
     public void setGoingBg(int resId) {
         mGoingTextView.setBackgroundResource(resId);
     }
+
+    public void setGoingBtnGone(){
+        mGoingTextView.setVisibility(View.GONE);
+    }
 }

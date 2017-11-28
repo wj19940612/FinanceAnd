@@ -21,6 +21,7 @@ import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.trade.trade.StockOrderActivity;
+import com.sbai.finance.activity.training.TrainingDetailActivity;
 import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.DailyReport;
@@ -33,6 +34,8 @@ import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.leaderboard.LeaderThreeRank;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.system.Share;
+import com.sbai.finance.model.training.MyTrainingRecord;
+import com.sbai.finance.model.training.UserEachTrainingScoreModel;
 import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -93,15 +96,10 @@ public class HomePageFragment extends BaseFragment {
     @BindView(R.id.importantNewsView)
     ImportantNewsView mImportantNewsView;
 
-    private MoreClickListener mMoreClickListener;
-
-    public void setMoreClickListener(MoreClickListener moreClickListener) {
-        moreClickListener = moreClickListener;
-    }
-
-    public interface MoreClickListener {
-        public void onMoreClick(int pageSize);
-    }
+    private boolean mIsVisibleToUser;
+    private boolean mHasEnter;
+    private UserEachTrainingScoreModel mUserEachTrainingScoreModel;
+    private List<MyTrainingRecord> mMyTrainingRecords;
 
     @Nullable
     @Override
@@ -279,16 +277,7 @@ public class HomePageFragment extends BaseFragment {
                         break;
                 }
                 requestClickBanner(information.getId());
-                if (information.isH5Style() && !TextUtils.isEmpty(information.getContent())) {
-                    Launcher.with(getActivity(), WebActivity.class)
-                            .putExtra(WebActivity.EX_URL, information.getContent())
-                            .execute();
-                } else {
-                    Launcher.with(getActivity(), WebActivity.class)
-                            .putExtra(WebActivity.EX_HTML, information.getContent())
-                            .putExtra(WebActivity.EX_TITLE, information.getTitle())
-                            .execute();
-                }
+                clickBannerAndGotoActivity(information);
             }
         });
         mLeaderBoardView.setLookRankListener(new LeaderBoardView.LookRankListener()
@@ -372,23 +361,9 @@ public class HomePageFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        startScheduleJob(TIME_ONE);
-        TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
-        requestGreetings();
-        getRefreshData();
-        requestRadioData();
-        requestBannerData();
-        requestBusniessBannerData();
-        requestLeaderBoardData();
-        request7NewsData();
-        requestImportantNewsData();
-//        MarketSubscriber.get().subscribeAll();
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && isAdded()) {
+        //fragment在前台显示
+        if (mIsVisibleToUser || !mHasEnter) {
+            mHasEnter = true;
             startScheduleJob(TIME_ONE);
             TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
             requestGreetings();
@@ -399,7 +374,28 @@ public class HomePageFragment extends BaseFragment {
             requestLeaderBoardData();
             request7NewsData();
             requestImportantNewsData();
+            requestUserScore();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isAdded()) {
+            mIsVisibleToUser = true;
+            startScheduleJob(TIME_ONE);
+            TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
+            requestGreetings();
+            getRefreshData();
+            requestRadioData();
+            requestBannerData();
+            requestBusniessBannerData();
+            requestLeaderBoardData();
+            request7NewsData();
+            requestImportantNewsData();
+            requestUserScore();
         } else if (!isVisibleToUser && isAdded()) {
+            mIsVisibleToUser = false;
             stopScheduleJob();
             mHomeTitleView.stopVerticalSrcoll();
             API.cancel(TAG);
@@ -409,9 +405,11 @@ public class HomePageFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        stopScheduleJob();
-        mHomeTitleView.stopVerticalSrcoll();
-        API.cancel(TAG);
+        if (mIsVisibleToUser) {
+            stopScheduleJob();
+            mHomeTitleView.stopVerticalSrcoll();
+            API.cancel(TAG);
+        }
     }
 
     //只更新部分字符,用于轮询数据
@@ -697,8 +695,180 @@ public class HomePageFragment extends BaseFragment {
         }).fireFree();
     }
 
+    private void clickBannerAndGotoActivity(Banner information) {
+        if (information.isH5Style() && !TextUtils.isEmpty(information.getContent())) {
+            Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_URL, information.getContent())
+                    .execute();
+        } else {
+            Launcher.with(getActivity(), WebActivity.class)
+                    .putExtra(WebActivity.EX_HTML, information.getContent())
+                    .putExtra(WebActivity.EX_TITLE, information.getTitle())
+                    .execute();
+        }
+//        if (information.getStyle().equals(Banner.STYLE_H5) && !TextUtils.isEmpty(information.getContent())) {
+//            Launcher.with(getActivity(), WebActivity.class)
+//                    .putExtra(WebActivity.EX_URL, information.getContent())
+//                    .execute();
+//        } else if (information.getStyle().equals(Banner.STYLE_HTML)) {
+//            Launcher.with(getActivity(), WebActivity.class)
+//                    .putExtra(WebActivity.EX_HTML, information.getContent())
+//                    .putExtra(WebActivity.EX_TITLE, information.getTitle())
+//                    .execute();
+//        } else if (information.getStyle().equals(Banner.STYLE_FUNCTIONMODULE)) {
+//            //功能页面
+//            if (information.getJumpSource().equals(Banner.FUNC_SHARE)) {
+//                //分享
+//            }
+//            if (information.getJumpSource().equals(Banner.FUNC_REGANDLOGIN)) {
+//                //注册登录
+//                openLoginPage();
+//            }
+//            if (information.getJumpSource().equals(Banner.FUNC_EVALUATE)) {
+//                //金融测评
+//                if (LocalUser.getUser().isLogin()) {
+//                    umengEventCount(UmengCountEventId.ME_FINANCE_TEST);
+//                    Launcher.with(getActivity(), EvaluationStartActivity.class).execute();
+//                    Preference.get().setIsFirstOpenWalletPage(LocalUser.getUser().getPhone());
+//                } else {
+//                    openLoginPage();
+//                }
+//            }
+//            if (information.getJumpSource().equals(Banner.FUNC_SHARE)) {
+//                //实名认证
+//                umengEventCount(UmengCountEventId.ME_CERTIFICATION);
+//                Launcher.with(getActivity(), CreditApproveActivity.class).execute();
+//            }
+//        } else if (information.getStyle().equals(Banner.STYLE_ORIGINALPAGE)) {
+//            if (information.getJumpSource().equals(Banner.QUESTION_INFO)) {
+//                //问答详情页
+//                Launcher.with(getActivity(), QuestionDetailActivity.class).putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(information.getId())).execute();
+//            }
+//            if (information.getJumpSource().equals(Banner.EXPLAIN_IDNEX)) {
+//                //姐说主页
+//                ((MainActivity) getActivity()).switchToMissFragment();
+//            }
+//            if (information.getJumpSource().equals(Banner.NEWS_INFO)) {
+//                //要闻详情页
+//                Launcher.with(getActivity(), DailyReportDetailActivity.class)
+//                        .putExtra(DailyReportDetailActivity.EX_ID, information.getJumpId())
+//                        .putExtra(DailyReportDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
+//                        .execute();
+//            }
+//            if (information.getJumpSource().equals(Banner.TOPIC)) {
+//                //一日一题
+//                umengEventCount(UmengCountEventId.PAGE_STUDY_ROOM);
+//                Launcher.with(getActivity(), StudyRoomActivity.class).execute();
+//            }
+//            if (information.getJumpSource().equals(Banner.MARKET_INFO)) {
+//                //行情详情页
+//                Launcher.with(getActivity(), StockFutureActivity.class)
+//                        .putExtra(ExtraKeys.PAGE_INDEX, 0)
+//                        .execute();
+//            }
+//            if (information.getJumpSource().equals(Banner.GAME_AWARD)) {
+//                //赏金赛
+//                Launcher.with(getActivity(), RewardActivity.class).execute();
+//            }
+//            if (information.getJumpSource().equals(Banner.MARKET_NORMAL)) {
+//                //普通场
+//                umengEventCount(UmengCountEventId.ARENA_FUTURE_PK);
+//                Launcher.with(getActivity(), BattleListActivity.class).execute();
+//            }
+//            if (information.getJumpSource().equals(Banner.USER_INFO)) {
+//                //用户信息页
+//                umengEventCount(UmengCountEventId.ME_MOD_USER_INFO);
+//                if (LocalUser.getUser().isLogin()) {
+//                    Launcher.with(getActivity(), ModifyUserInfoActivity.class).execute();
+//                } else {
+//                    openLoginPage();
+//                }
+//            }
+//            if (information.getJumpSource().equals(Banner.USER_PURSE)) {
+//                //钱包
+//                umengEventCount(UmengCountEventId.ME_WALLET);
+//                if (LocalUser.getUser().isLogin()) {
+//                    Launcher.with(getActivity(), WalletActivity.class).execute();
+//                    Preference.get().setIsFirstOpenWalletPage(LocalUser.getUser().getPhone());
+//                } else {
+//                    openLoginPage();
+//                }
+//            }
+//            if (information.getJumpSource().equals(Banner.USER_FEEDBACK)) {
+//                //意见反馈
+//                if (LocalUser.getUser().isLogin()) {
+//                    umengEventCount(UmengCountEventId.ME_FEEDBACK);
+//                    Launcher.with(getActivity(), FeedbackActivity.class).execute();
+//                } else {
+//                    openLoginPage();
+//                }
+//            }
+//            if (information.getJumpSource().equals(Banner.APPRAISE)) {
+//                //乐米学分页
+//                if (LocalUser.getUser().isLogin()) {
+//                    if (mUserEachTrainingScoreModel != null) {
+//                        umengEventCount(UmengCountEventId.ME_SEE_MY_CREDIT);
+//                        Launcher.with(getActivity(), CreditIntroduceActivity.class)
+//                                .putExtra(Launcher.EX_PAYLOAD, mUserEachTrainingScoreModel)
+//                                .execute();
+//                    }
+//                } else {
+//                    openLoginPage();
+//                }
+//            }
+//            if (information.getJumpSource().equals(Banner.STOCK) || information.getJumpSource().equals(Banner.K_TRAIN) || information.getJumpSource().equals(Banner.AVERAGE_TRAIN) || information.getJumpSource().equals(Banner.ANNUAL)) {
+//                requestAllTrainingList(information.getJumpId());
+//            }
+//        }
+
+    }
+
+    private void openLoginPage() {
+        Launcher.with(getActivity(), LoginActivity.class).execute();
+    }
+
+    private void requestUserScore() {
+        if (LocalUser.getUser().isLogin()) {
+            Client.requestUserScore()
+                    .setTag(TAG)
+                    .setCallback(new Callback2D<Resp<UserEachTrainingScoreModel>, UserEachTrainingScoreModel>() {
+                        @Override
+                        protected void onRespSuccessData(UserEachTrainingScoreModel data) {
+                            mUserEachTrainingScoreModel = data;
+                        }
+                    })
+                    .fire();
+        }
+    }
+
+    private void requestAllTrainingList(final String id) {
+        Client.getTrainingList().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<MyTrainingRecord>>, List<MyTrainingRecord>>() {
+                    @Override
+                    protected void onRespSuccessData(List<MyTrainingRecord> data) {
+                        dealTypeAndGotoTraining(id, data);
+                    }
+                }).fireFree();
+    }
+
+    private void dealTypeAndGotoTraining(String id, List<MyTrainingRecord> data) {
+        MyTrainingRecord train = null;
+        for (MyTrainingRecord trainingRecord : data) {
+            if (id.equals(String.valueOf(trainingRecord.getTrain().getId()))) {
+                train = trainingRecord;
+                break;
+            }
+        }
+        if (train != null) {
+            Launcher.with(getActivity(), TrainingDetailActivity.class)
+                    .putExtra(ExtraKeys.TRAINING, train.getTrain())
+                    .execute();
+        }
+    }
+
     @Override
     public void onDestroyView() {
+        mHasEnter = false;
         super.onDestroyView();
         mHomeTitleView.freeGif();
         unbinder.unbind();

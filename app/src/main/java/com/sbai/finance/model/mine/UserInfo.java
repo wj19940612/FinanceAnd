@@ -228,6 +228,8 @@ public class UserInfo implements Parcelable {
         setStatus(userDetailInfo.getStatus());
         setWxOpenId(userDetailInfo.getWxOpenId());
         setWxName(userDetailInfo.getWxName());
+        setCustomId(userDetailInfo.getCustomId());
+        setBriefingText(userDetailInfo.getBriefingText());
         LocalUser.getUser().setUserInfo(this);
     }
 

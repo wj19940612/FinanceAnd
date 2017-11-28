@@ -5,9 +5,18 @@ import android.os.Parcelable;
 
 import com.sbai.finance.utils.MissAudioManager;
 
+/**
+ * /explain/question/questionList.do
+ */
 public class Question implements Parcelable, MissAudioManager.IAudio {
 
-    private static final int QUESTION_TYPE_LATEST = 0;
+    public static final int QUESTION_TYPE_LATEST = 0;
+
+    public static final int QUESTION_TYPE_HOT = 1;
+
+
+    public static final int USER_IDENTITY_ORDINARY = 0;
+    public static final int USER_IDENTITY_HOST = 1;
 
     /**
      * answerContext : blob:http://var.esongbai.xyz/ed0ea7b6-bd51-4ff1-a631-864d01b9f4c8
@@ -58,6 +67,7 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
     private int collect;           //是否收藏 0 未收藏 1已收藏
     private int hot;                // 0 最新问答  1、2热门问答
     private String customName;      //小姐姐名字
+    private int userType;           //用户身份  0 普通用户 1主播
     // 我的问答中的数据
     private String content;        //问题内容
     private int dataId;            //问题id
@@ -73,6 +83,14 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
 
     public boolean isQuestionSolved() {
         return getSolve() == 1;
+    }
+
+    public int getTotalVoiceLength() {
+        return getSoundTime() * 1000;
+    }
+
+    public int getUserType() {
+        return userType;
     }
 
     public String getCustomName() {

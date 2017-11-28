@@ -42,8 +42,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.activity.MainActivity.PAGE_POSITION_INFO_NEWS;
-
 
 public class ArticleCollectionFragment extends BaseFragment {
 
@@ -89,7 +87,7 @@ public class ArticleCollectionFragment extends BaseFragment {
     }
 
     private void requestMyArticleCollect() {
-        Client.requestMyCollection(MyCollect.COLLECTI_TYPE_ARTICLE, mPage)
+        Client.requestMyCollection(MyCollect.COLLECT_TYPE_ARTICLE, mPage)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<MyCollect>>, List<MyCollect>>() {

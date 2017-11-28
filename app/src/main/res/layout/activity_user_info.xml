@@ -66,6 +66,20 @@
         app:subTextSize="@dimen/common_default_size"/>
 
     <com.sbai.finance.view.IconTextRow
+        android:id="@+id/personalSummary"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="13dp"
+        android:background="@drawable/bg_white"
+        android:visibility="gone"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/personal_summary"
+        app:rowTextColor="@color/primaryText"
+        app:rowTextSize="15sp"
+        app:rowVerticalPadding="0dp"
+        app:subTextVisible="visible"/>
+
+    <com.sbai.finance.view.IconTextRow
         android:id="@+id/sex"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -164,23 +178,23 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_split_height"
         android:background="@drawable/bg_white"
+        app:hasBottomSplitLine="true"
         app:rightIcon="@drawable/ic_arrow_right_tint"
         app:rowText="@string/we_chat"
         app:rowTextColor="@color/primaryText"
         app:subTextColor="@color/unluckyText"
-        app:subTextSize="@dimen/common_default_size"/>
+        app:subTextSize="@dimen/common_default_size"
+        app:splitLineColor="@color/split"/>
 
-    <Space
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/financeEvaluation"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/logout"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="44dp"
         android:background="@drawable/bg_white"
-        android:gravity="center"
-        android:text="@string/logout"
-        android:textColor="@color/colorPrimary"/>
+        android:visibility="visible"
+        app:rightIcon="@drawable/ic_arrow_right_tint"
+        app:rowText="@string/finance_evaluation"
+        app:rowTextColor="@color/primaryText"
+        app:rowTextSize="15sp"
+        app:rowVerticalPadding="0dp"/>
 </LinearLayout>

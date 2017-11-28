@@ -3,72 +3,79 @@ package com.sbai.finance.model.miss;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sbai.finance.net.Client;
+
 /**
- * Created by lixiaokuan0819 on 2017/8/2.
+ * Client /explain/question/prise.do  小姐姐点赞
+ * {@link Client# /user/comment/priseReply.do}
+ * 姐说问题详情页点赞
  */
 
-public class Praise implements Parcelable{
+public class Praise implements Parcelable {
 
-	/**
-	 * priseCount : 1
-	 * isPrise : 1
-	 */
+    public static final int IS_PRAISE = 1;
+    public static final int NOT_PRAISE = 0;
 
-	private int priseCount;
-	private int isPrise;
+    /**
+     * priseCount : 1
+     * isPrise : 1
+     */
 
-	public int getPriseCount() {
-		return priseCount;
-	}
+    private int priseCount;
+    private int isPrise;
 
-	public void setPriseCount(int priseCount) {
-		this.priseCount = priseCount;
-	}
+    public int getPriseCount() {
+        return priseCount;
+    }
 
-	public int getIsPrise() {
-		return isPrise;
-	}
+    public void setPriseCount(int priseCount) {
+        this.priseCount = priseCount;
+    }
 
-	public void setIsPrise(int isPrise) {
-		this.isPrise = isPrise;
-	}
+    public int getIsPrise() {
+        return isPrise;
+    }
 
-	@Override
-	public String toString() {
-		return "Praise{" +
-				"priseCount=" + priseCount +
-				", isPrise=" + isPrise +
-				'}';
-	}
+    public void setIsPrise(int isPrise) {
+        this.isPrise = isPrise;
+    }
 
-	@Override
-	public int describeContents() {
-		return 0;
-	}
+    @Override
+    public String toString() {
+        return "Praise{" +
+                "priseCount=" + priseCount +
+                ", isPrise=" + isPrise +
+                '}';
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(this.priseCount);
-		dest.writeInt(this.isPrise);
-	}
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-	public Praise() {
-	}
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.priseCount);
+        dest.writeInt(this.isPrise);
+    }
 
-	protected Praise(Parcel in) {
-		this.priseCount = in.readInt();
-		this.isPrise = in.readInt();
-	}
+    public Praise() {
+    }
 
-	public static final Creator<Praise> CREATOR = new Creator<Praise>() {
-		@Override
-		public Praise createFromParcel(Parcel source) {
-			return new Praise(source);
-		}
+    protected Praise(Parcel in) {
+        this.priseCount = in.readInt();
+        this.isPrise = in.readInt();
+    }
 
-		@Override
-		public Praise[] newArray(int size) {
-			return new Praise[size];
-		}
-	};
+    public static final Creator<Praise> CREATOR = new Creator<Praise>() {
+        @Override
+        public Praise createFromParcel(Parcel source) {
+            return new Praise(source);
+        }
+
+        @Override
+        public Praise[] newArray(int size) {
+            return new Praise[size];
+        }
+    };
 }

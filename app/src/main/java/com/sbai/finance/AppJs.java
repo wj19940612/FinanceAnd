@@ -11,6 +11,7 @@ import com.sbai.finance.activity.arena.RewardActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
+import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.model.system.JsOpenAppPageType;
 import com.sbai.finance.net.Client;
@@ -20,6 +21,7 @@ import com.sbai.finance.view.dialog.ShareDialog;
 
 public class AppJs {
 
+    private static final String TAG = "AppJs";
     private static final String ONLY_WE_CHAT_SHARE = "onlywx";
 
     private Context mContext;
@@ -177,7 +179,11 @@ public class AppJs {
                 break;
             case JsOpenAppPageType.FEED_BACK_REPLY:
                 break;
-            case JsOpenAppPageType.MISS_MESSAGE:
+            case JsOpenAppPageType.MISS_HOME_PAGE:
+                int missId = Integer.parseInt(id);
+                Launcher.with(mContext, MissProfileDetailActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, missId)
+                        .execute();
                 break;
             case JsOpenAppPageType.FUTURE_BATTLE:
                 break;
@@ -209,5 +215,8 @@ public class AppJs {
         jsOpenAppPage(type, null, null, null);
     }
 
-
+    @JavascriptInterface
+    public void jsOpenAppPage(int type, String id) {
+        jsOpenAppPage(type, id, null, null);
+    }
 }

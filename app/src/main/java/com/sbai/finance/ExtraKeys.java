@@ -52,6 +52,11 @@ public interface ExtraKeys {
     String ARENA_VIRTUAL_AWARD_NAME = "Arena_virtual_award_name";
 
     String WEB_PAGE_URL = "web_page_url";
-
     String STOCK_USER = "stock_user";
+    String RADIO = "radio";
+    String IAudio = "IAudio";
+    String MEDIA_PROGRESS = "media_progress";
+    String MEDIA_TOTAL_PROGRESS = "media_total_progress";
+    String MEDIA_PLAY_SOURCE = "media_play_source";
+    String COMMENT_SOURCE = "comment_source";
 }

@@ -7,9 +7,11 @@ package com.sbai.finance.model.mine;
  */
 
 public class MyCollect {
-    //收藏类型  1 提问 2 乐米日报
-    public static final int COLLECTI_TYPE_QUESTION = 1;
-    public static final int COLLECTI_TYPE_ARTICLE = 2;
+    //收藏类型  1 提问 2 乐米日报 3 音频 4电台
+    public static final int COLLECT_TYPE_QUESTION = 1;
+    public static final int COLLECT_TYPE_ARTICLE = 2;
+    public static final int COLLECTI_TYPE_AUDIO = 3;
+    public static final int COLLECTI_TYPE_RADIO = 4;
     /**
      * mongoId : 598c7e9e8776e2bc872d2ae2
      * coverUrl : https://esongtest.oss-cn-shanghai.aliyuncs.com/ueditor/1505183304405011072.jpg
@@ -42,10 +44,29 @@ public class MyCollect {
     private int userId;             //用户id
     private String content;         // 提问内容
     private int solve;              //是否解决 0 未解决 1 已解决
+    private String questionContext; //问题内容
+
+    //订阅的电台
+    private String radioCover;        //电台封面
+    private int radioHost;            //电台主播
+    private String radioIntroduction; //电台简介
+    private String radioName;         //电台名称
+    private int listenNumber;         //听众人数
+
+    //收藏的音频
+    private String audio;            //音频
+    private String audioCover;       //音频封面
+    private String audioName;        //音频名称
+    //    private int radioHost;         //音频主播，与电台主播命名重复
+    private String radioHostName;       //主播昵称
+    private int show;             // 1-显示 0-1下架
+
+    private int isRead;         //是否阅读最新消息
+
 
     //问题是否被解决
     public boolean isQuestionSolved() {
-        return getSolve()==1;
+        return getSolve() == 1;
     }
 
 
@@ -167,6 +188,102 @@ public class MyCollect {
 
     public void setPriseCount(int priseCount) {
         this.priseCount = priseCount;
+    }
+
+    public String getQuestionContext() {
+        return questionContext;
+    }
+
+    public void setQuestionContext(String questionContext) {
+        this.questionContext = questionContext;
+    }
+
+    public String getRadioCover() {
+        return radioCover;
+    }
+
+    public void setRadioCover(String radioCover) {
+        this.radioCover = radioCover;
+    }
+
+    public int getRadioHost() {
+        return radioHost;
+    }
+
+    public void setRadioHost(int radioHost) {
+        this.radioHost = radioHost;
+    }
+
+    public String getRadioIntroduction() {
+        return radioIntroduction;
+    }
+
+    public void setRadioIntroduction(String radioIntroduction) {
+        this.radioIntroduction = radioIntroduction;
+    }
+
+    public String getRadioName() {
+        return radioName;
+    }
+
+    public void setRadioName(String radioName) {
+        this.radioName = radioName;
+    }
+
+    public String getAudio() {
+        return audio;
+    }
+
+    public void setAudio(String audio) {
+        this.audio = audio;
+    }
+
+    public String getAudioCover() {
+        return audioCover;
+    }
+
+    public void setAudioCover(String audioCover) {
+        this.audioCover = audioCover;
+    }
+
+    public String getAudioName() {
+        return audioName;
+    }
+
+    public void setAudioName(String audioName) {
+        this.audioName = audioName;
+    }
+
+    public String getRadioHostName() {
+        return radioHostName;
+    }
+
+    public void setRadioHostName(String radioHostName) {
+        this.radioHostName = radioHostName;
+    }
+
+    public int getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(int isRead) {
+        this.isRead = isRead;
+    }
+
+    public int getListenNumber() {
+        return listenNumber;
+    }
+
+    public void setListenNumber(int listenNumber) {
+        this.listenNumber = listenNumber;
+    }
+
+    public int getShow() {
+        return show;
+    }
+
+    public void setShow(int show) {
+        this.show = show;
     }
 
     @Override

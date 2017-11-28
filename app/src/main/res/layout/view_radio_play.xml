@@ -4,68 +4,74 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/holo_red_dark"
-    android:minHeight="270dp">
+    android:layout_height="match_parent">
 
-    <com.sbai.finance.view.TitleBar
-        android:id="@+id/titleBar"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/voiceCoverRl"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:backFeature="true"
-        app:backIcon="@drawable/ic_tb_back_white"
-        app:rightImage="@drawable/ic_share"
-        app:rightVisible="true"/>
-
-    <ImageView
-        android:id="@+id/radioCover"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleBar"
-        tools:src="@mipmap/ic_launcher"/>
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:src="@drawable/bg_voice_play_cover"/>
+
+        <ImageView
+            android:id="@+id/voiceCover"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            tools:src="@mipmap/ic_launcher"/>
+    </FrameLayout>
+
 
     <LinearLayout
         android:id="@+id/seekBarLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/voiceCoverRl"
         android:layout_marginTop="25dp"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
-        app:layout_constraintTop_toBottomOf="@+id/radioCover">
+        app:layout_constraintTop_toBottomOf="@+id/voiceCoverRl">
 
         <TextView
             android:id="@+id/progressLength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/start_time"
             android:textColor="@color/split"
-            android:textSize="12sp"
-            tools:text="01:36"/>
+            android:textSize="12sp"/>
 
         <android.support.v7.widget.AppCompatSeekBar
             android:id="@+id/radioSeekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:maxHeight="2dp"
+            android:progressDrawable="@drawable/radio_seek_bar"
+            android:thumb="@drawable/bg_radio_seek_thumb"/>
+
 
         <TextView
             android:id="@+id/radioTotalLength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/start_time"
             android:textColor="@color/split"
-            android:textSize="12sp"
-            tools:text="01:36"/>
+            android:textSize="12sp"/>
     </LinearLayout>
 
     <ImageView
         android:id="@+id/play"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginTop="17dp"
+        android:layout_below="@+id/seekBarLL"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
         android:src="@drawable/bg_radio_play"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +81,8 @@
         android:id="@+id/listenNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="8dp"
         android:drawableLeft="@drawable/ic_radio_headset"
         android:drawablePadding="6dp"
         android:gravity="center_vertical"
@@ -84,7 +91,7 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/play"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBarLL"
+        app:layout_constraintTop_toTopOf="@+id/play"
         tools:text="15155"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -34,6 +34,7 @@ public class MissAudioManager {
     private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener;
     private volatile boolean mPreparing;
     private volatile boolean mStopPostPrepared;
+    private volatile int mSource; //播放的来源
     private boolean mPaused;
     private String mUuid;
     private IAudio mAudio;
@@ -87,6 +88,15 @@ public class MissAudioManager {
 
     private final String uuid(IAudio audio) {
         return audio.getAudioId() + "@" + audio.getAudioUrl();
+    }
+
+    public void start(IAudio audio, int source) {
+        mSource = source;
+        start(audio);
+    }
+
+    public int getSource() {
+        return mSource;
     }
 
     public void start(IAudio audio) {
@@ -227,6 +237,7 @@ public class MissAudioManager {
     }
 
     public boolean isStarted(IAudio audio) {
+        if (audio == null) return false;
         if (mMediaPlayer != null) {
             return uuid(audio).equals(mUuid) && !mPaused && !mStopPostPrepared;
         }
@@ -238,6 +249,23 @@ public class MissAudioManager {
             return mMediaPlayer.getCurrentPosition();
         }
         return 0;
+    }
+
+    public int getDuration() {
+        if (mMediaPlayer != null && !mPreparing) {
+            return mMediaPlayer.getDuration();
+        }
+        return 0;
+    }
+
+    public void setSeekProgress(int progress) {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.seekTo(progress);
+        }
+    }
+
+    public boolean isPlaying() {
+        return mMediaPlayer != null && mMediaPlayer.isPlaying();
     }
 
     private static class MyMediaPlayer extends MediaPlayer {
@@ -257,6 +285,7 @@ public class MissAudioManager {
         int getAudioId();
 
         String getAudioUrl();
+
     }
 
     public interface OnAudioListener {

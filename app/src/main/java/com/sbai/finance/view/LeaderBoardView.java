@@ -180,13 +180,13 @@ public class LeaderBoardView extends LinearLayout {
             if (LocalUser.getUser().isLogin() && LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getId() == dataBean.getUserId()) {
                 //没膜拜过但是 榜首是自己
                 mobaiBtn.setEnabled(false);
-                mobaiBtn.setBackgroundResource(R.drawable.home_button_ash);
+                mobaiBtn.setBackgroundResource(R.drawable.btn_home_ash);
             }else if (!dataBean.isWorship()) {//已膜拜过
                 mobaiBtn.setEnabled(false);
-                mobaiBtn.setBackgroundResource(R.drawable.home_button_noworship);
+                mobaiBtn.setBackgroundResource(R.drawable.btn_home_noworship);
             }  else if (dataBean.isWorship()) {
                 mobaiBtn.setEnabled(true);
-                mobaiBtn.setBackgroundResource(R.drawable.home_button_worship);
+                mobaiBtn.setBackgroundResource(R.drawable.btn_home_worship);
             }
             final Button finalMobaiBtn = mobaiBtn;
             finalMobaiBtn.setOnClickListener(new OnClickListener() {
@@ -194,7 +194,7 @@ public class LeaderBoardView extends LinearLayout {
                 public void onClick(View v) {
                     if (LocalUser.getUser().isLogin() && Network.isNetworkAvailable()) {
                         finalMobaiBtn.setEnabled(false);
-                        finalMobaiBtn.setBackgroundResource(R.drawable.home_button_noworship);
+                        finalMobaiBtn.setBackgroundResource(R.drawable.btn_home_noworship);
                     }
                     if (mMobaiRankListener != null) {
                         mMobaiRankListener.mobai(dataBean.getType(), dataBean);

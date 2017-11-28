@@ -44,9 +44,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
     private OnLoadMoreListener mOnLoadMoreListener;
 
-    private OnScrollStateListener mOnScrollStateListener;
-
-	private OnScrollListener mOnScrollListener;
+    private OnScrollListener mOnScrollListener;
 
     private TextView mLoadMoreTv;
 
@@ -190,8 +188,8 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        if (mOnScrollStateListener != null) {
-            mOnScrollStateListener.scrollStateChange(scrollState);
+        if (mOnScrollListener != null) {
+            mOnScrollListener.scrollStateChange(scrollState);
         }
         isFlingOrTouch = (scrollState != SCROLL_STATE_IDLE);
     }
@@ -199,9 +197,9 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem,
                          int visibleItemCount, int totalItemCount) {
-	    if (mOnScrollListener != null) {
-		    mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
-	    }
+        if (mOnScrollListener != null) {
+            mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+        }
 
         int topRowVerticalPosition =
                 (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
@@ -233,25 +231,20 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout implements AbsL
         mOnLoadMoreListener = listener;
     }
 
-    //滚动监听 一般在滚动结束后才发起请求
-    public void setOnScrollStateListener(OnScrollStateListener listener) {
-        mOnScrollStateListener = listener;
-    }
 
-	public void setOnScrollListener(OnScrollListener listener) {
-		mOnScrollListener = listener;
-	}
+    public void setOnScrollListener(OnScrollListener listener) {
+        mOnScrollListener = listener;
+    }
 
     public interface OnLoadMoreListener {
         void onLoadMore();
     }
 
-    public interface OnScrollStateListener {
+
+    public interface OnScrollListener {
+        void onScroll(AbsListView view, int firstVisibleItem,
+                      int visibleItemCount, int totalItemCount);
+
         int scrollStateChange(int scrollState);
     }
-
-	public interface OnScrollListener {
-		void onScroll(AbsListView view, int firstVisibleItem,
-		                      int visibleItemCount, int totalItemCount);
-	}
 }
