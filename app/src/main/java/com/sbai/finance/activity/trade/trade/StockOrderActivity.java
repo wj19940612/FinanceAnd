@@ -77,7 +77,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.appBarLayout)
     AppBarLayout mAppBarLayout;
-    private TextView mStockGame;
+    private TextView mStockAccountName;
     private int mAppBarVerticalOffset = -1;
     private PagerAdapter mPagerAdapter;
     private boolean mSwipeEnabled = true;
@@ -147,9 +147,9 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
 
     private void initTitleBar() {
         View customView = mTitleBar.getCustomView();
-        mStockGame = customView.findViewById(R.id.stockGame);
-        if (mStockGame != null) {
-            mStockGame.setOnClickListener(new View.OnClickListener() {
+        mStockAccountName = customView.findViewById(R.id.stockGame);
+        if (mStockAccountName != null) {
+            mStockAccountName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     showActivityPickerDialog();
@@ -200,6 +200,11 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        StockUser newUser = LocalUser.getUser().getStockUser();
+        if (newUser != null && mCurrentStockUser != null
+                && !newUser.getAccount().equalsIgnoreCase(mCurrentStockUser.getAccount())) {
+            setCurrentStockUser(newUser);
+        }
         registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 
@@ -229,7 +234,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
 
     private void setCurrentStockUser(StockUser stockUser) {
         if (stockUser != null) {
-            mStockGame.setText(stockUser.getAccountName());
+            mStockAccountName.setText(stockUser.getAccountName());
             if (mCurrentStockUser != null && !mCurrentStockUser.getAccount().equalsIgnoreCase(stockUser.getAccount())) {
                 mFundInfo.resetView();
             }
@@ -268,7 +273,6 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         } else {
             setCurrentStockUser(mCurrentStockUser);
         }
-
     }
 
     public void updateAssetAndPosition(List<StockData> result, Map<String, Position> positionMap) {

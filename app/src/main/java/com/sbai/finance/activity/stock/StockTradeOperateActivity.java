@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,23 +21,29 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.fragment.stock.StockTradeOperateFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Position;
 import com.sbai.finance.model.stocktrade.PositionRecords;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StockUtil;
 import com.sbai.finance.utils.TextViewUtils;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.SmartDialog;
+import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.picker.StockActivityPickerPopWin;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
 import java.util.ArrayList;
@@ -47,6 +52,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -71,6 +77,10 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
     ListView mListView;
     @BindView(R.id.stockPrompt)
     ImageView mStockPrompt;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
+
+    private TextView mStockAccountName;
 
     private StockTradeAdapter mStockTradeAdapter;
 
@@ -85,21 +95,70 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_trade_operate);
         ButterKnife.bind(this);
-
+        translucentStatusBar();
         initData(getIntent());
 
+        initTitleBar();
         initSlidingTab();
         iniListView();
 
         StockUser stockUser = LocalUser.getUser().getStockUser();
         if (stockUser != null) {
-            updateMaxTradeVolume();
-            requestStockHoldingList();
+            refreshStockUser(stockUser);
         } else {
             requestStockUser();
         }
 
         requestStockRTData();
+    }
+
+    private void refreshStockUser(StockUser stockUser) {
+        LocalUser.getUser().setStockUser(stockUser);
+        mStockAccountName.setText(stockUser.getAccountName());
+        updateMaxTradeVolume();
+        requestStockHoldingList();
+    }
+
+    private void initTitleBar() {
+        View customView = mTitleBar.getCustomView();
+        mStockAccountName = customView.findViewById(R.id.stockGame);
+        if (mStockAccountName != null) {
+            mStockAccountName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    requestStockAccountsAndShowPickDialog();
+                }
+            });
+        }
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Client.getArticleProtocol(ArticleProtocol.PROTOCOL_STOCK_SIMULATE).setTag(TAG)
+                        .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
+                            @Override
+                            protected void onRespSuccessData(ArticleProtocol data) {
+                                Launcher.with(getActivity(), WebActivity.class)
+                                        .putExtra(WebActivity.EX_TITLE, data.getTitle())
+                                        .putExtra(WebActivity.EX_HTML, data.getContent())
+                                        .execute();
+                            }
+
+                        }).fire();
+            }
+        });
+    }
+
+    private void requestStockAccountsAndShowPickDialog() {
+        Client.getStockAccountList().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<StockUser>>, List<StockUser>>() {
+                    @Override
+                    protected void onRespSuccessData(List<StockUser> data) {
+                        if (!data.isEmpty() && LocalUser.getUser().getStockUser() != null) {
+                            showActivityPickerDialog(data);
+                        }
+                    }
+                }).fire();
+
     }
 
     private void initData(Intent intent) {
@@ -162,6 +221,50 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
     public void onStockTradeFailure(String msg) {
         SmartDialog.with(getActivity(), msg)
                 .setNegativeVisible(View.GONE)
+                .show();
+    }
+
+    private void showActivityPickerDialog(final List<StockUser> stockUserList) {
+        final StockUser stockUser = LocalUser.getUser().getStockUser();
+
+        int currentUserPos = 0;
+        ArrayList<String> arrayList = new ArrayList<>();
+        for (int i = 0; i < stockUserList.size(); i++) {
+            StockUser user = stockUserList.get(i);
+            arrayList.add(user.getAccountName());
+            if (stockUser.getAccount().equals(user.getAccount())) {
+                currentUserPos = i;
+            }
+        }
+
+        new StockActivityPickerPopWin.Builder(getActivity(),
+                new StockActivityPickerPopWin.OnPickedListener() {
+                    @Override
+                    public void onPickCompleted(int position) {
+                        if (!stockUserList.get(position).getAccount().equals(stockUser.getAccount())) {
+                            requestSwitchAccount(stockUserList.get(position));
+                        }
+                    }
+                })
+                .colorCancel(ContextCompat.getColor(getActivity(), R.color.colorPrimary))
+                .colorConfirm(ContextCompat.getColor(getActivity(), R.color.colorPrimary))
+                .dataChose(currentUserPos)
+                .dataList(arrayList)
+                .build()
+                .showPopWin(getActivity());
+    }
+
+    @OnClick(R.id.stockPrompt)
+    public void onViewClicked() {
+        showTipDialog();
+    }
+
+    private void showTipDialog() {
+        SmartDialog.single(getActivity())
+                .setTitle(R.string.tips)
+                .setMessage(getString(R.string.cost_price_describe))
+                .setNegative(R.string.know)
+                .setPositiveVisible(View.GONE)
                 .show();
     }
 
@@ -334,24 +437,32 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
                     @Override
                     protected void onRespSuccessData(PositionRecords data) {
                         mHoldingPositionsAdapter.setPositionList(data.getList());
+                        requestStockHoldingListMarketData();
                     }
                 }).fireFree();
     }
 
-
     private void requestStockUser() {
-        Client.getStockAccountList()
-                .setTag(TAG)
+        Client.getStockAccountList().setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<StockUser>>, List<StockUser>>() {
                     @Override
                     protected void onRespSuccessData(List<StockUser> data) {
                         for (StockUser stockUser : data) {
                             if (stockUser.getActive() == StockUser.ACCOUNT_ACTIVE) {
-                                LocalUser.getUser().setStockUser(stockUser);
-                                updateMaxTradeVolume();
-                                requestStockHoldingList();
+                                refreshStockUser(stockUser);
+                                break;
                             }
                         }
+                    }
+                }).fireFree();
+    }
+
+    private void requestSwitchAccount(final StockUser stockUser) {
+        Client.requestSwitchAccount(stockUser.getId(), stockUser.getAccount())
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        refreshStockUser(stockUser);
                     }
                 }).fireFree();
     }
