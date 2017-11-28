@@ -1,9 +1,6 @@
 package com.sbai.finance.fragment.miss;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +23,10 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.RadioStationListActivity;
-import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
@@ -187,7 +181,9 @@ public class MissProfileRadioFragment extends BaseFragment {
         mRadioAdapter.setCallback(new RadioAdapter.CallBack() {
             @Override
             public void onItemClick(RadioInfo radioInfo) {
-                Launcher.with(getActivity(), RadioStationListActivity.class).putExtra(Launcher.EX_PAYLOAD, radioInfo.getId()).execute();
+                Launcher.with(getActivity(), RadioStationListActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, radioInfo.getId())
+                        .execute();
             }
         });
 

@@ -75,6 +75,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     private int mRadioStationId;
     private RadioStationAdapter mRadioStationAdapter;
     private RadioInfo mRadioInfo;
+    private Radio mRadio;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,9 +105,13 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
 
     private void initData(Intent intent) {
         mRadioStationId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+        mRadio = intent.getParcelableExtra(ExtraKeys.RADIO);
+        if (mRadio != null) {
+            mRadioStationId = mRadio.getRadioId();
+        }
     }
 
-    private void refreshData(){
+    private void refreshData() {
         requestRadioStationDetail();
         requestRadioProgram();
     }
@@ -240,7 +245,13 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position != 0) {
             Radio radioInfo = (Radio) parent.getItemAtPosition(position);
-            Launcher.with(this, RadioStationPlayActivityActivity.class).putExtra(ExtraKeys.RADIO, radioInfo).executeForResult(222);
+            if (mRadio != null) {
+                if (mRadio.getRadioId() == radioInfo.getRadioId()) {
+                    finish();
+                }
+            } else {
+                Launcher.with(this, RadioStationPlayActivityActivity.class).putExtra(ExtraKeys.RADIO, radioInfo).executeForResult(222);
+            }
         }
     }
 
