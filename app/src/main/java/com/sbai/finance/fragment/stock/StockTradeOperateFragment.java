@@ -45,7 +45,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.sbai.finance.utils.StockUtil.FEE_RATE;
+import static com.sbai.finance.utils.StockUtil.MINIMUM_FEE;
 import static com.sbai.finance.utils.StockUtil.NULL_VALUE;
+import static com.sbai.finance.utils.StockUtil.STAMP_TAX_RATE;
 
 /**
  * Modified by john on 27/11/2017
@@ -54,9 +57,6 @@ import static com.sbai.finance.utils.StockUtil.NULL_VALUE;
  * Description: 股票交易页面买入卖出 fragment
  */
 public class StockTradeOperateFragment extends BaseFragment {
-
-    private static final int MINIMUM_FEE = 5;
-    private static final float FEE_RATE = 0.003f;
 
     public interface OnPostTradeSuccessListener {
         void onPostTradeSuccess();
@@ -217,19 +217,24 @@ public class StockTradeOperateFragment extends BaseFragment {
     }
 
     private void updateFee() {
-        if (mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY) {
-            String tradePrice = mTradePrice.getText();
-            String tradeVolume = mTradeVolume.getText();
-            if (!TextUtils.isEmpty(tradePrice) && !TextUtils.isEmpty(tradeVolume)) {
-                double buyPrice = Double.parseDouble(tradePrice);
-                double buyVolume = Double.parseDouble(tradeVolume);
-                String fee = FinanceUtil.formatWithScale(Math.max(buyVolume * buyPrice * FEE_RATE, MINIMUM_FEE));
+        String tradePrice = mTradePrice.getText();
+        String tradeVolume = mTradeVolume.getText();
+        if (!TextUtils.isEmpty(tradePrice) && !TextUtils.isEmpty(tradeVolume)) {
+            double price = Double.parseDouble(tradePrice);
+            double volume = Double.parseDouble(tradeVolume);
+            if (mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY) { // 买入手续费：成交金额 * 0.3%
+                String fee = FinanceUtil.formatWithScale(Math.max(volume * price * FEE_RATE, MINIMUM_FEE));
                 mFee.setText(StrUtil.mergeTextWithColor(getString(R.string.fee_x), fee,
                         ContextCompat.getColor(getActivity(), R.color.redPrimary)));
-            } else {
-                mFee.setText(StrUtil.mergeTextWithColor(getString(R.string.fee_x), NULL_VALUE,
+            } else { // 卖出手续费：印花税（成交金额 * 0.1%）+ 成交金额 * 0.3%
+                String fee = FinanceUtil.formatWithScale(Math.max(volume * price * FEE_RATE, MINIMUM_FEE)
+                        + volume * price * STAMP_TAX_RATE);
+                mFee.setText(StrUtil.mergeTextWithColor(getString(R.string.fee_x), fee,
                         ContextCompat.getColor(getActivity(), R.color.redPrimary)));
             }
+        } else {
+            mFee.setText(StrUtil.mergeTextWithColor(getString(R.string.fee_x), NULL_VALUE,
+                    ContextCompat.getColor(getActivity(), R.color.redPrimary)));
         }
     }
 

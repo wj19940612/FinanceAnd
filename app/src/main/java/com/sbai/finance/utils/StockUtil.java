@@ -10,6 +10,9 @@ import android.text.TextUtils;
  * APIs:
  */
 public class StockUtil {
+    public static final int MINIMUM_FEE = 5;
+    public static final float FEE_RATE = 0.003f;
+    public static final float STAMP_TAX_RATE = 0.001f;
 
     public final static String NULL_VALUE = "--";
 
