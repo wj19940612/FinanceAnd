@@ -56,10 +56,10 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="12dp"
-                android:background="@drawable/btn_radio_station_unsubscribe"
+                android:background="@drawable/bg_radio_station_subscribed"
                 android:gravity="center"
                 android:text="@string/subscribed"
-                android:textColor="@color/white"
+                android:textColor="@color/love_text"
                 android:textSize="12sp"
                 android:visibility="gone"/>
 
