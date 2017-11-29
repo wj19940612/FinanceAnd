@@ -90,7 +90,8 @@ public class BaseFragment extends Fragment implements
     }
 
     /**
-     *  友盟统计埋点
+     * 友盟统计埋点
+     *
      * @param eventKey
      */
     protected void umengEventCount(String eventKey) {

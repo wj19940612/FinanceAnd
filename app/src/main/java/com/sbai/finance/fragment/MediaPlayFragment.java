@@ -7,8 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.model.radio.Radio;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.service.MediaPlayService;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.ToastUtil;
 
 /**
@@ -28,6 +32,30 @@ public abstract class MediaPlayFragment extends BaseFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (Preference.get().isAudioPlayPause()) {
+            MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+            if (audio != null) {
+                if (MissAudioManager.get().isPaused(audio)) {
+                    MissAudioManager.get().resume();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (MissAudioManager.get().isPlaying()) {
+            if (!Preference.get().isForeground()) {
+                MissAudioManager.get().pause();
+                Preference.get().setAudioPlayPause(true);
+            }
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMediaPlayBroadcastReceiver);
@@ -43,6 +71,14 @@ public abstract class MediaPlayFragment extends BaseFragment {
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PROGRESS);
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PLAY);
         return filter;
+    }
+
+    protected void updateRadioListen(Radio radio) {
+        if (radio != null)
+            Client.listenRadioAudio(radio.getAudioId())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .fireFree();
     }
 
     public MediaPlayService getMediaPlayService() {

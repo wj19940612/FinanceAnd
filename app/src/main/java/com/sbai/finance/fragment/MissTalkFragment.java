@@ -391,33 +391,9 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
                     if (mMediaPlayService != null) {
                         mMediaPlayService.startPlay(radio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
                     }
-//                    listenRadioAudio();
+                    updateRadioListen(radio);
                 }
             }
-
-//            private void listenRadioAudio() {
-//                // TODO: 2017/11/29
-//                if (!MissVoiceRecorder.isHeard(item.getId())) {
-//                    Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
-//                        @Override
-//                        protected void onRespSuccess(Resp<JsonPrimitive> resp) {
-//                            if (resp.isSuccess()) {
-//                                MissVoiceRecorder.markHeard(item.getId());
-//                                item.setListenCount(item.getListenCount() + 1);
-//                                mMissAskAdapter.notifyDataSetChanged();
-//                            }
-//                        }
-//
-//                        @Override
-//                        protected void onRespFailure(Resp failedResp) {
-//                            if (failedResp.getCode() == Resp.CODE_LISTENED) {
-//                                MissVoiceRecorder.markHeard(item.getId());
-//                                mMissAskAdapter.notifyDataSetChanged();
-//                            }
-//                        }
-//                    }).fire();
-//                }
-//            }
 
             @Override
             public void onMissRadioClick(Radio radio) {

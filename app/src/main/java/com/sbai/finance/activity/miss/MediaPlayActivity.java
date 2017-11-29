@@ -10,9 +10,11 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.service.MediaPlayService;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.ToastUtil;
 
 /**
@@ -39,6 +41,30 @@ public abstract class MediaPlayActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerBroadcast();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (Preference.get().isAudioPlayPause()) {
+            MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+            if (audio != null) {
+                if (MissAudioManager.get().isPaused(audio)) {
+                    MissAudioManager.get().resume();
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (MissAudioManager.get().isPlaying()) {
+            if (!Preference.get().isForeground()) {
+                MissAudioManager.get().pause();
+                Preference.get().setAudioPlayPause(true);
+            }
+        }
     }
 
     private void registerBroadcast() {

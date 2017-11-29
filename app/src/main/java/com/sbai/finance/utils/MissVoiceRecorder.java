@@ -33,14 +33,13 @@ public class MissVoiceRecorder {
     }
 
     private static void readFromPreference() {
-        if (sIntegerQueue == null) {
-            String ids = Preference.get().getAnswerIds();
-            if (!TextUtils.isEmpty(ids) && isJsonArray(ids)) {
-                Type type = new TypeToken<LinkedList<Integer>>() {}.getType();
-                sIntegerQueue = sGson.fromJson(ids, type);
-            } else {
-                sIntegerQueue = new LinkedList<>();
-            }
+        String ids = Preference.get().getAnswerIds();
+        if (!TextUtils.isEmpty(ids) && isJsonArray(ids)) {
+            Type type = new TypeToken<LinkedList<Integer>>() {
+            }.getType();
+            sIntegerQueue = sGson.fromJson(ids, type);
+        } else {
+            sIntegerQueue = new LinkedList<>();
         }
     }
 
