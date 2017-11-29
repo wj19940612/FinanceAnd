@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context="com.sbai.finance.activity.miss.MissAudioReplyActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:hasBottomSplitLine="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <RelativeLayout
+        android:id="@+id/questionRl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding"
+        android:paddingTop="@dimen/common_padding"
+        app:layout_constraintTop_toBottomOf="@+id/titleBar">
+
+        <com.sbai.finance.view.HasLabelImageLayout
+            android:id="@+id/avatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_default_avatar"
+            app:label_drawable="@drawable/ic_label_v"
+            app:label_view_height="12dp"
+            app:label_view_width="12dp"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/avatar"
+            android:textColor="@color/unluckyText"
+            android:textSize="12sp"
+            android:text="反方向的钟"/>
+
+        <TextView
+            android:id="@+id/askTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/name"
+            android:textColor="@color/unluckyText"
+            android:textSize="12sp"
+            tools:text="2017/07/07"/>
+
+        <TextView
+            android:id="@+id/questionContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name"
+            android:layout_marginBottom="19dp"
+            android:layout_marginTop="@dimen/common_padding"
+            android:layout_toRightOf="@+id/avatar"
+            android:lineSpacingExtra="4dp"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"
+            android:text="可莱丝打飞机卡萨丁九分裤水电费跨境电商路口附近的路口时间都是附近的考虑房价来看电视水电费看了觉得杀戮空间大富科技鲁大师 "/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/playRl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:paddingLeft="@dimen/common_padding"
+        android:paddingRight="@dimen/common_padding"
+        app:layout_constraintTop_toBottomOf="@+id/questionRl">
+
+        <com.sbai.finance.view.HasLabelImageLayout
+            android:id="@+id/missAvatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="@dimen/common_padding"
+            android:src="@drawable/ic_default_avatar"
+            app:label_drawable="@drawable/ic_label_v"
+            app:label_view_height="12dp"
+            app:label_view_width="12dp"/>
+
+        <TextView
+            android:id="@+id/missName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_padding"
+            android:layout_toRightOf="@+id/missAvatar"
+            android:textColor="@color/unluckyText"
+            android:textSize="12sp"
+            android:text="刷卡机房价快速发货"/>
+
+        <RelativeLayout
+            android:id="@+id/playSubmitRl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/missAvatar"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/missAvatar"
+            android:background="@drawable/bg_white_rounded_knowledge"
+            android:minHeight="40dp"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/play"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/ic_play"/>
+
+            <TextView
+                android:id="@+id/clickPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_toRightOf="@+id/play"
+                android:text="@string/click_play"
+                android:textColor="@color/unluckyText"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/audioLength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/clickPlay"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@+id/play"
+                android:textColor="@color/unluckyText"
+                android:textSize="10sp"
+                tools:text="100秒"/>
+
+            <LinearLayout
+                android:id="@+id/submitStatusLL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_color_primary_big_rounded"
+                android:gravity="center"
+                android:minHeight="28dp"
+                android:minWidth="80dp"
+                android:orientation="horizontal"
+                android:padding="6dp">
+
+                <ImageView
+                    android:id="@+id/loading"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/ic_loading"/>
+
+                <TextView
+                    android:id="@+id/submitStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:text="@string/submitting"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/submitResultHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/playSubmitRl"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@+id/missAvatar"
+            android:text="@string/audio_submit_success_hint"/>
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

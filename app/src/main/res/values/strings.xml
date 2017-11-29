@@ -1023,4 +1023,18 @@
     <string name="stay_current_page">留在当前页</string>
     <string name="check_entrust">查看委托</string>
     <string name="zero">0</string>
+
+    <!--姐说回复-->
+    <string name="click_play">点击试听</string>
+    <string name="restart_submit">重新发送</string>
+    <string name="audio_submit_success">发送成功</string>
+    <string name="submit_error">未发送成功！请检查网络后重新发送</string>
+    <string name="audio_submit_success_hint">建议先试听后发送，发送成功后将无法重新录音</string>
+    <string name="restart_recording">重新录音</string>
+    <string name="recording">录制中</string>
+    <string name="stop_submit">停止发送</string>
+    <string name="stop_submit_hint">语音正在上传中，确定要放弃上传吗？</string>
+    <string name="again">再等等</string>
+    <string name="stop">停止</string>
+    <string name="submitting">发送中</string>
 </resources>
