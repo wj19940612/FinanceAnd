@@ -1,4 +1,4 @@
-package com.sbai.finance.view;
+package com.sbai.finance.view.stock;
 
 import android.content.Context;
 import android.graphics.Bitmap;

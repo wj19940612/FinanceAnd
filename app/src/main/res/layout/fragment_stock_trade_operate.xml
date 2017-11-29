@@ -26,12 +26,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_grey_border"
-                android:enabled="false"
                 android:gravity="center"
                 android:hint="证券代码 / 名称 / 拼音"
                 android:minHeight="40dp"
                 android:textColor="@color/primaryText"
                 android:textSize="15sp"
+                android:textCursorDrawable="@drawable/cursor_primary"
                 tools:text="鲁信创投 SH600783"/>
 
             <com.sbai.finance.view.PlusMinusEditText

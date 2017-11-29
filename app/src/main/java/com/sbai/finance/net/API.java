@@ -29,6 +29,7 @@ public class API extends RequestManager {
     private static Set<String> sCurrentUrls = new HashSet<>();
 
     private int mMethod;
+    private String mId;
     private String mTag;
     private String mUri;
     private ApiCallback<?> mCallback;
@@ -83,6 +84,11 @@ public class API extends RequestManager {
 
     public API setIndeterminate(ApiIndeterminate apiProgress) {
         mIndeterminate = apiProgress;
+        return this;
+    }
+
+    public API setId(String id) {
+        mId = id;
         return this;
     }
 
@@ -152,6 +158,7 @@ public class API extends RequestManager {
         if (mCallback != null) {
             mCallback.setUrl(url);
             mCallback.setOnFinishedListener(new RequestFinishedListener());
+            mCallback.setId(mId);
             mCallback.setTag(mTag);
             mCallback.setIndeterminate(mIndeterminate);
             mCallback.onStart();

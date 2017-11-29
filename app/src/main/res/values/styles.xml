@@ -51,7 +51,7 @@
         <item name="android:textSize">15sp</item>
         <item name="android:maxLines">1</item>
         <item name="android:textColorHint">@color/unluckyText</item>
-        <item name="android:textCursorDrawable">@drawable/color_cursor</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_primary</item>
     </style>
 
     <style name="SignEditText.PhoneNum">
@@ -197,7 +197,7 @@
         <item name="android:textColor">@color/primaryText</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColorHint">@color/split</item>
-        <item name="android:textCursorDrawable">@drawable/color_cursor</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_primary</item>
     </style>
 
     <style name="FutureBtn">

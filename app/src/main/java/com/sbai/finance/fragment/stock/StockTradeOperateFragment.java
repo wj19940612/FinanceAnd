@@ -22,9 +22,11 @@ import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.local.StockOrder;
+import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.net.Callback;
+import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
@@ -34,10 +36,14 @@ import com.sbai.finance.utils.TextViewUtils;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.PlusMinusEditText;
 import com.sbai.finance.view.SmartDialog;
-import com.sbai.finance.view.TotalPricePopup;
 import com.sbai.finance.view.dialog.TradeConfirmDialog;
+import com.sbai.finance.view.stock.StockSearchPopup;
+import com.sbai.finance.view.stock.TotalPricePopup;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.util.List;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -62,6 +68,10 @@ public class StockTradeOperateFragment extends BaseFragment {
         void onPostTradeSuccess();
 
         void onCheckOrderClick();
+    }
+
+    public interface OnSearchStockClickListener {
+        void onSearchStockClick(Stock stock);
     }
 
     @BindView(R.id.stockNameCode)
@@ -135,8 +145,10 @@ public class StockTradeOperateFragment extends BaseFragment {
 
     private int mMaxTradeVolume;
     private TotalPricePopup mTotalPricePopup;
+    private StockSearchPopup mStockSearchPopup;
 
     private OnPostTradeSuccessListener mOnPostTradeSuccessListener;
+    private OnSearchStockClickListener mOnSearchStockClickListener;
 
     private TextWatcher mVolumeWatcher = new ValidationWatcher() {
         @Override
@@ -193,6 +205,58 @@ public class StockTradeOperateFragment extends BaseFragment {
             updateTotalPrice();
         }
     };
+
+    private TextWatcher mStockNameWatcher = new ValidationWatcher() {
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String searchKey = TextViewUtils.getTrim(mStockNameCode);
+            if (mStockNameCode.hasFocus() && !TextUtils.isEmpty(searchKey)) {
+                searchStocks(searchKey);
+            } else {
+                if (mStockSearchPopup != null) {
+                    mStockSearchPopup.dismiss();
+                }
+            }
+        }
+    };
+
+    private void searchStocks(String searchKey) {
+        String encodeSearchKey = null;
+        try {
+            encodeSearchKey = URLEncoder.encode(searchKey, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Client.searchStocks(encodeSearchKey).setTag(TAG)
+                .setId(searchKey)
+                .setCallback(new Callback2D<Resp<List<Stock>>, List<Stock>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Stock> data) {
+                        String curSearchKey = TextViewUtils.getTrim(mStockNameCode);
+                        if (curSearchKey.equals(getId())) {
+                            showSearchResultPopup(data);
+                        }
+                    }
+                }).fire();
+    }
+
+    private void showSearchResultPopup(List<Stock> data) {
+        if (mStockSearchPopup == null) {
+            mStockSearchPopup = new StockSearchPopup(getActivity());
+            mStockSearchPopup.setOnStockSelectListener(new StockSearchPopup.OnStockSelectListener() {
+                @Override
+                public void onStockSelect(Stock stock) {
+                    mStockSearchPopup.dismiss();
+                    mStockNameCode.clearFocus();
+                    if (mOnSearchStockClickListener != null) {
+                        mOnSearchStockClickListener.onSearchStockClick(stock);
+                    }
+                }
+            });
+        }
+        mStockSearchPopup.setStocks(data);
+        mStockSearchPopup.showBelow(mStockNameCode);
+    }
 
     public void updateMaxBuyableVolume() {
         String tradePrice = mTradePrice.getText();
@@ -319,6 +383,9 @@ public class StockTradeOperateFragment extends BaseFragment {
         if (context instanceof OnPostTradeSuccessListener) {
             mOnPostTradeSuccessListener = (OnPostTradeSuccessListener) context;
         }
+        if (context instanceof OnSearchStockClickListener) {
+            mOnSearchStockClickListener = (OnSearchStockClickListener) context;
+        }
     }
 
     @Override
@@ -352,6 +419,7 @@ public class StockTradeOperateFragment extends BaseFragment {
             mTradeButton.setText(R.string.sell_out_right_now);
         }
 
+        mStockNameCode.addTextChangedListener(mStockNameWatcher);
         mTradePrice.addTextChangedListener(mPriceWatcher);
         mTradeVolume.addTextChangedListener(mVolumeWatcher);
 
@@ -440,10 +508,10 @@ public class StockTradeOperateFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
-        mTradeVolume.removeCallbacks(mRunnable);
-
+        mStockNameCode.removeTextChangedListener(mStockNameWatcher);
         mTradePrice.removeTextChangedListener(mPriceWatcher);
         mTradeVolume.removeTextChangedListener(mVolumeWatcher);
+        mTradeVolume.removeCallbacks(mRunnable);
 
         super.onDestroyView();
         unbinder.unbind();
