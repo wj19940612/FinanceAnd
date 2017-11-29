@@ -538,14 +538,14 @@ public class StockTradeOperateFragment extends BaseFragment {
                     protected void onRespSuccess(Resp resp) {
                         String successMsg;
                         if (stockOrder.getDeputeType() == StockOrder.DEPUTE_TYPE_ENTRUST_BUY) {
-                            successMsg = getString(R.string.buy_success);
+                            successMsg = getString(R.string.buy_success_check_entrust);
                         } else {
-                            successMsg = getString(R.string.sell_success);
+                            successMsg = getString(R.string.sell_success_check_entrust);
                         }
                         SmartDialog.single(getActivity(), successMsg)
                                 .setTitle(R.string.tips)
                                 .setNegative(R.string.stay_current_page)
-                                .setPositive(R.string.check_orders, new SmartDialog.OnClickListener() {
+                                .setPositive(R.string.check_entrust, new SmartDialog.OnClickListener() {
                                     @Override
                                     public void onClick(Dialog dialog) {
                                         dialog.dismiss();
