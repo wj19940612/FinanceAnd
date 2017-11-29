@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.ValidityCheckUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,7 +84,9 @@ public class PlusMinusEditText extends FrameLayout {
     }
 
     public void setText(CharSequence text) {
-        mEditText.setText(text);
+        if (text == null || ValidityCheckUtil.isNumber(text)) {
+            mEditText.setText(text);
+        }
     }
 
     public String getText() {
