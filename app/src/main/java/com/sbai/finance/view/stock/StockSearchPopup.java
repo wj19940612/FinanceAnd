@@ -54,7 +54,9 @@ public class StockSearchPopup {
         mPopupWindow.setFocusable(false);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable(context.getResources(), (Bitmap) null));
         mPopupWindow.setClippingEnabled(true);
+        mPopupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
         mListView = view.findViewById(android.R.id.list);
+
         mStockSearchAdapter = new StockSearchAdapter(context);
         mListView.setAdapter(mStockSearchAdapter);
         mListView.setEmptyView(view.findViewById(android.R.id.empty));
