@@ -302,7 +302,7 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
 
             @Override
             public void onPageSelected(int position) {
-                if (position != PAGE_POSITION_MINE) {
+                if (position != PAGE_POSITION_MISS) {
                     MissAudioManager.get().stop();
                 }
                 mBottomTabs.selectTab(position);

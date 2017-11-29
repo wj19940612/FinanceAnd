@@ -16,7 +16,6 @@ import android.widget.ScrollView;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.MediaPlayActivity;
 import com.sbai.finance.game.WsClient;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.local.SysTime;
@@ -25,7 +24,6 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.view.RequestProgress;
@@ -155,12 +153,6 @@ public class BaseActivity extends BattlePushActivity implements
     protected void onStop() {
         super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
-        boolean isMediaPlay = this instanceof MediaPlayActivity;
-        if (!isMediaPlay) {
-            if (!Preference.get().isForeground()) {
-                MissAudioManager.get().stop();
-            }
-        }
     }
 
     @Override

@@ -262,9 +262,10 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         Client.listenRadioAudio(mRadio.getAudioId())
                 .setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Object>, Object>() {
+                .setCallback(new Callback<Resp<Object>>() {
+
                     @Override
-                    protected void onRespSuccessData(Object data) {
+                    protected void onRespSuccess(Resp<Object> resp) {
                         mRadioPlayLL.updateListenNumber();
                     }
                 })
