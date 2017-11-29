@@ -386,7 +386,7 @@
     <string name="pattern">模式</string>
     <string name="integral_war">积分战</string>
     <string name="ingot_war">元宝战</string>
-    <string name="integral">积分</string>
+    <string name="score">积分</string>
     <string name="ingot">元宝</string>
     <string name="cash">现金</string>
     <string name="versusing">对战中</string>
@@ -1017,9 +1017,9 @@
     <string name="total_value_x">总价：</string>
     <string name="yuan">元</string>
     <string name="about_x_yuan_without_fee">约%1$s元，不含手续费</string>
-    <string name="buy_success">成功买入, 可在[订单]查看</string>
-    <string name="sell_success">成功卖出，可在[订单]查看</string>
+    <string name="buy_success_check_entrust">成功买入, 可在[委托]查看</string>
+    <string name="sell_success_check_entrust">成功卖出，可在[委托]查看</string>
     <string name="stay_current_page">留在当前页</string>
-    <string name="check_orders">查看订单</string>
+    <string name="check_entrust">查看委托</string>
     <string name="zero">0</string>
 </resources>

@@ -228,13 +228,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     }
 
     public void setTabViewTextColor(ColorStateList textColor) {
-        int tabStripChildCount = mTabStrip.getChildCount();
-        for (int i = 0; i < tabStripChildCount; i++) {
-            TextView tabView = (TextView) mTabStrip.getChildAt(i);
-            if (tabView != null) {
-                tabView.setTextColor(textColor);
-            }
-        }
+        mTabTextViewColor = textColor;
     }
 
     public void setHasBottomBorder(boolean hasBottomBorder) {
