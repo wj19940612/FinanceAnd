@@ -70,9 +70,7 @@ import static com.sbai.finance.activity.BaseActivity.REQ_CODE_LOGIN;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
 public class MissTalkFragment extends MediaPlayFragment implements MissAskFragment.OnMissAskPageListener {
-
-    private static final int RECOMMEND_RADIO_REFRESH_TIME = 1000 * 60 * 3;
-
+    
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.recyclerView)
@@ -119,7 +117,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         initFloatView();
         requestRadioList();
         requestMissSwitcherList();
-        startScheduleJob(RECOMMEND_RADIO_REFRESH_TIME);
     }
 
 
@@ -142,9 +139,11 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     }
 
     @Override
-    public void onTimeUp(int count) {
-        super.onTimeUp(count);
-        requestRadioList();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isAdded()) {
+            requestMissList();
+        }
     }
 
     private void updateRadioFloatWindow() {
@@ -305,7 +304,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
                 .fireFree();
     }
 
-    private void requestRadioList() {
+    public void requestRadioList() {
         Client.requestRadioList()
                 .setIndeterminate(this)
                 .setTag(TAG)
