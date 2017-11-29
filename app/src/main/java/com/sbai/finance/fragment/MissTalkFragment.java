@@ -27,6 +27,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.miss.CommentActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
@@ -35,6 +36,7 @@ import com.sbai.finance.fragment.miss.MissAskFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.MissSwitcherModel;
+import com.sbai.finance.model.miss.Praise;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.radio.Radio;
@@ -99,7 +101,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     private Radio mRadio;
     private MediaPlayService mMediaPlayService;
     private int mPosition;
-    private boolean mPlayPage;
 
 
     @Nullable
@@ -172,6 +173,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         intentFilter.addAction(ACTION_LOGIN_SUCCESS);
         intentFilter.addAction(ACTION_LOGOUT_SUCCESS);
         intentFilter.addAction(ACTION_REWARD_SUCCESS);
+        intentFilter.addAction(CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS);
         return intentFilter;
     }
 
@@ -242,8 +244,10 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         }
 
         if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-            int rewardId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
-            if (rewardId == RewardInfo.TYPE_QUESTION) {
+            int rewardType = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+            int rewardId = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
+
+            if (rewardType == RewardInfo.TYPE_QUESTION && rewardId != -1) {
                 MissAskFragment missHotQuestionFragment = getMissHotQuestionFragment();
                 if (missHotQuestionFragment != null) {
                     missHotQuestionFragment.updateRewardInfo(rewardId);
@@ -254,7 +258,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
                     missLatestQuestionFragment.updateRewardInfo(rewardId);
                 }
             }
-
         }
     }
 
@@ -522,8 +525,8 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             mRadio = null;
         }
 
-        mPlayPage = (source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION && mPosition == 0)
-                || (source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION && mPosition == 1);
+//        mPlayPage = (source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION && mPosition == 0)
+//                || (source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION && mPosition == 1);
         if (radioPlayViewHasHasFocus
                 && mMissFloatWindow.getVisibility() == View.VISIBLE) {
             mMissFloatWindow.setVisibility(View.GONE);
@@ -542,6 +545,17 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             mMissFloatWindow.stopAnim();
         }
         changeFloatWindowView();
+    }
+
+    @Override
+    public void onOpenQuestionPage(Question question) {
+        if (question != null) {
+            Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
+            intent.putExtra(Launcher.EX_PAYLOAD, question.getId());
+            intent.putExtra(ExtraKeys.IS_FROM_MISS_TALK, true);
+            startActivityForResult(intent, REQ_QUESTION_DETAIL);
+            umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
+        }
     }
 
 
@@ -673,16 +687,22 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         if (requestCode == REQ_QUESTION_DETAIL && resultCode == BaseActivity.RESULT_OK) {
             if (data != null) {
                 Question question = data.getParcelableExtra(ExtraKeys.QUESTION);
-                if (question != null) {
-                    if (question.isLatestQuestion()) {
-                        MissAskFragment missLatestAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(1);
-                        missLatestAskFragment.updateQuestion(question);
-                    } else {
-                        MissAskFragment missHotAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(0);
-                        missHotAskFragment.updateQuestion(question);
-                    }
+                Praise praise = data.getParcelableExtra(ExtraKeys.PRAISE);
+                if (question != null && praise != null) {
+                    question.setIsPrise(praise.getIsPrise());
+                    question.setPriseCount(praise.getPriseCount());
                 }
+                updateFragmentPageQuestion(question);
             }
+        }
+    }
+
+    private void updateFragmentPageQuestion(Question question) {
+        if (question != null) {
+            MissAskFragment missHotAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(0);
+            missHotAskFragment.updateQuestion(question);
+            MissAskFragment missLatestAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(1);
+            missLatestAskFragment.updateQuestion(question);
         }
     }
 

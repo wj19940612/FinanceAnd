@@ -107,6 +107,7 @@ public class ReplyDialogFragment extends BottomDialogFragment {
                             intent.putExtra(ExtraKeys.COMMENT_SOURCE, CommentActivity.COMMENT_TYPE_RADIO);
                         }
                         startActivityForResult(intent, REQ_REPLY);
+                        dismiss();
                     } else {
                         if (mCallback != null) {
                             mCallback.onLoginSuccess();
