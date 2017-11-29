@@ -34,7 +34,7 @@ public class MissRadioViewSwitcher extends LinearLayout implements TimerHandler.
 
     private TextSwitcher mTextSwitcher;
     private TimerHandler mTimerHandler;
-    private static final int SWITCHER_CHANGE_TIME = 4000;
+    private static final int SWITCHER_CHANGE_TIME = 3000;
     private List<MissSwitcherModel> mMissSwitcherModelList;
     private int mCount;
 

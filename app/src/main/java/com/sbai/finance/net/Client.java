@@ -3271,6 +3271,14 @@ public class Client {
      */
     public static API waitMeAnswerNum() {
         return new API("/user/user/waitMeAnswerNum.do");
+    }
 
+    /**
+     * @param audioId
+     * @return
+     */
+    // TODO: 2017/11/29 增加音频收听接口
+    public static API listenRadioAudio(int audioId) {
+        return new API("");
     }
 }
