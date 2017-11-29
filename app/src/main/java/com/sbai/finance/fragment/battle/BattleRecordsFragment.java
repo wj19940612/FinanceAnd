@@ -113,7 +113,7 @@ public class BattleRecordsFragment extends BaseFragment {
         if (mBattle.getCoinType() == Battle.COIN_TYPE_INGOT) {
             return getString(R.string.ingot);
         }
-        return getString(R.string.integral);
+        return getString(R.string.score);
     }
 
     private void requestOrderHistory() {

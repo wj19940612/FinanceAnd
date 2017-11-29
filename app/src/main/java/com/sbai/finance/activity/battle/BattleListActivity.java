@@ -646,7 +646,7 @@ public class BattleListActivity extends BaseActivity implements
                 reward = item.getReward() + getActivity().getString(R.string.cash);
                 break;
             case Battle.COIN_TYPE_SCORE:
-                reward = item.getReward() + getActivity().getString(R.string.integral);
+                reward = item.getReward() + getActivity().getString(R.string.score);
                 break;
         }
         SmartDialog.single(getActivity(), getString(R.string.join_versus_tip, reward))
@@ -782,7 +782,7 @@ public class BattleListActivity extends BaseActivity implements
                 reward = data.getReward() + getActivity().getString(R.string.cash);
                 break;
             case Battle.COIN_TYPE_SCORE:
-                reward = data.getReward() + getActivity().getString(R.string.integral);
+                reward = data.getReward() + getActivity().getString(R.string.score);
                 break;
         }
         StringBuilder sb = new StringBuilder();
@@ -1030,7 +1030,7 @@ public class BattleListActivity extends BaseActivity implements
                         reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.cash));
                         break;
                     case Battle.COIN_TYPE_SCORE:
-                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.integral));
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.score));
                         break;
                 }
                 String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);
@@ -1137,7 +1137,7 @@ public class BattleListActivity extends BaseActivity implements
                         reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.cash));
                         break;
                     case Battle.COIN_TYPE_SCORE:
-                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.integral));
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.score));
                         break;
                 }
                 String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);
