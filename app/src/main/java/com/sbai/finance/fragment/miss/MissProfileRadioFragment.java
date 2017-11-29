@@ -67,9 +67,8 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
     RecyclerView mRecyclerView;
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
-    @BindView(R.id.createRadio)
-    Button mCreateRadio;
 
+    Button mCreateRadio;
     MissFloatWindow mMissFloatWindow;
 
     private int mCustomId;
@@ -87,15 +86,17 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
         return missProfileRadioFragment;
     }
 
-    public void setMiss(Miss miss) {
-        if (miss != null) {
-            if (LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getCustomId() == miss.getId()) {
-                //是自己的个人主页，显示创建电台按钮
-                mCreateRadio.setVisibility(View.VISIBLE);
-            } else {
-                mCreateRadio.setVisibility(View.GONE);
-            }
+    public void setRadioBtn(){
+        if (LocalUser.getUser().isMiss()) {
+            //是小姐姐，显示创建电台按钮
+            mCreateRadio.setVisibility(View.VISIBLE);
+        } else {
+            mCreateRadio.setVisibility(View.GONE);
         }
+    }
+
+    public void setMiss(Miss miss) {
+
     }
 
     @Override
@@ -104,6 +105,15 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
         if (context instanceof MissProfileDetailActivity) {
             mOnFragmentRecycleViewScrollListener = (MissProfileQuestionFragment.OnFragmentRecycleViewScrollListener) context;
             mMissFloatWindow =  ((MissProfileDetailActivity) context).getFloatWindow();
+            mCreateRadio = ((MissProfileDetailActivity) context).getCreateRadioBtn();
+            mCreateRadio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Launcher.with(getActivity(), WebActivity.class)
+                            .putExtra(WebActivity.EX_URL, Client.CREATE_RADIO_STATION)
+                            .execute();
+                }
+            });
         }
     }
 
@@ -253,17 +263,6 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
     protected void onMediaPlayStop(int IAudioId, int source) {
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
-    }
-
-    @OnClick(R.id.createRadio)
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.createRadio:
-                Launcher.with(getActivity(), WebActivity.class)
-                        .putExtra(WebActivity.EX_URL, Client.CREATE_RADIO_STATION)
-                        .execute();
-                break;
-        }
     }
 
     static class RadioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

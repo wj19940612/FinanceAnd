@@ -3281,4 +3281,11 @@ public class Client {
     public static API listenRadioAudio(int audioId) {
         return new API("");
     }
+
+    /**
+     * 更新待我答等未读已读状态
+     */
+    public static API updateAnswerReadStatus(int id){
+        return new API("/user/user/readQuestion.do",new ApiParams().put("id",id));
+    }
 }

@@ -26,7 +26,7 @@
             android:id="@+id/listEmptyView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:titleImage="@drawable/common_ic_no_question_or_answer"
+            app:titleImage="@drawable/common_ic_no_audio_collect"
             app:goingBg="@drawable/bg_annals_materials_4"/>
     </LinearLayout>
 

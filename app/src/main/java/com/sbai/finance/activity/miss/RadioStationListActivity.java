@@ -49,7 +49,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017\11\21 0021.
  */
 
-public class RadioStationListActivity extends BaseActivity implements AdapterView.OnItemClickListener, MissAudioManager.OnAudioListener {
+public class RadioStationListActivity extends MediaPlayActivity implements AdapterView.OnItemClickListener{
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -90,7 +90,6 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
         mListView.setOnItemClickListener(this);
 
         initFloatWindow();
-        MissAudioManager.get().addAudioListener(this);
 
         initHeaderView();
         initSwipeRefreshLayout();
@@ -329,7 +328,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     }
 
     @Override
-    public void onAudioStart() {
+    public void onMediaPlayStart(int IAudioId, int source) {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
         if (audio instanceof Question) {
             mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
@@ -337,32 +336,33 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     }
 
     @Override
-    public void onAudioPlay() {
+    public void onMediaPlay(int IAudioId, int source) {
         mMissFloatWindow.startAnim();
     }
 
     @Override
-    public void onAudioPause() {
-        mMissFloatWindow.stopAnim();
-        mMissFloatWindow.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onAudioResume() {
+    public void onMediaPlayResume(int IAudioId, int source) {
         mMissFloatWindow.setVisibility(View.VISIBLE);
         mMissFloatWindow.startAnim();
     }
 
     @Override
-    public void onAudioStop() {
+    public void onMediaPlayPause(int IAudioId, int source) {
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
     }
 
     @Override
-    public void onAudioError() {
+    protected void onMediaPlayStop(int IAudioId, int source) {
+        mMissFloatWindow.stopAnim();
+        mMissFloatWindow.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
 
     }
+
 
     static class RadioStationAdapter extends ArrayAdapter<Radio> {
         private Context mContext;

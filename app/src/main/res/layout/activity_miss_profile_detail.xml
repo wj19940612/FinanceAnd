@@ -40,7 +40,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="79dp"
-                        android:minHeight="210dp"
+                        android:paddingBottom="20dp"
+                        android:minHeight="190dp"
                         android:orientation="vertical"
                         android:visibility="visible"
                         app:layout_collapseMode="pin">
@@ -80,12 +81,13 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="8dp"
+                            android:maxLines="5"
+                            android:ellipsize="end"
                             android:gravity="center"
                             android:paddingLeft="14dp"
                             android:paddingRight="14dp"
                             android:textColor="@color/white"
-                            android:textSize="12sp"
-                            />
+                            android:textSize="12sp"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -157,7 +159,6 @@
                             app:backFeature="true"
                             app:backIcon="@drawable/ic_tb_back_white"
                             app:leftViewLeftPadding="0dp"
-                            app:rightImage="@drawable/ic_share"
                             app:rightVisible="true"
                             app:titleTextColor="@color/white"/>
 
@@ -211,6 +212,29 @@
             android:layout_marginRight="14dp"
             android:visibility="gone"/>
 
+        <Button
+            android:id="@+id/ask"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bg_train_comprehensive"
+            android:gravity="center"
+            android:text="@string/i_want_to_ask"
+            android:textColor="@color/gradient_text"
+            android:textSize="15sp"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/createRadio"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/create_radio_station"
+            android:textColor="@color/blueComprehensiveTraining"
+            android:textSize="15sp"
+            android:visibility="gone"/>
     </RelativeLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>
