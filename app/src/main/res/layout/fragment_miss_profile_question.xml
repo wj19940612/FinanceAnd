@@ -22,19 +22,7 @@
         android:drawableTop="@drawable/img_no_message"
         android:gravity="center_horizontal"
         android:text="@string/now_not_has_data"
-        android:textColor="@android:color/white"
-        android:visibility="gone"/>
-
-    <Button
-        android:id="@+id/ask"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/bg_train_comprehensive"
-        android:gravity="center"
-        android:text="@string/i_want_to_ask"
-        android:textColor="@color/gradient_text"
-        android:textSize="15sp"
+        android:textColor="@android:color/black"
         android:visibility="gone"/>
 
     <!--<com.sbai.finance.view.MissFloatWindow-->

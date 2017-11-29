@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.google.gson.JsonObject;
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
@@ -58,6 +59,8 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
     private static final int REQ_CODE_LOCATION = 805;
 
     private static final int REQ_CODE_CREDIT_APPROVE = 298;
+
+    private static final int REQ_CODE_PROFILE_INTRODUCTION = 2243;
 
     @BindView(R.id.userHeadImage)
     AppCompatImageView mUserHeadImage;
@@ -313,7 +316,11 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
                 }
                 break;
             case R.id.personalSummary:
-                Launcher.with(this, IntroduceSetActivity.class).execute();
+                String localBriefingText = "";
+                if(LocalUser.getUser().getUserInfo()!=null){
+                    localBriefingText = LocalUser.getUser().getUserInfo().getBriefingText();
+                }
+                Launcher.with(this, IntroduceSetActivity.class).putExtra(ExtraKeys.PROFILE_INTRODUCE,localBriefingText).executeForResult(REQ_CODE_PROFILE_INTRODUCTION);
                 break;
         }
     }
@@ -403,6 +410,9 @@ public class ModifyUserInfoActivity extends WeChatActivity implements ChooseSexD
                     break;
                 case REQ_CODE_CREDIT_APPROVE:
                     updateUserCreditStatus(CREDIT_IS_APPROVE_ING);
+                    break;
+                case REQ_CODE_PROFILE_INTRODUCTION:
+                    requestDetailUserInfo();
                     break;
                 default:
                     break;

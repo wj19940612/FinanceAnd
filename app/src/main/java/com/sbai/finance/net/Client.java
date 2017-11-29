@@ -3140,7 +3140,7 @@ public class Client {
      * 电台音频列表
      */
     public static API requestRadioDetailAudio(int radioId) {
-        return new API("/explain/audioManage/queryAudioByRadioId.do", new ApiParams().put("radioId", radioId));
+        return new API("/explain/audioManage/queryAudioByRadioIdForApp.do", new ApiParams().put("radioId", radioId));
     }
 
     /**
@@ -3282,5 +3282,20 @@ public class Client {
      */
     public static API searchStocks(String searchKey) {
         return new API("/api/stock-va/variety/search", new ApiParams().put("searchKey", searchKey));
+    }
+
+    /**
+     * @param audioId /explain/audioManage/updateNumberForApp.do
+     * @return
+     */
+    public static API listenRadioAudio(int audioId) {
+        return new API("/explain/audioManage/updateNumberForApp.do", new ApiParams().put("audioId", audioId));
+    }
+
+    /**
+     * 更新待我答等未读已读状态
+     */
+    public static API updateAnswerReadStatus(int id){
+        return new API("/user/user/readQuestion.do",new ApiParams().put("id",id));
     }
 }

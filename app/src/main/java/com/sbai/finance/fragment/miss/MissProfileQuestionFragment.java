@@ -23,6 +23,7 @@ import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.miss.CommentActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.RewardMissActivity;
@@ -59,6 +60,7 @@ import butterknife.Unbinder;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
+import static com.sbai.finance.activity.miss.CommentActivity.REQ_CODE_COMMENT;
 import static com.sbai.finance.activity.miss.MissProfileDetailActivity.CUSTOM_ID;
 
 /**
@@ -67,15 +69,15 @@ import static com.sbai.finance.activity.miss.MissProfileDetailActivity.CUSTOM_ID
 
 public class MissProfileQuestionFragment extends MediaPlayFragment {
 
+    private static final int REQ_CODE_COMMENT = 1001;
+
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(android.R.id.empty)
     AppCompatTextView mEmpty;
     Unbinder mBind;
-    @BindView(R.id.ask)
+
     Button mAsk;
-
-
     MissFloatWindow mMissFloatWindow;
 
     private QuestionListAdapter mQuestionListAdapter;
@@ -94,23 +96,6 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
 
     private MediaPlayService mMediaPlayService;
 
-    @OnClick(R.id.ask)
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.ask:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), SubmitQuestionActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, mCustomId)
-                            .execute();
-                } else {
-                    stopVoice();
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivityForResult(intent, MissProfileDetailActivity.REQ_SUBMIT_QUESTION_LOGIN);
-                }
-                break;
-        }
-    }
-
     public interface OnFragmentRecycleViewScrollListener {
 
         void onSwipRefreshEnable(boolean enabled, int fragmentPosition);
@@ -128,16 +113,19 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         mMediaPlayService = mediaPlayService;
     }
 
-    public void setMiss(Miss miss) {
-        mMiss = miss;
-        if (miss != null) {
-            if (LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getCustomId() == miss.getId()) {
-                //是自己的个人主页，隐藏我要提问按钮
+    public void setAskBtn() {
+        if (mMiss != null) {
+            if (LocalUser.getUser().isMiss()) {
+                //是小姐姐，隐藏我要提问按钮
                 mAsk.setVisibility(View.GONE);
             } else {
                 mAsk.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    public void setMiss(Miss miss) {
+        mMiss = miss;
     }
 
     public void refresh() {
@@ -146,54 +134,6 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         mHasMoreData = true;
         mQuestionList.clear();
         requestHerAnswerList(true);
-    }
-
-    //其他界面跳转回来
-    public void dealOtherActivityResule(int reqQuestionDetail, Intent data) {
-        if (reqQuestionDetail == REQ_QUESTION_DETAIL && data != null) {
-            Question question = data.getParcelableExtra(ExtraKeys.QUESTION);
-            Praise praise = data.getParcelableExtra(ExtraKeys.PRAISE);
-            if (question != null) {
-                for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
-                    Question item = mQuestionList.get(i);
-                    if (item != null && question.getId() == item.getId()) {
-                        item.setIsPrise(question.getIsPrise());
-                        item.setPriseCount(question.getPriseCount());
-                        item.setReplyCount(question.getReplyCount());
-                        item.setAwardCount(question.getAwardCount());
-                        item.setListenCount(question.getListenCount());
-
-                        if (praise != null) {
-                            if (mMiss != null) {
-                                if (question.getIsPrise() == 0) {
-                                    mMiss.setTotalPrise(mMiss.getTotalPrise() - 1);
-                                } else {
-                                    mMiss.setTotalPrise(mMiss.getTotalPrise() + 1);
-                                }
-                                ((MissProfileDetailActivity) getActivity()).praiseAdd(mMiss.getTotalPrise());
-                            }
-                        }
-
-                        if (item != null) {
-                            if (MissAudioManager.get().isStarted(item)) {
-                                startScheduleJob(100);
-                                MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
-                                    @Override
-                                    public void onCompleted(String url) {
-                                        mMissFloatWindow.setVisibility(View.GONE);
-                                        mMissFloatWindow.stopAnim();
-                                        mQuestionListAdapter.notifyDataSetChanged();
-                                        stopScheduleJob();
-                                    }
-                                });
-                            }
-                        }
-                    }
-                }
-
-                mQuestionListAdapter.notifyDataSetChanged();
-            }
-        }
     }
 
     private void updateFloatStatus() {
@@ -221,7 +161,22 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         super.onAttach(context);
         if (context instanceof MissProfileDetailActivity) {
             mOnFragmentRecycleViewScrollListener = (OnFragmentRecycleViewScrollListener) context;
-            mMissFloatWindow =  ((MissProfileDetailActivity) context).getFloatWindow();
+            mMissFloatWindow = ((MissProfileDetailActivity) context).getFloatWindow();
+            mAsk = ((MissProfileDetailActivity) context).getAskBtn();
+            mAsk.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (LocalUser.getUser().isLogin()) {
+                        Launcher.with(getActivity(), SubmitQuestionActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, mCustomId)
+                                .execute();
+                    } else {
+                        stopVoice();
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivityForResult(intent, MissProfileDetailActivity.REQ_SUBMIT_QUESTION_LOGIN);
+                    }
+                }
+            });
         }
         if (mMediaPlayService == null && context instanceof MissProfileDetailActivity) {
             mMediaPlayService = ((MissProfileDetailActivity) context).getMediaPlayService();
@@ -434,13 +389,26 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                 mPlayIngItem = item;
                 toggleQuestionVoice(item);
             }
+
+            @Override
+            public void onComment(Question item) {
+                if (item.getReplyCount() == 0) {
+                    if (LocalUser.getUser().isLogin()) {
+                        Intent intent = new Intent(getActivity(), CommentActivity.class);
+                        intent.putExtra(Launcher.EX_PAYLOAD, item.getQuestionUserId());
+                        intent.putExtra(Launcher.EX_PAYLOAD_1, item.getId());
+                        startActivityForResult(intent, REQ_CODE_COMMENT);
+                    } else {
+                        MissAudioManager.get().stop();
+                        Launcher.with(getActivity(), LoginActivity.class).execute();
+                    }
+                } else {
+                    Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
+                    intent.putExtra(Launcher.EX_PAYLOAD, item.getId());
+                    startActivityForResult(intent, REQ_QUESTION_DETAIL);
+                }
+            }
         });
-
-        initFloatView();
-    }
-
-    private void initFloatView() {
-
     }
 
     private void toggleQuestionVoice(Question item) {
@@ -593,6 +561,68 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQ_QUESTION_DETAIL && data != null) {
+            Question question = data.getParcelableExtra(ExtraKeys.QUESTION);
+            Praise praise = data.getParcelableExtra(ExtraKeys.PRAISE);
+            if (question != null) {
+                for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
+                    Question item = mQuestionList.get(i);
+                    if (item != null && question.getId() == item.getId()) {
+                        item.setIsPrise(question.getIsPrise());
+                        item.setPriseCount(question.getPriseCount());
+                        item.setReplyCount(question.getReplyCount());
+                        item.setAwardCount(question.getAwardCount());
+                        item.setListenCount(question.getListenCount());
+
+                        if (praise != null) {
+                            if (mMiss != null) {
+                                if (question.getIsPrise() == 0) {
+                                    mMiss.setTotalPrise(mMiss.getTotalPrise() - 1);
+                                } else {
+                                    mMiss.setTotalPrise(mMiss.getTotalPrise() + 1);
+                                }
+                                ((MissProfileDetailActivity) getActivity()).praiseAdd(mMiss.getTotalPrise());
+                            }
+                        }
+
+                        if (item != null) {
+                            if (MissAudioManager.get().isStarted(item)) {
+                                startScheduleJob(100);
+                                MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
+                                    @Override
+                                    public void onCompleted(String url) {
+                                        mMissFloatWindow.setVisibility(View.GONE);
+                                        mMissFloatWindow.stopAnim();
+                                        mQuestionListAdapter.notifyDataSetChanged();
+                                        stopScheduleJob();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+
+                mQuestionListAdapter.notifyDataSetChanged();
+            }
+        } else if (requestCode == REQ_CODE_COMMENT) {
+            if (data != null) {
+                int id = data.getIntExtra(ExtraKeys.QUESTION_ID, -1);
+                List<Question> missAskList = mQuestionList;
+                if (missAskList != null && !missAskList.isEmpty()) {
+                    for (Question result : missAskList) {
+                        if (result.getId() == id) {
+                            result.setReplyCount(1);
+                            mQuestionListAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
     }
@@ -611,6 +641,8 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
             void rewardOnClick(Question item);
 
             void playOnClick(Question item);
+
+            void onComment(Question item);
         }
 
         private Callback mCallback;
@@ -799,6 +831,15 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                     public void onClick(View v) {
                         if (callback != null) {
                             callback.playOnClick(item);
+                        }
+                    }
+                });
+
+                mCommentNumber.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (callback != null) {
+                            callback.onComment(item);
                         }
                     }
                 });

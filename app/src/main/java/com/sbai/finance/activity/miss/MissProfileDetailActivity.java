@@ -22,6 +22,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,6 +57,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.sbai.finance.activity.miss.CommentActivity.REQ_CODE_COMMENT;
+
 /**
  * Created by Administrator on 2017\11\22 0022.
  */
@@ -63,7 +66,8 @@ import butterknife.OnClick;
 public class MissProfileDetailActivity extends BaseActivity implements MissProfileQuestionFragment.OnFragmentRecycleViewScrollListener {
     public static final String CUSTOM_ID = "custom_id";
 
-    public static final int REQ_SUBMIT_QUESTION_LOGIN = 1001;
+    public static final int REQ_SUBMIT_QUESTION_LOGIN = 1002;
+
     public static final int FRAGMENT_QUESTION = 0;
     public static final int FRAGMENT_RADIO = 1;
 
@@ -101,6 +105,10 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
     View mGrantBack;
     @BindView(R.id.missFloatWindow)
     MissFloatWindow mMissFloatWindow;
+    @BindView(R.id.ask)
+    Button mAsk;
+    @BindView(R.id.createRadio)
+    Button mCreateRadio;
 
 
     private ProfileFragmentAdapter mProfileFragmentAdapter;
@@ -110,6 +118,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
     private int mAppBarVerticalOffset = -1;
     private Miss mMiss;
     public MediaPlayService mMediaPlayService;
+    private int mPosition;
 
     protected ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -130,8 +139,16 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         return mMediaPlayService;
     }
 
-    public MissFloatWindow getFloatWindow(){
+    public MissFloatWindow getFloatWindow() {
         return mMissFloatWindow;
+    }
+
+    public Button getAskBtn() {
+        return mAsk;
+    }
+
+    public Button getCreateRadioBtn() {
+        return mCreateRadio;
     }
 
     @Override
@@ -177,6 +194,23 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         mTabLayout.setHasBottomBorder(false);
         mTabLayout.setViewPager(mViewPager);
 
+        mTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                setPositionBtn(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -221,6 +255,38 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         }
     }
 
+    private void setPositionBtn(int position){
+        if (position == FRAGMENT_QUESTION) {
+            if (mMiss != null) {
+                if (LocalUser.getUser().isMiss()) {
+                    //是小姐姐，隐藏我要提问按钮
+                    mAsk.setVisibility(View.GONE);
+                    mCreateRadio.setVisibility(View.GONE);
+                } else {
+                    mAsk.setVisibility(View.VISIBLE);
+                    mCreateRadio.setVisibility(View.GONE);
+                }
+            }else{
+                mAsk.setVisibility(View.VISIBLE);
+                mCreateRadio.setVisibility(View.GONE);
+            }
+        } else if (position == FRAGMENT_RADIO) {
+            if (mMiss != null) {
+                if (LocalUser.getUser().isMiss()) {
+                    //是小姐姐，隐藏我要提问按钮
+                    mAsk.setVisibility(View.GONE);
+                    mCreateRadio.setVisibility(View.VISIBLE);
+                } else {
+                    mAsk.setVisibility(View.GONE);
+                    mCreateRadio.setVisibility(View.GONE);
+                }
+            }else{
+                mAsk.setVisibility(View.GONE);
+                mCreateRadio.setVisibility(View.GONE);
+            }
+        }
+    }
+
     public void refreshData() {
         Client.getMissDetail(mCustomId).setTag(TAG)
                 .setCallback(new Callback2D<Resp<Miss>, Miss>() {
@@ -233,7 +299,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                     @Override
                     public void onFailure(ApiError apiError) {
                         super.onFailure(apiError);
-                        mFansNumber.setVisibility(View.GONE);
+                        updateNullMissDetail();
                     }
 
                     @Override
@@ -259,7 +325,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         } else {
             mProfileIntroduce.setText(R.string.no_miss_introduce);
         }
-        if (LocalUser.getUser().isMiss()) {
+        if (LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getCustomId() == miss.getId()) {
             //是小姐姐自己
             mFollow.setVisibility(View.GONE);
             mNoFollow.setVisibility(View.VISIBLE);
@@ -274,6 +340,17 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                 mNoFollow.setText(R.string.is_attention);
             }
         }
+        setPositionBtn(mPosition);
+    }
+
+    private void updateNullMissDetail(){
+        setPositionBtn(0);
+        GlideApp.with(this).load(null)
+                .placeholder(R.drawable.ic_default_avatar)
+                .circleCrop()
+                .into(mAvatar);
+        mFansNumber.setText("粉丝");
+        mFansNumber.setVisibility(View.VISIBLE);
     }
 
     private void setFansNumber(int totalPrise) {
@@ -340,10 +417,6 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                     .putExtra(Launcher.EX_PAYLOAD, mCustomId)
                     .execute();
         }
-        if (requestCode == REQ_QUESTION_DETAIL && resultCode == RESULT_OK) {
-            MissProfileQuestionFragment missProfileQuestionFragment = (MissProfileQuestionFragment) mProfileFragmentAdapter.getFragment(0);
-            missProfileQuestionFragment.dealOtherActivityResule(REQ_QUESTION_DETAIL, data);
-        }
     }
 
     AppBarLayout.OnOffsetChangedListener mOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
@@ -404,7 +477,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                 break;
             case R.id.noFollow:
                 if (mMiss != null) {
-                    if (LocalUser.getUser().isMiss()) {
+                    if (LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getCustomId() == mMiss.getId()) {
                         Launcher.with(getActivity(), ModifyUserInfoActivity.class).execute();
                     } else {
                         attention();

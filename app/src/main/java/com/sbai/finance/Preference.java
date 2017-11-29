@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -51,6 +52,7 @@ public class Preference {
         String SHOW_BIND_WECHAT = "show_bind_wechat";
         String FIRST_OPEN_APP = "first_open_app";
         String UPDATE_OPEN_APP_TIME = "update_open_app_time";
+        String AUDIO_PLAY_PAUSE = "audio_play_pause";
     }
 
     private static Preference sInstance;
@@ -190,6 +192,7 @@ public class Preference {
         if (LocalUser.getUser().isLogin()) {
             key = LocalUser.getUser().getUserInfo().getUserPhone() + key;
         }
+        Log.d("wangjie", "setAnswerIds: "+key);
         apply(key, answerIds);
     }
 
@@ -198,6 +201,7 @@ public class Preference {
         if (LocalUser.getUser().isLogin()) {
             key = LocalUser.getUser().getUserInfo().getUserPhone() + key;
         }
+        Log.d("wangjie", "getAnswerIds: "+key);
         return mPrefs.getString(key, null);
     }
 
@@ -334,5 +338,13 @@ public class Preference {
         long systemTimestamp = SysTime.getSysTime().getSystemTimestamp();
         long time = systemTimestamp - mPrefs.getLong(Key.UPDATE_OPEN_APP_TIME, 0);
         return time > UPDATE_OPEN_APP_TIME;
+    }
+
+    public boolean isAudioPlayPause() {
+        return mPrefs.getBoolean(Key.AUDIO_PLAY_PAUSE, false);
+    }
+
+    public void setAudioPlayPause(boolean isAudioPlayPause){
+        apply(Key.AUDIO_PLAY_PAUSE,isAudioPlayPause);
     }
 }

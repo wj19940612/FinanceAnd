@@ -48,6 +48,7 @@ public class Answer {
     private int soundTime;            //语音时长
     private int top;                  //是否置顶
     private long updateTime;          //更新时间
+    private int readStatus;                 //0-未读 1-已读
 
     public int getAppointCustomId() {
         return appointCustomId;
@@ -207,5 +208,13 @@ public class Answer {
 
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public int getReadStatus() {
+        return readStatus;
+    }
+
+    public void setReadStatus(int readStatus) {
+        this.readStatus = readStatus;
     }
 }

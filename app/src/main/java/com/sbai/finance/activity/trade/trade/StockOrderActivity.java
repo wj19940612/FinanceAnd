@@ -26,7 +26,6 @@ import com.sbai.finance.fragment.battle.BattleListFragment;
 import com.sbai.finance.fragment.trade.stock.StockBusinessFragment;
 import com.sbai.finance.fragment.trade.stock.StockEntrustFragment;
 import com.sbai.finance.fragment.trade.stock.StockPositionFragment;
-import com.sbai.finance.model.ImageFloder;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.mutual.ArticleProtocol;
@@ -66,7 +65,8 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
  */
 
 public class StockOrderActivity extends BaseActivity implements BattleListFragment.OnFragmentRecycleViewScrollListener {
-    public static final String ACTION_SWITCH_ACCOUNT = "233";
+    public static final String ACTION_REFRESH_MANUAL = "233";
+    public static final String ACTION_REFRESH_AUTO = "243";
     public static final int REQUEST_CODE_ORDER = 250;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -86,7 +86,6 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     private boolean mSwipeEnabled = true;
     private PositionRecords mPositionRecords;
     private StockUser mCurrentStockUser;
-    private List<StockUser> mStockUsers;
     private int mPageIndex;
     private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
         @Override
@@ -164,7 +163,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
             mStockAccountName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showActivityPickerDialog();
+                    requestStockAccountsAndShowPickDialog();
                 }
             });
         }
@@ -255,13 +254,15 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     private void setCurrentStockUser(StockUser stockUser) {
         if (stockUser != null) {
             mStockAccountName.setText(stockUser.getAccountName());
-            if (mCurrentStockUser != null && !mCurrentStockUser.getAccount().equalsIgnoreCase(stockUser.getAccount())) {
+            if (mCurrentStockUser != null && mCurrentStockUser.getAccount().equalsIgnoreCase(stockUser.getAccount())) {
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_REFRESH_MANUAL));
+            } else {
                 mFundInfo.resetView();
+                mCurrentStockUser = stockUser;
+                LocalUser.getUser().setStockUser(stockUser);
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_REFRESH_MANUAL));
             }
         }
-        mCurrentStockUser = stockUser;
-        LocalUser.getUser().setStockUser(stockUser);
-        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_SWITCH_ACCOUNT));
     }
 
     private void requestSwitchAccount(final StockUser stockUser) {
@@ -280,18 +281,31 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
                 }).fireFree();
     }
 
+    private void requestStockAccountsAndShowPickDialog() {
+        Client.getStockAccountList().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<StockUser>>, List<StockUser>>() {
+                    @Override
+                    protected void onRespSuccessData(List<StockUser> data) {
+                        if (!data.isEmpty() && LocalUser.getUser().getStockUser() != null) {
+                            showActivityPickerDialog(data);
+                        }
+                    }
+                }).fire();
+
+    }
+
     private void updateStockAccount(List<StockUser> data) {
-        mStockUsers = data;
-        for (StockUser stockUser : mStockUsers) {
-            if (stockUser.getActive() == StockUser.ACCOUNT_ACTIVE) {
-                mCurrentStockUser = stockUser;
+        StockUser stockUser = null;
+        for (StockUser item : data) {
+            if (item.getActive() == StockUser.ACCOUNT_ACTIVE) {
+                stockUser = item;
                 break;
             }
         }
-        if (mCurrentStockUser == null) {
+        if (stockUser == null) {
             requestSwitchAccount(data.get(0));
         } else {
-            setCurrentStockUser(mCurrentStockUser);
+            setCurrentStockUser(stockUser);
         }
     }
 
@@ -310,11 +324,10 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
             Position position = positionMap.get(data.getInstrumentId());
             if (position != null) {
                 double lastPrice = Double.valueOf(data.getLastPrice());
-                int todayBusinessAmount = position.getTotalQty() - position.getUsableQty();
                 totalMarket += position.getTotalQty() * lastPrice;
                 floatProfit += position.getTotalQty() * (lastPrice - position.getAvgBuyPrice());
-                todayProfit += (lastPrice - Double.valueOf(data.getPreClsPrice())) * (position.getTodayBargainCount() - todayBusinessAmount + position.getUsableQty())
-                        + (lastPrice - position.getTodayAvgPrice()) * todayBusinessAmount;
+                todayProfit += (lastPrice - Double.valueOf(data.getPreClsPrice())) * (position.getTotalQty() - position.getTodayBargainCount())
+                        + (lastPrice - position.getTodayAvgPrice()) * position.getTodayBargainCount();
             }
         }
         mFundInfo.setTotalMarket(totalMarket);
@@ -331,8 +344,12 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         if (data.getUsableDraw() > 0) {
             mFundInfo.setFetchFund(data.getUsableDraw());
         }
-        mFundInfo.setTotalFund(mPositionRecords.getUsableMoney());
+    }
 
+    public void updateTotalFund() {
+        if (mPositionRecords != null) {
+            mFundInfo.setTotalFund(mPositionRecords.getUsableMoney());
+        }
     }
 
     private void showFetchFundDescribeDialog() {
@@ -345,25 +362,29 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
                 .show();
     }
 
-    private void showActivityPickerDialog() {
-        if (mStockUsers == null || mStockUsers.isEmpty()) return;
+    private void showActivityPickerDialog(final List<StockUser> stockUserList) {
+        final StockUser stockUser = LocalUser.getUser().getStockUser();
+        int currentUserPos = 0;
         ArrayList<String> arrayList = new ArrayList<>();
-        for (StockUser stockUser : mStockUsers) {
-            arrayList.add(stockUser.getAccountName());
+        for (int i = 0; i < stockUserList.size(); i++) {
+            StockUser user = stockUserList.get(i);
+            arrayList.add(user.getAccountName());
+            if (stockUser.getAccount().equals(user.getAccount())) {
+                currentUserPos = i;
+            }
         }
         new StockActivityPickerPopWin.Builder(getActivity(),
                 new StockActivityPickerPopWin.OnPickedListener() {
                     @Override
                     public void onPickCompleted(int position) {
-                        if (mStockUsers.indexOf(mCurrentStockUser) == position) return;
-                        if (position < mStockUsers.size()) {
-                            requestSwitchAccount(mStockUsers.get(position));
+                        if (!stockUserList.get(position).getAccount().equals(stockUser.getAccount())) {
+                            requestSwitchAccount(stockUserList.get(position));
                         }
                     }
                 })
                 .colorCancel(ContextCompat.getColor(getActivity(), R.color.colorPrimary))
                 .colorConfirm(ContextCompat.getColor(getActivity(), R.color.colorPrimary))
-                .dataChose(mStockUsers.indexOf(mCurrentStockUser))
+                .dataChose(currentUserPos)
                 .dataList(arrayList)
                 .build()
                 .showPopWin(getActivity());

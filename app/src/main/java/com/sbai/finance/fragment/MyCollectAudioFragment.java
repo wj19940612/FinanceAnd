@@ -20,6 +20,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
 import com.sbai.finance.fragment.mine.MyCollectQuestionFragment;
 import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.net.Callback2D;
@@ -87,13 +88,9 @@ public class MyCollectAudioFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MyCollect question = (MyCollect) parent.getAdapter().getItem(position);
-                //TODO 跳转具体的音频界面
-//                if (question != null && question.isQuestionSolved()) {
-//                    mClickMyCollect = question;
-//                    Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-//                    intent.putExtra(Launcher.EX_PAYLOAD, question.getDataId());
-//                    startActivityForResult(intent, QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL);
-//                }
+                if (question.getShow() != 0) {
+                    Launcher.with(getActivity(), RadioStationPlayActivityActivity.class).putExtra(ExtraKeys.IAudio, question.getDataId()).execute();
+                }
             }
         });
 

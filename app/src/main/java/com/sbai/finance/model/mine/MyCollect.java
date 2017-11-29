@@ -61,6 +61,7 @@ public class MyCollect {
     private String radioHostName;       //主播昵称
     private int show;             // 1-显示 0-1下架
 
+    private long subscibeTime; //收藏的时间
     private int isRead;         //是否阅读最新消息
 
 
@@ -284,6 +285,14 @@ public class MyCollect {
 
     public void setShow(int show) {
         this.show = show;
+    }
+
+    public long getSubscribeTime() {
+        return subscibeTime;
+    }
+
+    public void setSubscribeTime(long subscibeTime) {
+        this.subscibeTime = subscibeTime;
     }
 
     @Override

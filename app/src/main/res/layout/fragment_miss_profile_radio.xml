@@ -26,20 +26,20 @@
         android:drawableTop="@drawable/img_no_message"
         android:gravity="center_horizontal"
         android:text="@string/now_not_has_data"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:visibility="gone"/>
 
-    <Button
-        android:id="@+id/createRadio"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:gravity="center"
-        android:text="@string/create_radio_station"
-        android:textColor="@color/blueComprehensiveTraining"
-        android:textSize="15sp"
-        android:visibility="gone"/>
+    <!--<Button-->
+        <!--android:id="@+id/createRadio"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="44dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@color/white"-->
+        <!--android:gravity="center"-->
+        <!--android:text="@string/create_radio_station"-->
+        <!--android:textColor="@color/blueComprehensiveTraining"-->
+        <!--android:textSize="15sp"-->
+        <!--android:visibility="gone"/>-->
 
     <!--<com.sbai.finance.view.MissFloatWindow-->
         <!--android:id="@+id/missFloatWindow"-->

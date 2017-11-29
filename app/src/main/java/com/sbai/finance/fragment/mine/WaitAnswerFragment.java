@@ -35,6 +35,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.sbai.finance.activity.mine.WaitForMeAnswerActivity.WAIT_ME_ANSWER;
+
 /**
  * Created by Administrator on 2017\11\21 0021.
  */
@@ -54,7 +56,6 @@ public class WaitAnswerFragment extends BaseFragment {
     private AnswerAdapter mAnswerAdapter;
     private int mPage;
     private int mAnswerType = 1;
-    private WaitForMeAnswerActivity.NoReadNewsCallback mNoReadNewsCallback;
 
     public static WaitAnswerFragment newInstance(int type) {
         WaitAnswerFragment fragment = new WaitAnswerFragment();
@@ -62,10 +63,6 @@ public class WaitAnswerFragment extends BaseFragment {
         bundle.putInt(ANSWER_TYPE, type);
         fragment.setArguments(bundle);
         return fragment;
-    }
-
-    public void setNoReadCountListener(WaitForMeAnswerActivity.NoReadNewsCallback noReadCountListener) {
-        mNoReadNewsCallback = noReadCountListener;
     }
 
     @Override
@@ -101,6 +98,7 @@ public class WaitAnswerFragment extends BaseFragment {
         mListView.setEmptyView(mListEmptyView);
         mListView.setDivider(null);
         mAnswerAdapter = new AnswerAdapter(getActivity());
+        mAnswerAdapter.setAnswerType(mAnswerType);
         mListView.setAdapter(mAnswerAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -112,7 +110,9 @@ public class WaitAnswerFragment extends BaseFragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Question question = (Question) parent.getAdapter().getItem(position);
+                Answer answer = (Answer) parent.getAdapter().getItem(position);
+                requestUpdateReadStatus(answer.getId());
+                //TODO 跳转回答录音界面
 //                if (question != null && question.isQuestionSolved()) {
 //                    mClickQuestion = question;
 //                    Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
@@ -137,9 +137,6 @@ public class WaitAnswerFragment extends BaseFragment {
                     @Override
                     protected void onRespSuccessData(List<Answer> data) {
                         updateAnswerList(data);
-                        if (mNoReadNewsCallback != null) {
-                            mNoReadNewsCallback.noReadNews(data.size());
-                        }
                     }
 
                     @Override
@@ -155,6 +152,10 @@ public class WaitAnswerFragment extends BaseFragment {
         mAnswerAdapter.addAll(data);
     }
 
+    private void requestUpdateReadStatus(int id){
+        Client.updateAnswerReadStatus(id).setTag(TAG).fire();
+    }
+
     private void stopRefreshAnimation() {
         if (mSwipeRefreshLayout.isLoading()) {
             mSwipeRefreshLayout.setLoading(false);
@@ -166,7 +167,7 @@ public class WaitAnswerFragment extends BaseFragment {
 
     private void initListEmptyView() {
         switch (mAnswerType) {
-            case WaitForMeAnswerActivity.WAIT_ME_ANSWER:
+            case WAIT_ME_ANSWER:
                 mListEmptyView.setContentText(R.string.you_not_has_answer);
                 mListEmptyView.setGoingBtnGone();
                 break;
@@ -217,6 +218,8 @@ public class WaitAnswerFragment extends BaseFragment {
             AppCompatTextView mTitle;
             @BindView(R.id.time)
             TextView mTime;
+            @BindView(R.id.iconView)
+            View mIconView;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
@@ -226,6 +229,11 @@ public class WaitAnswerFragment extends BaseFragment {
                 if (answer == null) return;
                 mTime.setText(DateUtil.formatDefaultStyleTime(answer.getCreateTime()));
                 mTitle.setText(answer.getQuestionContext());
+                if (answer.getReadStatus() == 0 && answerType == WAIT_ME_ANSWER) {
+                    mIconView.setVisibility(View.VISIBLE);
+                } else {
+                    mIconView.setVisibility(View.GONE);
+                }
             }
         }
     }

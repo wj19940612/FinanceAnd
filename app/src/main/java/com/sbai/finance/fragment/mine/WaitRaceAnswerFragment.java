@@ -18,7 +18,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.Answer;
-import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -49,15 +48,10 @@ public class WaitRaceAnswerFragment extends BaseFragment {
     private RaceAnswerAdapter mRaceAnswerAdapter;
     private int mPage;
     private int mAnswerType = 1;
-    private WaitForMeAnswerActivity.NoReadNewsCallback mNoReadNewsCallback;
 
     public static WaitRaceAnswerFragment newInstance() {
         WaitRaceAnswerFragment fragment = new WaitRaceAnswerFragment();
         return fragment;
-    }
-
-    public void setNoReadCountListener(WaitForMeAnswerActivity.NoReadNewsCallback noReadCountListener) {
-        mNoReadNewsCallback = noReadCountListener;
     }
 
     @Override
@@ -92,8 +86,9 @@ public class WaitRaceAnswerFragment extends BaseFragment {
         mRaceAnswerAdapter = new RaceAnswerAdapter(getActivity());
         mRaceAnswerAdapter.setRaceClickListener(new RaceAnswerAdapter.RaceClickListener() {
             @Override
-            public void raceClick() {
-
+            public void raceClick(Answer item) {
+                requestUpdateReadStatus(item.getId());
+                //TODO 跳转回答录音界面
             }
         });
         mListView.setAdapter(mRaceAnswerAdapter);
@@ -132,9 +127,6 @@ public class WaitRaceAnswerFragment extends BaseFragment {
                     @Override
                     protected void onRespSuccessData(List<Answer> data) {
                         updateRaceList(data);
-                        if (mNoReadNewsCallback != null) {
-                            mNoReadNewsCallback.noReadNews(data.size());
-                        }
                     }
 
                     @Override
@@ -149,6 +141,10 @@ public class WaitRaceAnswerFragment extends BaseFragment {
     private void updateRaceList(List<Answer> data) {
         mRaceAnswerAdapter.clear();
         mRaceAnswerAdapter.addAll(data);
+    }
+
+    private void requestUpdateReadStatus(int id){
+        Client.updateAnswerReadStatus(id).setTag(TAG).fire();
     }
 
     private void stopRefreshAnimation() {
@@ -179,7 +175,7 @@ public class WaitRaceAnswerFragment extends BaseFragment {
         }
 
         public interface RaceClickListener {
-            public void raceClick();
+            public void raceClick(Answer item);
         }
 
         private Context mContext;
@@ -211,23 +207,29 @@ public class WaitRaceAnswerFragment extends BaseFragment {
             TextView mTime;
             @BindView(R.id.btnRaceAnswer)
             TextView mBtnRaceAnswer;
+            @BindView(R.id.iconView)
+            View mIconView;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindDataWithView(Answer item, Context context, final RaceClickListener raceClickListener) {
+            private void bindDataWithView(final Answer item, Context context, final RaceClickListener raceClickListener) {
                 mBtnRaceAnswer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (raceClickListener != null) {
-                            raceClickListener.raceClick();
+                            raceClickListener.raceClick(item);
                         }
                     }
                 });
-
                 mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
                 mTitle.setText(item.getQuestionContext());
+                if (item.getReadStatus() == 0) {
+                    mIconView.setVisibility(View.VISIBLE);
+                } else {
+                    mIconView.setVisibility(View.GONE);
+                }
             }
         }
     }

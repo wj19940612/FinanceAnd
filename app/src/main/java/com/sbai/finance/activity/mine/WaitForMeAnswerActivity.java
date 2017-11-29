@@ -40,14 +40,6 @@ public class WaitForMeAnswerActivity extends BaseActivity {
     ViewPager mViewPager;
 
     private WaitForMeAnswerFragmentAdapter mWaitForMeAnswerFragmentAdapter;
-    private int mWaitAnswerCount;
-    private int mRaceAnswerCount;
-    private int mHaveAnswerCount;
-    private int pagePosition;
-
-    public interface NoReadNewsCallback {
-        void noReadNews(int count);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,28 +47,7 @@ public class WaitForMeAnswerActivity extends BaseActivity {
         setContentView(R.layout.activity_wait_for_me_answer);
         ButterKnife.bind(this);
 
-        mWaitForMeAnswerFragmentAdapter = new WaitForMeAnswerFragmentAdapter(getSupportFragmentManager(), this, new NoReadNewsCallback() {
-            @Override
-            public void noReadNews(int count) {
-                if (mSlidingTabLayout.getTabItems().length < 1) return;
-                mWaitAnswerCount = count;
-                updateTitleBar();
-            }
-        },
-                new NoReadNewsCallback() {
-                    @Override
-                    public void noReadNews(int count) {
-                        if (mSlidingTabLayout.getTabItems().length < 2) return;
-                        mRaceAnswerCount = count;
-                        updateTitleBar();
-                    }
-                }, new NoReadNewsCallback() {
-            @Override
-            public void noReadNews(int count) {
-                mHaveAnswerCount = count;
-                updateTitleBar();
-            }
-        });
+        mWaitForMeAnswerFragmentAdapter = new WaitForMeAnswerFragmentAdapter(getSupportFragmentManager(), this);
         mViewPager.setOffscreenPageLimit(2);
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
@@ -91,8 +62,6 @@ public class WaitForMeAnswerActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                pagePosition = position;
-                updateTitleBar();
             }
 
             @Override
@@ -103,40 +72,15 @@ public class WaitForMeAnswerActivity extends BaseActivity {
         mSlidingTabLayout.setViewPager(mViewPager);
     }
 
-    private void updateTitleBar() {
-        if (mWaitAnswerCount == 0) {
-            mSlidingTabLayout.getTabItems()[0].setText(getString(R.string.wait_answer));
-        } else {
-            mSlidingTabLayout.getTabItems()[0].setText(getString(R.string.wait_answer_, mWaitAnswerCount));
-        }
-
-        if (mRaceAnswerCount == 0) {
-            mSlidingTabLayout.getTabItems()[1].setText(getString(R.string.wait_race_answer));
-        } else {
-            mSlidingTabLayout.getTabItems()[1].setText(getString(R.string.wait_race_answer_, mRaceAnswerCount));
-        }
-
-        if (mHaveAnswerCount == 0) {
-            mSlidingTabLayout.getTabItems()[2].setText(getString(R.string.have_answered));
-        } else {
-            mSlidingTabLayout.getTabItems()[2].setText(getString(R.string.have_answered_, mHaveAnswerCount));
-        }
-    }
 
     static class WaitForMeAnswerFragmentAdapter extends FragmentPagerAdapter {
         private FragmentManager mFragmentManager;
         private Context mContext;
-        private NoReadNewsCallback mWaitAnswerCallback;
-        private NoReadNewsCallback mRaceAnswerCallback;
-        private NoReadNewsCallback mHaveAnswerCallback;
 
-        public WaitForMeAnswerFragmentAdapter(FragmentManager fm, Context context, NoReadNewsCallback waitAnswerCallback, NoReadNewsCallback raceAnswerCallback, NoReadNewsCallback haveAnswerCallback) {
+        public WaitForMeAnswerFragmentAdapter(FragmentManager fm, Context context) {
             super(fm);
             mFragmentManager = fm;
             mContext = context;
-            mWaitAnswerCallback = waitAnswerCallback;
-            mRaceAnswerCallback = raceAnswerCallback;
-            mHaveAnswerCallback = haveAnswerCallback;
         }
 
         @Override
@@ -144,15 +88,12 @@ public class WaitForMeAnswerActivity extends BaseActivity {
             switch (position) {
                 case 0:
                     WaitAnswerFragment waitAnswerFragment = WaitAnswerFragment.newInstance(WAIT_ME_ANSWER);
-                    waitAnswerFragment.setNoReadCountListener(mWaitAnswerCallback);
                     return waitAnswerFragment;
                 case 1:
                     WaitRaceAnswerFragment waitRaceAnswerFragment = WaitRaceAnswerFragment.newInstance();
-                    waitRaceAnswerFragment.setNoReadCountListener(mRaceAnswerCallback);
                     return waitRaceAnswerFragment;
                 case 2:
                     WaitAnswerFragment haveAnswerFragment = WaitAnswerFragment.newInstance(HAVE_ANSWER);
-                    haveAnswerFragment.setNoReadCountListener(mHaveAnswerCallback);
                     return haveAnswerFragment;
             }
             return null;

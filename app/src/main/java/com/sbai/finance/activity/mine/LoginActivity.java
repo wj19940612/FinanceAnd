@@ -26,6 +26,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -113,6 +114,7 @@ public class LoginActivity extends WeChatActivity {
         initListener();
 
         setKeyboardHelper();
+        MissAudioManager.get().stop();
     }
 
     private void initListener() {

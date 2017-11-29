@@ -576,6 +576,7 @@
     <string name="choose_miss_answer">选择心仪的小姐姐来回答：</string>
     <string name="commit">提交</string>
     <string name="words_number">%1$d/140</string>
+    <string name="words_number2">%1$d/40</string>
     <string name="publish_your_comment">评论...</string>
     <string name="publish">发布</string>
     <string name="reply">回复</string>
@@ -822,7 +823,7 @@
 
     <string name="you_not_has_audio_collection">暂无音频收藏</string>
     <string name="collect_favorite_audio_here">在这里收藏喜欢的音频</string>
-    <string name="look_audio">查看音频</string>
+    <string name="look_audio">听听音频</string>
     <string name="audio">音频</string>
     <!--我的回复-->
     <string name="not_has_reply_news">暂无回复消息</string>

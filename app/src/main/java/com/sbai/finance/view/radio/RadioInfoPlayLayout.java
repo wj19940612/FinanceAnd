@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -54,6 +55,7 @@ public class RadioInfoPlayLayout extends LinearLayout {
     private RotateAnimation mRotateAnimation;
 
     private OnRadioPlayListener mOnRadioPlayListener;
+
 //    private ObjectAnimator mVoiceAnimator;
 
 
@@ -90,7 +92,6 @@ public class RadioInfoPlayLayout extends LinearLayout {
         mRotateAnimation.setDuration(5000);
         mRotateAnimation.setRepeatCount(-1);
         mRotateAnimation.setFillAfter(false);
-        mRotateAnimation.setStartOffset(10);
 //        mVoiceAnimator = ObjectAnimator.ofFloat(mVoiceCover, "rotation", 0.0F, 359.0F);
 //        mVoiceAnimator.setRepeatCount(-1);
 //        mVoiceAnimator.setDuration(5000);
@@ -113,6 +114,7 @@ public class RadioInfoPlayLayout extends LinearLayout {
 
     public void stopAnimation() {
         mRotateAnimation.cancel();
+        mVoiceCover.clearAnimation();
 //        mVoiceAnimator.end();
     }
 
@@ -133,6 +135,7 @@ public class RadioInfoPlayLayout extends LinearLayout {
     }
 
     public void setMediaPlayProgress(int mediaPlayCurrentPosition, int totalDuration) {
+        Log.d(TAG, "setMediaPlayProgress: " + mediaPlayCurrentPosition + "  " + totalDuration);
         if (totalDuration != 0) {
             mRadioSeekBar.setMax(totalDuration);
             setRadioProgress(mediaPlayCurrentPosition);
@@ -148,10 +151,21 @@ public class RadioInfoPlayLayout extends LinearLayout {
                     .circleCrop()
                     .into(mVoiceCover);
             mRadioTotalLength.setText(DateUtil.formatMediaLength(radio.getAudioTime()));
-            mListenNumber.setText(String.valueOf(radio.getViewNumber()));
+            setListenNumber(radio.getViewNumber());
             mRadioSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
             setPlayStatus(radio);
         }
+    }
+
+    public void updateListenNumber() {
+        if (mRadio != null) {
+            mRadio.setViewNumber(mRadio.getViewNumber() + 1);
+            setListenNumber(mRadio.getViewNumber());
+        }
+    }
+
+    public void setListenNumber(int listenNumber) {
+        mListenNumber.setText(String.valueOf(listenNumber));
     }
 
     public void onPlayStop() {
