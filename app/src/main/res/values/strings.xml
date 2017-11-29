@@ -386,7 +386,7 @@
     <string name="pattern">模式</string>
     <string name="integral_war">积分战</string>
     <string name="ingot_war">元宝战</string>
-    <string name="integral">积分</string>
+    <string name="score">积分</string>
     <string name="ingot">元宝</string>
     <string name="cash">现金</string>
     <string name="versusing">对战中</string>
