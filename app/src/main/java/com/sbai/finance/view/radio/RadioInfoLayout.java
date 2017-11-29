@@ -27,7 +27,6 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.finance.view.ShrinkTextLayout;
 import com.sbai.glide.GlideApp;
@@ -181,7 +180,6 @@ public class RadioInfoLayout extends LinearLayout {
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
-                            ToastUtil.show(resp.getMsg());
                             if (mRadioDetails != null) {
                                 if (mRadioDetails.getIsSubscriber() == 1) {
                                     mRadioDetails.setIsSubscriber(0);

@@ -101,7 +101,7 @@ public class MissRadioLayout extends LinearLayout {
 
             Radio radio = radioList.get(i);
             GlideApp.with(getContext())
-                    .load(radio.getAudioCover())
+                    .load(radio.getRadioCover())
                     .into(radioCover);
             voiceName.setText(radio.getAudioName());
             radioUpdateTime.setText(DateUtil.formatDefaultStyleTime(radio.getModifyTime()));
