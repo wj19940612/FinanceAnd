@@ -189,6 +189,7 @@ public class CommentActivity extends BaseActivity {
                             Intent intent = new Intent();
                             intent.setAction(BROADCAST_ACTION_REPLY_SUCCESS);
                             intent.putExtra(ExtraKeys.QUESTION_ID, mDataId);
+                            setResult(RESULT_OK, intent);
                             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
                             Intent lastIntent = getIntent();
                             lastIntent.putExtra(ExtraKeys.QUESTION_ID,mDataId);
