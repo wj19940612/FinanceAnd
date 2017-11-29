@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.StockDetailActivity;
-import com.sbai.finance.activity.stock.StockTradeActivity;
 import com.sbai.finance.activity.stock.StockTradeOperateActivity;
 import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -78,13 +77,13 @@ public class StockPositionFragment extends BaseFragment {
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equalsIgnoreCase(StockOrderActivity.ACTION_SWITCH_ACCOUNT)) {
+            if (intent.getAction().equalsIgnoreCase(StockOrderActivity.ACTION_REFRESH_MANUAL)) {
                 StockUser newUser = LocalUser.getUser().getStockUser();
-                if (newUser != null && mStockUser != null && !newUser.getAccount().equalsIgnoreCase(mStockUser.getAccount())) {
-                    mPositionAdapter.clear();
-                }
                 mStockUser = newUser;
-                requestAsset();
+                requestAsset(true);
+            }
+            if (intent.getAction().equalsIgnoreCase(StockOrderActivity.ACTION_REFRESH_AUTO)) {
+                requestAsset(false);
             }
         }
     };
@@ -107,14 +106,16 @@ public class StockPositionFragment extends BaseFragment {
 
     private void initBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(StockOrderActivity.ACTION_SWITCH_ACCOUNT);
+        intentFilter.addAction(StockOrderActivity.ACTION_REFRESH_MANUAL);
+        intentFilter.addAction(StockOrderActivity.ACTION_REFRESH_AUTO);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, intentFilter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        requestAsset();
+        requestAsset(true);
+        startScheduleJob(5 * 1000);
     }
 
     @Override
@@ -126,25 +127,25 @@ public class StockPositionFragment extends BaseFragment {
     @Override
     public void onTimeUp(int count) {
         super.onTimeUp(count);
-        requestStockMarketData();
+        requestAsset(false);
     }
 
-    private void requestAsset() {
+    private void requestAsset(final boolean manualRefresh) {
         if (mStockUser == null) return;
-        startScheduleJob(5 * 1000);
         Client.getStockHoldingList(mStockUser.getType(), mStockUser.getAccount(), mStockUser.getActivityCode())
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<PositionRecords>, PositionRecords>() {
                     @Override
                     protected void onRespSuccessData(PositionRecords data) {
-                        updateAssetAndPosition(data);
+                        updateAssetAndPosition(data, manualRefresh);
                     }
                 }).fireFree();
     }
 
 
-    private void updateAssetAndPosition(PositionRecords data) {
+    private void updateAssetAndPosition(PositionRecords data, boolean manualRefresh) {
         mPositionMap.clear();
+        mPositionAdapter.setManualRefresh(manualRefresh);
         mPositionAdapter.clear();
         mPositionAdapter.addAll(data.getList());
         for (Position position : data.getList()) {
@@ -175,6 +176,11 @@ public class StockPositionFragment extends BaseFragment {
                             }
                         }
                     }).fireFree();
+        } else {
+            if (getActivity() instanceof StockOrderActivity) {
+                StockOrderActivity activity = (StockOrderActivity) getActivity();
+                activity.updateTotalFund();
+            }
         }
     }
 
@@ -288,8 +294,8 @@ public class StockPositionFragment extends BaseFragment {
         private Map<String, String> mLastPriceMap;
         private Context mContext;
         private int mIndex = -1;
-        private boolean mRefreshData;
         private ItemClickListener mItemClickListener;
+        private boolean mManualRefresh;
 
         interface ItemClickListener {
 
@@ -320,8 +326,11 @@ public class StockPositionFragment extends BaseFragment {
 
         public void clear() {
             mPositionList.clear();
-            mRefreshData = true;
             notifyDataSetChanged();
+        }
+
+        public void setManualRefresh(boolean manualRefresh) {
+            mManualRefresh = manualRefresh;
         }
 
         public void addStockData(List<StockData> stockDataList) {
@@ -424,14 +433,21 @@ public class StockPositionFragment extends BaseFragment {
                 mLastPrice.setTextColor(color);
                 mCostPrice.setText(FinanceUtil.formatWithScale(stockPosition.getAvgBuyPrice(), 3));
                 mCostPrice.setTextColor(color);
-                mOperateArea.setVisibility(View.GONE);
-                if (position == mIndex && !mRefreshData) {
-                    mOperateArea.setVisibility(View.VISIBLE);
+                if (mIndex > -1 && mPositionList.size() > mIndex && mPositionList.get(mIndex) != null) {
+                    if (!mManualRefresh && position == mIndex && mPositionList.get(mIndex).getId() == stockPosition.getId()) {
+                        mOperateArea.setVisibility(View.VISIBLE);
+                    } else {
+                        mOperateArea.setVisibility(View.GONE);
+                        mIndex = -1;
+                    }
+                } else {
+                    mOperateArea.setVisibility(View.GONE);
+                    mIndex = -1;
                 }
+
                 mPositionArea.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mRefreshData = false;
                         if (mOperateArea.getVisibility() == View.VISIBLE) {
                             mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 200));
                             mIndex = -1;

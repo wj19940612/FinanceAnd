@@ -270,6 +270,7 @@ public class StockListFragment extends BaseFragment
     }
 
     private void updateStockIndexMarketData(List<StockData> data) {
+        if (getContext() == null) return;
         // 2.判断涨跌
         int redColor = ContextCompat.getColor(getContext(), R.color.redPrimary);
         int greenColor = ContextCompat.getColor(getContext(), R.color.greenAssist);
