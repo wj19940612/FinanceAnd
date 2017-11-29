@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -190,6 +191,7 @@ public class Preference {
         if (LocalUser.getUser().isLogin()) {
             key = LocalUser.getUser().getUserInfo().getUserPhone() + key;
         }
+        Log.d("wangjie", "setAnswerIds: "+key);
         apply(key, answerIds);
     }
 
@@ -198,6 +200,7 @@ public class Preference {
         if (LocalUser.getUser().isLogin()) {
             key = LocalUser.getUser().getUserInfo().getUserPhone() + key;
         }
+        Log.d("wangjie", "getAnswerIds: "+key);
         return mPrefs.getString(key, null);
     }
 

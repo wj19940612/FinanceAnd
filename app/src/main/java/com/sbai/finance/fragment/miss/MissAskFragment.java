@@ -389,6 +389,7 @@ public class MissAskFragment extends MediaPlayFragment {
                                 mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION);
                             }
                         }
+                        updateQuestionListenCount(item);
                     }
                 }
             }
