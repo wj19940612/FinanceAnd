@@ -54,7 +54,6 @@ public class WaitAnswerFragment extends BaseFragment {
     private AnswerAdapter mAnswerAdapter;
     private int mPage;
     private int mAnswerType = 1;
-    private WaitForMeAnswerActivity.NoReadNewsCallback mNoReadNewsCallback;
 
     public static WaitAnswerFragment newInstance(int type) {
         WaitAnswerFragment fragment = new WaitAnswerFragment();
@@ -62,10 +61,6 @@ public class WaitAnswerFragment extends BaseFragment {
         bundle.putInt(ANSWER_TYPE, type);
         fragment.setArguments(bundle);
         return fragment;
-    }
-
-    public void setNoReadCountListener(WaitForMeAnswerActivity.NoReadNewsCallback noReadCountListener) {
-        mNoReadNewsCallback = noReadCountListener;
     }
 
     @Override
@@ -137,9 +132,6 @@ public class WaitAnswerFragment extends BaseFragment {
                     @Override
                     protected void onRespSuccessData(List<Answer> data) {
                         updateAnswerList(data);
-                        if (mNoReadNewsCallback != null) {
-                            mNoReadNewsCallback.noReadNews(data.size());
-                        }
                     }
 
                     @Override

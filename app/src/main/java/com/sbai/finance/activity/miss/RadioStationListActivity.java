@@ -114,7 +114,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
     }
 
     private void initHeaderView() {
-        LinearLayout header = (LinearLayout) getLayoutInflater().inflate(R.layout.view_header_radio_station_detail, mRoot, false);
+        LinearLayout header = (LinearLayout) getLayoutInflater().inflate(R.layout.view_header_radio_station_detail, mListView, false);
         mCover = header.findViewById(R.id.cover);
         mSubscribe = header.findViewById(R.id.subscribe);
         mSubscribed = header.findViewById(R.id.subscribed);
@@ -228,7 +228,7 @@ public class RadioStationListActivity extends BaseActivity implements AdapterVie
         if (layout != null) {
             int lines = layout.getLineCount();
             if (lines > 0) {
-                if (layout.getEllipsisCount(lines - 1) > 0) {
+                if (layout.getEllipsisCount(1) > 0) {
                     return true;
                 }
             }

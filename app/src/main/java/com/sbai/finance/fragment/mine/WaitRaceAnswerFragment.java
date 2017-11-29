@@ -49,15 +49,10 @@ public class WaitRaceAnswerFragment extends BaseFragment {
     private RaceAnswerAdapter mRaceAnswerAdapter;
     private int mPage;
     private int mAnswerType = 1;
-    private WaitForMeAnswerActivity.NoReadNewsCallback mNoReadNewsCallback;
 
     public static WaitRaceAnswerFragment newInstance() {
         WaitRaceAnswerFragment fragment = new WaitRaceAnswerFragment();
         return fragment;
-    }
-
-    public void setNoReadCountListener(WaitForMeAnswerActivity.NoReadNewsCallback noReadCountListener) {
-        mNoReadNewsCallback = noReadCountListener;
     }
 
     @Override
@@ -132,9 +127,6 @@ public class WaitRaceAnswerFragment extends BaseFragment {
                     @Override
                     protected void onRespSuccessData(List<Answer> data) {
                         updateRaceList(data);
-                        if (mNoReadNewsCallback != null) {
-                            mNoReadNewsCallback.noReadNews(data.size());
-                        }
                     }
 
                     @Override

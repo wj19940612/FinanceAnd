@@ -245,7 +245,7 @@ public class MySubscribeActivity extends BaseActivity {
                 mTitle.setText(radioInfo.getRadioName());
                 setSpanIconText(mSubtitle, radioInfo.getRadioIntroduction(), context);
                 mNumber.setText(String.valueOf(radioInfo.getListenNumber()));
-                mTime.setText(DateUtil.formatDefaultStyleTime(radioInfo.getCreateTime()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(radioInfo.getSubscribeTime()));
                 if (radioInfo.getIsRead() != 0) {
                     mIconView.setVisibility(View.GONE);
                 } else {
