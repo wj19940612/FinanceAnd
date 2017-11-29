@@ -190,7 +190,9 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
         mRadioAdapter.setCallback(new RadioAdapter.CallBack() {
             @Override
             public void onItemClick(RadioInfo radioInfo) {
-                Launcher.with(getActivity(), RadioStationListActivity.class).putExtra(Launcher.EX_PAYLOAD, radioInfo.getId()).execute();
+                Launcher.with(getActivity(), RadioStationListActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, radioInfo.getId())
+                        .execute();
             }
         });
 

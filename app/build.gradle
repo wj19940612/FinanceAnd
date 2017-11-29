@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    //compileSdkVersion 27 todo release use this
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion '27.0.1'
 
     defaultConfig { // default is prod
@@ -101,10 +100,10 @@ android {
         }
 
         alpha {
-            applicationId "com.sbai.finance.alpha"
+//            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-Alpha'
-            versionCode 142
-            versionName "2.0.111604"
+            versionCode 144
+            versionName "2.0.1128"
             buildConfigField('String', 'HOST', '\"testlemi.ailemi.com\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 
@@ -185,8 +184,3 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
-
-
-
-
-

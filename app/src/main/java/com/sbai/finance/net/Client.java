@@ -6,6 +6,7 @@ import com.sbai.finance.App;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.levelevaluation.QuestionAnswer;
+import com.sbai.finance.model.local.StockOrder;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.httplib.ApiParams;
 
@@ -77,6 +78,16 @@ public class Client {
                         .put("page", page)
                         .put("pageSize", pageSize)
                         .put("smallVarietyTypeCode", smallVarietyTypeCode));
+    }
+
+
+    /**
+     * 获取股票账户列表
+     *
+     * @return
+     */
+    public static API getStockAccountList() {
+        return new API("/api/stock-or/account/info.do");
     }
 
     /**
@@ -3016,8 +3027,109 @@ public class Client {
     }
 
     /**
+     * <<<<<<< HEAD
+     *
+     * @param positionType
+     * @param userAccount
+     * @param activityCode
+     * @param page
+     * @return
+     */
+    public static API requestTodayBusiness(int positionType, String userAccount, String activityCode, int page) {
+        return new API("/api/stock-or/position/bargain.do", new ApiParams()
+                .put("positionType", positionType)
+                .put("userAccount", userAccount)
+                .put("activityCode", activityCode)
+                .put("page", page));
+    }
+
+    /**
+     * @param positionType
+     * @param userAccount
+     * @param activityCode
+     * @param page
+     * @return
+     */
+    public static API requestHistoryBusiness(int positionType, String userAccount, String activityCode, String startTime, String endTime, int page) {
+        return new API("/api/stock-or/position/bargain.do", new ApiParams()
+                .put("positionType", positionType)
+                .put("userAccount", userAccount)
+                .put("activityCode", activityCode)
+                .put("stime", startTime)
+                .put("etime", endTime)
+                .put("page", page));
+    }
+
+    /**
+     * 获取股票持仓数据
+     *
+     * @param positionType
+     * @param userAccount
+     * @param activityCode
+     * @return
+     */
+    public static API getStockHoldingList(int positionType, String userAccount, String activityCode) {
+        return new API("/api/stock-or/position/asset.do", new ApiParams()
+                .put("positionType", positionType)
+                .put("userAccount", userAccount)
+                .put("activityCode", activityCode)
+                .put("pageSize", 100000)
+                .put("page", 0));
+    }
+
+    /**
+     * 股票下单
+     *
+     * @param stockOrder
+     * @return
+     */
+    public static API markStockOrder(StockOrder stockOrder) {
+        return new API(POST, "/api/stock-or/declare/bid.do", new ApiParams(StockOrder.class, stockOrder));
+    }
+
+    /**
+     * 查询委托记录
+     *
+     * @param positionType
+     * @param userAccount
+     * @param activityCode
+     * @param page
+     * @return
+     */
+    public static API requestEntrust(int positionType, String userAccount, String activityCode, int page) {
+        return new API("/api/stock-or/declare/bargain.do", new ApiParams()
+                .put("positionType", positionType)
+                .put("userAccount", userAccount)
+                .put("activityCode", activityCode)
+                .put("page", page)
+                .put("pageSize", 10000));
+    }
+
+    /**
+     * 撤单
+     *
+     * @param id
+     * @return
+     */
+    public static API requestWithdraw(int id, String account) {
+        return new API(POST, "/api/stock-or/declare/cancel.do", new ApiParams()
+                .put("id", id)
+                .put("account", account));
+    }
+
+    /**
+     * 切换账号
+     */
+    public static API requestSwitchAccount(int id, String account) {
+        return new API(POST, "/api/stock-or/account/switchover.do", new ApiParams()
+                .put("id", id)
+                .put("account", account));
+    }
+
+    /**
      * 电台详情
      */
+
     public static API requestRadioDetail(int radioId) {
         return new API("/explain/radioManage/queryRadioByRadioIdForApp.do", new ApiParams().put("radioId", radioId));
     }
@@ -3150,16 +3262,15 @@ public class Client {
     /**
      * 等我答，待抢答，已回答
      */
-    public static API waitMeAnswer(int type){
+    public static API waitMeAnswer(int type) {
         return new API("/user/user/waitMeAnswer.do", new ApiParams().put("type", type));
     }
 
     /**
      * 等我答所有的条数
      */
-    public static API waitMeAnswerNum(){
+    public static API waitMeAnswerNum() {
         return new API("/user/user/waitMeAnswerNum.do");
 
     }
-
 }

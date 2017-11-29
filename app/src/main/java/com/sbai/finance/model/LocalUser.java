@@ -5,12 +5,15 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.sbai.finance.Preference;
 import com.sbai.finance.model.mine.UserInfo;
+import com.sbai.finance.model.stock.StockUser;
 
 public class LocalUser {
     private static LocalUser sLocalUser;
 
     private UserInfo mUserInfo;
     private String mPhone;
+
+    private StockUser mStockUser;
 
     public static LocalUser getUser() {
         if (sLocalUser == null) {
@@ -34,6 +37,11 @@ public class LocalUser {
         Preference.get().setUserJson(userJson);
     }
 
+    public void setStockUser(StockUser stockUser) {
+        mStockUser = stockUser;
+        saveToPreference();
+    }
+
     public void setUserInfo(UserInfo userInfo, String phone) {
         mUserInfo = userInfo;
         mPhone = phone;
@@ -50,7 +58,6 @@ public class LocalUser {
         saveToPreference();
     }
 
-
     public UserInfo getUserInfo() {
         return mUserInfo;
     }
@@ -61,6 +68,10 @@ public class LocalUser {
 
     public boolean isLogin() {
         return mUserInfo != null;
+    }
+
+    public StockUser getStockUser() {
+        return mStockUser;
     }
 
     public void logout() {
@@ -79,9 +90,10 @@ public class LocalUser {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "LocalUser{" +
                 "mUserInfo=" + mUserInfo +
+                ", mPhone='" + mPhone + '\'' +
+                ", mStockUser=" + mStockUser +
                 '}';
     }
-
 }

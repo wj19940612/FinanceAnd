@@ -33,6 +33,7 @@ public interface ExtraKeys {
 
     String MAIN_PAGE_CURRENT_ITEM = "main_page_currentItem";
     String ACTIVITY = "activity";
+
     String VARIETY = "variety";
 
     String QUESTION_ID = "question_id";
@@ -51,7 +52,7 @@ public interface ExtraKeys {
     String ARENA_VIRTUAL_AWARD_NAME = "Arena_virtual_award_name";
 
     String WEB_PAGE_URL = "web_page_url";
-
+    String STOCK_USER = "stock_user";
     String RADIO = "radio";
     String IAudio = "IAudio";
     String MEDIA_PROGRESS = "media_progress";

@@ -202,6 +202,7 @@ public class BaseActivity extends BattlePushActivity implements
     protected void stopScheduleJob() {
         if (mTimerHandler != null) {
             mTimerHandler.removeCallbacksAndMessages(null);
+            mTimerHandler.resetCount();
         }
     }
 

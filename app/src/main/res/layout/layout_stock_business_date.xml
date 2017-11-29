@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="horizontal"
+    android:paddingBottom="17dp"
+    android:paddingTop="17dp">
+
+    <LinearLayout
+        android:id="@+id/startTimeArea"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:drawablePadding="4dp"
+            android:drawableRight="@drawable/ic_down"
+            android:text="@string/start_time_stock"
+            android:textColor="@color/unluckyText"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/startTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blackPrimary"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            tool:text="2017-10-12"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/background"/>
+
+    <LinearLayout
+        android:id="@+id/endTimeArea"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:drawablePadding="4dp"
+            android:drawableRight="@drawable/ic_down"
+            android:text="@string/end_time"
+            android:textColor="@color/unluckyText"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/endTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blackPrimary"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            tool:text="2017-10-12"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>

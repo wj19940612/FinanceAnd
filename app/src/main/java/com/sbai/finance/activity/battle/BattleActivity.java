@@ -557,7 +557,7 @@ public class BattleActivity extends BaseActivity {
         if (mBattle.getCoinType() == 2) {
             return getString(R.string.ingot);
         }
-        return getString(R.string.integral);
+        return getString(R.string.score);
     }
 
     private void showRoomOvertimeDialog() {

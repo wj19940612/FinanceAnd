@@ -10,10 +10,10 @@
         android:layout_height="match_parent"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/ask5"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -53,6 +53,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ask4"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -91,6 +92,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ask3"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -129,6 +131,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ask2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -167,6 +170,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ask1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -210,6 +214,7 @@
             android:background="#838489"/>
 
         <LinearLayout
+            android:id="@+id/bid1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -248,6 +253,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/bid2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -286,6 +292,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/bid3"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -324,6 +331,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/bid4"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -362,6 +370,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/bid5"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

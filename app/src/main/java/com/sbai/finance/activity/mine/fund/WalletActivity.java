@@ -63,13 +63,13 @@ public class WalletActivity extends BaseActivity {
     private void initViewPager() {
         mFundFragmentAdapter = new FundFragmentAdapter(getSupportFragmentManager(), getActivity());
         mViewPager.setAdapter(mFundFragmentAdapter);
-        mViewPager.setOffscreenPageLimit(1);
+        mViewPager.setOffscreenPageLimit(2);
 
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(30, getResources()));
         mTabLayout.setPadding(Display.dp2Px(12, getResources()));
-        mTabLayout.setTabViewTextColor(Color.WHITE);
+        mTabLayout.setTabViewTextColor(android.R.color.white);
         mTabLayout.setSelectedIndicatorColors(Color.WHITE);
         mTabLayout.setHasBottomBorder(false);
         mTabLayout.setViewPager(mViewPager);
@@ -291,15 +291,15 @@ public class WalletActivity extends BaseActivity {
                     return AccountFundDetailFragment.newInstance(AccountFundDetail.TYPE_INGOT);
                 case 1:
                     return AccountFundDetailFragment.newInstance(AccountFundDetail.TYPE_CRASH);
-//                case 2:
-//                    return AccountFundDetailFragment.newInstance(AccountFundDetail.TYPE_SCORE);
+                case 2:
+                    return AccountFundDetailFragment.newInstance(AccountFundDetail.TYPE_SCORE);
             }
             return null;
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -309,8 +309,8 @@ public class WalletActivity extends BaseActivity {
                     return mContext.getString(R.string.ingot);
                 case 1:
                     return mContext.getString(R.string.cash);
-//                case 2:
-//                    return mContext.getString(R.string.score);
+                case 2:
+                    return mContext.getString(R.string.score);
             }
             return super.getPageTitle(position);
         }

@@ -266,9 +266,9 @@ public class MyCollectQuestionFragment extends BaseFragment {
                 if (question.isQuestionSolved()) {
                     mContent.setSelected(true);
                     mTitle.setEnabled(true);
-                    String priseCount = FinanceUtil.formatTenThousandNumber(question.getPriseCount());
-                    String replyCount = FinanceUtil.formatTenThousandNumber(question.getReplyCount());
-                    String awardCount = FinanceUtil.formatTenThousandNumber(question.getAwardCount());
+                    String priseCount = FinanceUtil.unitize(question.getPriseCount(), 1);
+                    String replyCount = FinanceUtil.unitize(question.getReplyCount() ,1);
+                    String awardCount = FinanceUtil.unitize(question.getAwardCount(), 1);
                     mContent.setText(context.getString(R.string.question_replay_content_award, priseCount, replyCount, awardCount));
 
                 } else {

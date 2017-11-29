@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backFeature="true"
-        app:backIcon="@drawable/ic_tb_back_white"
+        app:backIcon="@drawable/ic_tb_back_black"
         app:customView="@layout/tb_stock_name"
         app:rightImage="@drawable/ic_add_optional_of_title"
         app:rightText="@string/optional"
@@ -330,8 +330,8 @@
             android:id="@+id/moreDataDownArrow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
             android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:src="@drawable/ic_down_arrow"/>
     </LinearLayout>
 
@@ -408,7 +408,7 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <Button
-        android:id="@+id/mockTrading"
+        android:id="@+id/mockTrade"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_primary"

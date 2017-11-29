@@ -796,7 +796,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
 
     private void showRealNameIsCheckingDialog() {
         SmartDialog.single(getActivity(), getString(R.string.you_is_real_name_wait_please_wait))
-                .setPositiveVisable(View.GONE)
+                .setPositiveVisible(View.GONE)
                 .setNegative(R.string.i_see)
                 .show();
     }
@@ -982,7 +982,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
 
                 case ArenaApplyRule.PAY_FUND_TYPE_CREDIT:
                     return getString(R.string.ingot_is_not_enough,
-                            getString(R.string.integral),
+                            getString(R.string.score),
                             String.valueOf((int) mArenaApplyRule.getMoney()));
 
                 case ArenaApplyRule.PAY_FUND_TYPE_CRASH:

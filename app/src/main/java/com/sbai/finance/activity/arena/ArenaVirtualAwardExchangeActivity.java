@@ -27,7 +27,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
-import com.sbai.finance.utils.ValidityDecideUtil;
+import com.sbai.finance.utils.ValidityCheckUtil;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.httplib.ApiIndeterminate;
 
@@ -78,7 +78,7 @@ public class ArenaVirtualAwardExchangeActivity extends DialogBaseActivity {
         mGameArea.setFilters(new InputFilter[]{new InputFilter() {
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                if (ValidityDecideUtil.isGameAreaLegal(source)) {
+                if (ValidityCheckUtil.isGameAreaLegal(source)) {
                     return source;
                 }
                 return "";

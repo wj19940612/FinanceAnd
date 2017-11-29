@@ -31,6 +31,7 @@ public class Preference {
         String SERVICE_PHONE = "servicePhone";
         String SERVICE_QQ = "serviceQQ";
         String USER_JSON = "userJson";
+        String STOCK_USER_JSON = "stockUserJson";
         String PUSH_CLIENT_ID = "PUSH_CLIENT_ID";
         String SERVER_IP_PORT = "server_ip_port";
         String SERVER_TIME = "server_time";
@@ -117,6 +118,14 @@ public class Preference {
 
     public String getUserJson() {
         return mPrefs.getString(Key.USER_JSON, null);
+    }
+
+    public void setStockUserJson(String stockUserJson) {
+        apply(Key.STOCK_USER_JSON, stockUserJson);
+    }
+
+    public String getStockUserJson() {
+        return mPrefs.getString(Key.STOCK_USER_JSON, null);
     }
 
     public void setPushClientId(String clientId) {

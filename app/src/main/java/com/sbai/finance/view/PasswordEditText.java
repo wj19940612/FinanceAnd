@@ -26,7 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.utils.PasswordInputFilter;
+import com.sbai.finance.utils.inputfilter.PasswordInputFilter;
 
 import java.lang.reflect.Field;
 

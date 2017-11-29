@@ -241,7 +241,7 @@ public class BattleHisRecordActivity extends BaseActivity implements CustomSwipe
                         reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.cash));
                         break;
                     case Battle.COIN_TYPE_SCORE:
-                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.integral));
+                        reward = context.getString(R.string.battle_reward_, item.getReward(), context.getString(R.string.score));
                         break;
                 }
                 String varietyReward = context.getString(R.string.future_type_reward, item.getVarietyName(), reward);

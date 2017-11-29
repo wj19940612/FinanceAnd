@@ -71,6 +71,8 @@ import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
 public class MissTalkFragment extends MediaPlayFragment implements MissAskFragment.OnMissAskPageListener {
 
+    private static final int RECOMMEND_RADIO_REFRESH_TIME = 1000 * 60 * 3;
+
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.recyclerView)
@@ -117,6 +119,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         initFloatView();
         requestRadioList();
         requestMissSwitcherList();
+        startScheduleJob(RECOMMEND_RADIO_REFRESH_TIME);
     }
 
 
@@ -136,6 +139,12 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         requestMissList();
         mMissRadioLayout.updatePlayStatus();
         updateRadioFloatWindow();
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        requestRadioList();
     }
 
     private void updateRadioFloatWindow() {
@@ -329,10 +338,8 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             }
         });
 
-
         mMissAskFragmentAdapter = new MissAskFragmentAdapter(getChildFragmentManager(), getActivity(), this);
         mViewPager.setOffscreenPageLimit(1);
-        mViewPager.setCurrentItem(0, false);
         mViewPager.setAdapter(mMissAskFragmentAdapter);
         mViewPager.post(new Runnable() {
             @Override
@@ -342,12 +349,11 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         });
         mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-        mSlidingTabLayout.setPadding(Display.dp2Px(15, getResources()));
         mSlidingTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(60, getResources()));
         mSlidingTabLayout.setSelectedIndicatorHeight(2);
-        mSlidingTabLayout.setTabViewTextSize(16);
-        mSlidingTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.sliding_tab_text));
+        mSlidingTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.primary_or_unlucky_text_color));
         mSlidingTabLayout.setViewPager(mViewPager);
+        mViewPager.setCurrentItem(0, false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -578,6 +584,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        stopScheduleJob();
     }
 
     public static class MissListAdapter extends RecyclerView.Adapter<MissListAdapter.ViewHolder> {

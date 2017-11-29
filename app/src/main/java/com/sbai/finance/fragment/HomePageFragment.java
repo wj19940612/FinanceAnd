@@ -1,7 +1,5 @@
 package com.sbai.finance.fragment;
 
-import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -10,29 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sbai.finance.ExtraKeys;
-import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.arena.RewardActivity;
-import com.sbai.finance.activity.battle.BattleListActivity;
-import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.home.AllTrainingListActivity;
 import com.sbai.finance.activity.home.BroadcastListActivity;
 import com.sbai.finance.activity.home.StockFutureActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsListActivity;
-import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.mine.fund.WalletActivity;
-import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
-import com.sbai.finance.activity.mine.userinfo.CreditApproveActivity;
-import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
-import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
-import com.sbai.finance.activity.training.CreditIntroduceActivity;
+import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.activity.training.TrainingDetailActivity;
 import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.model.Banner;
@@ -62,7 +50,6 @@ import com.sbai.finance.view.HomeTitleView;
 import com.sbai.finance.view.ImportantNewsView;
 import com.sbai.finance.view.LeaderBoardView;
 import com.sbai.finance.view.SevenHourNewsView;
-import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.VerticalScrollTextView;
 import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.httplib.ApiError;
@@ -241,6 +228,15 @@ public class HomePageFragment extends BaseFragment {
                 umengEventCount(UmengCountEventId.PAGE_STUDY_ROOM);
                 Launcher.with(getActivity(), StudyRoomActivity.class).execute();
                 //点击一日一题
+            }
+
+            @Override
+            public void onStockSimulate() {
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), StockOrderActivity.class).execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
             }
         });
         mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener()
@@ -874,6 +870,7 @@ public class HomePageFragment extends BaseFragment {
     public void onDestroyView() {
         mHasEnter = false;
         super.onDestroyView();
+        mHomeTitleView.freeGif();
         unbinder.unbind();
     }
 }

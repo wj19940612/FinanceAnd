@@ -60,7 +60,8 @@
     <string name="all_day_news">7x24小时</string>
     <string name="focus_news">要闻</string>
     <string name="week_">星期%1$s</string>
-
+    <string name="practice">练一练</string>
+    <string name="study_room">一日一题</string>
     <!--opinion-->
 
     <!--optional-->
@@ -385,7 +386,7 @@
     <string name="pattern">模式</string>
     <string name="integral_war">积分战</string>
     <string name="ingot_war">元宝战</string>
-    <string name="integral">积分</string>
+    <string name="score">积分</string>
     <string name="ingot">元宝</string>
     <string name="cash">现金</string>
     <string name="versusing">对战中</string>
@@ -445,7 +446,7 @@
     <string name="plus_int">+%1$d</string>
     <string name="minus_int">-%1$d</string>
     <!--  聚宝盆  -->
-    <string name="exchange_rule">规则</string>
+    <string name="rule">规则</string>
     <string name="ingot_number">%1$s  元宝</string>
     <string name="integrate_number">%1$s  积分</string>
     <string name="go_recharge">去充值</string>
@@ -920,6 +921,45 @@
     <string name="hello_evening">晚上好，%1$s！</string>
     <string name="read_count_">阅 %1$d</string>
 
+    <!--trade-->
+    <string name="today_profit">今日收益</string>
+    <string name="total_fund">总资产</string>
+    <string name="total_position">持仓总市值</string>
+    <string name="position_float">持仓浮动盈亏</string>
+    <string name="enable_fund">可用资金</string>
+    <string name="fetch_fund">可取资金</string>
+    <string name="buy">买入</string>
+    <string name="sell">卖出</string>
+    <string name="stock_simulate_trade">A股模拟交易</string>
+    <string name="position">持仓</string>
+    <string name="entrust">委托</string>
+    <string name="history">历史</string>
+    <string name="stock_game_rule">规则</string>
+    <string name="name_position_value">名称/市值</string>
+    <string name="position_enable_amount">持仓/可卖</string>
+    <string name="last_price_cost_price">现价/成本</string>
+    <string name="float_fund">盈亏</string>
+    <string name="detail">详情</string>
+    <string name="today_business">当日成交</string>
+    <string name="history_business">历史成交</string>
+    <string name="entrust_status">交易状态</string>
+    <string name="stock_name_code">名称/代码</string>
+    <string name="amount_price">数量/价格</string>
+    <string name="business_fund">成交额</string>
+    <string name="business_time">成交时间</string>
+    <string name="entrust_time">委托时间</string>
+    <string name="stock_withdraw">撤单</string>
+    <string name="wait_business">等待成交</string>
+    <string name="wait_withdraw">等待撤单</string>
+    <string name="part_business">部分成交</string>
+    <string name="all_business">全部成交</string>
+    <string name="type">类型</string>
+    <string name="start_time_stock">起始时间</string>
+    <string name="end_time">终止时间</string>
+    <string name="tips">温馨提示</string>
+    <string name="is_confirm_withdraw">订单撤销后将无法恢复，是否确定\n撤销该订单?</string>
+    <string name="confirm_withdraw">确定撤单</string>
+    <string name="stock_simulate">A股模拟</string>
 
     <!--姐说-->
     <string name="radio">电台</string>
@@ -945,5 +985,41 @@
     <string name="equity">总股本</string>
     <string name="marketValue">总市值</string>
     <string name="mock_trading">模拟交易</string>
+    <string name="buy_in">买入</string>
+    <string name="sell_out">卖出</string>
+    <string name="buy_volume">买入量</string>
+    <string name="sell_price">卖出价</string>
+    <string name="sell_volume">卖出量</string>
+    <string name="limit_up_x">涨停：</string>
+    <string name="limit_down_x">跌停：</string>
+    <string name="full_position">全仓</string>
+    <string name="half_position">1/2仓</string>
+    <string name="quarter_position">1/4仓</string>
+    <string name="sell_out_right_now">立即卖出</string>
+    <string name="buy_in_right_now">立即买入</string>
+    <string name="stock_name_and_market_value">名称/市值</string>
+    <string name="holding_and_salable">持仓/可卖</string>
+    <string name="last_price_and_cost">现价/成本</string>
+    <string name="profit_and_loss">盈亏</string>
+    <string name="cost_price_describe">成本价=成交价+交易费用，成本价表示您在这个价位卖出不会亏损</string>
+    <string name="fetch_fund_describe">当日卖出的股票，资金可用于再次购买，但不可当日取出(T+1到账)</string>
+    <string name="know">知道了</string>
+    <string name="no_this_data">- -</string>
+    <string name="volume_can_buy_x">可买%1$d</string>
+    <string name="volume_can_sell_x">可卖%1$d</string>
+    <string name="entrust_buy_confirm">委托买入确认</string>
+    <string name="entrust_sell_confirm">委托卖出确认</string>
+    <string name="direction_x">方向：</string>
+    <string name="stock_x">股票：</string>
+    <string name="price_x">价格：</string>
+    <string name="volume_x">数量：</string>
+    <string name="fee_x">手续费：</string>
+    <string name="total_value_x">总价：</string>
+    <string name="yuan">元</string>
+    <string name="about_x_yuan_without_fee">约%1$s元，不含手续费</string>
+    <string name="buy_success_check_entrust">成功买入, 可在[委托]查看</string>
+    <string name="sell_success_check_entrust">成功卖出，可在[委托]查看</string>
+    <string name="stay_current_page">留在当前页</string>
+    <string name="check_entrust">查看委托</string>
     <string name="zero">0</string>
 </resources>

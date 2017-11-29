@@ -59,9 +59,9 @@ public class EvaluationResultActivity extends BaseActivity {
         mScoreView.setData(data);
         setScoreView(data.getLevel());
         mAccuracyHint.setText(getString(R.string.accuracy_ranking,
-                FinanceUtil.formatToPercentageReplaceZero(data.getAllAccuracy(), 2),
-                FinanceUtil.formatFloorPercent(data.getPassPercent())));
-        mAccuracy.setText(FinanceUtil.formatToPercentageReplaceZero(data.getAllAccuracy(), 2));
+                FinanceUtil.formatToPercentageRemoveTailZero(data.getAllAccuracy(), 2),
+                FinanceUtil.downToIntegerPercentage(data.getPassPercent())));
+        mAccuracy.setText(FinanceUtil.formatToPercentageRemoveTailZero(data.getAllAccuracy(), 2));
     }
 
     public void setScoreView(int result) {
