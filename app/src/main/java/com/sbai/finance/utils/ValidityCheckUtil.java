@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * 字符串合法性的判断
  */
 
-public class ValidityDecideUtil {
+public class ValidityCheckUtil {
 
     /**
      * 限制昵称只能输入中文、字母和数字
@@ -47,5 +47,18 @@ public class ValidityDecideUtil {
     public static boolean isIdentityCard(String identityCard) {
         Pattern compile = Pattern.compile("\\d{17}[\\d|x]|\\d{15}");
         return compile.matcher(identityCard).matches();
+    }
+
+    /**
+     * 检查是否是数字
+     *
+     * @param sequence
+     * @return
+     */
+    public static boolean isNumber(CharSequence sequence) {
+        if (sequence != null) {
+            return sequence.toString().matches("\\d+(?:\\.\\d+)?");
+        }
+        return false;
     }
 }

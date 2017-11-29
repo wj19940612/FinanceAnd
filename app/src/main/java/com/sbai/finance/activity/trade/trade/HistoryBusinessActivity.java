@@ -99,8 +99,8 @@ public class HistoryBusinessActivity extends BaseActivity {
     }
 
     private void initView() {
-        mStartTime.setText(DateUtil.format(System.currentTimeMillis() - 6 * 24 * 60 * 60 * 1000, "yyyy-MM-dd"));
-        mEndTime.setText(DateUtil.format(System.currentTimeMillis(), "yyyy-MM-dd"));
+        mStartTime.setText(DateUtil.format(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000, "yyyy-MM-dd"));
+        mEndTime.setText(DateUtil.format(System.currentTimeMillis() - 1 * 24 * 60 * 60 * 1000, "yyyy-MM-dd"));
     }
 
     @OnClick({R.id.startTimeArea, R.id.endTimeArea})

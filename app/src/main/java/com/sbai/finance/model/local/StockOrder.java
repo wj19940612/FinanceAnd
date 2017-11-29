@@ -1,5 +1,8 @@
 package com.sbai.finance.model.local;
 
+import static com.sbai.finance.utils.StockUtil.FEE_RATE;
+import static com.sbai.finance.utils.StockUtil.STAMP_TAX_RATE;
+
 /**
  * Modified by john on 27/11/2017
  * <p>
@@ -56,8 +59,15 @@ public class StockOrder {
         return deputeType;
     }
 
+    public double getFee() {
+        if (deputeType == DEPUTE_TYPE_ENTRUST_SELL) {
+            return price * quantity * FEE_RATE + price * quantity * STAMP_TAX_RATE;
+        }
+        return price * quantity * FEE_RATE;
+    }
+
     public double getValue() {
-        return price * quantity;
+        return getFee() + price * quantity;
     }
 
     public static final class Builder {

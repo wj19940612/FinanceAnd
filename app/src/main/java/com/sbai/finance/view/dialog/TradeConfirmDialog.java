@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.model.local.StockOrder;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.StockUtil;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.view.SmartDialog;
 
@@ -83,7 +82,8 @@ public class TradeConfirmDialog {
                     String.valueOf(mStockOrder.getPrice()), color));
             mVolume.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.volume_x),
                     String.valueOf(mStockOrder.getQuantity()), color));
-            mFee.setText(StockUtil.NULL_VALUE);
+            mFee.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.fee_x),
+                    FinanceUtil.formatWithScale(mStockOrder.getFee()), color));
             mTotalValue.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.total_value_x),
                     FinanceUtil.formatWithThousandsSeparator(mStockOrder.getValue()) + yuan, color));
             mConfirm.setTextColor(color);
@@ -98,7 +98,8 @@ public class TradeConfirmDialog {
                     String.valueOf(mStockOrder.getPrice()), color));
             mVolume.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.volume_x),
                     String.valueOf(mStockOrder.getQuantity()), color));
-            mFee.setText(StockUtil.NULL_VALUE);
+            mFee.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.fee_x),
+                    FinanceUtil.formatWithScale(mStockOrder.getFee()), color));
             mTotalValue.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.total_value_x),
                     FinanceUtil.formatWithThousandsSeparator(mStockOrder.getValue()) + yuan, color));
             mConfirm.setTextColor(color);

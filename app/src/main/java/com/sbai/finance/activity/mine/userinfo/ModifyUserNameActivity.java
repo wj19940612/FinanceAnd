@@ -20,7 +20,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
-import com.sbai.finance.utils.ValidityDecideUtil;
+import com.sbai.finance.utils.ValidityCheckUtil;
 import com.sbai.finance.view.TitleBar;
 
 import butterknife.BindView;
@@ -47,7 +47,7 @@ public class ModifyUserNameActivity extends BaseActivity {
         mUserName.setFilters(new InputFilter[]{new InputFilter() {
                     @Override
                     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                        if (ValidityDecideUtil.isLegalNickName(source)) {
+                        if (ValidityCheckUtil.isLegalNickName(source)) {
                             return source;
                         }
                         return "";
@@ -99,7 +99,7 @@ public class ModifyUserNameActivity extends BaseActivity {
 
     private void submitNickName() {
         final String userName = mUserName.getText().toString().trim();
-        if (!ValidityDecideUtil.isLegalNickName(userName)) {
+        if (!ValidityCheckUtil.isLegalNickName(userName)) {
             ToastUtil.show(R.string.is_only_a_chinese_name);
             return;
         }
