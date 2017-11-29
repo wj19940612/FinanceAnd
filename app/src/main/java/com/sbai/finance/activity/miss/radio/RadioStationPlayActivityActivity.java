@@ -154,9 +154,6 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                 .setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
                     @Override
                     protected void onRespSuccessData(QuestionReply questionReply) {
-                        if (showToast) {
-                            ToastUtil.show("刷新成功");
-                        }
                         if (questionReply.getData() != null) {
                             updateRadioReply(questionReply.getData(), questionReply.getResultCount());
                         }
@@ -249,7 +246,29 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                     mPlayThisVoice = false;
                 }
             }
+        } else {
+            if (mRadio == null) return;
+            if (mMediaPlayService != null
+                    && !MissAudioManager.get().isStarted(mRadio)
+                    && !MissAudioManager.get().isPaused(mRadio)) {
+                mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
+                updateListenNumber();
+            }
         }
+    }
+
+    private void updateListenNumber() {
+        if (mRadio == null) return;
+        Client.listenRadioAudio(mRadio.getAudioId())
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Object>, Object>() {
+                    @Override
+                    protected void onRespSuccessData(Object data) {
+                        mRadioPlayLL.updateListenNumber();
+                    }
+                })
+                .fireFree();
     }
 
     private void requestAudioDetails() {
@@ -296,7 +315,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                                 try {
                                     Bitmap gaussianBlur = new RenderScriptGaussianBlur(getActivity()).gaussianBlur(25, resource);
                                     mBg.setImageBitmap(gaussianBlur);
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     GlideApp.with(getActivity()).load(mRadio.getAudioCover()).into(mBg);
                                 }
                             } else {
@@ -377,6 +396,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                     if (mMediaPlayService != null) {
                         mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
                     }
+                    updateListenNumber();
                 }
             }
 

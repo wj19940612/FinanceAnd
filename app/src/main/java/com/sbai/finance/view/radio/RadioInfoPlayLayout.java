@@ -54,6 +54,7 @@ public class RadioInfoPlayLayout extends LinearLayout {
     private RotateAnimation mRotateAnimation;
 
     private OnRadioPlayListener mOnRadioPlayListener;
+
 //    private ObjectAnimator mVoiceAnimator;
 
 
@@ -148,10 +149,21 @@ public class RadioInfoPlayLayout extends LinearLayout {
                     .circleCrop()
                     .into(mVoiceCover);
             mRadioTotalLength.setText(DateUtil.formatMediaLength(radio.getAudioTime()));
-            mListenNumber.setText(String.valueOf(radio.getViewNumber()));
+            setListenNumber(radio.getViewNumber());
             mRadioSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
             setPlayStatus(radio);
         }
+    }
+
+    public void updateListenNumber() {
+        if (mRadio != null) {
+            mRadio.setViewNumber(mRadio.getViewNumber() + 1);
+            setListenNumber(mRadio.getViewNumber());
+        }
+    }
+
+    public void setListenNumber(int listenNumber) {
+        mListenNumber.setText(String.valueOf(listenNumber));
     }
 
     public void onPlayStop() {

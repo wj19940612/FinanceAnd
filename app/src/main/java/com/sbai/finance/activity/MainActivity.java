@@ -38,6 +38,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.BottomTabs;
@@ -118,7 +119,6 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
         super.onNewIntent(intent);
         handleIntentData(intent);
     }
-
 
 
     private void handleIntentData(Intent intent) {
@@ -302,6 +302,9 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
 
             @Override
             public void onPageSelected(int position) {
+                if (position != PAGE_POSITION_MINE) {
+                    MissAudioManager.get().stop();
+                }
                 mBottomTabs.selectTab(position);
                 refreshNotReadMessageCount();
             }

@@ -8,6 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.sbai.finance.R;
+import com.sbai.finance.model.radio.Radio;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.ToastUtil;
 
@@ -43,6 +47,19 @@ public abstract class MediaPlayFragment extends BaseFragment {
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PROGRESS);
         filter.addAction(MediaPlayService.BROADCAST_ACTION_MEDIA_PLAY);
         return filter;
+    }
+
+    protected void updateRadioListen(Radio radio) {
+        if (radio != null)
+            Client.listenRadioAudio(radio.getAudioId())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<Object>, Object>() {
+                        @Override
+                        protected void onRespSuccessData(Object data) {
+                        }
+                    })
+                    .fireFree();
     }
 
     public MediaPlayService getMediaPlayService() {

@@ -3274,11 +3274,10 @@ public class Client {
     }
 
     /**
-     * @param audioId
+     * @param audioId /explain/audioManage/updateNumberForApp.do
      * @return
      */
-    // TODO: 2017/11/29 增加音频收听接口
     public static API listenRadioAudio(int audioId) {
-        return new API("");
+        return new API("/explain/audioManage/updateNumberForApp.do", new ApiParams().put("audioId", audioId));
     }
 }
