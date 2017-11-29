@@ -3026,7 +3026,7 @@ public class Client {
      * 电台音频列表
      */
     public static API requestRadioDetailAudio(int radioId) {
-        return new API("/explain/audioManage/queryAudioByRadioId.do", new ApiParams().put("radioId", radioId));
+        return new API("/explain/audioManage/queryAudioByRadioIdForApp.do", new ApiParams().put("radioId", radioId));
     }
 
     /**
