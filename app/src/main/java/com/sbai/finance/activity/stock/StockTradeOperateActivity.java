@@ -447,8 +447,8 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
 
             public void bindingData(Position pos, HashMap<String, StockData> stockDataList, Context context) {
                 mStockName.setText(pos.getVarietyName());
-                mPositionAmount.setText(String.valueOf(pos.getTotalQty()));
-                mEnableAmount.setText(String.valueOf(pos.getUsableQty()));
+                mPositionAmount.setText(FinanceUtil.formatWithThousandsSeparator(pos.getTotalQty()));
+                mEnableAmount.setText(FinanceUtil.formatWithThousandsSeparator(pos.getUsableQty()));
                 mCostPrice.setText(FinanceUtil.formatWithScale(pos.getAvgBuyPrice(), 3));
 
                 StockData stockData = stockDataList.get(pos.getVarietyCode());
