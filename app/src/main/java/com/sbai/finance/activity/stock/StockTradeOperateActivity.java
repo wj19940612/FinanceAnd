@@ -39,6 +39,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StockUtil;
 import com.sbai.finance.utils.TextViewUtils;
@@ -127,6 +128,7 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
         mStockAccountName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                KeyBoardUtils.closeKeyboard(view);
                 requestStockAccountsAndShowPickDialog();
             }
         });
