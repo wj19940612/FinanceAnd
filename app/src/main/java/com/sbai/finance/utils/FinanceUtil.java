@@ -287,6 +287,16 @@ public class FinanceUtil {
      * @param value
      * @return 处理后的字符串
      */
+    public static String formatWithThousandsSeparator(int value) {
+        return formatWithThousandsSeparator(value, 0);
+    }
+
+    /**
+     * 使用千位分隔符分割 double 数据，并使用‘银行家算法’精确（保留）到小数点后两位
+     *
+     * @param value
+     * @return 处理后的字符串
+     */
     public static String formatWithThousandsSeparator(double value) {
         return formatWithThousandsSeparator(value, DEFAULT_SCALE);
     }
