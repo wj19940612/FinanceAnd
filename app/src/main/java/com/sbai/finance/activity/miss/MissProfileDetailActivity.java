@@ -266,6 +266,9 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                     mAsk.setVisibility(View.VISIBLE);
                     mCreateRadio.setVisibility(View.GONE);
                 }
+            }else{
+                mAsk.setVisibility(View.VISIBLE);
+                mCreateRadio.setVisibility(View.GONE);
             }
         } else if (position == FRAGMENT_RADIO) {
             if (mMiss != null) {
@@ -277,6 +280,9 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                     mAsk.setVisibility(View.GONE);
                     mCreateRadio.setVisibility(View.GONE);
                 }
+            }else{
+                mAsk.setVisibility(View.GONE);
+                mCreateRadio.setVisibility(View.GONE);
             }
         }
     }
@@ -293,7 +299,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                     @Override
                     public void onFailure(ApiError apiError) {
                         super.onFailure(apiError);
-                        mFansNumber.setVisibility(View.GONE);
+                        updateNullMissDetail();
                     }
 
                     @Override
@@ -335,6 +341,16 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
             }
         }
         setPositionBtn(mPosition);
+    }
+
+    private void updateNullMissDetail(){
+        setPositionBtn(0);
+        GlideApp.with(this).load(null)
+                .placeholder(R.drawable.ic_default_avatar)
+                .circleCrop()
+                .into(mAvatar);
+        mFansNumber.setText("粉丝");
+        mFansNumber.setVisibility(View.VISIBLE);
     }
 
     private void setFansNumber(int totalPrise) {
