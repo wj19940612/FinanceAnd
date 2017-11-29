@@ -191,6 +191,9 @@ public class CommentActivity extends BaseActivity {
                             intent.putExtra(ExtraKeys.QUESTION_ID, mDataId);
                             setResult(RESULT_OK, intent);
                             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+                            Intent lastIntent = getIntent();
+                            lastIntent.putExtra(ExtraKeys.QUESTION_ID,mDataId);
+                            setResult(RESULT_OK,lastIntent);
                             finish();
                         } else {
                             ToastUtil.show(resp.getMsg());

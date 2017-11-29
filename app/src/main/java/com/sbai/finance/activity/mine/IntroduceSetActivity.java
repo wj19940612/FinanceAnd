@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
@@ -35,17 +36,29 @@ public class IntroduceSetActivity extends BaseActivity {
     @BindView(R.id.publish)
     TextView mPublish;
 
+    private String localPrief;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_introduce);
         ButterKnife.bind(this);
+        initData();
         initView();
     }
 
+    private void initData(){
+        localPrief = getIntent().getStringExtra(ExtraKeys.PROFILE_INTRODUCE);
+    }
+
     private void initView() {
+        if(localPrief!=null){
+            mIntroduce.setText(localPrief);
+        }
+        mIntroduce.setFocusable(true);
         mIntroduce.addTextChangedListener(mValidationWatcher);
+        mIntroduce.requestFocus();
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -61,7 +74,7 @@ public class IntroduceSetActivity extends BaseActivity {
                 mPublish.setEnabled(true);
                 mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
             }
-            mWordsNumber.setText(getString(R.string.words_number, mIntroduce.getText().length()));
+            mWordsNumber.setText(getString(R.string.words_number2, mIntroduce.getText().length()));
         }
     };
 

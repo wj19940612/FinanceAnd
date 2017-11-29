@@ -40,10 +40,6 @@ public class WaitForMeAnswerActivity extends BaseActivity {
     ViewPager mViewPager;
 
     private WaitForMeAnswerFragmentAdapter mWaitForMeAnswerFragmentAdapter;
-    private int mWaitAnswerCount;
-    private int mRaceAnswerCount;
-    private int mHaveAnswerCount;
-    private int pagePosition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,8 +62,6 @@ public class WaitForMeAnswerActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                pagePosition = position;
-                updateTitleBar();
             }
 
             @Override
@@ -78,25 +72,6 @@ public class WaitForMeAnswerActivity extends BaseActivity {
         mSlidingTabLayout.setViewPager(mViewPager);
     }
 
-    private void updateTitleBar() {
-        if (mWaitAnswerCount == 0) {
-            mSlidingTabLayout.getTabItems()[0].setText(getString(R.string.wait_answer));
-        } else {
-            mSlidingTabLayout.getTabItems()[0].setText(getString(R.string.wait_answer_, mWaitAnswerCount));
-        }
-
-        if (mRaceAnswerCount == 0) {
-            mSlidingTabLayout.getTabItems()[1].setText(getString(R.string.wait_race_answer));
-        } else {
-            mSlidingTabLayout.getTabItems()[1].setText(getString(R.string.wait_race_answer_, mRaceAnswerCount));
-        }
-
-        if (mHaveAnswerCount == 0) {
-            mSlidingTabLayout.getTabItems()[2].setText(getString(R.string.have_answered));
-        } else {
-            mSlidingTabLayout.getTabItems()[2].setText(getString(R.string.have_answered_, mHaveAnswerCount));
-        }
-    }
 
     static class WaitForMeAnswerFragmentAdapter extends FragmentPagerAdapter {
         private FragmentManager mFragmentManager;
