@@ -433,16 +433,17 @@ public class StockPositionFragment extends BaseFragment {
                 mLastPrice.setTextColor(color);
                 mCostPrice.setText(FinanceUtil.formatWithScale(stockPosition.getAvgBuyPrice(), 3));
                 mCostPrice.setTextColor(color);
+                if (mManualRefresh) {
+                    mIndex = -1;
+                }
                 if (mIndex > -1 && mPositionList.size() > mIndex && mPositionList.get(mIndex) != null) {
                     if (!mManualRefresh && position == mIndex && mPositionList.get(mIndex).getId() == stockPosition.getId()) {
                         mOperateArea.setVisibility(View.VISIBLE);
                     } else {
                         mOperateArea.setVisibility(View.GONE);
-                        mIndex = -1;
                     }
                 } else {
                     mOperateArea.setVisibility(View.GONE);
-                    mIndex = -1;
                 }
 
                 mPositionArea.setOnClickListener(new View.OnClickListener() {

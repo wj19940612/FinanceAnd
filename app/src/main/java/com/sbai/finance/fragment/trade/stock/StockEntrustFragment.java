@@ -354,16 +354,17 @@ public class StockEntrustFragment extends BaseFragment {
                     mBusinessDate.setText(DateUtil.format(entrust.getBargainTime(), "MM/dd"));
                     mBusinessTime.setText(DateUtil.format(entrust.getBargainTime(), "HH:mm"));
                 }
+                if (mManualRefresh) {
+                    index = -1;
+                }
                 if (index > -1 && mEntrustList.size() > index && mEntrustList.get(index) != null) {
                     if (!mManualRefresh && position == index && mEntrustList.get(index).getId() == entrust.getId()) {
                         mOperateArea.setVisibility(View.VISIBLE);
                     } else {
                         mOperateArea.setVisibility(View.GONE);
-                        index = -1;
                     }
                 } else {
                     mOperateArea.setVisibility(View.GONE);
-                    index = -1;
                 }
                 mPositionArea.setOnClickListener(new View.OnClickListener() {
                     @Override
