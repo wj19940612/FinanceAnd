@@ -248,6 +248,7 @@ public class StockTradeOperateFragment extends BaseFragment {
                 public void onStockSelect(Stock stock) {
                     mStockSearchPopup.dismiss();
                     mStockNameCode.clearFocus();
+                    mTradePrice.requestFocus();
                     if (mOnSearchStockClickListener != null) {
                         mOnSearchStockClickListener.onSearchStockClick(stock);
                     }
