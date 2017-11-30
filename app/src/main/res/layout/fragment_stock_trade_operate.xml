@@ -28,10 +28,11 @@
                 android:background="@drawable/bg_grey_border"
                 android:gravity="center"
                 android:hint="证券代码 / 名称 / 拼音"
+                android:maxLines="1"
                 android:minHeight="40dp"
                 android:textColor="@color/primaryText"
-                android:textSize="15sp"
                 android:textCursorDrawable="@drawable/cursor_primary"
+                android:textSize="15sp"
                 tools:text="鲁信创投 SH600783"/>
 
             <com.sbai.finance.view.PlusMinusEditText
@@ -51,19 +52,19 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/limitUp"
+                    android:id="@+id/limitDown"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/limit_up_x"
+                    android:text="@string/limit_down_x"
                     android:textColor="@color/luckyText"
                     android:textSize="12sp"/>
 
                 <TextView
-                    android:id="@+id/limitDown"
+                    android:id="@+id/limitUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="@string/limit_down_x"
+                    android:text="@string/limit_up_x"
                     android:textColor="@color/luckyText"
                     android:textSize="12sp"/>
             </RelativeLayout>

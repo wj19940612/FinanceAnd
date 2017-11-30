@@ -70,7 +70,7 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
      */
 
     private String radioCover;  //电台封面
-    private long reviewTime;
+    private long reviewTime;    //审核时间
     private String userPortrait; //用户头像
     /**
      * deleted : 0

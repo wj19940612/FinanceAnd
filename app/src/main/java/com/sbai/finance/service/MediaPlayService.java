@@ -43,6 +43,7 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
 
     private TimerHandler mTimerHandler;
     private Intent mMediaPlayIntent;
+    private Intent mMediaStartIntent;
     private MissAudioManager mMissAudioManager;
     private MissAudioManager.IAudio mIAudio;
     private int mSource;
@@ -64,6 +65,7 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
         super.onCreate();
         mTimerHandler = new TimerHandler(this);
         mMediaPlayIntent = new Intent();
+        mMediaStartIntent = new Intent();
         mMissAudioManager = MissAudioManager.get();
         mMissAudioManager.addAudioListener(this);
     }
@@ -122,12 +124,12 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
 
     @Override
     public void onAudioStart() {
-        mMediaPlayIntent.setAction(BROADCAST_ACTION_MEDIA_START);
+        mMediaStartIntent.setAction(BROADCAST_ACTION_MEDIA_START);
         if (mIAudio != null) {
-            mMediaPlayIntent.putExtra(ExtraKeys.IAudio, mIAudio.getAudioId());
+            mMediaStartIntent.putExtra(ExtraKeys.IAudio, mIAudio.getAudioId());
         }
-        mMediaPlayIntent.putExtra(ExtraKeys.MEDIA_PLAY_SOURCE, mSource);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(mMediaPlayIntent);
+        mMediaStartIntent.putExtra(ExtraKeys.MEDIA_PLAY_SOURCE, mSource);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(mMediaStartIntent);
         mTimerHandler.sendEmptyMessageDelayed(DEFAULT_UPDATE_MEDIA_PROGRESS, 0);
     }
 

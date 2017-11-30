@@ -104,7 +104,7 @@ public class MissRadioLayout extends LinearLayout {
                     .load(radio.getRadioCover())
                     .into(radioCover);
             voiceName.setText(radio.getAudioName());
-            radioUpdateTime.setText(DateUtil.formatDefaultStyleTime(radio.getModifyTime()));
+            radioUpdateTime.setText(DateUtil.formatDefaultStyleTime(radio.getReviewTime()));
             radioName.setText(radio.getRadioName());
             radioOwnerName.setText(radio.getRadioHostName());
             radioLength.setText(DateUtil.formatMediaLength(radio.getAudioTime()));

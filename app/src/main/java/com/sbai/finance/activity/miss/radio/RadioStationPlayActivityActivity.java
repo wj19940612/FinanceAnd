@@ -252,6 +252,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                     && !MissAudioManager.get().isStarted(mRadio)
                     && !MissAudioManager.get().isPaused(mRadio)) {
                 mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
+                mRadioPlayLL.setPlayStatus(mRadio);
                 updateListenNumber();
             }
         }

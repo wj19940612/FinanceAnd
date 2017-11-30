@@ -365,7 +365,7 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
                 setSpanIconText(mSubtitle, radioInfo.getRadioIntroduction(), context);
 //                mSubtitle.setText(radioInfo.getRadioIntroduction());
                 mNumber.setText(String.valueOf(radioInfo.getListenNumber()));
-                mTime.setText(DateUtil.formatDefaultStyleTime(radioInfo.getCreateTime()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(radioInfo.getShowTime()));
                 mContent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

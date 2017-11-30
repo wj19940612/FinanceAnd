@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.audio.MissAudioManager;
+import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.VerticalSwipeRefreshLayout;
@@ -64,7 +66,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
     ImageView mCover;
     TextView mSubscribe;
     TextView mSubscribed;
-    ImageView mAvatar;
+    HasLabelImageLayout mAvatar;
     TextView mName;
     TextView mListenerNumber;
     TextView mContent;
@@ -75,6 +77,19 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
     private RadioStationAdapter mRadioStationAdapter;
     private RadioInfo mRadioInfo;
     private Radio mRadio;
+
+    private ViewTreeObserver.OnPreDrawListener mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
+        @Override
+        public boolean onPreDraw() {
+            if(!judgeIsMax()){
+                mBtnLookMore.setVisibility(View.GONE);
+            }else{
+                mBtnLookMore.setVisibility(View.VISIBLE);
+            }
+            mContent.getViewTreeObserver().removeOnPreDrawListener(mOnPreDrawListener);
+            return  true;
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -176,6 +191,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
                         .execute();
             }
         });
+        mContent.getViewTreeObserver().addOnPreDrawListener(mOnPreDrawListener);
         mListView.addHeaderView(header);
     }
 
@@ -276,10 +292,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
                 .centerCrop().fallback(getResources().getDrawable(R.drawable.bg_radio_big_cover))
                 .into(mCover);
 
-        GlideApp.with(this).load(radioInfo.getUserPortrait())
-                .placeholder(R.drawable.ic_default_avatar)
-                .circleCrop()
-                .into(mAvatar);
+        mAvatar.setAvatar(radioInfo.getUserPortrait(),Question.USER_IDENTITY_HOST);
 
         mName.setText(radioInfo.getRadioHostName());
 
@@ -295,11 +308,11 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         }
         mContent.setText(radioInfo.getRadioIntroduction());
         mListenerNumber.setText(String.valueOf(radioInfo.getListenNumber()));
+        mContent.getViewTreeObserver().addOnPreDrawListener(mOnPreDrawListener);
     }
 
     private void requestRadioProgram() {
         Client.requestRadioDetailAudio(mRadioStationId).setTag(TAG).setCallback(new Callback2D<Resp<List<Radio>>, List<Radio>>() {
-
 
             @Override
             protected void onRespSuccessData(List<Radio> data) {
@@ -414,7 +427,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
 
                 mListenerNumber.setText(String.valueOf(item.getViewNumber()));
 
-                mTime.setText(DateUtil.formatDefaultStyleTime(item.getModifyTime()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(item.getReviewTime()));
                 if (position == count - 1) {
                     mSplitView.setVisibility(View.GONE);
                 }
