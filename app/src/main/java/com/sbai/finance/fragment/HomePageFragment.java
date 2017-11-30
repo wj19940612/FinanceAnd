@@ -32,6 +32,7 @@ import com.sbai.finance.model.NoticeRadio;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.leaderboard.LeaderThreeRank;
+import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.system.Share;
 import com.sbai.finance.model.training.MyTrainingRecord;
@@ -438,10 +439,10 @@ public class HomePageFragment extends BaseFragment {
     }
 
     private void requestStockIndexData() {
-        Client.getStockIndexVariety().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+        Client.getStockIndexs().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Stock>>, List<Stock>>() {
                     @Override
-                    protected void onRespSuccessData(List<Variety> data) {
+                    protected void onRespSuccessData(List<Stock> data) {
                         if (data != null && data.size() != 0) {
                             mHomeTitleView.updateStockIndexData(data);
                             requestStockIndexMarketData(data);
@@ -450,11 +451,11 @@ public class HomePageFragment extends BaseFragment {
                 }).fire();
     }
 
-    private void requestStockIndexMarketData(List<Variety> data) {
+    private void requestStockIndexMarketData(List<Stock> data) {
         if (data == null || data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
-        for (Variety variety : data) {
-            stringBuilder.append(variety.getVarietyType()).append(",");
+        for (Stock stock : data) {
+            stringBuilder.append(stock.getVarietyCode()).append(",");
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         Client.getStockMarketData(stringBuilder.toString())

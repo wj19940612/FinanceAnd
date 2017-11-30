@@ -154,6 +154,9 @@ public class StockPositionFragment extends BaseFragment {
         if (getActivity() instanceof StockOrderActivity) {
             StockOrderActivity activity = (StockOrderActivity) getActivity();
             activity.updateEnableAndFetchFund(data);
+            if (mPositionMap.isEmpty()) {
+                activity.updateTotalFund(data);
+            }
         }
         requestStockMarketData();
     }
@@ -176,11 +179,6 @@ public class StockPositionFragment extends BaseFragment {
                             }
                         }
                     }).fireFree();
-        } else {
-            if (getActivity() instanceof StockOrderActivity) {
-                StockOrderActivity activity = (StockOrderActivity) getActivity();
-                activity.updateTotalFund();
-            }
         }
     }
 

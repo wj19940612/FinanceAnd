@@ -178,11 +178,12 @@ public class SearchOptionalActivity extends BaseActivity {
         }
         mKey = key;
         if (type.equalsIgnoreCase(Variety.VAR_STOCK) || type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
-            Client.searchStock(key).setTag(TAG)
+            Client.searchStocks(key).setTag(TAG)
+                    .setId(key)
                     .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                         @Override
                         protected void onRespSuccessData(List<Variety> data) {
-                            if (getUrl().contains(mKey)) {
+                            if (mKey.equals(getId())) {
                                 updateSearchData(data);
                             }
                         }

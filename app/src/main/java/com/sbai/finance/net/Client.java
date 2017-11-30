@@ -953,10 +953,21 @@ public class Client {
      * 股票指数品种
      *
      * @return
+     * @deprecated
      */
     public static API getStockIndexVariety() {
         return new API("/order/order/getStockExponentVariety.do");
     }
+
+    /**股票指数品种
+     *
+     * @return
+     */
+
+    public static API getStockIndexs() {
+        return new API("/api/stock-va/variety/expend");
+    }
+
 
     public static API stockSearch(String key) {
         return new API("/order/order/getStockVarietySearch.do",
@@ -3295,15 +3306,15 @@ public class Client {
     /**
      * 更新待我答等未读已读状态
      */
-    public static API updateAnswerReadStatus(int id){
-        return new API("/user/user/readQuestion.do",new ApiParams().put("id",id));
+    public static API updateAnswerReadStatus(int id) {
+        return new API("/user/user/readQuestion.do", new ApiParams().put("id", id));
     }
 
     /**
      * 抢答问题
      */
-    public static API rushToAnswer(int id){
-        return new API("/user/user/rushToAnswer.do",new ApiParams().put("questionId",id));
+    public static API rushToAnswer(int id) {
+        return new API("/user/user/rushToAnswer.do", new ApiParams().put("questionId", id));
     }
 
 }

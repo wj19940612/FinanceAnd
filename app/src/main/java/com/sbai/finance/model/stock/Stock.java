@@ -26,6 +26,24 @@ public class Stock {
     private String varietyCode; // 代码
     private String varietyName;
     private String varietyType; // 股票类型（A：A 股，B：B 股，H：H 股，expend：指数，fund：基金，bonds：债券）
+    private int varietyStatus;  //0停牌 1正常
+    private int exchangeOpened;//0休市 1开市
+
+    public int getVarietyStatus() {
+        return varietyStatus;
+    }
+
+    public void setVarietyStatus(int varietyStatus) {
+        this.varietyStatus = varietyStatus;
+    }
+
+    public int getExchangeOpened() {
+        return exchangeOpened;
+    }
+
+    public void setExchangeOpened(int exchangeOpened) {
+        this.exchangeOpened = exchangeOpened;
+    }
 
     public int getExchangeId() {
         return exchangeId;
@@ -65,6 +83,8 @@ public class Stock {
                 ", varietyCode='" + varietyCode + '\'' +
                 ", varietyName='" + varietyName + '\'' +
                 ", varietyType='" + varietyType + '\'' +
+                ", varietyStatus=" + varietyStatus +
+                ", exchangeOpened=" + exchangeOpened +
                 '}';
     }
 }

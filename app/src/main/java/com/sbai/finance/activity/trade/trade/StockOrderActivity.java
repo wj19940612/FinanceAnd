@@ -346,9 +346,15 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         }
     }
 
-    public void updateTotalFund() {
+    public void updateTotalFund(PositionRecords data) {
+        mPositionRecords = data;
         if (mPositionRecords != null) {
+            mFundInfo.resetView();
             mFundInfo.setTotalFund(mPositionRecords.getUsableMoney());
+            mFundInfo.setEnableFund(mPositionRecords.getUsableMoney());
+            if (data.getUsableDraw() > 0) {
+                mFundInfo.setFetchFund(mPositionRecords.getUsableDraw());
+            }
         }
     }
 

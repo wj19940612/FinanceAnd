@@ -19,6 +19,7 @@ import com.sbai.finance.model.NoticeRadio;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.local.SysTime;
+import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
@@ -486,7 +487,7 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     //更新股票名称
-    public void updateStockIndexData(List<Variety> data) {
+    public void updateStockIndexData(List<Stock> data) {
         switch (data.size()) {
             case 0:
                 return;
