@@ -28,6 +28,7 @@ import com.sbai.finance.fragment.stock.StockTradeOperateFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.mutual.ArticleProtocol;
+import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockUser;
@@ -63,7 +64,9 @@ import butterknife.OnClick;
  * <p>
  * 股票交易操作页面，买入卖出，如果从股票详情页面进入，当前账户为模拟，如果从账户页面进入，依赖于当前保存是什么账户
  */
-public class StockTradeOperateActivity extends BaseActivity implements StockTradeOperateFragment.OnPostTradeSuccessListener {
+public class StockTradeOperateActivity extends BaseActivity implements
+        StockTradeOperateFragment.OnPostTradeSuccessListener,
+        StockTradeOperateFragment.OnSearchStockClickListener {
 
     public static final String TRADE_TYPE = "trade_type";
     public static final int TRADE_TYPE_BUY = 80;
@@ -318,6 +321,11 @@ public class StockTradeOperateActivity extends BaseActivity implements StockTrad
                 .setNegative(R.string.know)
                 .setPositiveVisible(View.GONE)
                 .show();
+    }
+
+    @Override
+    public void onSearchStockClick(Stock stock) {
+        requestNewStockInfo(stock.getVarietyCode());
     }
 
     private class StockTradeAdapter extends FragmentPagerAdapter {

@@ -35,7 +35,7 @@ public class Display {
         if (displayMetrics != null && displayMetrics.widthPixels != 0) {
             return displayMetrics.widthPixels;
         }
-        return 1080;
+        return 0;
     }
 
     public static int getScreenHeight() {
@@ -43,7 +43,7 @@ public class Display {
         if (displayMetrics != null && displayMetrics.heightPixels != 0) {
             return displayMetrics.heightPixels;
         }
-        return 1920;
+        return 0;
     }
 
 }

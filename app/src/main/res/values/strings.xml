@@ -1026,7 +1026,9 @@
 
     <!--姐说回复-->
     <string name="click_play">点击试听</string>
+    <string name="press_record">按住录音</string>
     <string name="restart_submit">重新发送</string>
+    <string name="record_audio_time_is_short">录音时间太短</string>
     <string name="audio_submit_success">发送成功</string>
     <string name="submit_error">未发送成功！请检查网络后重新发送</string>
     <string name="audio_submit_success_hint">建议先试听后发送，发送成功后将无法重新录音</string>
@@ -1037,4 +1039,7 @@
     <string name="again">再等等</string>
     <string name="stop">停止</string>
     <string name="submitting">发送中</string>
+
+    
+    <string name="there_is_no_matched_stock">无匹配股票</string>
 </resources>

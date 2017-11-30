@@ -42,4 +42,14 @@ public class TextViewUtils {
             ((TextView) view).setTextColor(color);
         }
     }
+
+    /**
+     * 获取 tv 的 trim 字符串
+     *
+     * @param textView
+     * @return
+     */
+    public static String getTrim(TextView textView) {
+        return textView.getText().toString().trim();
+    }
 }

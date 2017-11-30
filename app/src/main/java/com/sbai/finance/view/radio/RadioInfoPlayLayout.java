@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.MissAudioManager;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;

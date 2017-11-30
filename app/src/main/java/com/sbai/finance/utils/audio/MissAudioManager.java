@@ -1,4 +1,4 @@
-package com.sbai.finance.utils;
+package com.sbai.finance.utils.audio;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;

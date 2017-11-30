@@ -59,7 +59,7 @@ public class Client {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
 //            return "mqqwpa://im/chat?chat_type=wpa&uin=" + serviceQQ + "&version=1";
 //        }
-        //return "mqqwpa://im/chat?chat_type=crm&uin=" + serviceQQ + "&version=1";
+//        return "mqqwpa://im/chat?chat_type=crm&uin=" + serviceQQ + "&version=1";
         return "mqqwpa://im/chat?chat_type=wpa&uin=" + serviceQQ + "&version=1";
     }
 
@@ -101,6 +101,8 @@ public class Client {
 
     /**
      * 股票搜索
+     *
+     * @deprecated
      */
     public static API searchStock(String search) {
         return new API("/order/stock/query/search.do",
@@ -3271,6 +3273,15 @@ public class Client {
      */
     public static API waitMeAnswerNum() {
         return new API("/user/user/waitMeAnswerNum.do");
+    }
+
+    /**
+     * 搜索股票
+     *
+     * @param searchKey 搜索关键字
+     */
+    public static API searchStocks(String searchKey) {
+        return new API("/api/stock-va/variety/search", new ApiParams().put("searchKey", searchKey));
     }
 
     /**

@@ -41,7 +41,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.ImageTextUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.MissAudioManager;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.ApiError;
@@ -51,7 +51,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.sbai.finance.activity.miss.MissProfileDetailActivity.CUSTOM_ID;
