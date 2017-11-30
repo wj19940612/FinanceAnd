@@ -293,8 +293,8 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                 .setCallback(new Callback2D<Resp<Miss>, Miss>() {
                     @Override
                     protected void onRespSuccessData(Miss miss) {
-                        updateMissDetail(miss);
                         setMiss(miss);
+                        updateMissDetail(miss);
                     }
 
                     @Override
@@ -345,7 +345,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
     }
 
     private void updateNullMissDetail(){
-        setPositionBtn(0);
+        setPositionBtn(mPosition);
         GlideApp.with(this).load(null)
                 .placeholder(R.drawable.ic_default_avatar)
                 .circleCrop()
