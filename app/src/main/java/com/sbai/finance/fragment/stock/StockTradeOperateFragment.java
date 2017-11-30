@@ -247,8 +247,6 @@ public class StockTradeOperateFragment extends BaseFragment {
                 @Override
                 public void onStockSelect(Stock stock) {
                     mStockSearchPopup.dismiss();
-                    mStockNameCode.removeTextChangedListener(mStockNameWatcher);
-                    mTradePrice.requestFocus();
                     if (mOnSearchStockClickListener != null) {
                         mOnSearchStockClickListener.onSearchStockClick(stock);
                     }
@@ -424,10 +422,13 @@ public class StockTradeOperateFragment extends BaseFragment {
         mTradePrice.addTextChangedListener(mPriceWatcher);
         mTradeVolume.addTextChangedListener(mVolumeWatcher);
 
-        updateWithVariety(mVariety);
+        updateStock(mVariety);
     }
 
-    public void updateWithVariety(Variety variety) {
+    public void updateStock(Variety variety) {
+        mStockNameCode.removeTextChangedListener(mStockNameWatcher);
+        mTradePrice.requestFocus();
+
         mVariety = variety;
 
         if (variety != null) {
@@ -585,7 +586,7 @@ public class StockTradeOperateFragment extends BaseFragment {
         StockUser stockUser = LocalUser.getUser().getStockUser();
         int deputeType = mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY ?
                 StockOrder.DEPUTE_TYPE_ENTRUST_BUY : StockOrder.DEPUTE_TYPE_ENTRUST_SELL;
-        double volume = Double.parseDouble(mTradeVolume.getText());
+        long volume = Long.parseLong(mTradeVolume.getText());
         double price = Double.parseDouble(mTradePrice.getText());
         String uuid = UUID.randomUUID().toString().replace("-", "");
 
