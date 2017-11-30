@@ -13,13 +13,15 @@ import android.os.Parcelable;
 public class Stock implements Parcelable {
 
     public static final String EXPEND = "expend";
+
     public static final int EXCHANGE_STATUS_CLOSE = 0;
     public static final int EXCHANGE_STATUS_OPEN = 1;
+
     public static final int OPTIONAL = 1;
+
     public static final String OPTIONAL_TYPE_STOCK = "stock";
     public static final String OPTIONAL_TYPE_PLATE = "plate";
 
-    public static final String DISPLAY_MARKET_TIMES = "06:00;05:00";
     public static final int PRICE_SCALE = 2;
 
     /**
@@ -48,36 +50,28 @@ public class Stock implements Parcelable {
         return exchangeCode;
     }
 
-    public void setExchangeCode(String exchangeCode) {
-        this.exchangeCode = exchangeCode;
-    }
-
     public boolean isOptional() {
         return option == 1;
-    }
-
-    public int getOption() {
-        return option;
     }
 
     public void setOption(int option) {
         this.option = option;
     }
 
+    public void setExchangeOpened(int exchangeOpened) {
+        this.exchangeOpened = exchangeOpened;
+    }
+
+    public int getOption() {
+        return option;
+    }
+
     public int getVarietyStatus() {
         return varietyStatus;
     }
 
-    public void setVarietyStatus(int varietyStatus) {
-        this.varietyStatus = varietyStatus;
-    }
-
     public int getExchangeOpened() {
         return exchangeOpened;
-    }
-
-    public void setExchangeOpened(int exchangeOpened) {
-        this.exchangeOpened = exchangeOpened;
     }
 
     public int getExchangeId() {

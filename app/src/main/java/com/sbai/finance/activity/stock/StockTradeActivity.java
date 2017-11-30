@@ -435,7 +435,7 @@ public abstract class StockTradeActivity extends BaseActivity {
         settings.setIndexesEnable(true);
         settings.setIndexesBaseLines(2);
         settings.setOpenMarketTimes("09:30;11:30;13:00;15:00");
-        settings.setDisplayMarketTimes(Stock.DISPLAY_MARKET_TIMES);
+        settings.setDisplayMarketTimes("09:30;13:00;15:00");
         settings.setCalculateXAxisFromOpenMarketTime(true);
         mStockTrendView.setSettings(settings);
 

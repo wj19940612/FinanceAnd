@@ -26,7 +26,6 @@ import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.stock.StockTradeOperateFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockData;
@@ -92,7 +91,7 @@ public class StockTradeOperateActivity extends BaseActivity implements
 
     private int mTradeType;
     private StockRTData mStockRTData;
-    private Variety mVariety;
+    private Stock mStock;
 
     private HoldingPositionsAdapter mHoldingPositionsAdapter;
 
@@ -168,7 +167,7 @@ public class StockTradeOperateActivity extends BaseActivity implements
 
     private void initData(Intent intent) {
         mTradeType = intent.getIntExtra(TRADE_TYPE, TRADE_TYPE_BUY);
-        mVariety = intent.getParcelableExtra(ExtraKeys.VARIETY);
+        mStock = intent.getParcelableExtra(ExtraKeys.VARIETY);
     }
 
     private void iniListView() {
@@ -187,25 +186,27 @@ public class StockTradeOperateActivity extends BaseActivity implements
 
     private void requestNewStockInfo(String varietyCode) {
         Client.getStockInfo(varietyCode).setTag(TAG)
-                .setCallback(new Callback2D<Resp<Variety>, Variety>() {
+                .setCallback(new Callback2D<Resp<Stock>, Stock>() {
                     @Override
-                    protected void onRespSuccessData(Variety data) {
-                        mVariety = data;
-                        updateWithVariety();
-                        requestStockRTData();
-                        updateMaxBuyableVolume();
-                        requestStockHoldingList();
+                    protected void onRespSuccessData(Stock data) {
+                        updateStock(data);
                     }
                 }).fire();
     }
 
-    private void updateWithVariety() {
+    private void updateStock(Stock data) {
+        mStock = data;
+
         for (int i = 0; i < mStockTradeAdapter.getCount(); i++) {
             Fragment fragment = mStockTradeAdapter.getFragment(i);
             if (fragment instanceof StockTradeOperateFragment) {
-                ((StockTradeOperateFragment) fragment).updateStock(mVariety);
+                ((StockTradeOperateFragment) fragment).updateStock(mStock);
             }
         }
+
+        requestStockRTData();
+        updateMaxBuyableVolume();
+        requestStockHoldingList();
     }
 
     private void updateMaxBuyableVolume() {
@@ -217,11 +218,11 @@ public class StockTradeOperateActivity extends BaseActivity implements
 
     private void updateMaxSalableVolume() {
         List<Position> positionList = mHoldingPositionsAdapter.getPositionList();
-        if (positionList.isEmpty() || mVariety == null) return;
+        if (positionList.isEmpty() || mStock == null) return;
 
         int salableVolume = 0;
         for (Position position : positionList) {
-            if (mVariety.getVarietyType().equals(position.getVarietyCode())) {
+            if (mStock.getVarietyCode().equals(position.getVarietyCode())) {
                 salableVolume = position.getUsableQty();
                 break;
             }
@@ -325,7 +326,7 @@ public class StockTradeOperateActivity extends BaseActivity implements
 
     @Override
     public void onSearchStockClick(Stock stock) {
-        requestNewStockInfo(stock.getVarietyCode());
+        updateStock(stock);
     }
 
     private class StockTradeAdapter extends FragmentPagerAdapter {
@@ -354,9 +355,9 @@ public class StockTradeOperateActivity extends BaseActivity implements
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return StockTradeOperateFragment.newInstance(mVariety, TRADE_TYPE_BUY);
+                    return StockTradeOperateFragment.newInstance(mStock, TRADE_TYPE_BUY);
                 case 1:
-                    return StockTradeOperateFragment.newInstance(mVariety, TRADE_TYPE_SELL);
+                    return StockTradeOperateFragment.newInstance(mStock, TRADE_TYPE_SELL);
             }
             return null;
         }
@@ -569,8 +570,8 @@ public class StockTradeOperateActivity extends BaseActivity implements
     }
 
     private void requestStockRTData() {
-        if (mVariety == null) return;
-        Client.getStockRealtimeData(mVariety.getVarietyType())
+        if (mStock == null) return;
+        Client.getStockRealtimeData(mStock.getVarietyCode())
                 .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>() {
                     @Override
                     protected void onRespSuccessData(StockRTData result) {
