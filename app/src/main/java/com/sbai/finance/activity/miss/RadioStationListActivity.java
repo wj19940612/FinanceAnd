@@ -22,8 +22,10 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.RadioInfo;
 import com.sbai.finance.model.radio.Radio;
@@ -50,7 +52,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017\11\21 0021.
  */
 
-public class RadioStationListActivity extends MediaPlayActivity implements AdapterView.OnItemClickListener{
+public class RadioStationListActivity extends MediaPlayActivity implements AdapterView.OnItemClickListener {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -81,13 +83,13 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
     private ViewTreeObserver.OnPreDrawListener mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
         public boolean onPreDraw() {
-            if(!judgeIsMax()){
+            if (!judgeIsMax()) {
                 mBtnLookMore.setVisibility(View.GONE);
-            }else{
+            } else {
                 mBtnLookMore.setVisibility(View.VISIBLE);
             }
             mContent.getViewTreeObserver().removeOnPreDrawListener(mOnPreDrawListener);
-            return  true;
+            return true;
         }
     };
 
@@ -153,22 +155,26 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
             @Override
             public void onClick(View view) {
                 if (mRadioInfo == null) return;
-                Client.collectRadio(String.valueOf(mRadioStationId)).setTag(TAG).setCallback(new Callback<Resp<Object>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()) {
-                            if (mRadioInfo.getIsSubscriber() == 0) {
-                                mRadioInfo.setIsSubscriber(1);
-                                mSubscribe.setVisibility(View.GONE);
-                                mSubscribed.setVisibility(View.VISIBLE);
-                            } else {
-                                mRadioInfo.setIsSubscriber(0);
-                                mSubscribe.setVisibility(View.VISIBLE);
-                                mSubscribed.setVisibility(View.GONE);
+                if (LocalUser.getUser().isLogin()) {
+                    Client.collectRadio(String.valueOf(mRadioStationId)).setTag(TAG).setCallback(new Callback<Resp<Object>>() {
+                        @Override
+                        protected void onRespSuccess(Resp<Object> resp) {
+                            if (resp.isSuccess()) {
+                                if (mRadioInfo.getIsSubscriber() == 0) {
+                                    mRadioInfo.setIsSubscriber(1);
+                                    mSubscribe.setVisibility(View.GONE);
+                                    mSubscribed.setVisibility(View.VISIBLE);
+                                } else {
+                                    mRadioInfo.setIsSubscriber(0);
+                                    mSubscribe.setVisibility(View.VISIBLE);
+                                    mSubscribed.setVisibility(View.GONE);
+                                }
                             }
                         }
-                    }
-                }).fireFree();
+                    }).fireFree();
+                } else {
+                    Launcher.with(RadioStationListActivity.this, LoginActivity.class).execute();
+                }
             }
         };
         mSubscribe.setOnClickListener(onClickListener);
@@ -292,7 +298,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
                 .centerCrop().fallback(getResources().getDrawable(R.drawable.bg_radio_big_cover))
                 .into(mCover);
 
-        mAvatar.setAvatar(radioInfo.getUserPortrait(),Question.USER_IDENTITY_HOST);
+        mAvatar.setAvatar(radioInfo.getUserPortrait(), Question.USER_IDENTITY_HOST);
 
         mName.setText(radioInfo.getRadioHostName());
 
