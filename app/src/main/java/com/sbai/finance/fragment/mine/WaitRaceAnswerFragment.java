@@ -88,6 +88,7 @@ public class WaitRaceAnswerFragment extends BaseFragment {
             @Override
             public void raceClick(Answer item) {
                 requestUpdateReadStatus(item.getId());
+                requestrushToAnswer(item.getId());
                 //TODO 跳转回答录音界面
             }
         });
@@ -145,6 +146,10 @@ public class WaitRaceAnswerFragment extends BaseFragment {
 
     private void requestUpdateReadStatus(int id){
         Client.updateAnswerReadStatus(id).setTag(TAG).fire();
+    }
+
+    private void requestrushToAnswer(int id){
+        Client.rushToAnswer(id).setTag(TAG).fire();
     }
 
     private void stopRefreshAnimation() {

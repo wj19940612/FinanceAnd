@@ -40,17 +40,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
             android:maxLines="2"
             android:ellipsize="end"
-            android:text="hello every one you say what to me"/>
+            android:text="hello every one you say what to me dasd dsadasda"/>
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/subtitle"
+            android:layout_marginRight="14dp"
             android:layout_marginBottom="10dp"
-            android:text="you know I have no money"/>
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="you know I have no money ssaS dsadada"/>
 
         <TextView
             android:id="@+id/number"
