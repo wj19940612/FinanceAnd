@@ -22,12 +22,11 @@ import android.widget.TextView;
 import com.google.gson.JsonObject;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -60,7 +59,6 @@ public class SearchOptionalActivity extends BaseActivity {
     EditText mSearch;
     @BindView(R.id.listView)
     ListView mListView;
-    private String type;
     private String mKey;
     private OptionalAdapter mOptionalAdapter;
 
@@ -68,18 +66,9 @@ public class SearchOptionalActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_optional_search);
-        type = getIntent().getStringExtra("type");
         ButterKnife.bind(this);
         initView();
-        initVariety();
-    }
-
-    private void initVariety() {
-        if (type.equalsIgnoreCase(Variety.VAR_STOCK) || type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
-            requestStockData();
-        } else if (type.equalsIgnoreCase(Variety.VAR_FUTURE)) {
-            requestFutureData();
-        }
+        requestStockData();
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -90,16 +79,6 @@ public class SearchOptionalActivity extends BaseActivity {
     };
 
     private void initView() {
-        if (type.equalsIgnoreCase(Variety.VAR_STOCK)) {
-            mTitleBar.setTitle(getString(R.string.stock_optional));
-            mSearch.setHint(getString(R.string.stock_optional_hint));
-        } else if (type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
-            mTitleBar.setTitle(getString(R.string.stock));
-            mSearch.setHint(getString(R.string.stock_optional_hint));
-        } else if (type.equalsIgnoreCase(Variety.VAR_FUTURE)) {
-            mTitleBar.setTitle(getString(R.string.future_optional));
-            mSearch.setHint(getString(R.string.future_optional_hint));
-        }
         mSearch.addTextChangedListener(mValidationWatcher);
         mSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -113,16 +92,16 @@ public class SearchOptionalActivity extends BaseActivity {
         mOptionalAdapter = new OptionalAdapter(this);
         mOptionalAdapter.setOnClickListener(new OptionalAdapter.OnClickListener() {
             @Override
-            public void onClick(final Variety variety) {
+            public void onClick(final Stock stock) {
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.DISCOVERY_ADD_SELF_OPTIONAL);
-                    Client.addOption(variety.getVarietyId())
+                    Client.addOption(stock.getId(), Stock.OPTIONAL_TYPE_STOCK)
                             .setTag(TAG)
                             .setCallback(new Callback<Resp<JsonObject>>() {
                                 @Override
                                 protected void onRespSuccess(Resp<JsonObject> resp) {
                                     if (resp.isSuccess()) {
-                                        updateOptionalData(variety.getVarietyId());
+                                        updateOptionalData(stock.getId());
                                         sendAddOptionalBroadCast();
                                     } else {
                                         ToastUtil.show(resp.getMsg());
@@ -138,20 +117,15 @@ public class SearchOptionalActivity extends BaseActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Variety variety = (Variety) parent.getItemAtPosition(position);
-                if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
-                    Launcher.with(getActivity(), FutureTradeActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
-                    finish();
-                }
-                if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                    if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)) {
+                Stock stock = (Stock) parent.getItemAtPosition(position);
+                if (stock != null) {
+                    if (stock.getVarietyType().equalsIgnoreCase(Stock.EXPEND)) {
                         Launcher.with(getActivity(), StockIndexActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                                .putExtra(Launcher.EX_PAYLOAD, stock).execute();
                         finish();
                     } else {
                         Launcher.with(getActivity(), StockDetailActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                                .putExtra(Launcher.EX_PAYLOAD, stock).execute();
                         finish();
                     }
                 }
@@ -161,9 +135,9 @@ public class SearchOptionalActivity extends BaseActivity {
 
     private void updateOptionalData(int varietyId) {
         for (int i = 0; i < mOptionalAdapter.getCount(); i++) {
-            Variety variety = mOptionalAdapter.getItem(i);
-            if (variety != null && variety.getVarietyId() == varietyId) {
-                variety.setCheckOptional(Variety.OPTIONAL);
+            Stock stock = mOptionalAdapter.getItem(i);
+            if (stock != null && stock.getId() == varietyId) {
+                stock.setOption(Stock.OPTIONAL);
                 mOptionalAdapter.notifyDataSetChanged();
                 break;
             }
@@ -177,35 +151,23 @@ public class SearchOptionalActivity extends BaseActivity {
             e.printStackTrace();
         }
         mKey = key;
-        if (type.equalsIgnoreCase(Variety.VAR_STOCK) || type.equalsIgnoreCase(TYPE_STOCK_ONLY)) {
-            Client.searchStocks(key).setTag(TAG)
-                    .setId(key)
-                    .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
-                        @Override
-                        protected void onRespSuccessData(List<Variety> data) {
-                            if (mKey.equals(getId())) {
-                                updateSearchData(data);
-                            }
+        Client.searchStocks(key).setTag(TAG)
+                .setId(key)
+                .setCallback(new Callback2D<Resp<List<Stock>>, List<Stock>>() {
+                    @Override
+                    protected void onRespSuccessData(List<Stock> data) {
+                        if (mKey.equals(getId())) {
+                            updateSearchData(data);
                         }
-                    }).fire();
-        } else if (type.equalsIgnoreCase(Variety.VAR_FUTURE)) {
-            Client.searchFuture(key).setTag(TAG)
-                    .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
-                        @Override
-                        protected void onRespSuccessData(List<Variety> data) {
-                            if (getUrl().contains(mKey)) {
-                                updateSearchData(data);
-                            }
-                        }
-                    }).fire();
-        }
+                    }
+                }).fire();
     }
 
     private void requestStockData() {
-        Client.searchStock("0000").setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+        Client.searchStocks("0000").setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Stock>>, List<Stock>>() {
                     @Override
-                    protected void onRespSuccessData(List<Variety> data) {
+                    protected void onRespSuccessData(List<Stock> data) {
                         if (data.size() >= 10) {
                             updateSearchData(data.subList(0, 10));
                         } else {
@@ -215,21 +177,7 @@ public class SearchOptionalActivity extends BaseActivity {
                 }).fire();
     }
 
-    private void requestFutureData() {
-        Client.searchFuture("").setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
-                    @Override
-                    protected void onRespSuccessData(List<Variety> data) {
-                        if (data.size() >= 10) {
-                            updateSearchData(data.subList(0, 10));
-                        } else {
-                            updateSearchData(data);
-                        }
-                    }
-                }).fire();
-    }
-
-    private void updateSearchData(List<Variety> data) {
+    private void updateSearchData(List<Stock> data) {
         mOptionalAdapter.clear();
         mOptionalAdapter.addAll(data);
         mOptionalAdapter.notifyDataSetChanged();
@@ -259,7 +207,7 @@ public class SearchOptionalActivity extends BaseActivity {
 
     }
 
-    static class OptionalAdapter extends ArrayAdapter<Variety> {
+    static class OptionalAdapter extends ArrayAdapter<Stock> {
         private OnClickListener mOnClickListener;
 
         public OptionalAdapter(@NonNull Context context) {
@@ -271,7 +219,7 @@ public class SearchOptionalActivity extends BaseActivity {
         }
 
         interface OnClickListener {
-            void onClick(Variety variety);
+            void onClick(Stock stock);
         }
 
         @NonNull
@@ -303,14 +251,10 @@ public class SearchOptionalActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(final Variety variety, final OnClickListener onClickListener) {
-                mFutureName.setText(variety.getVarietyName());
-                if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
-                    mFutureCode.setText(variety.getContractsCode());
-                } else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                    mFutureCode.setText(variety.getVarietyType());
-                }
-                if (variety.getCheckOptional() == Variety.OPTIONAL) {
+            private void bindingData(final Stock stock, final OnClickListener onClickListener) {
+                mFutureName.setText(stock.getVarietyName());
+                mFutureCode.setText(stock.getVarietyCode());
+                if (stock.isOptional()) {
                     mAddOptional.setVisibility(View.GONE);
                     mStatus.setVisibility(View.VISIBLE);
                 } else {
@@ -320,7 +264,7 @@ public class SearchOptionalActivity extends BaseActivity {
                 mAddOptional.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onClickListener.onClick(variety);
+                        onClickListener.onClick(stock);
                     }
                 });
             }

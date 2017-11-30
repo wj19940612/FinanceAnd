@@ -75,7 +75,6 @@ public class Variety implements Parcelable {
     private double ratio;    //汇率
 
 
-
     public int getCheckOptional() {
         return checkOptional;
     }

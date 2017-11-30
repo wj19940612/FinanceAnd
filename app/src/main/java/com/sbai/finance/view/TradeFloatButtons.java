@@ -66,6 +66,7 @@ public class TradeFloatButtons extends LinearLayout {
         params = new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1f;
         addView(mAddOptional, params);
+        mAddOptional.setVisibility(GONE);
 
         splitLine = new View(getContext());
         splitLine.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.split));
@@ -126,7 +127,7 @@ public class TradeFloatButtons extends LinearLayout {
             mAddOptional.getChildAt(0).setVisibility(GONE);
             ((TextView) mAddOptional.getChildAt(1)).setText(R.string.cancel_optional);
         } else {
-            mAddOptional.getChildAt(0).setVisibility(VISIBLE);
+            mAddOptional.getChildAt(0).setVisibility(GONE);
             ((TextView) mAddOptional.getChildAt(1)).setText(R.string.add_optional);
         }
     }
@@ -136,9 +137,11 @@ public class TradeFloatButtons extends LinearLayout {
 
         View splitLine = getChildAt(getChildCount() - 2);
         if (mHasTradeButton) {
+            setVisibility(VISIBLE);
             mTrade.setVisibility(VISIBLE);
             splitLine.setVisibility(VISIBLE);
         } else {
+            setVisibility(GONE);
             mTrade.setVisibility(GONE);
             splitLine.setVisibility(GONE);
         }

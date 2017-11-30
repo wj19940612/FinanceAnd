@@ -191,7 +191,7 @@ public class HomeTitleView extends RelativeLayout {
     }
 
     public interface OnClickItemListener {
-        public void onItemClick(int button, Variety variety);
+        public void onItemClick(int button, Object t);
     }
 
     public interface OnLookAllClickListener {
@@ -501,15 +501,13 @@ public class HomeTitleView extends RelativeLayout {
                 mCenterIndex.setTag(data.get(1));
                 mCenterIndex.setText(data.get(1).getVarietyName());
                 break;
-            case 3:
+            default:
                 mLeftIndex.setTag(data.get(0));
                 mLeftIndex.setText(data.get(0).getVarietyName());
                 mCenterIndex.setTag(data.get(1));
                 mCenterIndex.setText(data.get(1).getVarietyName());
                 mRightIndex.setTag(data.get(2));
                 mRightIndex.setText(data.get(2).getVarietyName());
-                break;
-            default:
                 break;
         }
         setRLClick(data);
@@ -602,27 +600,24 @@ public class HomeTitleView extends RelativeLayout {
 
     }
 
-    private void setRLClick(List<Variety> data) {
+    private void setRLClick(final List data) {
         if (data.size() == 1) {
-            final Variety onlyLeftData = data.get(0);
             mLeftRL.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mOnClickItemListener != null) {
-                        mOnClickItemListener.onItemClick(oldButton, onlyLeftData);
+                        mOnClickItemListener.onItemClick(oldButton, data.get(0));
                     }
                 }
             });
             mCenterRL.setOnClickListener(null);
             mRightRL.setOnClickListener(null);
         } else if (data.size() == 2) {
-            final Variety twoLeftData = data.get(0);
-            final Variety twoCenterData = data.get(1);
             mLeftRL.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mOnClickItemListener != null) {
-                        mOnClickItemListener.onItemClick(oldButton, twoLeftData);
+                        mOnClickItemListener.onItemClick(oldButton, data.get(0));
                     }
                 }
             });
@@ -630,22 +625,18 @@ public class HomeTitleView extends RelativeLayout {
                 @Override
                 public void onClick(View v) {
                     if (mOnClickItemListener != null) {
-                        mOnClickItemListener.onItemClick(oldButton, twoCenterData);
+                        mOnClickItemListener.onItemClick(oldButton, data.get(1));
                     }
                 }
             });
             mRightRL.setOnClickListener(null);
         } else if (data.size() > 2) {
-            final Variety threeLeftData = data.get(0);
-            final Variety threeCenterData = data.get(1);
-            final Variety threeRightData = data.get(2);
-            mLeftRL.setTag(threeLeftData);
+            mLeftRL.setTag(data.get(0));
             mLeftRL.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mOnClickItemListener != null) {
-                        Variety data = (Variety) mLeftRL.getTag();
-                        mOnClickItemListener.onItemClick(oldButton, threeLeftData);
+                        mOnClickItemListener.onItemClick(oldButton, mLeftRL.getTag());
                     }
                 }
             });
@@ -653,7 +644,7 @@ public class HomeTitleView extends RelativeLayout {
                 @Override
                 public void onClick(View v) {
                     if (mOnClickItemListener != null) {
-                        mOnClickItemListener.onItemClick(oldButton, threeCenterData);
+                        mOnClickItemListener.onItemClick(oldButton, data.get(1));
                     }
                 }
             });
@@ -661,7 +652,7 @@ public class HomeTitleView extends RelativeLayout {
                 @Override
                 public void onClick(View v) {
                     if (mOnClickItemListener != null) {
-                        mOnClickItemListener.onItemClick(oldButton, threeRightData);
+                        mOnClickItemListener.onItemClick(oldButton, data.get(2));
                     }
                 }
             });
@@ -674,10 +665,13 @@ public class HomeTitleView extends RelativeLayout {
 
     //更新股票行情
     public void updateStockIndexMarketData(List<StockData> data) {
-        Variety variety;
+        Stock stock;
         for (StockData stockData : data) {
-            variety = (Variety) mLeftIndex.getTag();
-            if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK) && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
+            stock = (Stock) mLeftIndex.getTag();
+            if (TextUtils.isEmpty(stock.getVarietyCode())){
+                continue;
+            }
+            if (stock != null && stock.getVarietyCode().equalsIgnoreCase(stockData.getInstrumentId())) {
                 updateIndexDataToUI(SELECT_LEFT, stockData);
                 if (oldButton == BUTTON_HUSHEN) {
                     mStockCacheData.put(SELECT_LEFT, stockData);
@@ -685,8 +679,8 @@ public class HomeTitleView extends RelativeLayout {
                     mOptionCacheData.put(SELECT_LEFT, stockData);
                 }
             }
-            variety = (Variety) mCenterIndex.getTag();
-            if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK) && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
+            stock = (Stock) mCenterIndex.getTag();
+            if (stock != null && stock.getVarietyCode().equalsIgnoreCase(stockData.getInstrumentId())) {
                 updateIndexDataToUI(SELECT_CENTER, stockData);
                 if (oldButton == BUTTON_HUSHEN) {
                     mStockCacheData.put(SELECT_CENTER, stockData);
@@ -694,8 +688,8 @@ public class HomeTitleView extends RelativeLayout {
                     mOptionCacheData.put(SELECT_CENTER, stockData);
                 }
             }
-            variety = (Variety) mRightIndex.getTag();
-            if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK) && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
+            stock = (Stock) mRightIndex.getTag();
+            if (stock != null&& stock.getVarietyCode().equalsIgnoreCase(stockData.getInstrumentId())) {
                 updateIndexDataToUI(SELECT_RIGHT, stockData);
                 if (oldButton == BUTTON_HUSHEN) {
                     mStockCacheData.put(SELECT_RIGHT, stockData);
@@ -829,7 +823,7 @@ public class HomeTitleView extends RelativeLayout {
         }
     }
 
-    public void updateSelectData(List<Variety> data) {
+    public void updateSelectData(List<Stock> data) {
         if (data == null || data.size() == 0) {
             setIndexViewVisible(SELECT_LEFT, false);
             mLeftSelectRL.setVisibility(View.VISIBLE);

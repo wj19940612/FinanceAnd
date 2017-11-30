@@ -22,7 +22,7 @@ import com.sbai.finance.activity.home.SearchOptionalActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -74,7 +74,7 @@ public class StockListFragment extends BaseFragment
     private int mPageSize = 15;
 
     private StockListAdapter mStockListAdapter;
-    private List<Variety> mStockIndexData;
+    private List<Stock> mStockIndexData;
     private HashSet<String> mSet;
     private BroadcastReceiver mBroadcastReceiver = new Network.NetworkChangeReceiver() {
         @Override
@@ -168,17 +168,17 @@ public class StockListFragment extends BaseFragment
         if (mListView != null && mStockListAdapter != null) {
             int first = mListView.getFirstVisiblePosition();
             int last = mListView.getLastVisiblePosition();
-            List<Variety> varietyList = new ArrayList<>();
+            List<Stock> stockList = new ArrayList<>();
             for (int i = first; i <= last; i++) {
-                Variety variety = mStockListAdapter.getItem(i);
-                if (variety != null) {
-                    if (variety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
-                        varietyList.add(variety);
+                Stock stock = mStockListAdapter.getItem(i);
+                if (stock != null) {
+                    if (stock.getExchangeOpened() == Stock.EXCHANGE_STATUS_OPEN) {
+                        stockList.add(stock);
                     }
                 }
             }
-            if (varietyList.size() > 0) {
-                requestStockMarketData(varietyList);
+            if (stockList.size() > 0) {
+                requestStockMarketData(stockList);
                 requestStockIndexMarketData(mStockIndexData);
             }
         }
@@ -187,9 +187,9 @@ public class StockListFragment extends BaseFragment
     private void requestStockData() {
         stopScheduleJob();
         Client.getStockVariety(mPage, mPageSize).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+                .setCallback(new Callback2D<Resp<List<Stock>>, List<Stock>>() {
                     @Override
-                    protected void onRespSuccessData(List<Variety> data) {
+                    protected void onRespSuccessData(List<Stock> data) {
                         updateStockData(data);
                         requestStockMarketData(data);
                         startScheduleJob(5 * 1000);
@@ -197,11 +197,11 @@ public class StockListFragment extends BaseFragment
                 }).fireFree();
     }
 
-    private void requestStockMarketData(List<Variety> data) {
+    private void requestStockMarketData(List<Stock> data) {
         if (data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
-        for (Variety variety : data) {
-            stringBuilder.append(variety.getVarietyType()).append(",");
+        for (Stock stock : data) {
+            stringBuilder.append(stock.getVarietyCode()).append(",");
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         Client.getStockMarketData(stringBuilder.toString())
@@ -213,11 +213,11 @@ public class StockListFragment extends BaseFragment
                 }).fireFree();
     }
 
-    private void requestStockIndexMarketData(List<Variety> data) {
+    private void requestStockIndexMarketData(List<Stock> data) {
         if (data == null || data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
-        for (Variety variety : data) {
-            stringBuilder.append(variety.getVarietyType()).append(",");
+        for (Stock stock : data) {
+            stringBuilder.append(stock.getVarietyCode()).append(",");
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         Client.getStockMarketData(stringBuilder.toString())
@@ -230,17 +230,17 @@ public class StockListFragment extends BaseFragment
     }
 
     private void requestStockIndexData() {
-        Client.getStockIndexVariety().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+        Client.getStockIndex().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Stock>>, List<Stock>>() {
                     @Override
-                    protected void onRespSuccessData(List<Variety> data) {
+                    protected void onRespSuccessData(List<Stock> data) {
                         updateStockIndexData(data);
                         requestStockIndexMarketData(data);
                     }
                 }).fire();
     }
 
-    private void updateStockIndexData(List<Variety> data) {
+    private void updateStockIndexData(List<Stock> data) {
         switch (data.size()) {
             case 0:
                 return;
@@ -254,15 +254,13 @@ public class StockListFragment extends BaseFragment
                 mShenZhen.setTag(data.get(1));
                 mShenZhen.setText(initStockIndex(data.get(1).getVarietyName()));
                 break;
-            case 3:
+            default:
                 mShangHai.setTag(data.get(0));
                 mShangHai.setText(initStockIndex(data.get(0).getVarietyName()));
                 mShenZhen.setTag(data.get(1));
                 mShenZhen.setText(initStockIndex(data.get(1).getVarietyName()));
                 mBoard.setTag(data.get(2));
                 mBoard.setText(initStockIndex(data.get(2).getVarietyName()));
-                break;
-            default:
                 break;
         }
         mStockIndexData = data;
@@ -275,7 +273,7 @@ public class StockListFragment extends BaseFragment
         int redColor = ContextCompat.getColor(getContext(), R.color.redPrimary);
         int greenColor = ContextCompat.getColor(getContext(), R.color.greenAssist);
         int color;
-        Variety variety;
+        Stock stock;
         SpannableString spannableString;
         for (StockData stockData : data) {
             String rateChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
@@ -287,35 +285,35 @@ public class StockListFragment extends BaseFragment
                 rateChange = "+" + rateChange;
                 ratePrice = "+" + ratePrice;
             }
-            variety = (Variety) mShangHai.getTag();
-            if (variety != null && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
-                spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
+            stock = (Stock) mShangHai.getTag();
+            if (stock != null && stock.getVarietyCode().equalsIgnoreCase(stockData.getInstrumentId())) {
+                spannableString = StrUtil.mergeTextWithRatioColor(stock.getVarietyName(),
                         "\n" + stockData.getFormattedLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, color);
                 mShangHai.setText(spannableString);
             }
-            variety = (Variety) mShenZhen.getTag();
-            if (variety != null && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
-                spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
+            stock = (Stock) mShenZhen.getTag();
+            if (stock != null && stock.getVarietyCode().equalsIgnoreCase(stockData.getInstrumentId())) {
+                spannableString = StrUtil.mergeTextWithRatioColor(stock.getVarietyName(),
                         "\n" + stockData.getFormattedLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, color);
                 mShenZhen.setText(spannableString);
             }
-            variety = (Variety) mBoard.getTag();
-            if (variety != null && variety.getVarietyType().equalsIgnoreCase(stockData.getInstrumentId())) {
-                spannableString = StrUtil.mergeTextWithRatioColor(variety.getVarietyName(),
+            stock = (Stock) mBoard.getTag();
+            if (stock != null && stock.getVarietyCode().equalsIgnoreCase(stockData.getInstrumentId())) {
+                spannableString = StrUtil.mergeTextWithRatioColor(stock.getVarietyName(),
                         "\n" + stockData.getFormattedLastPrice(), "\n" + ratePrice + "   " + rateChange, 1.133f, 0.667f, color, color);
                 mBoard.setText(spannableString);
             }
         }
     }
 
-    private void updateStockData(List<Variety> data) {
+    private void updateStockData(List<Stock> data) {
         stopRefreshAnimation();
         if (mSet.isEmpty()) {
             mStockListAdapter.clear();
         }
-        for (Variety variety : data) {
-            if (mSet.add(variety.getVarietyType())) {
-                mStockListAdapter.add(variety);
+        for (Stock stock : data) {
+            if (mSet.add(stock.getVarietyCode())) {
+                mStockListAdapter.add(stock);
             }
         }
         if (data.size() < mPageSize) {
@@ -333,21 +331,21 @@ public class StockListFragment extends BaseFragment
                 Launcher.with(getActivity(), SearchOptionalActivity.class).putExtra("type", SearchOptionalActivity.TYPE_STOCK_ONLY).execute();
                 break;
             case R.id.shangHai:
-                launcherIndexActivity((Variety) mShangHai.getTag());
+                launcherIndexActivity((Stock) mShangHai.getTag());
                 break;
             case R.id.shenZhen:
-                launcherIndexActivity((Variety) mShenZhen.getTag());
+                launcherIndexActivity((Stock) mShenZhen.getTag());
                 break;
             case R.id.board:
-                launcherIndexActivity((Variety) mBoard.getTag());
+                launcherIndexActivity((Stock) mBoard.getTag());
                 break;
         }
     }
 
-    private void launcherIndexActivity(Variety variety) {
-        if (variety != null && variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)) {
+    private void launcherIndexActivity(Stock stock) {
+        if (stock != null && stock.getVarietyType().equalsIgnoreCase(Stock.EXPEND)) {
             Launcher.with(getActivity(), StockIndexActivity.class)
-                    .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                    .putExtra(Launcher.EX_PAYLOAD, stock).execute();
         }
     }
 
@@ -379,14 +377,14 @@ public class StockListFragment extends BaseFragment
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Variety variety = (Variety) parent.getAdapter().getItem(position);
-        if (variety != null) {
+        Stock stock = (Stock) parent.getAdapter().getItem(position);
+        if (stock != null) {
             Launcher.with(getActivity(), StockDetailActivity.class).
-                    putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                    putExtra(Launcher.EX_PAYLOAD, stock).execute();
         }
     }
 
-    public static class StockListAdapter extends ArrayAdapter<Variety> {
+    public static class StockListAdapter extends ArrayAdapter<Stock> {
 
         private HashMap<String, StockData> mStockDataList;
 
@@ -432,15 +430,11 @@ public class StockListFragment extends BaseFragment
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(Variety item, HashMap<String, StockData> map, Context context) {
+            private void bindingData(Stock item, HashMap<String, StockData> map, Context context) {
                 mFutureName.setText(item.getVarietyName());
-                if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
-                    mFutureCode.setText(item.getContractsCode());
-                } else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                    mFutureCode.setText(item.getVarietyType());
-                }
+                mFutureCode.setText(item.getVarietyCode());
 
-                StockData stockData = map.get(item.getVarietyType());
+                StockData stockData = map.get(item.getVarietyCode());
                 if (stockData != null) {
                     mLastPrice.setText(stockData.getFormattedLastPrice());
                     if (stockData.isDelist()) {

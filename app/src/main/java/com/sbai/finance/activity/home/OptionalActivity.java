@@ -65,15 +65,13 @@ public class OptionalActivity extends BaseActivity implements
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     private SlideListAdapter mSlideListAdapter;
-    private int mPage = 0;
-    private int mPageSize = 200;
     private HashSet<String> mSet;
     private BroadcastReceiver mOptionalChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction() == OPTIONAL_CHANGE_ACTION) {
                 Variety variety = intent.getExtras().getParcelable(Launcher.EX_PAYLOAD);
-                boolean isAddOptional = intent.getExtras().getBoolean(Launcher.EX_PAYLOAD_1,false);
+                boolean isAddOptional = intent.getExtras().getBoolean(Launcher.EX_PAYLOAD_1, false);
                 if (variety != null) {
                     for (int i = 0; i < mSlideListAdapter.getCount(); i++) {
                         if (variety.getVarietyId() == mSlideListAdapter.getItem(i).getVarietyId()) {
@@ -83,7 +81,7 @@ public class OptionalActivity extends BaseActivity implements
                         }
                     }
                 }
-                if (isAddOptional){
+                if (isAddOptional) {
                     reset();
                     requestOptionalData();
                 }
@@ -120,6 +118,7 @@ public class OptionalActivity extends BaseActivity implements
         mListView.setAdapter(mSlideListAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
+        mSwipeRefreshLayout.setLoadMoreEnable(true);
         mSwipeRefreshLayout.setAdapter(mListView, mSlideListAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -176,7 +175,7 @@ public class OptionalActivity extends BaseActivity implements
     }
 
     private void requestOptionalData() {
-        Client.getOptional(mPage).setTag(TAG)
+        Client.getOptional().setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
                     @Override
                     protected void onRespSuccessData(List<Variety> data) {
@@ -254,11 +253,6 @@ public class OptionalActivity extends BaseActivity implements
                 }
             }
         }
-        if (data.size() < mPageSize) {
-            mSwipeRefreshLayout.setLoadMoreEnable(false);
-        } else {
-            mPage++;
-        }
         mSlideListAdapter.notifyDataSetChanged();
         requestMarketData(data);
     }
@@ -294,7 +288,6 @@ public class OptionalActivity extends BaseActivity implements
     }
 
     private void reset() {
-        mPage = 0;
         mSet.clear();
         mSwipeRefreshLayout.setLoadMoreEnable(true);
     }
