@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.miss.Question;
@@ -314,7 +313,6 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
 
     private void requestRadioProgram() {
         Client.requestRadioDetailAudio(mRadioStationId).setTag(TAG).setCallback(new Callback2D<Resp<List<Radio>>, List<Radio>>() {
-
 
             @Override
             protected void onRespSuccessData(List<Radio> data) {

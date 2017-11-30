@@ -40,7 +40,6 @@ import com.sbai.finance.utils.MissAudioManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventId;
-import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.HasLabelImageLayout;
 
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ public class MissAskFragment extends MediaPlayFragment {
     public static final int MISS_ASK_TYPE_LATEST = 0; //最新提问
 
     @BindView(R.id.emptyRecyclerView)
-    EmptyRecyclerView mEmptyRecyclerView;
+    RecyclerView mEmptyRecyclerView;
     Unbinder unbinder;
     @BindView(R.id.empty)
     NestedScrollView mEmpty;
@@ -284,7 +283,6 @@ public class MissAskFragment extends MediaPlayFragment {
     }
 
     private void initView() {
-        mEmptyRecyclerView.setEmptyView(mEmpty);
         mQuestionList = new ArrayList<>();
         mMissAskAdapter = new MissAskAdapter(mQuestionList, getActivity());
         mEmptyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -414,6 +412,15 @@ public class MissAskFragment extends MediaPlayFragment {
 
 
     private void updateLatestQuestionList(List<Question> questionList, boolean isRefresh) {
+
+        if (mQuestionList.isEmpty() && (questionList == null || questionList.isEmpty())) {
+            mEmpty.setVisibility(View.VISIBLE);
+            mEmptyRecyclerView.setVisibility(View.GONE);
+        } else {
+            mEmpty.setVisibility(View.GONE);
+            mEmptyRecyclerView.setVisibility(View.VISIBLE);
+        }
+
         if (questionList.size() < Client.DEFAULT_PAGE_SIZE) { // load completed
             mLoadMore = false;
         } else {

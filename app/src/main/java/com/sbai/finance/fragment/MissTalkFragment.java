@@ -135,6 +135,8 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     public void onResume() {
         super.onResume();
         requestMissList();
+        requestRadioList();
+        requestMissSwitcherList();
         mMissRadioLayout.updatePlayStatus();
         updateRadioFloatWindow();
     }
