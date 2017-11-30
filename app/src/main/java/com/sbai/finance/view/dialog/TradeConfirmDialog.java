@@ -81,7 +81,7 @@ public class TradeConfirmDialog {
             mPrice.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.price_x),
                     String.valueOf(mStockOrder.getPrice()), color));
             mVolume.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.volume_x),
-                    String.valueOf(mStockOrder.getQuantity()), color));
+                    FinanceUtil.formatWithScale(mStockOrder.getQuantity(), 0), color));
             mFee.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.fee_x),
                     FinanceUtil.formatWithScale(mStockOrder.getFee()), color));
             mTotalValue.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.total_value_x),
@@ -97,7 +97,7 @@ public class TradeConfirmDialog {
             mPrice.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.price_x),
                     String.valueOf(mStockOrder.getPrice()), color));
             mVolume.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.volume_x),
-                    String.valueOf(mStockOrder.getQuantity()), color));
+                    FinanceUtil.formatWithScale(mStockOrder.getQuantity(), 0), color));
             mFee.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.fee_x),
                     FinanceUtil.formatWithScale(mStockOrder.getFee()), color));
             mTotalValue.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.total_value_x),
