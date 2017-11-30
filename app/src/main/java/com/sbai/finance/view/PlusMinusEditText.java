@@ -39,6 +39,7 @@ public class PlusMinusEditText extends FrameLayout {
     private float mChangeInterval;
     private String mHint;
     private int mInputType;
+    private int mImeOptions;
 
     public PlusMinusEditText(Context context) {
         super(context);
@@ -57,6 +58,7 @@ public class PlusMinusEditText extends FrameLayout {
         mChangeInterval = typedArray.getFloat(R.styleable.PlusMinusEditText_changeInterval, 0);
         mHint = typedArray.getString(R.styleable.PlusMinusEditText_android_hint);
         mInputType = typedArray.getInt(R.styleable.PlusMinusEditText_inputType, 0);
+        mImeOptions = typedArray.getInt(R.styleable.PlusMinusEditText_android_imeOptions, 0);
 
         typedArray.recycle();
     }
@@ -67,6 +69,12 @@ public class PlusMinusEditText extends FrameLayout {
 
         setHint(mHint);
         setInputType(mInputType);
+        setImeOptions(mImeOptions);
+    }
+
+    public void setImeOptions(int imeOptions) {
+        mImeOptions = imeOptions;
+        mEditText.setImeOptions(mImeOptions);
     }
 
     private void setInputType(int inputType) {

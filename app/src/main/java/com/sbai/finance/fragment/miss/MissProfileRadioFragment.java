@@ -344,6 +344,9 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
                 if (position == count - 1) {
                     RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mContent.getLayoutParams();
                     layoutParams.setMargins((int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(64, context.getResources()));
+                }else{
+                    RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mContent.getLayoutParams();
+                    layoutParams.setMargins((int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()),0);
                 }
                 GlideApp.with(context).load(radioInfo.getRadioCover())
                         .placeholder(R.drawable.ic_default_image)

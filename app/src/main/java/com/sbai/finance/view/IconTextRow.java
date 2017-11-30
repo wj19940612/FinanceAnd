@@ -44,6 +44,8 @@ public class IconTextRow extends LinearLayout {
     private Drawable mSubTextRightDrawable;
     private int mSubTextRightMargin;
     private int mSubTextVisible;
+    private boolean mSubTextSingleLine;
+    private int mSubTextLeftMargin;
 
     private int mVerticalPadding;
     private int mHorizontalPadding;
@@ -94,6 +96,8 @@ public class IconTextRow extends LinearLayout {
         mSubTextRightDrawable = typedArray.getDrawable(R.styleable.IconTextRow_subTextRightDrawable);
         mSubTextRightMargin = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_subTextRightMargin, defaultPadding);
         mSubTextVisible = typedArray.getInt(R.styleable.IconTextRow_subTextVisible, 0);
+        mSubTextSingleLine = typedArray.getBoolean(R.styleable.IconTextRow_subTextSingleLine, false);
+        mSubTextLeftMargin = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_subTextLeftMargin, defaultPadding);
         mVerticalPadding = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_rowVerticalPadding, defaultPadding);
         mHorizontalPadding = typedArray.getDimensionPixelOffset(R.styleable.IconTextRow_rowHorizontalPadding, defaultPadding);
         mHasBottomSplitLine = typedArray.getBoolean(R.styleable.IconTextRow_hasBottomSplitLine, false);
@@ -140,7 +144,11 @@ public class IconTextRow extends LinearLayout {
         }
 
         if (mText == null) mText = "";
-        params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        if(mSubTextSingleLine){
+            params = new LayoutParams(0, LayoutParams.WRAP_CONTENT);
+        }else{
+            params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        }
         params.weight = 1;
         params.setMargins(0, 0, padding, 0);
         mTextView = new TextView(getContext());
@@ -164,14 +172,24 @@ public class IconTextRow extends LinearLayout {
             mRowSubTextView.setVisibility(GONE);
         }
 
-        params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, 0, mSubTextRightMargin, 0);
+
+
         mSubTextView = new TextView(getContext());
         mSubTextView.setText(mSubText);
         mSubTextView.setGravity(Gravity.CENTER);
         mSubTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSubTextSize);
         mSubTextView.setTextColor(mSubTextColor != null ? mSubTextColor : ColorStateList.valueOf(Color.GRAY));
         mSubTextView.setVisibility(mSubTextVisible);
+        if (mSubTextSingleLine) {
+            params = new LayoutParams(0, LayoutParams.WRAP_CONTENT);
+            params.weight = 2f;
+            mSubTextView.setGravity(Gravity.CENTER_VERTICAL|Gravity.RIGHT);
+            mSubTextView.setSingleLine(mSubTextSingleLine);
+            mSubTextView.setEllipsize(TextUtils.TruncateAt.END);
+        }else{
+            params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            params.setMargins(mSubTextLeftMargin, 0, mSubTextRightMargin, 0);
+        }
         if (mSubTextViewBg != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 mSubTextView.setBackground(mSubTextViewBg);

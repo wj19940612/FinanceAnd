@@ -203,7 +203,7 @@ public class StockTradeOperateActivity extends BaseActivity implements
         for (int i = 0; i < mStockTradeAdapter.getCount(); i++) {
             Fragment fragment = mStockTradeAdapter.getFragment(i);
             if (fragment instanceof StockTradeOperateFragment) {
-                ((StockTradeOperateFragment) fragment).updateWithVariety(mVariety);
+                ((StockTradeOperateFragment) fragment).updateStock(mVariety);
             }
         }
     }
