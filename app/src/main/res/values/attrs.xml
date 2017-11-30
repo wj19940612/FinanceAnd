@@ -67,6 +67,8 @@
         <attr name="subTextLeftDrawable" format="reference"/>
         <attr name="subTextRightDrawable" format="reference"/>
         <attr name="subTextRightMargin" format="reference|dimension"/>
+        <attr name="subTextSingleLine" format="boolean"/>
+        <attr name="subTextLeftMargin" format="reference|dimension"/>
         <attr name="subTextVisible">
             <enum name="visible" value="0"/>
             <enum name="invisible" value="4"/>
