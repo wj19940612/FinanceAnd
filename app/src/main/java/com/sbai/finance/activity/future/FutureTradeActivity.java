@@ -21,9 +21,9 @@ import com.sbai.chart.domain.KlineViewData;
 import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.dialog.TradeOptionDialogFragment;
+import com.sbai.finance.fragment.optional.OptionalListFragment;
 import com.sbai.finance.market.DataReceiveListener;
 import com.sbai.finance.market.MarketSubscriber;
 import com.sbai.finance.model.FutureIntroduce;
@@ -415,7 +415,7 @@ public class FutureTradeActivity extends BaseActivity {
 
     private void sendAddOptionalBroadCast(Variety variety, Boolean isAddOptional) {
         Intent intent = new Intent();
-        intent.setAction(OptionalActivity.OPTIONAL_CHANGE_ACTION);
+        intent.setAction(OptionalListFragment.OPTIONAL_CHANGE_ACTION);
         intent.putExtra(Launcher.EX_PAYLOAD, variety);
         intent.putExtra(Launcher.EX_PAYLOAD_1, isAddOptional);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);

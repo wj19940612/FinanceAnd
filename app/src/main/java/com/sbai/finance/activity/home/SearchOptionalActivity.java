@@ -25,6 +25,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
+import com.sbai.finance.fragment.optional.OptionalListFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.net.Callback;
@@ -185,7 +186,7 @@ public class SearchOptionalActivity extends BaseActivity {
 
     private void sendAddOptionalBroadCast() {
         Intent intent = new Intent();
-        intent.setAction(OptionalActivity.OPTIONAL_CHANGE_ACTION);
+        intent.setAction(OptionalListFragment.OPTIONAL_CHANGE_ACTION);
         intent.putExtra(Launcher.EX_PAYLOAD_1, true);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);
     }

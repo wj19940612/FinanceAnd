@@ -24,8 +24,8 @@ import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.fragment.optional.OptionalListFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockKlineData;
@@ -286,7 +286,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private void sendAddOptionalBroadCast(Stock stock, Boolean isAddOptional) {
         Intent intent = new Intent();
-        intent.setAction(OptionalActivity.OPTIONAL_CHANGE_ACTION);
+        intent.setAction(OptionalListFragment.OPTIONAL_CHANGE_ACTION);
         intent.putExtra(Launcher.EX_PAYLOAD, stock);
         intent.putExtra(Launcher.EX_PAYLOAD_1, isAddOptional);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);

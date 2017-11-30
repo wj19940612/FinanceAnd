@@ -16,8 +16,17 @@ public class PositionRecords {
 
     private double usableDraw; // 可取资金
     private double usableMoney; // 可用资金
+    private double frozen;//冻结资金
 
     private List<Position> list;
+
+    public double getFrozen() {
+        return frozen;
+    }
+
+    public void setFrozen(double frozen) {
+        this.frozen = frozen;
+    }
 
     public double getUsableDraw() {
         return usableDraw;
