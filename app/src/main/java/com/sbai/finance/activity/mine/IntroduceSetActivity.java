@@ -16,6 +16,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
@@ -56,9 +57,23 @@ public class IntroduceSetActivity extends BaseActivity {
         if(localPrief!=null){
             mIntroduce.setText(localPrief);
         }
+        if (localPrief.length() > 40) {
+            mPublish.setEnabled(false);
+            mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.redAssist));
+        } else {
+            mPublish.setEnabled(true);
+            mWordsNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
+        }
+        mWordsNumber.setText(getString(R.string.words_number2,localPrief.length()));
         mIntroduce.setFocusable(true);
         mIntroduce.addTextChangedListener(mValidationWatcher);
         mIntroduce.requestFocus();
+        mIntroduce.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                KeyBoardUtils.openKeyBoard(mIntroduce);
+            }
+        }, 200);
     }
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
