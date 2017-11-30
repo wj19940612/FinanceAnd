@@ -1023,4 +1023,5 @@
     <string name="stay_current_page">留在当前页</string>
     <string name="check_entrust">查看委托</string>
     <string name="zero">0</string>
+    <string name="there_is_no_matched_stock">无匹配股票</string>
 </resources>

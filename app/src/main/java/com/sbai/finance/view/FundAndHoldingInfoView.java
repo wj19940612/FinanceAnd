@@ -92,6 +92,7 @@ public class FundAndHoldingInfoView extends LinearLayout {
     }
 
     public void setTodayProfit(double todayProfit) {
+        todayProfit = Double.valueOf(FinanceUtil.formatWithScale(todayProfit));
         if (todayProfit == 0) {
             mTodayProfit.setText("0.00");
             mTodayProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
@@ -105,6 +106,7 @@ public class FundAndHoldingInfoView extends LinearLayout {
     }
 
     public void setHoldingFloat(double floatProfit) {
+        floatProfit = Double.valueOf(FinanceUtil.formatWithScale(floatProfit));
         if (floatProfit == 0) {
             mHoldingFloat.setText("0.00");
             mHoldingFloat.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));

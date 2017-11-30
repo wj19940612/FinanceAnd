@@ -167,7 +167,7 @@ public class PasswordEditText extends LinearLayout {
         try {
             f = TextView.class.getDeclaredField("mCursorDrawableRes");
             f.setAccessible(true);
-            f.set(editText, R.drawable.color_cursor);
+            f.set(editText, R.drawable.cursor_primary);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

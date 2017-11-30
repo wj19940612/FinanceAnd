@@ -1,6 +1,7 @@
 package com.sbai.finance.model.local;
 
 import static com.sbai.finance.utils.StockUtil.FEE_RATE;
+import static com.sbai.finance.utils.StockUtil.MINIMUM_FEE;
 import static com.sbai.finance.utils.StockUtil.STAMP_TAX_RATE;
 
 /**
@@ -61,9 +62,9 @@ public class StockOrder {
 
     public double getFee() {
         if (deputeType == DEPUTE_TYPE_ENTRUST_SELL) {
-            return price * quantity * FEE_RATE + price * quantity * STAMP_TAX_RATE;
+            return Math.max(price * quantity * FEE_RATE + price * quantity * STAMP_TAX_RATE, MINIMUM_FEE);
         }
-        return price * quantity * FEE_RATE;
+        return Math.max(price * quantity * FEE_RATE, MINIMUM_FEE);
     }
 
     public double getValue() {

@@ -677,6 +677,9 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
 
     private void updateQuestionReplyList(List<QuestionReply.DataBean> questionReplyList, int resultCount, boolean isRefresh) {
         mCommentNumber.setText(getString(R.string.comment_number_string, StrFormatter.getFormatCount(resultCount)));
+        if (resultCount != 0 && mQuestion != null) {
+            mQuestion.setReplyCount(resultCount);
+        }
         if (resultCount > 0) {
             mNoComment.setVisibility(View.GONE);
             mCommentArea.setBackgroundColor(ContextCompat.getColor(this, R.color.background));

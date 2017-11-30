@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.stock.StockUser;
@@ -43,6 +42,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.sbai.finance.activity.trade.trade.StockOrderActivity.ACTION_REFRESH_AUTO;
+import static com.sbai.finance.activity.trade.trade.StockOrderActivity.ACTION_REFRESH_MANUAL;
+
 /**
  * 股票委托记录页
  */
@@ -61,9 +63,12 @@ public class StockEntrustFragment extends BaseFragment {
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equalsIgnoreCase(StockOrderActivity.ACTION_SWITCH_ACCOUNT)) {
+            if (intent.getAction().equalsIgnoreCase(ACTION_REFRESH_MANUAL)) {
                 mStockUser = LocalUser.getUser().getStockUser();
                 requestEntrust(true);
+            }
+            if (intent.getAction().equalsIgnoreCase(ACTION_REFRESH_AUTO)) {
+                requestEntrust(false);
             }
         }
     };
@@ -86,7 +91,7 @@ public class StockEntrustFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        requestEntrust(false);
+        requestEntrust(true);
         startScheduleJob(5 * 1000);
     }
 
@@ -114,7 +119,8 @@ public class StockEntrustFragment extends BaseFragment {
 
     private void initBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(StockOrderActivity.ACTION_SWITCH_ACCOUNT);
+        intentFilter.addAction(ACTION_REFRESH_MANUAL);
+        intentFilter.addAction(ACTION_REFRESH_AUTO);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, intentFilter);
     }
 
@@ -153,16 +159,19 @@ public class StockEntrustFragment extends BaseFragment {
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        requestEntrust(true);
-
+                        notifyRefreshData();
                     }
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         ToastUtil.show(failedResp.getMsg());
-                        requestEntrust(true);
+                        notifyRefreshData();
                     }
                 }).fireFree();
+    }
+
+    private void notifyRefreshData() {
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_REFRESH_AUTO));
     }
 
     private void updateEntrust(List<Entrust> data, boolean manualRefresh) {
@@ -345,11 +354,17 @@ public class StockEntrustFragment extends BaseFragment {
                     mBusinessDate.setText(DateUtil.format(entrust.getBargainTime(), "MM/dd"));
                     mBusinessTime.setText(DateUtil.format(entrust.getBargainTime(), "HH:mm"));
                 }
-                mOperateArea.setVisibility(View.GONE);
+                if (mManualRefresh) {
+                    index = -1;
+                }
                 if (index > -1 && mEntrustList.size() > index && mEntrustList.get(index) != null) {
                     if (!mManualRefresh && position == index && mEntrustList.get(index).getId() == entrust.getId()) {
                         mOperateArea.setVisibility(View.VISIBLE);
+                    } else {
+                        mOperateArea.setVisibility(View.GONE);
                     }
+                } else {
+                    mOperateArea.setVisibility(View.GONE);
                 }
                 mPositionArea.setOnClickListener(new View.OnClickListener() {
                     @Override

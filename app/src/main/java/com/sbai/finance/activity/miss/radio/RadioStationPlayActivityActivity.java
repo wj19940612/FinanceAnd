@@ -255,6 +255,9 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                 updateListenNumber();
             }
         }
+        if (mRadio != null && MissAudioManager.get().isPaused(mRadio)) {
+            mRadioPlayLL.setMediaPlayProgress(MissAudioManager.get().getCurrentPosition(), mRadio.getAudioTime() * 1000);
+        }
     }
 
     private void updateListenNumber() {

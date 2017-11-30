@@ -31,6 +31,7 @@
         android:gravity="center"
         android:inputType="numberDecimal"
         android:textColor="@color/primaryText"
+        android:textCursorDrawable="@drawable/cursor_primary"
         android:textSize="15sp"
         tools:hint="@string/buy_price"/>
 

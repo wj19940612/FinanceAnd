@@ -29,6 +29,7 @@ public abstract class ApiCallback<T> implements Response.Listener<T>, Response.E
     private onFinishedListener mOnFinishedListener;
     private String mTag;
     private ApiIndeterminate mIndeterminate;
+    private String mId;
 
     public void setUrl(String url) {
         mUrl = url;
@@ -48,6 +49,14 @@ public abstract class ApiCallback<T> implements Response.Listener<T>, Response.E
 
     public String getUrl() {
         return mUrl;
+    }
+
+    public String getId() {
+        return mId;
+    }
+
+    public void setId(String id) {
+        mId = id;
     }
 
     public void setIndeterminate(ApiIndeterminate Indeterminate) {
