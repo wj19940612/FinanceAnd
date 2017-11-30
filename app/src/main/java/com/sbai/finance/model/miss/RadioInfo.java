@@ -40,6 +40,7 @@ public class RadioInfo {
     private int updateUserId;//审核人员
     private String userPortrait;//电台主播头像
     private String radioHostName;//电台主播名称
+    private long showTime;       //展示时间
 
     public long getCreateTime() {
         return createTime;
@@ -175,5 +176,13 @@ public class RadioInfo {
 
     public void setRadioHostName(String radioHostName) {
         this.radioHostName = radioHostName;
+    }
+
+    public long getShowTime() {
+        return showTime;
+    }
+
+    public void setShowTime(long showTime) {
+        this.showTime = showTime;
     }
 }

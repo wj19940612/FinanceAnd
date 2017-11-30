@@ -3287,4 +3287,12 @@ public class Client {
     public static API updateAnswerReadStatus(int id){
         return new API("/user/user/readQuestion.do",new ApiParams().put("id",id));
     }
+
+    /**
+     * 抢答问题
+     */
+    public static API rushToAnswer(int id){
+        return new API("/user/user/rushToAnswer.do",new ApiParams().put("questionId",id));
+    }
+
 }

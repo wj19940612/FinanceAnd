@@ -202,6 +202,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
 
             @Override
             public void onPageSelected(int position) {
+                mPosition = position;
                 setPositionBtn(position);
             }
 
