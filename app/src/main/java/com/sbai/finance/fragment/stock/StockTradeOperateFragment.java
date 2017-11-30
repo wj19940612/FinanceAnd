@@ -585,7 +585,7 @@ public class StockTradeOperateFragment extends BaseFragment {
         StockUser stockUser = LocalUser.getUser().getStockUser();
         int deputeType = mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY ?
                 StockOrder.DEPUTE_TYPE_ENTRUST_BUY : StockOrder.DEPUTE_TYPE_ENTRUST_SELL;
-        int volume = Integer.parseInt(mTradeVolume.getText());
+        double volume = Double.parseDouble(mTradeVolume.getText());
         double price = Double.parseDouble(mTradePrice.getText());
         String uuid = UUID.randomUUID().toString().replace("-", "");
 

@@ -23,7 +23,7 @@ public class StockOrder {
     private String activityCode;
     private String varietyCode;
     private String varietyName;
-    private int quantity;
+    private double quantity;
     private double price;
     private int deputeType;
     private String signId;
@@ -48,7 +48,7 @@ public class StockOrder {
         return varietyName;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 
@@ -77,7 +77,7 @@ public class StockOrder {
         private String activityCode;
         private String varietyCode;
         private String varietyName;
-        private int quantity;
+        private double quantity;
         private double price;
         private int deputeType;
         private String signId;
@@ -110,7 +110,7 @@ public class StockOrder {
             return this;
         }
 
-        public Builder quantity(int val) {
+        public Builder quantity(double val) {
             quantity = val;
             return this;
         }
