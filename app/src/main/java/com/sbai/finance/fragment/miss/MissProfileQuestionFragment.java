@@ -434,18 +434,20 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         int firstVisiblePosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         int lastVisiblePosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
         boolean visibleItemsStarted = false;
-        for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
-            if (i >= mQuestionListAdapter.getCount()) continue; // Skip header
-            Question question = mQuestionList.get(i);
-            if (question != null && MissAudioManager.get().isStarted(question)) {
-                View view = mRecyclerView.getChildAt(i - firstVisiblePosition);
-                TextView soundTime = view.findViewById(R.id.soundTime);
-                ProgressBar progressBar = view.findViewById(R.id.progressBar);
-                progressBar.setMax(question.getSoundTime() * 1000);
-                int pastTime = MissAudioManager.get().getCurrentPosition();
-                soundTime.setText(getString(R.string._seconds, (question.getSoundTime() * 1000 - pastTime) / 1000));
-                progressBar.setProgress(pastTime);
-                visibleItemsStarted = true;
+        if (firstVisiblePosition < 0 && lastVisiblePosition < 0 && mQuestionList.size() > 0) {
+            for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
+                if (i >= mQuestionListAdapter.getCount()) continue; // Skip header
+                Question question = mQuestionList.get(i);
+                if (question != null && MissAudioManager.get().isStarted(question)) {
+                    View view = mRecyclerView.getChildAt(i - firstVisiblePosition);
+                    TextView soundTime = view.findViewById(R.id.soundTime);
+                    ProgressBar progressBar = view.findViewById(R.id.progressBar);
+                    progressBar.setMax(question.getSoundTime() * 1000);
+                    int pastTime = MissAudioManager.get().getCurrentPosition();
+                    soundTime.setText(getString(R.string._seconds, (question.getSoundTime() * 1000 - pastTime) / 1000));
+                    progressBar.setProgress(pastTime);
+                    visibleItemsStarted = true;
+                }
             }
         }
 
@@ -556,6 +558,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
 
     @Override
     public void onDestroyView() {
+        Log.e("zzz", "onDestroyView");
         super.onDestroyView();
         mHasEnter = false;
         mBind.unbind();
