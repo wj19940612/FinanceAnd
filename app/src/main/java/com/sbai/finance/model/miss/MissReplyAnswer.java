@@ -40,10 +40,19 @@ public class MissReplyAnswer implements MissAudioManager.IAudio {
     private String userPortrait;  //提问人头像
     private List<ReplyVOBean> replyVO;
     private int appointCustomId;
+    private int userType;
 
     //自己加的
     private String audioPath;
     private int audioId;
+
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
 
     public void setAudioId(int audioId) {
         this.audioId = audioId;

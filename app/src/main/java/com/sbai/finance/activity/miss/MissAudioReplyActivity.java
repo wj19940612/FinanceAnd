@@ -41,6 +41,7 @@ import butterknife.OnClick;
 
 public class MissAudioReplyActivity extends MediaPlayActivity implements MissRecordedAudioLayout.OnRecordAudioListener {
 
+    public static final int QUESTION_TYPE_IS_NOT_SPECIFIED_MISS = 1;
 
     private static final int SUBMIT_INIT = 0;
     private static final int SUBMIT_PROCEED = 1;
@@ -99,6 +100,12 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
         initView();
 
         int questionId = getIntent().getIntExtra(ExtraKeys.QUESTION_ID, -1);
+        int questionType = getIntent().getIntExtra(ExtraKeys.QUESTION_TYPE, 0);
+        if (questionType == QUESTION_TYPE_IS_NOT_SPECIFIED_MISS) {
+            mTitleBar.setTitle(R.string.question_answer_detail);
+        } else {
+            mTitleBar.setTitle(R.string.wait_me_answer);
+        }
         requestQuestionDetail(questionId);
     }
 
@@ -147,8 +154,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
     }
 
     private void updateReplyAnswerInfo(MissReplyAnswer data) {
-        // TODO: 2017/12/1 缺少用户类型
-        mAvatar.setAvatar(data.getUserPortrait(), 0);
+        mAvatar.setAvatar(data.getUserPortrait(), data.getUserType());
         mName.setText(data.getUserName());
         mAskTime.setText(DateUtil.formatDefaultStyleTime(data.getCreateTime()));
         mQuestionContent.setText(data.getQuestionContext());

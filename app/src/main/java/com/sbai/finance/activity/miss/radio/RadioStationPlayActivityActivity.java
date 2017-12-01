@@ -262,8 +262,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     }
 
     private void updateListenNumber() {
-        if (mRadio == null) return;
-        Client.listenRadioAudio(mRadio.getAudioId())
+        Client.listenRadioAudio(mVoiceId)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
