@@ -17,6 +17,7 @@ import com.sbai.httplib.CookieManger;
 import com.sbai.httplib.GsonRequest;
 import com.sbai.httplib.RequestManager;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -37,6 +38,9 @@ public class API extends RequestManager {
     private ApiIndeterminate mIndeterminate;
     private RetryPolicy mRetryPolicy;
     private String mBody;
+
+    private String mFilePartName;
+    private File mFile;
 
     public API(String uri) {
         this(Request.Method.GET, uri, null, 0);
@@ -74,6 +78,14 @@ public class API extends RequestManager {
         mMethod = method;
         mTag = "";
         mBody = jsonBody;
+    }
+
+    public API(int method, String uri, ApiParams apiParams, String filePartName, File file) {
+        mApiParams = apiParams;
+        mMethod = method;
+        mUri = uri;
+        mFilePartName = filePartName;
+        mFile = file;
     }
 
 
@@ -133,6 +145,20 @@ public class API extends RequestManager {
         String url = createUrl();
 
         createThenEnqueue(url);
+    }
+
+    public void fireMultipartFile() {
+        synchronized (sCurrentUrls) {
+            String url = createUrl();
+
+            if (sCurrentUrls.add(mTag + "#" + url)) {
+                createMultipartThenEnqueue(url);
+            }
+        }
+    }
+
+    private void createMultipartThenEnqueue(String url) {
+
     }
 
     private String createUrl() {
