@@ -78,8 +78,7 @@
         app:rowTextSize="15sp"
         app:rowVerticalPadding="0dp"
         app:subTextVisible="visible"
-        app:subTextSingleLine="true"
-        app:subTextLeftMargin="10dp"/>
+        app:subTextSingleLine="true"/>
 
     <com.sbai.finance.view.IconTextRow
         android:id="@+id/sex"
