@@ -25,6 +25,7 @@
         android:paddingTop="12dp"
         android:textColor="@color/blackPrimary"
         android:textColorHint="@color/unluckyText"
+        android:hint="@string/please_introduce_yourself"
         android:textSize="15sp"/>
 
     <TextView

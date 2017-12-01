@@ -41,6 +41,7 @@ public class RadioInfo {
     private String userPortrait;//电台主播头像
     private String radioHostName;//电台主播名称
     private long showTime;       //展示时间
+    private int show;            //1-展示 0-下架
 
     public long getCreateTime() {
         return createTime;
@@ -184,5 +185,13 @@ public class RadioInfo {
 
     public void setShowTime(long showTime) {
         this.showTime = showTime;
+    }
+
+    public int getShow() {
+        return show;
+    }
+
+    public void setShow(int show) {
+        this.show = show;
     }
 }

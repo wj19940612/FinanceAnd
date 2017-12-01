@@ -44,28 +44,38 @@ public class SettingActivity extends BaseActivity {
         requestNoReadFeedbackNumber();
     }
 
-    @OnClick({R.id.shieldSetting, R.id.newMessageNotification, R.id.appInfo, R.id.securityCenter, R.id.feedback,R.id.aboutUs,R.id.logout})
+    @OnClick({R.id.shieldSetting, R.id.newMessageNotification, R.id.appInfo, R.id.securityCenter, R.id.feedback, R.id.aboutUs, R.id.logout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.shieldSetting:
                 break;
             case R.id.newMessageNotification:
-                umengEventCount(UmengCountEventId.ME_NEW_AWAIT);
-                Launcher.with(getActivity(), SetNotificationSwitchActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    umengEventCount(UmengCountEventId.ME_NEW_AWAIT);
+                    Launcher.with(getActivity(), SetNotificationSwitchActivity.class).execute();
+                } else {
+                    openLoginPage();
+                }
+
                 break;
             case R.id.securityCenter:
-                umengEventCount(UmengCountEventId.ME_SAFETY_CENTER);
-                Client.getUserHasPassWord()
-                        .setTag(TAG).setIndeterminate(this)
-                        .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
-                            @Override
-                            protected void onRespSuccessData(Boolean data) {
-                                Launcher.with(getActivity(), SecurityCenterActivity.class)
-                                        .putExtra(ExtraKeys.HAS_SECURITY_PSD, data.booleanValue())
-                                        .execute();
-                            }
-                        })
-                        .fire();
+                if (LocalUser.getUser().isLogin()) {
+                    umengEventCount(UmengCountEventId.ME_SAFETY_CENTER);
+                    Client.getUserHasPassWord()
+                            .setTag(TAG).setIndeterminate(this)
+                            .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                                @Override
+                                protected void onRespSuccessData(Boolean data) {
+                                    Launcher.with(getActivity(), SecurityCenterActivity.class)
+                                            .putExtra(ExtraKeys.HAS_SECURITY_PSD, data.booleanValue())
+                                            .execute();
+                                }
+                            })
+                            .fire();
+                } else {
+                    openLoginPage();
+                }
+
 
                 break;
             case R.id.feedback:
@@ -87,8 +97,13 @@ public class SettingActivity extends BaseActivity {
                 }
                 break;
             case R.id.logout:
-                umengEventCount(UmengCountEventId.ME_EXIT_LOGIN);
-                logout();
+                if (LocalUser.getUser().isLogin()) {
+                    umengEventCount(UmengCountEventId.ME_EXIT_LOGIN);
+                    logout();
+                } else {
+                    openLoginPage();
+                }
+
                 break;
         }
     }
