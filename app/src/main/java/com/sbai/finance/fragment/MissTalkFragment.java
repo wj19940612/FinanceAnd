@@ -31,7 +31,7 @@ import com.sbai.finance.activity.miss.CommentActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
-import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
 import com.sbai.finance.fragment.miss.MissAskFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
@@ -299,7 +299,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     private void requestMissSwitcherList() {
         Client.requestMissSwitcherList()
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<List<MissSwitcherModel>>, List<MissSwitcherModel>>() {
                     @Override
                     protected void onRespSuccessData(List<MissSwitcherModel> data) {
@@ -311,7 +310,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
     public void requestRadioList() {
         Client.requestRadioList()
-                .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Radio>>, List<Radio>>() {
                     @Override
@@ -355,7 +353,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mSlidingTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(60, getResources()));
         mSlidingTabLayout.setSelectedIndicatorHeight(2);
-        mSlidingTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.primary_or_unlucky_text_color));
+        mSlidingTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.tab_miss_question));
         mSlidingTabLayout.setViewPager(mViewPager);
         mViewPager.setCurrentItem(0, false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -402,7 +400,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
             @Override
             public void onMissRadioClick(Radio radio) {
-                Launcher.with(getActivity(), RadioStationPlayActivityActivity.class)
+                Launcher.with(getActivity(), RadioStationPlayActivity.class)
                         .putExtra(ExtraKeys.RADIO, radio)
                         .execute();
             }
@@ -466,7 +464,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
                         umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
                     } else {
-                        Launcher.with(getContext(), RadioStationPlayActivityActivity.class)
+                        Launcher.with(getContext(), RadioStationPlayActivity.class)
                                 .putExtra(ExtraKeys.RADIO, (Radio) audio)
                                 .execute();
                     }

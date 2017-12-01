@@ -35,6 +35,7 @@ import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
 import com.sbai.finance.activity.miss.MissAudioReplyActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.model.Banner;
@@ -263,6 +264,16 @@ public class PushIntentService extends GTIntentService {
                 intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 1);
                 try {
                     intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
+                } catch (NumberFormatException e) {
+                    if (!BuildConfig.IS_PROD) {
+                        ToastUtil.show("web data is error" + data.getDataId());
+                    }
+                }
+                break;
+            case PushMessageModel.AUDIO_DETAIL:
+                intent = new Intent(context, RadioStationPlayActivity.class);
+                try {
+                    intent.putExtra(ExtraKeys.IAudio, Integer.valueOf(data.getDataId()));
                 } catch (NumberFormatException e) {
                     if (!BuildConfig.IS_PROD) {
                         ToastUtil.show("web data is error" + data.getDataId());

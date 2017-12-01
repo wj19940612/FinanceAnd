@@ -3,12 +3,16 @@ package com.sbai.finance.view.radio;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
@@ -65,6 +69,7 @@ public class RadioInfoLayout extends LinearLayout {
     private Radio mRadio;
     private TextView mReviewTextView;
     private RadioDetails mRadioDetails;
+    private TextView mNoCommentGoAskQuestionTextView;
 
     public RadioInfoLayout(Context context) {
         this(context, null);
@@ -84,15 +89,36 @@ public class RadioInfoLayout extends LinearLayout {
 
 
         int padding = (int) Display.dp2Px(14, getResources());
-        mReviewTextView = new TextView(getContext());
+
+        RelativeLayout relativeLayout = new RelativeLayout(getContext());
+        relativeLayout.setBackgroundColor(Color.WHITE);
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(0, padding, 0, 0);
+
+        mReviewTextView = new TextView(getContext());
+
         mReviewTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_title_latest, 0, 0, 0);
         mReviewTextView.setPadding(padding, 15, 15, 0);
         mReviewTextView.setBackgroundColor(Color.WHITE);
         mReviewTextView.setCompoundDrawablePadding((int) Display.dp2Px(4, getResources()));
         mReviewTextView.setText(getContext().getString(R.string.comment_number_string, StrFormatter.getFormatCount(0)));
-        addView(mReviewTextView, layoutParams);
+
+
+        mNoCommentGoAskQuestionTextView = new TextView(getContext());
+        mNoCommentGoAskQuestionTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.unluckyText));
+        mNoCommentGoAskQuestionTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        mNoCommentGoAskQuestionTextView.setText(R.string.no_comment);
+        mNoCommentGoAskQuestionTextView.setGravity(Gravity.CENTER_VERTICAL);
+        mNoCommentGoAskQuestionTextView.setPadding(0, 5, padding, 0);
+
+        RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams1.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams1.addRule(RelativeLayout.CENTER_VERTICAL);
+
+
+        relativeLayout.addView(mReviewTextView, layoutParams);
+        relativeLayout.addView(mNoCommentGoAskQuestionTextView, layoutParams1);
+        addView(relativeLayout, layoutParams);
 
         mSubscribeStatus.setSelected(true);
         mSubscribeStatus.setText(R.string.subscribe);
@@ -117,6 +143,11 @@ public class RadioInfoLayout extends LinearLayout {
 
     public void setReviewNumber(int count) {
         mReviewTextView.setText(getContext().getString(R.string.comment_number_string, StrFormatter.getFormatCount(count)));
+        if (count > 0) {
+            mNoCommentGoAskQuestionTextView.setVisibility(GONE);
+        } else {
+            mNoCommentGoAskQuestionTextView.setVisibility(VISIBLE);
+        }
     }
 
     @Override

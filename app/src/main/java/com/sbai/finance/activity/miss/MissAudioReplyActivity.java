@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.finance.model.miss.MissReplyAnswer;
@@ -25,6 +26,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.finance.view.SmartDialog;
@@ -160,6 +162,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
         mQuestionContent.setText(data.getQuestionContext());
         if (data.getSolve() == MissReplyAnswer.QUESTION_SOLVE_STATUS_ALREADY_SOLVE) {
             mAudioRecord.setEnabled(false);
+            mPlayRl.setVisibility(View.VISIBLE);
             List<MissReplyAnswer.ReplyVOBean> replyVOBeans = data.getReplyVO();
             if (replyVOBeans != null && !replyVOBeans.isEmpty()) {
                 MissReplyAnswer.ReplyVOBean replyVOBean = replyVOBeans.get(0);
@@ -169,7 +172,9 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                 if (!TextUtils.isEmpty(replyVOBean.getCustomContext())) {
                     mMissReplyAnswer.setAudioPath(replyVOBean.getCustomContext());
                 }
+                mAudioLength.setText(getString(R.string.voice_time, replyVOBean.getSoundTime()));
             }
+            changeSubmitStatus(SUBMIT_SUCCESS);
         } else {
             if (LocalUser.getUser().isLogin()) {
                 UserInfo userInfo = LocalUser.getUser().getUserInfo();
@@ -203,22 +208,39 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
 
     }
 
-    @OnClick({R.id.avatar, R.id.questionRl, R.id.missAvatar, R.id.missName, R.id.play, R.id.clickPlay, R.id.playSubmitRl})
+    @OnClick({R.id.avatar, R.id.questionRl, R.id.missAvatar, R.id.missName, R.id.play, R.id.clickPlay, R.id.submitStatusLL})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.avatar:
+                if (mMissReplyAnswer != null) {
+                    Launcher.with(getActivity(), LookBigPictureActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mMissReplyAnswer.getUserPortrait())
+                            .putExtra(Launcher.EX_PAYLOAD_2, 0)
+                            .execute();
+                }
                 break;
             case R.id.questionRl:
                 break;
             case R.id.missAvatar:
-                break;
-            case R.id.missName:
+                if (mMissReplyAnswer != null) {
+                    if (mMissReplyAnswer.getReplyVO() != null && !mMissReplyAnswer.getReplyVO().isEmpty()) {
+                        Launcher.with(getActivity(), MissProfileDetailActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, mMissReplyAnswer.getReplyVO().get(0).getCustomId())
+                                .execute();
+                    } else {
+                        if (LocalUser.getUser().isLogin()) {
+                            Launcher.with(getActivity(), MissProfileDetailActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, LocalUser.getUser().getUserInfo().getCustomId())
+                                    .execute();
+                        }
+                    }
+                }
                 break;
             case R.id.play:
             case R.id.clickPlay:
                 playAudio();
                 break;
-            case R.id.playSubmitRl:
+            case R.id.submitStatusLL:
                 showSubmitAudioVerifyDialog();
                 break;
         }
@@ -311,10 +333,12 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                 mLoading.setVisibility(View.GONE);
                 mAudioRecord.setEnabled(true);
                 mSubmitStatus.setText(R.string.restart_submit);
+                mSubmitSuccess = true;
                 break;
             case SUBMIT_SUCCESS:
                 mSubmitSuccess = true;
                 mLoading.clearAnimation();
+                mLoading.setVisibility(View.VISIBLE);
                 mSubmitStatusLL.setBackgroundColor(Color.TRANSPARENT);
                 mLoading.setImageResource(R.drawable.ic_training_result_tick);
                 mSubmitStatus.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));

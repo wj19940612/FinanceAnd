@@ -13,7 +13,8 @@
             <corners android:radius="@dimen/hundred_radius"/>
         </shape>
     </item>
-    <item>
+
+    <item android:state_enabled="false">
         <shape>
             <corners android:radius="@dimen/hundred_radius"/>
             <solid android:color="@color/background"/>

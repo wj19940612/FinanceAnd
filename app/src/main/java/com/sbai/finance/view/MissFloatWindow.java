@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
-import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.service.MediaPlayService;
@@ -86,7 +86,7 @@ public class MissFloatWindow extends LinearLayout {
                     if (mOnMissFloatWindowClickListener != null) {
                         mOnMissFloatWindowClickListener.onClick(MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
                     }
-                    Launcher.with(getContext(), RadioStationPlayActivityActivity.class)
+                    Launcher.with(getContext(), RadioStationPlayActivity.class)
                             .putExtra(ExtraKeys.RADIO, (Radio) audio)
                             .execute();
                 }

@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Question;
@@ -270,7 +270,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
                     finish();
                 }
             } else {
-                Launcher.with(this, RadioStationPlayActivityActivity.class).putExtra(ExtraKeys.RADIO, radioInfo).executeForResult(222);
+                Launcher.with(this, RadioStationPlayActivity.class).putExtra(ExtraKeys.RADIO, radioInfo).executeForResult(222);
             }
         }
     }

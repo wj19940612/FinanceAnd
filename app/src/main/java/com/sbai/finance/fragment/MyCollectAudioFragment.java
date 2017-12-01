@@ -1,12 +1,10 @@
 package com.sbai.finance.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +17,11 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.activity.miss.QuestionDetailActivity;
-import com.sbai.finance.activity.miss.radio.RadioStationPlayActivityActivity;
-import com.sbai.finance.fragment.mine.MyCollectQuestionFragment;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
 import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.ListEmptyView;
@@ -89,7 +83,7 @@ public class MyCollectAudioFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MyCollect question = (MyCollect) parent.getAdapter().getItem(position);
                 if (question.getShow() != 0) {
-                    Launcher.with(getActivity(), RadioStationPlayActivityActivity.class).putExtra(ExtraKeys.IAudio, question.getDataId()).execute();
+                    Launcher.with(getActivity(), RadioStationPlayActivity.class).putExtra(ExtraKeys.IAudio, question.getDataId()).execute();
                 }
             }
         });

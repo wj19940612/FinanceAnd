@@ -113,7 +113,8 @@ public class WaitAnswerFragment extends BaseFragment {
                 requestUpdateReadStatus(answer.getId());
 
                 Launcher.with(getActivity(), MissAudioReplyActivity.class)
-                        .putExtra(ExtraKeys.QUESTION_ID,answer.getId())
+                        .putExtra(ExtraKeys.QUESTION_ID, answer.getId())
+                        .putExtra(ExtraKeys.QUESTION_TYPE, MissAudioReplyActivity.QUESTION_TYPE_IS_NOT_SPECIFIED_MISS)
                         .execute();
 
 //                //TODO 跳转回答录音界面
@@ -156,7 +157,7 @@ public class WaitAnswerFragment extends BaseFragment {
         mAnswerAdapter.addAll(data);
     }
 
-    private void requestUpdateReadStatus(int id){
+    private void requestUpdateReadStatus(int id) {
         Client.updateAnswerReadStatus(id).setTag(TAG).fire();
     }
 

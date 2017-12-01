@@ -184,6 +184,7 @@ public class AppJs {
                 Launcher.with(mContext, MissProfileDetailActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, missId)
                         .execute();
+                ((WebActivity) mContext).finish();
                 break;
             case JsOpenAppPageType.FUTURE_BATTLE:
                 break;

@@ -300,7 +300,7 @@
         <!-- 排行榜 -->
 
         <activity
-            android:name=".activity.miss.radio.RadioStationPlayActivityActivity"
+            android:name=".activity.miss.radio.RadioStationPlayActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
         <activity

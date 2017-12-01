@@ -7,6 +7,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
@@ -36,7 +37,7 @@ public class ForgetSecurityPassActivity extends BaseActivity {
     @BindView(R.id.authCode)
     AppCompatEditText mAuthCode;
     @BindView(R.id.getAuthCode)
-    AppCompatTextView mGetAuthCode;
+    TextView mGetAuthCode;
     @BindView(R.id.submit)
     AppCompatTextView mSubmit;
 
@@ -49,7 +50,6 @@ public class ForgetSecurityPassActivity extends BaseActivity {
         setContentView(R.layout.activity_forget_security_pass);
         ButterKnife.bind(this);
         mAuthCode.addTextChangedListener(mValidationWatcher);
-
         mPhoneNumber.setText(StrFormatter.getFormatSafetyPhoneNumber(LocalUser.getUser().getPhone()));
     }
 

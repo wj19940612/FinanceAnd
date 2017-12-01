@@ -109,7 +109,9 @@ public class MissRadioViewSwitcher extends LinearLayout implements TimerHandler.
             mMissSwitcherModelList = missSwitcherModelList;
             setVisibility(VISIBLE);
             mTimerHandler.removeCallbacksAndMessages(null);
-            mTimerHandler.sendEmptyMessageDelayed(SWITCHER_CHANGE_TIME, 0);
+            if (missSwitcherModelList.size() != 1) {
+                mTimerHandler.sendEmptyMessageDelayed(SWITCHER_CHANGE_TIME, 0);
+            }
         }
     }
 

@@ -38,55 +38,65 @@
         app:layout_constraintTop_toBottomOf="@+id/view"
         tools:text="溺水的鱼的专属电调f发货速度快分\n卡计划的尽快发货都是分开"/>
 
-    <TextView
-        android:id="@+id/radioUpdateTime"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/common_padding"
-        android:layout_marginTop="11dp"
-        android:textColor="@color/unluckyText"
-        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/startLL"
         app:layout_constraintStart_toEndOf="@+id/radioCover"
-        app:layout_constraintTop_toBottomOf="@+id/voiceName"
-        tools:text="1小时前"/>
+        app:layout_constraintTop_toBottomOf="@+id/voiceName">
 
-    <TextView
-        android:id="@+id/radioOwnerName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="11dp"
-        android:maxLines="1"
-        android:textColor="@color/unluckyText"
-        android:textSize="12sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/radioUpdateTime"
-        app:layout_constraintStart_toEndOf="@+id/radioUpdateTime"
-        app:layout_constraintTop_toBottomOf="@+id/voiceName"
-        tools:text="丁丁"/>
+        <TextView
+            android:id="@+id/radioUpdateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:textColor="@color/unluckyText"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/radioCover"
+            app:layout_constraintTop_toBottomOf="@+id/voiceName"
+            tools:text="1小时前"/>
 
-    <View
-        android:id="@+id/spit"
-        android:layout_width="0.5dp"
-        android:layout_height="10dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="15dp"
-        android:background="@color/split"
-        app:layout_constraintStart_toEndOf="@+id/radioOwnerName"
-        app:layout_constraintTop_toBottomOf="@+id/voiceName"/>
+        <TextView
+            android:id="@+id/radioOwnerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="11dp"
+            android:maxLines="1"
+            android:textColor="@color/unluckyText"
+            android:textSize="12sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/radioUpdateTime"
+            app:layout_constraintStart_toEndOf="@+id/radioUpdateTime"
+            app:layout_constraintTop_toBottomOf="@+id/voiceName"
+            tools:text="丁丁as"/>
 
-    <TextView
-        android:id="@+id/radioName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="11dp"
-        android:maxLines="1"
-        android:textColor="@color/unluckyText"
-        android:textSize="12sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/radioUpdateTime"
-        app:layout_constraintStart_toEndOf="@+id/spit"
-        app:layout_constraintTop_toBottomOf="@+id/voiceName"
-        tools:text="发的顺丰到付"/>
+        <View
+            android:id="@+id/spit"
+            android:layout_width="0.5dp"
+            android:layout_height="10dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/split"
+            app:layout_constraintStart_toEndOf="@+id/radioOwnerName"
+            app:layout_constraintTop_toBottomOf="@+id/voiceName"/>
+
+        <TextView
+            android:id="@+id/radioName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="11dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/unluckyText"
+            android:textSize="12sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/radioUpdateTime"
+            app:layout_constraintStart_toEndOf="@+id/spit"
+            app:layout_constraintTop_toBottomOf="@+id/voiceName"
+            tools:text="发的顺丰到付手机打开了飞机速度来看第三方简单的"/>
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/startLL"

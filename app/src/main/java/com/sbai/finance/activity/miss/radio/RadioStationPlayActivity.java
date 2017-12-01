@@ -46,10 +46,9 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.OnItemClickListener;
 import com.sbai.finance.utils.RenderScriptGaussianBlur;
-import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.finance.view.dialog.ShareDialog;
@@ -66,7 +65,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class RadioStationPlayActivityActivity extends MediaPlayActivity {
+public class RadioStationPlayActivity extends MediaPlayActivity {
 
     @BindView(R.id.radioPlayLL)
     RadioInfoPlayLayout mRadioPlayLL;
@@ -144,11 +143,12 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     protected void onPostResume() {
         super.onPostResume();
         requestAudioDetails();
-        requestRadioReplyList(false);
+        requestRadioReplyList();
         requestRadioDetails();
     }
 
-    private void requestRadioReplyList(final boolean showToast) {
+    private void requestRadioReplyList() {
+        if(mRadio==null) return;
         Client.requestRadioReplyList(mPage, mRadio.getRadioId(), mRadio.getAudioId())
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
@@ -303,6 +303,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
         mRadio = radio;
         mRadioCollect.setSelected(radio.getCollect() == RadioDetails.COLLECT);
         updateAudio();
+        requestRadioReplyList();
     }
 
     private void initView() {
@@ -374,7 +375,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (mLoadMore && recycleIsScrollBottom(recyclerView)) {
-                    requestRadioReplyList(false);
+                    requestRadioReplyList();
                 }
             }
 
@@ -416,7 +417,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     private void refreshRadioReviewData() {
         mSet.clear();
         mPage = 0;
-        requestRadioReplyList(true);
+        requestRadioReplyList();
         requestAudioDetails();
     }
 
@@ -606,7 +607,6 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
-                            ToastUtil.show(resp.getMsg());
                             mRadio.setCollect(mRadio.getCollect() == RadioDetails.COLLECT ? 0 : RadioDetails.COLLECT);
                             mRadioCollect.setSelected(mRadio.getCollect() == RadioDetails.COLLECT);
                         }

@@ -5,7 +5,7 @@ package com.sbai.finance.model.system;
  * h5和原生页面交互的type
  * <p>
  * //0 日报 1用户相关的信息,3 学一学, 4关注小姐姐用户的推送-后台,5训练 6活动 7模块 8反馈 9关注小姐姐用户的推送-前台自动 10 期货对战 11 竞技场 12 充值 13钱包  14  直接跳转h5页面的
- * 15 向主播提问-指定小姐姐  16 向主播提问-未指定小姐姐 17、话题 18 小姐姐上传的音频通过审核
+ * 15 向主播提问-指定小姐姐  16 向主播提问-未指定小姐姐 17、话题 18 小姐姐上传的音频通过审核  19 音频详情页
  */
 
 public interface JsOpenAppPageType {
@@ -27,5 +27,6 @@ public interface JsOpenAppPageType {
     int ASK_QUESTION_UNASSIGNED_MISS = 16;  // 待抢答页面
     int TOPIC = 17;                         //H5的话题详情页
     int MISS_AUDIO_IS_PASS_AUDIT = 18;      // 小姐姐详情页 电台标签页
+    int AUDIO_DETAIL = 19; //音频详情页
 
 }
