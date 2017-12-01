@@ -16,15 +16,14 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
+import com.sbai.finance.activity.miss.MissAudioReplyActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.Answer;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
-import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.ListEmptyView;
@@ -112,7 +111,12 @@ public class WaitAnswerFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Answer answer = (Answer) parent.getAdapter().getItem(position);
                 requestUpdateReadStatus(answer.getId());
-                //TODO 跳转回答录音界面
+
+                Launcher.with(getActivity(), MissAudioReplyActivity.class)
+                        .putExtra(ExtraKeys.QUESTION_ID,answer.getId())
+                        .execute();
+
+//                //TODO 跳转回答录音界面
 //                if (question != null && question.isQuestionSolved()) {
 //                    mClickQuestion = question;
 //                    Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);

@@ -7,6 +7,8 @@ public class MissMessage {
     public static final int TYPE_COMMENT = 50;
     public static final int TYPE_REPLY = 51;
     public static final int TYPE_MISS_ANSWER = 52;
+    public static final int TYPE_MISS_TOPIC = 56;
+    public static final int TYPE_MISS_TOPIC_COMMENT = 57;
     public static final int READ = 1;
 
     /**

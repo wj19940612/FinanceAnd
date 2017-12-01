@@ -1,6 +1,6 @@
 package com.sbai.finance.model.miss;
 
-import com.sbai.finance.utils.MissAudioManager;
+import com.sbai.finance.utils.audio.MissAudioManager;
 
 import java.io.Serializable;
 

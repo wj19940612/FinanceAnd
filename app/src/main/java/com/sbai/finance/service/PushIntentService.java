@@ -29,13 +29,17 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.battle.BattleActivity;
+import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
+import com.sbai.finance.activity.miss.MissAudioReplyActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
 import com.sbai.finance.activity.web.DailyReportDetailActivity;
 import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.push.PushMessageModel;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -234,6 +238,36 @@ public class PushIntentService extends GTIntentService {
             case PushMessageModel.H5_LINK:
                 intent = new Intent(context, MainActivity.class);
                 intent.putExtra(ExtraKeys.WEB_PAGE_URL, data.getUrl());
+                break;
+            case PushMessageModel.ASK_QUESTION_DESIGNATED_MISS:
+                intent = new Intent(context, MissAudioReplyActivity.class);
+                try {
+                    intent.putExtra(ExtraKeys.QUESTION_ID, Integer.valueOf(data.getDataId()));
+                    intent.putExtra(ExtraKeys.QUESTION_TYPE, MissAudioReplyActivity.QUESTION_TYPE_IS_NOT_SPECIFIED_MISS);
+                } catch (NumberFormatException e) {
+                    if (!BuildConfig.IS_PROD) {
+                        ToastUtil.show("web data is error" + data.getDataId());
+                    }
+                }
+                break;
+            case PushMessageModel.ASK_QUESTION_UNASSIGNED_MISS:
+                intent = new Intent(context, WaitForMeAnswerActivity.class);
+                intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 1);
+                break;
+            case PushMessageModel.TOPIC:
+                intent = new Intent(context, WebActivity.class);
+                intent.putExtra(WebActivity.EX_URL, String.format(Client.MISS_TOP_DETAILS_H5_URL, data.getDataId()));
+                break;
+            case PushMessageModel.MISS_AUDIO_IS_PASS_AUDIT:
+                intent = new Intent(context, MissProfileDetailActivity.class);
+                intent.putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 1);
+                try {
+                    intent.putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(data.getDataId()));
+                } catch (NumberFormatException e) {
+                    if (!BuildConfig.IS_PROD) {
+                        ToastUtil.show("web data is error" + data.getDataId());
+                    }
+                }
                 break;
 
         }

@@ -83,6 +83,7 @@ android {
     productFlavors {
 
         dev {
+            applicationId "com.sbai.finance.dev"
             minSdkVersion 21
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
@@ -100,7 +101,7 @@ android {
         }
 
         alpha {
-            applicationId "com.sbai.finance.alpha"
+//            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-alpha'
             versionCode 148
             versionName "2.0.12010"
@@ -147,6 +148,7 @@ android {
         }
     }
 }
+
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')

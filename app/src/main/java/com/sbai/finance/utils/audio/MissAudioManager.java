@@ -1,4 +1,4 @@
-package com.sbai.finance.utils;
+package com.sbai.finance.utils.audio;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -176,10 +176,11 @@ public class MissAudioManager {
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mMediaPlayer.setDataSource(audioUrl);
+            mMediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
+            Log.d("MediaPlayer", "initializeAndPrepare: " + e.toString());
         }
-        mMediaPlayer.prepareAsync();
         mPreparing = true;
     }
 
