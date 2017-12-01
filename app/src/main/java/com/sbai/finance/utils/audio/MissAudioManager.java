@@ -176,10 +176,11 @@ public class MissAudioManager {
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             mMediaPlayer.setDataSource(audioUrl);
+            mMediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
+            Log.d("MediaPlayer", "initializeAndPrepare: " + e.toString());
         }
-        mMediaPlayer.prepareAsync();
         mPreparing = true;
     }
 

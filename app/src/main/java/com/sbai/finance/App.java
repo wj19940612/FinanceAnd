@@ -2,9 +2,14 @@ package com.sbai.finance;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 
+import com.sbai.finance.activity.CatchCrashActivity;
 import com.sbai.finance.net.API;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Logger;
 import com.sbai.httplib.CookieManger;
+import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 
@@ -19,32 +24,32 @@ public class App extends Application {
 		API.init(sContext.getCacheDir());
 		CookieManger.getInstance().init(sContext.getFilesDir());
 
-//		if (!BuildConfig.IS_PROD) {
-//			handleUncaughtException();
-//			Logger.init();
-//		}
-//
-//		if (BuildConfig.DEBUG) {
-//			handleUncaughtException();
-//			Config.DEBUG = true;
-//		}
+		if (!BuildConfig.IS_PROD) {
+			handleUncaughtException();
+			Logger.init();
+		}
+
+		if (BuildConfig.DEBUG) {
+			handleUncaughtException();
+			Config.DEBUG = true;
+		}
 		//友盟
 		UMShareAPI.get(this);
 	}
 
 	private void handleUncaughtException() {
-//		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-//			@Override
-//			public void uncaughtException(Thread t, Throwable e) {
-//				Intent intent = new Intent(sContext, CatchCrashActivity.class);
-//				intent.putExtra(Launcher.EX_PAYLOAD, e);
-//				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//				startActivity(intent);
-//
-//				Preference.get().setForeground(false);
-//				System.exit(1);
-//			}
-//		});
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			@Override
+			public void uncaughtException(Thread t, Throwable e) {
+				Intent intent = new Intent(sContext, CatchCrashActivity.class);
+				intent.putExtra(Launcher.EX_PAYLOAD, e);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(intent);
+
+				Preference.get().setForeground(false);
+				System.exit(1);
+			}
+		});
 	}
 
 	public static Context getAppContext() {

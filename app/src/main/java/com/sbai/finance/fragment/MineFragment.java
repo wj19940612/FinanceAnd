@@ -22,12 +22,12 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.MyCollectionActivity;
 import com.sbai.finance.activity.mine.MyQuestionAndAnswerActivity;
 import com.sbai.finance.activity.mine.MySubscribeActivity;
+import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
-import com.sbai.finance.activity.miss.MissAudioReplyActivity;
 import com.sbai.finance.activity.training.CreditIntroduceActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.fund.UserFundInfo;
@@ -409,15 +409,13 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.message:
-                // TODO: 2017/11/29 增加入口
-//                if (LocalUser.getUser().isLogin()) {
-//                    umengEventCount(UmengCountEventId.ME_NEWS);
-//                    startActivity(new Intent(getActivity(), NewsActivity.class));
-//                    setNoReadNewsCount(0);
-//                } else {
-//                    openLoginPage();
-//                }
-                Launcher.with(getActivity(), MissAudioReplyActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    umengEventCount(UmengCountEventId.ME_NEWS);
+                    startActivity(new Intent(getActivity(), NewsActivity.class));
+                    setNoReadNewsCount(0);
+                } else {
+                    openLoginPage();
+                }
                 break;
             case R.id.setting:
                 if (LocalUser.getUser().isLogin()) {

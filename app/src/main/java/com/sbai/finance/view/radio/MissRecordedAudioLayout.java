@@ -43,9 +43,13 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
     private MediaRecorderManager mMediaRecorderManager;
     private int mAudioLengthTextColor;
 
+    private int mRecordBtnX;
+    private int mRecordBtnY;
+    private boolean mInLegalRange;
+
 
     public interface OnRecordAudioListener {
-        void onRecordAudioFinish(String audioPath, long audioLength);
+        void onRecordAudioFinish(String audioPath, int audioLength);
     }
 
     public void setOnRecordAudioListener(OnRecordAudioListener onRecordAudioListener) {
@@ -54,6 +58,9 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
     private TextView mAudioLengthTextView;
     private AppCompatButton mRecordAudioBtn;
+
+    private int mRecordAudioBtnWidth;
+    private int mRecordAudioBtnHeight;
 
     private boolean isStartRecord;  //是否开始长按录制
     private TimerHandler mTimerHandler;
@@ -92,7 +99,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
         mAudioLengthTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.unluckyText));
         mAudioLengthTextView.setText(R.string.recording);
         mAudioLengthTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-        mAudioLengthTextView.setVisibility(GONE);
+        setRecordStatus(RECORD_AUDIO_STATUS_INIT);
         addView(mAudioLengthTextView);
 
         mRecordAudioBtn = new AppCompatButton(getContext());
@@ -107,6 +114,18 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
         });
 
         mRecordAudioBtn.setOnTouchListener(this);
+
+        mRecordAudioBtn.post(new Runnable() {
+            @Override
+            public void run() {
+                int[] point = new int[2];
+                mRecordAudioBtn.getLocationOnScreen(point);
+                mRecordBtnX = point[0];
+                mRecordBtnY = point[1];
+                mRecordAudioBtnWidth = mRecordAudioBtn.getWidth();
+                mRecordAudioBtnHeight = mRecordAudioBtn.getHeight();
+            }
+        });
 
         LayoutParams layoutParams = new LayoutParams(dp2px(80), dp2px(80));
         layoutParams.gravity = Gravity.CENTER;
@@ -124,31 +143,47 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
-//                setRecordStatus(RECORD_AUDIO_STATUS_RECORDING);
+                mRecordStatusTextView.setText(R.string.press_record);
                 mAudioLengthTextView.setVisibility(VISIBLE);
                 break;
             case MotionEvent.ACTION_UP:
                 if (isStartRecord && mAudioLength < UNLAWFUL_AUDIO_TIME) {
                     ToastUtil.show(R.string.record_audio_time_is_short);
-                    reset();
                 } else {
-                    reset();
+                    if (mOnRecordAudioListener != null) {
+                        mOnRecordAudioListener.onRecordAudioFinish(mMediaRecorderManager.getRecordAudioPath(), mAudioLength);
+                    }
                 }
-
+                reset();
                 break;
             case MotionEvent.ACTION_MOVE:
-
+                float x = motionEvent.getRawX();
+                float y = motionEvent.getRawY();
+                if (isStartRecord) {
+                    mInLegalRange = pointISInsideRecordBtn(x, y);
+                }
                 break;
         }
         return false;
     }
 
+    private boolean pointISInsideRecordBtn(float x, float y) {
+        boolean x1 = x > (mRecordBtnX - 20);
+        boolean x2 = (mRecordBtnX + mRecordAudioBtnWidth) > x;
+        boolean y1 = y > (mRecordBtnY - 30);
+        boolean y2 = (mRecordBtnY + mRecordAudioBtnHeight) > y;
+        Log.d(TAG, "pointISInsideRecordBtn: "+x+" "+mRecordBtnX+"  "+y+"  "+mRecordBtnY);
+        return x1 && x2 && y1 && y2;
+    }
+
     private void reset() {
         mTimerHandler.removeCallbacksAndMessages(null);
+        mTimerHandler.resetCount();
         isStartRecord = false;
+        mMediaRecorderManager.onRecordStop();
+        setRecordStatus(RECORD_AUDIO_STATUS_INIT);
     }
 
     @Override
@@ -161,18 +196,25 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
     @Override
     public void onTimeUp(int count) {
         mAudioLength = count;
-        SpannableString spannableString = StrUtil.mergeTextWithColor(getContext().getString(R.string.recording), "  " +
-                        getContext().getString(R.string.voice_time, count),
-                mAudioLengthTextColor);
-        Log.d(TAG, "onTimeUp: " + count + " " + spannableString.toString());
-        mAudioLengthTextView.setText(spannableString);
+        if (mInLegalRange) {
+            SpannableString spannableString = StrUtil.mergeTextWithColor(getContext().getString(R.string.recording), "  " +
+                            getContext().getString(R.string.voice_time, count),
+                    mAudioLengthTextColor);
+            Log.d(TAG, "onTimeUp: " + count + " " + spannableString.toString());
+            mAudioLengthTextView.setText(spannableString);
+        } else {
+            mAudioLengthTextView.setText("超出范围取消");
+        }
     }
 
     public void setRecordStatus(int status) {
         switch (status) {
             case RECORD_AUDIO_STATUS_INIT:
+                mAudioLengthTextView.setVisibility(GONE);
+                break;
             case RECORD_AUDIO_STATUS_RECORDING:
                 mRecordStatusTextView.setText(R.string.press_record);
+                mAudioLengthTextView.setVisibility(VISIBLE);
                 break;
 
         }
@@ -183,11 +225,13 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
         super.onDetachedFromWindow();
         mTimerHandler.removeCallbacksAndMessages(null);
         mTimerHandler = null;
-        mMediaRecorderManager.onRecordStop();
+        mMediaRecorderManager.onDestroy();
         mMediaRecorderManager = null;
     }
+
 
     private int dp2px(int px) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, getResources().getDisplayMetrics());
     }
+
 }

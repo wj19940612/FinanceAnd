@@ -15,7 +15,9 @@
         app:backFeature="true"
         app:hasBottomSplitLine="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleText="@string/wait_me_answer"
+        app:titleTextSize="17sp"/>
 
     <RelativeLayout
         android:id="@+id/questionRl"
@@ -44,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/avatar"
-            android:text="反方向的钟"
+            tools:text="反方向的钟"
             android:textColor="@color/unluckyText"
             android:textSize="12sp"/>
 
@@ -67,7 +69,7 @@
             android:layout_marginTop="@dimen/common_padding"
             android:layout_toRightOf="@+id/avatar"
             android:lineSpacingExtra="4dp"
-            android:text="可莱丝打飞机卡萨丁九分裤水电费跨境电商路口附近的路口时间都是附近的考虑房价来看电视水电费看了觉得杀戮空间大富科技鲁大师 "
+            tools:text="可莱丝打飞机卡萨丁九分裤水电费跨境电商路口附近的路口时间都是附近的考虑房价来看电视水电费看了觉得杀戮空间大富科技鲁大师 "
             android:textColor="@color/primaryText"
             android:textSize="15sp"/>
     </RelativeLayout>
@@ -79,6 +81,7 @@
         android:layout_marginTop="40dp"
         android:paddingLeft="@dimen/common_padding"
         android:paddingRight="@dimen/common_padding"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/questionRl">
 
         <com.sbai.finance.view.HasLabelImageLayout
@@ -97,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/common_padding"
             android:layout_toRightOf="@+id/missAvatar"
-            android:text="刷卡机房价快速发货"
+            tools:text="刷卡机房价快速发货"
             android:textColor="@color/unluckyText"
             android:textSize="12sp"/>
 
@@ -181,6 +184,7 @@
     </RelativeLayout>
 
     <com.sbai.finance.view.radio.MissRecordedAudioLayout
+        android:id="@+id/audioRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

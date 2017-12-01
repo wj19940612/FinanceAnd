@@ -14,14 +14,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
+import com.sbai.finance.activity.miss.MissAudioReplyActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.Answer;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.ListEmptyView;
 
@@ -103,6 +106,13 @@ public class WaitRaceAnswerFragment extends BaseFragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Answer answer = (Answer) parent.getAdapter().getItem(position);
+                if (answer != null) {
+                    Launcher.with(getActivity(), MissAudioReplyActivity.class)
+                            .putExtra(ExtraKeys.QUESTION_ID, answer.getId())
+                            .execute();
+                }
+
 //                Question question = (Question) parent.getAdapter().getItem(position);
 //                if (question != null && question.isQuestionSolved()) {
 //                    mClickQuestion = question;
@@ -144,11 +154,11 @@ public class WaitRaceAnswerFragment extends BaseFragment {
         mRaceAnswerAdapter.addAll(data);
     }
 
-    private void requestUpdateReadStatus(int id){
+    private void requestUpdateReadStatus(int id) {
         Client.updateAnswerReadStatus(id).setTag(TAG).fire();
     }
 
-    private void requestrushToAnswer(int id){
+    private void requestrushToAnswer(int id) {
         Client.rushToAnswer(id).setTag(TAG).fire();
     }
 

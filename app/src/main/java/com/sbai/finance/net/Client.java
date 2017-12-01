@@ -3295,15 +3295,27 @@ public class Client {
     /**
      * 更新待我答等未读已读状态
      */
-    public static API updateAnswerReadStatus(int id){
-        return new API("/user/user/readQuestion.do",new ApiParams().put("id",id));
+    public static API updateAnswerReadStatus(int id) {
+        return new API("/user/user/readQuestion.do", new ApiParams().put("id", id));
     }
 
     /**
      * 抢答问题
      */
-    public static API rushToAnswer(int id){
-        return new API("/user/user/rushToAnswer.do",new ApiParams().put("questionId",id));
+    public static API rushToAnswer(int id) {
+        return new API("/user/user/rushToAnswer.do", new ApiParams().put("questionId", id));
     }
 
+    /**
+     * /explain/questionApp/replyDetail.do
+     * GET
+     * 提问详情新(qmw)  小姐姐回答问题
+     *
+     * @param questionId
+     */
+    public static API requestMissAnswerQuestionInfo(int questionId) {
+        return new API("/explain/questionApp/replyDetail.do",
+                new ApiParams()
+                        .put("id", questionId));
+    }
 }

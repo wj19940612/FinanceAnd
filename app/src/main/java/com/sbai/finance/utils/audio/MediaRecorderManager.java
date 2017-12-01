@@ -8,7 +8,6 @@ import android.util.Log;
 import com.sbai.finance.App;
 
 import java.io.File;
-import java.io.IOException;
 
 import static android.media.MediaRecorder.MEDIA_ERROR_SERVER_DIED;
 import static android.media.MediaRecorder.MEDIA_RECORDER_ERROR_UNKNOWN;
@@ -40,12 +39,14 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
     }
 
     public MediaRecorderManager() {
+    }
+
+    private void onPrepare() {
         mMediaRecorder = new MediaRecorder();
         mMediaRecorder.setOnErrorListener(this);
         mMediaRecorder.setOnInfoListener(this);
-
-        mMediaRecorder = new MediaRecorder();
-
+        //配置 MediaRecorder
+        //从麦克风采集
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         //输出格式为 aac 格式
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
@@ -59,6 +60,7 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
         mMediaRecorder.setMaxFileSize(DEFAULT_MAX_AUDIO_LENGTH);
         //设置录音文件配置
         mMediaRecorder.setOutputFile(getOutputFilePath());
+
     }
 
     private String getOutputFilePath() {
@@ -67,58 +69,62 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
         if (appContext.getExternalCacheDir() != null) {
             absolutePath = appContext.getExternalCacheDir().getAbsolutePath();
         } else {
-        absolutePath = Environment.getExternalStorageDirectory() + "/miss_voice";
+            absolutePath = Environment.getExternalStorageDirectory() + "/miss_record";
         }
-        mRecordAudioPath = System.currentTimeMillis() + ".aac";
         File dir = new File(absolutePath);
         if (!dir.exists()) {
             dir.mkdirs();
         }
 
-        File file = new File(dir, mRecordAudioPath);
-        Log.d(TAG, "getOutputFilePath: " + file.getAbsolutePath());
+        File file = new File(dir, System.currentTimeMillis() + ".aac");
+//        File file = new File(dir, System.currentTimeMillis() + ".3gp");
+        mRecordAudioPath = file.getAbsolutePath();
         return file.getAbsolutePath();
+    }
+
+    public String getRecordAudioPath() {
+        return mRecordAudioPath;
     }
 
     public void onRecordStart() {
         //配置 MediaRecorder
         mPreparing = false;
-        try {
-            mMediaRecorder.prepare();
-            mMediaRecorder.start();
-            mPreparing = true;
-            if (mMediaMediaRecorderPrepareListener != null) {
-                mMediaMediaRecorderPrepareListener.onMediaMediaRecorderPrepared();
+            try {
+                onPrepare();
+                mMediaRecorder.prepare();
+                mMediaRecorder.start();
+                mPreparing = true;
+                if (mMediaMediaRecorderPrepareListener != null) {
+                    mMediaMediaRecorderPrepareListener.onMediaMediaRecorderPrepared();
+                }
+            } catch (Exception e) {
+                mPreparing = false;
+                Log.d(TAG, "onPrepare: " + e.toString());
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            mPreparing = false;
-            Log.d(TAG, "onPrepare: " + e.toString());
-            e.printStackTrace();
-        }
     }
 
-    private void onRecordRelease() {
-        try {
-            mMediaRecorder.setOnErrorListener(null);
-            mMediaRecorder.setOnInfoListener(null);
-            mMediaRecorder.setPreviewDisplay(null);
-            mMediaRecorder.release();
-            mMediaRecorder.reset();
-            mMediaRecorder.stop();
-        } catch (Exception e) {
-            Log.d(TAG, "onRecordRelease: " + e.toString());
-            e.printStackTrace();
-        }
-    }
-
-    public void onRecordReset() {
-        mMediaRecorder.reset();
-    }
 
     public void onRecordStop() {
+        if(mMediaRecorder!=null){
+            try {
+                mMediaRecorder.setOnErrorListener(null);
+                mMediaRecorder.setOnInfoListener(null);
+                mMediaRecorder.setPreviewDisplay(null);
+                mMediaRecorder.stop();
+            } catch (Exception e) {
+                Log.d(TAG, "onRecordRelease: " + e.toString());
+                e.printStackTrace();
+            }
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+        }
+    }
+
+    public void onDestroy() {
         deleteRadioFile();
         if (mMediaRecorder != null) {
-            onRecordRelease();
+            onRecordStop();
             mMediaRecorder = null;
         }
     }
