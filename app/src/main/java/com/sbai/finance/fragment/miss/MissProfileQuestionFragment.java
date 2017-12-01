@@ -112,7 +112,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         mMediaPlayService = mediaPlayService;
     }
 
-    public void initScrollState(){
+    public void initScrollState() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
         if (mOnFragmentRecycleViewScrollListener != null) {
@@ -159,20 +159,22 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
             mOnFragmentRecycleViewScrollListener = (OnFragmentRecycleViewScrollListener) context;
             mMissFloatWindow = ((MissProfileDetailActivity) context).getFloatWindow();
             mAsk = ((MissProfileDetailActivity) context).getAskBtn();
-            mAsk.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (LocalUser.getUser().isLogin()) {
-                        Launcher.with(getActivity(), SubmitQuestionActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mCustomId)
-                                .execute();
-                    } else {
-                        stopVoice();
-                        Intent intent = new Intent(getActivity(), LoginActivity.class);
-                        startActivityForResult(intent, MissProfileDetailActivity.REQ_SUBMIT_QUESTION_LOGIN);
+            if (mAsk != null) {
+                mAsk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (LocalUser.getUser().isLogin()) {
+                            Launcher.with(getActivity(), SubmitQuestionActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, mCustomId)
+                                    .execute();
+                        } else {
+                            stopVoice();
+                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                            startActivityForResult(intent, MissProfileDetailActivity.REQ_SUBMIT_QUESTION_LOGIN);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
         if (mMediaPlayService == null && context instanceof MissProfileDetailActivity) {
             mMediaPlayService = ((MissProfileDetailActivity) context).getMediaPlayService();
