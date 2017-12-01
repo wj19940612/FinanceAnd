@@ -1299,6 +1299,18 @@ public class Client {
     }
 
     /**
+     * 获取股票交易所状态
+     *
+     * @param exchangeId
+     * @return
+     */
+    public static API getStockExchangeStatus(int exchangeId) {
+        return new API("/api/stock-va/exchange/status.do",
+                new ApiParams()
+                        .put("exchangeId", exchangeId));
+    }
+
+    /**
      * 获取意向金金额
      *
      * @return
@@ -3246,7 +3258,7 @@ public class Client {
      */
 
     public static API modifyProfileIntroduction(String introduction) {
-        return new API(POST,"/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
+        return new API(POST, "/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
     }
 
     /**

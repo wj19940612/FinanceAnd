@@ -207,6 +207,7 @@ public class OptionalListFragment extends BaseFragment implements
     private void updateOptionInfo(ArrayList<Stock> data) {
         stopRefreshAnimation();
         mSlideListAdapter.clear();
+        mSet.clear();
         for (Stock stock : data) {
             if (!TextUtils.isEmpty(stock.getVarietyCode()) && mSet.add(stock.getVarietyCode())) {
                 mSlideListAdapter.add(stock);

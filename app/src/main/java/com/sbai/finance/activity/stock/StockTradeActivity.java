@@ -262,7 +262,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void requestExchangeStatus() {
-        Client.getExchangeStatus(mStock.getExchangeId()).setTag(TAG)
+        Client.getStockExchangeStatus(mStock.getExchangeId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<Integer>, Integer>() {
                     @Override
                     protected void onRespSuccessData(Integer data) {
