@@ -62,7 +62,7 @@ public class StockOrder {
 
     public double getFee() {
         if (deputeType == DEPUTE_TYPE_ENTRUST_SELL) {
-            return Math.max(price * quantity * FEE_RATE + price * quantity * STAMP_TAX_RATE, MINIMUM_FEE);
+            return Math.max(price * quantity * FEE_RATE, MINIMUM_FEE) + price * quantity * STAMP_TAX_RATE;
         }
         return Math.max(price * quantity * FEE_RATE, MINIMUM_FEE);
     }
