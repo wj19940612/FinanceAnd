@@ -373,14 +373,14 @@ public class StockEntrustFragment extends BaseFragment {
                         if (mShowOperateView && (entrust.getMoiety() == Entrust.ENTRUST_STATUS_ALL_BUSINESS || entrust.getMoiety() == Entrust.ENTRUST_STATUS_WAIT_WITHDRAW))
                             return;
                         if (mOperateArea.getVisibility() == View.VISIBLE) {
-                            mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 200));
+                            mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 100));
                             index = -1;
                         } else {
                             if (itemClickListener != null && index > -1) {
                                 itemClickListener.hideOperateView(index);
                             }
                             index = position;
-                            mOperateArea.startAnimation(AnimUtils.createExpendY(mOperateArea, 200));
+                            mOperateArea.startAnimation(AnimUtils.createExpendY(mOperateArea, 100));
                         }
                     }
                 });

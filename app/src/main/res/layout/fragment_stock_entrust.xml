@@ -16,7 +16,8 @@
         <com.sbai.finance.view.EmptyRecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:paddingBottom="40dp"/>
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/empty"

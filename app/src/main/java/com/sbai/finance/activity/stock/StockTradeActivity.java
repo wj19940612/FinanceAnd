@@ -226,7 +226,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void requestAddOptional() {
-        Client.addOption(mStock.getId(), Stock.OPTIONAL_TYPE_STOCK)
+        Client.addOption(mStock.getVarietyCode(), Stock.OPTIONAL_TYPE_STOCK)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {
@@ -289,7 +289,7 @@ public abstract class StockTradeActivity extends BaseActivity {
         intent.setAction(OptionalListFragment.OPTIONAL_CHANGE_ACTION);
         intent.putExtra(Launcher.EX_PAYLOAD, stock);
         intent.putExtra(Launcher.EX_PAYLOAD_1, isAddOptional);
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
     }
 
     @Override

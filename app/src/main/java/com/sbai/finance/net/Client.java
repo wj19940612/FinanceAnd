@@ -1034,13 +1034,13 @@ public class Client {
     /**
      * 添加自选股
      *
-     * @param varietyId
+     * @param code
      * @return
      */
-    public static API addOption(int varietyId, String optType) {
+    public static API addOption(String code, String optType) {
         return new API(POST, "/api/stock-va/opt/add.do",
                 new ApiParams()
-                        .put("optTypeId", varietyId)
+                        .put("code", code)
                         .put("optType", optType));
     }
 
