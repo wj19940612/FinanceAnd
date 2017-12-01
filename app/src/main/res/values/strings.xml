@@ -220,6 +220,7 @@
     <string name="is_logout_lemi">是否要退出登录？</string>
     <string name="personal_summary">个人简介</string>
     <string name="set_personal_summary">设置个人简介</string>
+    <string name="please_introduce_yourself">介绍一下你自己吧</string>
     <!--   消息 -->
     <string name="up_load_more">加载更多</string>
 
