@@ -89,7 +89,7 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
 
     }
 
-    public void initScrollState(){
+    public void initScrollState() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
         if (mOnFragmentRecycleViewScrollListener != null) {
@@ -102,16 +102,18 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
         super.onAttach(context);
         if (context instanceof MissProfileDetailActivity) {
             mOnFragmentRecycleViewScrollListener = (MissProfileQuestionFragment.OnFragmentRecycleViewScrollListener) context;
-            mMissFloatWindow =  ((MissProfileDetailActivity) context).getFloatWindow();
+            mMissFloatWindow = ((MissProfileDetailActivity) context).getFloatWindow();
             mCreateRadio = ((MissProfileDetailActivity) context).getCreateRadioBtn();
-            mCreateRadio.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Launcher.with(getActivity(), WebActivity.class)
-                            .putExtra(WebActivity.EX_URL, Client.CREATE_RADIO_STATION)
-                            .execute();
-                }
-            });
+            if (mCreateRadio != null) {
+                mCreateRadio.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Launcher.with(getActivity(), WebActivity.class)
+                                .putExtra(WebActivity.EX_URL, Client.CREATE_RADIO_STATION)
+                                .execute();
+                    }
+                });
+            }
         }
     }
 
@@ -206,7 +208,7 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
 
     }
 
-    private void updateFloatState(){
+    private void updateFloatState() {
         if (MissAudioManager.get().isPlaying()) {
             MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
             if (audio != null) {
@@ -342,9 +344,9 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
                 if (position == count - 1) {
                     RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mContent.getLayoutParams();
                     layoutParams.setMargins((int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(64, context.getResources()));
-                }else{
+                } else {
                     RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mContent.getLayoutParams();
-                    layoutParams.setMargins((int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()),0);
+                    layoutParams.setMargins((int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), 0);
                 }
                 GlideApp.with(context).load(radioInfo.getRadioCover())
                         .placeholder(R.drawable.ic_default_image)
