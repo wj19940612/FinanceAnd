@@ -86,17 +86,16 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
         return missProfileRadioFragment;
     }
 
-    public void setRadioBtn(){
-        if (LocalUser.getUser().isMiss()) {
-            //是小姐姐，显示创建电台按钮
-            mCreateRadio.setVisibility(View.VISIBLE);
-        } else {
-            mCreateRadio.setVisibility(View.GONE);
-        }
-    }
-
     public void setMiss(Miss miss) {
 
+    }
+
+    public void initScrollState(){
+        LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+        boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
+        if (mOnFragmentRecycleViewScrollListener != null) {
+            mOnFragmentRecycleViewScrollListener.onSwipRefreshEnable(isTop, 0);
+        }
     }
 
     @Override
@@ -344,6 +343,9 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
                 if (position == count - 1) {
                     RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mContent.getLayoutParams();
                     layoutParams.setMargins((int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(64, context.getResources()));
+                }else{
+                    RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mContent.getLayoutParams();
+                    layoutParams.setMargins((int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()), (int) Display.dp2Px(14, context.getResources()),0);
                 }
                 GlideApp.with(context).load(radioInfo.getRadioCover())
                         .placeholder(R.drawable.ic_default_image)

@@ -20,7 +20,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.StockTradeOperateActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.local.StockOrder;
 import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockRTData;
@@ -140,7 +139,7 @@ public class StockTradeOperateFragment extends BaseFragment {
     Unbinder unbinder;
 
     private int mTradeType;
-    private Variety mVariety;
+    private Stock mStock;
     private StockRTData mStockRTData;
 
     private int mMaxTradeVolume;
@@ -247,8 +246,6 @@ public class StockTradeOperateFragment extends BaseFragment {
                 @Override
                 public void onStockSelect(Stock stock) {
                     mStockSearchPopup.dismiss();
-                    mStockNameCode.removeTextChangedListener(mStockNameWatcher);
-                    mTradePrice.requestFocus();
                     if (mOnSearchStockClickListener != null) {
                         mOnSearchStockClickListener.onSearchStockClick(stock);
                     }
@@ -304,9 +301,10 @@ public class StockTradeOperateFragment extends BaseFragment {
     }
 
     public void updateRealTimeData(StockRTData stockRTData) {
-        if (mVariety == null) return;
+        if (mStock == null) return;
 
-        if (mStockRTData == null || !mStockRTData.getInstrumentId().equals(mVariety.getVarietyType())) {
+        // 第一次更新数据 以及切换股票的时候
+        if (mStockRTData == null || !mStockRTData.getInstrumentId().equals(mStock.getVarietyCode())) {
             if (mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY) {
                 mTradePrice.setText(StockUtil.getStockDecimal(stockRTData.getAskPrice()));
             } else {
@@ -322,7 +320,7 @@ public class StockTradeOperateFragment extends BaseFragment {
             resetPositionSelectors();
         }
 
-        if (stockRTData.getInstrumentId().equals(mVariety.getVarietyType())) {
+        if (stockRTData.getInstrumentId().equals(mStock.getVarietyCode())) {
             mAskPrice1.setText(StockUtil.getStockDecimal(stockRTData.getAskPrice()));
             mAskPrice2.setText(StockUtil.getStockDecimal(stockRTData.getAskPrice2()));
             mAskPrice3.setText(StockUtil.getStockDecimal(stockRTData.getAskPrice3()));
@@ -366,13 +364,13 @@ public class StockTradeOperateFragment extends BaseFragment {
         String tradePrice = mTradePrice.getText();
         String tradeVolume = mTradeVolume.getText();
         return !TextUtils.isEmpty(tradePrice) && !TextUtils.isEmpty(tradeVolume)
-                && LocalUser.getUser().getStockUser() != null && mVariety != null;
+                && LocalUser.getUser().getStockUser() != null && mStock != null;
     }
 
-    public static StockTradeOperateFragment newInstance(Variety variety, int tradeType) {
+    public static StockTradeOperateFragment newInstance(Stock stock, int tradeType) {
         StockTradeOperateFragment fragment = new StockTradeOperateFragment();
         Bundle args = new Bundle();
-        args.putParcelable("var", variety);
+        args.putParcelable("var", stock);
         args.putInt("tradeType", tradeType);
         fragment.setArguments(args);
         return fragment;
@@ -394,7 +392,7 @@ public class StockTradeOperateFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mTradeType = getArguments().getInt("tradeType");
-            mVariety = getArguments().getParcelable("var");
+            mStock = getArguments().getParcelable("var");
         }
     }
 
@@ -424,14 +422,17 @@ public class StockTradeOperateFragment extends BaseFragment {
         mTradePrice.addTextChangedListener(mPriceWatcher);
         mTradeVolume.addTextChangedListener(mVolumeWatcher);
 
-        updateWithVariety(mVariety);
+        updateStock(mStock);
     }
 
-    public void updateWithVariety(Variety variety) {
-        mVariety = variety;
+    public void updateStock(Stock stock) {
+        mStockNameCode.removeTextChangedListener(mStockNameWatcher);
+        mTradePrice.requestFocus();
 
-        if (variety != null) {
-            mStockNameCode.setText(mVariety.getVarietyName() + " " + mVariety.getVarietyType());
+        mStock = stock;
+
+        if (mStock != null) {
+            mStockNameCode.setText(mStock.getVarietyName() + " " + mStock.getVarietyCode());
             mStockNameCode.setSelection(mStockNameCode.getText().length());
 
         } else {
@@ -441,7 +442,7 @@ public class StockTradeOperateFragment extends BaseFragment {
 
         // keep
         Bundle args = new Bundle();
-        args.putParcelable("var", mVariety);
+        args.putParcelable("var", mStock);
         args.putInt("tradeType", mTradeType);
         setArguments(args);
     }
@@ -585,7 +586,7 @@ public class StockTradeOperateFragment extends BaseFragment {
         StockUser stockUser = LocalUser.getUser().getStockUser();
         int deputeType = mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY ?
                 StockOrder.DEPUTE_TYPE_ENTRUST_BUY : StockOrder.DEPUTE_TYPE_ENTRUST_SELL;
-        double volume = Double.parseDouble(mTradeVolume.getText());
+        long volume = Long.parseLong(mTradeVolume.getText());
         double price = Double.parseDouble(mTradePrice.getText());
         String uuid = UUID.randomUUID().toString().replace("-", "");
 
@@ -593,8 +594,8 @@ public class StockTradeOperateFragment extends BaseFragment {
                 .positionType(stockUser.getType())
                 .userAccount(stockUser.getAccount())
                 .activityCode(stockUser.getActivityCode())
-                .varietyCode(mVariety.getVarietyType())
-                .varietyName(mVariety.getVarietyName())
+                .varietyCode(mStock.getVarietyCode())
+                .varietyName(mStock.getVarietyName())
                 .quantity(volume)
                 .price(price)
                 .deputeType(deputeType)

@@ -7,6 +7,7 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.levelevaluation.QuestionAnswer;
 import com.sbai.finance.model.local.StockOrder;
+import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.httplib.ApiParams;
 
@@ -100,17 +101,6 @@ public class Client {
     }
 
     /**
-     * 股票搜索
-     *
-     * @deprecated
-     */
-    public static API searchStock(String search) {
-        return new API("/order/stock/query/search.do",
-                new ApiParams()
-                        .put("search", search));
-    }
-
-    /**
      * 股票除指数品种
      *
      * @param page
@@ -124,6 +114,7 @@ public class Client {
                         .put("pageSize", pageSize)
                         .put("search", search));
     }
+
 
     /**
      * 获取服务器系统时间
@@ -943,7 +934,7 @@ public class Client {
      * @return
      */
     public static API getStockVariety(int page, int pageSize) {
-        return new API("/order/order/getStockVariety.do",
+        return new API("/api/stock-va/variety/var.do",
                 new ApiParams()
                         .put("page", page)
                         .put("pageSize", pageSize));
@@ -954,9 +945,11 @@ public class Client {
      *
      * @return
      */
-    public static API getStockIndexVariety() {
-        return new API("/order/order/getStockExponentVariety.do");
+
+    public static API getStockIndex() {
+        return new API("/api/stock-va/variety/expend.do");
     }
+
 
     public static API stockSearch(String key) {
         return new API("/order/order/getStockVarietySearch.do",
@@ -974,7 +967,7 @@ public class Client {
      * @return
      */
     public static API getStockInfo(String code) {
-        return new API("/order/stock/query/info.do", new ApiParams().put("code", code));
+        return new API("/api/stock-va/variety/findcode.do", new ApiParams().put("varCode", code));
     }
 
     /**
@@ -1022,11 +1015,8 @@ public class Client {
      *
      * @return
      */
-    public static API getOptional(int page) {
-        return new API("/order/optional/findOptional.do",
-                new ApiParams()
-                        .put("page", page)
-                        .put("pageSize", 10000));
+    public static API getOptional() {
+        return new API("/api/stock-va/opt/find.do");
     }
 
     /**
@@ -1047,23 +1037,36 @@ public class Client {
      * @param varietyId
      * @return
      */
-    public static API addOption(int varietyId) {
-        return new API("/order/optional/addOptional.do",
+    public static API addOption(int varietyId, String optType) {
+        return new API(POST, "/api/stock-va/opt/add.do",
                 new ApiParams()
-                        .put("varietyId", varietyId));
+                        .put("optTypeId", varietyId)
+                        .put("optType", optType));
     }
 
     /**
      * 添加自选股
      *
-     * @param varietyId
      * @return
      */
-    public static API delOptional(Integer varietyId) {
-        return new API("/order/optional/deleteOptional.do",
+    public static API delOptional(int optionalId) {
+        return new API(POST, "/api/stock-va/opt/del.do",
                 new ApiParams()
-                        .put("varietyId", varietyId));
+                        .put("optionalId", optionalId));
     }
+
+    /**
+     * 添加自选股
+     *
+     * @return
+     */
+    public static API delOptional(String varCode, String optType) {
+        return new API(POST, "/api/stock-va/opt/cancel.do",
+                new ApiParams()
+                        .put("varCode", varCode)
+                        .put("optType", optType));
+    }
+
 
     /**
      * 获取经济圈列表
@@ -3243,7 +3246,7 @@ public class Client {
      */
 
     public static API modifyProfileIntroduction(String introduction) {
-        return new API("/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
+        return new API(POST,"/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
     }
 
     /**
@@ -3295,15 +3298,15 @@ public class Client {
     /**
      * 更新待我答等未读已读状态
      */
-    public static API updateAnswerReadStatus(int id){
-        return new API("/user/user/readQuestion.do",new ApiParams().put("id",id));
+    public static API updateAnswerReadStatus(int id) {
+        return new API("/user/user/readQuestion.do", new ApiParams().put("id", id));
     }
 
     /**
      * 抢答问题
      */
-    public static API rushToAnswer(int id){
-        return new API("/user/user/rushToAnswer.do",new ApiParams().put("questionId",id));
+    public static API rushToAnswer(int id) {
+        return new API("/user/user/rushToAnswer.do", new ApiParams().put("questionId", id));
     }
 
 }

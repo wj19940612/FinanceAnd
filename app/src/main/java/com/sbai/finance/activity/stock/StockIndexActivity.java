@@ -92,7 +92,7 @@ public class StockIndexActivity extends StockTradeActivity {
             mFragmentManager = fm;
             mContext = context;
             try {
-                mExchangeCode = Integer.valueOf(mVariety.getExchangeCode());
+                mExchangeCode = Integer.valueOf(mStock.getExchangeCode());
             } catch (NumberFormatException e) {
 
             }

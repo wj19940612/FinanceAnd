@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +20,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.future.FutureTradeActivity;
+import com.sbai.finance.activity.home.SearchOptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.fragment.dialog.AddOptionalDialogFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.Variety;
-import com.sbai.finance.model.future.FutureData;
+import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -40,8 +39,6 @@ import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.slidingListView.SlideListView;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,32 +73,28 @@ public class OptionalListFragment extends BaseFragment implements
     LinearLayout mAddOptional;
     Unbinder unbinder;
     private SlideListAdapter mSlideListAdapter;
-    private int mPage = 0;
-    private int mPageSize = 200;
     private HashSet<String> mSet;
 
     private BroadcastReceiver mOptionalChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction() == OPTIONAL_CHANGE_ACTION) {
-                Variety variety = intent.getExtras().getParcelable(Launcher.EX_PAYLOAD);
+                Stock stock = intent.getExtras().getParcelable(Launcher.EX_PAYLOAD);
                 boolean isAddOptional = intent.getExtras().getBoolean(Launcher.EX_PAYLOAD_1, false);
-                if (variety != null) {
+                if (stock != null) {
                     for (int i = 0; i < mSlideListAdapter.getCount(); i++) {
-                        if (variety.getVarietyId() == mSlideListAdapter.getItem(i).getVarietyId()) {
-                            variety = mSlideListAdapter.getItem(i);
-                            requestDelOptionalData(variety);
+                        if (stock.getVarietyCode() == mSlideListAdapter.getItem(i).getVarietyCode()) {
+                            stock = mSlideListAdapter.getItem(i);
+                            requestDelOptionalData(stock);
                             break;
                         }
                     }
                 }
                 if (isAddOptional) {
-                    reset();
                     requestOptionalData();
                 }
             }
             if (intent.getAction() == ACTION_LOGIN_SUCCESS) {
-                reset();
                 requestOptionalData();
             }
         }
@@ -137,22 +130,19 @@ public class OptionalListFragment extends BaseFragment implements
         mListView.setAdapter(mSlideListAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setOnLoadMoreListener(this);
+        mSwipeRefreshLayout.setLoadMoreEnable(true);
         mSwipeRefreshLayout.setAdapter(mListView, mSlideListAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Variety variety = (Variety) parent.getItemAtPosition(position);
-                if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
-                    Launcher.with(getActivity(), FutureTradeActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, variety).executeForResult(OPTIONAL_CHANGE);
-                }
-                if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                    if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)) {
+                Stock stock = (Stock) parent.getItemAtPosition(position);
+                if (stock != null) {
+                    if (stock.getVarietyType().equalsIgnoreCase(Stock.EXPEND)) {
                         Launcher.with(getActivity(), StockIndexActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, variety).executeForResult(OPTIONAL_CHANGE);
+                                .putExtra(Launcher.EX_PAYLOAD, stock).executeForResult(OPTIONAL_CHANGE);
                     } else {
                         Launcher.with(getActivity(), StockDetailActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, variety).executeForResult(OPTIONAL_CHANGE);
+                                .putExtra(Launcher.EX_PAYLOAD, stock).executeForResult(OPTIONAL_CHANGE);
                     }
                 }
             }
@@ -161,11 +151,11 @@ public class OptionalListFragment extends BaseFragment implements
 
     private void requestOptionalData() {
         if (LocalUser.getUser().isLogin()) {
-            Client.getOptional(mPage).setTag(TAG)
-                    .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+            Client.getOptional().setTag(TAG)
+                    .setCallback(new Callback2D<Resp<List<Stock>>, List<Stock>>() {
                         @Override
-                        protected void onRespSuccessData(List<Variety> data) {
-                            updateOptionInfo((ArrayList<Variety>) data);
+                        protected void onRespSuccessData(List<Stock> data) {
+                            updateOptionInfo((ArrayList<Stock>) data);
                         }
 
                         @Override
@@ -177,13 +167,13 @@ public class OptionalListFragment extends BaseFragment implements
         }
     }
 
-    private void requestDelOptionalData(final Variety variety) {
-        Client.delOptional(variety.getVarietyId()).setTag(TAG)
+    private void requestDelOptionalData(final Stock stock) {
+        Client.delOptional(stock.getId()).setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         if (resp.isSuccess()) {
-                            mSlideListAdapter.remove(variety);
+                            mSlideListAdapter.remove(stock);
                             mSlideListAdapter.notifyDataSetChanged();
                         } else {
                             ToastUtil.show(resp.getMsg());
@@ -198,11 +188,11 @@ public class OptionalListFragment extends BaseFragment implements
      *
      * @param data
      */
-    private void requestStockMarketData(List<Variety> data) {
+    private void requestStockMarketData(List<Stock> data) {
         if (data == null || data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
-        for (Variety variety : data) {
-            stringBuilder.append(variety.getVarietyType()).append(",");
+        for (Stock stock : data) {
+            stringBuilder.append(stock.getVarietyCode()).append(",");
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         Client.getStockMarketData(stringBuilder.toString())
@@ -214,59 +204,16 @@ public class OptionalListFragment extends BaseFragment implements
                 }).fireFree();
     }
 
-
-    private void requestFutureMarketData(List<Variety> data) {
-        if (data == null || data.isEmpty()) return;
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Variety variety : data) {
-            stringBuilder.append(variety.getContractsCode()).append(",");
-        }
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        Client.getFutureMarketData(stringBuilder.toString()).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<FutureData>>, List<FutureData>>() {
-                    @Override
-                    protected void onRespSuccessData(List<FutureData> data) {
-                        mSlideListAdapter.addFutureData(data);
-                    }
-                })
-                .fireFree();
-    }
-
-    private void updateOptionInfo(ArrayList<Variety> data) {
+    private void updateOptionInfo(ArrayList<Stock> data) {
         stopRefreshAnimation();
         mSlideListAdapter.clear();
-        for (Variety variety : data) {
-            if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                if (mSet.add(variety.getVarietyType())) {
-                    mSlideListAdapter.add(variety);
-                }
-            } else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
-                if (mSet.add(variety.getContractsCode())) {
-                    mSlideListAdapter.add(variety);
-                }
+        for (Stock stock : data) {
+            if (!TextUtils.isEmpty(stock.getVarietyCode()) && mSet.add(stock.getVarietyCode())) {
+                mSlideListAdapter.add(stock);
             }
-        }
-        if (data.size() < mPageSize) {
-            mSwipeRefreshLayout.setLoadMoreEnable(false);
-        } else {
-            mPage++;
         }
         mSlideListAdapter.notifyDataSetChanged();
-        requestMarketData(data);
-    }
-
-    private void requestMarketData(ArrayList<Variety> data) {
-        List<Variety> futures = new ArrayList<>();
-        List<Variety> stocks = new ArrayList<>();
-        for (Variety variety : data) {
-            if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                stocks.add(variety);
-            } else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
-                futures.add(variety);
-            }
-        }
-        requestFutureMarketData(futures);
-        requestStockMarketData(stocks);
+        requestStockMarketData(data);
     }
 
     private void stopRefreshAnimation() {
@@ -282,7 +229,7 @@ public class OptionalListFragment extends BaseFragment implements
     public void onClick(View view) {
         if (LocalUser.getUser().isLogin()) {
             umengEventCount(UmengCountEventId.FIND_OPTIONAL_ADD);
-            AddOptionalDialogFragment.newInstance().show(getFragmentManager());
+            Launcher.with(getContext(), SearchOptionalActivity.class).execute();
         } else {
             Launcher.with(getActivity(), LoginActivity.class).execute();
         }
@@ -295,23 +242,17 @@ public class OptionalListFragment extends BaseFragment implements
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mOptionalChangeReceiver);
     }
 
-    private void reset() {
-        mPage = 0;
-        mSet.clear();
-        mSwipeRefreshLayout.setLoadMoreEnable(true);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPTIONAL_CHANGE && resultCode == RESULT_OK) {
-            Variety variety = data.getParcelableExtra(Launcher.EX_PAYLOAD);
+            Stock stock = data.getParcelableExtra(Launcher.EX_PAYLOAD);
             boolean isOptionalChanged = data.getBooleanExtra(Launcher.EX_PAYLOAD_1, false);
-            if (variety != null && isOptionalChanged) {
+            if (stock != null && isOptionalChanged) {
                 for (int i = 0; i < mSlideListAdapter.getCount(); i++) {
-                    if (variety.getVarietyId() == mSlideListAdapter.getItem(i).getVarietyId()) {
-                        variety = mSlideListAdapter.getItem(i);
-                        requestDelOptionalData(variety);
+                    if (stock.getVarietyCode() == mSlideListAdapter.getItem(i).getVarietyCode()) {
+                        stock = mSlideListAdapter.getItem(i);
+                        requestDelOptionalData(stock);
                         break;
                     }
                 }
@@ -321,26 +262,17 @@ public class OptionalListFragment extends BaseFragment implements
 
     @Override
     public void onRefresh() {
-        reset();
         requestOptionalData();
     }
 
     @Override
     public void onLoadMore() {
-        requestOptionalData();
+//        requestOptionalData();
     }
 
-    public static class SlideListAdapter extends ArrayAdapter<Variety> {
+    public static class SlideListAdapter extends ArrayAdapter<Stock> {
         Context mContext;
-        private HashMap<String, FutureData> mFutureDataList;
         private HashMap<String, StockData> mStockDataList;
-
-        public void addFutureData(List<FutureData> futureDataList) {
-            for (FutureData futureData : futureDataList) {
-                mFutureDataList.put(futureData.getInstrumentId(), futureData);
-            }
-            notifyDataSetChanged();
-        }
 
         public void addStockData(List<StockData> stockDataList) {
             for (StockData stockData : stockDataList) {
@@ -352,7 +284,6 @@ public class OptionalListFragment extends BaseFragment implements
         public SlideListAdapter(@NonNull Context context) {
             super(context, 0);
             mContext = context;
-            mFutureDataList = new HashMap<>();
             mStockDataList = new HashMap<>();
         }
 
@@ -367,7 +298,7 @@ public class OptionalListFragment extends BaseFragment implements
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), mFutureDataList, mStockDataList, mContext);
+            viewHolder.bindDataWithView(getItem(position), mStockDataList, mContext);
             return convertView;
         }
 
@@ -386,62 +317,35 @@ public class OptionalListFragment extends BaseFragment implements
                 ButterKnife.bind(this, content);
             }
 
-            private void bindDataWithView(Variety item, HashMap<String, FutureData> futureMap, HashMap<String, StockData> stockMap, Context context) {
-                if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                    mFutureName.setText(item.getVarietyName());
-                    mFutureCode.setText(context.getString(R.string.stock) + " " + item.getVarietyType());
-                    //      mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_shares),null,null,null);
-                    StockData stockData = stockMap.get(item.getVarietyType());
-                    if (stockData != null) {
-                        mLastPrice.setText(stockData.getFormattedLastPrice());
-                        if (stockData.isDelist()) {
-                            mRate.setEnabled(false);
-                            mRate.setText(R.string.delist);
-                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
-                        } else {
-                            mRate.setEnabled(true);
-                            String priceChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
-                            if (priceChange.startsWith("-")) {
-                                mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                                mRate.setSelected(false);
-                                mRate.setText(priceChange);
-                            } else {
-
-                                mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                                mRate.setSelected(true);
-                                mRate.setText("+" + priceChange);
-                            }
-                        }
+            private void bindDataWithView(Stock item, HashMap<String, StockData> stockMap, Context context) {
+                mFutureName.setText(item.getVarietyName());
+                mFutureCode.setText(context.getString(R.string.stock) + " " + item.getVarietyCode());
+                //      mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_shares),null,null,null);
+                StockData stockData = stockMap.get(item.getVarietyCode());
+                if (stockData != null) {
+                    mLastPrice.setText(stockData.getFormattedLastPrice());
+                    if (stockData.isDelist()) {
+                        mRate.setEnabled(false);
+                        mRate.setText(R.string.delist);
+                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
                     } else {
-                        mLastPrice.setText("--");
-                        mRate.setSelected(true);
-                        mRate.setText("--");
-                    }
-                } else if (item.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
-                    mFutureName.setText(item.getVarietyName());
-                    mFutureCode.setText(context.getString(R.string.futures) + " " + item.getContractsCode());
-                    //              mFutureCode.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(context,R.drawable.fanli_content_icon_futures),null,null,null);
-                    FutureData futureData = futureMap.get(item.getContractsCode());
-                    if (futureData != null) {
-                        double priceChange = FinanceUtil.subtraction(futureData.getLastPrice(), futureData.getPreSetPrice())
-                                .divide(new BigDecimal(futureData.getPreSetPrice()), 4, RoundingMode.HALF_EVEN)
-                                .multiply(new BigDecimal(100)).doubleValue();
-                        mLastPrice.setText(FinanceUtil.formatWithScale(futureData.getLastPrice(), item.getPriceScale()));
-                        if (priceChange >= 0) {
-                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                            mRate.setSelected(true);
-                            mRate.setText("+" + FinanceUtil.formatWithScale(priceChange) + "%");
-                        } else {
+                        mRate.setEnabled(true);
+                        String priceChange = FinanceUtil.formatToPercentage(stockData.getUpDropSpeed());
+                        if (priceChange.startsWith("-")) {
                             mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
                             mRate.setSelected(false);
-                            mRate.setText(FinanceUtil.formatWithScale(priceChange) + "%");
+                            mRate.setText(priceChange);
+                        } else {
+
+                            mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                            mRate.setSelected(true);
+                            mRate.setText("+" + priceChange);
                         }
-                    } else {
-                        mLastPrice.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                        mLastPrice.setText("--");
-                        mRate.setSelected(true);
-                        mRate.setText("--");
                     }
+                } else {
+                    mLastPrice.setText("--");
+                    mRate.setSelected(true);
+                    mRate.setText("--");
                 }
             }
         }
