@@ -668,7 +668,7 @@ public class HomeTitleView extends RelativeLayout {
         Stock stock;
         for (StockData stockData : data) {
             stock = (Stock) mLeftIndex.getTag();
-            if (TextUtils.isEmpty(stock.getVarietyCode())){
+            if (stock != null && TextUtils.isEmpty(stock.getVarietyCode())) {
                 continue;
             }
             if (stock != null && stock.getVarietyCode().equalsIgnoreCase(stockData.getInstrumentId())) {
@@ -689,7 +689,7 @@ public class HomeTitleView extends RelativeLayout {
                 }
             }
             stock = (Stock) mRightIndex.getTag();
-            if (stock != null&& stock.getVarietyCode().equalsIgnoreCase(stockData.getInstrumentId())) {
+            if (stock != null && stock.getVarietyCode().equalsIgnoreCase(stockData.getInstrumentId())) {
                 updateIndexDataToUI(SELECT_RIGHT, stockData);
                 if (oldButton == BUTTON_HUSHEN) {
                     mStockCacheData.put(SELECT_RIGHT, stockData);

@@ -14,6 +14,7 @@ import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.future.FutureTradeActivity;
 import com.sbai.finance.activity.home.AllTrainingListActivity;
 import com.sbai.finance.activity.home.BroadcastListActivity;
+import com.sbai.finance.activity.home.SearchOptionalActivity;
 import com.sbai.finance.activity.home.StockFutureActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -205,8 +206,7 @@ public class HomePageFragment extends BaseFragment {
                 //自选点击
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.PAGE_OPTIONAL_ALL);
-                    Launcher.with(getActivity(), StockFutureActivity.class)
-                            .putExtra(ExtraKeys.PAGE_INDEX, 2)
+                    Launcher.with(getActivity(), SearchOptionalActivity.class)
                             .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
@@ -362,7 +362,7 @@ public class HomePageFragment extends BaseFragment {
         //fragment在前台显示
         if (mIsVisibleToUser || !mHasEnter) {
             //第一次进入,则在前台
-            if(!mHasEnter){
+            if (!mHasEnter) {
                 mHasEnter = true;
                 mIsVisibleToUser = true;
             }

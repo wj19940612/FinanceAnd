@@ -71,6 +71,9 @@ public class MySubscribeActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MyCollect radioInfo = (MyCollect) parent.getAdapter().getItem(position);
+                if(radioInfo.getShow() == 0){//下架的电台不让点击
+                    return;
+                }
                 requestClickNewInfo(radioInfo);
                 Launcher.with(MySubscribeActivity.this, RadioStationListActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(radioInfo.getDataId()))
@@ -246,7 +249,11 @@ public class MySubscribeActivity extends BaseActivity {
                 mTitle.setText(radioInfo.getRadioName());
                 setSpanIconText(mSubtitle, radioInfo.getRadioIntroduction(), context);
                 mNumber.setText(String.valueOf(radioInfo.getListenNumber()));
-                mTime.setText(DateUtil.formatDefaultStyleTime(radioInfo.getSubscribeTime()));
+                if(radioInfo.getShow() == 1){//显示
+                    mTime.setText(DateUtil.formatDefaultStyleTime(radioInfo.getSubscribeTime()));
+                }else if(radioInfo.getShow() == 0){//下架
+                    mTime.setText("该电台已下架");
+                }
                 if (radioInfo.getIsRead() != 0) {
                     mIconView.setVisibility(View.GONE);
                 } else {

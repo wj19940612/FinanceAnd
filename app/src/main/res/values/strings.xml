@@ -119,7 +119,7 @@
     <string name="stock_finance">财务</string>
     <string name="market_close">休市</string>
     <string name="market_trading">交易中</string>
-    <string name="no_option">暂无自选股票/期货</string>
+    <string name="no_option">暂无自选股票</string>
     <string name="ask_5">卖5</string>
     <string name="ask_4">卖4</string>
     <string name="ask_3">卖3</string>
@@ -220,6 +220,7 @@
     <string name="is_logout_lemi">是否要退出登录？</string>
     <string name="personal_summary">个人简介</string>
     <string name="set_personal_summary">设置个人简介</string>
+    <string name="please_introduce_yourself">介绍一下你自己吧</string>
     <!--   消息 -->
     <string name="up_load_more">加载更多</string>
 
