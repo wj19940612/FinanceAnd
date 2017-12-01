@@ -60,4 +60,5 @@ public interface ExtraKeys {
     String MEDIA_PLAY_SOURCE = "media_play_source";
     String COMMENT_SOURCE = "comment_source";
     String PROFILE_INTRODUCE = "profile_introduce";
+    String QUESTION_TYPE = "question_type";
 }
