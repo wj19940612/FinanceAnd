@@ -3246,7 +3246,7 @@ public class Client {
      */
 
     public static API modifyProfileIntroduction(String introduction) {
-        return new API("/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
+        return new API(POST,"/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
     }
 
     /**

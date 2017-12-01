@@ -86,17 +86,16 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
         return missProfileRadioFragment;
     }
 
-    public void setRadioBtn(){
-        if (LocalUser.getUser().isMiss()) {
-            //是小姐姐，显示创建电台按钮
-            mCreateRadio.setVisibility(View.VISIBLE);
-        } else {
-            mCreateRadio.setVisibility(View.GONE);
-        }
-    }
-
     public void setMiss(Miss miss) {
 
+    }
+
+    public void initScrollState(){
+        LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+        boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
+        if (mOnFragmentRecycleViewScrollListener != null) {
+            mOnFragmentRecycleViewScrollListener.onSwipRefreshEnable(isTop, 0);
+        }
     }
 
     @Override
