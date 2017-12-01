@@ -397,6 +397,11 @@ public class MissNewsFragment extends BaseFragment implements
                         mMessageType.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                         mReplyContent.setVisibility(View.VISIBLE);
                         break;
+                    case MissMessage.TYPE_MISS_TOPIC_COMMENT:
+                        mMessageType.setText(context.getString(R.string.reply_your_comment));
+                        mMessageType.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                        mReplyContent.setVisibility(View.VISIBLE);
+                        break;
                 }
                 mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
                 if (item.isNoRead()) {
