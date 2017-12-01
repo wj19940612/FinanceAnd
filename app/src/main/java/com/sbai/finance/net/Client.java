@@ -931,14 +931,13 @@ public class Client {
      * 获取股票列表
      *
      * @param page
-     * @param pageSize
      * @return
      */
-    public static API getStockVariety(int page, int pageSize) {
+    public static API getStockVariety(int page) {
         return new API("/api/stock-va/variety/var.do",
                 new ApiParams()
                         .put("page", page)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
 
     /**
@@ -1035,13 +1034,13 @@ public class Client {
     /**
      * 添加自选股
      *
-     * @param varietyId
+     * @param code
      * @return
      */
-    public static API addOption(int varietyId, String optType) {
+    public static API addOption(String code, String optType) {
         return new API(POST, "/api/stock-va/opt/add.do",
                 new ApiParams()
-                        .put("optTypeId", varietyId)
+                        .put("code", code)
                         .put("optType", optType));
     }
 
@@ -3129,10 +3128,11 @@ public class Client {
      * @param id
      * @return
      */
-    public static API requestWithdraw(int id, String account) {
+    public static API requestWithdraw(int id, String account, String varietyCode) {
         return new API(POST, "/api/stock-or/declare/cancel.do", new ApiParams()
                 .put("id", id)
-                .put("account", account));
+                .put("account", account)
+                .put("varietyCode", varietyCode));
     }
 
     /**

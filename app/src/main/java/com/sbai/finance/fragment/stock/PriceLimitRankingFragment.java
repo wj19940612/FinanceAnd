@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -228,9 +228,9 @@ public class PriceLimitRankingFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         Client.getStockInfo(item.getInstrumentId())
-                                .setCallback(new Callback2D<Resp<Variety>, Variety>() {
+                                .setCallback(new Callback2D<Resp<Stock>, Stock>() {
                                     @Override
-                                    protected void onRespSuccessData(Variety data) {
+                                    protected void onRespSuccessData(Stock data) {
                                         Launcher.with(context, StockDetailActivity.class)
                                                 .putExtra(Launcher.EX_PAYLOAD, data).execute();
                                     }
