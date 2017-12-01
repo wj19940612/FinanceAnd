@@ -204,6 +204,17 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
             public void onPageSelected(int position) {
                 mPosition = position;
                 setPositionBtn(position);
+                if (position == FRAGMENT_RADIO) {
+                    MissProfileRadioFragment missProfileRadioFragment = getMissProfileRadioFragment();
+                    if (missProfileRadioFragment != null) {
+                        missProfileRadioFragment.initScrollState();
+                    }
+                }else if(position == FRAGMENT_QUESTION){
+                    MissProfileQuestionFragment missProfileQuestionFragment = getMissProfileQuestionFragment();
+                    if(missProfileQuestionFragment != null){
+                        missProfileQuestionFragment.initScrollState();
+                    }
+                }
             }
 
             @Override
@@ -256,32 +267,32 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         }
     }
 
-    private void setPositionBtn(int position){
+    private void setPositionBtn(int position) {
         if (position == FRAGMENT_QUESTION) {
             if (mMiss != null) {
-                if (LocalUser.getUser().isMiss()) {
-                    //是小姐姐，隐藏我要提问按钮
+                if (LocalUser.getUser().isMiss() && LocalUser.getUser().getUserInfo().getCustomId() == mMiss.getId()) {
+                    //是当前小姐姐，隐藏我要提问按钮
                     mAsk.setVisibility(View.GONE);
                     mCreateRadio.setVisibility(View.GONE);
                 } else {
                     mAsk.setVisibility(View.VISIBLE);
                     mCreateRadio.setVisibility(View.GONE);
                 }
-            }else{
+            } else {
                 mAsk.setVisibility(View.VISIBLE);
                 mCreateRadio.setVisibility(View.GONE);
             }
         } else if (position == FRAGMENT_RADIO) {
             if (mMiss != null) {
                 if (LocalUser.getUser().isMiss()) {
-                    //是小姐姐，隐藏我要提问按钮
+                    //是小姐姐，显示创建电台
                     mAsk.setVisibility(View.GONE);
                     mCreateRadio.setVisibility(View.VISIBLE);
                 } else {
                     mAsk.setVisibility(View.GONE);
                     mCreateRadio.setVisibility(View.GONE);
                 }
-            }else{
+            } else {
                 mAsk.setVisibility(View.GONE);
                 mCreateRadio.setVisibility(View.GONE);
             }
@@ -344,7 +355,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         setPositionBtn(mPosition);
     }
 
-    private void updateNullMissDetail(){
+    private void updateNullMissDetail() {
         setPositionBtn(mPosition);
         GlideApp.with(this).load(null)
                 .placeholder(R.drawable.ic_default_avatar)

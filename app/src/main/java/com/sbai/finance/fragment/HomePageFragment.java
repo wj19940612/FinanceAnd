@@ -363,7 +363,11 @@ public class HomePageFragment extends BaseFragment {
         super.onResume();
         //fragment在前台显示
         if (mIsVisibleToUser || !mHasEnter) {
-            mHasEnter = true;
+            //第一次进入,则在前台
+            if(!mHasEnter){
+                mHasEnter = true;
+                mIsVisibleToUser = true;
+            }
             startScheduleJob(TIME_ONE);
             TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
             requestGreetings();

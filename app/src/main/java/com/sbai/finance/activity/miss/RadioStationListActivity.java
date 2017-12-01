@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Html;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -73,7 +74,6 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
     TextView mListenerNumber;
     TextView mContent;
     TextView mBtnLookMore;
-    RelativeLayout mNameLayout;
 
     private int mRadioStationId;
     private RadioStationAdapter mRadioStationAdapter;
@@ -142,7 +142,6 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         mListenerNumber = header.findViewById(R.id.listenerNumber);
         mContent = header.findViewById(R.id.content);
         mBtnLookMore = header.findViewById(R.id.btnLookMore);
-        mNameLayout = header.findViewById(R.id.nameLayout);
         mBtnLookMore.setTag(false);
         mBtnLookMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,13 +178,15 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         };
         mSubscribe.setOnClickListener(onClickListener);
         mSubscribed.setOnClickListener(onClickListener);
-        mNameLayout.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener nameOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mRadioInfo == null) return;
                 Launcher.with(RadioStationListActivity.this, MissProfileDetailActivity.class).putExtra(Launcher.EX_PAYLOAD, mRadioInfo.getRadioHost()).execute();
             }
-        });
+        };
+        mName.setOnClickListener(nameOnClickListener);
+        mAvatar.setOnClickListener(nameOnClickListener);
 
         mCover.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -312,7 +313,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
             mSubscribe.setVisibility(View.GONE);
             mSubscribed.setVisibility(View.VISIBLE);
         }
-        mContent.setText(radioInfo.getRadioIntroduction());
+        mContent.setText(Html.fromHtml(radioInfo.getRadioIntroduction()).toString());
         mListenerNumber.setText(String.valueOf(radioInfo.getListenNumber()));
         mContent.getViewTreeObserver().addOnPreDrawListener(mOnPreDrawListener);
     }

@@ -75,7 +75,6 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/nameLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical">
@@ -90,6 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
+                    android:paddingRight="24dp"
                     android:layout_toRightOf="@+id/avatar"
                     android:textColor="@color/blueBlack"
                     android:textSize="15sp"/>

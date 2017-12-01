@@ -114,14 +114,11 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         mMediaPlayService = mediaPlayService;
     }
 
-    public void setAskBtn() {
-        if (mMiss != null) {
-            if (LocalUser.getUser().isMiss()) {
-                //是小姐姐，隐藏我要提问按钮
-                mAsk.setVisibility(View.GONE);
-            } else {
-                mAsk.setVisibility(View.VISIBLE);
-            }
+    public void initScrollState(){
+        LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+        boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
+        if (mOnFragmentRecycleViewScrollListener != null) {
+            mOnFragmentRecycleViewScrollListener.onSwipRefreshEnable(isTop, 0);
         }
     }
 
