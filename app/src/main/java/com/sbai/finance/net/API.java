@@ -15,6 +15,7 @@ import com.sbai.httplib.ApiIndeterminate;
 import com.sbai.httplib.ApiParams;
 import com.sbai.httplib.CookieManger;
 import com.sbai.httplib.GsonRequest;
+import com.sbai.httplib.MultipartRequest;
 import com.sbai.httplib.RequestManager;
 
 import java.io.File;
@@ -147,20 +148,6 @@ public class API extends RequestManager {
         createThenEnqueue(url);
     }
 
-    public void fireMultipartFile() {
-        synchronized (sCurrentUrls) {
-            String url = createUrl();
-
-            if (sCurrentUrls.add(mTag + "#" + url)) {
-                createMultipartThenEnqueue(url);
-            }
-        }
-    }
-
-    private void createMultipartThenEnqueue(String url) {
-
-    }
-
     private String createUrl() {
         String url = new StringBuilder(getHost()).append(mUri).toString();
         if (mMethod == Request.Method.GET && mApiParams != null) {
@@ -208,8 +195,12 @@ public class API extends RequestManager {
             type = mCallback.getGenericType();
         }
 
-        GsonRequest request
-                = new GsonRequest(mMethod, url, headers, mApiParams, mBody, type, mCallback);
+        Request request = null;
+        if (mFile != null && !TextUtils.isEmpty(mFilePartName)) {
+            request = new MultipartRequest(mMethod, url, headers, mFilePartName, mFile, mApiParams, type, mCallback);
+        } else {
+            request = new GsonRequest(mMethod, url, headers, mApiParams, mBody, type, mCallback);
+        }
         request.setTag(mTag);
 
         if (mRetryPolicy != null) {

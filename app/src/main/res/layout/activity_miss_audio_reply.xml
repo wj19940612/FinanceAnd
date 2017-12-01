@@ -121,7 +121,7 @@
                 android:layout_height="32dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="8dp"
-                android:src="@drawable/ic_play"/>
+                android:src="@drawable/bg_voice_play"/>
 
             <TextView
                 android:id="@+id/clickPlay"
@@ -158,26 +158,31 @@
                 android:padding="6dp">
 
                 <ImageView
+                    android:visibility="gone"
                     android:id="@+id/loading"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:src="@drawable/ic_loading"/>
 
                 <TextView
+                    android:textColor="@android:color/white"
                     android:id="@+id/submitStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="6dp"
-                    android:text="@string/submitting"/>
+                    android:text="@string/verify_submit"/>
             </LinearLayout>
         </RelativeLayout>
 
         <TextView
+            android:visibility="visible"
+            android:textSize="10sp"
             android:id="@+id/submitResultHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/playSubmitRl"
             android:layout_marginLeft="3dp"
+            android:textColor="@color/unluckyText"
             android:layout_marginTop="8dp"
             android:layout_toRightOf="@+id/missAvatar"
             android:text="@string/audio_submit_success_hint"/>

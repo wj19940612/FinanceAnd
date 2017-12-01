@@ -36,7 +36,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
     public static final int RECORD_AUDIO_STATUS_INIT = 0; //初始
     public static final int RECORD_AUDIO_STATUS_RECORDING = 1; //录制中
-    public static final int RECORD_AUDIO_STATUS_RESTART = 2; //重新录制
+    public static final int RECORD_AUDIO_STATUS_END = 2; //录制结束
 
     private OnRecordAudioListener mOnRecordAudioListener;
     private TextView mRecordStatusTextView;
@@ -124,6 +124,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
                 mRecordBtnY = point[1];
                 mRecordAudioBtnWidth = mRecordAudioBtn.getWidth();
                 mRecordAudioBtnHeight = mRecordAudioBtn.getHeight();
+                Log.d(TAG, "run: " + mRecordBtnX + "  " + mRecordBtnY + " " + mRecordAudioBtnWidth + " " + mRecordAudioBtnHeight);
             }
         });
 
@@ -157,6 +158,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
                     }
                 }
                 reset();
+                setRecordStatus(RECORD_AUDIO_STATUS_END);
                 break;
             case MotionEvent.ACTION_MOVE:
                 float x = motionEvent.getRawX();
@@ -174,7 +176,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
         boolean x2 = (mRecordBtnX + mRecordAudioBtnWidth) > x;
         boolean y1 = y > (mRecordBtnY - 30);
         boolean y2 = (mRecordBtnY + mRecordAudioBtnHeight) > y;
-        Log.d(TAG, "pointISInsideRecordBtn: "+x+" "+mRecordBtnX+"  "+y+"  "+mRecordBtnY);
+        Log.d(TAG, "pointISInsideRecordBtn: " + x1 + " " + x2 + "  " + y1 + "  " + y2 + " " + y);
         return x1 && x2 && y1 && y2;
     }
 
@@ -216,8 +218,17 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
                 mRecordStatusTextView.setText(R.string.press_record);
                 mAudioLengthTextView.setVisibility(VISIBLE);
                 break;
+            case RECORD_AUDIO_STATUS_END:
+                mRecordStatusTextView.setText(R.string.restart_recording);
+                break;
 
         }
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        mRecordAudioBtn.setEnabled(enabled);
     }
 
     @Override

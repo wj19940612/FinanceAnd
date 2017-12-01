@@ -7,9 +7,10 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.levelevaluation.QuestionAnswer;
 import com.sbai.finance.model.local.StockOrder;
-import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.httplib.ApiParams;
+
+import java.io.File;
 
 
 public class Client {
@@ -3246,7 +3247,7 @@ public class Client {
      */
 
     public static API modifyProfileIntroduction(String introduction) {
-        return new API(POST,"/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
+        return new API(POST, "/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
     }
 
     /**
@@ -3321,4 +3322,37 @@ public class Client {
                 new ApiParams()
                         .put("id", questionId));
     }
+
+    /**
+     * 文件上传
+     *
+     * @param fileName
+     * @param file
+     * @return
+     */
+    public static API submitFile(String fileName, File file) {
+        return new API(POST, "/user/upload/file.do",
+                new ApiParams()
+                        .put("file", file),
+                fileName, file);
+    }
+
+    /**
+     * /explain/questionApp/customerServiceReply.do
+     *
+     * @param id
+     * @param context
+     * @param soundTime
+     * @param customId
+     * @return
+     */
+    public static API submitMissAnswer(int id, String context, int soundTime, int customId) {
+        return new API("/explain/questionApp/customerServiceReply.do",
+                new ApiParams()
+                        .put("id", id)
+                        .put("context", context)
+                        .put("soundTime", soundTime)
+                        .put("customId", customId));
+    }
+
 }
