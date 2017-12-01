@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
 import com.google.gson.JsonObject;
@@ -35,6 +36,8 @@ import butterknife.OnClick;
 public class SettingActivity extends BaseActivity {
     @BindView(R.id.feedback)
     IconTextRow mFeedback;
+    @BindView(R.id.logout)
+    AppCompatTextView mLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,15 @@ public class SettingActivity extends BaseActivity {
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
         requestNoReadFeedbackNumber();
+        initView();
+    }
+
+    private void initView() {
+        if(LocalUser.getUser().isLogin()){
+            mLogout.setVisibility(View.VISIBLE);
+        }else{
+            mLogout.setVisibility(View.GONE);
+        }
     }
 
     @OnClick({R.id.shieldSetting, R.id.newMessageNotification, R.id.appInfo, R.id.securityCenter, R.id.feedback, R.id.aboutUs, R.id.logout})

@@ -92,7 +92,11 @@ public class WaitRaceAnswerFragment extends BaseFragment {
             public void raceClick(Answer item) {
                 requestUpdateReadStatus(item.getId());
                 requestrushToAnswer(item.getId());
-                //TODO 跳转回答录音界面
+                if (item != null) {
+                    Launcher.with(getActivity(), MissAudioReplyActivity.class)
+                            .putExtra(ExtraKeys.QUESTION_ID, item.getId())
+                            .execute();
+                }
             }
         });
         mListView.setAdapter(mRaceAnswerAdapter);
@@ -103,26 +107,17 @@ public class WaitRaceAnswerFragment extends BaseFragment {
             }
         });
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Answer answer = (Answer) parent.getAdapter().getItem(position);
-                if (answer != null) {
-                    Launcher.with(getActivity(), MissAudioReplyActivity.class)
-                            .putExtra(ExtraKeys.QUESTION_ID, answer.getId())
-                            .execute();
-                }
-
-//                Question question = (Question) parent.getAdapter().getItem(position);
-//                if (question != null && question.isQuestionSolved()) {
-//                    mClickQuestion = question;
-//                    Intent intent = new Intent(getActivity(), QuestionDetailActivity.class);
-//                    intent.putExtra(Launcher.EX_PAYLOAD, question.getDataId());
-//                    intent.putExtra(Launcher.EX_PAYLOAD_1, question.getCommentId());
-//                    startActivityForResult(intent, QuestionDetailActivity.REQ_CODE_QUESTION_DETAIL);
+//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Answer answer = (Answer) parent.getAdapter().getItem(position);
+//                if (answer != null) {
+//                    Launcher.with(getActivity(), MissAudioReplyActivity.class)
+//                            .putExtra(ExtraKeys.QUESTION_ID, answer.getId())
+//                            .execute();
 //                }
-            }
-        });
+//            }
+//        });
     }
 
     private void refreshData() {
