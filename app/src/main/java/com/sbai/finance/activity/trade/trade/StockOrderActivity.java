@@ -334,7 +334,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         mFundInfo.setHoldingFloat(floatProfit);
         mFundInfo.setTodayProfit(todayProfit);
         if (mPositionRecords != null) {
-            mFundInfo.setTotalFund(mPositionRecords.getUsableMoney() + totalMarket);
+            mFundInfo.setTotalFund(mPositionRecords.getUsableMoney() + mPositionRecords.getFrozen() + totalMarket);
         }
     }
 
@@ -346,9 +346,15 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         }
     }
 
-    public void updateTotalFund() {
+    public void updateTotalFund(PositionRecords data) {
+        mPositionRecords = data;
         if (mPositionRecords != null) {
-            mFundInfo.setTotalFund(mPositionRecords.getUsableMoney());
+            mFundInfo.resetView();
+            mFundInfo.setTotalFund(mPositionRecords.getUsableMoney() + mPositionRecords.getFrozen());
+            mFundInfo.setEnableFund(mPositionRecords.getUsableMoney());
+            if (data.getUsableDraw() > 0) {
+                mFundInfo.setFetchFund(mPositionRecords.getUsableDraw());
+            }
         }
     }
 

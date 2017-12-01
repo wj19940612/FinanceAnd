@@ -197,9 +197,6 @@
             android:name=".activity.mine.fund.WithDrawDetailsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.home.OptionalActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.home.SearchOptionalActivity"
             android:screenOrientation="portrait"/>
         <activity

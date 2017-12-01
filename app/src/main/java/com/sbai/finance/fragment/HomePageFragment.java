@@ -32,6 +32,7 @@ import com.sbai.finance.model.NoticeRadio;
 import com.sbai.finance.model.Variety;
 import com.sbai.finance.model.future.FutureData;
 import com.sbai.finance.model.leaderboard.LeaderThreeRank;
+import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.system.Share;
 import com.sbai.finance.model.training.MyTrainingRecord;
@@ -159,29 +160,26 @@ public class HomePageFragment extends BaseFragment {
         });
         mHomeTitleView.setOnClickItemListener(new HomeTitleView.OnClickItemListener() {
             @Override
-            public void onItemClick(int button, Variety variety) {
+            public void onItemClick(int button, Object t) {
                 if (button == BUTTON_HUSHEN) {
                     umengEventCount(UmengCountEventId.PAGE_HU_SHEN);
                     Launcher.with(getActivity(), StockIndexActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                            .putExtra(Launcher.EX_PAYLOAD, (Stock) t).execute();
                 } else if (button == BUTTON_QIHUO) {
                     umengEventCount(UmengCountEventId.PAGE_FUTURE);
                     Launcher.with(getActivity(), FutureTradeActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                            .putExtra(Launcher.EX_PAYLOAD, (Variety) t).execute();
 
                 } else if (button == BUTTON_ZIXUAN) {
                     umengEventCount(UmengCountEventId.PAGE_OPTIONAL);
-                    if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
-                        Launcher.with(getActivity(), FutureTradeActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, variety).execute();
-                    }
-                    if (variety != null && variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                        if (variety.getSmallVarietyTypeCode().equalsIgnoreCase(Variety.STOCK_EXPONENT)) {
+                    Stock stock = (Stock) t;
+                    if (stock != null) {
+                        if (stock.getVarietyType().equalsIgnoreCase(Stock.EXPEND)) {
                             Launcher.with(getActivity(), StockIndexActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                                    .putExtra(Launcher.EX_PAYLOAD, stock).execute();
                         } else {
                             Launcher.with(getActivity(), StockDetailActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, variety).execute();
+                                    .putExtra(Launcher.EX_PAYLOAD, stock).execute();
                         }
                     }
                 }
@@ -363,7 +361,11 @@ public class HomePageFragment extends BaseFragment {
         super.onResume();
         //fragment在前台显示
         if (mIsVisibleToUser || !mHasEnter) {
-            mHasEnter = true;
+            //第一次进入,则在前台
+            if(!mHasEnter){
+                mHasEnter = true;
+                mIsVisibleToUser = true;
+            }
             startScheduleJob(TIME_ONE);
             TAG = this.getClass().getSimpleName() + System.currentTimeMillis();
             requestGreetings();
@@ -438,10 +440,10 @@ public class HomePageFragment extends BaseFragment {
     }
 
     private void requestStockIndexData() {
-        Client.getStockIndexVariety().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+        Client.getStockIndex().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Stock>>, List<Stock>>() {
                     @Override
-                    protected void onRespSuccessData(List<Variety> data) {
+                    protected void onRespSuccessData(List<Stock> data) {
                         if (data != null && data.size() != 0) {
                             mHomeTitleView.updateStockIndexData(data);
                             requestStockIndexMarketData(data);
@@ -450,11 +452,11 @@ public class HomePageFragment extends BaseFragment {
                 }).fire();
     }
 
-    private void requestStockIndexMarketData(List<Variety> data) {
+    private void requestStockIndexMarketData(List<Stock> data) {
         if (data == null || data.isEmpty()) return;
         StringBuilder stringBuilder = new StringBuilder();
-        for (Variety variety : data) {
-            stringBuilder.append(variety.getVarietyType()).append(",");
+        for (Stock stock : data) {
+            stringBuilder.append(stock.getVarietyCode()).append(",");
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         Client.getStockMarketData(stringBuilder.toString())
@@ -513,37 +515,22 @@ public class HomePageFragment extends BaseFragment {
             mHomeTitleView.forceInitSelectUI();
             return;
         }
-        int page = 0;
-        Client.getOptional(page).setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Variety>>, List<Variety>>() {
+        Client.getOptional().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<Stock>>, List<Stock>>() {
                     @Override
-                    protected void onRespSuccessData(List<Variety> data) {
+                    protected void onRespSuccessData(List<Stock> data) {
                         if (data != null) {
                             mHomeTitleView.updateSelectData(data);
-                            updateOptionInfo((ArrayList<Variety>) data);
+                            updateOptionInfo((ArrayList<Stock>) data);
                         }
                     }
                 }).fireFree();
     }
 
-    private void updateOptionInfo(ArrayList<Variety> data) {
+    private void updateOptionInfo(ArrayList<Stock> data) {
         if (data != null && data.size() > 0) {
-            requestMarketData(data);
+            requestStockIndexMarketData(data);
         }
-    }
-
-    private void requestMarketData(ArrayList<Variety> data) {
-        List<Variety> futures = new ArrayList<>();
-        List<Variety> stocks = new ArrayList<>();
-        for (Variety variety : data) {
-            if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_STOCK)) {
-                stocks.add(variety);
-            } else if (variety.getBigVarietyTypeCode().equalsIgnoreCase(Variety.VAR_FUTURE)) {
-                futures.add(variety);
-            }
-        }
-        requestFutureMarketData(futures);
-        requestStockIndexMarketData(stocks);
     }
 
     private void requestGreetings() {

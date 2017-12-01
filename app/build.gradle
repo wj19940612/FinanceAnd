@@ -9,7 +9,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 49
-        versionName "2.1.0"
+        versionName "2.1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField('String', 'HOST', '\"lemi.ailemi.com\"')
@@ -104,7 +104,7 @@ android {
 //            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-alpha'
             versionCode 147
-            versionName "2.0.113002"
+            versionName "2.0.1201"
             buildConfigField('String', 'HOST', '\"testlemi.ailemi.com\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 

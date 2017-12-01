@@ -182,6 +182,7 @@ public class IconTextRow extends LinearLayout {
         mSubTextView.setVisibility(mSubTextVisible);
         if (mSubTextSingleLine) {
             params = new LayoutParams(0, LayoutParams.WRAP_CONTENT);
+            params.setMargins(mSubTextLeftMargin, 0, mSubTextRightMargin, 0);
             params.weight = 2f;
             mSubTextView.setGravity(Gravity.CENTER_VERTICAL|Gravity.RIGHT);
             mSubTextView.setSingleLine(mSubTextSingleLine);

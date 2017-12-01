@@ -21,9 +21,9 @@ import com.sbai.chart.domain.KlineViewData;
 import com.sbai.chart.domain.TrendViewData;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.dialog.TradeOptionDialogFragment;
+import com.sbai.finance.fragment.optional.OptionalListFragment;
 import com.sbai.finance.market.DataReceiveListener;
 import com.sbai.finance.market.MarketSubscriber;
 import com.sbai.finance.model.FutureIntroduce;
@@ -338,7 +338,6 @@ public class FutureTradeActivity extends BaseActivity {
             @Override
             public void onAddOptionalButtonClick() {
                 if (LocalUser.getUser().isLogin()) {
-                    checkOptionalStatus();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
@@ -350,15 +349,6 @@ public class FutureTradeActivity extends BaseActivity {
                 TradeOptionDialogFragment.newInstance().show(getSupportFragmentManager());
             }
         });
-    }
-
-
-    private void checkOptionalStatus() {
-        if (mTradeFloatButtons.isHasAddInOptional()) {
-            requestDeleteOptional();
-        } else {
-            requestAddOptional();
-        }
     }
 
     private void requestPrediction() {
@@ -389,35 +379,6 @@ public class FutureTradeActivity extends BaseActivity {
                         }
                     }).fire();
         }
-    }
-
-    private void requestAddOptional() {
-        umengEventCount(UmengCountEventId.DISCOVERY_ADD_SELF_OPTIONAL);
-        Client.addOption(mVariety.getVarietyId())
-                .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback<Resp<JsonObject>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<JsonObject> resp) {
-                        if (resp.isSuccess()) {
-                            mTradeFloatButtons.setHasAddInOption(true);
-                            CustomToast.getInstance().showText(FutureTradeActivity.this, R.string.add_option_succeed);
-                            sendAddOptionalBroadCast(null, true);
-                        } else {
-                            ToastUtil.show(resp.getMsg());
-                        }
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        super.onRespFailure(failedResp);
-                        // 701 代表已经添加过
-                        if (failedResp.getCode() == Resp.CODE_REPEAT_ADD) {
-                            mTradeFloatButtons.setHasAddInOption(true);
-                        }
-                    }
-                })
-                .fire();
     }
 
     private void requestDeleteOptional() {
@@ -454,7 +415,7 @@ public class FutureTradeActivity extends BaseActivity {
 
     private void sendAddOptionalBroadCast(Variety variety, Boolean isAddOptional) {
         Intent intent = new Intent();
-        intent.setAction(OptionalActivity.OPTIONAL_CHANGE_ACTION);
+        intent.setAction(OptionalListFragment.OPTIONAL_CHANGE_ACTION);
         intent.putExtra(Launcher.EX_PAYLOAD, variety);
         intent.putExtra(Launcher.EX_PAYLOAD_1, isAddOptional);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);

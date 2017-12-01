@@ -28,6 +28,7 @@ import com.sbai.finance.activity.trade.trade.StockOrderActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.stock.StockUser;
 import com.sbai.finance.model.stocktrade.Position;
@@ -154,6 +155,9 @@ public class StockPositionFragment extends BaseFragment {
         if (getActivity() instanceof StockOrderActivity) {
             StockOrderActivity activity = (StockOrderActivity) getActivity();
             activity.updateEnableAndFetchFund(data);
+            if (mPositionMap.isEmpty()) {
+                activity.updateTotalFund(data);
+            }
         }
         requestStockMarketData();
     }
@@ -176,11 +180,6 @@ public class StockPositionFragment extends BaseFragment {
                             }
                         }
                     }).fireFree();
-        } else {
-            if (getActivity() instanceof StockOrderActivity) {
-                StockOrderActivity activity = (StockOrderActivity) getActivity();
-                activity.updateTotalFund();
-            }
         }
     }
 
@@ -213,9 +212,9 @@ public class StockPositionFragment extends BaseFragment {
 
     private void requestStockInfo(Position position, final int type) {
         Client.getStockInfo(position.getVarietyCode())
-                .setCallback(new Callback2D<Resp<Variety>, Variety>() {
+                .setCallback(new Callback2D<Resp<Stock>, Stock>() {
                     @Override
-                    protected void onRespSuccessData(Variety data) {
+                    protected void onRespSuccessData(Stock data) {
                         Intent intent = null;
                         switch (type) {
                             case 1:

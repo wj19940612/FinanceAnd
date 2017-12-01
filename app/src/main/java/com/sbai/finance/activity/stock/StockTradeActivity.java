@@ -24,10 +24,10 @@ import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.home.OptionalActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.fragment.optional.OptionalListFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.Variety;
+import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.model.stock.StockRTData;
 import com.sbai.finance.model.stock.StockTrendData;
@@ -65,9 +65,6 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 import static com.umeng.socialize.utils.ContextUtil.getContext;
 
 public abstract class StockTradeActivity extends BaseActivity {
-
-    protected static final int HAS_ADD_OPTIONAL = 1;
-
     @BindView(R.id.mockTrade)
     protected Button mMockTrading;
 
@@ -130,7 +127,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private StockRTData mStockRTData;
 
-    protected Variety mVariety;
+    protected Stock mStock;
     private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
         @Override
         protected void onNetworkChanged(int availableNetworkType) {
@@ -162,12 +159,12 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private void requestOptionalStatus() {
         if (LocalUser.getUser().isLogin()) {
-            Client.checkOptional(mVariety.getVarietyId()).setTag(TAG)
-                    .setCallback(new Callback<Resp<Integer>>() {
+            Client.getStockInfo(mStock.getVarietyCode()).setTag(TAG)
+                    .setCallback(new Callback<Resp<Stock>>() {
                         @Override
-                        protected void onRespSuccess(Resp<Integer> resp) {
-                            Integer result = resp.getData();
-                            if (result != null && result == HAS_ADD_OPTIONAL) {
+                        protected void onRespSuccess(Resp<Stock> resp) {
+                            Stock result = resp.getData();
+                            if (result != null && result.isOptional()) {
                                 showCancelOptionalOfTitleBar();
                             }
                         }
@@ -212,7 +209,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void requestCancelOptional() {
-        Client.delOptional(mVariety.getVarietyId())
+        Client.delOptional(mStock.getVarietyCode(), mStock.getType())
                 .setTag(TAG).setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {
                     @Override
@@ -220,7 +217,7 @@ public abstract class StockTradeActivity extends BaseActivity {
                         if (resp.isSuccess()) {
                             showAddOptionalOfTitleBar();
                             CustomToast.getInstance().showText(getActivity(), R.string.delete_option_succeed);
-                            sendAddOptionalBroadCast(mVariety, false);
+                            sendAddOptionalBroadCast(mStock, false);
                         } else {
                             ToastUtil.show(resp.getMsg());
                         }
@@ -229,7 +226,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void requestAddOptional() {
-        Client.addOption(mVariety.getVarietyId())
+        Client.addOption(mStock.getId(), Stock.OPTIONAL_TYPE_STOCK)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {
@@ -265,32 +262,32 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void requestExchangeStatus() {
-        Client.getExchangeStatus(mVariety.getExchangeId()).setTag(TAG)
+        Client.getExchangeStatus(mStock.getExchangeId()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<Integer>, Integer>() {
                     @Override
                     protected void onRespSuccessData(Integer data) {
-                        int exchangeStatus = (data != null ? data.intValue() : mVariety.getExchangeStatus());
-                        mVariety.setExchangeStatus(exchangeStatus);
+                        int exchangeStatus = (data != null ? data.intValue() : mStock.getExchangeOpened());
+                        mStock.setExchangeOpened(exchangeStatus);
                         updateExchangeStatusView();
                     }
                 }).fireFree();
     }
 
     private void updateExchangeStatusView() {
-        int exchangeStatus = mVariety.getExchangeStatus();
+        int exchangeStatus = mStock.getExchangeOpened();
         View view = mTitleBar.getCustomView();
         TextView exchangeStatusView = (TextView) view.findViewById(R.id.exchangeStatus);
-        if (exchangeStatus == Variety.EXCHANGE_STATUS_CLOSE) {
+        if (exchangeStatus == Stock.EXCHANGE_STATUS_CLOSE) {
             exchangeStatusView.setText(R.string.market_close);
         } else {
             exchangeStatusView.setText(R.string.market_trading);
         }
     }
 
-    private void sendAddOptionalBroadCast(Variety variety, Boolean isAddOptional) {
+    private void sendAddOptionalBroadCast(Stock stock, Boolean isAddOptional) {
         Intent intent = new Intent();
-        intent.setAction(OptionalActivity.OPTIONAL_CHANGE_ACTION);
-        intent.putExtra(Launcher.EX_PAYLOAD, variety);
+        intent.setAction(OptionalListFragment.OPTIONAL_CHANGE_ACTION);
+        intent.putExtra(Launcher.EX_PAYLOAD, stock);
         intent.putExtra(Launcher.EX_PAYLOAD_1, isAddOptional);
         LocalBroadcastManager.getInstance(getContext()).sendBroadcastSync(intent);
     }
@@ -321,7 +318,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void requestStockRTData() {
-        Client.getStockRealtimeData(mVariety.getVarietyType())
+        Client.getStockRealtimeData(mStock.getVarietyCode())
                 .setCallback(new Callback2D<Resp<StockRTData>, StockRTData>() {
                     @Override
                     protected void onRespSuccessData(StockRTData result) {
@@ -395,8 +392,8 @@ public abstract class StockTradeActivity extends BaseActivity {
         View view = mTitleBar.getCustomView();
         TextView productName = (TextView) view.findViewById(R.id.productName);
         TextView exchangeStatus = (TextView) view.findViewById(R.id.exchangeStatus);
-        productName.setText(mVariety.getVarietyName() + " (" + mVariety.getVarietyType() + ")");
-        if (mVariety.getExchangeStatus() == Variety.EXCHANGE_STATUS_OPEN) {
+        productName.setText(mStock.getVarietyName() + " (" + mStock.getVarietyCode() + ")");
+        if (mStock.getExchangeOpened() == Stock.EXCHANGE_STATUS_OPEN) {
             exchangeStatus.setText(R.string.market_trading);
         } else {
             exchangeStatus.setText(R.string.market_close);
@@ -419,7 +416,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void initData(Intent intent) {
-        mVariety = intent.getParcelableExtra(Launcher.EX_PAYLOAD);
+        mStock = intent.getParcelableExtra(Launcher.EX_PAYLOAD);
     }
 
 
@@ -438,13 +435,13 @@ public abstract class StockTradeActivity extends BaseActivity {
         settings.setIndexesEnable(true);
         settings.setIndexesBaseLines(2);
         settings.setOpenMarketTimes("09:30;11:30;13:00;15:00");
-        settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
+        settings.setDisplayMarketTimes("09:30;13:00;15:00");
         settings.setCalculateXAxisFromOpenMarketTime(true);
         mStockTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
         settings2.setBaseLines(5);
-        settings2.setNumberScale(mVariety.getPriceScale());
+        settings2.setNumberScale(Stock.PRICE_SCALE);
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
         settings2.setIndexesEnable(true);
@@ -455,7 +452,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void requestStockTrendDataAndSet() {
-        Client.getStockTrendData(mVariety.getVarietyType()).setTag(TAG)
+        Client.getStockTrendData(mStock.getVarietyCode()).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<StockTrendData>>, List<StockTrendData>>() {
                     @Override
                     protected void onRespSuccessData(List<StockTrendData> result) {
@@ -523,7 +520,7 @@ public abstract class StockTradeActivity extends BaseActivity {
 
     private void requestKlineDataAndSet(int type) {
         mStockKlineView.clearData();
-        Client.getStockKlineData(mVariety.getVarietyType(), type)
+        Client.getStockKlineData(mStock.getVarietyCode(), type)
                 .setTag(TAG).setIndeterminate(this)
                 .setCallback(new StockCallback<StockResp, List<StockKlineData>>() {
                     @Override
@@ -549,7 +546,7 @@ public abstract class StockTradeActivity extends BaseActivity {
             case R.id.mockTrade:
                 if (LocalUser.getUser().isLogin()) {
                     Launcher.with(getActivity(), StockTradeOperateActivity.class)
-                            .putExtra(ExtraKeys.VARIETY, mVariety)
+                            .putExtra(ExtraKeys.VARIETY, mStock)
                             .execute();
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();

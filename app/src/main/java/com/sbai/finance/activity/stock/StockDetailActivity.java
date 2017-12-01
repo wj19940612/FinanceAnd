@@ -126,9 +126,9 @@ public class StockDetailActivity extends StockTradeActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return StockNewsFragment.newInstance(mVariety.getVarietyType());
+                    return StockNewsFragment.newInstance(mStock.getVarietyCode());
                 case 1:
-                    return FinanceFragment.newInstance(mVariety.getVarietyType());
+                    return FinanceFragment.newInstance(mStock.getVarietyCode());
             }
             return null;
         }

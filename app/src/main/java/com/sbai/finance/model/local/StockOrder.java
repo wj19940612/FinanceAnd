@@ -23,7 +23,7 @@ public class StockOrder {
     private String activityCode;
     private String varietyCode;
     private String varietyName;
-    private double quantity;
+    private long quantity;
     private double price;
     private int deputeType;
     private String signId;
@@ -62,7 +62,7 @@ public class StockOrder {
 
     public double getFee() {
         if (deputeType == DEPUTE_TYPE_ENTRUST_SELL) {
-            return Math.max(price * quantity * FEE_RATE + price * quantity * STAMP_TAX_RATE, MINIMUM_FEE);
+            return Math.max(price * quantity * FEE_RATE, MINIMUM_FEE) + price * quantity * STAMP_TAX_RATE;
         }
         return Math.max(price * quantity * FEE_RATE, MINIMUM_FEE);
     }
@@ -77,7 +77,7 @@ public class StockOrder {
         private String activityCode;
         private String varietyCode;
         private String varietyName;
-        private double quantity;
+        private long quantity;
         private double price;
         private int deputeType;
         private String signId;
@@ -110,7 +110,7 @@ public class StockOrder {
             return this;
         }
 
-        public Builder quantity(double val) {
+        public Builder quantity(long val) {
             quantity = val;
             return this;
         }
