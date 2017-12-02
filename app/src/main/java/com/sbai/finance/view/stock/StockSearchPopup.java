@@ -78,7 +78,6 @@ public class StockSearchPopup {
     }
 
     public void setStocks(List<Stock> data) {
-        Log.d("Temp", "setStocks: size" + data.size());
         mStockList.clear();
         mStockList.addAll(data);
         mStockSearchAdapter.notifyDataSetChanged();

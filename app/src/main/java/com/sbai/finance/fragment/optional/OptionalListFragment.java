@@ -94,6 +94,7 @@ public class OptionalListFragment extends BaseFragment implements
                     requestOptionalData();
                 }
             }
+
             if (intent.getAction() == ACTION_LOGIN_SUCCESS) {
                 requestOptionalData();
             }
