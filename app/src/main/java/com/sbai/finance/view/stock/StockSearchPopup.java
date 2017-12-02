@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.utils.Display;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,6 +41,7 @@ public class StockSearchPopup {
     private StockSearchAdapter mStockSearchAdapter;
     private Context mContext;
     private OnStockSelectListener mOnStockSelectListener;
+    private List<Stock> mStockList;
 
     public interface OnStockSelectListener {
         void onStockSelect(Stock stock);
@@ -46,6 +49,7 @@ public class StockSearchPopup {
 
     public StockSearchPopup(Context context) {
         mContext = context;
+        mStockList = new ArrayList<>();
         View view = LayoutInflater.from(context).inflate(R.layout.popup_stock_search, null);
         mPopupWindow = new PopupWindow(view,
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -55,11 +59,11 @@ public class StockSearchPopup {
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable(context.getResources(), (Bitmap) null));
         mPopupWindow.setClippingEnabled(true);
         mPopupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-        mListView = view.findViewById(android.R.id.list);
+        mListView = view.findViewById(R.id.list);
 
-        mStockSearchAdapter = new StockSearchAdapter(context);
+        mStockSearchAdapter = new StockSearchAdapter(context, mStockList);
         mListView.setAdapter(mStockSearchAdapter);
-        mListView.setEmptyView(view.findViewById(android.R.id.empty));
+        mListView.setEmptyView(view.findViewById(R.id.empty));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
@@ -74,8 +78,12 @@ public class StockSearchPopup {
     }
 
     public void setStocks(List<Stock> data) {
-        mStockSearchAdapter.clear();
-        mStockSearchAdapter.addAll(data);
+        mStockList.clear();
+        mStockList.addAll(data);
+        mStockSearchAdapter.notifyDataSetChanged();
+        if (data.size() > 0) { // 修复一个有数据也显示 empty view 的问题
+            mListView.setVisibility(View.VISIBLE);
+        }
     }
 
     public void showBelow(View v) {
@@ -110,8 +118,8 @@ public class StockSearchPopup {
     }
 
     static class StockSearchAdapter extends ArrayAdapter<Stock> {
-        public StockSearchAdapter(@NonNull Context context) {
-            super(context, 0);
+        public StockSearchAdapter(@NonNull Context context, List<Stock> stockList) {
+            super(context, 0, 0, stockList);
         }
 
         @NonNull

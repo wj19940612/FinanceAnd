@@ -28,13 +28,11 @@ import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.stock.StockData;
-import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.slidingListView.SlideListView;
@@ -78,23 +76,8 @@ public class OptionalListFragment extends BaseFragment implements
     private BroadcastReceiver mOptionalChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() == OPTIONAL_CHANGE_ACTION) {
-                Stock stock = intent.getExtras().getParcelable(Launcher.EX_PAYLOAD);
-                boolean isAddOptional = intent.getExtras().getBoolean(Launcher.EX_PAYLOAD_1, false);
-                if (stock != null) {
-                    for (int i = 0; i < mSlideListAdapter.getCount(); i++) {
-                        if (stock.getVarietyCode().equalsIgnoreCase(mSlideListAdapter.getItem(i).getVarietyCode())) {
-                            stock = mSlideListAdapter.getItem(i);
-                            requestDelOptionalData(stock);
-                            break;
-                        }
-                    }
-                }
-                if (isAddOptional) {
-                    requestOptionalData();
-                }
-            }
-            if (intent.getAction() == ACTION_LOGIN_SUCCESS) {
+            if (intent.getAction().equalsIgnoreCase(OPTIONAL_CHANGE_ACTION)
+                    || intent.getAction().equalsIgnoreCase(ACTION_LOGIN_SUCCESS)) {
                 requestOptionalData();
             }
         }
@@ -167,22 +150,6 @@ public class OptionalListFragment extends BaseFragment implements
         }
     }
 
-    private void requestDelOptionalData(final Stock stock) {
-        Client.delOptional(stock.getId()).setTag(TAG)
-                .setCallback(new Callback<Resp<Object>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()) {
-                            mSlideListAdapter.remove(stock);
-                            mSlideListAdapter.notifyDataSetChanged();
-                        } else {
-                            ToastUtil.show(resp.getMsg());
-                            stopRefreshAnimation();
-                        }
-                    }
-                }).fire();
-    }
-
     /**
      * 新批量请求股票行情接口
      *
@@ -247,17 +214,7 @@ public class OptionalListFragment extends BaseFragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPTIONAL_CHANGE && resultCode == RESULT_OK) {
-            Stock stock = data.getParcelableExtra(Launcher.EX_PAYLOAD);
-            boolean isOptionalChanged = data.getBooleanExtra(Launcher.EX_PAYLOAD_1, false);
-            if (stock != null && isOptionalChanged) {
-                for (int i = 0; i < mSlideListAdapter.getCount(); i++) {
-                    if (stock.getVarietyCode() == mSlideListAdapter.getItem(i).getVarietyCode()) {
-                        stock = mSlideListAdapter.getItem(i);
-                        requestDelOptionalData(stock);
-                        break;
-                    }
-                }
-            }
+             requestOptionalData();
         }
     }
 
