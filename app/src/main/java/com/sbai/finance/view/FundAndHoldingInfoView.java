@@ -9,8 +9,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
+import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,9 +45,15 @@ public class FundAndHoldingInfoView extends LinearLayout {
     TextView mSell;
     @BindView(R.id.fetchFundDescribe)
     TextView mFetchFundDescribe;
+    @BindView(R.id.rechargeScore)
+    TextView mRechargeScore;
 
     private OnOrderClickListener mOnOrderClickListener;
     private Context mContext;
+
+    @OnClick(R.id.rechargeScore)
+    public void onViewClicked() {
+    }
 
     public interface OnOrderClickListener {
 
@@ -137,7 +149,7 @@ public class FundAndHoldingInfoView extends LinearLayout {
         mFetchFund.setTextColor(eightyWhite);
     }
 
-    @OnClick({R.id.buy, R.id.sell, R.id.fetchFundDescribe})
+    @OnClick({R.id.buy, R.id.sell, R.id.fetchFundDescribe, R.id.rechargeScore})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.buy:
@@ -154,6 +166,17 @@ public class FundAndHoldingInfoView extends LinearLayout {
                 if (mOnOrderClickListener != null) {
                     mOnOrderClickListener.fetchFund();
                 }
+                break;
+            case R.id.rechargeScore:
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getContext(), VirtualProductExchangeActivity.class)
+                            .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_SCORE)
+                            .putExtra(ExtraKeys.USER_FUND, 0)
+                            .execute();
+                } else {
+                    Launcher.with(getContext(), LoginActivity.class).execute();
+                }
+                break;
         }
     }
 }

@@ -118,11 +118,11 @@ public class WalletActivity extends BaseActivity {
             if (accountCrashFragment != null) {
                 accountCrashFragment.updateUserFund(fund);
             }
-
-            AccountFundDetailFragment scoreFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(2);
-            if (scoreFragment != null) {
-                scoreFragment.updateUserFund(fund);
-            }
+//
+//            AccountFundDetailFragment scoreFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(2);
+//            if (scoreFragment != null) {
+//                scoreFragment.updateUserFund(fund);
+//            }
         }
     }
 
@@ -267,10 +267,10 @@ public class WalletActivity extends BaseActivity {
             accountCrashFragment.refreshFundDetail();
         }
 
-        AccountFundDetailFragment scoreFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(2);
-        if (scoreFragment != null) {
-            scoreFragment.refreshFundDetail();
-        }
+//        AccountFundDetailFragment scoreFragment = (AccountFundDetailFragment) mFundFragmentAdapter.getFragment(2);
+//        if (scoreFragment != null) {
+//            scoreFragment.refreshFundDetail();
+//        }
     }
 
     private static class FundFragmentAdapter extends FragmentPagerAdapter {
@@ -291,8 +291,8 @@ public class WalletActivity extends BaseActivity {
                     return AccountFundDetailFragment.newInstance(AccountFundDetail.TYPE_INGOT);
                 case 1:
                     return AccountFundDetailFragment.newInstance(AccountFundDetail.TYPE_CRASH);
-                case 2:
-                    return AccountFundDetailFragment.newInstance(AccountFundDetail.TYPE_SCORE);
+//                case 2:
+//                    return AccountFundDetailFragment.newInstance(AccountFundDetail.TYPE_SCORE);
             }
             return null;
         }
@@ -309,8 +309,8 @@ public class WalletActivity extends BaseActivity {
                     return mContext.getString(R.string.ingot);
                 case 1:
                     return mContext.getString(R.string.cash);
-                case 2:
-                    return mContext.getString(R.string.score);
+//                case 2:
+//                    return mContext.getString(R.string.score);
             }
             return super.getPageTitle(position);
         }

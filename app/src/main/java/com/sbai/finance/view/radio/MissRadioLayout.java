@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,6 +36,7 @@ public class MissRadioLayout extends LinearLayout {
     private ImageView mPlayImageView;
     private Radio mPlayRadio;
     private TextView mRadioTextView;
+    private Rect mRect;
 
     public interface OnMissRadioPlayListener {
         void onMissRadioPlay(Radio radio);
@@ -64,10 +64,7 @@ public class MissRadioLayout extends LinearLayout {
         setBackgroundColor(Color.WHITE);
         mPlayStateList = new ArrayList<>();
 
-        Rect rect = new Rect();
-
-        getGlobalVisibleRect(rect);
-
+        mRect = new Rect();
     }
 
     public void setOnMissRadioPlayListener(OnMissRadioPlayListener onMissRadioPlayListener) {
@@ -169,7 +166,6 @@ public class MissRadioLayout extends LinearLayout {
                     PlayStatus playStatus = mPlayStateList.get(i);
                     Radio radio = playStatus.getRadio();
                     if (radio.getId() == audio.getAudioId()) {
-                        Log.d(TAG, "updatePlayStatus: " + ((Radio) audio).getRadioName());
                         mPlayImageView = playStatus.getImageView();
                         mPlayImageView.setSelected(true);
                         mRadioTextView = playStatus.getRadioTextView();
@@ -189,7 +185,6 @@ public class MissRadioLayout extends LinearLayout {
             int scaleTime = totalDuration - mediaPlayCurrentPosition;
             String format = DateUtil.format(scaleTime, DateUtil.FORMAT_MINUTE_SECOND);
             if (!format.equalsIgnoreCase(mRadioTextView.getText().toString())) {
-                Log.d(TAG, "setPlayRadio: " + scaleTime + "  " + format);
                 mRadioTextView.setText(format);
             }
         }
@@ -218,6 +213,21 @@ public class MissRadioLayout extends LinearLayout {
         if (mPlayImageView != null) {
             mPlayImageView.setSelected(false);
         }
+    }
+
+    public boolean onPlayViewIsVisible() {
+        if (getVisibility() != VISIBLE) {
+            return false;
+        }
+
+        if (mPlayImageView == null) {
+            return false;
+        }
+
+        if (!mPlayImageView.isShown() || mPlayImageView.getVisibility() != VISIBLE) {
+            return false;
+        }
+        return getGlobalVisibleRect(mRect) && mPlayImageView.getGlobalVisibleRect(mRect);
     }
 
     @Override

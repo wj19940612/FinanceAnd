@@ -149,7 +149,7 @@
                                 android:layout_alignParentBottom="true"
                                 android:layout_marginLeft="@dimen/common_padding"
                                 android:layout_marginRight="@dimen/common_padding"
-                                android:background="@drawable/bg_white_stroke_line"
+                                android:background="@drawable/bg_gray_white_stroke_line"
                                 android:gravity="center_vertical"
                                 android:paddingBottom="11dp"
                                 android:paddingTop="11dp">

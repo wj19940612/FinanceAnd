@@ -933,6 +933,7 @@
     <string name="fetch_fund">可取资金</string>
     <string name="buy">买入</string>
     <string name="sell">卖出</string>
+    <string name="recharge_score">入金</string>
     <string name="stock_simulate_trade">A股模拟交易</string>
     <string name="position">持仓</string>
     <string name="entrust">委托</string>

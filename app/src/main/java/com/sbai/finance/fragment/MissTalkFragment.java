@@ -137,8 +137,8 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         requestMissList();
         requestRadioList();
         requestMissSwitcherList();
-        updateRadioFloatWindow();
         mMissRadioLayout.updatePlayStatus();
+        changeFloatWindowView();
     }
 
     @Override
@@ -183,7 +183,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     public void onMediaPlay(int IAudioId, int source) {
         changeFloatWindowView();
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
-            updateRadioFloatWindow();
             mMissRadioLayout.updatePlayStatus();
         }
         notifyFragmentDataSetChange(source);
@@ -202,7 +201,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     public void onMediaPlayResume(int IAudioId, int source) {
         notifyFragmentDataSetChange(source);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
-            updateRadioFloatWindow();
             mMissRadioLayout.updatePlayStatus();
         }
     }
@@ -264,6 +262,16 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         super.onMediaPlayCurrentPosition(IAudioId, source, mediaPlayCurrentPosition, totalDuration);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
             mMissRadioLayout.setPlayRadio(mediaPlayCurrentPosition, totalDuration);
+            boolean isVisible = mMissRadioLayout.onPlayViewIsVisible();
+            if (isVisible) {
+                if (mMissFloatWindow.getVisibility() == View.VISIBLE) {
+                    mMissFloatWindow.setVisibility(View.GONE);
+                }
+            } else {
+                if (mMissFloatWindow.getVisibility() == View.GONE) {
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 
