@@ -252,8 +252,8 @@ public class StockTradeOperateFragment extends BaseFragment {
                 }
             });
         }
-        mStockSearchPopup.setStocks(data);
         mStockSearchPopup.showBelow(mStockNameCode);
+        mStockSearchPopup.setStocks(data);
     }
 
     public void updateMaxBuyableVolume() {
