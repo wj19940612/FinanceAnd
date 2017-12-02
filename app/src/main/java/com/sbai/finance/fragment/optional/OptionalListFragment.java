@@ -78,23 +78,8 @@ public class OptionalListFragment extends BaseFragment implements
     private BroadcastReceiver mOptionalChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() == OPTIONAL_CHANGE_ACTION) {
-                Stock stock = intent.getExtras().getParcelable(Launcher.EX_PAYLOAD);
-                boolean isAddOptional = intent.getExtras().getBoolean(Launcher.EX_PAYLOAD_1, false);
-                if (stock != null) {
-                    for (int i = 0; i < mSlideListAdapter.getCount(); i++) {
-                        if (stock.getVarietyCode().equalsIgnoreCase(mSlideListAdapter.getItem(i).getVarietyCode())) {
-                            stock = mSlideListAdapter.getItem(i);
-                            requestDelOptionalData(stock);
-                            break;
-                        }
-                    }
-                }
-                if (isAddOptional) {
-                    requestOptionalData();
-                }
-            }
-            if (intent.getAction() == ACTION_LOGIN_SUCCESS) {
+            if (intent.getAction().equalsIgnoreCase(OPTIONAL_CHANGE_ACTION)
+                    || intent.getAction().equalsIgnoreCase(ACTION_LOGIN_SUCCESS)) {
                 requestOptionalData();
             }
         }
@@ -165,22 +150,6 @@ public class OptionalListFragment extends BaseFragment implements
                         }
                     }).fireFree();
         }
-    }
-
-    private void requestDelOptionalData(final Stock stock) {
-        Client.delOptional(stock.getId()).setTag(TAG)
-                .setCallback(new Callback<Resp<Object>>() {
-                    @Override
-                    protected void onRespSuccess(Resp<Object> resp) {
-                        if (resp.isSuccess()) {
-                            mSlideListAdapter.remove(stock);
-                            mSlideListAdapter.notifyDataSetChanged();
-                        } else {
-                            ToastUtil.show(resp.getMsg());
-                            stopRefreshAnimation();
-                        }
-                    }
-                }).fire();
     }
 
     /**
