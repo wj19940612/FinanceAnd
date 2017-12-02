@@ -418,12 +418,8 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.setting:
-                if (LocalUser.getUser().isLogin()) {
-                    umengEventCount(UmengCountEventId.ME_SETTING);
-                    Launcher.with(getActivity(), SettingActivity.class).execute();
-                } else {
-                    openLoginPage();
-                }
+                umengEventCount(UmengCountEventId.ME_SETTING);
+                Launcher.with(getActivity(), SettingActivity.class).execute();
                 break;
             case R.id.mineSubscribe:
                 if (LocalUser.getUser().isLogin()) {

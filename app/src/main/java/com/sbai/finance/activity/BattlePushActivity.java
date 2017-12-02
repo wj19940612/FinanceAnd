@@ -22,7 +22,7 @@ import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.Praise;
 import com.sbai.finance.model.battle.TradeOrder;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.MissAudioManager;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.SmartDialog;
 
 import java.lang.reflect.Type;

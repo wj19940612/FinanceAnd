@@ -449,14 +449,14 @@ public class StockPositionFragment extends BaseFragment {
                     @Override
                     public void onClick(View view) {
                         if (mOperateArea.getVisibility() == View.VISIBLE) {
-                            mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 200));
+                            mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 100));
                             mIndex = -1;
                         } else {
                             if (itemClickListener != null && mIndex > -1) {
                                 itemClickListener.hideOperateView(mIndex);
                             }
                             mIndex = position;
-                            mOperateArea.startAnimation(AnimUtils.createExpendY(mOperateArea, 200));
+                            mOperateArea.startAnimation(AnimUtils.createExpendY(mOperateArea, 100));
                         }
                     }
                 });

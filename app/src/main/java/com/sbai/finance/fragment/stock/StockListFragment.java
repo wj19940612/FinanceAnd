@@ -7,14 +7,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -31,7 +31,6 @@ import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.StrUtil;
-import com.sbai.finance.view.CustomSwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,8 +49,7 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
  * 股票列表
  */
 
-public class StockListFragment extends BaseFragment
-        implements SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener, AdapterView.OnItemClickListener {
+public class StockListFragment extends BaseFragment {
     @BindView(R.id.search)
     EditText mSearch;
     @BindView(R.id.shangHai)
@@ -64,14 +62,14 @@ public class StockListFragment extends BaseFragment
     TextView mRate;
     @BindView(R.id.empty)
     TextView mEmpty;
-    @BindView(R.id.listView)
-    ListView mListView;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
     @BindView(R.id.swipeRefreshLayout)
-    CustomSwipeRefreshLayout mSwipeRefreshLayout;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     Unbinder unbinder;
 
     private int mPage = 0;
-    private int mPageSize = 15;
+    private boolean mLoadMore = true;
 
     private StockListAdapter mStockListAdapter;
     private List<Stock> mStockIndexData;
@@ -81,8 +79,7 @@ public class StockListFragment extends BaseFragment
         protected void onNetworkChanged(int availableNetworkType) {
             if (availableNetworkType > Network.NET_NONE) {
                 requestStockIndexData();
-                reset();
-                requestStockData();
+                refreshData();
             }
         }
     };
@@ -99,20 +96,50 @@ public class StockListFragment extends BaseFragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
-        requestStockData();
+        initSwipeRefreshView();
+        initRecyclerView();
+        refreshData();
         requestStockIndexData();
+    }
+
+    private void initSwipeRefreshView() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+            }
+        });
+    }
+
+    private void initRecyclerView() {
+        mStockListAdapter = new StockListAdapter(getContext());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(mStockListAdapter);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (isSlideToBottom(mRecyclerView) && mLoadMore) {
+                    requestStockData(false);
+                }
+            }
+        });
+    }
+
+    protected boolean isSlideToBottom(RecyclerView recyclerView) {
+        if (recyclerView == null) return false;
+        return recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange();
     }
 
     private void initView() {
         mSet = new HashSet<>();
         mSearch.setFocusable(false);
         mStockListAdapter = new StockListAdapter(getContext());
-        mListView.setAdapter(mStockListAdapter);
-        mListView.setEmptyView(mEmpty);
-        mListView.setOnItemClickListener(this);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setOnLoadMoreListener(this);
-        mSwipeRefreshLayout.setAdapter(mListView, mStockListAdapter);
 
         mShangHai.setText(initStockIndex(getString(R.string.ShangHaiStockExchange)));
         mShenZhen.setText(initStockIndex(getString(R.string.ShenzhenStockExchange)));
@@ -142,6 +169,13 @@ public class StockListFragment extends BaseFragment
         requestVisibleStockMarket();
     }
 
+    public void refreshData() {
+        mPage = 0;
+        mSet.clear();
+        mLoadMore = true;
+        requestStockData(true);
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -165,34 +199,45 @@ public class StockListFragment extends BaseFragment
     }
 
     private void requestVisibleStockMarket() {
-        if (mListView != null && mStockListAdapter != null) {
-            int first = mListView.getFirstVisiblePosition();
-            int last = mListView.getLastVisiblePosition();
-            List<Stock> stockList = new ArrayList<>();
-            for (int i = first; i <= last; i++) {
-                Stock stock = mStockListAdapter.getItem(i);
-                if (stock != null) {
-                    if (stock.getExchangeOpened() == Stock.EXCHANGE_STATUS_OPEN) {
-                        stockList.add(stock);
+        if (mRecyclerView != null && mStockListAdapter != null) {
+            RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+            if (layoutManager instanceof LinearLayoutManager) {
+                LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
+                int lastItemPosition = linearManager.findLastVisibleItemPosition();
+                int firstItemPosition = linearManager.findFirstVisibleItemPosition();
+                List<Stock> stockList = new ArrayList<>();
+                for (int i = firstItemPosition; i <= lastItemPosition; i++) {
+                    Stock stock = mStockListAdapter.getStock(i);
+                    if (stock != null) {
+                        if (stock.getExchangeOpened() == Stock.EXCHANGE_STATUS_OPEN) {
+                            stockList.add(stock);
+                        }
                     }
                 }
-            }
-            if (stockList.size() > 0) {
-                requestStockMarketData(stockList);
-                requestStockIndexMarketData(mStockIndexData);
+                if (stockList.size() > 0) {
+                    requestStockMarketData(stockList);
+                    requestStockIndexMarketData(mStockIndexData);
+                }
             }
         }
+
     }
 
-    private void requestStockData() {
+    private void requestStockData(final boolean isRefresh) {
         stopScheduleJob();
-        Client.getStockVariety(mPage, mPageSize).setTag(TAG)
+        Client.getStockVariety(mPage).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Stock>>, List<Stock>>() {
                     @Override
                     protected void onRespSuccessData(List<Stock> data) {
-                        updateStockData(data);
+                        updateStockData(data, isRefresh);
                         requestStockMarketData(data);
                         startScheduleJob(5 * 1000);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        stopRefreshAnimation();
                     }
                 }).fireFree();
     }
@@ -306,22 +351,24 @@ public class StockListFragment extends BaseFragment
         }
     }
 
-    private void updateStockData(List<Stock> data) {
-        stopRefreshAnimation();
-        if (mSet.isEmpty()) {
+    private void updateStockData(List<Stock> data, boolean isRefresh) {
+        if (isRefresh) {
             mStockListAdapter.clear();
         }
-        for (Stock stock : data) {
-            if (mSet.add(stock.getVarietyCode())) {
-                mStockListAdapter.add(stock);
-            }
-        }
-        if (data.size() < mPageSize) {
-            mSwipeRefreshLayout.setLoadMoreEnable(false);
+        if (data.size() < Client.DEFAULT_PAGE_SIZE) {
+            mLoadMore = false;
         } else {
             mPage++;
+            mLoadMore = true;
         }
-        mStockListAdapter.notifyDataSetChanged();
+        mStockListAdapter.addAll(data);
+        if (mStockListAdapter.isEmpty()) {
+            mRecyclerView.setVisibility(View.GONE);
+            mEmpty.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mEmpty.setVisibility(View.GONE);
+        }
     }
 
     @OnClick({R.id.search, R.id.shangHai, R.id.shenZhen, R.id.board})
@@ -349,48 +396,43 @@ public class StockListFragment extends BaseFragment
         }
     }
 
-    @Override
-    public void onRefresh() {
-        reset();
-        requestStockData();
-    }
-
-    private void reset() {
-        mPage = 0;
-        mSet.clear();
-        mSwipeRefreshLayout.setLoadMoreEnable(true);
-    }
-
-    @Override
-    public void onLoadMore() {
-        requestStockData();
-    }
-
     private void stopRefreshAnimation() {
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
-        if (mSwipeRefreshLayout.isLoading()) {
-            mSwipeRefreshLayout.setLoading(false);
-        }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Stock stock = (Stock) parent.getAdapter().getItem(position);
-        if (stock != null) {
-            Launcher.with(getActivity(), StockDetailActivity.class).
-                    putExtra(Launcher.EX_PAYLOAD, stock).execute();
-        }
-    }
-
-    public static class StockListAdapter extends ArrayAdapter<Stock> {
+    public static class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.ViewHolder> {
 
         private HashMap<String, StockData> mStockDataList;
+        private List<Stock> mStockList;
+        private Context mContext;
 
-        public StockListAdapter(@NonNull Context context) {
-            super(context, 0);
+        StockListAdapter(@NonNull Context context) {
+            mStockList = new ArrayList<>();
+            mContext = context;
             mStockDataList = new HashMap<>();
+        }
+
+        public void addAll(List<Stock> stocks) {
+            mStockList.addAll(stocks);
+            notifyDataSetChanged();
+        }
+
+        public void clear() {
+            mStockList.clear();
+            notifyDataSetChanged();
+        }
+
+        public boolean isEmpty() {
+            return mStockList.isEmpty();
+        }
+
+        public Stock getStock(int index) {
+            if (mStockList.size() > index && index > -1) {
+                return mStockList.get(index);
+            }
+            return null;
         }
 
         public void addStockData(List<StockData> stockDataList) {
@@ -400,22 +442,23 @@ public class StockListFragment extends BaseFragment
             notifyDataSetChanged();
         }
 
-        @NonNull
         @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_variey, parent, false);
-                viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            viewHolder.bindingData(getItem(position), mStockDataList, getContext());
-            return convertView;
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_stock, parent, false);
+            return new ViewHolder(view);
         }
 
-        static class ViewHolder {
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bindingData(mStockList.get(position), mStockDataList, mContext);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mStockList.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
 
             @BindView(R.id.futureName)
             TextView mFutureName;
@@ -425,14 +468,25 @@ public class StockListFragment extends BaseFragment
             TextView mLastPrice;
             @BindView(R.id.rate)
             TextView mRate;
+            @BindView(R.id.rootView)
+            LinearLayout mRootView;
 
-            ViewHolder(View view) {
-                ButterKnife.bind(this, view);
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this, itemView);
             }
 
-            private void bindingData(Stock item, HashMap<String, StockData> map, Context context) {
+            private void bindingData(final Stock item, HashMap<String, StockData> map, final Context context) {
                 mFutureName.setText(item.getVarietyName());
                 mFutureCode.setText(item.getVarietyCode());
+                mRootView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Launcher.with(context, StockDetailActivity.class).
+                                putExtra(Launcher.EX_PAYLOAD, item).execute();
+                    }
+                });
 
                 StockData stockData = map.get(item.getVarietyCode());
                 if (stockData != null) {

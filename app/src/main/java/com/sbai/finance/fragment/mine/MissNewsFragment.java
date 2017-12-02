@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
@@ -44,12 +45,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.sbai.finance.model.miss.MissMessage.TYPE_MISS_TOPIC;
+
 /**
  * 姐说消息
  */
 
 public class MissNewsFragment extends BaseFragment implements
         SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
+
     @BindView(R.id.listView)
     ListView mListView;
     @BindView(R.id.empty)
@@ -113,6 +117,12 @@ public class MissNewsFragment extends BaseFragment implements
                 if (missMessage != null) {
                     if (missMessage.isNoRead()) {
                         requestReadMessage(missMessage.getId());
+                    }
+                    if (missMessage != null && missMessage.getType() == TYPE_MISS_TOPIC) {
+                        Launcher.with(getContext(), WebActivity.class)
+                                .putExtra(WebActivity.EX_URL, String.format(Client.MISS_TOP_DETAILS_H5_URL, String.valueOf(missMessage.getDataId())))
+                                .execute();
+                        return;
                     }
                     //   requestMessageDetail(missMessage.getDataId());
                     if ("null".equalsIgnoreCase(missMessage.getMongoId())) {
@@ -378,6 +388,16 @@ public class MissNewsFragment extends BaseFragment implements
                         break;
                     case MissMessage.TYPE_REPLY:
                         mReplyContent.setText(item.getMsg());
+                        mMessageType.setText(context.getString(R.string.reply_your_comment));
+                        mMessageType.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                        mReplyContent.setVisibility(View.VISIBLE);
+                        break;
+                    case MissMessage.TYPE_MISS_TOPIC:
+                        mMessageType.setText(context.getString(R.string.comment_your_topic));
+                        mMessageType.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                        mReplyContent.setVisibility(View.VISIBLE);
+                        break;
+                    case MissMessage.TYPE_MISS_TOPIC_COMMENT:
                         mMessageType.setText(context.getString(R.string.reply_your_comment));
                         mMessageType.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                         mReplyContent.setVisibility(View.VISIBLE);

@@ -134,8 +134,8 @@ public class StockEntrustFragment extends BaseFragment {
             }
 
             @Override
-            public void withdraw(int id) {
-                showWithdrawDialog(id);
+            public void withdraw(int id, String varietyCode) {
+                showWithdrawDialog(id, varietyCode);
             }
         });
         mRecyclerView.setAdapter(mEntrustAdapter);
@@ -153,8 +153,8 @@ public class StockEntrustFragment extends BaseFragment {
                 }).fireFree();
     }
 
-    private void requestWithdraw(int id) {
-        Client.requestWithdraw(id, mStockUser.getAccount())
+    private void requestWithdraw(int id, String varietyCode) {
+        Client.requestWithdraw(id, mStockUser.getAccount(), varietyCode)
                 .setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -185,7 +185,7 @@ public class StockEntrustFragment extends BaseFragment {
         }
     }
 
-    private void showWithdrawDialog(final int id) {
+    private void showWithdrawDialog(final int id, final String varietyCode) {
         SmartDialog.single(getActivity())
                 .setTitle(R.string.tips)
                 .setMessage(getString(R.string.is_confirm_withdraw))
@@ -194,7 +194,7 @@ public class StockEntrustFragment extends BaseFragment {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        requestWithdraw(id);
+                        requestWithdraw(id, varietyCode);
 
                     }
                 }).show();
@@ -231,7 +231,7 @@ public class StockEntrustFragment extends BaseFragment {
 
             void hideOperateView(int index);
 
-            void withdraw(int id);
+            void withdraw(int id, String varietyCode);
 
         }
 
@@ -373,14 +373,14 @@ public class StockEntrustFragment extends BaseFragment {
                         if (mShowOperateView && (entrust.getMoiety() == Entrust.ENTRUST_STATUS_ALL_BUSINESS || entrust.getMoiety() == Entrust.ENTRUST_STATUS_WAIT_WITHDRAW))
                             return;
                         if (mOperateArea.getVisibility() == View.VISIBLE) {
-                            mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 200));
+                            mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 100));
                             index = -1;
                         } else {
                             if (itemClickListener != null && index > -1) {
                                 itemClickListener.hideOperateView(index);
                             }
                             index = position;
-                            mOperateArea.startAnimation(AnimUtils.createExpendY(mOperateArea, 200));
+                            mOperateArea.startAnimation(AnimUtils.createExpendY(mOperateArea, 100));
                         }
                     }
                 });
@@ -388,7 +388,7 @@ public class StockEntrustFragment extends BaseFragment {
                     @Override
                     public void onClick(View view) {
                         if (itemClickListener != null) {
-                            itemClickListener.withdraw(entrust.getId());
+                            itemClickListener.withdraw(entrust.getId(), entrust.getVarietyCode());
                         }
                     }
                 });

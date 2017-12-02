@@ -3,7 +3,7 @@ package com.sbai.finance.model.miss;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.sbai.finance.utils.MissAudioManager;
+import com.sbai.finance.utils.audio.MissAudioManager;
 
 /**
  * /explain/question/questionList.do

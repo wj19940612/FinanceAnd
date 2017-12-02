@@ -96,7 +96,7 @@ public class SearchOptionalActivity extends BaseActivity {
             public void onClick(final Stock stock) {
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.DISCOVERY_ADD_SELF_OPTIONAL);
-                    Client.addOption(stock.getId(), Stock.OPTIONAL_TYPE_STOCK)
+                    Client.addOption(stock.getVarietyCode(), Stock.OPTIONAL_TYPE_STOCK)
                             .setTag(TAG)
                             .setCallback(new Callback<Resp<JsonObject>>() {
                                 @Override

@@ -27,6 +27,8 @@
     <!-- 支付宝支付需要5种权限 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!--录制音频-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application
         android:name=".App"
@@ -201,7 +203,7 @@
             android:name=".activity.future.FutureTradeActivity"
             android:screenOrientation="portrait"/>
 
-        <!--Stock-->
+        <!-- Stock -->
         <activity
             android:name=".activity.stock.SearchStockActivity"
             android:screenOrientation="portrait"/>
@@ -329,7 +331,6 @@
             android:name=".activity.miss.RewardMissActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BaseDialog.Bottom"/>
-
         <activity
             android:name=".activity.miss.MissProfileDetailActivity"
             android:screenOrientation="portrait"/>
@@ -430,7 +431,7 @@
         <activity
             android:name=".activity.trade.trade.HistoryBusinessActivity"
             android:screenOrientation="portrait"/>
-        <!--我的-->
+        <!-- 我的 -->
         <activity
             android:name=".activity.mine.MySubscribeActivity"
             android:screenOrientation="portrait"/>
@@ -440,5 +441,10 @@
         <activity
             android:name=".activity.mine.WaitForMeAnswerActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.miss.MissAudioReplyActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
     </application>
+
 </manifest>

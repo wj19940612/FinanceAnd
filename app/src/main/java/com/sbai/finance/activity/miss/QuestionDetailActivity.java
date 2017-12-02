@@ -47,7 +47,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.MissAudioManager;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventId;

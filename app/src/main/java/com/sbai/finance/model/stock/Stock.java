@@ -103,21 +103,6 @@ public class Stock implements Parcelable {
     }
 
     @Override
-    public String toString() {
-        return "Stock{" +
-                "exchangeId=" + exchangeId +
-                ", id=" + id +
-                ", stockType='" + stockType + '\'' +
-                ", type='" + type + '\'' +
-                ", varietyCode='" + varietyCode + '\'' +
-                ", varietyName='" + varietyName + '\'' +
-                ", varietyType='" + varietyType + '\'' +
-                ", varietyStatus=" + varietyStatus +
-                ", exchangeOpened=" + exchangeOpened +
-                '}';
-    }
-
-    @Override
     public int describeContents() {
         return 0;
     }
@@ -133,6 +118,8 @@ public class Stock implements Parcelable {
         dest.writeString(this.varietyType);
         dest.writeInt(this.varietyStatus);
         dest.writeInt(this.exchangeOpened);
+        dest.writeInt(this.option);
+        dest.writeString(this.exchangeCode);
     }
 
     public Stock() {
@@ -148,6 +135,8 @@ public class Stock implements Parcelable {
         this.varietyType = in.readString();
         this.varietyStatus = in.readInt();
         this.exchangeOpened = in.readInt();
+        this.option = in.readInt();
+        this.exchangeCode = in.readString();
     }
 
     public static final Parcelable.Creator<Stock> CREATOR = new Parcelable.Creator<Stock>() {

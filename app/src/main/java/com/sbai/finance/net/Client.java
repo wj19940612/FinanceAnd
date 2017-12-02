@@ -7,9 +7,10 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.levelevaluation.QuestionAnswer;
 import com.sbai.finance.model.local.StockOrder;
-import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.httplib.ApiParams;
+
+import java.io.File;
 
 
 public class Client {
@@ -930,14 +931,13 @@ public class Client {
      * 获取股票列表
      *
      * @param page
-     * @param pageSize
      * @return
      */
-    public static API getStockVariety(int page, int pageSize) {
+    public static API getStockVariety(int page) {
         return new API("/api/stock-va/variety/var.do",
                 new ApiParams()
                         .put("page", page)
-                        .put("pageSize", pageSize));
+                        .put("pageSize", Client.DEFAULT_PAGE_SIZE));
     }
 
     /**
@@ -1034,13 +1034,13 @@ public class Client {
     /**
      * 添加自选股
      *
-     * @param varietyId
+     * @param code
      * @return
      */
-    public static API addOption(int varietyId, String optType) {
+    public static API addOption(String code, String optType) {
         return new API(POST, "/api/stock-va/opt/add.do",
                 new ApiParams()
-                        .put("optTypeId", varietyId)
+                        .put("code", code)
                         .put("optType", optType));
     }
 
@@ -1294,6 +1294,18 @@ public class Client {
      */
     public static API getExchangeStatus(int exchangeId) {
         return new API("/order/order/getExchangeStatus.do",
+                new ApiParams()
+                        .put("exchangeId", exchangeId));
+    }
+
+    /**
+     * 获取股票交易所状态
+     *
+     * @param exchangeId
+     * @return
+     */
+    public static API getStockExchangeStatus(int exchangeId) {
+        return new API("/api/stock-va/exchange/status.do",
                 new ApiParams()
                         .put("exchangeId", exchangeId));
     }
@@ -3116,10 +3128,11 @@ public class Client {
      * @param id
      * @return
      */
-    public static API requestWithdraw(int id, String account) {
+    public static API requestWithdraw(int id, String account, String varietyCode) {
         return new API(POST, "/api/stock-or/declare/cancel.do", new ApiParams()
                 .put("id", id)
-                .put("account", account));
+                .put("account", account)
+                .put("varietyCode", varietyCode));
     }
 
     /**
@@ -3246,7 +3259,7 @@ public class Client {
      */
 
     public static API modifyProfileIntroduction(String introduction) {
-        return new API(POST,"/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
+        return new API(POST, "/user/user/updateUser.do", new ApiParams().put("briefingText", introduction));
     }
 
     /**
@@ -3307,6 +3320,51 @@ public class Client {
      */
     public static API rushToAnswer(int id) {
         return new API("/user/user/rushToAnswer.do", new ApiParams().put("questionId", id));
+    }
+
+    /**
+     * /explain/questionApp/replyDetail.do
+     * GET
+     * 提问详情新(qmw)  小姐姐回答问题
+     *
+     * @param questionId
+     */
+    public static API requestMissAnswerQuestionInfo(int questionId) {
+        return new API("/explain/questionApp/replyDetail.do",
+                new ApiParams()
+                        .put("id", questionId));
+    }
+
+    /**
+     * 文件上传
+     *
+     * @param fileName
+     * @param file
+     * @return
+     */
+    public static API submitFile(String fileName, File file) {
+        return new API(POST, "/user/upload/file.do",
+                new ApiParams()
+                        .put("file", file),
+                fileName, file);
+    }
+
+    /**
+     * /explain/questionApp/customerServiceReply.do
+     *
+     * @param id
+     * @param context
+     * @param soundTime
+     * @param customId
+     * @return
+     */
+    public static API submitMissAnswer(int id, String context, int soundTime, int customId) {
+        return new API("/explain/questionApp/customerServiceReply.do",
+                new ApiParams()
+                        .put("id", id)
+                        .put("context", context)
+                        .put("soundTime", soundTime)
+                        .put("customId", customId));
     }
 
 }

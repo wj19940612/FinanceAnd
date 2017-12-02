@@ -20,7 +20,7 @@ import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.MissAudioManager;
+import com.sbai.finance.utils.audio.MissAudioManager;
 
 public class MissFloatWindow extends LinearLayout {
     private HasLabelImageLayout mMissAvatar;

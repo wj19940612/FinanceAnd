@@ -43,7 +43,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.MissAudioManager;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventId;
@@ -55,13 +55,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
-import static com.sbai.finance.activity.miss.CommentActivity.REQ_CODE_COMMENT;
 import static com.sbai.finance.activity.miss.MissProfileDetailActivity.CUSTOM_ID;
 
 /**
@@ -114,7 +112,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         mMediaPlayService = mediaPlayService;
     }
 
-    public void initScrollState(){
+    public void initScrollState() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
         boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
         if (mOnFragmentRecycleViewScrollListener != null) {
@@ -161,20 +159,22 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
             mOnFragmentRecycleViewScrollListener = (OnFragmentRecycleViewScrollListener) context;
             mMissFloatWindow = ((MissProfileDetailActivity) context).getFloatWindow();
             mAsk = ((MissProfileDetailActivity) context).getAskBtn();
-            mAsk.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (LocalUser.getUser().isLogin()) {
-                        Launcher.with(getActivity(), SubmitQuestionActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mCustomId)
-                                .execute();
-                    } else {
-                        stopVoice();
-                        Intent intent = new Intent(getActivity(), LoginActivity.class);
-                        startActivityForResult(intent, MissProfileDetailActivity.REQ_SUBMIT_QUESTION_LOGIN);
+            if (mAsk != null) {
+                mAsk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (LocalUser.getUser().isLogin()) {
+                            Launcher.with(getActivity(), SubmitQuestionActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, mCustomId)
+                                    .execute();
+                        } else {
+                            stopVoice();
+                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                            startActivityForResult(intent, MissProfileDetailActivity.REQ_SUBMIT_QUESTION_LOGIN);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
         if (mMediaPlayService == null && context instanceof MissProfileDetailActivity) {
             mMediaPlayService = ((MissProfileDetailActivity) context).getMediaPlayService();

@@ -83,7 +83,7 @@ public class OptionalListFragment extends BaseFragment implements
                 boolean isAddOptional = intent.getExtras().getBoolean(Launcher.EX_PAYLOAD_1, false);
                 if (stock != null) {
                     for (int i = 0; i < mSlideListAdapter.getCount(); i++) {
-                        if (stock.getVarietyCode() == mSlideListAdapter.getItem(i).getVarietyCode()) {
+                        if (stock.getVarietyCode().equalsIgnoreCase(mSlideListAdapter.getItem(i).getVarietyCode())) {
                             stock = mSlideListAdapter.getItem(i);
                             requestDelOptionalData(stock);
                             break;
@@ -207,6 +207,7 @@ public class OptionalListFragment extends BaseFragment implements
     private void updateOptionInfo(ArrayList<Stock> data) {
         stopRefreshAnimation();
         mSlideListAdapter.clear();
+        mSet.clear();
         for (Stock stock : data) {
             if (!TextUtils.isEmpty(stock.getVarietyCode()) && mSet.add(stock.getVarietyCode())) {
                 mSlideListAdapter.add(stock);

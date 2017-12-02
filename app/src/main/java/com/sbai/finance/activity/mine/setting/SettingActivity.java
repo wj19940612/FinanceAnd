@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
 import com.google.gson.JsonObject;
@@ -35,6 +36,8 @@ import butterknife.OnClick;
 public class SettingActivity extends BaseActivity {
     @BindView(R.id.feedback)
     IconTextRow mFeedback;
+    @BindView(R.id.logout)
+    AppCompatTextView mLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,30 +45,49 @@ public class SettingActivity extends BaseActivity {
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
         requestNoReadFeedbackNumber();
+        initView();
     }
 
-    @OnClick({R.id.shieldSetting, R.id.newMessageNotification, R.id.appInfo, R.id.securityCenter, R.id.feedback,R.id.aboutUs,R.id.logout})
+    private void initView() {
+        if(LocalUser.getUser().isLogin()){
+            mLogout.setVisibility(View.VISIBLE);
+        }else{
+            mLogout.setVisibility(View.GONE);
+        }
+    }
+
+    @OnClick({R.id.shieldSetting, R.id.newMessageNotification, R.id.appInfo, R.id.securityCenter, R.id.feedback, R.id.aboutUs, R.id.logout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.shieldSetting:
                 break;
             case R.id.newMessageNotification:
-                umengEventCount(UmengCountEventId.ME_NEW_AWAIT);
-                Launcher.with(getActivity(), SetNotificationSwitchActivity.class).execute();
+                if (LocalUser.getUser().isLogin()) {
+                    umengEventCount(UmengCountEventId.ME_NEW_AWAIT);
+                    Launcher.with(getActivity(), SetNotificationSwitchActivity.class).execute();
+                } else {
+                    openLoginPage();
+                }
+
                 break;
             case R.id.securityCenter:
-                umengEventCount(UmengCountEventId.ME_SAFETY_CENTER);
-                Client.getUserHasPassWord()
-                        .setTag(TAG).setIndeterminate(this)
-                        .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
-                            @Override
-                            protected void onRespSuccessData(Boolean data) {
-                                Launcher.with(getActivity(), SecurityCenterActivity.class)
-                                        .putExtra(ExtraKeys.HAS_SECURITY_PSD, data.booleanValue())
-                                        .execute();
-                            }
-                        })
-                        .fire();
+                if (LocalUser.getUser().isLogin()) {
+                    umengEventCount(UmengCountEventId.ME_SAFETY_CENTER);
+                    Client.getUserHasPassWord()
+                            .setTag(TAG).setIndeterminate(this)
+                            .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                                @Override
+                                protected void onRespSuccessData(Boolean data) {
+                                    Launcher.with(getActivity(), SecurityCenterActivity.class)
+                                            .putExtra(ExtraKeys.HAS_SECURITY_PSD, data.booleanValue())
+                                            .execute();
+                                }
+                            })
+                            .fire();
+                } else {
+                    openLoginPage();
+                }
+
 
                 break;
             case R.id.feedback:
@@ -87,8 +109,13 @@ public class SettingActivity extends BaseActivity {
                 }
                 break;
             case R.id.logout:
-                umengEventCount(UmengCountEventId.ME_EXIT_LOGIN);
-                logout();
+                if (LocalUser.getUser().isLogin()) {
+                    umengEventCount(UmengCountEventId.ME_EXIT_LOGIN);
+                    logout();
+                } else {
+                    openLoginPage();
+                }
+
                 break;
         }
     }

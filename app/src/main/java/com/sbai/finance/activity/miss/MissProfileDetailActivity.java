@@ -57,8 +57,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sbai.finance.activity.miss.CommentActivity.REQ_CODE_COMMENT;
-
 /**
  * Created by Administrator on 2017\11\22 0022.
  */
@@ -134,6 +132,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         public void onServiceDisconnected(ComponentName componentName) {
         }
     };
+    private int mCurrentItem;
 
     public MediaPlayService getMediaPlayService() {
         return mMediaPlayService;
@@ -171,6 +170,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
 
     private void initData(Intent intent) {
         mCustomId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
+        mCurrentItem = intent.getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
     }
 
     private void initView() {
@@ -181,6 +181,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         mProfileFragmentAdapter = new ProfileFragmentAdapter(getSupportFragmentManager(), mCustomId);
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setAdapter(mProfileFragmentAdapter);
+        mViewPager.setCurrentItem(mCurrentItem);
 
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
@@ -209,9 +210,9 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                     if (missProfileRadioFragment != null) {
                         missProfileRadioFragment.initScrollState();
                     }
-                }else if(position == FRAGMENT_QUESTION){
+                } else if (position == FRAGMENT_QUESTION) {
                     MissProfileQuestionFragment missProfileQuestionFragment = getMissProfileQuestionFragment();
-                    if(missProfileQuestionFragment != null){
+                    if (missProfileQuestionFragment != null) {
                         missProfileQuestionFragment.initScrollState();
                     }
                 }

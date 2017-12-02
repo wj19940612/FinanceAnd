@@ -1,6 +1,5 @@
 package com.sbai.finance.view.radio;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
@@ -147,21 +146,9 @@ public class RadioInfoLayout extends LinearLayout {
             case R.id.radioName:
             case R.id.radioCover:
                 if (mRadio != null) {
-                    if (getContext() instanceof Activity) {
-                        Activity activity = (Activity) getContext();
-                        if (activity.getCallingActivity() != null &&
-                                activity.getCallingActivity().getClassName().equalsIgnoreCase(RadioStationListActivity.class.getName())) {
-                            activity.finish();
-                        } else {
-                            Launcher.with(getContext(), RadioStationListActivity.class)
-                                    .putExtra(ExtraKeys.RADIO, mRadio)
-                                    .executeForResult(555);
-                        }
-                    } else {
-                        Launcher.with(getContext(), RadioStationListActivity.class)
-                                .putExtra(ExtraKeys.RADIO, mRadio)
-                                .executeForResult(555);
-                    }
+                    Launcher.with(getContext(), RadioStationListActivity.class)
+                            .putExtra(ExtraKeys.RADIO, mRadio)
+                            .execute();
                 }
                 break;
             case R.id.subscribeStatus:

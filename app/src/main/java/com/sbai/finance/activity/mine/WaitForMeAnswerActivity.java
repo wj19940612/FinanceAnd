@@ -9,13 +9,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.fragment.mine.QuestionOrCommentFragment;
 import com.sbai.finance.fragment.mine.WaitAnswerFragment;
 import com.sbai.finance.fragment.mine.WaitRaceAnswerFragment;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
@@ -70,6 +69,9 @@ public class WaitForMeAnswerActivity extends BaseActivity {
             }
         });
         mSlidingTabLayout.setViewPager(mViewPager);
+
+        int currentItem = getIntent().getIntExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, 0);
+        mViewPager.setCurrentItem(currentItem);
     }
 
 

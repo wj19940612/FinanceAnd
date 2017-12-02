@@ -46,7 +46,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.MissAudioManager;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.OnItemClickListener;
 import com.sbai.finance.utils.RenderScriptGaussianBlur;
 import com.sbai.finance.utils.ToastUtil;
@@ -262,8 +262,7 @@ public class RadioStationPlayActivityActivity extends MediaPlayActivity {
     }
 
     private void updateListenNumber() {
-        if (mRadio == null) return;
-        Client.listenRadioAudio(mRadio.getAudioId())
+        Client.listenRadioAudio(mVoiceId)
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
