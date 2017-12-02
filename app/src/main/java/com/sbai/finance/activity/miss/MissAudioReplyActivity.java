@@ -340,11 +340,11 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                 mLoading.clearAnimation();
                 mLoading.setVisibility(View.VISIBLE);
                 mSubmitStatusLL.setBackgroundColor(Color.TRANSPARENT);
+                mSubmitStatusLL.setEnabled(false);
                 mLoading.setImageResource(R.drawable.ic_training_result_tick);
                 mSubmitStatus.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
                 mSubmitStatus.setText(R.string.submit_success);
                 mAudioRecord.setEnabled(false);
-
                 changeSubmitStatusText(true);
                 break;
         }
