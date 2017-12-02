@@ -101,7 +101,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     private Radio mRadio;
 
     private boolean mLoadMore;
-    private ReplyDialogFragment mReplyDialogFragment;
 
     private HashSet<String> mSet;
     private ArrayList<QuestionReply.DataBean> mQuestionReplyList;
@@ -142,20 +141,20 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        requestAudioDetails();
+        requestAudioDetails(true);
         requestRadioReplyList();
         requestRadioDetails();
     }
 
     private void requestRadioReplyList() {
-        if(mRadio==null) return;
+        if (mRadio == null) return;
         Client.requestRadioReplyList(mPage, mRadio.getRadioId(), mRadio.getAudioId())
                 .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
                     @Override
                     protected void onRespSuccessData(QuestionReply questionReply) {
                         if (questionReply.getData() != null) {
-                            updateRadioReply(questionReply.getData(), questionReply.getResultCount());
+                            updateRadioReply(questionReply.getData());
                         }
                     }
 
@@ -169,9 +168,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                 .fireFree();
     }
 
-    private void updateRadioReply(List<QuestionReply.DataBean> questionReplyList, int resultCount) {
-        mRadioInfoLayout.setReviewNumber(questionReplyList.size());
-
+    private void updateRadioReply(List<QuestionReply.DataBean> questionReplyList) {
         if (questionReplyList.size() < Client.DEFAULT_PAGE_SIZE) {
             mLoadMore = false;
         } else {
@@ -219,16 +216,14 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
             mRadioInfoLayout.setRadio(mRadio);
             mRadioPlayLL.setRadio(mRadio);
             mRadioPlayLL.setPlayStatus(mRadio);
-            initMissFloatWindow();
         }
     }
 
-    private void initMissFloatWindow() {
+    private void initMissFloatWindow(boolean automaticPlay) {
         MissAudioManager missAudioManager = MissAudioManager.get();
         MissAudioManager.IAudio audio = missAudioManager.getAudio();
         if (missAudioManager.isPlaying()) {
             if (audio instanceof Question) {
-                mMissFloatWindow.startAnim();
                 mMissFloatWindow.setVisibility(View.VISIBLE);
                 Question question = (Question) audio;
                 mMissFloatWindow.setMissAvatar(question.getCustomPortrait());
@@ -236,7 +231,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
             } else if (audio instanceof Radio) {
                 Radio playRadio = (Radio) audio;
                 mMissFloatWindow.setMissAvatar(playRadio.getUserPortrait());
-                mMissFloatWindow.startAnim();
                 if (mRadio != null && mRadio.getId() == ((Radio) audio).getId()) {
                     mMissFloatWindow.setVisibility(View.GONE);
                     mPlayThisVoice = true;
@@ -250,7 +244,8 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
             if (mRadio == null) return;
             if (mMediaPlayService != null
                     && !MissAudioManager.get().isStarted(mRadio)
-                    && !MissAudioManager.get().isPaused(mRadio)) {
+                    && !MissAudioManager.get().isPaused(mRadio)
+                    && automaticPlay) {
                 mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
                 mRadioPlayLL.setPlayStatus(mRadio);
                 updateListenNumber();
@@ -275,7 +270,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                 .fireFree();
     }
 
-    private void requestAudioDetails() {
+    private void requestAudioDetails(final boolean automaticPlay) {
         Client.requestVoiceDetails(mVoiceId)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -286,7 +281,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                         if (MissAudioManager.get().isPlaying() && MissAudioManager.get().getAudio() instanceof Radio) {
                             mMissFloatWindow.setMissAvatar(radio.getUserPortrait());
                         }
-                        updateAudioDetail(radio);
+                        updateAudioDetail(radio, automaticPlay);
                     }
 
                     @Override
@@ -299,11 +294,13 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                 .fireFree();
     }
 
-    private void updateAudioDetail(Radio radio) {
+    private void updateAudioDetail(Radio radio, boolean automaticPlay) {
         mRadio = radio;
         mRadioCollect.setSelected(radio.getCollect() == RadioDetails.COLLECT);
+        mRadioInfoLayout.setReviewNumber(radio.getAudioComment());
         updateAudio();
         requestRadioReplyList();
+        initMissFloatWindow(automaticPlay);
     }
 
     private void initView() {
@@ -338,20 +335,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
             @Override
             public void onItemClick(QuestionReply.DataBean dataBean, int position) {
                 if (dataBean != null) {
-                    if (mReplyDialogFragment == null) {
-                        mReplyDialogFragment = ReplyDialogFragment.newInstance(dataBean, mRadio);
-                    }
-                    if (!mReplyDialogFragment.isAdded()) {
-                        mReplyDialogFragment.show(getSupportFragmentManager());
-                    }
-
-                    mReplyDialogFragment.setCallback(new ReplyDialogFragment.Callback() {
-                                                         @Override
-                                                         public void onLoginSuccess() {
-                                                             MissAudioManager.get().stop();
-                                                         }
-                                                     }
-                    );
+                    ReplyDialogFragment.newInstance(dataBean, mRadio).show(getSupportFragmentManager());
                 }
             }
         });
@@ -417,8 +401,9 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     private void refreshRadioReviewData() {
         mSet.clear();
         mPage = 0;
+        mRecyclerView.scrollToPosition(0);
         requestRadioReplyList();
-        requestAudioDetails();
+        requestAudioDetails(false);
     }
 
     private AppBarLayout.OnOffsetChangedListener sOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
@@ -437,20 +422,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
             } else {
                 if (!TextUtils.isEmpty(mTitle.getText())) {
                     mTitle.setText("");
-                }
-            }
-
-            if (verticalOffset < -400) {
-                if (MissAudioManager.get().isStarted(mRadio)) {
-                    if (mMissFloatWindow.getVisibility() == View.GONE) {
-                        mMissFloatWindow.setVisibility(View.VISIBLE);
-                    }
-                }
-            } else {
-                if (MissAudioManager.get().isStarted(mRadio)) {
-                    if (mMissFloatWindow.getVisibility() == View.VISIBLE) {
-                        mMissFloatWindow.setVisibility(View.GONE);
-                    }
                 }
             }
         }
@@ -481,14 +452,12 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
-        mMissFloatWindow.startAnim();
         mRadioPlayLL.setPlayStatus(mRadio);
         changeFloatWindowView();
     }
 
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
-        mMissFloatWindow.startAnim();
         mRadioPlayLL.setPlayStatus(mRadio);
         mRadioPlayLL.startAnimation();
         changeFloatWindowView();
@@ -497,14 +466,11 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     @Override
     public void onMediaPlayPause(int IAudioId, int source) {
         mRadioPlayLL.setPlayStatus(mRadio);
-        mMissFloatWindow.stopAnim();
-        mRadioPlayLL.stopAnimation();
         mMissFloatWindow.setVisibility(View.GONE);
     }
 
     @Override
     protected void onMediaPlayStop(int IAudioId, int source) {
-        mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
             mRadioPlayLL.onPlayStop();
@@ -513,7 +479,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     @Override
     protected void onMediaPlayError(int IAudioId, int source) {
-        mMissFloatWindow.clearAnimation();
         mMissFloatWindow.setVisibility(View.GONE);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
             mRadioPlayLL.stopAnimation();

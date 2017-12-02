@@ -94,6 +94,22 @@ public class MissFloatWindow extends LinearLayout {
         });
     }
 
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        if (visibility == VISIBLE) {
+            startAnim();
+        } else {
+            stopAnim();
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        clearAnimation();
+    }
+
     public void setMissAvatar(String avatarUrl) {
         if (getContext() == null || ((Activity) getContext()).isFinishing()) {
             return;

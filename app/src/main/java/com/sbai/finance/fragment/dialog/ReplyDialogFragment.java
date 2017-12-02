@@ -65,6 +65,15 @@ public class ReplyDialogFragment extends BottomDialogFragment {
         return replyDialogFragment;
     }
 
+    public void setData(QuestionReply.DataBean questionReply, Radio radio) {
+        mQuestionReply = questionReply;
+        mRadio = radio;
+    }
+
+    public void setData(QuestionReply.DataBean questionReply) {
+        setData(questionReply, null);
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +95,8 @@ public class ReplyDialogFragment extends BottomDialogFragment {
     public void onResume() {
         super.onResume();
         if (mQuestionReply.getUserModel() != null && mQuestionReply != null) {
-            mReplyContent.setText(mQuestionReply.getUserModel().getUserName() + ":" + mQuestionReply.getContent());
+            String s = mQuestionReply.getUserModel().getUserName() + ":" + mQuestionReply.getContent();
+            mReplyContent.setText(s);
         }
     }
 

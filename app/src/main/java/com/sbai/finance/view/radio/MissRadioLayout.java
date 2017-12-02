@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -144,28 +145,31 @@ public class MissRadioLayout extends LinearLayout {
                 }
             });
         }
+        updatePlayStatus();
     }
 
-    public void unChangePlay(ImageView playImageView) {
+    private void unChangePlay() {
         if (mPlayStateList != null && !mPlayStateList.isEmpty()) {
             for (PlayStatus result : mPlayStateList) {
-                if (result.getImageView() != playImageView) {
-                    result.getImageView().setSelected(false);
-                    result.getRadioTextView().setText(DateUtil.formatMediaLength(result.getRadio().getAudioTime()));
-                }
+                ImageView imageView = result.getImageView();
+                imageView.setSelected(false);
+                TextView radioTextView = result.getRadioTextView();
+                radioTextView.setText(DateUtil.formatMediaLength(result.getRadio().getAudioTime()));
             }
         }
     }
 
-    public void updatePlayView() {
-        unChangePlay(null);
+
+    public void updatePlayStatus() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-        if (audio instanceof Radio) {
-            if (MissAudioManager.get().isPlaying()) {
+        unChangePlay();
+        if (MissAudioManager.get().isPlaying()) {
+            if (audio instanceof Radio) {
                 for (int i = 0; i < mPlayStateList.size(); i++) {
                     PlayStatus playStatus = mPlayStateList.get(i);
                     Radio radio = playStatus.getRadio();
                     if (radio.getId() == audio.getAudioId()) {
+                        Log.d(TAG, "updatePlayStatus: " + ((Radio) audio).getRadioName());
                         mPlayImageView = playStatus.getImageView();
                         mPlayImageView.setSelected(true);
                         mRadioTextView = playStatus.getRadioTextView();
@@ -173,40 +177,20 @@ public class MissRadioLayout extends LinearLayout {
                         break;
                     }
                 }
-            }
-        }
-        unChangePlay(mPlayImageView);
-    }
-
-    public void updatePlayStatus() {
-        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-        if (MissAudioManager.get().isPlaying()) {
-            if (audio instanceof Radio) {
-                for (int i = 0; i < mPlayStateList.size(); i++) {
-                    PlayStatus playStatus = mPlayStateList.get(i);
-                    Radio radio = playStatus.getRadio();
-                    if (radio.getId() == audio.getAudioId()) {
-                        playStatus.getImageView().setSelected(true);
-                        mRadioTextView = playStatus.getRadioTextView();
-                        mPlayRadio = radio;
-                        break;
-                    }
-                }
             } else if (audio instanceof Question) {
-                unChangePlay(null);
+                unChangePlay();
             }
         }
     }
 
     public void setPlayRadio(int mediaPlayCurrentPosition, int totalDuration) {
         if (totalDuration == 0) return;
-        if (mRadioTextView == null) {
-            updatePlayStatus();
-        }
         if (mRadioTextView != null) {
-            if (mPlayRadio != null) {
-                int scaleTime = totalDuration - mediaPlayCurrentPosition;
-                mRadioTextView.setText(DateUtil.format(scaleTime, DateUtil.FORMAT_MINUTE_SECOND));
+            int scaleTime = totalDuration - mediaPlayCurrentPosition;
+            String format = DateUtil.format(scaleTime, DateUtil.FORMAT_MINUTE_SECOND);
+            if (!format.equalsIgnoreCase(mRadioTextView.getText().toString())) {
+                Log.d(TAG, "setPlayRadio: " + scaleTime + "  " + format);
+                mRadioTextView.setText(format);
             }
         }
     }
@@ -215,7 +199,7 @@ public class MissRadioLayout extends LinearLayout {
         if (mPlayImageView != null) {
             mPlayImageView.setSelected(false);
         } else {
-            unChangePlay(null);
+            unChangePlay();
         }
     }
 

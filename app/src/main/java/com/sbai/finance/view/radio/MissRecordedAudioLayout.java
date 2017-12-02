@@ -181,11 +181,15 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
     }
 
     private void reset() {
-        mTimerHandler.removeCallbacksAndMessages(null);
         mTimerHandler.resetCount();
+        mTimerHandler.removeCallbacksAndMessages(null);
         isStartRecord = false;
         mMediaRecorderManager.onRecordStop();
         setRecordStatus(RECORD_AUDIO_STATUS_INIT);
+        SpannableString spannableString = StrUtil.mergeTextWithColor(getContext().getString(R.string.recording), "  " +
+                        getContext().getString(R.string.voice_time, 0),
+                mAudioLengthTextColor);
+        mAudioLengthTextView.setText(spannableString);
     }
 
     @Override

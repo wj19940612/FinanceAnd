@@ -1,8 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.sbai.finance.fragment.miss.MissAskFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.sbai.finance.fragment.miss.MissAskFragment">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/empty"
@@ -19,10 +19,9 @@
             android:text="@string/ask_miss"/>
     </android.support.v4.widget.NestedScrollView>
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/emptyRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible"/>
-</FrameLayout>
+</RelativeLayout>

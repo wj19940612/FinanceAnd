@@ -24,7 +24,7 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
 
     private static final String TAG = "MediaPlayService";
 
-    private static final int DEFAULT_UPDATE_MEDIA_PROGRESS = 200;
+    private static final int DEFAULT_UPDATE_MEDIA_PROGRESS = 1000;
 
     public static final String BROADCAST_ACTION_MEDIA_START = "broadcast_action_media_start";
     public static final String BROADCAST_ACTION_MEDIA_PLAY = "broadcast_action_media_play";

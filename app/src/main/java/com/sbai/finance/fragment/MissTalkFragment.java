@@ -46,9 +46,9 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.OnItemClickListener;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.finance.view.MissRadioViewSwitcher;
@@ -137,8 +137,8 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         requestMissList();
         requestRadioList();
         requestMissSwitcherList();
-        mMissRadioLayout.updatePlayStatus();
         updateRadioFloatWindow();
+        mMissRadioLayout.updatePlayStatus();
     }
 
     @Override
@@ -146,6 +146,8 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isAdded()) {
             requestMissList();
+            requestRadioList();
+            requestMissSwitcherList();
         }
     }
 
@@ -154,12 +156,10 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
             if (audio != null) {
                 if (audio instanceof Radio) {
-                    mMissFloatWindow.startAnim();
                     mMissFloatWindow.setVisibility(View.VISIBLE);
                     mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
                 } else if (audio instanceof Question) {
                     if (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_MISS_PROFILE) {
-                        mMissFloatWindow.startAnim();
                         mMissFloatWindow.setVisibility(View.VISIBLE);
                         mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
                     }
@@ -181,11 +181,10 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
-        mMissFloatWindow.startAnim();
         changeFloatWindowView();
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
             updateRadioFloatWindow();
-            mMissRadioLayout.updatePlayView();
+            mMissRadioLayout.updatePlayStatus();
         }
         notifyFragmentDataSetChange(source);
     }
@@ -201,17 +200,15 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
-        mMissFloatWindow.startAnim();
         notifyFragmentDataSetChange(source);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
             updateRadioFloatWindow();
-            mMissRadioLayout.onMediaResume();
+            mMissRadioLayout.updatePlayStatus();
         }
     }
 
     @Override
     public void onMediaPlayPause(int IAudioId, int source) {
-        mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
         notifyFragmentDataSetChange(source);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
@@ -221,7 +218,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
     @Override
     protected void onMediaPlayStop(int IAudioId, int source) {
-        mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
         notifyFragmentDataSetChange(source);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
@@ -343,6 +339,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         mMissAskFragmentAdapter = new MissAskFragmentAdapter(getChildFragmentManager(), getActivity(), this);
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setAdapter(mMissAskFragmentAdapter);
+        mViewPager.setCurrentItem(0, false);
         mViewPager.post(new Runnable() {
             @Override
             public void run() {
@@ -355,7 +352,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         mSlidingTabLayout.setSelectedIndicatorHeight(2);
         mSlidingTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.tab_miss_question));
         mSlidingTabLayout.setViewPager(mViewPager);
-        mViewPager.setCurrentItem(0, false);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -520,10 +516,10 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
     @Override
     public void onRadioPlay(Question question, boolean radioPlayViewHasHasFocus, int source) {
-        if (mRadio != null) {
-            mMissRadioLayout.unChangePlay(null);
-            mRadio = null;
-        }
+//        if (mRadio != null) {
+//            mMissRadioLayout.unChangePlay(null);
+//            mRadio = null;
+//        }
 
 //        mPlayPage = (source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION && mPosition == 0)
 //                || (source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION && mPosition == 1);
@@ -542,7 +538,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     public void onChangeMissFloatWindow(boolean hideFloatWindow) {
         if (hideFloatWindow) {
             mMissFloatWindow.setVisibility(View.GONE);
-            mMissFloatWindow.stopAnim();
         }
         changeFloatWindowView();
     }

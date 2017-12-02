@@ -5,17 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.service.MediaPlayService;
-import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.utils.audio.MissAudioManager;
 
 /**
  * Created by ${wangJie} on 2017/11/23.
@@ -38,8 +36,8 @@ public abstract class MediaPlayActivity extends BaseActivity {
     };
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onStart() {
+        super.onStart();
         registerBroadcast();
     }
 
@@ -59,6 +57,7 @@ public abstract class MediaPlayActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMediaPlayBroadcastReceiver);
         if (MissAudioManager.get().isPlaying()) {
             if (!Preference.get().isForeground()) {
                 MissAudioManager.get().pause();
@@ -83,11 +82,6 @@ public abstract class MediaPlayActivity extends BaseActivity {
         return filter;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMediaPlayBroadcastReceiver);
-    }
 
     public abstract void onMediaPlayStart(int IAudioId, int source);
 

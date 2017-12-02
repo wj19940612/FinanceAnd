@@ -16,7 +16,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -47,10 +46,10 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.finance.view.MissFloatWindow;
@@ -122,10 +121,8 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     private TextView mRewardNumber;
     private TextView mCommentNumber;
     private TextView mNoComment;
-    private ReplyDialogFragment mReplyDialogFragment;
 
     protected MediaPlayService mMediaPlayService;
-    private boolean mPlayThisVoice;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -169,36 +166,10 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         mListView.setAdapter(mQuestionReplyListAdapter);
         mListView.setOnItemClickListener(this);
 
-        mSwipeRefreshLayout.setOnScrollListener(new CustomSwipeRefreshLayout.OnScrollListener() {
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-                if (mPlayThisVoice) {
-                    if (firstVisibleItem != 0) {
-                        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-                        if (audio != null && MissAudioManager.get().isStarted(audio)
-                                && mMissFloatWindow.getVisibility() == View.GONE) {
-                            mMissFloatWindow.setVisibility(View.VISIBLE);
-                        }
-                    } else {
-                        if (mMissFloatWindow.getVisibility() == View.VISIBLE) {
-                            mMissFloatWindow.setVisibility(View.GONE);
-                        }
-                    }
-
-                }
-            }
-
-            @Override
-            public int scrollStateChange(int scrollState) {
-                return 0;
-            }
-        });
-
         Intent serviceIntent = new Intent(getActivity(), MediaPlayService.class);
         bindService(serviceIntent, mServiceConnection, Service.BIND_AUTO_CREATE);
 
-        initMissFloatWindow(null);
+        initMissFloatWindow();
     }
 
     private void requestShareData() {
@@ -322,13 +293,11 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
         updateThisPlayStatus();
-        updateMissFloatView();
     }
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
         updateThisPlayStatus();
-        updateMissFloatView();
     }
 
     @Override
@@ -339,7 +308,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                 setPlayingState();
             } else {
                 mMissFloatWindow.setVisibility(View.VISIBLE);
-                mMissFloatWindow.startAnim();
             }
         }
     }
@@ -351,7 +319,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
             if (playingQuestion.getId() == mQuestionId) {
                 setPauseState();
             } else {
-                mMissFloatWindow.stopAnim();
                 mMissFloatWindow.setVisibility(View.GONE);
             }
         }
@@ -359,7 +326,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
 
     @Override
     protected void onMediaPlayStop(int IAudioId, int source) {
-        mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
         setStopState();
     }
@@ -421,7 +387,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                 Question playingQuestion = (Question) MissAudioManager.get().getAudio();
                 if (playingQuestion.getId() == mQuestionId) {
                     mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
-                    mPlayThisVoice = true;
                     setPlayingState();
                     mMissFloatWindow.setVisibility(View.GONE);
                 } else {
@@ -431,15 +396,15 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         }
     }
 
-    private void updateMissFloatView() {
-        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-        if (audio instanceof Question) {
-            Question playingQuestion = (Question) audio;
-            mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
-        } else if (audio instanceof Radio) {
-            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
-        }
-    }
+//    private void updateMissFloatView() {
+//        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+//        if (audio instanceof Question) {
+//            Question playingQuestion = (Question) audio;
+//            mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
+//        } else if (audio instanceof Radio) {
+//            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+//        }
+//    }
 
     private void initHeaderView() {
         LinearLayout header = (LinearLayout) getLayoutInflater().inflate(R.layout.view_header_question_detail, null);
@@ -514,7 +479,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
             }
         });
 
-        initMissFloatWindow(mQuestion);
+        initMissFloatWindow();
 
         mProgressBar.setMax(mQuestion.getSoundTime() * 1000);
         if (MissAudioManager.get().isStarted(mQuestion)) {
@@ -526,39 +491,24 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         }
     }
 
-    private void initMissFloatWindow(Question question) {
+    private void initMissFloatWindow() {
         final MissAudioManager missAudioManager = MissAudioManager.get();
         if (missAudioManager.isPlaying()) {
             MissAudioManager.IAudio audio = missAudioManager.getAudio();
             if (audio instanceof Radio) {
-                mPlayThisVoice = false;
-                mMissFloatWindow.startAnim();
                 mMissFloatWindow.setVisibility(View.VISIBLE);
                 mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
             } else if (audio instanceof Question) {
-                if (question == null) {
-                    mPlayThisVoice = false;
-                } else {
-                    if (MissAudioManager.get().isStarted(audio)) {
-                        mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
-                        mMissFloatWindow.startAnim();
-                        if (mQuestion.getId() != ((Question) audio).getId()) {
-                            mPlayThisVoice = false;
-                            mMissFloatWindow.setVisibility(View.VISIBLE);
-                        } else {
-                            mPlayThisVoice = true;
-                        }
-
+                if (MissAudioManager.get().isStarted(audio)) {
+                    Question question = (Question) audio;
+                    mMissFloatWindow.setMissAvatar(question.getCustomPortrait());
+                    if (mQuestion != null && mQuestion.getId() != (question.getId())) {
+                        mMissFloatWindow.setVisibility(View.VISIBLE);
                     }
                 }
             }
-            if (mPlayThisVoice) {
-                mMissFloatWindow.setVisibility(View.GONE);
-            } else {
-                mMissFloatWindow.setVisibility(View.VISIBLE);
-            }
-        }
 
+        }
         mMissFloatWindow.setOnMissFloatWindowClickListener(new MissFloatWindow.OnMissFloatWindowClickListener() {
             @Override
             public void onClick(int source) {
@@ -816,20 +766,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         QuestionReply.DataBean item = (QuestionReply.DataBean) parent.getItemAtPosition(position);
 
         if (item != null) {
-            if (mReplyDialogFragment == null) {
-                mReplyDialogFragment = ReplyDialogFragment.newInstance(item);
-            }
-            if (!mReplyDialogFragment.isAdded()) {
-                mReplyDialogFragment.show(getSupportFragmentManager());
-            }
-
-            mReplyDialogFragment.setCallback(new ReplyDialogFragment.Callback() {
-                                                 @Override
-                                                 public void onLoginSuccess() {
-                                                     stopQuestionVoice();
-                                                 }
-                                             }
-            );
+            ReplyDialogFragment.newInstance(item).show(getSupportFragmentManager());
         }
     }
 

@@ -240,7 +240,6 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
             }
         });
 
-        mViewPager.setCurrentItem(0);
         initTitleBar();
     }
 
