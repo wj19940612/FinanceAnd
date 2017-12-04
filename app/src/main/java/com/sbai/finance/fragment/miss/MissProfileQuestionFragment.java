@@ -202,6 +202,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
+        mRootMissFloatWindow = mMissFloatWindow;
         mRect = new Rect();
     }
 

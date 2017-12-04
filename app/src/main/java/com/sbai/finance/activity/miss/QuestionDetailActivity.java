@@ -142,6 +142,8 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         setContentView(R.layout.activity_question_detail);
         ButterKnife.bind(this);
 
+        mRootMissFloatWindow = mMissFloatWindow;
+
         initData(getIntent());
         initView();
         mSet = new HashSet<>();
@@ -579,13 +581,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         MissAudioManager.get().stop();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-//        if (!Preference.get().isForeground()) {
-//            stopQuestionVoice();
-//        }
-    }
 
     private void requestQuestionReplyList(final boolean isRefresh) {
         Client.getQuestionReplyList(mType, mQuestionId, mPage, mPageSize, mReplayMsgId)

@@ -113,6 +113,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mRootMissFloatWindow = mMissFloatWindow;
         initView();
         initFloatView();
         requestRadioList();
@@ -140,7 +141,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         requestRadioList();
         requestMissSwitcherList();
         mMissRadioLayout.updatePlayStatus();
-        changeFloatWindowView();
     }
 
     @Override
@@ -369,6 +369,10 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
                 // 在提问页面需要更新数据 然后回调，用来区分那个页面可见
                 mPosition = position;
                 setVisibleFragmentLabel(position);
+                MissAskFragment fragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(position);
+                if (fragment != null) {
+                    fragment.refreshData();
+                }
             }
 
             @Override

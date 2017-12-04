@@ -128,6 +128,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         setContentView(R.layout.activity_radio_station_play_activity);
         setSupportActionBar(mToolbar);
         ButterKnife.bind(this);
+        mRootMissFloatWindow = mMissFloatWindow;
         translucentStatusBar();
 
         mSet = new HashSet<>();
@@ -145,6 +146,12 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         requestAudioDetails(true);
         requestRadioReplyList();
         requestRadioDetails();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mRadioPlayLL.stopAnimation();
     }
 
     private void requestRadioReplyList() {
@@ -247,8 +254,8 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         } else {
             if (mRadio == null) return;
             if (mMediaPlayService != null
-                    && !MissAudioManager.get().isStarted(mRadio)
-                    && !MissAudioManager.get().isPaused(mRadio)
+                    && !MissAudioManager.get().isStarted(audio)
+                    && !MissAudioManager.get().isPaused(audio)
                     && automaticPlay) {
                 mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
                 mRadioPlayLL.setPlayStatus(mRadio);
@@ -300,7 +307,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     private void updateAudioDetail(Radio radio, boolean automaticPlay) {
         mRadio = radio;
-        mRadioCollect.setSelected(radio.getCollect() == RadioDetails.COLLECT);
+        mRadioCollect.setSelected(radio.getIsCollect() == RadioDetails.COLLECT);
         updateAudio();
         requestRadioReplyList();
         initMissFloatWindow(automaticPlay);
@@ -582,8 +589,8 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                     .setCallback(new Callback<Resp<Object>>() {
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
-                            mRadio.setCollect(mRadio.getCollect() == RadioDetails.COLLECT ? 0 : RadioDetails.COLLECT);
-                            mRadioCollect.setSelected(mRadio.getCollect() == RadioDetails.COLLECT);
+                            mRadio.setIsCollect(mRadio.getIsCollect() == RadioDetails.COLLECT ? 0 : RadioDetails.COLLECT);
+                            mRadioCollect.setSelected(mRadio.getIsCollect() == RadioDetails.COLLECT);
                         }
                     })
                     .fireFree();

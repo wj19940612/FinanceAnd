@@ -99,7 +99,6 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_miss_audio_reply);
         ButterKnife.bind(this);
-
         initView();
 
         int questionId = getIntent().getIntExtra(ExtraKeys.QUESTION_ID, -1);

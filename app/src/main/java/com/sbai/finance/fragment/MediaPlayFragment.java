@@ -4,14 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.audio.MissAudioManager;
+import com.sbai.finance.view.MissFloatWindow;
 
 /**
  * Created by ${wangJie} on 2017/11/23.
@@ -21,10 +24,23 @@ public abstract class MediaPlayFragment extends BaseFragment {
 
 
     public MediaPlayService mMediaPlayService;
+    protected MissFloatWindow mRootMissFloatWindow;
 
     @Override
     public void onResume() {
         super.onResume();
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (mRootMissFloatWindow != null) {
+            if (audio instanceof Question) {
+                Question playQuestion = (Question) audio;
+                mRootMissFloatWindow.setMissAvatar(playQuestion.getCustomPortrait());
+            } else if (audio instanceof Radio) {
+                mRootMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+            }
+            if (!MissAudioManager.get().isPlaying()) {
+                mRootMissFloatWindow.setVisibility(View.GONE);
+            }
+        }
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMediaPlayBroadcastReceiver, getIntentFilter());
     }
 

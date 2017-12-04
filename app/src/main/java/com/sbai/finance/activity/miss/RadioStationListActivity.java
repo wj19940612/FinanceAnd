@@ -34,7 +34,6 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.audio.MissAudioManager;
@@ -98,7 +97,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_miss_radio_station_list);
         ButterKnife.bind(this);
-
+        mRootMissFloatWindow = mMissFloatWindow;
         initData(getIntent());
 
         mRadioStationAdapter = new RadioStationAdapter(this);

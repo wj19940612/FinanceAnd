@@ -49,7 +49,7 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
     private String audioIntroduction;//内容简介
     private String audioName;       //音频名称
     private int audioTime;          //时长
-    private int collect;
+    private int isCollect;
     private long createTime;
     private int displayStatus;      //显示状态
     private int goldAwardMoney;     //打赏（元宝）
@@ -77,7 +77,6 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
      */
 
     private int deleted;
-
 
 
     @Override
@@ -146,12 +145,12 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
         this.audioTime = audioTime;
     }
 
-    public int getCollect() {
-        return collect;
+    public int getIsCollect() {
+        return isCollect;
     }
 
-    public void setCollect(int collect) {
-        this.collect = collect;
+    public void setIsCollect(int collect) {
+        this.isCollect = collect;
     }
 
     public long getCreateTime() {
@@ -266,7 +265,7 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
         dest.writeString(this.audioIntroduction);
         dest.writeString(this.audioName);
         dest.writeInt(this.audioTime);
-        dest.writeInt(this.collect);
+        dest.writeInt(this.isCollect);
         dest.writeLong(this.createTime);
         dest.writeInt(this.displayStatus);
         dest.writeInt(this.goldAwardMoney);
@@ -289,7 +288,7 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
         this.audioIntroduction = in.readString();
         this.audioName = in.readString();
         this.audioTime = in.readInt();
-        this.collect = in.readInt();
+        this.isCollect = in.readInt();
         this.createTime = in.readLong();
         this.displayStatus = in.readInt();
         this.goldAwardMoney = in.readInt();
@@ -327,7 +326,7 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
                 ", audioIntroduction='" + audioIntroduction + '\'' +
                 ", audioName='" + audioName + '\'' +
                 ", audioTime=" + audioTime +
-                ", collect=" + collect +
+                ", isCollect=" + isCollect +
                 ", createTime=" + createTime +
                 ", displayStatus=" + displayStatus +
                 ", goldAwardMoney=" + goldAwardMoney +
