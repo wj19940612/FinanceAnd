@@ -105,17 +105,6 @@ public class WaitRaceAnswerFragment extends BaseFragment {
             }
         });
 
-//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Answer answer = (Answer) parent.getAdapter().getItem(position);
-//                if (answer != null) {
-//                    Launcher.with(getActivity(), MissAudioReplyActivity.class)
-//                            .putExtra(ExtraKeys.QUESTION_ID, answer.getId())
-//                            .execute();
-//                }
-//            }
-//        });
     }
 
     private void refreshData() {

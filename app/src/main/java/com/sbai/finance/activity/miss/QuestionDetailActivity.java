@@ -396,15 +396,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         }
     }
 
-//    private void updateMissFloatView() {
-//        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-//        if (audio instanceof Question) {
-//            Question playingQuestion = (Question) audio;
-//            mMissFloatWindow.setMissAvatar(playingQuestion.getCustomPortrait());
-//        } else if (audio instanceof Radio) {
-//            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
-//        }
-//    }
 
     private void initHeaderView() {
         LinearLayout header = (LinearLayout) getLayoutInflater().inflate(R.layout.view_header_question_detail, null);

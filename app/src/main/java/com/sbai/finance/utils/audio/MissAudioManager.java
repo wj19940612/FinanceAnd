@@ -175,6 +175,7 @@ public class MissAudioManager {
     private void initializeAndPrepare(String audioUrl) {
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
+            Log.d("MediaPlayer", "播放地址: " + audioUrl);
             mMediaPlayer.setDataSource(audioUrl);
             mMediaPlayer.prepareAsync();
         } catch (IOException e) {
@@ -280,7 +281,7 @@ public class MissAudioManager {
         public void setDataSource(String path)
                 throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
             super.setDataSource(path);
-            Log.d("MediaPlayer", "setDataSource: "+path);
+            Log.d("MediaPlayer", "setDataSource: " + path);
             dataSourcePath = path;
         }
     }

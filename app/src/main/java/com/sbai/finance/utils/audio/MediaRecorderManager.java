@@ -50,6 +50,7 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         //输出格式为 aac 格式
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
+//        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         //所有安卓系统都支持采样频率
         mMediaRecorder.setAudioSamplingRate(44100);
         //通用的 AAC 编码格式

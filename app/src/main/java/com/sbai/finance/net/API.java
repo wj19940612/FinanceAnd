@@ -198,6 +198,7 @@ public class API extends RequestManager {
         Request request = null;
         if (mFile != null && !TextUtils.isEmpty(mFilePartName)) {
             request = new MultipartRequest(mMethod, url, headers, mFilePartName, mFile, mApiParams, type, mCallback);
+
         } else {
             request = new GsonRequest(mMethod, url, headers, mApiParams, mBody, type, mCallback);
         }

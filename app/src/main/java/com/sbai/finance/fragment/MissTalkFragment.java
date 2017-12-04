@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
@@ -130,7 +129,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
         }
         if (audio != null) {
-            if (MissAudioManager.get().isPaused(audio) && mMissFloatWindow.getVisibility() == View.VISIBLE) {
+            if (!MissAudioManager.get().isPlaying()) {
                 mMissFloatWindow.setVisibility(View.GONE);
             }
         }
@@ -545,7 +544,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
     @Override
     public void onChangeMissFloatWindow(boolean hideFloatWindow) {
-        if (hideFloatWindow) {
+        if (hideFloatWindow && mMissFloatWindow != null) {
             mMissFloatWindow.setVisibility(View.GONE);
         }
         changeFloatWindowView();
@@ -571,12 +570,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         return (MissAskFragment) mMissAskFragmentAdapter.getFragment(1);
     }
 
-    private View createMissHeaderView() {
-        LinearLayout header = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.view_header_miss_talk_1, null);
-        EmptyRecyclerView recyclerView = (EmptyRecyclerView) header.findViewById(R.id.recyclerView);
-        TextView emptyView = (TextView) header.findViewById(R.id.missEmpty);
-        return header;
-    }
 
     private void requestMissList() {
         Client.getMissList().setTag(TAG)

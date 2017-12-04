@@ -45,7 +45,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
     private int mRecordBtnX;
     private int mRecordBtnY;
-    private boolean mInLegalRange;
+    private boolean mInLegalRange = true;
 
 
     public interface OnRecordAudioListener {
