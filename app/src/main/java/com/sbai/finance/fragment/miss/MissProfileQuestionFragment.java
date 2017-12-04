@@ -331,6 +331,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
             refresh();
         }
         updateFloatStatus();
+        mQuestionListAdapter.notifyDataSetChanged();
     }
 
     @Override
