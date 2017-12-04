@@ -121,13 +121,13 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
     @Override
     public void onMediaPlay(int IAudioId, int source) {
         mPlay.setSelected(true);
-        startScheduleJob(1000,0);
+        startScheduleJob(1000, 0);
     }
 
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
         mPlay.setSelected(true);
-        startScheduleJob(1000,0);
+        startScheduleJob(1000, 0);
     }
 
     @Override
@@ -194,6 +194,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                 if (!TextUtils.isEmpty(replyVOBean.getCustomContext())) {
                     mMissReplyAnswer.setAudioPath(replyVOBean.getCustomContext());
                 }
+                mTotalTime = replyVOBean.getSoundTime();
                 mAudioLength.setText(getString(R.string.voice_time, replyVOBean.getSoundTime()));
             }
             changeSubmitStatus(SUBMIT_SUCCESS);
