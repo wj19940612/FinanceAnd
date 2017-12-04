@@ -53,7 +53,7 @@ public class StockEntrustFragment extends BaseFragment {
     @BindView(R.id.lastAndCostPrice)
     TextView mLastAndCostPrice;
     @BindView(R.id.recyclerView)
-    EmptyRecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
     @BindView(R.id.empty)
     NestedScrollView mEmpty;
     Unbinder unbinder;
@@ -125,7 +125,6 @@ public class StockEntrustFragment extends BaseFragment {
     }
 
     private void initRecyclerView() {
-        mRecyclerView.setEmptyView(mEmpty);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mEntrustAdapter = new EntrustAdapter(getActivity(), new EntrustAdapter.ItemClickListener() {
             @Override
@@ -180,8 +179,10 @@ public class StockEntrustFragment extends BaseFragment {
         mEntrustAdapter.addAll(data);
         if (data == null || data.isEmpty()) {
             mEmpty.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
         } else {
             mEmpty.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -268,12 +269,18 @@ public class StockEntrustFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mEntrustList.get(position), mItemClickListener, mContext, position);
+            if (position < mEntrustList.size()) {
+                holder.bindDataWithView(mEntrustList.get(position), mItemClickListener, mContext, position);
+            } else {
+                holder.bindDataWithView(null, mItemClickListener, mContext, position);
+            }
+
+
         }
 
         @Override
         public int getItemCount() {
-            return mEntrustList.size();
+            return mEntrustList.size() + 1;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
@@ -301,6 +308,8 @@ public class StockEntrustFragment extends BaseFragment {
             TextView mBusinessTime;
             @BindView(R.id.withdraw)
             TextView mWithdraw;
+            @BindView(R.id.split)
+            View mSplit;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -309,6 +318,11 @@ public class StockEntrustFragment extends BaseFragment {
 
             public void bindDataWithView(final Entrust entrust, final ItemClickListener itemClickListener,
                                          final Context context, final int position) {
+                if (position == mEntrustList.size()) {
+                    resetView();
+                    return;
+                }
+                mSplit.setVisibility(View.VISIBLE);
                 if (entrust.getDirection() == Entrust.ENTRUST_BS_BUY) {
                     mEntrustBs.setText(context.getString(R.string.buy));
                     mEntrustBs.setTextColor(ContextCompat.getColor(context, R.color.redAssist));
@@ -393,6 +407,22 @@ public class StockEntrustFragment extends BaseFragment {
                     }
                 });
             }
+
+            private void resetView() {
+                mSplit.setVisibility(View.GONE);
+                mPositionArea.setOnClickListener(null);
+                mOperateArea.setVisibility(View.GONE);
+                mEntrustBs.setText(null);
+                mEntrustStatus.setText(null);
+                mStockName.setText(null);
+                mStockCode.setText(null);
+                mEntrustAmount.setText(null);
+                mEntrustPrice.setText(null);
+                mBusinessFund.setText(null);
+                mBusinessDate.setText(null);
+                mBusinessTime.setText(null);
+            }
         }
+
     }
 }
