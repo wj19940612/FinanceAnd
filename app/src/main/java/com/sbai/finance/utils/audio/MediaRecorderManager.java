@@ -2,6 +2,7 @@ package com.sbai.finance.utils.audio;
 
 import android.content.Context;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
@@ -49,7 +50,10 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
         //从麦克风采集
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         //输出格式为 aac 格式
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
+        }
+//        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         //所有安卓系统都支持采样频率
         mMediaRecorder.setAudioSamplingRate(44100);
         //通用的 AAC 编码格式
@@ -58,6 +62,11 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
         mMediaRecorder.setAudioEncodingBitRate(96000);
         //设置最大语音时间长度
         mMediaRecorder.setMaxFileSize(DEFAULT_MAX_AUDIO_LENGTH);
+
+//        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+////        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+//        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+//        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         //设置录音文件配置
         mMediaRecorder.setOutputFile(getOutputFilePath());
 
@@ -76,7 +85,9 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
             dir.mkdirs();
         }
 
+//        File file = new File(dir, System.currentTimeMillis() + ".3gp");
         File file = new File(dir, System.currentTimeMillis() + ".aac");
+//        File file = new File(dir, System.currentTimeMillis() + ".mp3");
         mRecordAudioPath = file.getAbsolutePath();
         return file.getAbsolutePath();
     }

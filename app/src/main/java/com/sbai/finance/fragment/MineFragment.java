@@ -96,6 +96,9 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.waitMeAnswer)
     IconTextRow mWaitMeAnswer;
 
+    private int messageReadCount = -1;
+    private int questionReadCount = -1;
+
 
     private UserEachTrainingScoreModel mUserEachTrainingScoreModel;
 
@@ -141,6 +144,8 @@ public class MineFragment extends BaseFragment {
 
 
     public void refreshNotReadMessageCount() {
+        messageReadCount = -1;
+        questionReadCount = -1;
         requestNoReadNewsNumber();
         if (LocalUser.getUser().isMiss()) {
             requestNoReadAnswerNumber();
@@ -259,7 +264,8 @@ public class MineFragment extends BaseFragment {
                         } else {
                             mMessage.setSubTextVisible(View.GONE);
                         }
-                        setNoReadNewsCount(count);
+                        messageReadCount = count;
+                        setNoReadQuestionAndCount();
                     }
 
                     @Override
@@ -283,7 +289,8 @@ public class MineFragment extends BaseFragment {
                         mWaitMeAnswer.setSubTextSize(9);
                         mWaitMeAnswer.setSubText("99+");
                     }
-                    setNoReadAnswerCount((int) noReadCount);
+                    questionReadCount = (int) noReadCount;
+                    setNoReadQuestionAndCount();
                 }
             }
         }).fire();
@@ -336,6 +343,20 @@ public class MineFragment extends BaseFragment {
     private void setNoReadAnswerCount(int count) {
         if (getActivity() instanceof OnNoReadNewsListener) {
             ((OnNoReadNewsListener) getActivity()).onNoReadNewsNumber(count);
+        }
+    }
+
+    private void setNoReadQuestionAndCount() {
+        if (!LocalUser.getUser().isMiss()) {
+            ((OnNoReadNewsListener) getActivity()).onNoReadNewsNumber(messageReadCount == -1 ? 0 : messageReadCount);
+        } else {
+            if (messageReadCount == -1 || questionReadCount == -1) {
+                return;
+            } else {
+                int count;
+                count = messageReadCount == 0 ? questionReadCount : messageReadCount;
+                ((OnNoReadNewsListener) getActivity()).onNoReadNewsNumber(count);
+            }
         }
     }
 

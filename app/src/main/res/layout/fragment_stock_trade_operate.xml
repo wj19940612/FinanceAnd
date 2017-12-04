@@ -40,8 +40,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:imeOptions="actionNext"
                 android:hint="@string/buy_price"
+                android:imeOptions="actionNext"
+                android:maxLength="7"
                 app:changeInterval="0.01"
                 app:inputType="decimal"/>
 
@@ -76,6 +77,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/buy_volume"
                 android:imeOptions="actionDone"
+                android:maxLength="15"
                 app:changeInterval="100"
                 app:inputType="number"/>
 

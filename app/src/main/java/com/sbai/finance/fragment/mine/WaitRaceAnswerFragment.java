@@ -6,10 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,6 +20,7 @@ import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
 import com.sbai.finance.activity.miss.MissAudioReplyActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.Answer;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -27,6 +28,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.ListEmptyView;
+import com.sbai.httplib.ApiError;
 
 import java.util.List;
 
@@ -39,6 +41,7 @@ import butterknife.Unbinder;
  */
 
 public class WaitRaceAnswerFragment extends BaseFragment {
+    public static final int QUESTION_RUSH_TO_ANSWER_FAIL = 4710;
 
     private Unbinder mBind;
     @BindView(android.R.id.list)
@@ -82,6 +85,14 @@ public class WaitRaceAnswerFragment extends BaseFragment {
         refreshData();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isAdded()) {
+            refreshData();
+        }
+    }
+
     private void initView() {
         initListEmptyView();
         mListView.setEmptyView(mListEmptyView);
@@ -90,13 +101,7 @@ public class WaitRaceAnswerFragment extends BaseFragment {
         mRaceAnswerAdapter.setRaceClickListener(new RaceAnswerAdapter.RaceClickListener() {
             @Override
             public void raceClick(Answer item) {
-                requestUpdateReadStatus(item.getId());
-                requestrushToAnswer(item.getId());
-                if (item != null) {
-                    Launcher.with(getActivity(), MissAudioReplyActivity.class)
-                            .putExtra(ExtraKeys.QUESTION_ID, item.getId())
-                            .execute();
-                }
+                requestrushToAnswer(item);
             }
         });
         mListView.setAdapter(mRaceAnswerAdapter);
@@ -107,17 +112,6 @@ public class WaitRaceAnswerFragment extends BaseFragment {
             }
         });
 
-//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Answer answer = (Answer) parent.getAdapter().getItem(position);
-//                if (answer != null) {
-//                    Launcher.with(getActivity(), MissAudioReplyActivity.class)
-//                            .putExtra(ExtraKeys.QUESTION_ID, answer.getId())
-//                            .execute();
-//                }
-//            }
-//        });
     }
 
     private void refreshData() {
@@ -149,12 +143,29 @@ public class WaitRaceAnswerFragment extends BaseFragment {
         mRaceAnswerAdapter.addAll(data);
     }
 
-    private void requestUpdateReadStatus(int id) {
-        Client.updateAnswerReadStatus(id).setTag(TAG).fire();
+
+    private void requestrushToAnswer(final Answer item) {
+        Client.rushToAnswer(item.getId()).setTag(TAG).setCallback(new Callback<Resp<Object>>() {
+            @Override
+            protected void onRespSuccess(Resp<Object> resp) {
+                updateRaceResult(item);
+            }
+
+            @Override
+            protected void onRespFailure(Resp failedResp) {
+                super.onRespFailure(failedResp);
+                refreshData();
+            }
+        }).fire();
     }
 
-    private void requestrushToAnswer(int id) {
-        Client.rushToAnswer(id).setTag(TAG).fire();
+    private void updateRaceResult(Answer item) {
+        if (item != null) {
+            Launcher.with(getActivity(), MissAudioReplyActivity.class)
+                    .putExtra(ExtraKeys.QUESTION_ID, item.getId())
+                    .execute();
+        }
+
     }
 
     private void stopRefreshAnimation() {

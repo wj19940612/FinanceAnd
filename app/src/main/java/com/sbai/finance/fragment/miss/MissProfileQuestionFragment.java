@@ -43,6 +43,7 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.MissVoiceRecorder;
@@ -143,11 +144,9 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                     mMissFloatWindow.setVisibility(View.VISIBLE);
                     mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
                 } else if (audio instanceof Question) {
-                    if (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_MISS_PROFILE) {
-                        mMissFloatWindow.startAnim();
-                        mMissFloatWindow.setVisibility(View.VISIBLE);
-                        mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
-                    }
+                    mMissFloatWindow.startAnim();
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                    mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
                 }
             }
 
@@ -260,19 +259,21 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         int firstVisiblePosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         int lastVisiblePosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
         boolean visibleItemsStarted = false;
-        if (mQuestionList != null && mQuestionList.size() > 0) {
-            for (int i = firstVisiblePosition; i < lastVisiblePosition; i++) {
-                if (i >= mQuestionListAdapter.getCount()) continue; // Skip header
-                Question question = mQuestionList.get(i);
-                if (question != null && MissAudioManager.get().isStarted(question)) {
-                    View view = mRecyclerView.getChildAt(i - firstVisiblePosition);
-                    visibleItemsStarted = view.getGlobalVisibleRect(mRect);
-                    TextView soundTime = view.findViewById(R.id.soundTime);
-                    ProgressBar progressBar = view.findViewById(R.id.progressBar);
-                    progressBar.setMax(question.getSoundTime() * 1000);
-                    int pastTime = MissAudioManager.get().getCurrentPosition();
-                    soundTime.setText(getString(R.string._seconds, (question.getSoundTime() * 1000 - pastTime) / 1000));
-                    progressBar.setProgress(pastTime);
+        if (firstVisiblePosition > 0 && lastVisiblePosition > 0 && mQuestionList.size() > 0) {
+            if (mQuestionList != null && mQuestionList.size() > 0) {
+                for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
+                    if (i >= mQuestionListAdapter.getCount()) continue; // Skip header
+                    Question question = mQuestionList.get(i);
+                    if (question != null && MissAudioManager.get().isStarted(question)) {
+                        View view = mRecyclerView.getChildAt(i - firstVisiblePosition);
+                        visibleItemsStarted = view.getGlobalVisibleRect(mRect);
+                        TextView soundTime = view.findViewById(R.id.soundTime);
+                        ProgressBar progressBar = view.findViewById(R.id.progressBar);
+                        progressBar.setMax(question.getSoundTime() * 1000);
+                        int pastTime = MissAudioManager.get().getCurrentPosition();
+                        soundTime.setText(getString(R.string._seconds, (question.getSoundTime() * 1000 - pastTime) / 1000));
+                        progressBar.setProgress(pastTime);
+                    }
                 }
             }
         }
@@ -332,6 +333,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
             refresh();
         }
         updateFloatStatus();
+        mQuestionListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -701,7 +703,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ((ViewHolder) holder).bindingData(mContext, mQuestionList.get(position), mCallback, isTheDifferentMonth(position));
+            ((ViewHolder) holder).bindingData(mContext, mQuestionList.get(position), mCallback, isTheDifferentMonth(position), position, getCount());
         }
 
         @Override
@@ -742,9 +744,16 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(Context context, final Question item, final Callback callback, boolean theDifferentMonth) {
+            private void bindingData(Context context, final Question item, final Callback callback, boolean theDifferentMonth, int position, int count) {
                 if (item == null) return;
 
+                if (position == count - 1) {
+                    RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mItemLayout.getLayoutParams();
+                    layoutParams.setMargins(0, 0, 0, (int) Display.dp2Px(64, context.getResources()));
+                } else {
+                    RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) mItemLayout.getLayoutParams();
+                    layoutParams.setMargins(0, 0, 0, 0);
+                }
                 if (theDifferentMonth) {
                     mMonth.setVisibility(View.VISIBLE);
                     mMonth.setText(DateUtil.getFormatYearMonth(item.getCreateTime()));

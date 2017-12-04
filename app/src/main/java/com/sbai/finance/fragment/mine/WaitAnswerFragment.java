@@ -92,6 +92,14 @@ public class WaitAnswerFragment extends BaseFragment {
         refreshData();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isAdded()) {
+            refreshData();
+        }
+    }
+
     private void initView() {
         initListEmptyView();
         mListView.setEmptyView(mListEmptyView);
@@ -110,8 +118,6 @@ public class WaitAnswerFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Answer answer = (Answer) parent.getAdapter().getItem(position);
-                requestUpdateReadStatus(answer.getId());
-
                 Launcher.with(getActivity(), MissAudioReplyActivity.class)
                         .putExtra(ExtraKeys.QUESTION_ID, answer.getId())
                         .putExtra(ExtraKeys.QUESTION_TYPE, MissAudioReplyActivity.QUESTION_TYPE_IS_NOT_SPECIFIED_MISS)
@@ -147,10 +153,6 @@ public class WaitAnswerFragment extends BaseFragment {
     private void updateAnswerList(List<Answer> data) {
         mAnswerAdapter.clear();
         mAnswerAdapter.addAll(data);
-    }
-
-    private void requestUpdateReadStatus(int id) {
-        Client.updateAnswerReadStatus(id).setTag(TAG).fire();
     }
 
     private void stopRefreshAnimation() {

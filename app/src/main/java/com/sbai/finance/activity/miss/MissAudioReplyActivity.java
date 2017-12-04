@@ -92,6 +92,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
     MissReplyAnswer mMissReplyAnswer;
     private boolean mSubmitSuccess = true;
     private int mRecordAudioLength;
+    private int mTotalTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +109,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
         } else {
             mTitleBar.setTitle(R.string.wait_me_answer);
         }
+        Client.updateAnswerReadStatus(questionId).setTag(TAG).fire();
         requestQuestionDetail(questionId);
     }
 
@@ -119,26 +121,46 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
     @Override
     public void onMediaPlay(int IAudioId, int source) {
         mPlay.setSelected(true);
+        startScheduleJob(1000, 0);
     }
 
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
         mPlay.setSelected(true);
+        startScheduleJob(1000, 0);
     }
 
     @Override
     public void onMediaPlayPause(int IAudioId, int source) {
         mPlay.setSelected(false);
+        stopScheduleJob();
     }
 
     @Override
     protected void onMediaPlayStop(int IAudioId, int source) {
         mPlay.setSelected(false);
+        stopScheduleJob();
+        mAudioLength.setText(getString(R.string.voice_time, mRecordAudioLength));
+        mTotalTime = mRecordAudioLength;
     }
 
     @Override
     protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
 
+    }
+
+
+    @Override
+    public void onTimeUp(int count) {
+        super.onTimeUp(count);
+        int time = --mTotalTime;
+        mAudioLength.setText(getString(R.string.voice_time, time));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MissAudioManager.get().stop();
     }
 
     private void requestQuestionDetail(int questionId) {
@@ -172,6 +194,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                 if (!TextUtils.isEmpty(replyVOBean.getCustomContext())) {
                     mMissReplyAnswer.setAudioPath(replyVOBean.getCustomContext());
                 }
+                mTotalTime = replyVOBean.getSoundTime();
                 mAudioLength.setText(getString(R.string.voice_time, replyVOBean.getSoundTime()));
             }
             changeSubmitStatus(SUBMIT_SUCCESS);
@@ -287,6 +310,9 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
 
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
+                            if (mMissReplyAnswer != null) {
+                                mMissReplyAnswer.setAudioPath((String) resp.getData());
+                            }
                             submitMissAnswer(resp.getData());
                         }
 
@@ -343,7 +369,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                 mSubmitStatusLL.setEnabled(false);
                 mLoading.setImageResource(R.drawable.ic_training_result_tick);
                 mSubmitStatus.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
-                mSubmitStatus.setText(R.string.submit_success);
+                mSubmitStatus.setText(R.string.send_success);
                 mAudioRecord.setEnabled(false);
                 changeSubmitStatusText(true);
                 break;
@@ -370,6 +396,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
             }
             mAudioLength.setText(getString(R.string.voice_time, audioLength));
             mRecordAudioLength = audioLength;
+            mTotalTime = audioLength;
             if (mMissReplyAnswer != null) {
                 mMissReplyAnswer.setAudioPath(audioPath);
             }

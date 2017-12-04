@@ -208,6 +208,11 @@ public class StockTradeOperateFragment extends BaseFragment {
     private TextWatcher mStockNameWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable editable) {
+            boolean tradeButtonEnable = checkTradeButtonEnable();
+            if (tradeButtonEnable != mTradeButton.isEnabled()) {
+                mTradeButton.setEnabled(tradeButtonEnable);
+            }
+
             String searchKey = TextViewUtils.getTrim(mStockNameCode);
             if (mStockNameCode.hasFocus() && !TextUtils.isEmpty(searchKey)) {
                 searchStocks(searchKey);
@@ -350,20 +355,24 @@ public class StockTradeOperateFragment extends BaseFragment {
     }
 
     private int calculateSharesCanBuy(double availableFund, double buyPrice) {
-        int totalShares = (int) (availableFund / buyPrice);
-        totalShares -= totalShares % 100;
-        double fee = Math.max(totalShares * buyPrice * FEE_RATE, MINIMUM_FEE);
-        availableFund -= fee;
-        int sharesCanBuy = (int) (availableFund / buyPrice);
-        sharesCanBuy -= sharesCanBuy % 100;
-        return sharesCanBuy;
+        if (buyPrice > 0) {
+            int totalShares = (int) (availableFund / buyPrice);
+            totalShares -= totalShares % 100;
+            double fee = Math.max(totalShares * buyPrice * FEE_RATE, MINIMUM_FEE);
+            availableFund -= fee;
+            int sharesCanBuy = (int) (availableFund / buyPrice);
+            sharesCanBuy -= sharesCanBuy % 100;
+            return sharesCanBuy;
+        }
+        return 0;
     }
 
 
     private boolean checkTradeButtonEnable() {
         String tradePrice = mTradePrice.getText();
         String tradeVolume = mTradeVolume.getText();
-        return !TextUtils.isEmpty(tradePrice) && !TextUtils.isEmpty(tradeVolume)
+        String stockName = TextViewUtils.getTrim(mStockNameCode);
+        return !TextUtils.isEmpty(tradePrice) && !TextUtils.isEmpty(tradeVolume) && !TextUtils.isEmpty(stockName)
                 && LocalUser.getUser().getStockUser() != null && mStock != null;
     }
 

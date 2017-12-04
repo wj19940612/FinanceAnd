@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.CardView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
@@ -47,6 +48,8 @@ import butterknife.ButterKnife;
  */
 
 public class MySubscribeActivity extends BaseActivity {
+    public static final String CLICKTAG = "clicktag";
+
     @BindView(android.R.id.list)
     ListView mListView;
     @BindView(android.R.id.empty)
@@ -119,9 +122,11 @@ public class MySubscribeActivity extends BaseActivity {
             protected void onRespSuccessData(List<MyCollect> data) {
                 if (data.size() == 0 && mPage == 0) {
                     stopRefreshAnimation();
+                    mListView.setVisibility(View.GONE);
                     mEmpty.setVisibility(View.VISIBLE);
                 } else {
                     mEmpty.setVisibility(View.GONE);
+                    mListView.setVisibility(View.VISIBLE);
                     updateSubscribeList(data, isRefresh);
                 }
             }
@@ -183,7 +188,7 @@ public class MySubscribeActivity extends BaseActivity {
     }
 
     private void requestClickNewInfo(MyCollect radioInfo) {
-        Client.readCollect(radioInfo.getId()).setTag(TAG).fire();
+        Client.readCollect(radioInfo.getId()).setTag(CLICKTAG).fire();
     }
 
     public static class SubscribeAdapter extends ArrayAdapter<MyCollect> {
@@ -221,7 +226,7 @@ public class MySubscribeActivity extends BaseActivity {
             @BindView(R.id.iconView)
             View mIconView;
             @BindView(R.id.content)
-            RelativeLayout mContent;
+            CardView mContent;
             @BindView(R.id.coverRL)
             RelativeLayout mCoverRL;
 

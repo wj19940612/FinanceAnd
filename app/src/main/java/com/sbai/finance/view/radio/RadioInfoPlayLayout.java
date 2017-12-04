@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,11 +52,10 @@ public class RadioInfoPlayLayout extends LinearLayout {
     private Unbinder mBind;
     private Radio mRadio;
 
-    private RotateAnimation mRotateAnimation;
+//    private RotateAnimation mRotateAnimation;
 
     private OnRadioPlayListener mOnRadioPlayListener;
-
-//    private ObjectAnimator mVoiceAnimator;
+    private Animation mRotateAnimation;
 
 
     public interface OnRadioPlayListener {
@@ -86,16 +85,13 @@ public class RadioInfoPlayLayout extends LinearLayout {
     }
 
     private void createVoicePlayRotateAnimation() {
-        mRotateAnimation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        LinearInterpolator lin = new LinearInterpolator();
-        mRotateAnimation.setInterpolator(lin);
-        mRotateAnimation.setDuration(5000);
-        mRotateAnimation.setRepeatCount(-1);
-        mRotateAnimation.setFillAfter(false);
-//        mVoiceAnimator = ObjectAnimator.ofFloat(mVoiceCover, "rotation", 0.0F, 359.0F);
-//        mVoiceAnimator.setRepeatCount(-1);
-//        mVoiceAnimator.setDuration(5000);
-//        mVoiceAnimator.setInterpolator(new LinearInterpolator());
+//        mRotateAnimation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+//        LinearInterpolator lin = new LinearInterpolator();
+//        mRotateAnimation.setInterpolator(lin);
+//        mRotateAnimation.setDuration(5000);
+//        mRotateAnimation.setRepeatCount(-1);
+//        mRotateAnimation.setFillAfter(false);
+        mRotateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.infinite_rotate);
     }
 
     @Override
@@ -109,13 +105,10 @@ public class RadioInfoPlayLayout extends LinearLayout {
 
     public void startAnimation() {
         mVoiceCover.startAnimation(mRotateAnimation);
-//        mVoiceAnimator.start();
     }
 
     public void stopAnimation() {
-        mRotateAnimation.cancel();
         mVoiceCover.clearAnimation();
-//        mVoiceAnimator.end();
     }
 
     public void setRadioProgress(int progress) {
