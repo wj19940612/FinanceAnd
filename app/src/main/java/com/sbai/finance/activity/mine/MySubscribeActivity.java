@@ -119,9 +119,11 @@ public class MySubscribeActivity extends BaseActivity {
             protected void onRespSuccessData(List<MyCollect> data) {
                 if (data.size() == 0 && mPage == 0) {
                     stopRefreshAnimation();
+                    mListView.setVisibility(View.GONE);
                     mEmpty.setVisibility(View.VISIBLE);
                 } else {
                     mEmpty.setVisibility(View.GONE);
+                    mListView.setVisibility(View.VISIBLE);
                     updateSubscribeList(data, isRefresh);
                 }
             }
