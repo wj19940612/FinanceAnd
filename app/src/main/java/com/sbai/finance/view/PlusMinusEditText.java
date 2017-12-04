@@ -3,6 +3,7 @@ package com.sbai.finance.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -40,6 +41,7 @@ public class PlusMinusEditText extends FrameLayout {
     private String mHint;
     private int mInputType;
     private int mImeOptions;
+    private int mMaxLength;
 
     public PlusMinusEditText(Context context) {
         super(context);
@@ -59,6 +61,7 @@ public class PlusMinusEditText extends FrameLayout {
         mHint = typedArray.getString(R.styleable.PlusMinusEditText_android_hint);
         mInputType = typedArray.getInt(R.styleable.PlusMinusEditText_inputType, 0);
         mImeOptions = typedArray.getInt(R.styleable.PlusMinusEditText_android_imeOptions, 0);
+        mMaxLength = typedArray.getInt(R.styleable.PlusMinusEditText_android_maxLength, 15);
 
         typedArray.recycle();
     }
@@ -70,6 +73,11 @@ public class PlusMinusEditText extends FrameLayout {
         setHint(mHint);
         setInputType(mInputType);
         setImeOptions(mImeOptions);
+        setMaxLength(mMaxLength);
+    }
+
+    private void setMaxLength(int maxLength) {
+        mEditText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
     }
 
     public void setImeOptions(int imeOptions) {

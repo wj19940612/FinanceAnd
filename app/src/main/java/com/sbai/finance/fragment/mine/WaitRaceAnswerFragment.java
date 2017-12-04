@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
 import com.sbai.finance.activity.miss.MissAudioReplyActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.Answer;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -26,6 +28,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.ListEmptyView;
+import com.sbai.httplib.ApiError;
 
 import java.util.List;
 
@@ -38,6 +41,7 @@ import butterknife.Unbinder;
  */
 
 public class WaitRaceAnswerFragment extends BaseFragment {
+    public static final int QUESTION_RUSH_TO_ANSWER_FAIL = 4710;
 
     private Unbinder mBind;
     @BindView(android.R.id.list)
@@ -81,6 +85,14 @@ public class WaitRaceAnswerFragment extends BaseFragment {
         refreshData();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isAdded()) {
+            refreshData();
+        }
+    }
+
     private void initView() {
         initListEmptyView();
         mListView.setEmptyView(mListEmptyView);
@@ -89,12 +101,7 @@ public class WaitRaceAnswerFragment extends BaseFragment {
         mRaceAnswerAdapter.setRaceClickListener(new RaceAnswerAdapter.RaceClickListener() {
             @Override
             public void raceClick(Answer item) {
-                requestrushToAnswer(item.getId());
-                if (item != null) {
-                    Launcher.with(getActivity(), MissAudioReplyActivity.class)
-                            .putExtra(ExtraKeys.QUESTION_ID, item.getId())
-                            .execute();
-                }
+                requestrushToAnswer(item);
             }
         });
         mListView.setAdapter(mRaceAnswerAdapter);
@@ -137,8 +144,30 @@ public class WaitRaceAnswerFragment extends BaseFragment {
     }
 
 
-    private void requestrushToAnswer(int id) {
-        Client.rushToAnswer(id).setTag(TAG).fire();
+    private void requestrushToAnswer(final Answer item) {
+        Client.rushToAnswer(item.getId()).setTag(TAG).setCallback(new Callback<Resp<Object>>() {
+            @Override
+            protected void onRespSuccess(Resp<Object> resp) {
+                updateRaceResult(item);
+            }
+
+            @Override
+            protected void onRespFailure(Resp failedResp) {
+                super.onRespFailure(failedResp);
+                if (failedResp.getCode() == QUESTION_RUSH_TO_ANSWER_FAIL) {
+                    refreshData();
+                }
+            }
+        }).fire();
+    }
+
+    private void updateRaceResult(Answer item) {
+        if (item != null) {
+            Launcher.with(getActivity(), MissAudioReplyActivity.class)
+                    .putExtra(ExtraKeys.QUESTION_ID, item.getId())
+                    .execute();
+        }
+
     }
 
     private void stopRefreshAnimation() {

@@ -211,11 +211,9 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
                     mMissFloatWindow.setVisibility(View.VISIBLE);
                     mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
                 } else if (audio instanceof Question) {
-                    if (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_MISS_PROFILE) {
-                        mMissFloatWindow.startAnim();
-                        mMissFloatWindow.setVisibility(View.VISIBLE);
-                        mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
-                    }
+                    mMissFloatWindow.startAnim();
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                    mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
                 }
             }
 

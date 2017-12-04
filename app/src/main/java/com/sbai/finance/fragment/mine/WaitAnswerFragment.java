@@ -92,6 +92,14 @@ public class WaitAnswerFragment extends BaseFragment {
         refreshData();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isAdded()) {
+            refreshData();
+        }
+    }
+
     private void initView() {
         initListEmptyView();
         mListView.setEmptyView(mListEmptyView);
