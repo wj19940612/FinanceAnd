@@ -33,6 +33,7 @@
             <enum name="number" value="1"/>
         </attr>
         <attr name="android:imeOptions"/>
+        <attr name="android:maxLength"/>
     </declare-styleable>
 
     <!--大厅底部 tabs-->
