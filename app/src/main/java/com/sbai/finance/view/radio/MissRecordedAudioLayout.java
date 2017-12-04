@@ -175,7 +175,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
         boolean x1 = x > (mRecordBtnX - 20);
         boolean x2 = (mRecordBtnX + mRecordAudioBtnWidth) > x;
         boolean y1 = y > (mRecordBtnY - 30);
-        boolean y2 = (mRecordBtnY + mRecordAudioBtnHeight) > y;
+        boolean y2 = (mRecordBtnY + mRecordAudioBtnHeight + 50) > y;
         Log.d(TAG, "pointISInsideRecordBtn: " + x1 + " " + x2 + "  " + y1 + "  " + y2 + " " + y);
         return x1 && x2 && y1 && y2;
     }

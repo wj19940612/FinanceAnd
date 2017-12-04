@@ -309,6 +309,9 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
 
                         @Override
                         protected void onRespSuccess(Resp<Object> resp) {
+                            if (mMissReplyAnswer != null) {
+                                mMissReplyAnswer.setAudioPath((String) resp.getData());
+                            }
                             submitMissAnswer(resp.getData());
                         }
 
