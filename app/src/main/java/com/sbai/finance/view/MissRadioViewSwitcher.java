@@ -68,8 +68,6 @@ public class MissRadioViewSwitcher extends LinearLayout implements TimerHandler.
         layoutParams.setMargins(defaultPadding, 0, defaultPadding, 0);
         layoutParams.weight = 1;
         addView(mTextSwitcher, layoutParams);
-        mTextSwitcher.setInAnimation(getContext(), R.anim.slide_in_from_bottom);
-        mTextSwitcher.setOutAnimation(getContext(), R.anim.slide_out_to_top);
         mTextSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
@@ -109,7 +107,16 @@ public class MissRadioViewSwitcher extends LinearLayout implements TimerHandler.
             mMissSwitcherModelList = missSwitcherModelList;
             setVisibility(VISIBLE);
             mTimerHandler.removeCallbacksAndMessages(null);
-            mTimerHandler.sendEmptyMessageDelayed(SWITCHER_CHANGE_TIME, 0);
+
+            if (mMissSwitcherModelList != null && mMissSwitcherModelList.size() == 1) {
+                mTextSwitcher.setText(mMissSwitcherModelList.get(0).getTopicTitle());
+            } else {
+                //如果只有一个 不要动画
+                mTextSwitcher.setInAnimation(getContext(), R.anim.slide_in_from_bottom);
+                mTextSwitcher.setOutAnimation(getContext(), R.anim.slide_out_to_top);
+                mTimerHandler.sendEmptyMessageDelayed(SWITCHER_CHANGE_TIME, 0);
+            }
+
         }
     }
 

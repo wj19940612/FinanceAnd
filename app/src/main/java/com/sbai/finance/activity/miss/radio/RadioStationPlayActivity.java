@@ -460,7 +460,10 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
         mRadioPlayLL.setPlayStatus(mRadio);
-        mRadioPlayLL.startAnimation();
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (mRadio != null && audio != null && mRadio.getId() == audio.getAudioId()) {
+            mRadioPlayLL.startAnimation();
+        }
         changeFloatWindowView();
     }
 
@@ -512,12 +515,12 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
             mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
         } else if (audio instanceof Radio) {
             mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
-            if (mRadio.getId() == audio.getAudioId()) {
-                if (mRadio != null) {
+            if (mRadio != null) {
+                if (mRadio.getId() == audio.getAudioId()) {
                     mMissFloatWindow.setMissAvatar(mRadio.getUserPortrait());
+                    mPlayThisVoice = true;
+                    mRadioPlayLL.startAnimation();
                 }
-                mPlayThisVoice = true;
-                mRadioPlayLL.startAnimation();
             } else {
                 mRadioPlayLL.stopAnimation();
             }

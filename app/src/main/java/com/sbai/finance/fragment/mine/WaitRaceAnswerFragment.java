@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -144,9 +143,6 @@ public class WaitRaceAnswerFragment extends BaseFragment {
         mRaceAnswerAdapter.addAll(data);
     }
 
-    private void requestUpdateReadStatus(int id) {
-        Client.updateAnswerReadStatus(id).setTag(TAG).fire();
-    }
 
     private void requestrushToAnswer(final Answer item) {
         Client.rushToAnswer(item.getId()).setTag(TAG).setCallback(new Callback<Resp<Object>>() {
@@ -158,15 +154,12 @@ public class WaitRaceAnswerFragment extends BaseFragment {
             @Override
             protected void onRespFailure(Resp failedResp) {
                 super.onRespFailure(failedResp);
-                if (failedResp.getCode() == QUESTION_RUSH_TO_ANSWER_FAIL) {
-                    refreshData();
-                }
+                refreshData();
             }
         }).fire();
     }
 
     private void updateRaceResult(Answer item) {
-        requestUpdateReadStatus(item.getId());
         if (item != null) {
             Launcher.with(getActivity(), MissAudioReplyActivity.class)
                     .putExtra(ExtraKeys.QUESTION_ID, item.getId())

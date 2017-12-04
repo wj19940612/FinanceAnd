@@ -22,11 +22,21 @@ public abstract class MediaPlayFragment extends BaseFragment {
 
     public MediaPlayService mMediaPlayService;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMediaPlayBroadcastReceiver, getIntentFilter());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMediaPlayBroadcastReceiver);
+    }
 
     @Override
     public void onStart() {
         super.onStart();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMediaPlayBroadcastReceiver, getIntentFilter());
         if (Preference.get().isAudioPlayPause()) {
             MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
             if (audio != null) {
@@ -40,7 +50,6 @@ public abstract class MediaPlayFragment extends BaseFragment {
     @Override
     public void onStop() {
         super.onStop();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMediaPlayBroadcastReceiver);
         if (MissAudioManager.get().isPlaying()) {
             if (!Preference.get().isForeground()) {
                 MissAudioManager.get().pause();
