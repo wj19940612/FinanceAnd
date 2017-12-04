@@ -280,6 +280,7 @@ public class MissAudioManager {
         public void setDataSource(String path)
                 throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
             super.setDataSource(path);
+            Log.d("MediaPlayer", "setDataSource: "+path);
             dataSourcePath = path;
         }
     }

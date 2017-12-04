@@ -46,6 +46,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.httplib.ApiError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +114,6 @@ public class RechargeActivity extends BaseActivity {
 
         initData();
         initView();
-        requestUsablePlatformList();
         requestUserFund();
     }
 
@@ -323,6 +323,7 @@ public class RechargeActivity extends BaseActivity {
                     break;
                 }
             }
+            updateInitStatus();
         }
     }
 
@@ -406,6 +407,13 @@ public class RechargeActivity extends BaseActivity {
                     protected void onRespSuccessData(UserFundInfo data) {
                         mUserFundInfo = data;
                         updateUserFund(mUserFundInfo);
+                        requestUsablePlatformList();
+                    }
+
+                    @Override
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
+                        requestUsablePlatformList();
                     }
                 })
                 .fireFree();
@@ -421,7 +429,16 @@ public class RechargeActivity extends BaseActivity {
                 mUserFundCount = userFundInfo.getYuanbao();
                 break;
         }
+        updateInitStatus();
         handleUserPayPlatform(mUsableRechargeWayList);
+    }
+
+    private void updateInitStatus() {
+        changeRechargeBtnStatus();
+        if (mUsableRechargeWayList != null && !mUsableRechargeWayList.isEmpty()) {
+            UsableRechargeWay usableRechargeWay = mUsableRechargeWayList.get(0);
+            updateSelectPayWay(usableRechargeWay, 0);
+        }
     }
 
     private void submitRechargeData() {

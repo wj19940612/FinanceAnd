@@ -160,16 +160,19 @@ public class MissRadioLayout extends LinearLayout {
     public void updatePlayStatus() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
         unChangePlay();
-        if (MissAudioManager.get().isPlaying()) {
+        if (MissAudioManager.get().isPlaying() || MissAudioManager.get().isPaused(audio)) {
             if (audio instanceof Radio) {
                 for (int i = 0; i < mPlayStateList.size(); i++) {
                     PlayStatus playStatus = mPlayStateList.get(i);
                     Radio radio = playStatus.getRadio();
                     if (radio.getId() == audio.getAudioId()) {
                         mPlayImageView = playStatus.getImageView();
-                        mPlayImageView.setSelected(true);
+                        if (MissAudioManager.get().isPlaying()) {
+                            mPlayImageView.setSelected(true);
+                        }
                         mRadioTextView = playStatus.getRadioTextView();
                         mPlayRadio = radio;
+                        setPlayProgress(MissAudioManager.get().getCurrentPosition(), MissAudioManager.get().getDuration());
                         break;
                     }
                 }
@@ -179,7 +182,7 @@ public class MissRadioLayout extends LinearLayout {
         }
     }
 
-    public void setPlayRadio(int mediaPlayCurrentPosition, int totalDuration) {
+    public void setPlayProgress(int mediaPlayCurrentPosition, int totalDuration) {
         if (totalDuration == 0) return;
         if (mRadioTextView != null) {
             int scaleTime = totalDuration - mediaPlayCurrentPosition;

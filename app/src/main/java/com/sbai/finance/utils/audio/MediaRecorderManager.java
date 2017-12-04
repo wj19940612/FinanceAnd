@@ -77,7 +77,6 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
         }
 
         File file = new File(dir, System.currentTimeMillis() + ".aac");
-//        File file = new File(dir, System.currentTimeMillis() + ".3gp");
         mRecordAudioPath = file.getAbsolutePath();
         return file.getAbsolutePath();
     }

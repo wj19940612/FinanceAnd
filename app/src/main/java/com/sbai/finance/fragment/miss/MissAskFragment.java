@@ -2,6 +2,7 @@ package com.sbai.finance.fragment.miss;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -74,6 +75,7 @@ public class MissAskFragment extends MediaPlayFragment {
     private HashSet<Integer> mSet;
     private MediaPlayService mMediaPlayService;
     private int mSelectPosition;
+    private Rect mRect;
 
     public void updateQuestion(Question question) {
         if (mQuestionList != null && !mQuestionList.isEmpty()) {
@@ -162,6 +164,7 @@ public class MissAskFragment extends MediaPlayFragment {
         super.onActivityCreated(savedInstanceState);
         initView();
         requestAskList(true);
+        mRect = new Rect();
     }
 
 
@@ -208,7 +211,8 @@ public class MissAskFragment extends MediaPlayFragment {
         if (source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION ||
                 source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION ||
                 source == MediaPlayService.MEDIA_SOURCE_MISS_PROFILE) {
-            if (mSelectPosition == -1) return;
+            if (mSelectPosition == -1 || (mQuestionList == null || mQuestionList.isEmpty())) return;
+
             LinearLayoutManager layoutManager = (LinearLayoutManager) mEmptyRecyclerView.getLayoutManager();
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
             int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
@@ -226,8 +230,9 @@ public class MissAskFragment extends MediaPlayFragment {
                         int pastTime = MissAudioManager.get().getCurrentPosition();
                         soundTime.setText(getString(R.string._seconds, (question.getTotalVoiceLength() - pastTime) / 1000));
                         progressBar.setProgress(pastTime);
+                        radioPlayHasFocus = view.getGlobalVisibleRect(mRect);
                     }
-                    radioPlayHasFocus = true;
+
                     break;
                 }
             }

@@ -265,13 +265,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position != 0) {
             Radio radioInfo = (Radio) parent.getItemAtPosition(position);
-            if (mRadio != null) {
-                if (mRadio.getRadioId() == radioInfo.getRadioId()) {
-                    finish();
-                }
-            } else {
-                Launcher.with(this, RadioStationPlayActivity.class).putExtra(ExtraKeys.RADIO, radioInfo).executeForResult(222);
-            }
+            Launcher.with(this, RadioStationPlayActivity.class).putExtra(ExtraKeys.RADIO, radioInfo).executeForResult(222);
         }
     }
 

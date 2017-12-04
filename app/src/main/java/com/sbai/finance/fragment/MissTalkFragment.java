@@ -129,6 +129,11 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         } else if (audio instanceof Radio) {
             mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
         }
+        if (audio != null) {
+            if (MissAudioManager.get().isPaused(audio) && mMissFloatWindow.getVisibility() == View.VISIBLE) {
+                mMissFloatWindow.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -182,9 +187,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     @Override
     public void onMediaPlay(int IAudioId, int source) {
         changeFloatWindowView();
-        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
-            mMissRadioLayout.updatePlayStatus();
-        }
+        mMissRadioLayout.updatePlayStatus();
         notifyFragmentDataSetChange(source);
     }
 
@@ -192,9 +195,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     public void onMediaPlayStart(int IAudioId, int source) {
         changeFloatWindowView();
         notifyFragmentDataSetChange(source);
-        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
-            mMissRadioLayout.onMediaResume();
-        }
+        mMissRadioLayout.updatePlayStatus();
     }
 
     @Override
@@ -261,7 +262,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
         super.onMediaPlayCurrentPosition(IAudioId, source, mediaPlayCurrentPosition, totalDuration);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
-            mMissRadioLayout.setPlayRadio(mediaPlayCurrentPosition, totalDuration);
+            mMissRadioLayout.setPlayProgress(mediaPlayCurrentPosition, totalDuration);
             boolean isVisible = mMissRadioLayout.onPlayViewIsVisible();
             if (isVisible) {
                 if (mMissFloatWindow.getVisibility() == View.VISIBLE) {
@@ -288,7 +289,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     }
 
     private void notifyFragmentDataSetChange(int source) {
-        if (source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION || source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION) {
+        if (source != MediaPlayService.MEDIA_SOURCE_HOT_QUESTION) {
             MissAskFragment missHotAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(0);
             if (missHotAskFragment != null) {
                 missHotAskFragment.notifyFragmentDataSetChange();

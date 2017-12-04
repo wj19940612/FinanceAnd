@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -127,7 +128,7 @@ public class RadioInfoLayout extends LinearLayout {
     public void setRadio(Radio radio) {
         mRadio = radio;
         mVoiceName.setText(radio.getAudioName());
-        mVoiceIntroduce.setContentText(radio.getAudioIntroduction());
+        mVoiceIntroduce.setContentText(Html.fromHtml(radio.getAudioIntroduction()).toString());
         mRadioOwnerAvatar.setAvatar(radio.getUserPortrait(), Question.USER_IDENTITY_HOST);
         mRadioOwnerName.setText(radio.getRadioHostName());
         mRadioName.setText(radio.getRadioName());

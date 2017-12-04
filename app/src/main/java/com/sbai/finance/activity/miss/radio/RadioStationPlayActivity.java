@@ -141,6 +141,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        mPage = 0;
         requestAudioDetails(true);
         requestRadioReplyList();
         requestRadioDetails();
@@ -467,6 +468,10 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     public void onMediaPlayPause(int IAudioId, int source) {
         mRadioPlayLL.setPlayStatus(mRadio);
         mMissFloatWindow.setVisibility(View.GONE);
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+            mRadioPlayLL.onPlayPause();
+        }
+
     }
 
     @Override

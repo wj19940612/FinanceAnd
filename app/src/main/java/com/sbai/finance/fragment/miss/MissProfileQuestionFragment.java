@@ -3,6 +3,7 @@ package com.sbai.finance.fragment.miss;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -94,6 +95,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
     private boolean mHasEnter;
 
     private MediaPlayService mMediaPlayService;
+    private Rect mRect;
 
     public interface OnFragmentRecycleViewScrollListener {
 
@@ -201,6 +203,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
+        mRect = new Rect();
     }
 
     @Override
@@ -249,6 +252,38 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
         mQuestionListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
+        super.onMediaPlayCurrentPosition(IAudioId, source, mediaPlayCurrentPosition, totalDuration);
+        int firstVisiblePosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+        int lastVisiblePosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
+        boolean visibleItemsStarted = false;
+        if (mQuestionList != null && mQuestionList.size() > 0) {
+            for (int i = firstVisiblePosition; i < lastVisiblePosition; i++) {
+                if (i >= mQuestionListAdapter.getCount()) continue; // Skip header
+                Question question = mQuestionList.get(i);
+                if (question != null && MissAudioManager.get().isStarted(question)) {
+                    View view = mRecyclerView.getChildAt(i - firstVisiblePosition);
+                    visibleItemsStarted = view.getGlobalVisibleRect(mRect);
+                    TextView soundTime = view.findViewById(R.id.soundTime);
+                    ProgressBar progressBar = view.findViewById(R.id.progressBar);
+                    progressBar.setMax(question.getSoundTime() * 1000);
+                    int pastTime = MissAudioManager.get().getCurrentPosition();
+                    soundTime.setText(getString(R.string._seconds, (question.getSoundTime() * 1000 - pastTime) / 1000));
+                    progressBar.setProgress(pastTime);
+                }
+            }
+        }
+
+        if (visibleItemsStarted && mMissFloatWindow.getVisibility() == View.VISIBLE) {
+            mMissFloatWindow.setVisibility(View.GONE);
+        }
+
+        if (!visibleItemsStarted && mMissFloatWindow.getVisibility() == View.GONE) {
+            mMissFloatWindow.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -423,37 +458,6 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
             if (mMediaPlayService != null) {
                 mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_MISS_PROFILE);
             }
-        }
-    }
-
-    @Override
-    public void onTimeUp(int count) {
-        int firstVisiblePosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-        int lastVisiblePosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
-        boolean visibleItemsStarted = false;
-        if (firstVisiblePosition < 0 && lastVisiblePosition < 0 && mQuestionList.size() > 0) {
-            for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
-                if (i >= mQuestionListAdapter.getCount()) continue; // Skip header
-                Question question = mQuestionList.get(i);
-                if (question != null && MissAudioManager.get().isStarted(question)) {
-                    View view = mRecyclerView.getChildAt(i - firstVisiblePosition);
-                    TextView soundTime = view.findViewById(R.id.soundTime);
-                    ProgressBar progressBar = view.findViewById(R.id.progressBar);
-                    progressBar.setMax(question.getSoundTime() * 1000);
-                    int pastTime = MissAudioManager.get().getCurrentPosition();
-                    soundTime.setText(getString(R.string._seconds, (question.getSoundTime() * 1000 - pastTime) / 1000));
-                    progressBar.setProgress(pastTime);
-                    visibleItemsStarted = true;
-                }
-            }
-        }
-
-        if (visibleItemsStarted && mMissFloatWindow.getVisibility() == View.VISIBLE) {
-            mMissFloatWindow.setVisibility(View.GONE);
-        }
-
-        if (!visibleItemsStarted && mMissFloatWindow.getVisibility() == View.GONE) {
-            mMissFloatWindow.setVisibility(View.VISIBLE);
         }
     }
 

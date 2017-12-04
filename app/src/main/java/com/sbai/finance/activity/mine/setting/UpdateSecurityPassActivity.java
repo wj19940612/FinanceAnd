@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -154,14 +153,8 @@ public class UpdateSecurityPassActivity extends BaseActivity {
                             .setCallback(new Callback<Resp<Object>>() {
                                 @Override
                                 protected void onRespSuccess(Resp<Object> resp) {
-                                    Log.d(TAG, "onRespSuccess: " + resp.toString());
-                                    if (resp.isSuccess()) {
-                                        toastMassage(resp);
-                                        setResult(RESULT_OK);
-                                        finish();
-                                    } else {
-                                        toastMassage(resp);
-                                    }
+                                    setResult(RESULT_OK);
+                                    finish();
                                 }
 
                             })
