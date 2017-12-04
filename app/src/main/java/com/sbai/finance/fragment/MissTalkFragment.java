@@ -128,10 +128,8 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         } else if (audio instanceof Radio) {
             mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
         }
-        if (audio != null) {
-            if (!MissAudioManager.get().isPlaying()) {
-                mMissFloatWindow.setVisibility(View.GONE);
-            }
+        if (!MissAudioManager.get().isPlaying()) {
+            mMissFloatWindow.setVisibility(View.GONE);
         }
     }
 

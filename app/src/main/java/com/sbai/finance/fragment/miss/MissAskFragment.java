@@ -60,9 +60,9 @@ public class MissAskFragment extends MediaPlayFragment {
     public static final int MISS_ASK_TYPE_HOT = 1; //最热提问
     public static final int MISS_ASK_TYPE_LATEST = 0; //最新提问
 
+    Unbinder unbinder;
     @BindView(R.id.emptyRecyclerView)
     RecyclerView mEmptyRecyclerView;
-    Unbinder unbinder;
     @BindView(R.id.empty)
     NestedScrollView mEmpty;
 
@@ -283,7 +283,7 @@ public class MissAskFragment extends MediaPlayFragment {
                         updateLatestQuestionList(questionList, isRefresh);
                     }
 
-                }).fire();
+                }).fireFree();
 
     }
 
@@ -417,8 +417,7 @@ public class MissAskFragment extends MediaPlayFragment {
 
 
     private void updateLatestQuestionList(List<Question> questionList, boolean isRefresh) {
-
-        if (mQuestionList.isEmpty() && (questionList == null || questionList.isEmpty())) {
+        if ((questionList == null || questionList.isEmpty())|| mQuestionList.isEmpty()) {
             mEmpty.setVisibility(View.VISIBLE);
             mEmptyRecyclerView.setVisibility(View.GONE);
         } else {
@@ -510,12 +509,12 @@ public class MissAskFragment extends MediaPlayFragment {
 
         public void addAll(List<Question> questionList) {
             mMissAskList.addAll(questionList);
-            notifyDataSetChanged();
+            this.notifyDataSetChanged();
         }
 
         public void add(Question result) {
             mMissAskList.add(result);
-            notifyDataSetChanged();
+            this.notifyDataSetChanged();
         }
 
         @Override

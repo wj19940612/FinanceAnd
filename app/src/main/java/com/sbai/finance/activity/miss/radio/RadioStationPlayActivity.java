@@ -154,8 +154,11 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                 .setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
                     @Override
                     protected void onRespSuccessData(QuestionReply questionReply) {
-                        if (questionReply.getData() != null) {
-                            updateRadioReply(questionReply.getData());
+                        if (questionReply != null) {
+                            mRadioInfoLayout.setReviewNumber(questionReply.getResultCount());
+                            if (questionReply.getData() != null) {
+                                updateRadioReply(questionReply.getData());
+                            }
                         }
                     }
 
@@ -298,7 +301,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     private void updateAudioDetail(Radio radio, boolean automaticPlay) {
         mRadio = radio;
         mRadioCollect.setSelected(radio.getCollect() == RadioDetails.COLLECT);
-        mRadioInfoLayout.setReviewNumber(radio.getAudioComment());
         updateAudio();
         requestRadioReplyList();
         initMissFloatWindow(automaticPlay);
