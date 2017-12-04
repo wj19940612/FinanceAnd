@@ -154,9 +154,7 @@ public class WaitRaceAnswerFragment extends BaseFragment {
             @Override
             protected void onRespFailure(Resp failedResp) {
                 super.onRespFailure(failedResp);
-                if (failedResp.getCode() == QUESTION_RUSH_TO_ANSWER_FAIL) {
-                    refreshData();
-                }
+                refreshData();
             }
         }).fire();
     }
