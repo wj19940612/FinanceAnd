@@ -34,6 +34,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SettingActivity extends BaseActivity {
+
+    public static int REQUEST_CODE_SAFE_CENTER = 101;
+    public static int REQUEST_CODE_NEWS_NOTIFICATION = 102;
+    public static int REQUEST_CODE_FEED_BACK = 103;
+
     @BindView(R.id.feedback)
     IconTextRow mFeedback;
     @BindView(R.id.logout)
@@ -44,6 +49,13 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
+        initFeedBack();
+        initView();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
         initFeedBack();
         initView();
     }
@@ -71,7 +83,7 @@ public class SettingActivity extends BaseActivity {
                     umengEventCount(UmengCountEventId.ME_NEW_AWAIT);
                     Launcher.with(getActivity(), SetNotificationSwitchActivity.class).execute();
                 } else {
-                    openLoginPage();
+                    Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQUEST_CODE_NEWS_NOTIFICATION);
                 }
 
                 break;
@@ -90,7 +102,7 @@ public class SettingActivity extends BaseActivity {
                             })
                             .fire();
                 } else {
-                    openLoginPage();
+                    Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQUEST_CODE_SAFE_CENTER);
                 }
 
 
@@ -100,7 +112,7 @@ public class SettingActivity extends BaseActivity {
                     umengEventCount(UmengCountEventId.ME_FEEDBACK);
                     Launcher.with(getActivity(), FeedbackActivity.class).execute();
                 } else {
-                    openLoginPage();
+                    Launcher.with(getActivity(), LoginActivity.class).executeForResult(REQUEST_CODE_FEED_BACK);
                 }
                 break;
             case R.id.aboutUs:
@@ -185,5 +197,31 @@ public class SettingActivity extends BaseActivity {
 
     private void openLoginPage() {
         Launcher.with(getActivity(), LoginActivity.class).execute();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE_SAFE_CENTER) {
+                umengEventCount(UmengCountEventId.ME_SAFETY_CENTER);
+                Client.getUserHasPassWord()
+                        .setTag(TAG).setIndeterminate(this)
+                        .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                            @Override
+                            protected void onRespSuccessData(Boolean data) {
+                                Launcher.with(getActivity(), SecurityCenterActivity.class)
+                                        .putExtra(ExtraKeys.HAS_SECURITY_PSD, data.booleanValue())
+                                        .execute();
+                            }
+                        })
+                        .fire();
+            } else if (requestCode == REQUEST_CODE_NEWS_NOTIFICATION) {
+                umengEventCount(UmengCountEventId.ME_NEW_AWAIT);
+                Launcher.with(getActivity(), SetNotificationSwitchActivity.class).execute();
+            } else if (requestCode == REQUEST_CODE_FEED_BACK) {
+                umengEventCount(UmengCountEventId.ME_FEEDBACK);
+                Launcher.with(getActivity(), FeedbackActivity.class).execute();
+            }
+        }
     }
 }
