@@ -100,10 +100,10 @@ android {
         }
 
         alpha {
-            applicationId "com.sbai.finance.alpha"
+//            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-alpha'
-            versionCode 151
-            versionName "2.0.1204"
+            versionCode 153
+            versionName "2.0.1204033"
             buildConfigField('String', 'HOST', '\"testlemi.ailemi.com\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 
