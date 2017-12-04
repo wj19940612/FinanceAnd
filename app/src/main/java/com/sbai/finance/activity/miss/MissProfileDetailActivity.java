@@ -45,6 +45,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.MissFloatWindow;
@@ -485,9 +486,14 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.follow:
-                attention();
+                if (hasNetWork()) {
+                    attention();
+                }
                 break;
             case R.id.noFollow:
+                if (!hasNetWork()) {
+                    return;
+                }
                 if (mMiss != null) {
                     if (LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getCustomId() == mMiss.getId()) {
                         Launcher.with(getActivity(), ModifyUserInfoActivity.class).execute();
@@ -512,6 +518,15 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                     }
                 });
                 break;
+        }
+    }
+
+    private boolean hasNetWork() {
+        if (Network.isNetworkAvailable()) {
+            return true;
+        } else {
+            ToastUtil.show(R.string.http_lib_error_network);
+            return false;
         }
     }
 
