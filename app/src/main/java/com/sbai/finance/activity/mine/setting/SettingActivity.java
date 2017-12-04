@@ -44,14 +44,19 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
-        requestNoReadFeedbackNumber();
+        initFeedBack();
         initView();
     }
 
+    private void initFeedBack() {
+        if (LocalUser.getUser().isLogin())
+            requestNoReadFeedbackNumber();
+    }
+
     private void initView() {
-        if(LocalUser.getUser().isLogin()){
+        if (LocalUser.getUser().isLogin()) {
             mLogout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mLogout.setVisibility(View.GONE);
         }
     }
