@@ -54,17 +54,17 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
         }
 //        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        //所有安卓系统都支持采样频率
-        mMediaRecorder.setAudioSamplingRate(44100);
         //通用的 AAC 编码格式
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
+        //所有安卓系统都支持采样频率
+        mMediaRecorder.setAudioSamplingRate(44100);
         //音质比较好的频率
         mMediaRecorder.setAudioEncodingBitRate(96000);
         //设置最大语音时间长度
         mMediaRecorder.setMaxFileSize(DEFAULT_MAX_AUDIO_LENGTH);
 
-//        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-////        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+//        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 //        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 //        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         //设置录音文件配置
@@ -87,7 +87,7 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
 
 //        File file = new File(dir, System.currentTimeMillis() + ".3gp");
         File file = new File(dir, System.currentTimeMillis() + ".aac");
-//        File file = new File(dir, System.currentTimeMillis() + ".mp3");
+//        File file = new File(dir, System.currentTimeMillis() + ".mp4");
         mRecordAudioPath = file.getAbsolutePath();
         return file.getAbsolutePath();
     }
