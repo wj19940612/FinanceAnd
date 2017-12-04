@@ -21,6 +21,8 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.activity.stock.StockTradeOperateActivity;
 import com.sbai.finance.fragment.battle.BattleListFragment;
 import com.sbai.finance.fragment.trade.stock.StockBusinessFragment;
@@ -28,6 +30,7 @@ import com.sbai.finance.fragment.trade.stock.StockEntrustFragment;
 import com.sbai.finance.fragment.trade.stock.StockPositionFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
+import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.model.stock.StockData;
 import com.sbai.finance.model.stock.StockUser;
@@ -68,6 +71,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
     public static final String ACTION_REFRESH_MANUAL = "233";
     public static final String ACTION_REFRESH_AUTO = "243";
     public static final int REQUEST_CODE_ORDER = 250;
+    public static final int REQUEST_CODE_RECHARGE = 260;
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.fundInfo)
@@ -205,6 +209,18 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
             public void fetchFund() {
                 showFetchFundDescribeDialog();
             }
+
+            @Override
+            public void recharge() {
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), VirtualProductExchangeActivity.class)
+                            .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_SCORE)
+                            .putExtra(ExtraKeys.USER_FUND, 0)
+                            .executeForResult(REQUEST_CODE_RECHARGE);
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
         });
     }
 
@@ -230,6 +246,9 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_ORDER && resultCode == RESULT_OK) {
             setTabIndex(1);
+        }
+        if (requestCode == REQUEST_CODE_RECHARGE && resultCode == RESULT_OK) {
+            requestStockAccount();
         }
     }
 
@@ -260,6 +279,11 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
                 mFundInfo.resetView();
                 mCurrentStockUser = stockUser;
                 LocalUser.getUser().setStockUser(stockUser);
+                if (mCurrentStockUser.getType() == StockUser.ACCOUNT_TYPE_MOCK) {
+                    mFundInfo.setRechargeViewVisible(View.VISIBLE);
+                } else {
+                    mFundInfo.setRechargeViewVisible(View.GONE);
+                }
                 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_REFRESH_MANUAL));
             }
         }

@@ -210,7 +210,7 @@ public class StockEntrustFragment extends BaseFragment {
 
     private void hidePriOperateView(int index) {
         if (index < 0 && mRecyclerView.getChildCount() - 1 < index) return;
-        View viewGroup = mRecyclerView.getChildAt(index);
+        View viewGroup = mRecyclerView.getLayoutManager().findViewByPosition(index);
         if (viewGroup != null) {
             View view = viewGroup.findViewById(R.id.operateArea);
             if (view != null) {

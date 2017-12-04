@@ -264,7 +264,7 @@ public class StockPositionFragment extends BaseFragment {
 
     private void hidePriOperateView(int index) {
         if (index < 0 && mRecyclerView.getChildCount() - 1 < index) return;
-        View viewGroup = mRecyclerView.getChildAt(index);
+        View viewGroup = mRecyclerView.getLayoutManager().findViewByPosition(index);
         if (viewGroup != null) {
             View view = viewGroup.findViewById(R.id.operateArea);
             if (view != null) {
@@ -449,8 +449,8 @@ public class StockPositionFragment extends BaseFragment {
                     @Override
                     public void onClick(View view) {
                         if (mOperateArea.getVisibility() == View.VISIBLE) {
-                            mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 100));
                             mIndex = -1;
+                            mOperateArea.startAnimation(AnimUtils.createCollapseY(mOperateArea, 100));
                         } else {
                             if (itemClickListener != null && mIndex > -1) {
                                 itemClickListener.hideOperateView(mIndex);

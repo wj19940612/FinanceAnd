@@ -226,7 +226,7 @@ public abstract class StockTradeActivity extends BaseActivity {
     }
 
     private void requestAddOptional() {
-        Client.addOption(mStock.getVarietyCode(), Stock.OPTIONAL_TYPE_STOCK)
+        Client.addOption(mStock.getVarietyCode(), mStock.getType())
                 .setTag(TAG)
                 .setIndeterminate(this)
                 .setCallback(new Callback<Resp<JsonObject>>() {
