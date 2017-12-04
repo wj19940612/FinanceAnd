@@ -274,6 +274,7 @@ public class StockOrderActivity extends BaseActivity implements BattleListFragme
         if (stockUser != null) {
             mStockAccountName.setText(stockUser.getAccountName());
             if (mCurrentStockUser != null && mCurrentStockUser.getAccount().equalsIgnoreCase(stockUser.getAccount())) {
+                LocalUser.getUser().setStockUser(stockUser);
                 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_REFRESH_MANUAL));
             } else {
                 mFundInfo.resetView();
