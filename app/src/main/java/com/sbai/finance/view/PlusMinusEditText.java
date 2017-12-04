@@ -42,6 +42,13 @@ public class PlusMinusEditText extends FrameLayout {
     private int mInputType;
     private int mImeOptions;
     private int mMaxLength;
+    private OnPlusMinusClickListener mOnPlusMinusClickListener;
+
+    public interface OnPlusMinusClickListener {
+        void onPlusClick();
+
+        void onMinusClick();
+    }
 
     public PlusMinusEditText(Context context) {
         super(context);
@@ -76,6 +83,10 @@ public class PlusMinusEditText extends FrameLayout {
         setMaxLength(mMaxLength);
     }
 
+    public void setOnPlusMinusClickListener(OnPlusMinusClickListener onPlusMinusClickListener) {
+        mOnPlusMinusClickListener = onPlusMinusClickListener;
+    }
+
     private void setMaxLength(int maxLength) {
         mEditText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
     }
@@ -102,6 +113,7 @@ public class PlusMinusEditText extends FrameLayout {
     public void setText(CharSequence text) {
         if (text == null || ValidityCheckUtil.isNumber(text)) {
             mEditText.setText(text);
+            mEditText.setSelection(mEditText.getText().toString().length());
         }
     }
 
@@ -126,9 +138,15 @@ public class PlusMinusEditText extends FrameLayout {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.minus:
+                if (mOnPlusMinusClickListener != null) {
+                    mOnPlusMinusClickListener.onMinusClick();
+                }
                 minus();
                 break;
             case R.id.plus:
+                if (mOnPlusMinusClickListener != null) {
+                    mOnPlusMinusClickListener.onPlusClick();
+                }
                 plus();
                 break;
         }

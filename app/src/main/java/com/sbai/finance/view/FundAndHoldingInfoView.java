@@ -62,6 +62,8 @@ public class FundAndHoldingInfoView extends LinearLayout {
         void sell();
 
         void fetchFund();
+
+        void recharge();
     }
 
     public FundAndHoldingInfoView(Context context) {
@@ -101,6 +103,10 @@ public class FundAndHoldingInfoView extends LinearLayout {
 
     public void setFetchFund(double fetchFund) {
         mFetchFund.setText(FinanceUtil.formatWithScale(fetchFund));
+    }
+
+    public void setRechargeViewVisible(int visibility) {
+        mRechargeScore.setVisibility(visibility);
     }
 
     public void setTodayProfit(double todayProfit) {
@@ -168,13 +174,8 @@ public class FundAndHoldingInfoView extends LinearLayout {
                 }
                 break;
             case R.id.rechargeScore:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getContext(), VirtualProductExchangeActivity.class)
-                            .putExtra(ExtraKeys.RECHARGE_TYPE, AccountFundDetail.TYPE_SCORE)
-                            .putExtra(ExtraKeys.USER_FUND, 0)
-                            .execute();
-                } else {
-                    Launcher.with(getContext(), LoginActivity.class).execute();
+                if (mOnOrderClickListener != null) {
+                    mOnOrderClickListener.recharge();
                 }
                 break;
         }
