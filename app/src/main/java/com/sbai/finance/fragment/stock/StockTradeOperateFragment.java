@@ -430,6 +430,21 @@ public class StockTradeOperateFragment extends BaseFragment {
         mStockNameCode.addTextChangedListener(mStockNameWatcher);
         mTradePrice.addTextChangedListener(mPriceWatcher);
         mTradeVolume.addTextChangedListener(mVolumeWatcher);
+        mTradeVolume.setOnPlusMinusClickListener(new PlusMinusEditText.OnPlusMinusClickListener() {
+            @Override
+            public void onPlusClick() {
+                mFullPosition.setSelected(false);
+                mHalfPosition.setSelected(false);
+                mQuarterPosition.setSelected(false);
+            }
+
+            @Override
+            public void onMinusClick() {
+                mFullPosition.setSelected(false);
+                mHalfPosition.setSelected(false);
+                mQuarterPosition.setSelected(false);
+            }
+        });
 
         updateStock(mStock);
     }
