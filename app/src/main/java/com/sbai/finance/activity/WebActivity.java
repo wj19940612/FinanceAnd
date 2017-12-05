@@ -173,6 +173,10 @@ public class WebActivity extends BaseActivity {
     }
 
     protected void initWebView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+
         // init cookies
         syncCookies(mPageUrl);
 
@@ -183,6 +187,9 @@ public class WebActivity extends BaseActivity {
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setUserAgentString(webSettings.getUserAgentString()
                 + " ###" + getString(R.string.android_web_agent) + "/1.0");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
         //mWebView.getSettings().setAppCacheEnabled(true);l
         //webSettings.setAppCachePath(getExternalCacheDir().getPath());
         webSettings.setAllowFileAccess(true);
