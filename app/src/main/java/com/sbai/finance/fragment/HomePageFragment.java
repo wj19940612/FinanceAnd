@@ -705,6 +705,7 @@ public class HomePageFragment extends BaseFragment {
         } else if (information.getStyle().equals(Banner.STYLE_FUNCTIONMODULE)) {
             //功能页面
             if (information.getJumpSource().equals(Banner.FUNC_SHARE)) {
+
                 //分享
             } else if (information.getJumpSource().equals(Banner.FUNC_REGANDLOGIN)) {
                 //注册登录
@@ -750,9 +751,7 @@ public class HomePageFragment extends BaseFragment {
                 Launcher.with(getActivity(), StudyRoomActivity.class).execute();
             } else if (information.getJumpSource().equals(Banner.MARKET_INFO)) {
                 //行情详情页
-                Launcher.with(getActivity(), StockFutureActivity.class)
-                        .putExtra(ExtraKeys.PAGE_INDEX, 0)
-                        .execute();
+                gotoStockDetailActivity(information.getJumpId());
             } else if (information.getJumpSource().equals(Banner.GAME_AWARD)) {
                 //赏金赛
                 Launcher.with(getActivity(), RewardActivity.class).execute();
@@ -801,6 +800,26 @@ public class HomePageFragment extends BaseFragment {
                 requestAllTrainingList(information.getJumpId());
             }
         }
+
+    }
+
+    private void gotoStockDetailActivity(String jumpId) {
+        Client.getStockInfo(jumpId).setTag(TAG)
+                .setCallback(new Callback<Resp<Stock>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Stock> resp) {
+                        Stock result = resp.getData();
+                        if (result != null) {
+                            if (result.getVarietyType().equalsIgnoreCase(Stock.EXPEND)) {
+                                Launcher.with(getActivity(), StockIndexActivity.class)
+                                        .putExtra(Launcher.EX_PAYLOAD, result).execute();
+                            } else {
+                                Launcher.with(getActivity(), StockDetailActivity.class).
+                                        putExtra(Launcher.EX_PAYLOAD, result).execute();
+                            }
+                        }
+                    }
+                }).fireFree();
 
     }
 
