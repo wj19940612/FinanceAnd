@@ -99,7 +99,6 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_miss_audio_reply);
         ButterKnife.bind(this);
-
         initView();
 
         int questionId = getIntent().getIntExtra(ExtraKeys.QUESTION_ID, -1);
@@ -121,6 +120,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
     @Override
     public void onMediaPlay(int IAudioId, int source) {
         mPlay.setSelected(true);
+        Log.d(TAG, "onMediaPlay: ");
         startScheduleJob(1000, 0);
     }
 
@@ -294,7 +294,6 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                         submitRecordAudio();
                     }
                 }).show();
-
     }
 
     private void submitRecordAudio() {

@@ -237,6 +237,7 @@
     <string name="please_input_old_password">请输入旧安全密码</string>
     <string name="please_input_new_password">请输入新安全密码</string>
     <string name="please_confirm_new_password">请确认新安全密码</string>
+    <string name="please_sure_confirm_new_password">请再次确认安全密码</string>
     <string name="modify_success">修改成功</string>
     <string name="modify_fail">修改失败</string>
     <string name="set_success">设置成功</string>

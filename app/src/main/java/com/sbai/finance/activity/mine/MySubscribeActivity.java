@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
@@ -74,7 +75,7 @@ public class MySubscribeActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MyCollect radioInfo = (MyCollect) parent.getAdapter().getItem(position);
-                if(radioInfo.getShow() == 0){//下架的电台不让点击
+                if (radioInfo.getShow() == 0) {//下架的电台不让点击
                     return;
                 }
                 requestClickNewInfo(radioInfo);
@@ -252,11 +253,11 @@ public class MySubscribeActivity extends BaseActivity {
                 })
                         .into(mCover);
                 mTitle.setText(radioInfo.getRadioName());
-                setSpanIconText(mSubtitle, radioInfo.getRadioIntroduction(), context);
+                setSpanIconText(mSubtitle, Html.fromHtml(radioInfo.getRadioIntroduction()).toString(), context);
                 mNumber.setText(String.valueOf(radioInfo.getListenNumber()));
-                if(radioInfo.getShow() == 1){//显示
+                if (radioInfo.getShow() == 1) {//显示
                     mTime.setText(DateUtil.formatDefaultStyleTime(radioInfo.getSubscribeTime()));
-                }else if(radioInfo.getShow() == 0){//下架
+                } else if (radioInfo.getShow() == 0) {//下架
                     mTime.setText("该电台已下架");
                 }
                 if (radioInfo.getIsRead() != 0) {

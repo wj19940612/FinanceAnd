@@ -83,7 +83,7 @@ android {
     productFlavors {
 
         dev {
-            minSdkVersion 21
+//            minSdkVersion 21
             versionNameSuffix '-dev'
             applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
@@ -102,8 +102,8 @@ android {
         alpha {
 //            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-alpha'
-            versionCode 153
-            versionName "2.0.1204033"
+            versionCode 155
+            versionName "2.0.120502"
             buildConfigField('String', 'HOST', '\"testlemi.ailemi.com\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 

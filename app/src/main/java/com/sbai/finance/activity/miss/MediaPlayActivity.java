@@ -7,13 +7,17 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.audio.MissAudioManager;
+import com.sbai.finance.view.MissFloatWindow;
 
 /**
  * Created by ${wangJie} on 2017/11/23.
@@ -23,6 +27,8 @@ import com.sbai.finance.utils.audio.MissAudioManager;
 public abstract class MediaPlayActivity extends BaseActivity {
 
     protected MediaPlayService mMediaPlayService;
+
+    protected MissFloatWindow mRootMissFloatWindow;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -34,6 +40,23 @@ public abstract class MediaPlayActivity extends BaseActivity {
         public void onServiceDisconnected(ComponentName componentName) {
         }
     };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+        if (mRootMissFloatWindow != null) {
+            if (audio instanceof Question) {
+                Question playQuestion = (Question) audio;
+                mRootMissFloatWindow.setMissAvatar(playQuestion.getCustomPortrait());
+            } else if (audio instanceof Radio) {
+                mRootMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+            }
+            if (!MissAudioManager.get().isPlaying()) {
+                mRootMissFloatWindow.setVisibility(View.GONE);
+            }
+        }
+    }
 
     @Override
     protected void onStart() {

@@ -113,6 +113,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mRootMissFloatWindow = mMissFloatWindow;
         initView();
         initFloatView();
         requestRadioList();
@@ -122,13 +123,13 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
     private void changeFloatWindowView() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-        if (audio instanceof Question) {
-            Question playQuestion = (Question) audio;
-            mMissFloatWindow.setMissAvatar(playQuestion.getCustomPortrait());
-        } else if (audio instanceof Radio) {
-            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
-        }
-        if (audio != null) {
+        if(mMissFloatWindow!=null){
+            if (audio instanceof Question) {
+                Question playQuestion = (Question) audio;
+                mMissFloatWindow.setMissAvatar(playQuestion.getCustomPortrait());
+            } else if (audio instanceof Radio) {
+                mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+            }
             if (!MissAudioManager.get().isPlaying()) {
                 mMissFloatWindow.setVisibility(View.GONE);
             }
@@ -142,7 +143,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         requestRadioList();
         requestMissSwitcherList();
         mMissRadioLayout.updatePlayStatus();
-        changeFloatWindowView();
     }
 
     @Override
@@ -152,24 +152,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             requestMissList();
             requestRadioList();
             requestMissSwitcherList();
-        }
-    }
-
-    private void updateRadioFloatWindow() {
-        if (MissAudioManager.get().isPlaying()) {
-            MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-            if (audio != null) {
-                if (audio instanceof Radio) {
-                    mMissFloatWindow.setVisibility(View.VISIBLE);
-                    mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
-                } else if (audio instanceof Question) {
-                    if (MissAudioManager.get().getSource() == MediaPlayService.MEDIA_SOURCE_MISS_PROFILE) {
-                        mMissFloatWindow.setVisibility(View.VISIBLE);
-                        mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
-                    }
-                }
-            }
-
         }
     }
 
@@ -371,6 +353,10 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
                 // 在提问页面需要更新数据 然后回调，用来区分那个页面可见
                 mPosition = position;
                 setVisibleFragmentLabel(position);
+                MissAskFragment fragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(position);
+                if (fragment != null) {
+                    fragment.refreshData();
+                }
             }
 
             @Override
