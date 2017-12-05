@@ -3271,10 +3271,10 @@ public class Client {
     }
 
     /**
-     * 对收藏的东西已读
+     * 对收藏的东西已读,这里type固定为4，是订阅的电台
      */
-    public static API readCollect(int dataId) {
-        return new API(POST, "/user/user/readCollect.do", new ApiParams().put("id", dataId));
+    public static API readCollect(String dataId) {
+        return new API(POST, "/user/user/readCollect.do", new ApiParams().put("dataId", dataId).put("type", 4));
     }
 
     /**

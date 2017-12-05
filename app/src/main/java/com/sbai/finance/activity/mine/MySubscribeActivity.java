@@ -77,7 +77,6 @@ public class MySubscribeActivity extends BaseActivity {
                 if (radioInfo.getShow() == 0) {//下架的电台不让点击
                     return;
                 }
-                requestClickNewInfo(radioInfo);
                 Launcher.with(MySubscribeActivity.this, RadioStationListActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(radioInfo.getDataId()))
                         .execute();
@@ -185,10 +184,6 @@ public class MySubscribeActivity extends BaseActivity {
         if (mSwipeRefreshLayout.isLoading()) {
             mSwipeRefreshLayout.setLoading(false);
         }
-    }
-
-    private void requestClickNewInfo(MyCollect radioInfo) {
-        Client.readCollect(radioInfo.getId()).setTag(TAG).fireFree();
     }
 
     public static class SubscribeAdapter extends ArrayAdapter<MyCollect> {
