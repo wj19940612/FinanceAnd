@@ -27,6 +27,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.RadioInfo;
 import com.sbai.finance.model.radio.Radio;
@@ -109,6 +110,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         initHeaderView();
         initSwipeRefreshLayout();
         refreshData();
+        requestClickNewInfo(mRadioStationId);
     }
 
     @Override
@@ -319,6 +321,10 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
                 }
             }
         }).fireFree();
+    }
+
+    private void requestClickNewInfo(int dataId) {
+        Client.readCollect(String.valueOf(dataId)).setTag(TAG).fireFree();
     }
 
     private void updateAudio(List<Radio> data) {
