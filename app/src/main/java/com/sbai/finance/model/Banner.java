@@ -75,7 +75,7 @@ public class Banner implements Parcelable {
     private String subTitle;//副标题
     private int userCount;//参与人数
     private String montageData;//活动关键字
-    private String jumpSource;//原生页面要跳到哪个原生页面
+    private String jumpType;//原生页面要跳到哪个原生页面
     private String jumpId;//原生页面跳过去带Id传过去
 
     //gift 独有的
@@ -256,12 +256,12 @@ public class Banner implements Parcelable {
         this.montageData = montageData;
     }
 
-    public String getJumpSource() {
-        return jumpSource;
+    public String getJumpType() {
+        return jumpType;
     }
 
-    public void setJumpSource(String jumpSource) {
-        this.jumpSource = jumpSource;
+    public void setJumpType(String jumpType) {
+        this.jumpType = jumpType;
     }
 
     public String getJumpId() {
@@ -323,7 +323,7 @@ public class Banner implements Parcelable {
         dest.writeString(this.montageData);
         dest.writeInt(this.clicks);
         dest.writeString(this.smallPic);
-        dest.writeString(this.jumpSource);
+        dest.writeString(this.jumpType);
         dest.writeString(this.jumpId);
     }
 
@@ -350,7 +350,7 @@ public class Banner implements Parcelable {
         this.clicks = in.readInt();
         this.smallPic = in.readString();
         this.jumpId = in.readString();
-        this.jumpSource = in.readString();
+        this.jumpType = in.readString();
     }
 
     public static final Creator<Banner> CREATOR = new Creator<Banner>() {
