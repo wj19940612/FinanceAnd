@@ -417,7 +417,7 @@ public class MissAskFragment extends MediaPlayFragment {
 
 
     private void updateLatestQuestionList(List<Question> questionList, boolean isRefresh) {
-        if ((questionList == null || questionList.isEmpty())|| mQuestionList.isEmpty()) {
+        if ((questionList == null || questionList.isEmpty()) || mQuestionList.isEmpty()) {
             mEmpty.setVisibility(View.VISIBLE);
             mEmptyRecyclerView.setVisibility(View.GONE);
         } else {
@@ -428,9 +428,7 @@ public class MissAskFragment extends MediaPlayFragment {
         if (questionList.size() < Client.DEFAULT_PAGE_SIZE) { // load completed
             mLoadMore = false;
         } else {
-            if (mMissAskType == MISS_ASK_TYPE_LATEST) {
-                mLoadMore = true;
-            }
+            mLoadMore = true;
         }
         if (!questionList.isEmpty()) {
             mCreateTime = questionList.get(questionList.size() - 1).getCreateTime();
