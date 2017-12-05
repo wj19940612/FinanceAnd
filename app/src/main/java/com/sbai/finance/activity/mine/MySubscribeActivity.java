@@ -78,9 +78,9 @@ public class MySubscribeActivity extends BaseActivity {
                     return;
                 }
                 requestClickNewInfo(radioInfo);
-//                Launcher.with(MySubscribeActivity.this, RadioStationListActivity.class)
-//                        .putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(radioInfo.getDataId()))
-//                        .execute();
+                Launcher.with(MySubscribeActivity.this, RadioStationListActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(radioInfo.getDataId()))
+                        .execute();
 
             }
         });
