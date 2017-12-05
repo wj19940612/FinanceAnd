@@ -126,8 +126,15 @@ public class PushIntentService extends GTIntentService {
         }
 
         String channelId = getString(R.string.app_name);
+        boolean b = !TextUtils.isEmpty(pushMessageModel.getTitle());
+        String notificationTitle;
+        if (b) {
+            notificationTitle = pushMessageModel.getTitle();
+        } else {
+            notificationTitle = channelId;
+        }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId);
-        builder.setContentTitle(pushMessageModel.getTitle());
+        builder.setContentTitle(notificationTitle);
         builder.setContentText(pushMessageModel.getMsg());
         builder.setAutoCancel(true);
         builder.setWhen(System.currentTimeMillis());

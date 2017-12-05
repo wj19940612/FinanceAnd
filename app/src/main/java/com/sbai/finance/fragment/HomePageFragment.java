@@ -252,20 +252,8 @@ public class HomePageFragment extends BaseFragment {
         {
             @Override
             public void onBannerClick(Banner information) {
-                umengEventCount(UmengCountEventId.PAGE_BANNER);
                 requestClickBanner(information.getId());
-                if (information.isH5Style()) {
-                    if (!TextUtils.isEmpty(information.getContent())) {
-                        Launcher.with(getActivity(), WebActivity.class)
-                                .putExtra(WebActivity.EX_URL, information.getContent())
-                                .execute();
-                    }
-                } else {
-                    Launcher.with(getActivity(), WebActivity.class)
-                            .putExtra(WebActivity.EX_HTML, information.getContent())
-                            .putExtra(WebActivity.EX_TITLE, information.getTitle())
-                            .execute();
-                }
+                clickBannerAndGotoActivity(information);
             }
         });
         mBusinessBanner.setOnViewClickListener(new BusinessBanner.OnViewClickListener()
@@ -704,15 +692,15 @@ public class HomePageFragment extends BaseFragment {
                     .execute();
         } else if (information.getStyle().equals(Banner.STYLE_FUNCTIONMODULE)) {
             //功能页面
-            if (information.getJumpSource().equals(Banner.FUNC_SHARE)) {
+            if (information.getJumpType().equals(Banner.FUNC_SHARE)) {
 
                 //分享
-            } else if (information.getJumpSource().equals(Banner.FUNC_REGANDLOGIN)) {
+            } else if (information.getJumpType().equals(Banner.FUNC_REGANDLOGIN)) {
                 //注册登录
                 if (!LocalUser.getUser().isLogin()) {
                     openLoginPage();
                 }
-            } else if (information.getJumpSource().equals(Banner.FUNC_EVALUATE)) {
+            } else if (information.getJumpType().equals(Banner.FUNC_EVALUATE)) {
                 //金融测评
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.ME_FINANCE_TEST);
@@ -721,7 +709,7 @@ public class HomePageFragment extends BaseFragment {
                 } else {
                     openLoginPage();
                 }
-            } else if (information.getJumpSource().equals(Banner.FUNC_SHARE)) {
+            } else if (information.getJumpType().equals(Banner.FUNC_SHARE)) {
                 //实名认证
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.ME_CERTIFICATION);
@@ -731,35 +719,35 @@ public class HomePageFragment extends BaseFragment {
                 }
             }
         } else if (information.getStyle().equals(Banner.STYLE_ORIGINALPAGE)) {
-            if (information.getJumpSource().equals(Banner.QUESTION_INFO)) {
+            if (information.getJumpType().equals(Banner.QUESTION_INFO)) {
                 //问答详情页
                 Launcher.with(getActivity(), QuestionDetailActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(information.getJumpId()))
                         .execute();
-            } else if (information.getJumpSource().equals(Banner.EXPLAIN_IDNEX)) {
+            } else if (information.getJumpType().equals(Banner.EXPLAIN_IDNEX)) {
                 //姐说主页
                 ((MainActivity) getActivity()).switchToMissFragment();
-            } else if (information.getJumpSource().equals(Banner.NEWS_INFO)) {
+            } else if (information.getJumpType().equals(Banner.NEWS_INFO)) {
                 //要闻详情页
                 Launcher.with(getActivity(), DailyReportDetailActivity.class)
                         .putExtra(DailyReportDetailActivity.EX_ID, information.getJumpId())
                         .putExtra(DailyReportDetailActivity.EX_RAW_COOKIE, CookieManger.getInstance().getRawCookie())
                         .execute();
-            } else if (information.getJumpSource().equals(Banner.TOPIC)) {
+            } else if (information.getJumpType().equals(Banner.TOPIC)) {
                 //一日一题
                 umengEventCount(UmengCountEventId.PAGE_STUDY_ROOM);
                 Launcher.with(getActivity(), StudyRoomActivity.class).execute();
-            } else if (information.getJumpSource().equals(Banner.MARKET_INFO)) {
+            } else if (information.getJumpType().equals(Banner.MARKET_INFO)) {
                 //行情详情页
                 gotoStockDetailActivity(information.getJumpId());
-            } else if (information.getJumpSource().equals(Banner.GAME_AWARD)) {
+            } else if (information.getJumpType().equals(Banner.GAME_AWARD)) {
                 //赏金赛
                 Launcher.with(getActivity(), RewardActivity.class).execute();
-            } else if (information.getJumpSource().equals(Banner.MARKET_NORMAL)) {
+            } else if (information.getJumpType().equals(Banner.MARKET_NORMAL)) {
                 //普通场
                 umengEventCount(UmengCountEventId.ARENA_FUTURE_PK);
                 Launcher.with(getActivity(), BattleListActivity.class).execute();
-            } else if (information.getJumpSource().equals(Banner.USER_INFO)) {
+            } else if (information.getJumpType().equals(Banner.USER_INFO)) {
                 //用户信息页
                 umengEventCount(UmengCountEventId.ME_MOD_USER_INFO);
                 if (LocalUser.getUser().isLogin()) {
@@ -767,7 +755,7 @@ public class HomePageFragment extends BaseFragment {
                 } else {
                     openLoginPage();
                 }
-            } else if (information.getJumpSource().equals(Banner.USER_PURSE)) {
+            } else if (information.getJumpType().equals(Banner.USER_PURSE)) {
                 //钱包
                 umengEventCount(UmengCountEventId.ME_WALLET);
                 if (LocalUser.getUser().isLogin()) {
@@ -776,7 +764,7 @@ public class HomePageFragment extends BaseFragment {
                 } else {
                     openLoginPage();
                 }
-            } else if (information.getJumpSource().equals(Banner.USER_FEEDBACK)) {
+            } else if (information.getJumpType().equals(Banner.USER_FEEDBACK)) {
                 //意见反馈
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.ME_FEEDBACK);
@@ -784,7 +772,7 @@ public class HomePageFragment extends BaseFragment {
                 } else {
                     openLoginPage();
                 }
-            } else if (information.getJumpSource().equals(Banner.APPRAISE)) {
+            } else if (information.getJumpType().equals(Banner.APPRAISE)) {
                 //乐米学分页
                 if (LocalUser.getUser().isLogin()) {
                     if (mUserEachTrainingScoreModel != null) {
@@ -796,7 +784,7 @@ public class HomePageFragment extends BaseFragment {
                 } else {
                     openLoginPage();
                 }
-            } else if (information.getJumpSource().equals(Banner.STOCK) || information.getJumpSource().equals(Banner.K_TRAIN) || information.getJumpSource().equals(Banner.AVERAGE_TRAIN) || information.getJumpSource().equals(Banner.ANNUAL)) {
+            } else if (information.getJumpType().equals(Banner.STOCK) || information.getJumpType().equals(Banner.K_TRAIN) || information.getJumpType().equals(Banner.AVERAGE_TRAIN) || information.getJumpType().equals(Banner.ANNUAL)) {
                 requestAllTrainingList(information.getJumpId());
             }
         }
