@@ -259,6 +259,12 @@ public class MissAskFragment extends MediaPlayFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        refreshData();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mEmptyRecyclerView.clearOnChildAttachStateChangeListeners();
