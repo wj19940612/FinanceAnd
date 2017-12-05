@@ -1,9 +1,7 @@
 package com.sbai.finance.view;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -129,7 +127,7 @@ public class HomeBanner extends FrameLayout {
         if (informationList.size() == 0) {
             setVisibility(View.GONE);
             return;
-        }else {
+        } else {
             setVisibility(View.VISIBLE);
         }
         filterEmptyInformation(informationList);
