@@ -66,7 +66,7 @@ public class StockPositionFragment extends BaseFragment {
     @BindView(R.id.lastAndCostPrice)
     TextView mLastAndCostPrice;
     @BindView(R.id.recyclerView)
-    EmptyRecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
     @BindView(R.id.empty)
     NestedScrollView mEmpty;
     Unbinder unbinder;
@@ -149,6 +149,13 @@ public class StockPositionFragment extends BaseFragment {
         mPositionAdapter.setManualRefresh(manualRefresh);
         mPositionAdapter.clear();
         mPositionAdapter.addAll(data.getList());
+        if (data.getList().isEmpty()) {
+            mEmpty.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+        } else {
+            mEmpty.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
         for (Position position : data.getList()) {
             mPositionMap.put(position.getVarietyCode(), position);
         }
@@ -184,7 +191,6 @@ public class StockPositionFragment extends BaseFragment {
     }
 
     private void initRecyclerView() {
-        mRecyclerView.setEmptyView(mEmpty);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mPositionAdapter = new PositionAdapter(getActivity(), new PositionAdapter.ItemClickListener() {
             @Override
@@ -347,12 +353,16 @@ public class StockPositionFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mPositionList.get(position), mLastPriceMap, mItemClickListener, mContext, position);
+            if (position < mPositionList.size()) {
+                holder.bindDataWithView(mPositionList.get(position), mLastPriceMap, mItemClickListener, mContext, position);
+            } else {
+                holder.bindDataWithView(null, mLastPriceMap, mItemClickListener, mContext, position);
+            }
         }
 
         @Override
         public int getItemCount() {
-            return mPositionList.size();
+            return mPositionList.size() + 1;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
@@ -382,6 +392,8 @@ public class StockPositionFragment extends BaseFragment {
             TextView mSell;
             @BindView(R.id.positionDetail)
             TextView mPositionDetail;
+            @BindView(R.id.split)
+            View mSplit;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -390,6 +402,11 @@ public class StockPositionFragment extends BaseFragment {
 
             public void bindDataWithView(final Position stockPosition, Map<String, String> lastPriceMap,
                                          final ItemClickListener itemClickListener, final Context context, final int position) {
+                if (position == mPositionList.size()) {
+                    resetView();
+                    return;
+                }
+                mSplit.setVisibility(View.VISIBLE);
                 int color = ContextCompat.getColor(context, R.color.blackPrimary);
                 String lastPriceStr = lastPriceMap.get(stockPosition.getVarietyCode());
                 if (!TextUtils.isEmpty(lastPriceStr)) {
@@ -492,6 +509,20 @@ public class StockPositionFragment extends BaseFragment {
             private void hideOperateView() {
                 mOperateArea.setVisibility(View.GONE);
                 mIndex = -1;
+            }
+
+            private void resetView() {
+                mSplit.setVisibility(View.GONE);
+                mPositionArea.setOnClickListener(null);
+                mOperateArea.setVisibility(View.GONE);
+                mStockName.setText(null);
+                mPositionValue.setText(null);
+                mPositionAmount.setText(null);
+                mEnableAmount.setText(null);
+                mLastPrice.setText(null);
+                mCostPrice.setText(null);
+                mFloatValue.setText(null);
+                mFloatRate.setText(null);
             }
 
         }
