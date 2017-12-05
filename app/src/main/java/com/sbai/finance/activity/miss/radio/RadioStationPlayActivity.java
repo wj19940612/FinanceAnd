@@ -142,7 +142,9 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        mSet.clear();
         mPage = 0;
+        mRecyclerView.scrollToPosition(0);
         requestAudioDetails(true);
         requestRadioReplyList();
         requestRadioDetails();

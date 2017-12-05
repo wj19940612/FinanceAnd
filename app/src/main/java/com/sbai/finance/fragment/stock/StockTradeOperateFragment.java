@@ -417,6 +417,8 @@ public class StockTradeOperateFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         TextViewUtils.setTextViewSize(getView().findViewById(R.id.fivePriceView), 12);
+        setBackground4FiveMarketData();
+
         if (mTradeType == StockTradeOperateActivity.TRADE_TYPE_BUY) {
             mTradePrice.setHint(R.string.buy_price);
             mTradeVolume.setHint(R.string.buy_volume);
@@ -447,6 +449,19 @@ public class StockTradeOperateFragment extends BaseFragment {
         });
 
         updateStock(mStock);
+    }
+
+    private void setBackground4FiveMarketData() {
+        getView().findViewById(R.id.ask5).setBackgroundResource(R.drawable.btn_transparent);
+        getView().findViewById(R.id.ask4).setBackgroundResource(R.drawable.btn_transparent);
+        getView().findViewById(R.id.ask3).setBackgroundResource(R.drawable.btn_transparent);
+        getView().findViewById(R.id.ask2).setBackgroundResource(R.drawable.btn_transparent);
+        getView().findViewById(R.id.ask1).setBackgroundResource(R.drawable.btn_transparent);
+        getView().findViewById(R.id.bid1).setBackgroundResource(R.drawable.btn_transparent);
+        getView().findViewById(R.id.bid2).setBackgroundResource(R.drawable.btn_transparent);
+        getView().findViewById(R.id.bid3).setBackgroundResource(R.drawable.btn_transparent);
+        getView().findViewById(R.id.bid4).setBackgroundResource(R.drawable.btn_transparent);
+        getView().findViewById(R.id.bid5).setBackgroundResource(R.drawable.btn_transparent);
     }
 
     public void updateStock(Stock stock) {

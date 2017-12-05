@@ -52,4 +52,6 @@ public class TextViewUtils {
     public static String getTrim(TextView textView) {
         return textView.getText().toString().trim();
     }
+
+
 }
