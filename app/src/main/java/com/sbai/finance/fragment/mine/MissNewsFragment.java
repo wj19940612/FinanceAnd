@@ -336,10 +336,12 @@ public class MissNewsFragment extends BaseFragment implements
                 if (item.getSourceUser() != null) {
                     if (item.getType() == MissMessage.TYPE_MISS_ANSWER) {
                         if (!TextUtils.isEmpty(item.getSourceUser().getName())) {
-                            if (item.getSourceUser().getName().length() == 8) {
-                                mUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(13, context.getResources()));
+                            if (item.getSourceUser().getName().length() >= 7) {
+                                mUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(12, context.getResources()));
+                                mMessageType.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(12, context.getResources()));
                             } else {
-                                mUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(14, context.getResources()));
+                                mUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(13, context.getResources()));
+                                mMessageType.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(13, context.getResources()));
                             }
                             if (item.getSourceUser().getName().length() > 8) {
                                 item.getSourceUser().setName(item.getSourceUser().getName().substring(0, 8) + "...");
@@ -354,10 +356,12 @@ public class MissNewsFragment extends BaseFragment implements
 
                     } else {
                         if (!TextUtils.isEmpty(item.getSourceUser().getUserName())) {
-                            if (item.getSourceUser().getUserName().length() == 8) {
-                                mUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(13, context.getResources()));
+                            if (item.getSourceUser().getUserName().length() >= 7) {
+                                mUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(12, context.getResources()));
+                                mMessageType.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(12, context.getResources()));
                             } else {
-                                mUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(14, context.getResources()));
+                                mUserName.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(13, context.getResources()));
+                                mMessageType.setTextSize(TypedValue.COMPLEX_UNIT_PX, Display.sp2Px(13, context.getResources()));
                             }
                             if (item.getSourceUser().getUserName().length() > 8) {
                                 item.getSourceUser().setUserName(item.getSourceUser().getUserName().substring(0, 8) + "...");
