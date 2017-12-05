@@ -150,7 +150,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
 
         initHeaderView();
 
-        requestQuestionDetail();
         requestQuestionReplyList(true);
 
         initSwipeRefreshLayout();
@@ -161,6 +160,12 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                 requestShareData();
             }
         });
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        requestQuestionDetail();
     }
 
     private void initView() {
