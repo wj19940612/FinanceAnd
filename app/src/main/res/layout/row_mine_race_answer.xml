@@ -32,11 +32,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginRight="6dp"
+                    android:layout_marginRight="16dp"
                     android:lineSpacingExtra="3dp"
                     android:textColor="@color/primary_or_unlucky_text_color"
-                    android:textSize="16sp"
-                    tools:text=""/>
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/content"
@@ -68,7 +67,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="10dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:background="@drawable/bg_red_circular"/>
             </RelativeLayout>
 

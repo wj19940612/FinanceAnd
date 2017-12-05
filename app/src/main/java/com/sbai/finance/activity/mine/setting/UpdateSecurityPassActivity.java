@@ -31,6 +31,8 @@ public class UpdateSecurityPassActivity extends BaseActivity {
     private static final int PAGE_TYPE_MODIFY = 101;
     private static final int PAGE_TYPE_FORGET_MODIFY = 102;
 
+    private static final int FAILED_PASS_ERROR = 2006;//密码不正确的返回码
+
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
 
@@ -117,7 +119,7 @@ public class UpdateSecurityPassActivity extends BaseActivity {
             if (mPasswordInputCount == 1) {
                 mNewPassWord = password;
                 mPasswordInputCount++;
-//                mSafetyPasswordHint.setText(R.string.please_confirm_new_password);
+                mSafetyPasswordHint.setText(R.string.please_confirm_new_password);
                 mSecurityPassword.clearSafetyNumber();
 
             } else if (mPasswordInputCount == 2) {
@@ -187,7 +189,7 @@ public class UpdateSecurityPassActivity extends BaseActivity {
                             @Override
                             protected void onRespFailure(Resp failedResp) {
                                 super.onRespFailure(failedResp);
-                                if (failedResp.getCode() == 600) {
+                                if (failedResp.getCode() == 600 || failedResp.getCode() == FAILED_PASS_ERROR) {
                                     mSecurityPassword.clearSafetyNumber();
                                 }
                             }
