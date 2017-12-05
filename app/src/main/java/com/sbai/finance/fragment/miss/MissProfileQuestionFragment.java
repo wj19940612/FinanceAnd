@@ -259,7 +259,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         int firstVisiblePosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         int lastVisiblePosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
         boolean visibleItemsStarted = false;
-        if (firstVisiblePosition > 0 && lastVisiblePosition > 0 && mQuestionList.size() > 0) {
+        if (firstVisiblePosition >= 0 && lastVisiblePosition >= 0 && mQuestionList.size() > 0) {
             if (mQuestionList != null && mQuestionList.size() > 0) {
                 for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
                     if (i >= mQuestionListAdapter.getCount()) continue; // Skip header
