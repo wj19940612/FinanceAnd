@@ -49,7 +49,6 @@ import butterknife.ButterKnife;
  */
 
 public class MySubscribeActivity extends BaseActivity {
-    public static final String CLICKTAG = "clicktag";
 
     @BindView(android.R.id.list)
     ListView mListView;
@@ -79,9 +78,9 @@ public class MySubscribeActivity extends BaseActivity {
                     return;
                 }
                 requestClickNewInfo(radioInfo);
-                Launcher.with(MySubscribeActivity.this, RadioStationListActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(radioInfo.getDataId()))
-                        .execute();
+//                Launcher.with(MySubscribeActivity.this, RadioStationListActivity.class)
+//                        .putExtra(Launcher.EX_PAYLOAD, Integer.valueOf(radioInfo.getDataId()))
+//                        .execute();
 
             }
         });
@@ -189,7 +188,7 @@ public class MySubscribeActivity extends BaseActivity {
     }
 
     private void requestClickNewInfo(MyCollect radioInfo) {
-        Client.readCollect(radioInfo.getId()).setTag(CLICKTAG).fire();
+        Client.readCollect(radioInfo.getId()).setTag(TAG).fireFree();
     }
 
     public static class SubscribeAdapter extends ArrayAdapter<MyCollect> {
