@@ -616,7 +616,7 @@ public class Client {
                 .put("latitude", LocalUser.getUser().getUserInfo().getLatitude())
         );
     }
-    
+
     /**
      * 获取首页的 banner
      *

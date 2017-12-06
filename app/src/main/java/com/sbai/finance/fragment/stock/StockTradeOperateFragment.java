@@ -29,6 +29,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.StockUtil;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.TextViewUtils;
@@ -466,13 +467,13 @@ public class StockTradeOperateFragment extends BaseFragment {
 
     public void updateStock(Stock stock) {
         mStockNameCode.removeTextChangedListener(mStockNameWatcher);
-        mTradePrice.requestFocus();
 
         mStock = stock;
 
         if (mStock != null) {
             mStockNameCode.setText(mStock.getVarietyName() + " " + mStock.getVarietyCode());
             mStockNameCode.setSelection(mStockNameCode.getText().length());
+            KeyBoardUtils.closeKeyboard(mStockNameCode);
 
         } else {
             mStockNameCode.setText(null);
@@ -565,6 +566,7 @@ public class StockTradeOperateFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.stockNameCode:
+                mStockNameCode.removeTextChangedListener(mStockNameWatcher);
                 mStockNameCode.addTextChangedListener(mStockNameWatcher);
                 break;
 
