@@ -112,7 +112,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
         } else {
             mTitleBar.setTitle(R.string.wait_me_answer);
         }
-        Client.updateAnswerReadStatus(questionId).setTag(TAG).fire();
+        Client.updateAnswerReadStatus(questionId).setTag(TAG).fireFree();
         requestQuestionDetail(questionId);
     }
 
