@@ -25,10 +25,11 @@
 
             <include layout="@layout/layout_stock_business_title"/>
 
-            <com.sbai.finance.view.EmptyRecyclerView
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/empty"
@@ -40,7 +41,7 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="100dp"
                 android:text="@string/now_not_has_data"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
