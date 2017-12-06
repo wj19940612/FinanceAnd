@@ -37,9 +37,10 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.utils.audio.MissAudioManager;
+import com.sbai.finance.utils.audio.MissVoiceRecorder;
 import com.sbai.finance.view.HasLabelImageLayout;
 
 import java.util.ArrayList;
@@ -398,13 +399,13 @@ public class MissAskFragment extends MediaPlayFragment {
     }
 
     private void updateQuestionListenCount(final Question item) {
-        if (!item.isListene()) {
+        if (!MissVoiceRecorder.isHeard(item.getId())) {
             Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
                 @Override
                 protected void onRespSuccess(Resp<JsonPrimitive> resp) {
                     if (resp.isSuccess()) {
-                        item.setListene(true);
                         item.setListenCount(item.getListenCount() + 1);
+                        MissVoiceRecorder.markHeard(item.getId());
                         mMissAskAdapter.notifyDataSetChanged();
                     }
                 }
@@ -412,7 +413,7 @@ public class MissAskFragment extends MediaPlayFragment {
                 @Override
                 protected void onRespFailure(Resp failedResp) {
                     if (failedResp.getCode() == Resp.CODE_LISTENED) {
-                        item.setListene(true);
+                        MissVoiceRecorder.markHeard(item.getId());
                         mMissAskAdapter.notifyDataSetChanged();
                     }
                 }
@@ -584,7 +585,7 @@ public class MissAskFragment extends MediaPlayFragment {
                 mQuestion.setText(item.getQuestionContext());
                 mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
 
-                if (!item.isListene()) {
+                if (MissVoiceRecorder.isHeard(item.getId())) {
                     mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
                 } else {
                     mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));

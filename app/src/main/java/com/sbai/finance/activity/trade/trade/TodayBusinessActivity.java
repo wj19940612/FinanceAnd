@@ -38,7 +38,7 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 public class TodayBusinessActivity extends BaseActivity {
 
     @BindView(R.id.recyclerView)
-    EmptyRecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
     @BindView(R.id.empty)
     TextView mEmpty;
     @BindView(R.id.swipeRefreshLayout)
@@ -94,7 +94,6 @@ public class TodayBusinessActivity extends BaseActivity {
     }
 
     private void initRecyclerView() {
-        mRecyclerView.setEmptyView(mEmpty);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mBusinessAdapter = new StockEntrustFragment.EntrustAdapter(getActivity(), false);
         mRecyclerView.setAdapter(mBusinessAdapter);
@@ -179,20 +178,23 @@ public class TodayBusinessActivity extends BaseActivity {
     }
 
     private void updateBusiness(List<Entrust> data, boolean isRefresh) {
-        if (data == null || data.isEmpty()) {
+
+        if (isRefresh) {
+            mBusinessAdapter.clear();
+        }
+        if (data.size() < Client.DEFAULT_PAGE_SIZE) {
+            mLoadMore = false;
+        } else {
+            mPage++;
+            mLoadMore = true;
+        }
+        mBusinessAdapter.addAll(data);
+        if (mBusinessAdapter.isEmpty()) {
+            mRecyclerView.setVisibility(View.GONE);
             mEmpty.setVisibility(View.VISIBLE);
         } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
             mEmpty.setVisibility(View.GONE);
-            if (isRefresh) {
-                mBusinessAdapter.clear();
-            }
-            if (data.size() < Client.DEFAULT_PAGE_SIZE) {
-                mLoadMore = false;
-            } else {
-                mPage++;
-                mLoadMore = true;
-            }
-            mBusinessAdapter.addAll(data);
         }
     }
 

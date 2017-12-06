@@ -124,7 +124,6 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
     @Override
     public void onMediaPlay(int IAudioId, int source) {
         mPlay.setSelected(true);
-        Log.d(TAG, "onMediaPlay: ");
         startScheduleJob(1000, 0);
     }
 

@@ -183,7 +183,6 @@ public class UpdateSecurityPassActivity extends BaseActivity {
                                 mPasswordInputCount++;
                                 mSafetyPasswordHint.setText(R.string.please_input_new_password);
                                 mSecurityPassword.clearSafetyNumber();
-                                toastMassage(resp);
                             }
 
                             @Override
