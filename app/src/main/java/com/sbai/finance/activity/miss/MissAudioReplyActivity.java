@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.ExtraKeys;
@@ -28,6 +29,9 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.audio.MissAudioManager;
+import com.sbai.finance.utils.ffmpeg.AndroidAudioConverter;
+import com.sbai.finance.utils.ffmpeg.AudioFormat;
+import com.sbai.finance.utils.ffmpeg.IConvertCallback;
 import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -154,6 +158,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
     public void onTimeUp(int count) {
         super.onTimeUp(count);
         int time = --mTotalTime;
+        if (time < 0) return;
         mAudioLength.setText(getString(R.string.voice_time, time));
     }
 
@@ -195,6 +200,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                     mMissReplyAnswer.setAudioPath(replyVOBean.getCustomContext());
                 }
                 mTotalTime = replyVOBean.getSoundTime();
+                mRecordAudioLength = replyVOBean.getSoundTime();
                 mAudioLength.setText(getString(R.string.voice_time, replyVOBean.getSoundTime()));
             }
             changeSubmitStatus(SUBMIT_SUCCESS);
@@ -296,38 +302,72 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                 }).show();
     }
 
+
+    public void convertAudio(String path) {
+        /**
+         *  Update with a valid audio file!
+         *  Supported formats: {@link AndroidAudioConverter.AudioFormat}
+         */
+//        File wavFile = new File(Environment.getExternalStorageDirectory(), "recorded_audio.wav");
+        File file = new File(path);
+        IConvertCallback callback = new IConvertCallback() {
+            @Override
+            public void onSuccess(File convertedFile) {
+
+                submitMp3File(convertedFile);
+
+//                Toast.makeText(MissAudioReplyActivity.this, "SUCCESS: " + convertedFile.getPath(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Exception error) {
+                Toast.makeText(MissAudioReplyActivity.this, "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        };
+        AndroidAudioConverter.with(this)
+                .setFile(file)
+                .setFormat(AudioFormat.MP3)
+                .setCallback(callback)
+                .convert();
+    }
+
+    private void submitMp3File(final File convertedFile) {
+        Client.submitFile("file", convertedFile)
+                .setTag(TAG)
+                .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
+                .setCallback(new Callback<Resp<Object>>() {
+
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        if (mMissReplyAnswer != null) {
+                            mMissReplyAnswer.setAudioPath((String) resp.getData());
+                        }
+
+                        submitMissAnswer((String) resp.getData(), convertedFile);
+                    }
+
+                    @Override
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
+                        changeSubmitStatus(SUBMIT_ERROR);
+                    }
+                })
+                .fireFree();
+    }
+
     private void submitRecordAudio() {
         if (mMissReplyAnswer != null
                 && !TextUtils.isEmpty(mMissReplyAnswer.getAudioUrl())
                 && LocalUser.getUser().isLogin()) {
             mSubmitSuccess = false;
             changeSubmitStatus(SUBMIT_PROCEED);
-            Client.submitFile("file", new File(mMissReplyAnswer.getAudioUrl()))
-                    .setTag(TAG)
-                    .setRetryPolicy(new DefaultRetryPolicy(100000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT))
-                    .setCallback(new Callback<Resp<Object>>() {
-
-                        @Override
-                        protected void onRespSuccess(Resp<Object> resp) {
-                            if (mMissReplyAnswer != null) {
-                                mMissReplyAnswer.setAudioPath((String) resp.getData());
-                            }
-                            submitMissAnswer(resp.getData());
-                        }
-
-                        @Override
-                        public void onFailure(ApiError apiError) {
-                            super.onFailure(apiError);
-                            changeSubmitStatus(SUBMIT_ERROR);
-                        }
-                    })
-                    .fireFree();
+            convertAudio(mMissReplyAnswer.getAudioUrl());
         }
     }
 
-    private void submitMissAnswer(Object data) {
+    private void submitMissAnswer(final String data, final File convertedFile) {
         Client.submitMissAnswer(mMissReplyAnswer.getId(),
-                (String) data, mRecordAudioLength,
+                data, mRecordAudioLength,
                 LocalUser.getUser().getUserInfo().getCustomId())
                 .setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
@@ -335,6 +375,12 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
                         changeSubmitStatus(SUBMIT_SUCCESS);
+
+                        mMissReplyAnswer.setAudioPath(data);
+                        if (convertedFile != null) {
+                            boolean delete = convertedFile.delete();
+                            Log.d(TAG, "删除不: " + delete);
+                        }
                     }
                 })
                 .fireFree();

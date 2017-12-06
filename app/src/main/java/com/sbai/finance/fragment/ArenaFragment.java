@@ -167,7 +167,8 @@ public class ArenaFragment extends BaseFragment {
 
     public void updateIngotNumber(UserFundInfo userFundInfo) {
         long ingot = userFundInfo != null ? userFundInfo.getYuanbao() : 0;
-        SpannableString nameAndIngot = StrUtil.mergeTextWithRatioColor(LocalUser.getUser().getUserInfo().getUserName(),
+        String name = LocalUser.getUser().getUserInfo() != null ? LocalUser.getUser().getUserInfo().getUserName() : "";
+        SpannableString nameAndIngot = StrUtil.mergeTextWithRatioColor(name,
                 "\n" + getString(R.string.my_ingot_, ingot)
                 , 0.75f,
                 ContextCompat.getColor(getActivity(), R.color.yellowAssist));

@@ -2,7 +2,6 @@ package com.sbai.finance.utils.audio;
 
 import android.content.Context;
 import android.media.MediaRecorder;
-import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
@@ -44,18 +43,19 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
 
     private void onPrepare() {
         mMediaRecorder = new MediaRecorder();
+        mMediaRecorder = new MediaRecorder();
         mMediaRecorder.setOnErrorListener(this);
         mMediaRecorder.setOnInfoListener(this);
         //配置 MediaRecorder
         //从麦克风采集
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        //输出格式为 aac 格式
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
-        }
-//        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        //通用的 AAC 编码格式
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+//        //输出格式为 aac 格式
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
+//        }
+////        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+//        //通用的 AAC 编码格式
+//        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
         //所有安卓系统都支持采样频率
         mMediaRecorder.setAudioSamplingRate(44100);
@@ -67,12 +67,28 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
 //        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 //        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 //        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        //设置录音文件配置
-        mMediaRecorder.setOutputFile(getOutputFilePath());
 
+        //google推荐的  播放速度慢   W/MediaHTTPConnection: readAt 757699559 / 32768 => java.net.ProtocolException
+//        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+//        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+//        //设置录音文件配置
+//        mMediaRecorder.setOutputFile(getOutputFilePath(".3gp"));//
+//
+
+        //能播放出来 ios 不支持
+        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
+        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+//        //设置录音文件配置
+        mMediaRecorder.setOutputFile(getOutputFilePath(".amr"));//
+//
+
+//        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
+//        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+        //设置录音文件配置
+//        mMediaRecorder.setOutputFile(getOutputFilePath(".mp3"));
     }
 
-    private String getOutputFilePath() {
+    private String getOutputFilePath(String path) {
         String absolutePath;
         Context appContext = App.getAppContext();
         if (appContext.getExternalCacheDir() != null) {
@@ -85,8 +101,8 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
             dir.mkdirs();
         }
 
-//        File file = new File(dir, System.currentTimeMillis() + ".3gp");
-        File file = new File(dir, System.currentTimeMillis() + ".aac");
+        File file = new File(dir, System.currentTimeMillis() + path);
+//        File file = new File(dir, System.currentTimeMillis() + ".aac");
 //        File file = new File(dir, System.currentTimeMillis() + ".mp3");
         mRecordAudioPath = file.getAbsolutePath();
         return file.getAbsolutePath();
@@ -99,24 +115,24 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
     public void onRecordStart() {
         //配置 MediaRecorder
         mPreparing = false;
-            try {
-                onPrepare();
-                mMediaRecorder.prepare();
-                mMediaRecorder.start();
-                mPreparing = true;
-                if (mMediaMediaRecorderPrepareListener != null) {
-                    mMediaMediaRecorderPrepareListener.onMediaMediaRecorderPrepared();
-                }
-            } catch (Exception e) {
-                mPreparing = false;
-                Log.d(TAG, "onPrepare: " + e.toString());
-                e.printStackTrace();
+        try {
+            onPrepare();
+            mMediaRecorder.prepare();
+            mMediaRecorder.start();
+            mPreparing = true;
+            if (mMediaMediaRecorderPrepareListener != null) {
+                mMediaMediaRecorderPrepareListener.onMediaMediaRecorderPrepared();
             }
+        } catch (Exception e) {
+            mPreparing = false;
+            Log.d(TAG, "onPrepare: " + e.toString());
+            e.printStackTrace();
+        }
     }
 
 
     public void onRecordStop() {
-        if(mMediaRecorder!=null){
+        if (mMediaRecorder != null) {
             try {
                 mMediaRecorder.setOnErrorListener(null);
                 mMediaRecorder.setOnInfoListener(null);
