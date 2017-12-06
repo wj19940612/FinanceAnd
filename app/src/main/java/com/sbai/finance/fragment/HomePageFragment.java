@@ -709,7 +709,7 @@ public class HomePageFragment extends BaseFragment {
                 } else {
                     openLoginPage();
                 }
-            } else if (information.getJumpType().equals(Banner.FUNC_SHARE)) {
+            } else if (information.getJumpType().equals(Banner.FUNC_CERTIFICATION)) {
                 //实名认证
                 if (LocalUser.getUser().isLogin()) {
                     umengEventCount(UmengCountEventId.ME_CERTIFICATION);
