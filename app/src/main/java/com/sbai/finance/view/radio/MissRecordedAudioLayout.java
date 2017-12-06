@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.utils.CheckPermissionUtils;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
@@ -159,7 +160,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
                 if (isStartRecord) {
                     if (mAudioLength < UNLAWFUL_AUDIO_TIME) {
                         ToastUtil.show(R.string.record_audio_time_is_short);
-                    }else {
+                    } else {
                         if (mOnRecordAudioListener != null) {
                             mOnRecordAudioListener.onRecordAudioFinish(mMediaRecorderManager.getRecordAudioPath(), mAudioLength);
                         }
@@ -203,9 +204,13 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
     @Override
     public void onMediaMediaRecorderPrepared() {
-        isStartRecord = true;
-        mAudioLength = 0;
-        mTimerHandler.sendEmptyMessageDelayed(UPDATE_AUDIO_LENGTH, 0);
+        if (CheckPermissionUtils.isVoicePermission()) {
+            isStartRecord = true;
+            mAudioLength = 0;
+            mTimerHandler.sendEmptyMessageDelayed(UPDATE_AUDIO_LENGTH, 0);
+        } else {
+            error();
+        }
     }
 
     @Override
@@ -214,13 +219,17 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
             case MediaRecorderManager.RECORD_MEDIA_ERROR_CODE:
 //                break;
             case MediaRecorderManager.RECORD_MEDIA_ERROR_CODE_PERMISSION:
-                mTimerHandler.removeCallbacksAndMessages(null);
-                setRecordStatus(RECORD_AUDIO_STATUS_INIT);
-                isStartRecord = false;
-                mAudioLength = 0;
-                showPermissionDialog();
+                error();
                 break;
         }
+    }
+
+    private void error() {
+        mTimerHandler.removeCallbacksAndMessages(null);
+        setRecordStatus(RECORD_AUDIO_STATUS_INIT);
+        isStartRecord = false;
+        mAudioLength = 0;
+        showPermissionDialog();
     }
 
     private void showPermissionDialog() {
@@ -230,7 +239,9 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         Uri packageURI = Uri.parse("package:" + getContext().getPackageName());
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
+//                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_SETTINGS);
                         getContext().startActivity(intent);
                     }
                 })

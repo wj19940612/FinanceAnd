@@ -61,4 +61,5 @@ public interface ExtraKeys {
     String COMMENT_SOURCE = "comment_source";
     String PROFILE_INTRODUCE = "profile_introduce";
     String QUESTION_TYPE = "question_type";
+    String IS_READ = "is_read";
 }

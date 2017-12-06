@@ -221,8 +221,11 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
                 m.setRotate(90);
                 //旋转后的图片
                 bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, m, true);
-                Bitmap sizeBitmap = Bitmap.createScaledBitmap(bitmap,
-                        mCameraTopRectView.getViewWidth(), mCameraTopRectView.getViewHeight(), true);
+                Bitmap sizeBitmap = bitmap;
+                if (bitmap != null) {
+                    sizeBitmap = Bitmap.createScaledBitmap(bitmap,
+                            mCameraTopRectView.getViewWidth(), mCameraTopRectView.getViewHeight(), true);
+                }
                 bitmap = Bitmap.createBitmap(sizeBitmap, mCameraTopRectView.getRectLeft(),
                         mCameraTopRectView.getRectTop(),
                         mCameraTopRectView.getRectRight() - mCameraTopRectView.getRectLeft(),
