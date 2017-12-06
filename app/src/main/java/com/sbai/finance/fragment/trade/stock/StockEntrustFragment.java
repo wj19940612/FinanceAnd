@@ -257,6 +257,10 @@ public class StockEntrustFragment extends BaseFragment {
             notifyDataSetChanged();
         }
 
+        public boolean isEmpty() {
+            return mEntrustList.isEmpty();
+        }
+
         public void setManualRefresh(boolean manualRefresh) {
             this.mManualRefresh = manualRefresh;
         }
