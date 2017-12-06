@@ -38,7 +38,6 @@ import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.audio.MissAudioManager;
-import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.HasLabelImageLayout;
@@ -399,12 +398,12 @@ public class MissAskFragment extends MediaPlayFragment {
     }
 
     private void updateQuestionListenCount(final Question item) {
-        if (!MissVoiceRecorder.isHeard(item.getId())) {
+        if (!item.isListene()) {
             Client.listen(item.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
                 @Override
                 protected void onRespSuccess(Resp<JsonPrimitive> resp) {
                     if (resp.isSuccess()) {
-                        MissVoiceRecorder.markHeard(item.getId());
+                        item.setListene(true);
                         item.setListenCount(item.getListenCount() + 1);
                         mMissAskAdapter.notifyDataSetChanged();
                     }
@@ -413,7 +412,7 @@ public class MissAskFragment extends MediaPlayFragment {
                 @Override
                 protected void onRespFailure(Resp failedResp) {
                     if (failedResp.getCode() == Resp.CODE_LISTENED) {
-                        MissVoiceRecorder.markHeard(item.getId());
+                        item.setListene(true);
                         mMissAskAdapter.notifyDataSetChanged();
                     }
                 }
@@ -585,7 +584,7 @@ public class MissAskFragment extends MediaPlayFragment {
                 mQuestion.setText(item.getQuestionContext());
                 mListenerNumber.setText(context.getString(R.string.listener_number, StrFormatter.getFormatCount(item.getListenCount())));
 
-                if (MissVoiceRecorder.isHeard(item.getId())) {
+                if (!item.isListene()) {
                     mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.unluckyText));
                 } else {
                     mListenerNumber.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));

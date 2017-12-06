@@ -68,6 +68,7 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
     private int hot;                // 0 最新问答  1、2热门问答
     private String customName;      //小姐姐名字
     private int userType;           //用户身份  0 普通用户 1主播
+    private boolean isListene;      //是否听过语音
     // 我的问答中的数据
     private String content;        //问题内容
     private int dataId;            //问题id
@@ -87,6 +88,18 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
 
     public int getTotalVoiceLength() {
         return getSoundTime() * 1000;
+    }
+
+    public static int getQuestionTypeLatest() {
+        return QUESTION_TYPE_LATEST;
+    }
+
+    public boolean isListene() {
+        return isListene;
+    }
+
+    public void setListene(boolean listene) {
+        isListene = listene;
     }
 
     public int getUserType() {
@@ -374,6 +387,8 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
                 ", collect=" + collect +
                 ", hot=" + hot +
                 ", customName='" + customName + '\'' +
+                ", userType=" + userType +
+                ", isListene=" + isListene +
                 ", content='" + content + '\'' +
                 ", dataId=" + dataId +
                 ", type=" + type +
@@ -414,6 +429,8 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
         dest.writeInt(this.collect);
         dest.writeInt(this.hot);
         dest.writeString(this.customName);
+        dest.writeInt(this.userType);
+        dest.writeByte(this.isListene ? (byte) 1 : (byte) 0);
         dest.writeString(this.content);
         dest.writeInt(this.dataId);
         dest.writeInt(this.type);
@@ -447,6 +464,8 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
         this.collect = in.readInt();
         this.hot = in.readInt();
         this.customName = in.readString();
+        this.userType = in.readInt();
+        this.isListene = in.readByte() != 0;
         this.content = in.readString();
         this.dataId = in.readInt();
         this.type = in.readInt();
