@@ -360,13 +360,13 @@
     <string name="recharge_service">遇到任何问题，请联系客服></string>
     <string name="next">下一步</string>
     <string name="mine_crash">我的现金(元)</string>
-    <string name="mine_score">我的积分</string>
+    <string name="mine_score">我的模拟金</string>
     <string name="mine_ingot">我的元宝</string>
     <string name="confirm_payment_money">确认支付  (%1$s元)</string>
     <string name="confirm_payment_ingot">确认支付  (%1$s元宝)</string>
     <string name="confirm_money">确认支付</string>
     <string name="ingot_recharge">元宝充值</string>
-    <string name="score_recharge">积分充值</string>
+    <string name="score_recharge">模拟金充值</string>
     <string name="balance_not_enough">余额不足</string>
     <string name="number_ingot">%1$s元宝</string>
 
@@ -385,9 +385,9 @@
     <string name="create_battle">创建对战</string>
     <string name="choose_futures">选择期货</string>
     <string name="pattern">模式</string>
-    <string name="integral_war">积分战</string>
+    <string name="integral_war">模拟金战</string>
     <string name="ingot_war">元宝战</string>
-    <string name="score">积分</string>
+    <string name="score">模拟金</string>
     <string name="ingot">元宝</string>
     <string name="cash">现金</string>
     <string name="versusing">对战中</string>
@@ -449,7 +449,7 @@
     <!--  聚宝盆  -->
     <string name="rule">规则</string>
     <string name="ingot_number">%1$s  元宝</string>
-    <string name="integrate_number">%1$s  积分</string>
+    <string name="integrate_number">%1$s  模拟金</string>
     <string name="go_recharge">去充值</string>
     <string name="is_not_set_safety_pass">为了您的账户安全，请设置安全密码</string>
     <string name="full_text">...全文</string>
@@ -875,7 +875,7 @@
     <string name="against_user">对战者</string>
     <string name="win_rate">胜率：%1$s</string>
     <string name="battle_count_profit">对局总数：%1$s场  元宝结算: %2$s个</string>
-    <string name="arena_score">%1$s(积分)</string>
+    <string name="arena_score">%1$s(模拟金)</string>
     <string name="ingot_is_not_enough">您的%1$s不足%2$s,暂时不能参赛</string>
     <string name="exchange_details">兑换详情</string>
     <string name="exchange_success">兑换成功</string>
@@ -1019,8 +1019,7 @@
     <string name="volume_x">数量：</string>
     <string name="fee_x">手续费：</string>
     <string name="total_value_x">总价：</string>
-    <string name="yuan">元</string>
-    <string name="about_x_yuan_without_fee">约%1$s元，不含手续费</string>
+    <string name="about_x_without_fee">约%1$s，不含手续费</string>
     <string name="buy_success_check_entrust">成功买入, 可在[委托]查看</string>
     <string name="sell_success_check_entrust">成功卖出，可在[委托]查看</string>
     <string name="stay_current_page">留在当前页</string>

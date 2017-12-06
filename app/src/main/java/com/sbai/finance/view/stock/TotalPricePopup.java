@@ -38,7 +38,7 @@ public class TotalPricePopup {
     }
 
     public void setTotalPrice(String totalPrice) {
-        mTotalPrice.setText(mContext.getString(R.string.about_x_yuan_without_fee, totalPrice));
+        mTotalPrice.setText(mContext.getString(R.string.about_x_without_fee, totalPrice));
     }
 
     public void showAbove(View v) {

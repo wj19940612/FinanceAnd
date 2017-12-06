@@ -71,7 +71,6 @@ public class TradeConfirmDialog {
         mConfirm = (TextView) mView.findViewById(R.id.confirm);
 
         int color = ContextCompat.getColor(mActivity, R.color.redPrimary);
-        String yuan = mActivity.getString(R.string.yuan);
         if (mStockOrder.getDeputeType() == StockOrder.DEPUTE_TYPE_ENTRUST_BUY) {
             mTitle.setText(R.string.entrust_buy_confirm);
             mDirection.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.direction_x),
@@ -85,7 +84,7 @@ public class TradeConfirmDialog {
             mFee.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.fee_x),
                     FinanceUtil.formatWithScale(mStockOrder.getFee()), color));
             mTotalValue.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.total_value_x),
-                    FinanceUtil.formatWithThousandsSeparator(mStockOrder.getValue()) + yuan, color));
+                    FinanceUtil.formatWithThousandsSeparator(mStockOrder.getValue()), color));
             mConfirm.setTextColor(color);
         } else {
             color = ContextCompat.getColor(mActivity, R.color.greenAssist);
@@ -101,7 +100,7 @@ public class TradeConfirmDialog {
             mFee.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.fee_x),
                     FinanceUtil.formatWithScale(mStockOrder.getFee()), color));
             mTotalValue.setText(StrUtil.mergeTextWithColor(mActivity.getString(R.string.total_value_x),
-                    FinanceUtil.formatWithThousandsSeparator(mStockOrder.getValue()) + yuan, color));
+                    FinanceUtil.formatWithThousandsSeparator(mStockOrder.getValue()), color));
             mConfirm.setTextColor(color);
         }
         mCancel.setOnClickListener(new View.OnClickListener() {

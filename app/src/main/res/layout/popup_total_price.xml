@@ -15,7 +15,7 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="2dp"
-        android:text="@string/about_x_yuan_without_fee"
+        android:text="@string/about_x_without_fee"
         android:textColor="@android:color/white"
         android:textSize="10sp"/>
 
