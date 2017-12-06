@@ -54,8 +54,6 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
     private static final int SUBMIT_ERROR = 2;
     private static final int SUBMIT_SUCCESS = 3;
 
-    String TAG = "MediaRecorderManager";
-
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.avatar)

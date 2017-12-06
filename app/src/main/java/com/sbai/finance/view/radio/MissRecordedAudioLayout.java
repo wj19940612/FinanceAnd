@@ -1,6 +1,11 @@
 package com.sbai.finance.view.radio;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
@@ -19,6 +24,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.audio.MediaRecorderManager;
+import com.sbai.finance.view.SmartDialog;
 
 
 /**
@@ -62,7 +68,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
     private int mRecordAudioBtnWidth;
     private int mRecordAudioBtnHeight;
 
-    private boolean isStartRecord;  //是否开始长按录制
+    private volatile boolean isStartRecord;  //是否开始长按录制
     private TimerHandler mTimerHandler;
     private int mAudioLength;
 
@@ -124,7 +130,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
                 mRecordBtnY = point[1];
                 mRecordAudioBtnWidth = mRecordAudioBtn.getWidth();
                 mRecordAudioBtnHeight = mRecordAudioBtn.getHeight();
-                Log.d(TAG, "run: " + mRecordBtnX + "  " + mRecordBtnY + " " + mRecordAudioBtnWidth + " " + mRecordAudioBtnHeight);
+//                Log.d(TAG, "run: " + mRecordBtnX + "  " + mRecordBtnY + " " + mRecordAudioBtnWidth + " " + mRecordAudioBtnHeight);
             }
         });
 
@@ -150,15 +156,18 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
                 mAudioLengthTextView.setVisibility(VISIBLE);
                 break;
             case MotionEvent.ACTION_UP:
-                if (isStartRecord && mAudioLength < UNLAWFUL_AUDIO_TIME) {
-                    ToastUtil.show(R.string.record_audio_time_is_short);
-                } else {
-                    if (mOnRecordAudioListener != null) {
-                        mOnRecordAudioListener.onRecordAudioFinish(mMediaRecorderManager.getRecordAudioPath(), mAudioLength);
+                if (isStartRecord) {
+                    if (mAudioLength < UNLAWFUL_AUDIO_TIME) {
+                        ToastUtil.show(R.string.record_audio_time_is_short);
+                    }else {
+                        if (mOnRecordAudioListener != null) {
+                            mOnRecordAudioListener.onRecordAudioFinish(mMediaRecorderManager.getRecordAudioPath(), mAudioLength);
+                        }
+                        reset();
+                        setRecordStatus(RECORD_AUDIO_STATUS_END);
                     }
                 }
                 reset();
-                setRecordStatus(RECORD_AUDIO_STATUS_END);
                 break;
             case MotionEvent.ACTION_MOVE:
                 float x = motionEvent.getRawX();
@@ -176,7 +185,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
         boolean x2 = (mRecordBtnX + mRecordAudioBtnWidth) > x;
         boolean y1 = y > (mRecordBtnY - 30);
         boolean y2 = (mRecordBtnY + mRecordAudioBtnHeight + 50) > y;
-        Log.d(TAG, "pointISInsideRecordBtn: " + x1 + " " + x2 + "  " + y1 + "  " + y2 + " " + y);
+//        Log.d(TAG, "pointISInsideRecordBtn: " + x1 + " " + x2 + "  " + y1 + "  " + y2 + " " + y);
         return x1 && x2 && y1 && y2;
     }
 
@@ -205,7 +214,28 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
             case MediaRecorderManager.RECORD_MEDIA_ERROR_CODE:
 
                 break;
+            case MediaRecorderManager.RECORD_MEDIA_ERROR_CODE_PERMISSION:
+                mTimerHandler.removeCallbacksAndMessages(null);
+                setRecordStatus(RECORD_AUDIO_STATUS_INIT);
+                isStartRecord = false;
+                mAudioLength = 0;
+                showPermissionDialog();
+                break;
         }
+    }
+
+    private void showPermissionDialog() {
+        SmartDialog.single((Activity) getContext(), getContext().getString(R.string.please_open_the_recording_permission))
+                .setPositive(R.string.go_to_set, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        Uri packageURI = Uri.parse("package:" + getContext().getPackageName());
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
+                        getContext().startActivity(intent);
+                    }
+                })
+                .show();
     }
 
     @Override

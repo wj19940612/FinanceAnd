@@ -24,6 +24,7 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
     private static final String TAG = "MediaRecorderManager";
 
     public static final int RECORD_MEDIA_ERROR_CODE = -2;  //自己定义的错误code
+    public static final int RECORD_MEDIA_ERROR_CODE_PERMISSION = -3;  //自己定义的没有权限错误code
 
     private static final int DEFAULT_MAX_AUDIO_LENGTH = 10 * 60 * 1000;  //最大时间长度
 
@@ -129,8 +130,14 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
             }
         } catch (Exception e) {
             mPreparing = false;
-            if (mMediaMediaRecorderPrepareListener != null) {
-                mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_CODE, e);
+            if (e.toString().contains("Permission")) {
+                if (mMediaMediaRecorderPrepareListener != null) {
+                    mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_CODE_PERMISSION, e);
+                }
+            } else {
+                if (mMediaMediaRecorderPrepareListener != null) {
+                    mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_CODE, e);
+                }
             }
             Log.d(TAG, "onPrepare: " + e.toString());
             e.printStackTrace();
@@ -177,6 +184,7 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
 
     @Override
     public void onError(MediaRecorder mediaRecorder, int what, int extra) {
+        Log.d(TAG, "onError: " + what + "  " + extra);
         if (mMediaMediaRecorderPrepareListener != null) {
             mMediaMediaRecorderPrepareListener.onError(what, new RuntimeException("system error  extra: " + extra));
         }
@@ -192,6 +200,7 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
 
     @Override
     public void onInfo(MediaRecorder mediaRecorder, int what, int extra) {
+        Log.d(TAG, "onInfo: " + what + "  " + extra);
         if (mMediaMediaRecorderPrepareListener != null) {
             mMediaMediaRecorderPrepareListener.onError(what, new RuntimeException("system error  extra: " + extra));
         }
@@ -207,4 +216,5 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
                 break;
         }
     }
+
 }

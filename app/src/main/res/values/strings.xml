@@ -1046,6 +1046,7 @@
     <string name="submitting">发送中</string>
     <string name="question_answer_detail">问题详情</string>
     <string name="audio_length">%1$s秒</string>
+    <string name="please_open_the_recording_permission">请打开录音权限</string>
     
     <string name="there_is_no_matched_stock">无匹配股票</string>
 </resources>
