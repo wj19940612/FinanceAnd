@@ -212,8 +212,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
     public void onError(int what, Exception e) {
         switch (what) {
             case MediaRecorderManager.RECORD_MEDIA_ERROR_CODE:
-
-                break;
+//                break;
             case MediaRecorderManager.RECORD_MEDIA_ERROR_CODE_PERMISSION:
                 mTimerHandler.removeCallbacksAndMessages(null);
                 setRecordStatus(RECORD_AUDIO_STATUS_INIT);

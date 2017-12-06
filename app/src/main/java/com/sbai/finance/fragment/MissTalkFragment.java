@@ -174,7 +174,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
-        changeFloatWindowView();
         notifyFragmentDataSetChange(source);
         mMissRadioLayout.updatePlayStatus();
     }
