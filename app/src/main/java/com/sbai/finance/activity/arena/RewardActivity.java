@@ -82,7 +82,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-
+/**
+ * Modified by john on 06/12/2017
+ *
+ * 赏金场（竞技场）列表页面
+ *
+ */
 public class RewardActivity extends BaseActivity implements View.OnClickListener, BattleListFragment.OnFragmentRecycleViewScrollListener {
 
     private static final int REQ_CODE_FUTURE_BATTLE = 3787;
@@ -917,9 +922,6 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
             case ArenaApplyRule.PAY_FUND_TYPE_INGOT:
                 entryFees = getString(R.string.number_ingot, String.valueOf((int) data.getMoney()));
                 break;
-            case ArenaApplyRule.PAY_FUND_TYPE_CREDIT:
-                entryFees = getString(R.string.number_score, String.valueOf(data.getMoney()));
-                break;
             case ArenaApplyRule.PAY_FUND_TYPE_CRASH:
                 entryFees = getString(R.string.RMB, String.valueOf(data.getMoney()));
                 break;
@@ -979,11 +981,6 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                     return getString(R.string.ingot_is_not_enough,
                             getString(R.string.ingot),
                             String.valueOf((int) mArenaApplyRule.getMoney() + "个"));
-
-                case ArenaApplyRule.PAY_FUND_TYPE_CREDIT:
-                    return getString(R.string.ingot_is_not_enough,
-                            getString(R.string.score),
-                            String.valueOf((int) mArenaApplyRule.getMoney()));
 
                 case ArenaApplyRule.PAY_FUND_TYPE_CRASH:
                     return getString(R.string.ingot_is_not_enough,
