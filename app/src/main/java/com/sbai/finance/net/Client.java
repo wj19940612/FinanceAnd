@@ -616,16 +616,7 @@ public class Client {
                 .put("latitude", LocalUser.getUser().getUserInfo().getLatitude())
         );
     }
-
-    /**
-     * 获取首页的 banner
-     *
-     * @return
-     */
-    public static API getBannerData() {
-        return new API(POST, "/user/news/findBannerList.do");
-    }
-
+    
     /**
      * 获取首页的 banner
      *
@@ -633,7 +624,7 @@ public class Client {
      * @return
      */
     public static API getHomeBannerData(int bannerType) {
-        return new API(POST, "/user/news/findBannerList.do", new ApiParams().put("showType", bannerType));
+        return new API("/user/news/findBannerList.do", new ApiParams().put("showType", bannerType));
     }
 
     /**
