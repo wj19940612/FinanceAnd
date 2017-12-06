@@ -369,7 +369,6 @@
     <string name="score_recharge">积分充值</string>
     <string name="balance_not_enough">余额不足</string>
     <string name="number_ingot">%1$s元宝</string>
-    <string name="number_score">%1$s积分</string>
 
     <!--银行卡绑定-->
     <string name="bind_bank_card_warn">持卡人必须与账号信息一致,信息不做其他用途</string>

@@ -88,16 +88,6 @@
                     android:textColor="@android:color/white"
                     android:textSize="14sp"/>
 
-                <TextView
-                    android:id="@+id/integralWar"
-                    android:layout_width="70dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="14dp"
-                    android:background="@drawable/bg_fight_text"
-                    android:gravity="center"
-                    android:text="@string/integral_war"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"/>
             </LinearLayout>
 
             <LinearLayout

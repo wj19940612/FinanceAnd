@@ -386,7 +386,7 @@ public class VirtualProductExchangeActivity extends RechargeActivity {
                 if (virtualProductModel.isIngot()) {
                     mProduct.setText(context.getString(R.string.number_ingot, FinanceUtil.formatWithScale(virtualProductModel.getToMoney(), 0)));
                 } else {
-                    mProduct.setText(context.getString(R.string.number_score, FinanceUtil.formatWithScale(virtualProductModel.getToMoney(), 0)));
+                    mProduct.setText(FinanceUtil.formatWithScale(virtualProductModel.getToMoney(), 0));
                 }
                 mProduct.setSelected(virtualProductModel.isSelect());
                 mProduct.setOnClickListener(new View.OnClickListener() {
