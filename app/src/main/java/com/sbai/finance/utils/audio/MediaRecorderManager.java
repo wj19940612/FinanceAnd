@@ -23,6 +23,8 @@ import static android.media.MediaRecorder.MEDIA_RECORDER_INFO_UNKNOWN;
 public class MediaRecorderManager implements MediaRecorder.OnErrorListener, MediaRecorder.OnInfoListener {
     private static final String TAG = "MediaRecorderManager";
 
+    public static final int RECORD_MEDIA_ERROR_CODE = -2;  //自己定义的错误code
+
     private static final int DEFAULT_MAX_AUDIO_LENGTH = 10 * 60 * 1000;  //最大时间长度
 
     private MediaRecorder mMediaRecorder;
@@ -32,6 +34,8 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
 
     public interface MediaMediaRecorderPrepareListener {
         void onMediaMediaRecorderPrepared();
+
+        void onError(int what, Exception e);
     }
 
     public void setMediaMediaRecorderPrepareListener(MediaMediaRecorderPrepareListener mediaMediaRecorderPrepareListener) {
@@ -125,6 +129,9 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
             }
         } catch (Exception e) {
             mPreparing = false;
+            if (mMediaMediaRecorderPrepareListener != null) {
+                mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_CODE, e);
+            }
             Log.d(TAG, "onPrepare: " + e.toString());
             e.printStackTrace();
         }
@@ -139,6 +146,9 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
                 mMediaRecorder.setPreviewDisplay(null);
                 mMediaRecorder.stop();
             } catch (Exception e) {
+                if (mMediaMediaRecorderPrepareListener != null) {
+                    mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_CODE, e);
+                }
                 Log.d(TAG, "onRecordRelease: " + e.toString());
                 e.printStackTrace();
             }
@@ -167,6 +177,9 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
 
     @Override
     public void onError(MediaRecorder mediaRecorder, int what, int extra) {
+        if (mMediaMediaRecorderPrepareListener != null) {
+            mMediaMediaRecorderPrepareListener.onError(what, new RuntimeException("system error  extra: " + extra));
+        }
         switch (what) {
             case MEDIA_RECORDER_ERROR_UNKNOWN:
                 Log.d(TAG, "onError: " + MEDIA_RECORDER_ERROR_UNKNOWN);
@@ -179,6 +192,9 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
 
     @Override
     public void onInfo(MediaRecorder mediaRecorder, int what, int extra) {
+        if (mMediaMediaRecorderPrepareListener != null) {
+            mMediaMediaRecorderPrepareListener.onError(what, new RuntimeException("system error  extra: " + extra));
+        }
         switch (what) {
             case MEDIA_RECORDER_INFO_UNKNOWN:
                 Log.d(TAG, "onInfo: " + MEDIA_RECORDER_INFO_UNKNOWN);

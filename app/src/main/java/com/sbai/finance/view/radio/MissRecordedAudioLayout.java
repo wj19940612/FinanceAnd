@@ -200,6 +200,15 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
     }
 
     @Override
+    public void onError(int what, Exception e) {
+        switch (what) {
+            case MediaRecorderManager.RECORD_MEDIA_ERROR_CODE:
+
+                break;
+        }
+    }
+
+    @Override
     public void onTimeUp(int count) {
         mAudioLength = count;
         if (mInLegalRange) {
