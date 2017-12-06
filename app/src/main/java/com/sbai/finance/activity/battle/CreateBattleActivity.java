@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,6 +32,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.BgShadowTextView;
+import com.sbai.finance.view.MyGridView;
 import com.sbai.finance.view.SmartDialog;
 
 import java.util.ArrayList;
@@ -53,18 +53,19 @@ public class CreateBattleActivity extends BaseActivity {
     public static final String CREATE_SUCCESS_ACTION = "CREATE_SUCCESS_ACTION";
     @BindView(R.id.chooseFutures)
     BgShadowTextView mChooseFutures;
-    @BindView(ingotWar)
+    @BindView(R.id.ingotWar)
     TextView mIngotWar;
-    @BindView(R.id.integralWar)
-    TextView mIntegralWar;
     @BindView(R.id.bountyGridView)
-    GridView mBountyGridView;
-    @BindView(R.id.durationGridView)
-    GridView mDurationGridView;
-    @BindView(R.id.launch_battle)
-    ImageView mLaunchBattle;
+    MyGridView mBountyGridView;
     @BindView(R.id.bountyArea)
     LinearLayout mBountyArea;
+    @BindView(R.id.durationGridView)
+    MyGridView mDurationGridView;
+    @BindView(R.id.launch_battle)
+    ImageView mLaunchBattle;
+    @BindView(R.id.hint)
+    TextView mHint;
+
 
     private String mContractsCode = null;
     private int mVarietyId;
@@ -96,15 +97,9 @@ public class CreateBattleActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = (String) parent.getItemAtPosition(position);
-                if (mIntegralWar.isSelected()) {
-                    updateIntegralConfig();
-                    mBountyAdapter.setChecked(position);
-                    mBountyAdapter.notifyDataSetChanged();
-                } else {
-                    updateIngotConfig();
-                    mBountyAdapter.setChecked(position);
-                    mBountyAdapter.notifyDataSetChanged();
-                }
+                updateIngotConfig();
+                mBountyAdapter.setChecked(position);
+                mBountyAdapter.notifyDataSetChanged();
                 mBountySelected = true;
                 whetherLaunchBattle();
                 mReward = Double.parseDouble(item);
@@ -131,7 +126,6 @@ public class CreateBattleActivity extends BaseActivity {
             mBountySelected = false;
         }
         mIngotWar.setSelected(true);
-        mIntegralWar.setSelected(false);
         updateIngotConfig();
         whetherLaunchBattle();
         mCoinType = 2;
@@ -199,7 +193,7 @@ public class CreateBattleActivity extends BaseActivity {
         mDurationAdapter.addAll(mDurationList);
     }
 
-    @OnClick({R.id.chooseFutures, ingotWar, R.id.integralWar, R.id.launch_battle})
+    @OnClick({R.id.chooseFutures, R.id.ingotWar, R.id.launch_battle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.chooseFutures:
@@ -215,22 +209,9 @@ public class CreateBattleActivity extends BaseActivity {
                     mBountySelected = false;
                 }
                 mIngotWar.setSelected(true);
-                mIntegralWar.setSelected(false);
                 updateIngotConfig();
                 whetherLaunchBattle();
                 mCoinType = 2;
-                break;
-            case R.id.integralWar:
-                mBountyArea.setVisibility(View.VISIBLE);
-                if (!mIntegralWar.isSelected()) {
-                    mBountyAdapter.setChecked(-1);
-                    mBountySelected = false;
-                }
-                mIntegralWar.setSelected(true);
-                mIngotWar.setSelected(false);
-                updateIntegralConfig();
-                whetherLaunchBattle();
-                mCoinType = 3;
                 break;
             case R.id.launch_battle:
                 umengEventCount(UmengCountEventId.FUTURE_PK_LAUNCHER);
@@ -298,7 +279,6 @@ public class CreateBattleActivity extends BaseActivity {
 
             public void bindingData(String bounty, int position, int checked) {
                 mChoice.setText(bounty);
-//                mChoice.setSelected(false);
                 if (checked == position) {
                     mChoice.setSelected(true);
                 } else {
@@ -358,7 +338,7 @@ public class CreateBattleActivity extends BaseActivity {
 
     private void whetherLaunchBattle() {
         if (mChooseFutures.isSelected()
-                && (mIngotWar.isSelected() || mIntegralWar.isSelected())
+                && mIngotWar.isSelected()
                 && (mBountySelected)
                 && (mDurationSelected)) {
             mLaunchBattle.setEnabled(true);
