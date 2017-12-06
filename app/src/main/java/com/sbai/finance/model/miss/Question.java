@@ -94,13 +94,6 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
         return QUESTION_TYPE_LATEST;
     }
 
-    public boolean isListene() {
-        return isListene;
-    }
-
-    public void setListene(boolean listene) {
-        isListene = listene;
-    }
 
     public int getUserType() {
         return userType;
@@ -388,7 +381,6 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
                 ", hot=" + hot +
                 ", customName='" + customName + '\'' +
                 ", userType=" + userType +
-                ", isListene=" + isListene +
                 ", content='" + content + '\'' +
                 ", dataId=" + dataId +
                 ", type=" + type +
