@@ -147,4 +147,22 @@ public class StockUser implements Parcelable {
             return new StockUser[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "StockUser{" +
+                "account='" + account + '\'' +
+                ", accountName='" + accountName + '\'' +
+                ", active=" + active +
+                ", activityCode='" + activityCode + '\'' +
+                ", expiryDate='" + expiryDate + '\'' +
+                ", fund=" + fund +
+                ", id=" + id +
+                ", status=" + status +
+                ", type=" + type +
+                ", usableMoney=" + usableMoney +
+                ", userId=" + userId +
+                ", virtualType=" + virtualType +
+                '}';
+    }
 }
