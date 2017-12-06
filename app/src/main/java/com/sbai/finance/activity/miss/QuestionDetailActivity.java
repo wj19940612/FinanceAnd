@@ -46,7 +46,6 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.MissVoiceRecorder;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.audio.MissAudioManager;
@@ -445,7 +444,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
             mCollectImage.setImageResource(R.drawable.ic_miss_collect);
         }
 
-        if (MissVoiceRecorder.isHeard(mQuestion.getId())) {
+        if (mQuestion.isListene()) {
             mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.unluckyText));
         } else {
             mListenerNumber.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -557,12 +556,12 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     }
 
     private void updateQuestionListenCount(final Question question) {
-        if (!MissVoiceRecorder.isHeard(question.getId())) {
+        if (!question.isListene()) {
             Client.listen(question.getId()).setTag(TAG).setCallback(new Callback<Resp<JsonPrimitive>>() {
                 @Override
                 protected void onRespSuccess(Resp<JsonPrimitive> resp) {
                     if (resp.isSuccess()) {
-                        MissVoiceRecorder.markHeard(question.getId());
+                        question.setListene(true);
                         question.setListenCount(question.getListenCount() + 1);
                         mListenerNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
                         mListenerNumber.setText(getString(R.string.listener_number, StrFormatter.getFormatCount(question.getListenCount())));
@@ -573,7 +572,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                 @Override
                 protected void onRespFailure(Resp failedResp) {
                     if (failedResp.getCode() == Resp.CODE_LISTENED) {
-                        MissVoiceRecorder.markHeard(question.getId());
+                        question.setListene(true);
                         mListenerNumber.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
                     }
                 }
