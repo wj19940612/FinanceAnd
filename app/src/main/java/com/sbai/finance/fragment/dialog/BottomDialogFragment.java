@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
@@ -45,10 +46,14 @@ public class BottomDialogFragment extends DialogFragment {
     }
 
     public void show(FragmentManager manager) {
-        this.show(manager, this.getClass().getSimpleName());
+        try {
+            this.show(manager, this.getClass().getSimpleName());
+        } catch (IllegalStateException e) {
+            Log.d(TAG, "show: " + e.toString());
+        }
     }
 
-    public void  showAllowingStateLoss(FragmentManager manager){
+    public void showAllowingStateLoss(FragmentManager manager) {
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(this, this.getClass().getSimpleName());
         ft.commitAllowingStateLoss();
