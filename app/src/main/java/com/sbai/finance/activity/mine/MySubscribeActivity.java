@@ -85,13 +85,13 @@ public class MySubscribeActivity extends BaseActivity {
             }
         });
         requestSubscribeList(true);
-        MissAudioManager.get().stop();
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
         requestSubscribeList(true);
+        MissAudioManager.get().stop();
     }
 
     private void initSwipeRefreshLayout() {
