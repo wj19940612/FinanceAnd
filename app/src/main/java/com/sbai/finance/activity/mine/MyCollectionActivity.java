@@ -15,6 +15,7 @@ import com.sbai.finance.fragment.mine.ArticleCollectionFragment;
 import com.sbai.finance.fragment.mine.MyCollectQuestionFragment;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
@@ -37,8 +38,9 @@ public class MyCollectionActivity extends BaseActivity {
         setContentView(R.layout.layout_titlebar_sliding_tablayout_viewpager);
         ButterKnife.bind(this);
         initView();
+        MissAudioManager.get().stop();
     }
-
+    
     private void initView() {
         mTitleBar.setTitle(R.string.my_collection);
         mSlidingTabLayout.setDistributeEvenly(true);
@@ -55,11 +57,11 @@ public class MyCollectionActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-              if (position==0){
-                  umengEventCount(UmengCountEventId.ME_MY_COLLECTION_ASK);
-              }else {
-                  umengEventCount(UmengCountEventId.ME_MY_COLLECTION_ARTICLE);
-              }
+                if (position == 0) {
+                    umengEventCount(UmengCountEventId.ME_MY_COLLECTION_ASK);
+                } else {
+                    umengEventCount(UmengCountEventId.ME_MY_COLLECTION_ARTICLE);
+                }
             }
 
             @Override

@@ -35,6 +35,7 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.ImageTextUtil;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.ApiError;
@@ -84,6 +85,7 @@ public class MySubscribeActivity extends BaseActivity {
             }
         });
         requestSubscribeList(true);
+        MissAudioManager.get().stop();
     }
 
     @Override
