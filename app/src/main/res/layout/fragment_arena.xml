@@ -13,6 +13,8 @@
         android:layout_height="wrap_content"
         app:titleText="@string/arena"
         app:titleTextColor="@color/blackPrimary"
+        app:rightVisible="true"
+        app:rightText="活动入口"
         app:titleTextSize="17sp"/>
 
 
