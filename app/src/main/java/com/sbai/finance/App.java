@@ -17,62 +17,63 @@ import com.umeng.socialize.UMShareAPI;
 
 public class App extends Application {
 
-	private static Context sContext;
+    private static Context sContext;
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		sContext = this;
-		API.init(sContext.getCacheDir());
-		CookieManger.getInstance().init(sContext.getFilesDir());
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        sContext = this;
+        API.init(sContext.getCacheDir());
+        CookieManger.getInstance().init(sContext.getFilesDir());
 
-		if (!BuildConfig.IS_PROD) {
-			handleUncaughtException();
-			Logger.init();
-		}
+        if (!BuildConfig.IS_PROD) {
+            handleUncaughtException();
+            Logger.init();
+        }
 
-		if (BuildConfig.DEBUG) {
-			handleUncaughtException();
-			Config.DEBUG = true;
-		}
-		//友盟
-		UMShareAPI.get(this);
+        if (BuildConfig.DEBUG) {
+            handleUncaughtException();
+            Config.DEBUG = true;
+        }
+        //友盟
+        UMShareAPI.get(this);
 
-		AndroidAudioConverter.load(this, new ILoadCallback() {
-			@Override
-			public void onSuccess() {
-				// Great!
-			}
-			@Override
-			public void onFailure(Exception error) {
-				// FFmpeg is not supported by device
-				error.printStackTrace();
-			}
-		});
-	}
+        AndroidAudioConverter.load(this, new ILoadCallback() {
+            @Override
+            public void onSuccess() {
+                // Great!
+            }
 
-	private void handleUncaughtException() {
-		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-			@Override
-			public void uncaughtException(Thread t, Throwable e) {
-				Intent intent = new Intent(sContext, CatchCrashActivity.class);
-				intent.putExtra(Launcher.EX_PAYLOAD, e);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(intent);
+            @Override
+            public void onFailure(Exception error) {
+                // FFmpeg is not supported by device
+                error.printStackTrace();
+            }
+        });
+    }
 
-				Preference.get().setForeground(false);
-				System.exit(1);
-			}
-		});
-	}
+    private void handleUncaughtException() {
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                Intent intent = new Intent(sContext, CatchCrashActivity.class);
+                intent.putExtra(Launcher.EX_PAYLOAD, e);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
 
-	public static Context getAppContext() {
-		return sContext;
-	}
+                Preference.get().setForeground(false);
+                System.exit(1);
+            }
+        });
+    }
 
-	static {
-		// 注意：以下全为正式的 appId & secret
-		PlatformConfig.setWeixin("wxf53be05ac695d994", "aab33a762834f9f0722190a67aefcef0");
-		PlatformConfig.setSinaWeibo("522354160", "af7a654293ada586a62534ac9fd03845", "");
-	}
+    public static Context getAppContext() {
+        return sContext;
+    }
+
+    static {
+        // 注意：以下全为正式的 appId & secret
+        PlatformConfig.setWeixin("wxf53be05ac695d994", "aab33a762834f9f0722190a67aefcef0");
+        PlatformConfig.setSinaWeibo("522354160", "af7a654293ada586a62534ac9fd03845", "");
+    }
 }

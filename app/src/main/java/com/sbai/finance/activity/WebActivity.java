@@ -207,13 +207,13 @@ public class WebActivity extends BaseActivity {
         mWebView.setDrawingCacheEnabled(true);
         mWebView.addJavascriptInterface(new AppJs(this), "AppJs");
 
-        if (!isFlyme()) {     //魅族max 一旦打开web页面 应用的动画就会出问题  并且max4使用
+//        if (!isFlyme()) {     //魅族max 一旦打开web页面 应用的动画就会出问题  并且max4使用
             if (Build.VERSION.SDK_INT >= 19) {
                 mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
             } else {
                 mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             }
-        }
+//        }
         mWebViewClient = new WebViewClient();
         mWebView.setWebViewClient(mWebViewClient);
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -256,6 +256,11 @@ public class WebActivity extends BaseActivity {
         });
 
         loadPage();
+    }
+
+    @Override
+    public boolean shouldUpRecreateTask(Intent targetIntent) {
+        return super.shouldUpRecreateTask(targetIntent);
     }
 
     protected void syncCookies(String pageUrl) {
