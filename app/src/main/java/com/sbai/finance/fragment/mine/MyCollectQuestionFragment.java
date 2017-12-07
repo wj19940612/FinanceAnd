@@ -261,7 +261,7 @@ public class MyCollectQuestionFragment extends BaseFragment {
             public void bindDataWithView(MyCollect question, Context context) {
                 if (question == null) return;
 
-                mTime.setText(DateUtil.formatDefaultStyleTime(question.getCreateTime()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(question.getSubscribeTime()));
                 mTitle.setText(question.getContent());
                 if (question.isQuestionSolved()) {
                     mContent.setSelected(true);

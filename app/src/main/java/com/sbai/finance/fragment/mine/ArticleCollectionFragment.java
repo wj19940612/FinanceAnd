@@ -252,7 +252,7 @@ public class ArticleCollectionFragment extends BaseFragment {
 
             public void bindDataWithView(MyCollect item, Context context) {
                 Glide.with(context).load(item.getCoverUrl()).into(mImage);
-                mTime.setText(DateUtil.formatDefaultStyleTime(item.getCreateTime()));
+                mTime.setText(DateUtil.formatDefaultStyleTime(item.getSubscribeTime()));
                 mTitle.setText(item.getTitle());
             }
         }
