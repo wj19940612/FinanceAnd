@@ -134,6 +134,11 @@ public class BaseActivity extends BattlePushActivity implements
         MobclickAgent.onResume(this);
 
         updatePageOpenTime();
+
+        boolean isCanPlayAudioPage = this instanceof MediaPlayActivity;
+        if (!isCanPlayAudioPage && MissAudioManager.get().isPlaying()) {
+            MissAudioManager.get().stop();
+        }
     }
 
     @Override

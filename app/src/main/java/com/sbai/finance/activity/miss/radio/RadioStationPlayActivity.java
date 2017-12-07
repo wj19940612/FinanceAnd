@@ -229,7 +229,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
             mRadioInfoLayout.setRadio(mRadio);
             mRadioPlayLL.setRadio(mRadio);
             mRadioPlayLL.setPlayStatus(mRadio);
-            updateAduioCover();
+            updateAudioCover();
         }
     }
 
@@ -318,7 +318,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     private void initView() {
         mAppBarLayout.addOnOffsetChangedListener(sOnOffsetChangedListener);
-        updateAduioCover();
+        updateAudioCover();
 
         mQuestionReplyList = new ArrayList<>();
         mRadioReviewAdapter = new RadioReviewAdapter(mQuestionReplyList, getActivity());
@@ -391,7 +391,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         });
     }
 
-    private void updateAduioCover() {
+    private void updateAudioCover() {
         if (mRadio != null) {
             GlideApp.with(getActivity())
                     .asBitmap()
