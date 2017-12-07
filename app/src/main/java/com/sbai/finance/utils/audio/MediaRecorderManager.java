@@ -1,11 +1,12 @@
 package com.sbai.finance.utils.audio;
 
-import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.util.Log;
 
 import com.sbai.finance.App;
+import com.sbai.finance.R;
+import com.sbai.finance.utils.FileUtils;
 
 import java.io.File;
 
@@ -94,25 +95,12 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
     }
 
     private String getOutputFilePath(String path) {
-        String absolutePath;
-        Context appContext = App.getAppContext();
-        if (appContext.getExternalCacheDir() != null) {
-            absolutePath = appContext.getExternalCacheDir().getAbsolutePath();
-        } else {
-            absolutePath = Environment.getExternalStorageDirectory() + "/miss_record";
-        }
-        File dir = new File(absolutePath);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        File file = new File(dir, System.currentTimeMillis() + path);
-//        File file = new File(dir, System.currentTimeMillis() + ".aac");
-//        File file = new File(dir, System.currentTimeMillis() + ".mp3");
+        File file = FileUtils.createFile(App.getAppContext().getString(R.string.app_name) + path, Environment.DIRECTORY_MUSIC);
+        Log.d(TAG, "getOutputFilePath: " + file.getAbsolutePath());
         mRecordAudioPath = file.getAbsolutePath();
         return file.getAbsolutePath();
     }
-
+    
     public String getRecordAudioPath() {
         return mRecordAudioPath;
     }
