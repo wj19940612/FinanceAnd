@@ -133,12 +133,13 @@ public class StatusBarActivity extends AppCompatActivity {
         return !TextUtils.isEmpty(getSystemProperty("ro.miui.ui.version.name"));
     }
 
-    private boolean isFlyme() {
+    protected boolean isFlyme() {
         try {
-            final Method method = Build.class.getMethod("hasSmartBar");
+            final Method method = Build.class.getMethod("hasSmartBar");  // max4 会抛出java.lang.NoSuchMethodException: hasSmartBar []
             return method != null;
         } catch (final Exception e) {
-            return false;
+            return "Meizu".equalsIgnoreCase(Build.BRAND);
+//            return false;
         }
     }
 

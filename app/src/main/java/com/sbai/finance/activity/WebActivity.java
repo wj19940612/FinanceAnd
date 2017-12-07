@@ -30,9 +30,9 @@ import android.widget.ProgressBar;
 import com.sbai.finance.AppJs;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.utils.image.ImageUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
+import com.sbai.finance.utils.image.ImageUtils;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.httplib.CookieManger;
@@ -206,12 +206,14 @@ public class WebActivity extends BaseActivity {
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mWebView.setDrawingCacheEnabled(true);
         mWebView.addJavascriptInterface(new AppJs(this), "AppJs");
-        if (Build.VERSION.SDK_INT >= 19) {
-            mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        } else {
-            mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
 
+        if (!isFlyme()) {     //魅族max 一旦打开web页面 应用的动画就会出问题  并且max4使用
+            if (Build.VERSION.SDK_INT >= 19) {
+                mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            } else {
+                mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
+        }
         mWebViewClient = new WebViewClient();
         mWebView.setWebViewClient(mWebViewClient);
         mWebView.setWebChromeClient(new WebChromeClient() {
