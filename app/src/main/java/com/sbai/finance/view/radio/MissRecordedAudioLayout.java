@@ -20,12 +20,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.utils.CheckPermissionUtils;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.audio.MediaRecorderManager;
 import com.sbai.finance.view.SmartDialog;
+
+import java.io.File;
 
 
 /**
@@ -54,6 +55,9 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
     private int mRecordBtnY;
     private boolean mInLegalRange = true;
 
+    private String audioPath;
+
+    private boolean hasRecordPermission = true;
 
     public interface OnRecordAudioListener {
         void onRecordAudioFinish(String audioPath, int audioLength);
@@ -149,12 +153,14 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
         addView(mRecordStatusTextView);
     }
 
+
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mRecordStatusTextView.setText(R.string.press_record);
                 mAudioLengthTextView.setVisibility(VISIBLE);
+                hasRecordPermission = true;
                 break;
             case MotionEvent.ACTION_UP:
                 if (isStartRecord) {
@@ -202,15 +208,13 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
         mAudioLengthTextView.setText(spannableString);
     }
 
+
     @Override
-    public void onMediaMediaRecorderPrepared() {
-        if (CheckPermissionUtils.isVoicePermission()) {
-            isStartRecord = true;
-            mAudioLength = 0;
-            mTimerHandler.sendEmptyMessageDelayed(UPDATE_AUDIO_LENGTH, 0);
-        } else {
-            error();
-        }
+    public void onMediaMediaRecorderPrepared(String path) {
+        audioPath = path;
+        isStartRecord = true;
+        mAudioLength = 0;
+        mTimerHandler.sendEmptyMessageDelayed(UPDATE_AUDIO_LENGTH, 0);
     }
 
     @Override
@@ -250,6 +254,15 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
     @Override
     public void onTimeUp(int count) {
+        if (hasRecordPermission) {
+            File file = new File(audioPath);
+            if (file.length() <= 0) {
+                error();
+                hasRecordPermission = false;
+                return;
+            }
+        }
+
         mAudioLength = count;
         if (mInLegalRange) {
             SpannableString spannableString = StrUtil.mergeTextWithColor(getContext().getString(R.string.recording), "  " +

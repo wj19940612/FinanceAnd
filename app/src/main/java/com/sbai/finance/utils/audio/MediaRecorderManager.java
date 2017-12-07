@@ -34,7 +34,7 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
     private MediaMediaRecorderPrepareListener mMediaMediaRecorderPrepareListener;
 
     public interface MediaMediaRecorderPrepareListener {
-        void onMediaMediaRecorderPrepared();
+        void onMediaMediaRecorderPrepared(String path);
 
         void onError(int what, Exception e);
     }
@@ -126,7 +126,7 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
             mMediaRecorder.start();
             mPreparing = true;
             if (mMediaMediaRecorderPrepareListener != null) {
-                mMediaMediaRecorderPrepareListener.onMediaMediaRecorderPrepared();
+                mMediaMediaRecorderPrepareListener.onMediaMediaRecorderPrepared(mRecordAudioPath);
             }
         } catch (Exception e) {
             mPreparing = false;
