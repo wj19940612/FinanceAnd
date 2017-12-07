@@ -397,13 +397,13 @@ public class MissNewsFragment extends BaseFragment implements
                         mReplyContent.setVisibility(View.VISIBLE);
                         break;
                     case MissMessage.TYPE_MISS_TOPIC:
-                        mReplyContent.setText(item.getData().getContent());
+                        mReplyContent.setText(item.getMsg());
                         mMessageType.setText(context.getString(R.string.reply_your_comment));
                         mMessageType.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                         mReplyContent.setVisibility(View.VISIBLE);
                         break;
                     case MissMessage.TYPE_MISS_TOPIC_COMMENT:
-                        mReplyContent.setText(item.getData().getContent());
+                        mReplyContent.setText(item.getMsg());
                         mMessageType.setText(context.getString(R.string.reply_your_comment));
                         mMessageType.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                         mReplyContent.setVisibility(View.VISIBLE);
