@@ -285,8 +285,8 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
             }
         } else if (position == FRAGMENT_RADIO) {
             if (mMiss != null) {
-                if (LocalUser.getUser().isMiss()) {
-                    //是小姐姐，显示创建电台
+                if (LocalUser.getUser().isMiss() && LocalUser.getUser().getUserInfo().getCustomId() == mMiss.getId()) {
+                    //是当前小姐姐，显示创建电台
                     mAsk.setVisibility(View.GONE);
                     mCreateRadio.setVisibility(View.VISIBLE);
                 } else {
