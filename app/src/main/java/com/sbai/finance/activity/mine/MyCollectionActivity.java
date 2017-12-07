@@ -38,9 +38,14 @@ public class MyCollectionActivity extends BaseActivity {
         setContentView(R.layout.layout_titlebar_sliding_tablayout_viewpager);
         ButterKnife.bind(this);
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         MissAudioManager.get().stop();
     }
-    
+
     private void initView() {
         mTitleBar.setTitle(R.string.my_collection);
         mSlidingTabLayout.setDistributeEvenly(true);

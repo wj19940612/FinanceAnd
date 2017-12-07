@@ -5,7 +5,6 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -127,7 +126,7 @@ public class RadioInfoPlayLayout extends LinearLayout {
     }
 
     public void setMediaPlayProgress(int mediaPlayCurrentPosition, int totalDuration) {
-        Log.d(TAG, "setMediaPlayProgress: " + mediaPlayCurrentPosition + "  " + totalDuration);
+//        Log.d(TAG, "setMediaPlayProgress: " + mediaPlayCurrentPosition + "  " + totalDuration);
         if (totalDuration != 0) {
             mRadioSeekBar.setMax(totalDuration);
             setRadioProgress(mediaPlayCurrentPosition);

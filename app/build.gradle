@@ -8,8 +8,8 @@ android {
         applicationId "com.sbai.finance"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 49
-        versionName "2.1.0.0"
+        versionCode 52
+        versionName "2.2.02"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField('String', 'HOST', '\"lemi.ailemi.com\"')
@@ -102,8 +102,8 @@ android {
         alpha {
             applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-alpha'
-            versionCode 158
-            versionName "2.0.120602"
+            versionCode 160
+            versionName "2.0.120702"
             buildConfigField('String', 'HOST', '\"testlemi.ailemi.com\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 

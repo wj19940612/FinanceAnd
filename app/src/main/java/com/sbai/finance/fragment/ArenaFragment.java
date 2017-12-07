@@ -31,6 +31,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.OnTouchAlphaChangeImageView;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
@@ -61,6 +62,8 @@ public class ArenaFragment extends BaseFragment {
     OnTouchAlphaChangeImageView mMoneyRewardArena;
     @BindView(R.id.generalBattleBanner)
     OnTouchAlphaChangeImageView mGeneralBattleBanner;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     private Unbinder mBind;
 
     @Nullable
@@ -76,6 +79,15 @@ public class ArenaFragment extends BaseFragment {
         super.onResume();
         startBreatheAnimation();
         updateUserStatus();
+        // TODO: 2017/12/7 测试
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL,"https://lemi.ailemi.com/lm/activityk.html ")
+                        .execute();
+            }
+        });
     }
 
     private void updateArenaActivityStatus() {

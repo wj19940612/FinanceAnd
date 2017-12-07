@@ -258,6 +258,11 @@ public class WebActivity extends BaseActivity {
         loadPage();
     }
 
+    @Override
+    public boolean shouldUpRecreateTask(Intent targetIntent) {
+        return super.shouldUpRecreateTask(targetIntent);
+    }
+
     protected void syncCookies(String pageUrl) {
         String rawCookie = CookieManger.getInstance().getRawCookie();
         Log.d(TAG, "syncCookies: " + rawCookie + ", " + pageUrl);

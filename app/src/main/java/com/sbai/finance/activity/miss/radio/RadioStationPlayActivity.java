@@ -229,6 +229,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
             mRadioInfoLayout.setRadio(mRadio);
             mRadioPlayLL.setRadio(mRadio);
             mRadioPlayLL.setPlayStatus(mRadio);
+            updateAudioCover();
         }
     }
 
@@ -317,27 +318,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     private void initView() {
         mAppBarLayout.addOnOffsetChangedListener(sOnOffsetChangedListener);
-        if (mRadio != null) {
-            GlideApp.with(getActivity())
-                    .asBitmap()
-                    .load(mRadio.getAudioCover())
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            //后台有可能传入gif图片 会抛出android.renderscript.RSIllegalArgumentException: USAGE_SHARED cannot be used with a Bitmap that has a null config.
-                            if (resource != null) {
-                                try {
-                                    Bitmap gaussianBlur = new RenderScriptGaussianBlur(getActivity()).gaussianBlur(25, resource);
-                                    mBg.setImageBitmap(gaussianBlur);
-                                } catch (Exception e) {
-                                    GlideApp.with(getActivity()).load(mRadio.getAudioCover()).into(mBg);
-                                }
-                            } else {
-                                GlideApp.with(getActivity()).load(mRadio.getAudioCover()).into(mBg);
-                            }
-                        }
-                    });
-        }
+        updateAudioCover();
 
         mQuestionReplyList = new ArrayList<>();
         mRadioReviewAdapter = new RadioReviewAdapter(mQuestionReplyList, getActivity());
@@ -408,6 +389,30 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                 }
             }
         });
+    }
+
+    private void updateAudioCover() {
+        if (mRadio != null) {
+            GlideApp.with(getActivity())
+                    .asBitmap()
+                    .load(mRadio.getAudioCover())
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            //后台有可能传入gif图片 会抛出android.renderscript.RSIllegalArgumentException: USAGE_SHARED cannot be used with a Bitmap that has a null config.
+                            if (resource != null) {
+                                try {
+                                    Bitmap gaussianBlur = new RenderScriptGaussianBlur(getActivity()).gaussianBlur(25, resource);
+                                    mBg.setImageBitmap(gaussianBlur);
+                                } catch (Exception e) {
+                                    GlideApp.with(getActivity()).load(mRadio.getAudioCover()).into(mBg);
+                                }
+                            } else {
+                                GlideApp.with(getActivity()).load(mRadio.getAudioCover()).into(mBg);
+                            }
+                        }
+                    });
+        }
     }
 
     private void refreshRadioReviewData() {

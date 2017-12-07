@@ -261,6 +261,7 @@ public class LoginActivity extends WeChatActivity {
             mAuthCodeArea.setVisibility(View.VISIBLE);
             mPassword.setVisibility(View.GONE);
             mPasswordLoginOperations.setVisibility(View.GONE);
+            mGetAuthCode.setEnabled(checkObtainAuthCodeEnable());
             mPassword.setPassword("");
 
             if (getPhoneNumber().length() == 11) {
