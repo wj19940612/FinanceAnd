@@ -7,8 +7,8 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 
 import java.io.File;
-
-import javax.net.ssl.SSLSocketFactory;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 public class RequestManager {
 
@@ -21,7 +21,15 @@ public class RequestManager {
 
         public static RequestQueue newRequestQueue(File cacheDirectory) {
             File cacheDir = new File(cacheDirectory, DEFAULT_CACHE_DIR);
-            Network network = new BasicNetwork(new CookieHurlStack(null, (SSLSocketFactory) SSLSocketFactory.getDefault()));
+            Network network = null;
+            try {
+                TLSSocketFactory factory = new TLSSocketFactory();
+                network = new BasicNetwork(new CookieHurlStack(null, factory));
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (KeyManagementException e) {
+                e.printStackTrace();
+            }
             RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network);
             queue.start();
             return queue;
