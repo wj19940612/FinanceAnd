@@ -19,7 +19,6 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.ValidationWatcher;
 
 import butterknife.BindView;
@@ -93,15 +92,11 @@ public class ForgetSecurityPassActivity extends BaseActivity {
                             @Override
                             protected void onRespSuccess(Resp<Object> resp) {
                                 if (resp.isSuccess()) {
-                                    ToastUtil.show(resp.getMsg());
                                     restartGetAuthCode();
                                     Launcher.with(getActivity(), UpdateSecurityPassActivity.class)
                                             .putExtra(ExtraKeys.HAS_SECURITY_PSD, true)
                                             .putExtra(ExtraKeys.AUTH_CODE, authCode)
                                             .executeForResult(REQ_CODE_MODIFY_PASS);
-                                    ToastUtil.show(resp.getMsg());
-                                } else {
-                                    ToastUtil.show(resp.getMsg());
                                 }
                             }
                         })
