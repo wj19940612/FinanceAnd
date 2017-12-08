@@ -147,7 +147,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         mRecyclerView.scrollToPosition(0);
         requestAudioDetails(true);
         requestRadioReplyList();
-        requestRadioDetails();
     }
 
     @Override
@@ -314,6 +313,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         updateAudio();
         requestRadioReplyList();
         initMissFloatWindow(automaticPlay);
+        requestRadioDetails();
     }
 
     private void initView() {
