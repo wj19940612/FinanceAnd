@@ -60,11 +60,11 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.BattleOperateView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -805,7 +805,10 @@ public class BattleActivity extends BaseActivity {
         settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
         settings.setLimitUpPercent((float) mVariety.getLimitUpPercent());
         settings.setCalculateXAxisFromOpenMarketTime(true);
-        settings.setGameMode(true);
+        settings.setColorCfg(new ColorCfg()
+                .put(new String[]{ColorCfg.DASH_LINE, ColorCfg.UNSTABLE_PRICE_BG, ColorCfg.REAL_TIME_LINE, ColorCfg.TOUCH_LINE_TXT_BG, ColorCfg.TOUCH_LINE}, "#ffffff")
+                .put(new String[]{ColorCfg.UNSTABLE_PRICE, ColorCfg.TOUCH_LINE_TXT}, "#000000")
+                .put(ColorCfg.BASE_LINE, "#362d4d"));
         mTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();

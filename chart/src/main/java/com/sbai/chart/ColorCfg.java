@@ -14,8 +14,7 @@ public class ColorCfg {
     public static final String UNSTABLE_PRICE_BG = "unstablePriceBg";
     public static final String REAL_TIME_LINE = "realTimeLine";
     public static final String TOUCH_LINE_TXT = "touchLineText";
-    public static final String RED_RECT_BG = "redRectBg";
-    public static final String RED_TOUCH_LINE = "redTouchLine";
+    public static final String TOUCH_LINE_TXT_BG = "touchLineTextBg";
     public static final String BASE_LINE = "baseLine";
     public static final String TOUCH_LINE = "touchLine";
 
@@ -32,5 +31,12 @@ public class ColorCfg {
 
     public String get(String elementName) {
         return mCfg.get(elementName);
+    }
+
+    public ColorCfg put(String[] elementNames, String color) {
+        for (String elementName : elementNames) {
+            mCfg.put(elementName, color);
+        }
+        return this;
     }
 }
