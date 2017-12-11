@@ -217,7 +217,7 @@ public class MissAskFragment extends MediaPlayFragment {
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
             int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
             boolean radioPlayHasFocus = false;
-            for (int i = firstVisibleItemPosition; i < lastVisibleItemPosition; i++) {
+            for (int i = firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
                 Question question = mQuestionList.get(i);
                 if (question != null && MissAudioManager.get().isStarted(question)) {
                     View view = mEmptyRecyclerView.getChildAt(i - firstVisibleItemPosition);

@@ -31,6 +31,7 @@ import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.OnTouchAlphaChangeImageView;
+import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
@@ -61,6 +62,8 @@ public class ArenaFragment extends BaseFragment {
     OnTouchAlphaChangeImageView mMoneyRewardArena;
     @BindView(R.id.generalBattleBanner)
     OnTouchAlphaChangeImageView mGeneralBattleBanner;
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     private Unbinder mBind;
 
     @Nullable

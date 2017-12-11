@@ -1,2 +1,9 @@
-<manifest package="com.sbai.glide"
-          xmlns:android="http://schemas.android.com/apk/res/android"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.sbai.glide">
+
+    <application>
+        <meta-data
+            android:name="com.bumptech.glide.integration.volley.VolleyGlideModule"
+            android:value="GlideModule"/>
+    </application>
+</manifest>
