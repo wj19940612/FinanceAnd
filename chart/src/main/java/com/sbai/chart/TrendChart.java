@@ -22,14 +22,17 @@ import java.util.List;
 
 public class TrendChart extends ChartView {
 
-    private static final String DASH_LINE = "dashLine";
-    private static final String UNSTABLE_PRICE = "unstablePrice";
-    private static final String UNSTABLE_PRICE_BG = "unstablePriceBg";
-    private static final String REAL_TIME_LINE = "realTimeLine";
-    private static final String TOUCH_LINE_EXT = "touchLineText";
-    private static final String RED_RECT_BG = "redRectBg";
-    private static final String RED_TOUCH_LINE = "redTouchLine";
-    private static final String BASE_LINE = "baseLine";
+    public static final String DASH_LINE = "dashLine";
+    public static final String DEFAULT_TXT = "defaultText";
+    public static final String UNSTABLE_PRICE = "unstablePrice";
+    public static final String UNSTABLE_PRICE_BG = "unstablePriceBg";
+    public static final String REAL_TIME_LINE = "realTimeLine";
+    public static final String TOUCH_LINE_TXT = "touchLineText";
+    public static final String RED_RECT_BG = "redRectBg";
+    public static final String RED_TOUCH_LINE = "redTouchLine";
+    public static final String BASE_LINE = "baseLine";
+    public static final String TOUCH_LINE = "touchLine";
+
 
     private List<TrendViewData> mDataList;
     private TrendViewData mUnstableData;
@@ -81,7 +84,7 @@ public class TrendChart extends ChartView {
             paint.setColor(Color.WHITE);
         }
 
-        if (tag.equals(TOUCH_LINE_EXT)) {
+        if (tag.equals(TOUCH_LINE_TXT)) {
             paint.setColor(Color.BLACK);
         }
 
@@ -133,7 +136,7 @@ public class TrendChart extends ChartView {
         paint.setColor(Color.parseColor(ChartView.ChartColor.WHITE.get()));
         paint.setTextSize(mBigFontSize);
         paint.setPathEffect(null);
-        checkGameMode(paint, TOUCH_LINE_EXT);
+        checkGameMode(paint, TOUCH_LINE_TXT);
     }
 
     protected void setRedRectBgPaint(Paint paint) {

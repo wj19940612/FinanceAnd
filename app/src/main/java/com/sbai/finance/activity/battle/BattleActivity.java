@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sbai.chart.ColorCfg;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
@@ -812,8 +813,11 @@ public class BattleActivity extends BaseActivity {
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
-        settings2.setGameMode(true);
+        settings2.setColorCfg(new ColorCfg()
+                .put(ColorCfg.BASE_LINE, "#362d4d")
+                .put(ColorCfg.TOUCH_LINE, "#ffffff"));
         mKlineView.setSettings(settings2);
+        mKlineView.scaleSideBarText(0.7f);
         mKlineView.setOnReachBorderListener(new KlineView.OnReachBorderListener() {
             @Override
             public void onReachLeftBorder(KlineViewData theLeft, List<KlineViewData> dataList) {

@@ -151,12 +151,11 @@ public class KlineView extends RelativeLayout implements KlineChart.OnTouchLines
 
     public void setSettings(ChartSettings settings) {
         mKlineChart.setSettings(settings);
-        if (settings instanceof KlineChart.Settings) {
-            if (((KlineChart.Settings) settings).isGameMode()) {
-                scaleSideBarText(mLeftSideBar, 0.7f);
-                scaleSideBarText(mRightSideBar, 0.7f);
-            }
-        }
+    }
+
+    public void scaleSideBarText(float scale) {
+        scaleSideBarText(mLeftSideBar, scale);
+        scaleSideBarText(mRightSideBar, scale);
     }
 
     private void scaleSideBarText(View sideBar, float v) {
