@@ -6,7 +6,6 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 
-import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.radio.Radio;
@@ -50,29 +49,6 @@ public abstract class MediaPlayFragment extends BaseFragment {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMediaPlayBroadcastReceiver);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (Preference.get().isAudioPlayPause()) {
-            MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-            if (audio != null) {
-                if (MissAudioManager.get().isPaused(audio)) {
-                    MissAudioManager.get().resume();
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (MissAudioManager.get().isPlaying()) {
-            if (!Preference.get().isForeground()) {
-                MissAudioManager.get().pause();
-                Preference.get().setAudioPlayPause(true);
-            }
-        }
-    }
 
     public IntentFilter getIntentFilter() {
         IntentFilter filter = new IntentFilter();

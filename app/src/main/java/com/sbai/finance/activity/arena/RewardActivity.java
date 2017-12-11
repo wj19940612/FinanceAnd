@@ -157,7 +157,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_arena);
+        setContentView(R.layout.activity_reward);
         ButterKnife.bind(this);
         initView();
     }

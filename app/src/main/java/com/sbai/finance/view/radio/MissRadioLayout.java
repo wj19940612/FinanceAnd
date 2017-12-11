@@ -160,14 +160,14 @@ public class MissRadioLayout extends LinearLayout {
     public void updatePlayStatus() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
         unChangePlay();
-        if (MissAudioManager.get().isPlaying() || MissAudioManager.get().isPaused(audio)) {
+        if (MissAudioManager.get().isStarted(audio) || MissAudioManager.get().isPaused(audio)) {
             if (audio instanceof Radio) {
                 for (int i = 0; i < mPlayStateList.size(); i++) {
                     PlayStatus playStatus = mPlayStateList.get(i);
                     Radio radio = playStatus.getRadio();
                     if (radio.getId() == audio.getAudioId()) {
                         mPlayImageView = playStatus.getImageView();
-                        if (MissAudioManager.get().isPlaying()) {
+                        if (MissAudioManager.get().isStarted(audio)) {
                             mPlayImageView.setSelected(true);
                         }
                         mRadioTextView = playStatus.getRadioTextView();
