@@ -67,11 +67,19 @@ public abstract class MediaPlayActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMediaPlayBroadcastReceiver);
+        if (needRegisterBroadcast()) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mMediaPlayBroadcastReceiver);
+        }
     }
 
     private void registerBroadcast() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMediaPlayBroadcastReceiver, getIntentFilter());
+        if (needRegisterBroadcast()) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(mMediaPlayBroadcastReceiver, getIntentFilter());
+        }
+    }
+
+    protected boolean needRegisterBroadcast() {
+        return true;
     }
 
     protected IntentFilter getIntentFilter() {

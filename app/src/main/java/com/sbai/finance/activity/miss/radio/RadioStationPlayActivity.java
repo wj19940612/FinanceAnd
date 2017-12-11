@@ -31,6 +31,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.CommentActivity;
 import com.sbai.finance.activity.miss.MediaPlayActivity;
+import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
 import com.sbai.finance.model.LocalUser;
@@ -710,32 +711,36 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
                 QuestionReply.DataBean.UserModelBean userModelBean = item.getUserModel();
                 if (userModelBean != null) {
-                    int userIdentity = userModelBean.getCustomId() != 0 ? Question.USER_IDENTITY_HOST : Question.USER_IDENTITY_ORDINARY;
+                    int userIdentity = userModelBean.getCustomId() != 0 ? Question.USER_IDENTITY_MISS : Question.USER_IDENTITY_ORDINARY;
                     mAvatar.setAvatar(userModelBean.getUserPortrait(), userIdentity);
                     mUserName.setText(item.getUserModel().getUserName());
-                    mAvatar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Launcher.with(context, LookBigPictureActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, item.getUserModel().getUserPortrait())
-                                    .putExtra(Launcher.EX_PAYLOAD_2, 0)
-                                    .execute();
-                        }
-                    });
                 } else {
                     mAvatar.setAvatar("", 0);
                     mUserName.setText("");
+                }
+                
+                mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String userPortrait = null;
+                        int userIdentity = 0;
+                        if (item.getUserModel() != null) {
+                            userPortrait = item.getUserModel().getUserPortrait();
+                            userIdentity = item.getUserModel().getCustomId() != 0 ? Question.USER_IDENTITY_MISS : Question.USER_IDENTITY_ORDINARY;
+                        }
 
-                    mAvatar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                        if (userIdentity == Question.USER_IDENTITY_MISS) {
+                            Launcher.with(context, MissProfileDetailActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, 0)      // TODO: 2017/12/11 缺少小姐姐id
+                                    .execute();
+                        } else {
                             Launcher.with(context, LookBigPictureActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, "")
+                                    .putExtra(Launcher.EX_PAYLOAD, userPortrait)
                                     .putExtra(Launcher.EX_PAYLOAD_2, 0)
                                     .execute();
                         }
-                    });
-                }
+                    }
+                });
 
                 setReviewPrice(item.getPriseCount(), item.getIsPrise());
 

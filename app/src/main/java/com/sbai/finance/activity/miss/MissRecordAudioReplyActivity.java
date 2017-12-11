@@ -199,7 +199,7 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
             if (replyVOBeans != null && !replyVOBeans.isEmpty()) {
                 MissReplyAnswer.ReplyVOBean replyVOBean = replyVOBeans.get(0);
 
-                mMissAvatar.setAvatar(replyVOBean.getCustomPortrait(), Question.USER_IDENTITY_HOST);
+                mMissAvatar.setAvatar(replyVOBean.getCustomPortrait(), Question.USER_IDENTITY_MISS);
                 mMissName.setText(replyVOBean.getCustomName());
                 if (!TextUtils.isEmpty(replyVOBean.getCustomContext())) {
                     mMissReplyAnswer.setAudioPath(replyVOBean.getCustomContext());
@@ -212,7 +212,7 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
         } else {
             if (LocalUser.getUser().isLogin()) {
                 UserInfo userInfo = LocalUser.getUser().getUserInfo();
-                mMissAvatar.setAvatar(userInfo.getUserPortrait(), Question.USER_IDENTITY_HOST);
+                mMissAvatar.setAvatar(userInfo.getUserPortrait(), Question.USER_IDENTITY_MISS);
                 mMissName.setText(userInfo.getUserName());
             }
         }

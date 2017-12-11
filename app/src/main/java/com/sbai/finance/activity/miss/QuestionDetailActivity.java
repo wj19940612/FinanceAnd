@@ -424,7 +424,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
 
     private void updateQuestionDetail() {
         mAvatar.setAvatar(mQuestion.getUserPortrait(), mQuestion.getUserType());
-        mMissAvatar.setAvatar(mQuestion.getCustomPortrait(), Question.USER_IDENTITY_HOST);
+        mMissAvatar.setAvatar(mQuestion.getCustomPortrait(), Question.USER_IDENTITY_MISS);
 
         mName.setText(mQuestion.getUserName());
         mAskTime.setText(DateUtil.formatDefaultStyleTime(mQuestion.getCreateTime()));
@@ -454,10 +454,17 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         mAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Launcher.with(getActivity(), LookBigPictureActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mQuestion.getUserPortrait())
-                        .putExtra(Launcher.EX_PAYLOAD_2, 0)
-                        .execute();
+                // TODO: 2017/12/11  缺少用户是否是小姐姐 
+                if (mQuestion.isMiss()) {
+                    Launcher.with(getActivity(), MissProfileDetailActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mQuestion.getAnswerCustomId())
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), LookBigPictureActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mQuestion.getUserPortrait())
+                            .putExtra(Launcher.EX_PAYLOAD_2, 0)
+                            .execute();
+                }
             }
         });
 
@@ -812,38 +819,39 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
             public void bindingData(final Context context, final QuestionReply.DataBean item) {
                 if (item == null) return;
 
-                QuestionReply.DataBean.UserModelBean userModelBean = item.getUserModel();
+                final QuestionReply.DataBean.UserModelBean userModelBean = item.getUserModel();
                 if (userModelBean != null) {
-
-                    int userIdentity = userModelBean.getCustomId() != 0 ? Question.USER_IDENTITY_HOST : Question.USER_IDENTITY_ORDINARY;
-
+                    int userIdentity = userModelBean.getCustomId() != 0 ? Question.USER_IDENTITY_MISS : Question.USER_IDENTITY_ORDINARY;
                     mAvatar.setAvatar(userModelBean.getUserPortrait(), userIdentity);
-
                     mUserName.setText(item.getUserModel().getUserName());
 
-                    mAvatar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Launcher.with(context, LookBigPictureActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, item.getUserModel().getUserPortrait())
-                                    .putExtra(Launcher.EX_PAYLOAD_2, 0)
-                                    .execute();
-                        }
-                    });
                 } else {
                     mAvatar.setAvatar("", 0);
                     mUserName.setText("");
+                }
 
-                    mAvatar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String userPortrait = null;
+                        int userIdentity = 0;
+                        if (item.getUserModel() != null) {
+                            userPortrait = item.getUserModel().getUserPortrait();
+                            userIdentity = item.getUserModel().getCustomId() != 0 ? Question.USER_IDENTITY_MISS : Question.USER_IDENTITY_ORDINARY;
+                        }
+
+                        if (userIdentity == Question.USER_IDENTITY_MISS) {
+                            Launcher.with(context, MissProfileDetailActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, 0)      // TODO: 2017/12/11 缺少小姐姐id
+                                    .execute();
+                        } else {
                             Launcher.with(context, LookBigPictureActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, "")
+                                    .putExtra(Launcher.EX_PAYLOAD, userPortrait)
                                     .putExtra(Launcher.EX_PAYLOAD_2, 0)
                                     .execute();
                         }
-                    });
-                }
+                    }
+                });
 
                 setPrice(item.getPriseCount(), item.getIsPrise());
                 mReviewPriceCount.setOnClickListener(new View.OnClickListener() {

@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
@@ -62,7 +61,7 @@ import butterknife.OnClick;
  * Created by Administrator on 2017\11\22 0022.
  */
 
-public class MissProfileDetailActivity extends BaseActivity implements MissProfileQuestionFragment.OnFragmentRecycleViewScrollListener {
+public class MissProfileDetailActivity extends MediaPlayActivity implements MissProfileQuestionFragment.OnFragmentRecycleViewScrollListener {
     public static final String CUSTOM_ID = "custom_id";
 
     public static final int REQ_SUBMIT_QUESTION_LOGIN = 1002;
@@ -556,6 +555,41 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
         } else {
             ToastUtil.show(getString(R.string.no_miss));
         }
+    }
+
+    @Override
+    protected boolean needRegisterBroadcast() {
+        return false;
+    }
+
+    @Override
+    public void onMediaPlayStart(int IAudioId, int source) {
+
+    }
+
+    @Override
+    public void onMediaPlay(int IAudioId, int source) {
+
+    }
+
+    @Override
+    public void onMediaPlayResume(int IAudioId, int source) {
+
+    }
+
+    @Override
+    public void onMediaPlayPause(int IAudioId, int source) {
+
+    }
+
+    @Override
+    protected void onMediaPlayStop(int IAudioId, int source) {
+
+    }
+
+    @Override
+    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
+
     }
 
     static class ProfileFragmentAdapter extends FragmentPagerAdapter {

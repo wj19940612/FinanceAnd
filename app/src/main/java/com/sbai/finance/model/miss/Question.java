@@ -14,9 +14,8 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
 
     public static final int QUESTION_TYPE_HOT = 1;
 
-
     public static final int USER_IDENTITY_ORDINARY = 0;
-    public static final int USER_IDENTITY_HOST = 1;
+    public static final int USER_IDENTITY_MISS = 1;
 
     /**
      * answerContext : blob:http://var.esongbai.xyz/ed0ea7b6-bd51-4ff1-a631-864d01b9f4c8
@@ -94,6 +93,9 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
         return QUESTION_TYPE_LATEST;
     }
 
+    public boolean isMiss() {
+        return getUserType() == USER_IDENTITY_MISS;
+    }
 
     public int getUserType() {
         return userType;

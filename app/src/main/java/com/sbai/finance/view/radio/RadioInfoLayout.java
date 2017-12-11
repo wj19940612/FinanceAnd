@@ -129,7 +129,7 @@ public class RadioInfoLayout extends LinearLayout {
         mRadio = radio;
         mVoiceName.setText(radio.getAudioName());
         mVoiceIntroduce.setContentText(Html.fromHtml(radio.getAudioIntroduction()).toString());
-        mRadioOwnerAvatar.setAvatar(radio.getUserPortrait(), Question.USER_IDENTITY_HOST);
+        mRadioOwnerAvatar.setAvatar(radio.getUserPortrait(), Question.USER_IDENTITY_MISS);
         mRadioOwnerName.setText(radio.getRadioHostName());
         mRadioName.setText(radio.getRadioName());
         GlideApp.with(getContext())

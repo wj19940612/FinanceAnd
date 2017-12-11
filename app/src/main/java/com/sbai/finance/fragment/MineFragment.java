@@ -28,6 +28,7 @@ import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
+import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.training.CreditIntroduceActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.fund.UserFundInfo;
@@ -374,13 +375,26 @@ public class MineFragment extends BaseFragment {
     }
 
     @OnClick({R.id.userInfoArea, R.id.lemiScoreArea, R.id.wallet, R.id.mineQuestionsAndAnswers, R.id.mineCollection,
-            R.id.message, R.id.setting, R.id.mineSubscribe, R.id.waitMeAnswer})
+            R.id.message, R.id.setting, R.id.mineSubscribe, R.id.waitMeAnswer, R.id.userHeadImage})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.userInfoArea:
                 umengEventCount(UmengCountEventId.ME_MOD_USER_INFO);
                 if (LocalUser.getUser().isLogin()) {
                     startActivityForResult(new Intent(getActivity(), ModifyUserInfoActivity.class), REQ_CODE_USER_INFO);
+                } else {
+                    openLoginPage();
+                }
+                break;
+            case R.id.userHeadImage:
+                if (LocalUser.getUser().isLogin()) {
+                    if (LocalUser.getUser().isMiss()) {
+                        Launcher.with(getActivity(), MissProfileDetailActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, LocalUser.getUser().getUserInfo().getCustomId())
+                                .execute();
+                    } else {
+                        Launcher.with(getActivity(), ModifyUserInfoActivity.class).execute();
+                    }
                 } else {
                     openLoginPage();
                 }

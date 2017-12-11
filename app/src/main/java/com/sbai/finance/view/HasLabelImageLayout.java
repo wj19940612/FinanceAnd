@@ -79,7 +79,7 @@ public class HasLabelImageLayout extends RelativeLayout {
     }
 
     public void setAvatar(String avatarUrl, int userIdentity) {
-        if (userIdentity == Question.USER_IDENTITY_HOST) {
+        if (userIdentity == Question.USER_IDENTITY_MISS) {
             mLabelImageView.setVisibility(VISIBLE);
         } else {
             mLabelImageView.setVisibility(GONE);
