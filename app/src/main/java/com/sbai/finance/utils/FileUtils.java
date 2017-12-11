@@ -24,6 +24,8 @@ public class FileUtils {
 
     private static final String TAG = "FileUtils";
 
+    private static File sFile;
+
     /**
      * ExternalStorage: Traditionally SD card, or a built-in storage in device that is distinct from
      * the protected internal storage and can be mounted as a filesystem on a computer.
@@ -106,7 +108,10 @@ public class FileUtils {
                         Log.d(TAG, "ImageUtil: external picture storage is exist");
                     }
                 } else {
-                    rootFile = Environment.getExternalStorageDirectory();
+                    rootFile = App.getAppContext().getExternalCacheDir();
+                    if (rootFile == null) {
+                        rootFile = Environment.getExternalStorageDirectory();
+                    }
                 }
             } catch (Exception e) { // In case of folder missing, should not be call
                 rootFile = Environment.getExternalStorageDirectory();
@@ -134,12 +139,22 @@ public class FileUtils {
             }
 
             if (fullDir.exists()) {
-                return new File(fullDir, newFileName);
+                sFile = new File(fullDir, newFileName);
+                return sFile;
             }
-            return new File(root, newFileName);
+            sFile = new File(root, newFileName);
+            return sFile;
 
         } else {
-            return new File(root, fileName);
+            sFile = new File(root, fileName);
+            return sFile;
         }
+    }
+
+    public static boolean deleteFile() {
+        if (sFile != null) {
+            return sFile.delete();
+        }
+        return false;
     }
 }

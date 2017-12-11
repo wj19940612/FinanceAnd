@@ -1,7 +1,6 @@
 package com.sbai.finance.utils.audio;
 
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.util.Log;
 
 import com.sbai.finance.App;
@@ -95,7 +94,7 @@ public class MediaRecorderManager implements MediaRecorder.OnErrorListener, Medi
     }
 
     private String getOutputFilePath(String path) {
-        File file = FileUtils.createFile(App.getAppContext().getString(R.string.app_name) + path, Environment.DIRECTORY_MUSIC);
+        File file = FileUtils.createFile(App.getAppContext().getString(R.string.app_name) +System.currentTimeMillis()+ path);
         Log.d(TAG, "getOutputFilePath: " + file.getAbsolutePath());
         mRecordAudioPath = file.getAbsolutePath();
         return file.getAbsolutePath();

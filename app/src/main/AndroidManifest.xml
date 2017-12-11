@@ -442,7 +442,7 @@
             android:name=".activity.mine.WaitForMeAnswerActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.miss.MissAudioReplyActivity"
+            android:name=".activity.miss.MissRecordAudioReplyActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
     </application>

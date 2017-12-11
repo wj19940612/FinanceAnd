@@ -32,7 +32,7 @@ import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
-import com.sbai.finance.activity.miss.MissAudioReplyActivity;
+import com.sbai.finance.activity.miss.MissRecordAudioReplyActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
@@ -248,10 +248,10 @@ public class PushIntentService extends GTIntentService {
                 intent.putExtra(ExtraKeys.WEB_PAGE_URL, data.getUrl());
                 break;
             case PushMessageModel.ASK_QUESTION_DESIGNATED_MISS:
-                intent = new Intent(context, MissAudioReplyActivity.class);
+                intent = new Intent(context, MissRecordAudioReplyActivity.class);
                 try {
                     intent.putExtra(ExtraKeys.QUESTION_ID, Integer.valueOf(data.getDataId()));
-                    intent.putExtra(ExtraKeys.QUESTION_TYPE, MissAudioReplyActivity.QUESTION_TYPE_IS_NOT_SPECIFIED_MISS);
+                    intent.putExtra(ExtraKeys.QUESTION_TYPE, MissRecordAudioReplyActivity.QUESTION_TYPE_IS_NOT_SPECIFIED_MISS);
                 } catch (NumberFormatException e) {
                     if (!BuildConfig.IS_PROD) {
                         ToastUtil.show("web data is error" + data.getDataId());

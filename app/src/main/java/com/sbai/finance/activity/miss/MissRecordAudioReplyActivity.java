@@ -27,6 +27,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FileUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.ffmpeg.AndroidAudioConverter;
@@ -45,7 +46,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MissAudioReplyActivity extends MediaPlayActivity implements MissRecordedAudioLayout.OnRecordAudioListener {
+public class MissRecordAudioReplyActivity extends MediaPlayActivity implements MissRecordedAudioLayout.OnRecordAudioListener {
 
     public static final int QUESTION_TYPE_IS_NOT_SPECIFIED_MISS = 1;
 
@@ -93,15 +94,21 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
 
     MissReplyAnswer mMissReplyAnswer;
     private boolean mSubmitSuccess = true;
+
+
+    private boolean mSubmitting;
+
     private int mRecordAudioLength;
     private int mTotalTime;
+    private String mRecordAudioPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_miss_audio_reply);
+        setContentView(R.layout.activity_miss_record_audio_reply);
         ButterKnife.bind(this);
-        initView();
+
+        mAudioRecord.setOnRecordAudioListener(this);
 
         int questionId = getIntent().getIntExtra(ExtraKeys.QUESTION_ID, -1);
         int questionType = getIntent().getIntExtra(ExtraKeys.QUESTION_TYPE, 0);
@@ -110,6 +117,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
         } else {
             mTitleBar.setTitle(R.string.wait_me_answer);
         }
+
         Client.updateAnswerReadStatus(questionId).setTag(TAG).fireFree();
         requestQuestionDetail(questionId);
     }
@@ -210,17 +218,15 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
         }
     }
 
-    private void initView() {
-        mAudioRecord.setOnRecordAudioListener(this);
-    }
-
 
     @Override
     public void onBackPressed() {
-        if (!mSubmitSuccess) {
-            SmartDialog.single(getActivity(), getString(R.string.stop_submit_hint))
-                    .setNegative(R.string.again)
-                    .setPositive(R.string.stop, new SmartDialog.OnClickListener() {
+        if (mSubmitting) {
+            showSubmittingHintDialog();
+        } else if (!mSubmitSuccess) {
+            SmartDialog.single(getActivity(), getString(R.string.you_still_have_the_recording_not_sent_can_you_really_give_up))
+                    .setNegative(R.string.cancel)
+                    .setPositive(R.string.give_up_sent, new SmartDialog.OnClickListener() {
                         @Override
                         public void onClick(Dialog dialog) {
                             dialog.dismiss();
@@ -231,7 +237,25 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
         } else {
             super.onBackPressed();
         }
+    }
 
+    @Override
+    public void finish() {
+        super.finish();
+        FileUtils.deleteFile();
+    }
+
+    private void showSubmittingHintDialog() {
+        SmartDialog.single(getActivity(), getString(R.string.stop_submit_hint))
+                .setNegative(R.string.again)
+                .setPositive(R.string.stop, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                })
+                .show();
     }
 
     @OnClick({R.id.avatar, R.id.questionRl, R.id.missAvatar, R.id.missName, R.id.play, R.id.clickPlay, R.id.submitStatusLL})
@@ -254,7 +278,7 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                                 .putExtra(Launcher.EX_PAYLOAD, mMissReplyAnswer.getReplyVO().get(0).getCustomId())
                                 .execute();
                     } else {
-                        if (LocalUser.getUser().isLogin()) {
+                        if (LocalUser.getUser().isLogin() && LocalUser.getUser().isMiss()) {
                             Launcher.with(getActivity(), MissProfileDetailActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, LocalUser.getUser().getUserInfo().getCustomId())
                                     .execute();
@@ -305,20 +329,18 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
          *  Update with a valid audio file!
          *  Supported formats: {@link AndroidAudioConverter.AudioFormat}
          */
-//        File wavFile = new File(Environment.getExternalStorageDirectory(), "recorded_audio.wav");
         File file = new File(path);
+        Log.d(TAG, "convertAudio: " + file.getAbsolutePath());
         IConvertCallback callback = new IConvertCallback() {
             @Override
             public void onSuccess(File convertedFile) {
-
                 submitMp3File(convertedFile);
-
-//                Toast.makeText(MissAudioReplyActivity.this, "SUCCESS: " + convertedFile.getPath(), Toast.LENGTH_LONG).show();
+                mSubmitting = true;
             }
 
             @Override
             public void onFailure(Exception error) {
-                Toast.makeText(MissAudioReplyActivity.this, "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(MissRecordAudioReplyActivity.this, "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         };
         AndroidAudioConverter.with(this)
@@ -356,7 +378,6 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
         if (mMissReplyAnswer != null
                 && !TextUtils.isEmpty(mMissReplyAnswer.getAudioUrl())
                 && LocalUser.getUser().isLogin()) {
-            mSubmitSuccess = false;
             changeSubmitStatus(SUBMIT_PROCEED);
             convertAudio(mMissReplyAnswer.getAudioUrl());
         }
@@ -376,8 +397,14 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                         mMissReplyAnswer.setAudioPath(data);
                         if (convertedFile != null) {
                             boolean delete = convertedFile.delete();
-                            Log.d(TAG, "删除不: " + delete);
+                            mRecordAudioPath = null;
                         }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        mSubmitting = false;
                     }
                 })
                 .fireFree();
@@ -401,10 +428,12 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
                 mLoading.setVisibility(View.GONE);
                 mAudioRecord.setEnabled(true);
                 mSubmitStatus.setText(R.string.restart_submit);
-                mSubmitSuccess = true;
+                mSubmitting = false;
                 break;
             case SUBMIT_SUCCESS:
                 mSubmitSuccess = true;
+                mSubmitting = false;
+
                 mLoading.clearAnimation();
                 mLoading.setVisibility(View.VISIBLE);
                 mSubmitStatusLL.setBackgroundColor(Color.TRANSPARENT);
@@ -433,6 +462,8 @@ public class MissAudioReplyActivity extends MediaPlayActivity implements MissRec
     public void onRecordAudioFinish(String audioPath, int audioLength) {
         Log.d(TAG, "onRecordAudioFinish: " + audioPath);
         if (!TextUtils.isEmpty(audioPath)) {
+            mRecordAudioPath = audioPath;
+            mSubmitSuccess = false;
             if (mPlayRl.getVisibility() == View.GONE) {
                 mPlayRl.setVisibility(View.VISIBLE);
             }
