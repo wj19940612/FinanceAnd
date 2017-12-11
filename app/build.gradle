@@ -119,7 +119,7 @@ android {
         // channel use default (prod) configuration
 //        tencent {}
 //        m360 {}
-//        xiaomi {}
+        xiaomi {}
 //        baidu {}
 //        huawei {}
 //        vivo {}
