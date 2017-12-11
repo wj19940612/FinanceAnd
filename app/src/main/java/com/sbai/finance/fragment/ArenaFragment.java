@@ -79,15 +79,6 @@ public class ArenaFragment extends BaseFragment {
         super.onResume();
         startBreatheAnimation();
         updateUserStatus();
-        // TODO: 2017/12/7 测试
-        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Launcher.with(getActivity(), WebActivity.class)
-                        .putExtra(WebActivity.EX_URL,"https://lemi.ailemi.com/lm/activityk.html ")
-                        .execute();
-            }
-        });
     }
 
     private void updateArenaActivityStatus() {
