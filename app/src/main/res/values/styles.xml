@@ -178,11 +178,17 @@
         <item name="android:textSize">11sp</item>
     </style>
 
-    <style name="reward_money">
+    <style name="RewardIngot">
         <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/reward_ingot_text_color</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="RewardMoney">
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/reward_money_text_color</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/btn_reward_money</item>
     </style>
 
     <style name="Widget.GifView" parent="@android:style/Widget"/>

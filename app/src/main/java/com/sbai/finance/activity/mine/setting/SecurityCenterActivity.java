@@ -2,6 +2,7 @@ package com.sbai.finance.activity.mine.setting;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -27,6 +28,8 @@ public class SecurityCenterActivity extends BaseActivity {
     private static final int REQ_CODE_UPDATE_SECURITY_PSD = 247;
     private static final int REQ_CODE_UPDATE_LOGIN_PSD = 246;
 
+    public static final int REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT = 3886;
+
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
 
@@ -44,8 +47,8 @@ public class SecurityCenterActivity extends BaseActivity {
     IconTextRow mModifySecurityPassword;
     @BindView(R.id.forgetSecurityPassword)
     IconTextRow mForgetSecurityPassword;
-    @BindView(R.id.smallNoSecretPayment)
-    IconTextRow mSmallNoSecretPayment;
+    @BindView(R.id.allowSmallNoSecretPayment)
+    AppCompatImageView mAllowSmallNoSecretPayment;
 
     private boolean mHasSecurityPassword;
     private boolean mHasLoginPassword;
@@ -58,7 +61,9 @@ public class SecurityCenterActivity extends BaseActivity {
 
         initData(getIntent());
         initViews();
-        requestUserSmallNoSecretPayment();
+        if (mHasSecurityPassword) {
+            requestUserSmallNoSecretPayment();
+        }
     }
 
     private void initViews() {
@@ -85,7 +90,7 @@ public class SecurityCenterActivity extends BaseActivity {
     }
 
     @OnClick({R.id.modifySecurityPassword, R.id.forgetSecurityPassword, R.id.setSecurityPassword,
-            R.id.setLoginPassword, R.id.modifyLoginPassword, R.id.smallNoSecretPayment})
+            R.id.setLoginPassword, R.id.modifyLoginPassword, R.id.allowSmallNoSecretPayment})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.forgetSecurityPassword:
@@ -119,8 +124,8 @@ public class SecurityCenterActivity extends BaseActivity {
                         .putExtra(ExtraKeys.HAS_LOGIN_PSD, mHasLoginPassword)
                         .executeForResult(REQ_CODE_UPDATE_LOGIN_PSD);
                 break;
-            case R.id.smallNoSecretPayment:
-                Launcher.with(getActivity(), SmallAndFreePaymentPassSetActivity.class).executeForResult(SmallAndFreePaymentPassSetActivity.REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT);
+            case R.id.allowSmallNoSecretPayment:
+                setNonSecretPayment();
                 break;
         }
     }
@@ -132,18 +137,26 @@ public class SecurityCenterActivity extends BaseActivity {
                 .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
                     @Override
                     protected void onRespSuccessData(Boolean data) {
-                        updateUserSmallNoSecretPaymentStatus(data);
+                        mAllowSmallNoSecretPayment.setSelected(data);
                     }
                 })
                 .fireFree();
     }
 
-    private void updateUserSmallNoSecretPaymentStatus(Boolean data) {
-        if (data) {
-            mSmallNoSecretPayment.setSubText("开启了");
-        } else {
-            mSmallNoSecretPayment.setSubText("没有开启");
-        }
+    private void setNonSecretPayment() {
+        Client.setNonSecretPayment()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                    @Override
+                    protected void onRespSuccessData(Boolean data) {
+                        mAllowSmallNoSecretPayment.setSelected(data);
+                        Intent intent = new Intent();
+                        intent.putExtra(Launcher.EX_PAYLOAD, data.booleanValue());
+                        setResult(RESULT_OK, intent);
+                    }
+                })
+                .fireFree();
     }
 
     @Override
@@ -164,10 +177,6 @@ public class SecurityCenterActivity extends BaseActivity {
                     mHasLoginPassword = LocalUser.getUser().getUserInfo().isSetPass();
                     mSetLoginPassword.setVisibility(View.GONE);
                     mModifyLoginPassword.setVisibility(View.VISIBLE);
-                    break;
-                case SmallAndFreePaymentPassSetActivity.REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT:
-                    boolean booleanExtra = data.getBooleanExtra(Launcher.EX_PAYLOAD, false);
-                    updateUserSmallNoSecretPaymentStatus(booleanExtra);
                     break;
             }
         }

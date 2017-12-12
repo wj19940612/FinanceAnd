@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.utils.FinanceUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,14 +17,21 @@ import butterknife.OnClick;
 
 
 public class RewardSelectMoneyView extends LinearLayout {
-    @BindView(R.id.index0)
-    TextView mIndex0;
-    @BindView(R.id.index1)
-    TextView mIndex1;
-    @BindView(R.id.index2)
-    TextView mIndex2;
-    @BindView(R.id.index3)
-    TextView mIndex3;
+
+    public static final int EXCHANGE_RATE_FOR_CASH_EXCHANGE = 100;  //现金兑换元宝汇率
+
+    @BindView(R.id.firstRewardLL)
+    LinearLayout mFirstRewardLL;
+    @BindView(R.id.secondRewardLL)
+    LinearLayout mSecondRewardLL;
+    @BindView(R.id.thirdRewardLL)
+    LinearLayout mThirdRewardLL;
+    @BindView(R.id.otherIngotNumber)
+    TextView mOtherIngotNumber;
+    @BindView(R.id.otherMoneyContent)
+    TextView mOtherMoneyContent;
+    @BindView(R.id.otherRewardLL)
+    LinearLayout mOtherRewardLL;
     private int mSelectedIndex;
     private long mOtherMoney;
     private OnSelectedCallback mOnSelectedCallback;
@@ -59,48 +67,25 @@ public class RewardSelectMoneyView extends LinearLayout {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.index0, R.id.index1, R.id.index2, R.id.index3})
+    @OnClick({R.id.firstRewardLL, R.id.secondRewardLL, R.id.thirdRewardLL, R.id.otherRewardLL})
     public void onViewClicked(View view) {
-        switch (mSelectedIndex) {
-            case 0:
-                mIndex0.setSelected(false);
-                break;
-            case 1:
-                mIndex1.setSelected(false);
-                break;
-            case 2:
-                mIndex2.setSelected(false);
-                break;
-            case 3:
-                mIndex3.setSelected(false);
-            default:
-                break;
-        }
         switch (view.getId()) {
-            case R.id.index0:
+            case R.id.firstRewardLL:
+                changeReward(mSelectedIndex, false);
                 mSelectedIndex = 0;
-                mIndex0.setSelected(true);
-                if (mOnSelectedCallback != null) {
-                    mOnSelectedCallback.selected(10);
-                }
+                changeReward(mSelectedIndex, true);
                 break;
-            case R.id.index1:
+            case R.id.secondRewardLL:
+                changeReward(mSelectedIndex, false);
                 mSelectedIndex = 1;
-                mIndex1.setSelected(true);
-                if (mOnSelectedCallback != null) {
-                    mOnSelectedCallback.selected(100);
-                }
+                changeReward(mSelectedIndex, true);
                 break;
-            case R.id.index2:
+            case R.id.thirdRewardLL:
+                changeReward(mSelectedIndex, false);
                 mSelectedIndex = 2;
-                mIndex2.setSelected(true);
-                if (mOnSelectedCallback != null) {
-                    mOnSelectedCallback.selected(1000);
-                }
+                changeReward(mSelectedIndex, true);
                 break;
-            case R.id.index3:
-                mSelectedIndex = 3;
-                mIndex3.setSelected(true);
+            case R.id.otherRewardLL:
                 if (mOnSelectedCallback != null) {
                     mOnSelectedCallback.selectedOther();
                 }
@@ -108,44 +93,62 @@ public class RewardSelectMoneyView extends LinearLayout {
         }
     }
 
-    public RewardSelectMoneyView setOtherMoney(long money) {
-        mOtherMoney = money;
-        mIndex3.setText(getContext().getString(R.string.other) + "\n" + String.valueOf(money));
-        return this;
+    private void changeReward(int selectedIndex, boolean isSelect) {
+        switch (selectedIndex) {
+            case 0:
+                mFirstRewardLL.setSelected(isSelect);
+                for (int i = 0; i < mFirstRewardLL.getChildCount(); i++) {
+                    mFirstRewardLL.getChildAt(i).setSelected(isSelect);
+                }
+                if (isSelect) {
+                    if (mOnSelectedCallback != null) {
+                        mOnSelectedCallback.selected(10);
+                    }
+                }
+                break;
+            case 1:
+                mSecondRewardLL.setSelected(isSelect);
+                for (int i = 0; i < mSecondRewardLL.getChildCount(); i++) {
+                    mSecondRewardLL.getChildAt(i).setSelected(isSelect);
+                }
+                if (isSelect) {
+                    if (mOnSelectedCallback != null) {
+                        mOnSelectedCallback.selected(100);
+                    }
+                }
+                break;
+            case 2:
+                mThirdRewardLL.setSelected(isSelect);
+                for (int i = 0; i < mThirdRewardLL.getChildCount(); i++) {
+                    mThirdRewardLL.getChildAt(i).setSelected(isSelect);
+                }
+                if (isSelect) {
+                    if (mOnSelectedCallback != null) {
+                        mOnSelectedCallback.selected(1000);
+                    }
+                }
+                break;
+            case 3:
+                mOtherRewardLL.setSelected(isSelect);
+                for (int i = 0; i < mOtherRewardLL.getChildCount(); i++) {
+                    mOtherRewardLL.getChildAt(i).setSelected(isSelect);
+                }
+                break;
+
+        }
     }
 
-    public void setSelectedIndex(int index) {
-        switch (mSelectedIndex) {
-            case 0:
-                mIndex0.setSelected(false);
-                break;
-            case 1:
-                mIndex1.setSelected(false);
-                break;
-            case 2:
-                mIndex2.setSelected(false);
-                break;
-            case 3:
-                mIndex3.setSelected(false);
-            default:
-                break;
-        }
-        mSelectedIndex = index;
-        switch (index) {
-            case 0:
-                mIndex0.setSelected(true);
-                break;
-            case 1:
-                mIndex1.setSelected(true);
-                break;
-            case 2:
-                mIndex2.setSelected(true);
-                break;
-            case 3:
-                mIndex3.setSelected(true);
-            default:
-                break;
-        }
+
+    public void setOtherMoney(long money) {
+        mOtherMoney = money;
+        mOtherMoneyContent.setVisibility(VISIBLE);
+        changeReward(mSelectedIndex, false);
+        mSelectedIndex = 3;
+        changeReward(mSelectedIndex, true);
+
+        mOtherIngotNumber.setText(getContext().getString(R.string.ingot_number_no_blank, money));
+        double cash = FinanceUtil.divide(money, EXCHANGE_RATE_FOR_CASH_EXCHANGE).doubleValue();
+        mOtherMoneyContent.setText(getContext().getString(R.string.s_yuan, String.valueOf(cash)));
     }
 
     public int getSelectedIndex() {
@@ -172,7 +175,4 @@ public class RewardSelectMoneyView extends LinearLayout {
         return mOtherMoney;
     }
 
-    public void clearSelected() {
-        mIndex3.setSelected(false);
-    }
 }

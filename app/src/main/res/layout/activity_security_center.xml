@@ -88,11 +88,37 @@
             app:rowTextSize="15sp"/>
     </LinearLayout>
 
-    <com.sbai.finance.view.IconTextRow
-        android:id="@+id/smallNoSecretPayment"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_padding"
         android:background="@drawable/bg_white"
-        app:rowText="@string/small_no_secret_payment"/>
+        android:padding="@dimen/common_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/small_no_secret_payment"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/allowSmallNoSecretPayment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/bg_switch_news"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginTop="10dp"
+        android:text="@string/small_no_secret_payment_hint"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"/>
 
 </LinearLayout>

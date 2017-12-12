@@ -28,22 +28,27 @@
             android:orientation="vertical"
             android:paddingBottom="20dp"
             android:paddingLeft="@dimen/common_padding"
-            android:paddingRight="@dimen/common_padding"
-            android:paddingTop="40dp">
-
-            <com.sbai.finance.view.RewardSelectMoneyView
-                android:id="@+id/rewardMoneyContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"/>
+            android:paddingRight="@dimen/common_padding">
 
             <TextView
                 android:id="@+id/openAllowAvoidClosePay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:drawableLeft="@drawable/ic_free_payment_no_pass"
+                android:drawablePadding="5dp"
+                android:paddingBottom="11dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="11dp"
                 android:text="@string/start_small_and_free_payment_immediately"
-                android:visibility="gone"/>
+                android:visibility="invisible"/>
+
+            <com.sbai.finance.view.RewardSelectMoneyView
+                android:id="@+id/rewardMoneyContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"/>
 
             <TextView
                 android:id="@+id/confirmReward"

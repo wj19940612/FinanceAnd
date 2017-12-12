@@ -16,7 +16,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
-import com.sbai.finance.activity.mine.setting.SmallAndFreePaymentPassSetActivity;
+import com.sbai.finance.activity.mine.setting.SecurityCenterActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.fragment.dialog.RewardInputSafetyPassDialogFragment;
 import com.sbai.finance.fragment.dialog.RewardOtherMoneyDialogFragment;
@@ -108,14 +108,18 @@ public class RewardMissActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccessData(Boolean data) {
                         mIsAllowAvoidClosePay = data;
-                        if (data) {
-                            mOpenAllowAvoidClosePay.setVisibility(View.GONE);
-                        } else {
-                            mOpenAllowAvoidClosePay.setVisibility(View.VISIBLE);
-                        }
+                        changeSmallFreePayHintViewStatus(data);
                     }
                 })
                 .fireFree();
+    }
+
+    private void changeSmallFreePayHintViewStatus(Boolean data) {
+        if (data) {
+            mOpenAllowAvoidClosePay.setVisibility(View.INVISIBLE);
+        } else {
+            mOpenAllowAvoidClosePay.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initView() {
@@ -137,11 +141,7 @@ public class RewardMissActivity extends BaseActivity {
                             @Override
                             public void onDismiss() {
                                 mRewardArea.setVisibility(View.VISIBLE);
-                                if (mRewardMoneyContent.getOtherMoney() == 0) {
-                                    mRewardMoneyContent.clearSelected();
-                                }
                                 if (mSelectedIndex != -1) {
-                                    mRewardMoneyContent.setSelectedIndex(mSelectedIndex);
                                     mRewardMoney.setText(String.valueOf(mRewardMoneyContent.getSelectedMoney()));
                                     mConfirmReward.setEnabled(true);
                                 }
@@ -186,7 +186,7 @@ public class RewardMissActivity extends BaseActivity {
                 requestUserFindInfo();
                 break;
             case R.id.openAllowAvoidClosePay:
-                Launcher.with(getActivity(), SmallAndFreePaymentPassSetActivity.class).executeForResult(SmallAndFreePaymentPassSetActivity.REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT);
+                Launcher.with(getActivity(), SecurityCenterActivity.class).executeForResult(SecurityCenterActivity.REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT);
                 break;
         }
     }
@@ -353,14 +353,10 @@ public class RewardMissActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == SmallAndFreePaymentPassSetActivity.REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT) {
+        if (resultCode == RESULT_OK && requestCode == SecurityCenterActivity.REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT) {
             boolean booleanExtra = data.getBooleanExtra(Launcher.EX_PAYLOAD, false);
             mIsAllowAvoidClosePay = booleanExtra;
-            if (mIsAllowAvoidClosePay) {
-                mOpenAllowAvoidClosePay.setVisibility(View.GONE);
-            } else {
-                mOpenAllowAvoidClosePay.setVisibility(View.VISIBLE);
-            }
+            changeSmallFreePayHintViewStatus(mIsAllowAvoidClosePay);
         }
     }
 }

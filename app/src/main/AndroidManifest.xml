@@ -445,8 +445,6 @@
             android:name=".activity.miss.MissRecordAudioReplyActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.mine.setting.SmallAndFreePaymentPassSetActivity">
-        </activity>
     </application>
 
 </manifest>
