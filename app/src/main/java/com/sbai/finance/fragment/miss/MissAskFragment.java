@@ -197,11 +197,7 @@ public class MissAskFragment extends MediaPlayFragment {
     }
 
     private void notifyAdapterDataChanged(int source) {
-//        if (mMissAskType == MISS_ASK_TYPE_HOT && source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION) {
         mMissAskAdapter.notifyDataSetChanged();
-//        } else if (mMissAskType == MISS_ASK_TYPE_LATEST && source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION) {
-//            mMissAskAdapter.notifyDataSetChanged();
-//        }
     }
 
     @Override
