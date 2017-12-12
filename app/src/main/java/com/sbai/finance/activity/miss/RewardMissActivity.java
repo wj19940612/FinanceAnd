@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -15,16 +16,20 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
+import com.sbai.finance.activity.mine.setting.SmallAndFreePaymentPassSetActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.fragment.dialog.RewardInputSafetyPassDialogFragment;
 import com.sbai.finance.fragment.dialog.RewardOtherMoneyDialogFragment;
 import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
+import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.RewardSelectMoneyView;
 import com.sbai.finance.view.SmartDialog;
@@ -38,6 +43,10 @@ import butterknife.OnClick;
  */
 
 public class RewardMissActivity extends BaseActivity {
+
+
+    private static final int SMALL_NO_SECRET_PAYMENT = 100;
+
     @BindView(R.id.cancelArea)
     View mCancelArea;
     @BindView(R.id.rewardMoneyContent)
@@ -48,9 +57,14 @@ public class RewardMissActivity extends BaseActivity {
     TextView mRewardMoney;
     @BindView(R.id.rewardArea)
     FrameLayout mRewardArea;
+    @BindView(R.id.openAllowAvoidClosePay)
+    TextView mOpenAllowAvoidClosePay;
     private int mId;
     private int mType;
     private int mSelectedIndex = -1;
+
+    private boolean mIsAllowAvoidClosePay;
+    private boolean mHasSafetyPass;
 
     public static void show(Activity activity, int id, int type) {
         Launcher.with(activity, RewardMissActivity.class)
@@ -67,6 +81,41 @@ public class RewardMissActivity extends BaseActivity {
 
         initData(getIntent());
         initView();
+        requestUserHasSafetyPass();
+    }
+
+    private void requestUserHasSafetyPass() {
+        Client.getUserHasPassWord()
+                .setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                    @Override
+                    protected void onRespSuccessData(Boolean data) {
+                        mHasSafetyPass = data;
+                        if (data) {
+                            requestUserSmallNoSecretPaymentStatus();
+                        }
+                    }
+                })
+                .fire();
+    }
+
+    private void requestUserSmallNoSecretPaymentStatus() {
+        //想增加个缓存
+        Client.requestUserSmallNoSecretPaymentStatus()
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                    @Override
+                    protected void onRespSuccessData(Boolean data) {
+                        mIsAllowAvoidClosePay = data;
+                        if (data) {
+                            mOpenAllowAvoidClosePay.setVisibility(View.GONE);
+                        } else {
+                            mOpenAllowAvoidClosePay.setVisibility(View.VISIBLE);
+                        }
+                    }
+                })
+                .fireFree();
     }
 
     private void initView() {
@@ -127,7 +176,7 @@ public class RewardMissActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.cancelArea, R.id.confirmReward})
+    @OnClick({R.id.cancelArea, R.id.confirmReward, R.id.openAllowAvoidClosePay})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.cancelArea:
@@ -135,6 +184,9 @@ public class RewardMissActivity extends BaseActivity {
                 break;
             case R.id.confirmReward:
                 requestUserFindInfo();
+                break;
+            case R.id.openAllowAvoidClosePay:
+                Launcher.with(getActivity(), SmallAndFreePaymentPassSetActivity.class).executeForResult(SmallAndFreePaymentPassSetActivity.REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT);
                 break;
         }
     }
@@ -150,28 +202,89 @@ public class RewardMissActivity extends BaseActivity {
                         if (data.getYuanbao() < Long.valueOf(mRewardMoney.getText().toString())) {
                             showRechargeDialog(getActivity(), data);
                         } else {
-                            requestUserHasSafetyPass();
+                            if (mIsAllowAvoidClosePay && SMALL_NO_SECRET_PAYMENT >= Long.valueOf(mRewardMoney.getText().toString())) {
+                                smallNoSecretReward();
+                            } else {
+                                if (!mHasSafetyPass) {
+                                    showAddSafetyPassDialog();
+                                } else {
+                                    showInputSafetyPassDialog();
+                                }
+                            }
                         }
                     }
                 })
                 .fireFree();
     }
 
-    private void requestUserHasSafetyPass() {
-        Client.getUserHasPassWord()
+    private void smallNoSecretReward() {
+        switch (mType) {
+            case RewardInfo.TYPE_MISS:
+                rewardToMiss();
+                break;
+            case RewardInfo.TYPE_QUESTION:
+                rewardQuestion();
+                break;
+        }
+    }
+
+    private void rewardQuestion() {
+        long rewardMoney = mRewardMoneyContent.getSelectedMoney();
+        Client.rewardQuestion(mId, rewardMoney, AccountFundDetail.TYPE_INGOT, null)
                 .setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
+                .setCallback(new Callback<Resp<Object>>() {
                     @Override
-                    protected void onRespSuccessData(Boolean data) {
-                        if (!data) {
-                            showAddSafetyPassDialog();
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        ToastUtil.show(getString(R.string.success_reward));
+                        sendRewardSuccessBroadcast(getActivity());
+                        finish();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
+                            finish();
                         } else {
-                            showInputSafetyPassDialog();
+                            if (failedResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
+                            }
+                            ToastUtil.show(failedResp.getMsg());
                         }
                     }
-                })
-                .fire();
+                }).fire();
+    }
+
+    private void rewardToMiss() {
+        long rewardMoney = mRewardMoneyContent.getSelectedMoney();
+        Client.rewardMiss(mId, rewardMoney, AccountFundDetail.TYPE_INGOT, null)
+                .setTag(TAG)
+                .setCallback(new Callback<Resp<Object>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+                        ToastUtil.show(getString(R.string.success_reward));
+                        sendRewardSuccessBroadcast(getActivity());
+                        finish();
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        if (failedResp.getCode() == Resp.CODE_EXCHANGE_FUND_IS_NOT_ENOUGH) {
+                            finish();
+                        } else {
+                            if (failedResp.getCode() == Resp.CODE_SAFETY_INPUT_ERROR) {
+
+                            }
+                            ToastUtil.show(failedResp.getMsg());
+                        }
+                    }
+                }).fire();
+    }
+
+    private void sendRewardSuccessBroadcast(FragmentActivity activity) {
+        Intent intent = new Intent();
+        intent.setAction(ACTION_REWARD_SUCCESS);
+        intent.putExtra(Launcher.EX_PAYLOAD, mType);
+        intent.putExtra(Launcher.EX_PAYLOAD_1, mId);
+        LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
     }
 
     private void showAddSafetyPassDialog() {
@@ -237,4 +350,17 @@ public class RewardMissActivity extends BaseActivity {
                 .show(getActivity().getSupportFragmentManager());
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == SmallAndFreePaymentPassSetActivity.REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT) {
+            boolean booleanExtra = data.getBooleanExtra(Launcher.EX_PAYLOAD, false);
+            mIsAllowAvoidClosePay = booleanExtra;
+            if (mIsAllowAvoidClosePay) {
+                mOpenAllowAvoidClosePay.setVisibility(View.GONE);
+            } else {
+                mOpenAllowAvoidClosePay.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 }

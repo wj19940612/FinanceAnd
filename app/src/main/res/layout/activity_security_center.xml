@@ -14,9 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/common_margin"
+        android:background="@android:color/white"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
-        android:background="@android:color/white"
         app:titleText="@string/security_center"
         app:titleTextColor="@color/primaryText"/>
 
@@ -87,4 +87,12 @@
             app:rowTextColor="@color/primaryText"
             app:rowTextSize="15sp"/>
     </LinearLayout>
+
+    <com.sbai.finance.view.IconTextRow
+        android:id="@+id/smallNoSecretPayment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        app:rowText="@string/small_no_secret_payment"/>
+
 </LinearLayout>
