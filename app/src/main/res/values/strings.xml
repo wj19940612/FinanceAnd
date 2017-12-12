@@ -1049,6 +1049,7 @@
     <string name="please_open_the_recording_permission">请打开录音权限</string>
     <string name="you_still_have_the_recording_not_sent_can_you_really_give_up">您还有录音未发送，确定放弃吗？</string>
     <string name="give_up_sent">放弃发送</string>
+    <string name="the_interesting_and_juicy_anchor_will_answer_for_you">有趣又有料的主播为你解答</string>
 
     <string name="there_is_no_matched_stock">无匹配股票</string>
 </resources>

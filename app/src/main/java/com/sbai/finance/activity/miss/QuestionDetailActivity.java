@@ -38,7 +38,6 @@ import com.sbai.finance.model.miss.QuestionCollect;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.radio.Radio;
-import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -180,26 +179,11 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     }
 
     private void requestShareData() {
-        final String shareTitle = getString(R.string.share_title);
-        final String shareDescription = getString(R.string.question_share_description);
-        final String shareUrl = String.format(SHARE_URL_QUESTION, mQuestionId);
-        Client.requestShareData(Share.SHARE_CODE_QUESTION_ANSWER)
-                .setIndeterminate(this)
-                .setTag(TAG)
-                .setCallback(new Callback2D<Resp<Share>, Share>() {
-                    @Override
-                    protected void onRespSuccessData(Share data) {
-                        data.setShareLink(data.getShareLink().concat("?questionId=" + mQuestionId));
-                        share(data.getTitle(), data.getContent(), data.getShareLink(), data.getShareLeUrl());
-                    }
-
-                    @Override
-                    public void onFailure(ApiError apiError) {
-                        super.onFailure(apiError);
-                        share(shareTitle, shareDescription, shareUrl, null);
-                    }
-                })
-                .fireFree();
+        String shareUrl = String.format(SHARE_URL_QUESTION, mQuestionId);
+        if (mQuestion != null) {
+            String shareThumbUrl = mQuestion.getCustomPortrait();
+            share(mQuestion.getQuestionContext(), getString(R.string.the_interesting_and_juicy_anchor_will_answer_for_you), shareUrl, shareThumbUrl);
+        }
     }
 
     private void share(String shareTitle, String shareDescription, String shareUrl, String shareThumbUrl) {
@@ -207,9 +191,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
 
         ShareDialog.with(getActivity())
                 .setTitle(getString(R.string.share_title))
-                .setShareTitle(getString(R.string.question_share_share_title))
-                .setShareDescription(getString(R.string.question_share_description))
-                .setShareUrl(String.format(SHARE_URL_QUESTION, mQuestionId))
                 .setShareTitle(shareTitle)
                 .setShareDescription(shareDescription)
                 .setShareUrl(shareUrl)
