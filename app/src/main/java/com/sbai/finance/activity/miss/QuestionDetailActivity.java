@@ -457,7 +457,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                 // TODO: 2017/12/11  缺少用户是否是小姐姐 
                 if (mQuestion.isMiss()) {
                     Launcher.with(getActivity(), MissProfileDetailActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, mQuestion.getAnswerCustomId())
+                            .putExtra(Launcher.EX_PAYLOAD, mQuestion.getCustomId())
                             .execute();
                 } else {
                     Launcher.with(getActivity(), LookBigPictureActivity.class)
@@ -835,14 +835,16 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                     public void onClick(View v) {
                         String userPortrait = null;
                         int userIdentity = 0;
+                        int missId = 0;
                         if (item.getUserModel() != null) {
                             userPortrait = item.getUserModel().getUserPortrait();
                             userIdentity = item.getUserModel().getCustomId() != 0 ? Question.USER_IDENTITY_MISS : Question.USER_IDENTITY_ORDINARY;
+                            missId = item.getUserModel().getCustomId();
                         }
 
                         if (userIdentity == Question.USER_IDENTITY_MISS) {
                             Launcher.with(context, MissProfileDetailActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, 0)      // TODO: 2017/12/11 缺少小姐姐id
+                                    .putExtra(Launcher.EX_PAYLOAD, missId)
                                     .execute();
                         } else {
                             Launcher.with(context, LookBigPictureActivity.class)

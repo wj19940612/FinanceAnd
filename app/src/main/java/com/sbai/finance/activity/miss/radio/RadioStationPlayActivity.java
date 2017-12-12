@@ -718,20 +718,22 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                     mAvatar.setAvatar("", 0);
                     mUserName.setText("");
                 }
-                
+
                 mAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String userPortrait = null;
                         int userIdentity = 0;
+                        int missId = 0;
                         if (item.getUserModel() != null) {
                             userPortrait = item.getUserModel().getUserPortrait();
                             userIdentity = item.getUserModel().getCustomId() != 0 ? Question.USER_IDENTITY_MISS : Question.USER_IDENTITY_ORDINARY;
+                            missId = item.getUserModel().getCustomId();
                         }
 
                         if (userIdentity == Question.USER_IDENTITY_MISS) {
                             Launcher.with(context, MissProfileDetailActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, 0)      // TODO: 2017/12/11 缺少小姐姐id
+                                    .putExtra(Launcher.EX_PAYLOAD, missId)
                                     .execute();
                         } else {
                             Launcher.with(context, LookBigPictureActivity.class)
