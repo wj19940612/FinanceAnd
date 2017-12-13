@@ -16,7 +16,6 @@ import com.sbai.glide.GlideApp;
  * 开始对战的倒数两秒弹窗
  */
 public class StartBattleDialog extends BaseDialog {
-
     public interface OnDismissListener {
         void onDismiss();
     }
