@@ -8,6 +8,8 @@ public class ChartSettings {
     private int mNumberScale;
     private int mXAxis;
     private float mPreClosePrice;
+    private ColorCfg mColorCfg;
+    private int mTimeLineHeight;
 
     public ChartSettings() {
         mBaseLines = new float[0];
@@ -70,5 +72,13 @@ public class ChartSettings {
 
     public int getXAxis() {
         return mXAxis;
+    }
+
+    public void setColorCfg(ColorCfg colorCfg) {
+        mColorCfg = colorCfg;
+    }
+
+    public ColorCfg getColorCfg() {
+        return mColorCfg;
     }
 }

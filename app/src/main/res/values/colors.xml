@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#000</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="redPrimary">#F25B57</color>
+    <color name="redPrimary">#f25b57</color>
     <color name="blackPrimary">#222</color>
 
     <color name="background">#F5F5F5</color>
@@ -18,7 +18,7 @@
 
     <!--Assist-->
     <color name="yellowAssist">#FFC336</color>
-    <color name="greenAssist">#2FCC9F</color>
+    <color name="greenAssist">#2fcc9f</color>
     <color name="redAssist">#EF6D6A</color>
     <color name="greyAssist">#7B7B7B</color>
     <color name="blueAssist">#6A9CEF</color>

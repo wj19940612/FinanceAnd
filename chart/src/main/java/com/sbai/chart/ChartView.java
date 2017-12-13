@@ -24,10 +24,10 @@ public abstract class ChartView extends View {
         BASE("#dddddd"),
         TEXT("#999999"),
         WHITE("#ffffff"),
-        GREEN("#2ecc9f"),
+        GREEN("#2fcc9f"),
         BLACK("#222222"),
         DASH("#979797"),
-        RED("#ef6d6a");
+        RED("#f25b57");
 
         private String value;
 
@@ -71,6 +71,7 @@ public abstract class ChartView extends View {
     private Handler mHandler;
 
     protected ChartSettings mSettings;
+    protected ColorCfg mColorCfg;
 
     protected float mFontSize;
     protected int mFontHeight;
@@ -178,6 +179,7 @@ public abstract class ChartView extends View {
 
     public void setSettings(ChartSettings settings) {
         mSettings = settings;
+        mColorCfg = mSettings.getColorCfg();
         redraw();
     }
 
@@ -185,6 +187,7 @@ public abstract class ChartView extends View {
         paint.setColor(Color.parseColor(ChartColor.BASE.get()));
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(mBaseLineWidth);
+        applyColorConfiguration(paint, ColorCfg.BASE_LINE);
     }
 
     protected void setDefaultTextPaint(Paint paint) {
@@ -192,6 +195,16 @@ public abstract class ChartView extends View {
         paint.setTextSize(mFontSize);
         paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);
+        applyColorConfiguration(paint, ColorCfg.DEFAULT_TXT);
+    }
+
+    protected void applyColorConfiguration(Paint paint, String elementName) {
+        if (mColorCfg == null) return;
+
+        String color = mColorCfg.get(elementName);
+        if (color != null) {
+            paint.setColor(Color.parseColor(color));
+        }
     }
 
     @Override
@@ -548,6 +561,7 @@ public abstract class ChartView extends View {
         if (mRectF == null) {
             mRectF = new RectF();
         }
+        mRectF.setEmpty();
         return mRectF;
     }
 

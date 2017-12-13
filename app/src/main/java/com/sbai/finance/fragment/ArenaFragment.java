@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.TestActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.arena.RewardActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
@@ -72,6 +73,17 @@ public class ArenaFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_arena, container, false);
         mBind = ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Launcher.with(getActivity(), TestActivity.class).execute();
+            }
+        });
     }
 
     @Override
