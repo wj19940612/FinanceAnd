@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tool="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:orientation="vertical">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/dialogDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        app:srcCompat="@drawable/ic_popup_delete"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialogDelete"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:elevation="1dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_guess_kline_record"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_white_rounded"
+            android:orientation="vertical"
+            android:paddingBottom="30dp"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:paddingTop="30dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="6dp"
+                    android:drawableRight="@drawable/ic_guess_kline_record_1v1"
+                    android:text="@string/one_to_one_pk"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/onePkCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:background="@drawable/bg_background_rounded_one_px"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp"
+                    android:textColor="@color/luckyText"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    tool:text="32场次"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="22dp"
+                android:background="@color/background"
+                android:orientation="horizontal"
+                android:paddingBottom="11dp"
+                android:paddingTop="11dp">
+
+                <TextView
+                    android:id="@+id/onePkProfit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textColor="@color/blackPrimary"
+                    android:textSize="14sp"
+                    tool:text="1254\n盈利元宝"/>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5">
+
+                    <TextView
+                        android:id="@+id/onePkRate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="18dp"
+                        android:gravity="center"
+                        android:textColor="@color/blackPrimary"
+                        android:textSize="14sp"
+                        tool:text="1254%\n胜率"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="6dp"
+                    android:drawableRight="@drawable/ic_guess_kline_record_four"
+                    android:text="@string/one_to_one_pk"
+                    android:textColor="#FEC022"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/fourPkCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:background="@drawable/bg_background_rounded_one_px"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp"
+                    android:textColor="@color/luckyText"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    tool:text="32场次"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                android:orientation="horizontal"
+                android:paddingBottom="6dp"
+                android:paddingTop="11dp">
+
+                <TextView
+                    android:id="@+id/fourPkProfit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:textColor="@color/blackPrimary"
+                    android:textSize="14sp"
+                    tool:text="1254\n盈利元宝"/>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:paddingLeft="14dp">
+
+                    <TextView
+                        android:id="@+id/firstCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginRight="18dp"
+                        android:drawableBottom="@drawable/ic_guess_kline_top_first"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:textColor="@color/blackPrimary"
+                        android:textSize="14sp"
+                        tool:text="12"/>
+
+                    <TextView
+                        android:id="@+id/secondCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="18dp"
+                        android:drawableBottom="@drawable/ic_guess_kline_top_second"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:textColor="@color/blackPrimary"
+                        android:textSize="14sp"
+                        tool:text="1254"/>
+
+                    <TextView
+                        android:id="@+id/thirdCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="18dp"
+                        android:drawableBottom="@drawable/ic_guess_kline_top_third"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:textColor="@color/blackPrimary"
+                        android:textSize="14sp"
+                        tool:text="125"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

@@ -248,6 +248,13 @@
         <item name="android:windowExitAnimation">@anim/fade_out_quickly</item>
     </style>
 
+    <style name="CountDownView">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/bg_guess_kline_countdown_rounded</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>

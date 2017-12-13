@@ -1047,6 +1047,20 @@
     <string name="question_answer_detail">问题详情</string>
     <string name="audio_length">%1$s秒</string>
     <string name="please_open_the_recording_permission">请打开录音权限</string>
-    
+
     <string name="there_is_no_matched_stock">无匹配股票</string>
+
+    <!--guess_kline-->
+    <string name="guess_kline_four_pk">四人一局，群雄争霸</string>
+    <string name="guess_kline_one_pk">狭路相逢，强强对决</string>
+    <string name="guess_kline_exercise">免费练习，磨炼技巧</string>
+    <string name="single_exercise">单人练习</string>
+    <string name="four_pk_room">四人乱斗场</string>
+    <string name="one_pk">1V1 PK场</string>
+    <string name="total_profit_with_colon">总盈利:</string>
+    <string name="position_profit_with_colon">持仓:</string>
+    <string name="you_end_game_please_wait_others">恭喜您已完成本局比赛,请等待其他玩家完成</string>
+    <string name="one_to_one_pk">1V1</string>
+    <string name="four_pk">乱斗</string>
+    <string name="_total_profit">%1$d\n盈利(元宝)</string>
 </resources>

@@ -445,6 +445,12 @@
             android:name=".activity.miss.MissAudioReplyActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.guesskline.GuessKlineActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.guesskline.GuessKlineDetailActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
