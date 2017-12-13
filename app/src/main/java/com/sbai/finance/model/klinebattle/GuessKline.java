@@ -1,4 +1,4 @@
-package com.sbai.finance.model.training;
+package com.sbai.finance.model.klinebattle;
 
 import android.support.annotation.StringDef;
 

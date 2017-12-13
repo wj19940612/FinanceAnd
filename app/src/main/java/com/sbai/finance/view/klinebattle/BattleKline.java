@@ -1,4 +1,4 @@
-package com.sbai.finance.view.game;
+package com.sbai.finance.view.klinebattle;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.domain.KlineViewData;
+import com.sbai.finance.model.klinebattle.BattleKlineData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,11 @@ import java.util.List;
  * <p>
  * k 线对决的 k 线图
  */
-public class GameKline extends KlineChart {
+public class BattleKline extends KlineChart {
 
     private static final String TRANS_GREEN = "#262fcc9f";
     private static final String TRANS_RED = "#26f25b57";
-    private List<GameKlineData> mDataList;
+    private List<BattleKlineData> mDataList;
 
     protected void setTranslucentBgPaint(Paint paint, String color) {
         paint.setColor(Color.parseColor(color));
@@ -30,11 +31,11 @@ public class GameKline extends KlineChart {
         paint.setPathEffect(null);
     }
 
-    public GameKline(Context context) {
+    public BattleKline(Context context) {
         super(context);
     }
 
-    public GameKline(Context context, AttributeSet attrs) {
+    public BattleKline(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -49,12 +50,12 @@ public class GameKline extends KlineChart {
 
     }
 
-    public void addKlineData(GameKlineData gameKlineData) {
+    public void addKlineData(BattleKlineData gameKlineData) {
         mDataList.add(gameKlineData);
         addData(gameKlineData);
     }
 
-    public void setKlineDataList(List<GameKlineData> klineDataList) {
+    public void setKlineDataList(List<BattleKlineData> klineDataList) {
         mDataList = klineDataList;
         setDataList(new ArrayList<KlineViewData>(klineDataList));
     }
@@ -76,21 +77,21 @@ public class GameKline extends KlineChart {
         RectF rectF = null;
         int i = getStart();
         for (; i < getEnd(); i++) {
-            GameKlineData data = mDataList.get(i);
-            if (rectF != null && data.getMark().equalsIgnoreCase(GameKlineData.MARK_SELL)) {
+            BattleKlineData data = mDataList.get(i);
+            if (rectF != null && data.getMark().equalsIgnoreCase(BattleKlineData.MARK_SELL)) {
                 rectF.right = getChartXOfScreen(i);
                 String bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
                 setTranslucentBgPaint(sPaint, bgColor);
                 canvas.drawRect(rectF, sPaint);
                 rectF = null;
-            } else if (rectF != null && data.getMark().equalsIgnoreCase(GameKlineData.MARK_HOLD_PASS) && i == getEnd() - 1) {
+            } else if (rectF != null && data.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS) && i == getEnd() - 1) {
                 rectF.right = left + width;
-            } else if (data.getMark().equalsIgnoreCase(GameKlineData.MARK_HOLD_PASS) && i == getStart()) {
+            } else if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS) && i == getStart()) {
                 rectF = getRectF();
                 rectF.top = top;
                 rectF.bottom = top + height;
                 rectF.left = left;
-            } else if (data.getMark().equalsIgnoreCase(GameKlineData.MARK_BUY)) {
+            } else if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_BUY)) {
                 rectF = getRectF();
                 rectF.top = top;
                 rectF.bottom = top + height;
@@ -100,11 +101,11 @@ public class GameKline extends KlineChart {
         if (rectF != null) {
             String bgColor = TRANS_RED;
             for (; i < mDataList.size(); i++) {
-                GameKlineData data = mDataList.get(i);
-                if (data.getMark().equalsIgnoreCase(GameKlineData.MARK_SELL)) {
+                BattleKlineData data = mDataList.get(i);
+                if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_SELL)) {
                     bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
                     break;
-                } else if (data.getMark().equalsIgnoreCase(GameKlineData.MARK_HOLD_PASS)) {
+                } else if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS)) {
                     bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
                 } else {
                     break;
@@ -112,44 +113,6 @@ public class GameKline extends KlineChart {
             }
             setTranslucentBgPaint(sPaint, bgColor);
             canvas.drawRect(rectF, sPaint);
-        }
-    }
-
-    public static class GameKlineData extends KlineViewData {
-
-        public static final String MARK_BUY = "B";
-        public static final String MARK_SELL = "S";
-        public static final String MARK_PASS = "P";
-        public static final String MARK_HOLD_PASS = "HP";
-
-        private int id;
-        private String mark;
-        private double profit;
-        private double positions;
-
-        public void setMark(String mark) {
-            this.mark = mark;
-        }
-
-        public void setPositions(double positions) {
-            this.positions = positions;
-        }
-
-        public String getMark() {
-            return mark;
-        }
-
-        public double getProfit() {
-            return profit;
-        }
-
-        public double getPositions() {
-            return positions;
-        }
-
-        public GameKlineData(KlineViewData klineViewData) {
-            super(klineViewData);
-            mark = MARK_PASS;
         }
     }
 }

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.training.GuessKline;
+import com.sbai.finance.model.klinebattle.GuessKline;
 import com.sbai.finance.view.training.guesskline.AgainstProfitView;
 import com.sbai.finance.view.training.guesskline.CountDownView;
 import com.sbai.finance.view.training.guesskline.GuessKlineOperateView;

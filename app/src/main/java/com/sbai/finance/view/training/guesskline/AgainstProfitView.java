@@ -1,9 +1,7 @@
 package com.sbai.finance.view.training.guesskline;
 
 import android.content.Context;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -11,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.training.GuessKline;
+import com.sbai.finance.model.klinebattle.GuessKline;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

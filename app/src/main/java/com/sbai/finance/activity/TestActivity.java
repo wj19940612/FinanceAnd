@@ -7,11 +7,12 @@ import com.sbai.chart.ColorCfg;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.R;
+import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.stock.StockCallback;
 import com.sbai.finance.net.stock.StockResp;
-import com.sbai.finance.view.game.GameKline;
+import com.sbai.finance.view.klinebattle.BattleKline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ import butterknife.ButterKnife;
 public class TestActivity extends BaseActivity {
 
     @BindView(R.id.gameKline)
-    GameKline mGameKline;
+    BattleKline mBattleKline;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,8 +47,8 @@ public class TestActivity extends BaseActivity {
                 .put(ColorCfg.BASE_LINE, "#2a2a2a"));
         settings2.setIndexesEnable(true);
         settings2.setIndexesBaseLines(2);
-        mGameKline.setDayLine(true);
-        mGameKline.setSettings(settings2);
+        mBattleKline.setDayLine(true);
+        mBattleKline.setSettings(settings2);
 
         requestKlineDataAndSet(StockKlineData.PERIOD_DAY);
     }
@@ -59,23 +60,23 @@ public class TestActivity extends BaseActivity {
                     @Override
                     public void onDataMsg(List<StockKlineData> result, StockResp.Msg msg) {
                         List<KlineViewData> dataList = new ArrayList<KlineViewData>(result);
-                        List<GameKline.GameKlineData> data = new ArrayList<>();
+                        List<BattleKlineData> data = new ArrayList<>();
                         for (int i = 0; i < dataList.size(); i++) {
-                            GameKline.GameKlineData klineData = new GameKline.GameKlineData(dataList.get(i));
+                            BattleKlineData klineData = new BattleKlineData(dataList.get(i));
                             if (i == dataList.size() - 25) {
-                                klineData.setMark(GameKline.GameKlineData.MARK_BUY);
+                                klineData.setMark(BattleKlineData.MARK_BUY);
                             } else if (i == dataList.size() - 15) {
-                                klineData.setMark(GameKline.GameKlineData.MARK_SELL);
+                                klineData.setMark(BattleKlineData.MARK_SELL);
                             } else if (i == dataList.size() - 10) {
-                                klineData.setMark(GameKline.GameKlineData.MARK_BUY);
+                                klineData.setMark(BattleKlineData.MARK_BUY);
 
                             } else if (i == dataList.size() - 2) {
-                                klineData.setMark(GameKline.GameKlineData.MARK_SELL);
+                                klineData.setMark(BattleKlineData.MARK_SELL);
                                 klineData.setPositions(-1);
                             }
                             data.add(klineData);
                         }
-                        mGameKline.setKlineDataList(data);
+                        mBattleKline.setKlineDataList(data);
                     }
                 }).fire();
     }
