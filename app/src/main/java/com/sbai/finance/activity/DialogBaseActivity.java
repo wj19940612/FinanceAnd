@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import com.sbai.finance.utils.TimerHandler;
+import com.umeng.analytics.MobclickAgent;
 
 public class DialogBaseActivity extends AppCompatActivity implements TimerHandler.TimerCallback {
 
@@ -28,6 +29,10 @@ public class DialogBaseActivity extends AppCompatActivity implements TimerHandle
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.width = (int) (dm.widthPixels * getWidthRatio());
+    }
+
+    protected void umengEventCount(String eventKey) {
+        MobclickAgent.onEvent(getActivity(), eventKey);
     }
 
     protected float getWidthRatio() {

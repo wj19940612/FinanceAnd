@@ -23,6 +23,7 @@ import com.sbai.finance.activity.ContentImgActivity;
 import com.sbai.finance.activity.mine.ImageSelectActivity;
 import com.sbai.finance.activity.mine.userinfo.AreaTakePhoneActivity;
 import com.sbai.finance.activity.mine.userinfo.ClipHeadImageActivity;
+import com.sbai.finance.utils.FileUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.PermissionUtil;
 import com.sbai.finance.utils.ToastUtil;
@@ -223,8 +224,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     private void openSystemCameraPage() {
         Intent openCameraIntent = new Intent(
                 MediaStore.ACTION_IMAGE_CAPTURE);
-        mFile = new File(Environment
-                .getExternalStorageDirectory(), System.currentTimeMillis() + "image.jpg");
+        mFile = FileUtils.createFile(getString(R.string.app_name) + System.currentTimeMillis() + "image.jpg");
         // 指定照片保存路径（SD卡），image.jpg为一个临时文件，防止拿到
         Uri mMBitmapUri = Uri.fromFile(mFile);
         openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMBitmapUri);

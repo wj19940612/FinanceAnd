@@ -9,11 +9,9 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ScrollView;
 
-import com.sbai.finance.Preference;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.TimerHandler;
-import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
 
@@ -42,17 +40,7 @@ public class BaseFragment extends Fragment implements
         MobclickAgent.onPageStart(TAG);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        boolean isMediaPlay = this instanceof MediaPlayFragment;
-        if (!isMediaPlay) {
-            if (!Preference.get().isForeground()) {
-                MissAudioManager.get().stop();
-            }
-        }
-    }
-
+    
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

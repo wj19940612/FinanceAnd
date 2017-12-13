@@ -38,7 +38,6 @@ import com.sbai.finance.model.miss.QuestionCollect;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.miss.RewardInfo;
 import com.sbai.finance.model.radio.Radio;
-import com.sbai.finance.model.system.Share;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -180,26 +179,11 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     }
 
     private void requestShareData() {
-        final String shareTitle = getString(R.string.share_title);
-        final String shareDescription = getString(R.string.question_share_description);
-        final String shareUrl = String.format(SHARE_URL_QUESTION, mQuestionId);
-        Client.requestShareData(Share.SHARE_CODE_QUESTION_ANSWER)
-                .setIndeterminate(this)
-                .setTag(TAG)
-                .setCallback(new Callback2D<Resp<Share>, Share>() {
-                    @Override
-                    protected void onRespSuccessData(Share data) {
-                        data.setShareLink(data.getShareLink().concat("?questionId=" + mQuestionId));
-                        share(data.getTitle(), data.getContent(), data.getShareLink(), data.getShareLeUrl());
-                    }
-
-                    @Override
-                    public void onFailure(ApiError apiError) {
-                        super.onFailure(apiError);
-                        share(shareTitle, shareDescription, shareUrl, null);
-                    }
-                })
-                .fireFree();
+        String shareUrl = String.format(SHARE_URL_QUESTION, mQuestionId);
+        if (mQuestion != null) {
+            String shareThumbUrl = mQuestion.getCustomPortrait();
+            share(mQuestion.getQuestionContext(), getString(R.string.the_interesting_and_juicy_anchor_will_answer_for_you), shareUrl, shareThumbUrl);
+        }
     }
 
     private void share(String shareTitle, String shareDescription, String shareUrl, String shareThumbUrl) {
@@ -207,9 +191,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
 
         ShareDialog.with(getActivity())
                 .setTitle(getString(R.string.share_title))
-                .setShareTitle(getString(R.string.question_share_share_title))
-                .setShareDescription(getString(R.string.question_share_description))
-                .setShareUrl(String.format(SHARE_URL_QUESTION, mQuestionId))
                 .setShareTitle(shareTitle)
                 .setShareDescription(shareDescription)
                 .setShareUrl(shareUrl)
@@ -424,7 +405,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
 
     private void updateQuestionDetail() {
         mAvatar.setAvatar(mQuestion.getUserPortrait(), mQuestion.getUserType());
-        mMissAvatar.setAvatar(mQuestion.getCustomPortrait(), Question.USER_IDENTITY_HOST);
+        mMissAvatar.setAvatar(mQuestion.getCustomPortrait(), Question.USER_IDENTITY_MISS);
 
         mName.setText(mQuestion.getUserName());
         mAskTime.setText(DateUtil.formatDefaultStyleTime(mQuestion.getCreateTime()));
@@ -454,10 +435,17 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         mAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Launcher.with(getActivity(), LookBigPictureActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, mQuestion.getUserPortrait())
-                        .putExtra(Launcher.EX_PAYLOAD_2, 0)
-                        .execute();
+                // TODO: 2017/12/11  缺少用户是否是小姐姐 
+                if (mQuestion.isMiss()) {
+                    Launcher.with(getActivity(), MissProfileDetailActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mQuestion.getCustomId())
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), LookBigPictureActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, mQuestion.getUserPortrait())
+                            .putExtra(Launcher.EX_PAYLOAD_2, 0)
+                            .execute();
+                }
             }
         });
 
@@ -812,38 +800,41 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
             public void bindingData(final Context context, final QuestionReply.DataBean item) {
                 if (item == null) return;
 
-                QuestionReply.DataBean.UserModelBean userModelBean = item.getUserModel();
+                final QuestionReply.DataBean.UserModelBean userModelBean = item.getUserModel();
                 if (userModelBean != null) {
-
-                    int userIdentity = userModelBean.getCustomId() != 0 ? Question.USER_IDENTITY_HOST : Question.USER_IDENTITY_ORDINARY;
-
+                    int userIdentity = userModelBean.getCustomId() != 0 ? Question.USER_IDENTITY_MISS : Question.USER_IDENTITY_ORDINARY;
                     mAvatar.setAvatar(userModelBean.getUserPortrait(), userIdentity);
-
                     mUserName.setText(item.getUserModel().getUserName());
 
-                    mAvatar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Launcher.with(context, LookBigPictureActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, item.getUserModel().getUserPortrait())
-                                    .putExtra(Launcher.EX_PAYLOAD_2, 0)
-                                    .execute();
-                        }
-                    });
                 } else {
                     mAvatar.setAvatar("", 0);
                     mUserName.setText("");
+                }
 
-                    mAvatar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String userPortrait = null;
+                        int userIdentity = 0;
+                        int missId = 0;
+                        if (item.getUserModel() != null) {
+                            userPortrait = item.getUserModel().getUserPortrait();
+                            userIdentity = item.getUserModel().getCustomId() != 0 ? Question.USER_IDENTITY_MISS : Question.USER_IDENTITY_ORDINARY;
+                            missId = item.getUserModel().getCustomId();
+                        }
+
+                        if (userIdentity == Question.USER_IDENTITY_MISS) {
+                            Launcher.with(context, MissProfileDetailActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, missId)
+                                    .execute();
+                        } else {
                             Launcher.with(context, LookBigPictureActivity.class)
-                                    .putExtra(Launcher.EX_PAYLOAD, "")
+                                    .putExtra(Launcher.EX_PAYLOAD, userPortrait)
                                     .putExtra(Launcher.EX_PAYLOAD_2, 0)
                                     .execute();
                         }
-                    });
-                }
+                    }
+                });
 
                 setPrice(item.getPriseCount(), item.getIsPrise());
                 mReviewPriceCount.setOnClickListener(new View.OnClickListener() {

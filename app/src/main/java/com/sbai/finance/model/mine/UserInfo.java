@@ -65,6 +65,8 @@ public class UserInfo implements Parcelable {
     private String inviteCode; //邀请码
 
 
+    private boolean allowAvoidClosePay;  //允许 免密支付
+
 
     //小姐姐登录的信息
     /**
@@ -344,6 +346,7 @@ public class UserInfo implements Parcelable {
     public void setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel;
     }
+
     public UserInfo() {
     }
 

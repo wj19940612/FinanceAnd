@@ -160,12 +160,6 @@ public class BaseActivity extends BattlePushActivity implements
     protected void onStop() {
         super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
-        boolean isMediaPlay = this instanceof MediaPlayActivity;
-        if (!isMediaPlay) {
-            if (!Preference.get().isForeground()) {
-                MissAudioManager.get().stop();
-            }
-        }
     }
 
     @Override

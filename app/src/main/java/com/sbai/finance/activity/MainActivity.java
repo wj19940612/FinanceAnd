@@ -38,9 +38,9 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.OnNoReadNewsListener;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.BottomTabs;
 import com.sbai.finance.view.ScrollableViewPager;
 import com.sbai.httplib.ApiError;
@@ -236,6 +236,7 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
             requestUserFund();
         }
     }
+
 
     public MediaPlayService getMediaPlayService() {
         return mMediaPlayService;

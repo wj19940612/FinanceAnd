@@ -3147,7 +3147,7 @@ public class Client {
      * 电台音频列表
      */
     public static API requestRadioDetailAudio(int radioId) {
-        return new API(POST,"/explain/audioManage/queryAudioByRadioIdForApp.do", new ApiParams().put("radioId", radioId));
+        return new API(POST, "/explain/audioManage/queryAudioByRadioIdForApp.do", new ApiParams().put("radioId", radioId));
     }
 
     /**
@@ -3223,7 +3223,7 @@ public class Client {
      * @return
      */
     public static API collectRadio(String radioId) {
-        return new API(POST,"/user/user/collect.do", new ApiParams().put("type", 4).put("dataId", radioId));
+        return new API(POST, "/user/user/collect.do", new ApiParams().put("type", 4).put("dataId", radioId));
     }
 
 
@@ -3310,7 +3310,7 @@ public class Client {
      * 抢答问题
      */
     public static API rushToAnswer(int id) {
-        return new API(POST,"/user/user/rushToAnswer.do", new ApiParams().put("questionId", id));
+        return new API(POST, "/user/user/rushToAnswer.do", new ApiParams().put("questionId", id));
     }
 
     /**
@@ -3358,4 +3358,25 @@ public class Client {
                         .put("customId", customId));
     }
 
+    /**
+     * /user/userAccount/findNonSecretPayStatus.do
+     * GET
+     * 查看当前用户是否开启免密设置（黄磊）
+     *
+     * @return
+     */
+    public static API requestUserSmallNoSecretPaymentStatus() {
+        return new API("/user/userAccount/findNonSecretPayStatus.do");
+    }
+
+    /**
+     * /user/userAccount/setNonSecretPayment.do
+     * POST
+     * 设置免密状态（黄磊）
+     *
+     * @return
+     */
+    public static API setNonSecretPayment() {
+        return new API(POST, "/user/userAccount/setNonSecretPayment.do");
+    }
 }

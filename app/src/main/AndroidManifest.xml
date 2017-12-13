@@ -27,7 +27,7 @@
     <!-- 支付宝支付需要5种权限 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <!--录制音频-->
+    <!-- 录制音频 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application
@@ -442,7 +442,7 @@
             android:name=".activity.mine.WaitForMeAnswerActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.miss.MissAudioReplyActivity"
+            android:name=".activity.miss.MissRecordAudioReplyActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
         <activity

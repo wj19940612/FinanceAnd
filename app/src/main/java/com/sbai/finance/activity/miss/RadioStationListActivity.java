@@ -27,7 +27,6 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.miss.RadioInfo;
 import com.sbai.finance.model.radio.Radio;
@@ -292,7 +291,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
                 .centerCrop().fallback(getResources().getDrawable(R.drawable.bg_radio_big_cover))
                 .into(mCover);
 
-        mAvatar.setAvatar(radioInfo.getUserPortrait(), Question.USER_IDENTITY_HOST);
+        mAvatar.setAvatar(radioInfo.getUserPortrait(), Question.USER_IDENTITY_MISS);
 
         mName.setText(radioInfo.getRadioHostName());
 

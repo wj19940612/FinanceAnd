@@ -1047,6 +1047,22 @@
     <string name="question_answer_detail">问题详情</string>
     <string name="audio_length">%1$s秒</string>
     <string name="please_open_the_recording_permission">请打开录音权限</string>
+    <string name="you_still_have_the_recording_not_sent_can_you_really_give_up">您还有录音未发送，确定放弃吗？</string>
+    <string name="give_up_sent">放弃发送</string>
+    <string name="the_interesting_and_juicy_anchor_will_answer_for_you">有趣又有料的主播为你解答</string>
+
+
+    <string name="start_small_and_free_payment_immediately">开启小额免密支付></string>
+    <string name="small_no_secret_payment">小额免密支付</string>
+    <string name="small_no_secret_payment_hint">当元宝付款金额小于等于100元宝时，无需输入交易密码。</string>
+    <string name="ten_ingot">10元宝</string>
+    <string name="one_hundred_ingot">100元宝</string>
+    <string name="ten_hundred_ingot">1000元宝</string>
+    <string name="one_tenth_yuan">0.1元</string>
+    <string name="one_yuan">1元</string>
+    <string name="ten_yuan">10元</string>
+    <string name="s_yuan">%1$s元</string>
+
 
     <string name="there_is_no_matched_stock">无匹配股票</string>
 

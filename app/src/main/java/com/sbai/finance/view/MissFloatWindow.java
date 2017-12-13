@@ -114,7 +114,7 @@ public class MissFloatWindow extends LinearLayout {
         if (getContext() == null || ((Activity) getContext()).isFinishing()) {
             return;
         }
-        setMissAvatar(avatarUrl, Question.USER_IDENTITY_HOST);
+        setMissAvatar(avatarUrl, Question.USER_IDENTITY_MISS);
     }
 
     private void setMissAvatar(String avatarUrl, int userIdentity) {

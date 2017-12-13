@@ -14,9 +14,8 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
 
     public static final int QUESTION_TYPE_HOT = 1;
 
-
     public static final int USER_IDENTITY_ORDINARY = 0;
-    public static final int USER_IDENTITY_HOST = 1;
+    public static final int USER_IDENTITY_MISS = 1;
 
     /**
      * answerContext : blob:http://var.esongbai.xyz/ed0ea7b6-bd51-4ff1-a631-864d01b9f4c8
@@ -69,6 +68,7 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
     private String customName;      //小姐姐名字
     private int userType;           //用户身份  0 普通用户 1主播
     private boolean isListene;      //是否听过语音
+    private int customId;           //提问用户对应的小姐姐ID
     // 我的问答中的数据
     private String content;        //问题内容
     private int dataId;            //问题id
@@ -94,6 +94,9 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
         return QUESTION_TYPE_LATEST;
     }
 
+    public boolean isMiss() {
+        return getUserType() == USER_IDENTITY_MISS;
+    }
 
     public int getUserType() {
         return userType;
@@ -342,6 +345,26 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
     public Question() {
     }
 
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
+
+    public boolean isListene() {
+        return isListene;
+    }
+
+    public void setListene(boolean listene) {
+        isListene = listene;
+    }
+
+    public int getCustomId() {
+        return customId;
+    }
+
+    public void setCustomId(int customId) {
+        this.customId = customId;
+    }
+
     @Override
     public int getAudioId() {
         return id;
@@ -381,6 +404,8 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
                 ", hot=" + hot +
                 ", customName='" + customName + '\'' +
                 ", userType=" + userType +
+                ", isListene=" + isListene +
+                ", customId=" + customId +
                 ", content='" + content + '\'' +
                 ", dataId=" + dataId +
                 ", type=" + type +
@@ -423,6 +448,7 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
         dest.writeString(this.customName);
         dest.writeInt(this.userType);
         dest.writeByte(this.isListene ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.customId);
         dest.writeString(this.content);
         dest.writeInt(this.dataId);
         dest.writeInt(this.type);
@@ -458,6 +484,7 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
         this.customName = in.readString();
         this.userType = in.readInt();
         this.isListene = in.readByte() != 0;
+        this.customId = in.readInt();
         this.content = in.readString();
         this.dataId = in.readInt();
         this.type = in.readInt();

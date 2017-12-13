@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
-import com.sbai.finance.activity.miss.MissAudioReplyActivity;
+import com.sbai.finance.activity.miss.MissRecordAudioReplyActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.Answer;
 import com.sbai.finance.net.Callback;
@@ -28,7 +27,6 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.ListEmptyView;
-import com.sbai.httplib.ApiError;
 
 import java.util.List;
 
@@ -161,7 +159,7 @@ public class WaitRaceAnswerFragment extends BaseFragment {
 
     private void updateRaceResult(Answer item) {
         if (item != null) {
-            Launcher.with(getActivity(), MissAudioReplyActivity.class)
+            Launcher.with(getActivity(), MissRecordAudioReplyActivity.class)
                     .putExtra(ExtraKeys.QUESTION_ID, item.getId())
                     .execute();
         }

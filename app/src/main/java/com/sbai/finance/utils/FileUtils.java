@@ -9,12 +9,22 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.sbai.finance.App;
+
+import java.io.File;
 
 /**
  * Created by ${wangJie} on 2017/7/4.
  */
 
 public class FileUtils {
+
+    private static final String TAG = "FileUtils";
+
+    private static File sFile;
 
     /**
      * ExternalStorage: Traditionally SD card, or a built-in storage in device that is distinct from
@@ -74,8 +84,77 @@ public class FileUtils {
             return true;
         } else {
             ActivityCompat.requestPermissions(activity,
-                    new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
             return false;
         }
+    }
+
+    public static File createFile(String fileName) {
+        return createFile(fileName, "");
+    }
+
+    /**
+     * @param fileName
+     * @param type     Environment.DIRECTORY_PICTURES 图库、音频地址等
+     * @return
+     */
+    public static File createFile(String fileName, String type) {
+        File rootFile = null;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) { // Ues external storage first
+            try {
+                if (!TextUtils.isEmpty(type)) {
+                    rootFile = Environment.getExternalStoragePublicDirectory(type);
+                    if (!rootFile.mkdirs()) {
+                        Log.d(TAG, "ImageUtil: external picture storage is exist");
+                    }
+                } else {
+                    rootFile = App.getAppContext().getExternalCacheDir();
+                    if (rootFile == null) {
+                        rootFile = Environment.getExternalStorageDirectory();
+                    }
+                }
+            } catch (Exception e) { // In case of folder missing, should not be call
+                rootFile = Environment.getExternalStorageDirectory();
+                e.printStackTrace();
+            } finally {
+                if (rootFile != null) {
+                    Log.d(TAG, "ImageUtil: external storage is " + rootFile.getAbsolutePath());
+                }
+            }
+        } else {
+            rootFile = App.getAppContext().getExternalCacheDir();
+        }
+        return createFile(rootFile, fileName);
+    }
+
+
+    private static File createFile(File root, String fileName) {
+        int lastIndexOfSeparator = fileName.lastIndexOf(File.separator);
+        if (lastIndexOfSeparator != -1) {
+            String subDir = fileName.substring(0, lastIndexOfSeparator);
+            String newFileName = fileName.substring(lastIndexOfSeparator + 1, fileName.length());
+            File fullDir = new File(root, subDir);
+            if (!fullDir.mkdirs()) {
+                Log.d(TAG, "createFile: directory create failure or directory had created");
+            }
+
+            if (fullDir.exists()) {
+                sFile = new File(fullDir, newFileName);
+                return sFile;
+            }
+            sFile = new File(root, newFileName);
+            return sFile;
+
+        } else {
+            sFile = new File(root, fileName);
+            return sFile;
+        }
+    }
+
+    public static boolean deleteFile() {
+        if (sFile != null) {
+            return sFile.delete();
+        }
+        return false;
     }
 }

@@ -5,7 +5,6 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.sbai.finance.App;
-import com.sbai.finance.Preference;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -189,7 +188,6 @@ public class MissAudioManager {
         Log.d("MediaPlayer", "stop: ");
         if (mMediaPlayer != null) {
             if (!mPreparing) {
-                Preference.get().setAudioPlayPause(false);
                 mMediaPlayer.stop();
                 mMediaPlayer.release();
                 mMediaPlayer = null;
@@ -206,7 +204,6 @@ public class MissAudioManager {
             if (!mPreparing) {
                 mMediaPlayer.pause();
             }
-            Preference.get().setAudioPlayPause(false);
             mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
             mPaused = true;
             onPause();
@@ -326,7 +323,6 @@ public class MissAudioManager {
     }
 
     private void onPause() {
-        Preference.get().setAudioPlayPause(false);
         for (WeakReference<OnAudioListener> reference : mAudioViewList) {
             if (reference.get() != null) {
                 reference.get().onAudioPause();
