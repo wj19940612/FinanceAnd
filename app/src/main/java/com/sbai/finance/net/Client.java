@@ -3350,7 +3350,7 @@ public class Client {
      * @return
      */
     public static API submitMissAnswer(int id, String context, int soundTime, int customId) {
-        return new API("/explain/questionApp/customerServiceReply.do",
+        return new API(POST, "/explain/questionApp/customerServiceReply.do",
                 new ApiParams()
                         .put("id", id)
                         .put("context", context)

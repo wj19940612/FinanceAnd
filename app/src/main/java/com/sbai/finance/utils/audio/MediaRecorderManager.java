@@ -1,11 +1,12 @@
 package com.sbai.finance.utils.audio;
 
+import android.media.AudioRecord;
 import android.util.Log;
 
-import com.czt.mp3recorder.MP3Recorder;
 import com.sbai.finance.App;
 import com.sbai.finance.R;
 import com.sbai.finance.utils.FileUtils;
+import com.songbai.mp3record.MP3Recorder;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +19,8 @@ import java.io.IOException;
 public class MediaRecorderManager {
     private static final String TAG = "MediaRecorderManager";
 
-    public static final int RECORD_MEDIA_ERROR_CODE = -2;  //自己定义的错误code
-    public static final int RECORD_MEDIA_ERROR_CODE_PERMISSION = -3;  //自己定义的没有权限错误code
+    public static final int RECORD_MEDIA_ERROR_SYSTEM_CODE = 0;  //录制音频系统抛出的错误
+    public static final int RECORD_MEDIA_ERROR_CODE_PERMISSION = 1;  //自己定义的没有权限错误code
 
     private static final int DEFAULT_MAX_AUDIO_LENGTH = 10 * 60 * 1000;  //最大时间长度
 
@@ -63,12 +64,31 @@ public class MediaRecorderManager {
             if (mMediaMediaRecorderPrepareListener != null) {
                 mMediaMediaRecorderPrepareListener.onMediaMediaRecorderPrepared(outputFilePath);
             }
+
+            int recordingState = mMP3Recorder.getRecordingState();
+            if (recordingState != AudioRecord.RECORDSTATE_RECORDING) {
+                if (mMediaMediaRecorderPrepareListener != null) {
+                    mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_CODE_PERMISSION, new Exception("   State is not Recording "));
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            Log.d(TAG, "onRecordStart: ");
             if (mMediaMediaRecorderPrepareListener != null) {
-                mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_CODE, e);
+                mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_SYSTEM_CODE, e);
             }
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            if (mMediaMediaRecorderPrepareListener != null) {
+                mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_SYSTEM_CODE, e);
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            if (mMediaMediaRecorderPrepareListener != null) {
+                mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_SYSTEM_CODE, e);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG, "onRecordStart: " + e.toString());
         }
     }
 
