@@ -24,10 +24,10 @@ public abstract class ChartView extends View {
         BASE("#dddddd"),
         TEXT("#999999"),
         WHITE("#ffffff"),
-        GREEN("#2ecc9f"),
+        GREEN("#2fcc9f"),
         BLACK("#222222"),
         DASH("#979797"),
-        RED("#ef6d6a");
+        RED("#f25b57");
 
         private String value;
 
@@ -561,6 +561,7 @@ public abstract class ChartView extends View {
         if (mRectF == null) {
             mRectF = new RectF();
         }
+        mRectF.setEmpty();
         return mRectF;
     }
 

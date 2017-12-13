@@ -806,7 +806,8 @@ public class BattleActivity extends BaseActivity {
         settings.setLimitUpPercent((float) mVariety.getLimitUpPercent());
         settings.setCalculateXAxisFromOpenMarketTime(true);
         settings.setColorCfg(new ColorCfg()
-                .put(new String[]{ColorCfg.DASH_LINE, ColorCfg.UNSTABLE_PRICE_BG, ColorCfg.REAL_TIME_LINE, ColorCfg.TOUCH_LINE_TXT_BG, ColorCfg.TOUCH_LINE}, "#ffffff")
+                .put(new String[]{ColorCfg.DASH_LINE, ColorCfg.UNSTABLE_PRICE_BG, ColorCfg.REAL_TIME_LINE,
+                        ColorCfg.TOUCH_LINE_TXT_BG, ColorCfg.TOUCH_LINE}, "#ffffff")
                 .put(new String[]{ColorCfg.UNSTABLE_PRICE, ColorCfg.TOUCH_LINE_TXT}, "#000000")
                 .put(ColorCfg.BASE_LINE, "#362d4d"));
         mTrendView.setSettings(settings);

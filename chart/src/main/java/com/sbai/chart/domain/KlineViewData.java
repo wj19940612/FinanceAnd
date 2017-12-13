@@ -25,6 +25,15 @@ public class KlineViewData implements Parcelable {
     private String time;
     private long timeStamp;
 
+    public KlineViewData(KlineViewData klineViewData) {
+        this.closePrice = klineViewData.getClosePrice();
+        this.maxPrice = klineViewData.getMaxPrice();
+        this.minPrice = klineViewData.getMinPrice();
+        this.openPrice = klineViewData.getOpenPrice();
+        this.nowVolume = klineViewData.getNowVolume();
+        this.day = klineViewData.getDay();
+    }
+
     // local cache data
     private SparseArray<Float> movingAverages;
 

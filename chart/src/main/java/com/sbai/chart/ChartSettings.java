@@ -9,6 +9,7 @@ public class ChartSettings {
     private int mXAxis;
     private float mPreClosePrice;
     private ColorCfg mColorCfg;
+    private int mTimeLineHeight;
 
     public ChartSettings() {
         mBaseLines = new float[0];

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 
@@ -43,8 +44,9 @@ public class KlineChart extends ChartView {
 
     // visible points index range
     private int mStart;
-    private int mLength;
     private int mEnd;
+    private int mLength;
+
     private float mCandleWidth;
     private float mMaxBaseLine;
     private float mMinBaseLine;
@@ -52,6 +54,11 @@ public class KlineChart extends ChartView {
 
     public KlineChart(Context context) {
         super(context);
+        init();
+    }
+
+    public KlineChart(Context context, AttributeSet attrs) {
+        super(context, attrs);
         init();
     }
 
@@ -95,6 +102,23 @@ public class KlineChart extends ChartView {
 
         mFirstVisibleIndex = Integer.MAX_VALUE;
         mLastVisibleIndex = Integer.MIN_VALUE;
+    }
+
+    protected int getStart() {
+        return mStart;
+    }
+
+    protected int getEnd() {
+        return mEnd;
+    }
+
+    protected List<KlineViewData> getDataList() {
+        return mDataList;
+    }
+
+    public void addData(KlineViewData data) {
+        mDataList.add(data);
+        redraw();
     }
 
     public void setDataList(List<KlineViewData> dataList) {
@@ -181,10 +205,11 @@ public class KlineChart extends ChartView {
         applyColorConfiguration(paint, ColorCfg.TOUCH_LINE);
     }
 
-    protected void setRedRectBgPaint(Paint paint) {
+    protected void setTouchLineTextBgPaint(Paint paint) {
         paint.setColor(Color.parseColor(ChartView.ChartColor.RED.get()));
         paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);
+        applyColorConfiguration(paint, ColorCfg.TOUCH_LINE_TXT_BG);
     }
 
     private void calculateStartAndEndPosition() {
@@ -503,12 +528,12 @@ public class KlineChart extends ChartView {
         }
     }
 
-    private float getChartXOfScreen(int index) {
+    protected float getChartXOfScreen(int index) {
         index = index - mStart; // visible index 0 ~ 39
         return getChartX(index);
     }
 
-    private float getChartXOfScreen(int index, KlineViewData data) {
+    protected float getChartXOfScreen(int index, KlineViewData data) {
         index = index - mStart; // visible index 0 ~ 39
         updateFirstLastVisibleIndex(index);
         mVisibleList.put(index, data);
@@ -522,7 +547,7 @@ public class KlineChart extends ChartView {
 
     @Override
     protected float getChartX(int index) {
-        float offset = super.getChartX(1) / 2;
+        float offset = mCandleWidth / 2;
         float width = getWidth() - getPaddingLeft() - getPaddingRight() - mPriceAreaWidth;
         float chartX = getPaddingLeft() + index * width * 1.0f / mSettings.getXAxis();
         return chartX + offset;
@@ -530,7 +555,7 @@ public class KlineChart extends ChartView {
 
     @Override
     protected int getIndexOfXAxis(float chartX) {
-        float offset = super.getChartX(1) / 2;
+        float offset = mCandleWidth / 2;
         float width = getWidth() - getPaddingLeft() - getPaddingRight() - mPriceAreaWidth;
         chartX = chartX - offset - getPaddingLeft();
         return (int) (chartX * mSettings.getXAxis() / width);
@@ -639,7 +664,7 @@ public class KlineChart extends ChartView {
                 }
                 redRect.bottom = redRect.top + rectHeight;
                 redRect.right = redRect.left + rectWidth;
-                setRedRectBgPaint(sPaint);
+                setTouchLineTextBgPaint(sPaint);
                 canvas.drawRoundRect(redRect, 2, 2, sPaint);
                 float volumeY = redRect.top + rectHeight / 2 + mOffset4CenterBigText;
                 setTouchLineTextPaint(sPaint);
