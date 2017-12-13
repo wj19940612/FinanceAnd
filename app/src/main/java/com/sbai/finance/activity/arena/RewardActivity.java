@@ -84,9 +84,8 @@ import butterknife.OnClick;
 
 /**
  * Modified by john on 06/12/2017
- *
+ * <p>
  * 赏金场（竞技场）列表页面
- *
  */
 public class RewardActivity extends BaseActivity implements View.OnClickListener, BattleListFragment.OnFragmentRecycleViewScrollListener {
 

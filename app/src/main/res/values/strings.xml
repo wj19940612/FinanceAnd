@@ -1079,4 +1079,6 @@
     <string name="one_to_one_pk">1V1</string>
     <string name="four_pk">乱斗</string>
     <string name="_total_profit">%1$d\n盈利(元宝)</string>
+    <string name="people_amount">人</string>
+    <string name="matching_room_people_amount">正在匹配，房间人数:</string>
 </resources>

@@ -49,6 +49,41 @@
         android:textColor="@color/unluckyText"
         android:textSize="12sp"/>
 
+    <LinearLayout
+        android:id="@+id/fourPkArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/matching_room_people_amount"
+            android:textColor="@color/unluckyText"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:layout_width="@dimen/common_padding"
+            android:layout_height="@dimen/common_padding"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:background="@drawable/bg_blue_rounded"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            tools:text="3"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/people_amount"
+            android:textColor="@color/unluckyText"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/cancel"
         android:layout_width="match_parent"
