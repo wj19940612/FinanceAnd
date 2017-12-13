@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purpleBlack">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/ic_kline_battle_result"/>
+
+    <com.sbai.finance.view.TitleBar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_white"
+        app:leftViewLeftPadding="0dp"
+        app:rightVisible="true"
+        app:titleText="@string/practice_score"
+        app:titleTextColor="@color/white"/>
+
+    <LinearLayout
+        android:id="@+id/nameLayout"
+        android:layout_width="346dp"
+        android:layout_height="306dp"
+        android:layout_below="@+id/titleBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/bg_single_practice_result"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/upDown"
+            android:layout_width="126dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="26dp"
+            android:gravity="center"
+            android:textSize="36sp"/>
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="24dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/get_name"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/otherName"
+            android:layout_width="192dp"
+            android:layout_height="45dp"
+            android:gravity="center"
+            android:textColor="@color/yellowColor2"
+            android:textSize="32sp"/>
+
+        <TextView
+            android:id="@+id/resultTip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nameLayout"
+        android:layout_marginTop="40dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/reLookBtn"
+            android:layout_width="110dp"
+            android:layout_height="33dp"
+            android:background="@drawable/bg_kline_practice_result_relook"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/moreOneBtn"
+            android:layout_width="110dp"
+            android:layout_height="33dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/bg_kline_practice_result_more_one"
+            android:gravity="center"
+            android:text="@string/more_one_game"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <com.sbai.finance.view.KLineBottomResultView
+        android:layout_width="347dp"
+        android:layout_height="126dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"/>
+
+</RelativeLayout>

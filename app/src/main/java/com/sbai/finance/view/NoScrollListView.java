@@ -11,17 +11,17 @@ import com.sbai.finance.utils.Display;
  * Created by lixiaokuan0819 on 2017/4/25.
  */
 
-public class MyListView extends ListView {
+public class NoScrollListView extends ListView {
 
-    public MyListView(Context context) {
+    public NoScrollListView(Context context) {
         super(context);
     }
 
-    public MyListView(Context context, AttributeSet attrs) {
+    public NoScrollListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MyListView(Context context, AttributeSet attrs, int defStyle) {
+    public NoScrollListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

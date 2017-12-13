@@ -523,6 +523,31 @@
     <string name="you_not_install_weixin">您尚未安装微信</string>
     <string name="you_not_install_weibo">您尚未安装微博</string>
     <string name="countdown">等待倒计时</string>
+    <string name="match_stock">比赛股票</string>
+    <string name="match_score">比赛成绩</string>
+    <string name="practice_score">练习成绩</string>
+    <string name="match_rank">排名</string>
+    <string name="match_income">收益</string>
+    <string name="match_reward">奖金</string>
+    <string name="match_record">记录</string>
+    <string name="more_one_game">再来一局</string>
+    <string name="get_name">获得称号:</string>
+    <string name="one_by_one_rank">1V1榜</string>
+    <string name="melee_rank">乱斗榜</string>
+    <string name="rank_number">排名</string>
+    <string name="medal">奖牌</string>
+    <string name="win_rate_txt">胜率</string>
+    <string name="battle_have_30">对战场次满30场，成绩计入排行榜</string>
+    <string name="win_the_kline">胜利</string>
+    <string name="eat_chicken">大吉大利，今晚吃鸡</string>
+    <string name="fail_the_kline">失败</string>
+    <string name="more_attention_miss">多关注"解说"有助于提升</string>
+    <string name="kline_first">第1名</string>
+    <string name="kline_second">第2名</string>
+    <string name="kline_third">第3名</string>
+    <string name="kline_four">第4名</string>
+    <string name="very_nice_deal">非常出色的操作！</string>
+    <string name="deal_not_bad">表现不错，继续加油吧</string>
 
     <!--     版本更新             -->
     <string name="download_fail">下载失败</string>
@@ -803,6 +828,7 @@
     <string name="accuracy_">准确率：%1$s</string>
     <string name="fight_again">再战一局</string>
     <string name="go_to_normal_battle">去普通场</string>
+    <string name="app_user">用户</string>
 
     <!-- 我的问答-->
     <string name="you_not_has_question">你还未提问</string>

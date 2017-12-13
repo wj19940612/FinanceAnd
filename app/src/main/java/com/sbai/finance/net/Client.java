@@ -3358,4 +3358,12 @@ public class Client {
                         .put("customId", customId));
     }
 
+    public static API requestKlineRankData(){
+        return new API(POST,"/api/game-bat/battle/userrank");
+    }
+
+    public static API requestKlineBattleResult(){
+        return new API(POST,"/api/game-bat/battle/battlerank");
+    }
+
 }

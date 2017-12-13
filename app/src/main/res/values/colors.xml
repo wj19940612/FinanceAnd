@@ -43,6 +43,7 @@
     <color name="bank_card_hint">#BFBFBF</color>
     <color name="yellowColor2">#FEC022</color>
     <color name="blueBlack">#6684A0</color>
+    <color name="weak_purple">#635B78</color>
 
     <!--gradient-->
     <color name="backgroundGradientStart">#69B2FF</color>
@@ -69,4 +70,7 @@
     <color name="arenaRankingTitleTextColor">#8A839E</color>
 
     <color name="radioText">#6684A0</color>
+    <color name="purpleBlack">#100E19</color>
+    <color name="smallWhite">#66FFFFFF</color>
+    <color name="littleWhite">#16FFFFFF</color>
 </resources>
