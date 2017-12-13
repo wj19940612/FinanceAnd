@@ -84,10 +84,10 @@ public class RewardMissActivity extends BaseActivity {
         requestUserHasSafetyPass();
     }
 
+
     private void requestUserHasSafetyPass() {
         Client.getUserHasPassWord()
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<Boolean>, Boolean>() {
                     @Override
                     protected void onRespSuccessData(Boolean data) {
@@ -186,7 +186,9 @@ public class RewardMissActivity extends BaseActivity {
                 requestUserFindInfo();
                 break;
             case R.id.openAllowAvoidClosePay:
-                Launcher.with(getActivity(), SecurityCenterActivity.class).executeForResult(SecurityCenterActivity.REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT);
+                Launcher.with(getActivity(), SecurityCenterActivity.class)
+                        .putExtra(ExtraKeys.HAS_SECURITY_PSD, mHasSafetyPass)
+                        .executeForResult(SecurityCenterActivity.REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT);
                 break;
         }
     }
@@ -232,6 +234,7 @@ public class RewardMissActivity extends BaseActivity {
         long rewardMoney = mRewardMoneyContent.getSelectedMoney();
         Client.rewardQuestion(mId, rewardMoney, AccountFundDetail.TYPE_INGOT, null)
                 .setTag(TAG)
+                .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -257,6 +260,7 @@ public class RewardMissActivity extends BaseActivity {
         long rewardMoney = mRewardMoneyContent.getSelectedMoney();
         Client.rewardMiss(mId, rewardMoney, AccountFundDetail.TYPE_INGOT, null)
                 .setTag(TAG)
+                .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {

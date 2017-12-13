@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.view.autofit.AutofitTextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +28,7 @@ public class RewardSelectMoneyView extends LinearLayout {
     @BindView(R.id.thirdRewardLL)
     LinearLayout mThirdRewardLL;
     @BindView(R.id.otherIngotNumber)
-    TextView mOtherIngotNumber;
+    AutofitTextView mOtherIngotNumber;
     @BindView(R.id.otherMoneyContent)
     TextView mOtherMoneyContent;
     @BindView(R.id.otherRewardLL)
@@ -65,6 +66,18 @@ public class RewardSelectMoneyView extends LinearLayout {
         setOrientation(VERTICAL);
         LayoutInflater.from(getContext()).inflate(R.layout.view_reward_select_money, this, true);
         ButterKnife.bind(this);
+
+
+        post(new Runnable() {
+            @Override
+            public void run() {
+                mSelectedIndex = 0;
+                changeReward(mSelectedIndex, true);
+                if (mOnSelectedCallback != null) {
+                    mOnSelectedCallback.selected(10);
+                }
+            }
+        });
     }
 
     @OnClick({R.id.firstRewardLL, R.id.secondRewardLL, R.id.thirdRewardLL, R.id.otherRewardLL})

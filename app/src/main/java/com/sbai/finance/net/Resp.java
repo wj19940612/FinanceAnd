@@ -21,6 +21,8 @@ public class Resp<T> {
     public static final int CODE_EXCHANGE_ITEM_IS_MODIFIED = 2205;
     // 安全密码错误
     public static final int CODE_SAFETY_INPUT_ERROR = 2203;
+    // 用户没有设置安全密码
+    public static final int CODE_USER_NOT_SET_SECURITY_PASS = 2202;
     //未绑定微信
     public static final int CODE_NO_BIND_WE_CHAT = 214;
     public static final int SUCCESS = 200;

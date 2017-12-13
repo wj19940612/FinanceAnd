@@ -155,6 +155,16 @@ public class SecurityCenterActivity extends BaseActivity {
                         intent.putExtra(Launcher.EX_PAYLOAD, data.booleanValue());
                         setResult(RESULT_OK, intent);
                     }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        super.onRespFailure(failedResp);
+                        if (failedResp.getCode() == Resp.CODE_USER_NOT_SET_SECURITY_PASS) {
+                            Launcher.with(getActivity(), UpdateSecurityPassActivity.class)
+                                    .putExtra(ExtraKeys.HAS_SECURITY_PSD, mHasSecurityPassword)
+                                    .executeForResult(REQ_CODE_UPDATE_SECURITY_PSD);
+                        }
+                    }
                 })
                 .fireFree();
     }
