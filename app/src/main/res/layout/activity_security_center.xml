@@ -89,11 +89,13 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/smallNoSecretPaymentRl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_padding"
         android:background="@drawable/bg_white"
-        android:padding="@dimen/common_padding">
+        android:padding="@dimen/common_padding"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -113,6 +115,7 @@
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/smallNoSecretPaymentHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/common_padding"
