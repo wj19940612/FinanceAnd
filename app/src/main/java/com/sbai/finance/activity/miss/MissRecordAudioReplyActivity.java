@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.ExtraKeys;
@@ -30,9 +29,6 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FileUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.audio.MissAudioManager;
-import com.sbai.finance.utils.ffmpeg.AndroidAudioConverter;
-import com.sbai.finance.utils.ffmpeg.AudioFormat;
-import com.sbai.finance.utils.ffmpeg.IConvertCallback;
 import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -331,23 +327,24 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
          */
         File file = new File(path);
         Log.d(TAG, "convertAudio: " + file.getAbsolutePath());
-        IConvertCallback callback = new IConvertCallback() {
-            @Override
-            public void onSuccess(File convertedFile) {
-                submitMp3File(convertedFile);
-                mSubmitting = true;
-            }
-
-            @Override
-            public void onFailure(Exception error) {
-                Toast.makeText(MissRecordAudioReplyActivity.this, "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        };
-        AndroidAudioConverter.with(this)
-                .setFile(file)
-                .setFormat(AudioFormat.MP3)
-                .setCallback(callback)
-                .convert();
+//        IConvertCallback callback = new IConvertCallback() {
+//            @Override
+//            public void onSuccess(File convertedFile) {
+//                submitMp3File(convertedFile);
+        submitMp3File(file);
+        mSubmitting = true;
+//            }
+//
+//            @Override
+//            public void onFailure(Exception error) {
+//                Toast.makeText(MissRecordAudioReplyActivity.this, "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        };
+//        AndroidAudioConverter.with(this)
+//                .setFile(file)
+//                .setFormat(AudioFormat.MP3)
+//                .setCallback(callback)
+//                .convert();
     }
 
     private void submitMp3File(final File convertedFile) {

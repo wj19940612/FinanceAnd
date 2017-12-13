@@ -85,7 +85,7 @@ android {
         dev {
 //            minSdkVersion 21
             versionNameSuffix '-dev'
-//            applicationIdSuffix '.dev'
+            applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
             buildConfigField('String', 'HOST', '\"devlm.esongbai.abc\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
@@ -177,10 +177,12 @@ dependencies {
     // coding tools
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    compile 'com.github.adrielcafe:ffmpeg-android-java:2a627f6ecd@aar'
+//    compile 'com.github.adrielcafe:ffmpeg-android-java:2a627f6ecd@aar'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    compile 'com.czt.mp3recorder:library:1.0.4'
 }

@@ -26,8 +26,6 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.audio.MediaRecorderManager;
 import com.sbai.finance.view.SmartDialog;
 
-import java.io.File;
-
 
 /**
  * Created by ${wangJie} on 2017/11/29.
@@ -254,14 +252,14 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
     @Override
     public void onTimeUp(int count) {
-        if (hasRecordPermission) {
-            File file = new File(audioPath);
-            if (file.length() <= 0) {
-                error();
-                hasRecordPermission = false;
-                return;
-            }
-        }
+//        if (hasRecordPermission) {
+//            File file = new File(audioPath);
+//            if (file.length() <= 0) {
+//                error();
+//                hasRecordPermission = false;
+//                return;
+//            }
+//        }
 
         mAudioLength = count;
         if (mInLegalRange) {

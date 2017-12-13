@@ -8,8 +8,6 @@ import com.sbai.finance.activity.CatchCrashActivity;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Logger;
-import com.sbai.finance.utils.ffmpeg.AndroidAudioConverter;
-import com.sbai.finance.utils.ffmpeg.ILoadCallback;
 import com.sbai.httplib.CookieManger;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
@@ -37,19 +35,6 @@ public class App extends Application {
         }
         //友盟
         UMShareAPI.get(this);
-
-        AndroidAudioConverter.load(this, new ILoadCallback() {
-            @Override
-            public void onSuccess() {
-                // Great!
-            }
-
-            @Override
-            public void onFailure(Exception error) {
-                // FFmpeg is not supported by device
-                error.printStackTrace();
-            }
-        });
     }
 
     private void handleUncaughtException() {
