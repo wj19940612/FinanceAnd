@@ -178,11 +178,17 @@
         <item name="android:textSize">11sp</item>
     </style>
 
-    <style name="reward_money">
+    <style name="RewardIngot">
         <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/reward_ingot_text_color</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="RewardMoney">
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/reward_money_text_color</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/btn_reward_money</item>
     </style>
 
     <style name="Widget.GifView" parent="@android:style/Widget"/>
@@ -246,6 +252,13 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowEnterAnimation">@anim/fade_in_quickly</item>
         <item name="android:windowExitAnimation">@anim/fade_out_quickly</item>
+    </style>
+
+    <style name="CountDownView">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/bg_guess_kline_countdown_rounded</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

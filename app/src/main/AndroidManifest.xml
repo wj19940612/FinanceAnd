@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.sbai.finance">
+<manifest package="com.sbai.finance"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -27,7 +27,7 @@
     <!-- 支付宝支付需要5种权限 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <!--录制音频-->
+    <!-- 录制音频 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application
@@ -442,7 +442,7 @@
             android:name=".activity.mine.WaitForMeAnswerActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.miss.MissAudioReplyActivity"
+            android:name=".activity.miss.MissRecordAudioReplyActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
 
@@ -456,6 +456,15 @@
             android:name=".activity.arena.KlinePracticeResultActivity"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name=".activity.arena.klinebattle.KlineBattleActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.klinebattle.KlineBattleDetailActivity"/>
+        <!-- TEST-->
+        <activity
+            android:name=".activity.TestActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

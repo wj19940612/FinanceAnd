@@ -61,10 +61,6 @@ public class RewardOtherMoneyDialogFragment extends CenterDialogFragment {
     }
 
 
-    public static RewardOtherMoneyDialogFragment newInstance() {
-        RewardOtherMoneyDialogFragment fragment = new RewardOtherMoneyDialogFragment();
-        return fragment;
-    }
 
     public static RewardOtherMoneyDialogFragment newInstance(long money) {
         RewardOtherMoneyDialogFragment fragment = new RewardOtherMoneyDialogFragment();

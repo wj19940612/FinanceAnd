@@ -12,9 +12,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class Launcher {
-    /**
-     * @deprecated
-     * */
+
     public static final String EX_PAYLOAD = "payload";
     /**
      * @deprecated

@@ -21,7 +21,6 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.view.EmptyRecyclerView;
 
 import java.util.List;
 

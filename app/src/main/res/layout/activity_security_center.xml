@@ -14,9 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/common_margin"
+        android:background="@android:color/white"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_black"
-        android:background="@android:color/white"
         app:titleText="@string/security_center"
         app:titleTextColor="@color/primaryText"/>
 
@@ -87,4 +87,38 @@
             app:rowTextColor="@color/primaryText"
             app:rowTextSize="15sp"/>
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_padding"
+        android:background="@drawable/bg_white"
+        android:padding="@dimen/common_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/small_no_secret_payment"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/allowSmallNoSecretPayment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/bg_switch_news"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginTop="10dp"
+        android:text="@string/small_no_secret_payment_hint"
+        android:textColor="@color/unluckyText"
+        android:textSize="12sp"/>
+
 </LinearLayout>

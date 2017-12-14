@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 
-import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.miss.Question;
@@ -64,33 +63,23 @@ public abstract class MediaPlayActivity extends BaseActivity {
         registerBroadcast();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (Preference.get().isAudioPlayPause()) {
-            MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-            if (audio != null) {
-                if (MissAudioManager.get().isPaused(audio)) {
-                    MissAudioManager.get().resume();
-                }
-            }
-        }
-    }
 
     @Override
     protected void onStop() {
         super.onStop();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMediaPlayBroadcastReceiver);
-        if (MissAudioManager.get().isPlaying()) {
-            if (!Preference.get().isForeground()) {
-                MissAudioManager.get().pause();
-                Preference.get().setAudioPlayPause(true);
-            }
+        if (needRegisterBroadcast()) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mMediaPlayBroadcastReceiver);
         }
     }
 
     private void registerBroadcast() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMediaPlayBroadcastReceiver, getIntentFilter());
+        if (needRegisterBroadcast()) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(mMediaPlayBroadcastReceiver, getIntentFilter());
+        }
+    }
+
+    protected boolean needRegisterBroadcast() {
+        return true;
     }
 
     protected IntentFilter getIntentFilter() {

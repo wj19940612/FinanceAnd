@@ -11,6 +11,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineOtherName;
+import com.sbai.finance.model.klinebattle.KlineBattle;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -28,6 +29,7 @@ import butterknife.ButterKnife;
 public class KlinePracticeResultActivity extends BaseActivity {
 
     public static final String PROFIT = "profit";
+    public static final String KLINEBATTLE = "klinebattle";
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -49,6 +51,7 @@ public class KlinePracticeResultActivity extends BaseActivity {
     KlineBottomResultView mBottomView;
 
     private double mProfit;
+    private KlineBattle mKlineBattle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +65,7 @@ public class KlinePracticeResultActivity extends BaseActivity {
 
     private void initData() {
         mProfit = getIntent().getDoubleExtra(PROFIT, 0);
+        mKlineBattle = getIntent().getParcelableExtra(KLINEBATTLE);
     }
 
     private void initView() {
@@ -99,7 +103,7 @@ public class KlinePracticeResultActivity extends BaseActivity {
     }
 
     private void updateBottomView() {
-        mBottomView.updateStockName("天齐锂业");
+        mBottomView.updateStockName("");
         mBottomView.updateStockId("SZ002466");
         mBottomView.updateStockUpDown(12.87);
         mBottomView.updateStockLine("2011/12/13", "2012/02/11");

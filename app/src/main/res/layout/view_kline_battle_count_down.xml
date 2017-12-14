@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#1a1729">
+
+    <TextView
+        android:id="@+id/minuteHigh"
+        style="@style/CountDownView"
+        android:layout_width="16dp"
+        android:layout_height="18dp"
+        android:layout_marginRight="2dp"
+        tool:text="2"/>
+
+    <TextView
+        android:id="@+id/minuteLow"
+        style="@style/CountDownView"
+        android:layout_width="16dp"
+        android:layout_height="18dp"
+        tool:text="2"/>
+
+    <TextView
+        android:layout_width="10dp"
+        android:layout_height="18dp"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:text=":"
+        android:textColor="@android:color/white"
+        android:textSize="10sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/secondHigh"
+        style="@style/CountDownView"
+        android:layout_width="16dp"
+        android:layout_height="18dp"
+        android:layout_marginRight="2dp"
+        tool:text="2"/>
+
+    <TextView
+        android:id="@+id/secondLow"
+        style="@style/CountDownView"
+        android:layout_width="16dp"
+        android:layout_height="18dp"
+        tool:text="2"/>
+</LinearLayout>

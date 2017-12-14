@@ -84,9 +84,8 @@ import butterknife.OnClick;
 
 /**
  * Modified by john on 06/12/2017
- *
+ * <p>
  * 赏金场（竞技场）列表页面
- *
  */
 public class RewardActivity extends BaseActivity implements View.OnClickListener, BattleListFragment.OnFragmentRecycleViewScrollListener {
 
@@ -157,7 +156,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_arena);
+        setContentView(R.layout.activity_reward);
         ButterKnife.bind(this);
         initView();
     }
@@ -866,7 +865,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 StartMatchDialog.dismiss(getActivity());
                 showCancelMatchDialog();
             }
-        });
+        },false);
     }
 
     private void showCancelMatchDialog() {

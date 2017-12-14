@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
-import com.sbai.finance.activity.miss.MissAudioReplyActivity;
+import com.sbai.finance.activity.miss.MissRecordAudioReplyActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.Answer;
 import com.sbai.finance.net.Callback2D;
@@ -118,9 +118,9 @@ public class WaitAnswerFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Answer answer = (Answer) parent.getAdapter().getItem(position);
-                Launcher.with(getActivity(), MissAudioReplyActivity.class)
+                Launcher.with(getActivity(), MissRecordAudioReplyActivity.class)
                         .putExtra(ExtraKeys.QUESTION_ID, answer.getId())
-                        .putExtra(ExtraKeys.QUESTION_TYPE, MissAudioReplyActivity.QUESTION_TYPE_IS_NOT_SPECIFIED_MISS)
+                        .putExtra(ExtraKeys.QUESTION_TYPE, MissRecordAudioReplyActivity.QUESTION_TYPE_IS_NOT_SPECIFIED_MISS)
                         .execute();
 
             }
