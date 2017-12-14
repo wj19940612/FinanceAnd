@@ -48,8 +48,6 @@ public class KlineChart extends ChartView {
     private int mLength;
 
     private float mCandleWidth;
-    private float mMaxBaseLine;
-    private float mMinBaseLine;
     private boolean mInitData;
 
     public KlineChart(Context context) {
@@ -97,11 +95,12 @@ public class KlineChart extends ChartView {
         mCandleWidth = dp2Px(CANDLES_WIDTH_DP);
         mMovingAverages = new int[]{5, 10, 20};
 
-        mMaxBaseLine = Float.MIN_VALUE;
-        mMinBaseLine = Float.MAX_VALUE;
-
         mFirstVisibleIndex = Integer.MAX_VALUE;
         mLastVisibleIndex = Integer.MIN_VALUE;
+    }
+
+    protected int[] getMovingAverages() {
+        return mMovingAverages;
     }
 
     protected int getStart() {
@@ -224,20 +223,14 @@ public class KlineChart extends ChartView {
     @Override
     protected void calculateMovingAverages(boolean indexesEnable) {
         if (mDataList != null && mDataList.size() > 0) {
-            float max = Float.MIN_VALUE;
-            float min = Float.MAX_VALUE;
             for (int movingAverage : mMovingAverages) {
                 for (int i = mStart; i < mEnd; i++) {
                     int start = i - movingAverage + 1;
                     if (start < 0) continue;
                     float movingAverageValue = calculateMovingAverageValue(start, movingAverage);
                     mDataList.get(i).addMovingAverage(movingAverage, movingAverageValue);
-                    if (max < movingAverageValue) max = movingAverageValue;
-                    if (min > movingAverageValue) min = movingAverageValue;
                 }
             }
-            mMaxBaseLine = max;
-            mMinBaseLine = min;
         }
     }
 
@@ -258,12 +251,20 @@ public class KlineChart extends ChartView {
     @Override
     protected void calculateBaseLines(float[] baselines) {
         if (mDataList != null && mDataList.size() > 0) {
-            float max = mMaxBaseLine;
-            float min = mMinBaseLine;
+            float max = Float.MIN_VALUE;
+            float min = Float.MAX_VALUE;
             for (int i = mStart; i < mEnd; i++) {
                 KlineViewData data = mDataList.get(i);
-                if (max < data.getMaxPrice()) max = data.getMaxPrice();
-                if (min > data.getMinPrice()) min = data.getMinPrice();
+                max = Math.max(max, data.getMaxPrice());
+                min = Math.min(min, data.getMinPrice());
+
+                for (int movingAverage : mMovingAverages) {
+                    int start = i - movingAverage + 1;
+                    if (start < 0) continue;
+                    float mv = mDataList.get(i).getMovingAverage(movingAverage);
+                    max = Math.max(max, mv);
+                    min = Math.min(min, mv);
+                }
             }
 
             float priceRange = BigDecimal.valueOf(max).subtract(new BigDecimal(min))
@@ -599,9 +600,6 @@ public class KlineChart extends ChartView {
         mEnd = 0;
         mLength = 0;
         mVisibleList.clear();
-
-        mMaxBaseLine = Float.MIN_VALUE;
-        mMinBaseLine = Float.MAX_VALUE;
 
         mFirstVisibleIndex = Integer.MAX_VALUE;
         mLastVisibleIndex = Integer.MIN_VALUE;
