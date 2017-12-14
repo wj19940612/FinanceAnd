@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.sbai.finance.R;
@@ -29,11 +31,30 @@ public class StartMatchDialog extends BaseDialog {
         super(activity);
     }
 
-    public static void get(final Activity activity, final OnCancelListener listener) {
+    public void setRoomPeople(int count) {
+        if (getCustomView() != null) {
+            TextView roomPeople = getCustomView().findViewById(R.id.roomPeople);
+            if (roomPeople != null) {
+                roomPeople.setText(String.valueOf(count));
+            }
+        }
+    }
+
+    public static void get(final Activity activity, final OnCancelListener listener, boolean isShowMatchedAmount) {
 
         setCurrentDialog(DIALOG_START_MATCH);
 
         View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_start_match, null);
+        LinearLayout fourPkArea = customView.findViewById(R.id.fourPkArea);
+        TextView message = customView.findViewById(R.id.message);
+        if (isShowMatchedAmount) {
+            fourPkArea.setVisibility(View.VISIBLE);
+            message.setVisibility(View.GONE);
+        } else {
+            fourPkArea.setVisibility(View.GONE);
+            message.setVisibility(View.VISIBLE);
+        }
+
         final WaveView mMatchLoading = (WaveView) customView.findViewById(R.id.matchLoading);
         customView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override

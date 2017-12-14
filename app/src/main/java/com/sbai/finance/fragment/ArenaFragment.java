@@ -17,6 +17,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.TestActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.arena.RewardActivity;
+import com.sbai.finance.activity.arena.klinebattle.KlineBattleActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
@@ -48,7 +49,8 @@ import butterknife.Unbinder;
 public class ArenaFragment extends BaseFragment {
 
     private static final int BREATHE_ANIMATION_DURATION = 1500;
-
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     @BindView(R.id.avatar)
     ImageView mAvatar;
     @BindView(R.id.nameAndIngot)
@@ -57,21 +59,20 @@ public class ArenaFragment extends BaseFragment {
     TextView mTextArenaKnowledge;
     @BindView(R.id.iconArenaKnowledge)
     ImageView mIconArenaKnowledge;
-    @BindView(R.id.stairHalo)
-    ImageView mStairHalo;
+    @BindView(R.id.klineBattle)
+    OnTouchAlphaChangeImageView mKlineBattle;
     @BindView(R.id.moneyRewardArena)
     OnTouchAlphaChangeImageView mMoneyRewardArena;
     @BindView(R.id.generalBattleBanner)
     OnTouchAlphaChangeImageView mGeneralBattleBanner;
-    @BindView(R.id.titleBar)
-    TitleBar mTitleBar;
-    private Unbinder mBind;
+    Unbinder mBinder;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_arena, container, false);
-        mBind = ButterKnife.bind(this, view);
+        mBinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -129,7 +130,6 @@ public class ArenaFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mStairHalo.clearAnimation();
     }
 
     private void startBreatheAnimation() {
@@ -138,18 +138,17 @@ public class ArenaFragment extends BaseFragment {
         alphaAnimation.setRepeatMode(Animation.REVERSE);
         alphaAnimation.setDuration(BREATHE_ANIMATION_DURATION);
         alphaAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        mStairHalo.startAnimation(alphaAnimation);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mBind.unbind();
+        mBinder.unbind();
     }
 
 
     @OnClick({R.id.textArenaKnowledge, R.id.iconArenaKnowledge, R.id.moneyRewardArena,
-            R.id.generalBattleBanner, R.id.nameAndIngot, R.id.avatar})
+            R.id.generalBattleBanner, R.id.nameAndIngot, R.id.avatar, R.id.klineBattle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.textArenaKnowledge:
@@ -157,6 +156,10 @@ public class ArenaFragment extends BaseFragment {
                 umengEventCount(UmengCountEventId.ARENA_KNOWLEDGE);
                 Launcher.with(getActivity(), WebActivity.class)
                         .putExtra(WebActivity.EX_URL, Client.ARENA_KNOWLEDGE)
+                        .execute();
+                break;
+            case R.id.klineBattle:
+                Launcher.with(getActivity(), KlineBattleActivity.class)
                         .execute();
                 break;
             case R.id.moneyRewardArena:

@@ -19,10 +19,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * k线训练倒计时
+ * k线训练操作
  */
 
-public class GuessKlineOperateView extends LinearLayout {
+public class KlineBattleOperateView extends LinearLayout {
     @BindView(R.id.imgRank)
     ImageView mImgRank;
     @BindView(R.id.imgAvatar)
@@ -54,21 +54,21 @@ public class GuessKlineOperateView extends LinearLayout {
         void pass();
     }
 
-    public GuessKlineOperateView(Context context) {
+    public KlineBattleOperateView(Context context) {
         this(context, null);
     }
 
-    public GuessKlineOperateView(Context context, @Nullable AttributeSet attrs) {
+    public KlineBattleOperateView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public GuessKlineOperateView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public KlineBattleOperateView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     private void init(Context context) {
-        LayoutInflater.from(context).inflate(R.layout.view_guess_kline_operate, this, true);
+        LayoutInflater.from(context).inflate(R.layout.view_kline_battle_operate, this, true);
         ButterKnife.bind(this);
         mContext = context;
     }
@@ -77,37 +77,37 @@ public class GuessKlineOperateView extends LinearLayout {
         mOperateListener = operateListener;
     }
 
-    public GuessKlineOperateView complete() {
+    public KlineBattleOperateView complete() {
         mEndPk.setVisibility(VISIBLE);
         mOperate.setVisibility(GONE);
         return this;
     }
 
-    public GuessKlineOperateView battling() {
+    public KlineBattleOperateView battling() {
         mEndPk.setVisibility(GONE);
         mOperate.setVisibility(VISIBLE);
         return this;
     }
 
 
-    public GuessKlineOperateView buySuccess() {
+    public KlineBattleOperateView buySuccess() {
         mBuy.setVisibility(GONE);
         mClear.setVisibility(VISIBLE);
         return this;
     }
 
-    public GuessKlineOperateView clearSuccess() {
+    public KlineBattleOperateView clearSuccess() {
         mBuy.setVisibility(VISIBLE);
         mClear.setVisibility(GONE);
         return this;
     }
 
-    public GuessKlineOperateView remainKline(int amount) {
+    public KlineBattleOperateView remainKline(int amount) {
         mRemainKAmount.setText(String.valueOf(amount));
         return this;
     }
 
-    public GuessKlineOperateView totalProfit(double totalProfit) {
+    public KlineBattleOperateView totalProfit(double totalProfit) {
         totalProfit = Double.valueOf(FinanceUtil.formatWithScale(totalProfit));
         if (totalProfit == 0) {
             mTotalProfit.setText("0.00");
@@ -122,7 +122,7 @@ public class GuessKlineOperateView extends LinearLayout {
         return this;
     }
 
-    public GuessKlineOperateView positionProfit(double positionProfit) {
+    public KlineBattleOperateView positionProfit(double positionProfit) {
         positionProfit = Double.valueOf(FinanceUtil.formatWithScale(positionProfit));
         if (positionProfit == 0) {
             mPositionProfit.setText("0.00");
@@ -137,7 +137,7 @@ public class GuessKlineOperateView extends LinearLayout {
         return this;
     }
 
-    public GuessKlineOperateView clearPositionProfit() {
+    public KlineBattleOperateView clearPositionProfit() {
         mPositionProfit.setText(R.string.no_this_data);
         mPositionProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
         return this;

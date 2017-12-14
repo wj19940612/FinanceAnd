@@ -10,11 +10,11 @@ import java.util.List;
  * 猜K 对战信息
  */
 
-public class GuessKline {
+public class KlineBattle {
 
     @StringDef({TYPE_1V1, TYPE_4V4, TYPE_EXERCISE})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface GuessType {
+    public @interface BattleType {
     }
 
     public static final String TYPE_EXERCISE = "exercise";//本地自己训练的游戏类型
@@ -34,7 +34,7 @@ public class GuessKline {
     public static final String POSITION_NO = "N";
 
     private List<BattleBean> battleStaList;
-    private List<UserMarkBean> userMarkList;
+    private List<BattleKlineData> userMarkList;
 
     public List<BattleBean> getBattleStaList() {
         return battleStaList;
@@ -44,11 +44,11 @@ public class GuessKline {
         this.battleStaList = battleStaList;
     }
 
-    public List<UserMarkBean> getUserMarkList() {
+    public List<BattleKlineData> getUserMarkList() {
         return userMarkList;
     }
 
-    public void setUserMarkList(List<UserMarkBean> userMarkList) {
+    public void setUserMarkList(List<BattleKlineData> userMarkList) {
         this.userMarkList = userMarkList;
     }
 
@@ -166,129 +166,4 @@ public class GuessKline {
         }
     }
 
-    public static class UserMarkBean {
-        /**
-         * bettleId : 19
-         * closePrice : 3373.95
-         * day : 2015-01-07
-         * id : 1
-         * mark : N
-         * maxPrice : 3374.9
-         * minPrice : 3312.21
-         * nowVolume : 391918880
-         * openPrice : 3326.65
-         * positions : 0.0
-         * profit : 0.0
-         * userId : 1070
-         */
-
-        private int battleId;
-        private double closePrice;
-        private String day;
-        private int id;
-        private String mark;
-        private double maxPrice;
-        private double minPrice;
-        private int nowVolume;
-        private double openPrice;
-        private double positions;
-        private double profit;
-        private int userId;
-
-        public int getBattleId() {
-            return battleId;
-        }
-
-        public void setBattleId(int battleId) {
-            this.battleId = battleId;
-        }
-
-        public double getClosePrice() {
-            return closePrice;
-        }
-
-        public void setClosePrice(double closePrice) {
-            this.closePrice = closePrice;
-        }
-
-        public String getDay() {
-            return day;
-        }
-
-        public void setDay(String day) {
-            this.day = day;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getMark() {
-            return mark;
-        }
-
-        public void setMark(String mark) {
-            this.mark = mark;
-        }
-
-        public double getMaxPrice() {
-            return maxPrice;
-        }
-
-        public void setMaxPrice(double maxPrice) {
-            this.maxPrice = maxPrice;
-        }
-
-        public double getMinPrice() {
-            return minPrice;
-        }
-
-        public void setMinPrice(double minPrice) {
-            this.minPrice = minPrice;
-        }
-
-        public int getNowVolume() {
-            return nowVolume;
-        }
-
-        public void setNowVolume(int nowVolume) {
-            this.nowVolume = nowVolume;
-        }
-
-        public double getOpenPrice() {
-            return openPrice;
-        }
-
-        public void setOpenPrice(double openPrice) {
-            this.openPrice = openPrice;
-        }
-
-        public double getPositions() {
-            return positions;
-        }
-
-        public void setPositions(double positions) {
-            this.positions = positions;
-        }
-
-        public double getProfit() {
-            return profit;
-        }
-
-        public void setProfit(double profit) {
-            this.profit = profit;
-        }
-
-        public int getUserId() {
-            return userId;
-        }
-
-        public void setUserId(int userId) {
-            this.userId = userId;
-        }
-    }
 }

@@ -3379,4 +3379,11 @@ public class Client {
     public static API setNonSecretPayment() {
         return new API(POST, "/user/userAccount/setNonSecretPayment.do");
     }
+
+    /**
+     * k线对决-单人练习获取k线数据
+     */
+    public static API getSingleKlineBattleData() {
+        return new API("/api/game-bat/signbattle/sign.do");
+    }
 }

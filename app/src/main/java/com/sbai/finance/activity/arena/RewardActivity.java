@@ -865,7 +865,7 @@ public class RewardActivity extends BaseActivity implements View.OnClickListener
                 StartMatchDialog.dismiss(getActivity());
                 showCancelMatchDialog();
             }
-        });
+        },false);
     }
 
     private void showCancelMatchDialog() {

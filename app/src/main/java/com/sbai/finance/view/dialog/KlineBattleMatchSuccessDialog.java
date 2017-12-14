@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.training.GuessKline;
+import com.sbai.finance.model.klinebattle.KlineBattle;
 import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
@@ -20,21 +20,21 @@ import java.util.List;
 /**
  * 猜K线开始对战的倒数两秒弹窗
  */
-public class GuessKlineMatchSuccessDialog extends BaseDialog {
+public class KlineBattleMatchSuccessDialog extends BaseDialog {
 
     public interface OnDismissListener {
         void onDismiss();
     }
 
-    public GuessKlineMatchSuccessDialog(Activity activity) {
+    public KlineBattleMatchSuccessDialog(Activity activity) {
         super(activity);
     }
 
-    public static void get(Activity activity, @NonNull List<GuessKline.BattleBean> battleBeans, OnDismissListener onDismissListener) {
+    public static void get(Activity activity, @NonNull List<KlineBattle.BattleBean> battleBeans, OnDismissListener onDismissListener) {
 
         setCurrentDialog(DIALOG_START_GAME);
 
-        View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_guess_kline_match_success, null);
+        View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_kline_battle_match_success, null);
 
         TextView countDown = customView.findViewById(R.id.countdown);
         LinearLayout onePkArea = customView.findViewById(R.id.onePkArea);
@@ -50,8 +50,8 @@ public class GuessKlineMatchSuccessDialog extends BaseDialog {
         ImageView avatar2 = customView.findViewById(R.id.avatar2);
         TextView userName3 = customView.findViewById(R.id.userName3);
         ImageView avatar3 = customView.findViewById(R.id.avatar3);
-        List<GuessKline.BattleBean> battleBeanList = new ArrayList();
-        for (GuessKline.BattleBean battleBean : battleBeans) {
+        List<KlineBattle.BattleBean> battleBeanList = new ArrayList();
+        for (KlineBattle.BattleBean battleBean : battleBeans) {
             if (battleBean.getUserId() != LocalUser.getUser().getUserInfo().getId()) {
                 battleBeanList.add(battleBean);
             }
@@ -79,7 +79,7 @@ public class GuessKlineMatchSuccessDialog extends BaseDialog {
         }
 
 
-        GuessKlineMatchSuccessDialog.single(activity)
+        KlineBattleMatchSuccessDialog.single(activity)
                 .setCancelableOnBackPress(false)
                 .setCancelableOnTouchOutside(false)
                 .setCustomView(customView)

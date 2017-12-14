@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.arena.guesskline;
+package com.sbai.finance.activity.arena.klinebattle;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +17,7 @@ import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.fragment.dialog.system.StartDialogFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.fund.UserFundInfo;
-import com.sbai.finance.model.klinebattle.GuessKline;
+import com.sbai.finance.model.klinebattle.KlineBattle;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -35,7 +35,7 @@ import butterknife.OnClick;
  * K线对决选择页面
  */
 
-public class GuessKlineActivity extends BaseActivity {
+public class KlineBattleActivity extends BaseActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.fourPkDescribe)
@@ -62,7 +62,7 @@ public class GuessKlineActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guess_kline);
+        setContentView(R.layout.activity_kline_battle);
         ButterKnife.bind(this);
         initTitleView();
     }
@@ -172,18 +172,18 @@ public class GuessKlineActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fourPk:
-                Launcher.with(getActivity(), GuessKlineDetailActivity.class)
-                        .putExtra(ExtraKeys.GUESS_TYPE, GuessKline.TYPE_4V4)
+                Launcher.with(getActivity(), KlineBattleDetailActivity.class)
+                        .putExtra(ExtraKeys.GUESS_TYPE, KlineBattle.TYPE_4V4)
                         .execute();
                 break;
             case R.id.onePk:
-                Launcher.with(getActivity(), GuessKlineDetailActivity.class)
-                        .putExtra(ExtraKeys.GUESS_TYPE, GuessKline.TYPE_1V1)
+                Launcher.with(getActivity(), KlineBattleDetailActivity.class)
+                        .putExtra(ExtraKeys.GUESS_TYPE, KlineBattle.TYPE_1V1)
                         .execute();
                 break;
             case R.id.exercise:
-                Launcher.with(getActivity(), GuessKlineDetailActivity.class)
-                        .putExtra(ExtraKeys.GUESS_TYPE, GuessKline.TYPE_EXERCISE)
+                Launcher.with(getActivity(), KlineBattleDetailActivity.class)
+                        .putExtra(ExtraKeys.GUESS_TYPE, KlineBattle.TYPE_EXERCISE)
                         .execute();
                 break;
             case R.id.rank:

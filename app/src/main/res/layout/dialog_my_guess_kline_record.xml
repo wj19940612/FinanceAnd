@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="6dp"
                     android:drawableRight="@drawable/ic_guess_kline_record_1v1"
-                    android:text="@string/one_to_one_pk"
+                    android:text="@string/one_vs_one"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     android:textStyle="bold"/>
@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="6dp"
                     android:drawableRight="@drawable/ic_guess_kline_record_four"
-                    android:text="@string/one_to_one_pk"
+                    android:text="@string/one_vs_one"
                     android:textColor="#FEC022"
                     android:textSize="14sp"
                     android:textStyle="bold"/>
