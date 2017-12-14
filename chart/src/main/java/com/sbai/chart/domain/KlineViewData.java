@@ -76,11 +76,18 @@ public class KlineViewData implements Parcelable {
         movingAverages.put(movingAverageKey, Float.valueOf(movingAverageValue));
     }
 
-    public float getMovingAverage(int movingAverageKey) {
+    public Float getMovingAverage(int movingAverageKey) {
         if (movingAverages != null) {
-            Float movingAverageValue = movingAverages.get(movingAverageKey);
-            if (movingAverageValue != null) {
-                return movingAverageValue.floatValue();
+            return movingAverages.get(movingAverageKey);
+        }
+        return null;
+    }
+
+    public float getMovingAverageValue(int movingAverageKey) {
+        if (movingAverages != null) {
+            Float aFloat = movingAverages.get(movingAverageKey);
+            if (aFloat != null) {
+                return aFloat.floatValue();
             }
             return 0f;
         }

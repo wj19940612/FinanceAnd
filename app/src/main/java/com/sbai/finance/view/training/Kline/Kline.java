@@ -156,7 +156,7 @@ public class Kline extends ChartView {
                 if (start < 0) continue;
                 KData kData = mDataList.get(i);
                 float chartX = getChartX(i);
-                float movingAverageValue = kData.getK().getMovingAverage(movingAverage);
+                float movingAverageValue = kData.getK().getMovingAverageValue(movingAverage);
                 float chartY = getChartY(movingAverageValue);
                 if (path.isEmpty()) { // start
                     path.moveTo(chartX, chartY);
@@ -264,8 +264,8 @@ public class Kline extends ChartView {
                     for (int j = 0; j < mLines.length; j++) {
                         int ma = mSettings.getMovingAverages()[j];
                         if (i - ma < 0) break; // (i - 1) no MA data
-                        mLines[j].start.set(getChartX(i - 1), getChartY(preKData.getK().getMovingAverage(ma)));
-                        mLines[j].end.set(getChartX(i), getChartY(kData.getK().getMovingAverage(ma)));
+                        mLines[j].start.set(getChartX(i - 1), getChartY(preKData.getK().getMovingAverageValue(ma)));
+                        mLines[j].end.set(getChartX(i), getChartY(kData.getK().getMovingAverageValue(ma)));
                     }
                     if (Line.isIntersected(mLines[0], mLines[1])) {
                         IntersectionPoint point = mIntersectionPointArray.get(i);
