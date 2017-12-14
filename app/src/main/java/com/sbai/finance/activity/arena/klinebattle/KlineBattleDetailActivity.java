@@ -74,17 +74,17 @@ public class KlineBattleDetailActivity extends BaseActivity {
         mOperateView.setOperateListener(new KlineBattleOperateView.OperateListener() {
             @Override
             public void buy() {
-                buy();
+                buyOperate();
             }
 
             @Override
             public void clear() {
-                clear();
+                clearOperate();
             }
 
             @Override
             public void pass() {
-                pass();
+                passOperate();
             }
         });
     }
@@ -115,13 +115,15 @@ public class KlineBattleDetailActivity extends BaseActivity {
         mOperateView.setRemainKline(mRemainKlineAmount);
     }
 
-    protected void buy() {
+    protected void buyOperate() {
     }
 
-    protected void clear() {
+    protected void clearOperate() {
     }
 
-    protected void pass() {
+    protected void passOperate() {
     }
+
+    protected void battleFinish(){}
 
 }

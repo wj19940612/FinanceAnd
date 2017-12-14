@@ -39,6 +39,7 @@ public class KlineBattle {
     private String battleStockStartTime;
     private int line;
 
+
     private List<BattleBean> battleStaList;
     private List<BattleKlineData> userMarkList;
 

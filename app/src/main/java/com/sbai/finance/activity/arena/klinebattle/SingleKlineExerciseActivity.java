@@ -19,6 +19,7 @@ import java.util.List;
 
 public class SingleKlineExerciseActivity extends KlineBattleDetailActivity {
     private List<BattleKlineData> mBattleKlineDataList;
+    private int mPositionIndex = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,36 +49,68 @@ public class SingleKlineExerciseActivity extends KlineBattleDetailActivity {
         mRemainKlineAmount = mKlineBattle.getLine();
         mBattleKlineDataList = mKlineBattle.getUserMarkList();
         if (mBattleKlineDataList != null && mBattleKlineDataList.size() >= 40) {
-            mKlineView.setKlineDataList(mBattleKlineDataList.subList(0, 40));
+            mKlineView.initKlineDataList(mBattleKlineDataList.subList(0, 40));
         }
         mCountdown.setTotalTime(200, new KlineBattleCountDownView.OnCountDownListener() {
             @Override
             public void finish() {
-                ToastUtil.show("游戏时间到");
+                battleFinish();
             }
         });
         setRemainKline();
     }
 
     @Override
-    protected void buy() {
+    protected void buyOperate() {
+        setKlineViewAndOperateView(KlineBattle.BUY);
+    }
+
+    @Override
+    protected void clearOperate() {
+        setKlineViewAndOperateView(KlineBattle.SELL);
+    }
+
+    @Override
+    protected void passOperate() {
+        setKlineViewAndOperateView(KlineBattle.PASS);
+    }
+
+    private void setKlineViewAndOperateView(String type) {
         if (mBattleKlineDataList == null) return;
-        if (mCurrentIndex == mBattleKlineDataList.size()) return;
+        if (mCurrentIndex == mBattleKlineDataList.size()) {
+            battleFinish();
+            return;
+        }
         if (mCurrentIndex + 1 < mBattleKlineDataList.size()) {
-            BattleKlineData currentKlineData = mBattleKlineDataList.get(mCurrentIndex);
+            BattleKlineData positionKlineData = null;
             BattleKlineData nextKlineData = mBattleKlineDataList.get(mCurrentIndex + 1);
             mKlineView.addKlineData(nextKlineData);
-            mOperateView.setPositionProfit((nextKlineData.getClosePrice() - currentKlineData.getClosePrice()) / currentKlineData.getClosePrice());
-            mOperateView.buySuccess();
-            mCurrentIndex += 1;
+            if (type.equalsIgnoreCase(KlineBattle.PASS)) {
+                if (mPositionIndex > -1) {
+                    positionKlineData = mBattleKlineDataList.get(mPositionIndex);
+                }
+            } else {
+                positionKlineData = mBattleKlineDataList.get(mCurrentIndex);
+            }
+            if (positionKlineData != null) {
+                mOperateView.setPositionProfit((nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice());
+            }
+            if (type.equalsIgnoreCase(KlineBattle.BUY)) {
+                mPositionIndex = mCurrentIndex;
+                mOperateView.buySuccess();
+            } else if (type.equalsIgnoreCase(KlineBattle.SELL)) {
+                mPositionIndex = -1;
+                mOperateView.clearSuccess();
+            }
+            mCurrentIndex = mCurrentIndex + 1;
+            mRemainKlineAmount = mRemainKlineAmount - 1;
+            setRemainKline();
         }
     }
 
     @Override
-    protected void clear() {
-    }
+    protected void battleFinish() {
+        super.battleFinish();
 
-    @Override
-    protected void pass() {
     }
 }

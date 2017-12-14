@@ -99,6 +99,7 @@ public class KlineBattleOperateView extends LinearLayout {
     public void clearSuccess() {
         mBuy.setVisibility(VISIBLE);
         mClear.setVisibility(GONE);
+        clearPositionProfit();
     }
 
     public void setRemainKline(int amount) {
