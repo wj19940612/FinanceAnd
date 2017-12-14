@@ -69,13 +69,13 @@ public class MissAskFragment extends MediaPlayFragment {
     private int mMissAskType;
     private ArrayList<Question> mQuestionList;
     private MissAskAdapter mMissAskAdapter;
-    private Long mCreateTime;
     private boolean mLoadMore;
     private OnMissAskPageListener mOnMissAskPageListener;
     private HashSet<Integer> mSet;
     private MediaPlayService mMediaPlayService;
     private int mSelectPosition;
     private Rect mRect;
+    private int mPage;
 
     public void updateQuestion(Question question) {
         if (mQuestionList != null && !mQuestionList.isEmpty()) {
@@ -162,9 +162,29 @@ public class MissAskFragment extends MediaPlayFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mSet = new HashSet<>();
         initView();
-        requestAskList(true);
         mRect = new Rect();
+        requestAskList(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshData();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mEmptyRecyclerView.clearOnChildAttachStateChangeListeners();
+        unbinder.unbind();
+    }
+
+    public void refreshData() {
+        mPage = 0;
+        mSet.clear();
+        requestAskList(true);
     }
 
 
@@ -254,31 +274,12 @@ public class MissAskFragment extends MediaPlayFragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        refreshData();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mEmptyRecyclerView.clearOnChildAttachStateChangeListeners();
-        unbinder.unbind();
-    }
-
-    public void refreshData() {
-        mCreateTime = null;
-//        mSet = new HashSet<>();
-        requestAskList(true);
-    }
-
     private void requestAskList(final boolean isRefresh) {
         int type = 0;
         if (mMissAskType == MISS_ASK_TYPE_HOT) {
             type = Question.QUESTION_TYPE_HOT;
         }
-        Client.getMissQuestionList(mCreateTime, Client.DEFAULT_PAGE_SIZE, type).setTag(TAG)
+        Client.getMissQuestionList(mPage, Client.DEFAULT_PAGE_SIZE, type).setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<Question>>, List<Question>>() {
                     @Override
                     protected void onRespSuccessData(List<Question> questionList) {
@@ -431,20 +432,17 @@ public class MissAskFragment extends MediaPlayFragment {
             mLoadMore = false;
         } else {
             mLoadMore = true;
-        }
-        if (!questionList.isEmpty()) {
-            mCreateTime = questionList.get(questionList.size() - 1).getCreateTime();
+            mPage++;
         }
         if (isRefresh) {
             mMissAskAdapter.clear();
         }
-        mMissAskAdapter.addAll(questionList);
 
-//        for (Question result : questionList) {
-//            if (mSet.add(result.getId())) {
-//                mMissAskAdapter.add(result);
-//            }
-//        }
+        for (Question result : questionList) {
+            if (mSet.add(result.getId())) {
+                mMissAskAdapter.add(result);
+            }
+        }
     }
 
 
