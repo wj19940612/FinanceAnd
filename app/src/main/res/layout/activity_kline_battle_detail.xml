@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1729">
+    android:background="#100E19">
 
     <include
         android:id="@+id/title"
@@ -19,8 +19,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"/>
 
+    <com.sbai.finance.view.klinebattle.BattleKline
+        android:id="@+id/klineView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@+id/againstProfit"/>
+
     <com.sbai.finance.view.training.guesskline.KlineBattleOperateView
-        android:id="@+id/operate"
+        android:id="@+id/operateView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"/>

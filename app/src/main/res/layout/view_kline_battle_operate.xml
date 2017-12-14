@@ -53,7 +53,7 @@
                 android:layout_marginLeft="30dp"
                 android:background="@drawable/bg_guess_kline_my_profit"
                 android:orientation="horizontal"
-                android:paddingBottom="6dp"
+                android:paddingBottom="4dp"
                 android:paddingLeft="52dp"
                 android:paddingTop="6dp">
 

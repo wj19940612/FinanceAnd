@@ -3386,4 +3386,13 @@ public class Client {
     public static API getSingleKlineBattleData() {
         return new API("/api/game-bat/signbattle/sign.do");
     }
+
+    /**
+     * k线对决-查询当前用户是否进行对战
+     */
+    public static API getCurrentKlineBattle() {
+        return new API("/api/game-bat/battle/inf.do");
+    }
+
+
 }
