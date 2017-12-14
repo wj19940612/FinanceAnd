@@ -2204,10 +2204,10 @@ public class Client {
      *
      * @return
      */
-    public static API getMissQuestionList(Long createTime, int pageSize, int type) {
+    public static API getMissQuestionList(int page, int pageSize, int type) {
         return new API("/explain/question/questionList.do",
                 new ApiParams()
-                        .put("createTime", createTime)
+                        .put("page", page)
                         .put("pageSize", pageSize)
                         .put("type", type));
     }
