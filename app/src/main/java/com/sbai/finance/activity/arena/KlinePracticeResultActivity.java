@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
@@ -27,9 +28,6 @@ import butterknife.ButterKnife;
  */
 
 public class KlinePracticeResultActivity extends BaseActivity {
-
-    public static final String PROFIT = "profit";
-    public static final String KLINEBATTLE = "klinebattle";
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -64,8 +62,8 @@ public class KlinePracticeResultActivity extends BaseActivity {
     }
 
     private void initData() {
-        mProfit = getIntent().getDoubleExtra(PROFIT, 0);
-        mKlineBattle = getIntent().getParcelableExtra(KLINEBATTLE);
+        mProfit = getIntent().getDoubleExtra(ExtraKeys.PROFIT, 0);
+        mKlineBattle = getIntent().getParcelableExtra(ExtraKeys.KLINEBATTLE);
     }
 
     private void initView() {

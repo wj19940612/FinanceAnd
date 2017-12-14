@@ -39,10 +39,19 @@ public class KlineBattle {
     private String battleStockStartTime;
     private int line;
     private double rise;
+    private long endTime;
 
 
     private List<BattleBean> battleStaList;
     private List<BattleKlineData> userMarkList;
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
 
     public String getBattleVarietyCode() {
         return battleVarietyCode;
