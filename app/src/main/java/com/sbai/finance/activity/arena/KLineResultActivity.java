@@ -8,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,12 +21,10 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.view.KLineTopResultView;
+import com.sbai.finance.view.KlineBottomResultView;
 import com.sbai.finance.view.NoScrollListView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,9 +50,11 @@ public class KLineResultActivity extends BaseActivity {
     TextView mMoreOneBtn;
     @BindView(R.id.topType)
     LinearLayout mTopType;
+    @BindView(R.id.bottomView)
+    KlineBottomResultView mBottomView;
 
     private ResultAdapter mResultAdapter;
-    private int goinType;
+    private int mGoinType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +67,7 @@ public class KLineResultActivity extends BaseActivity {
     }
 
     private void initData() {
-        goinType = getIntent().getIntExtra(GOIN_TYPE, 1);
+        mGoinType = getIntent().getIntExtra(GOIN_TYPE, 1);
     }
 
     private void initView() {
@@ -83,60 +82,42 @@ public class KLineResultActivity extends BaseActivity {
     }
 
     private void refreshData() {
-//        Client.requestKlineBattleResult().setTag(TAG).setCallback(new Callback2D<Resp<List<KlineBattleResult>>, List<KlineBattleResult>>() {
-//            @Override
-//            protected void onRespSuccessData(List<KlineBattleResult> data) {
-//                updateData(data);
-//            }
-//        }).fireFree();
-        List<KlineBattleResult> data = new ArrayList<>();
-        KlineBattleResult result1 = new KlineBattleResult();
-        result1.setUserName("美杜莎");
-        result1.setMoney(2000);
-        result1.setProfit(12.83);
-        result1.setSort(1);
-        result1.setUserId(1421);
-        result1.setUserPortrait("https://esongtest.oss-cn-shanghai.aliyuncs.com/upload/20171124/1421i1511490760433.png");
-
-        KlineBattleResult result2 = new KlineBattleResult();
-        result2.setUserName("用户007");
-        result2.setMoney(800);
-        result2.setProfit(8.83);
-        result2.setSort(2);
-        result2.setUserId(1418);
-        result2.setUserPortrait("https://esongtest.oss-cn-shanghai.aliyuncs.com/upload/20171124/1421i1511490760433.png");
-        data.add(result1);
-        data.add(result2);
-        updateData(data);
+        Client.requestKlineBattleResult().setTag(TAG).setCallback(new Callback2D<Resp<KlineBattleResult>, KlineBattleResult>() {
+            @Override
+            protected void onRespSuccessData(KlineBattleResult data) {
+                updateData(data);
+            }
+        }).fireFree();
     }
 
-    private void updateData(List<KlineBattleResult> data) {
+    private void updateData(KlineBattleResult data) {
         //搜索自己的数据
-        if (data != null && data.size() != 0 && LocalUser.getUser().getUserInfo() != null) {
-            KlineBattleResult meResult = null;
-            for (KlineBattleResult result : data) {
-                if (result.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
-                    meResult = result;
+        if (data.getRanking() != null && data.getRanking().size() != 0 && LocalUser.getUser().getUserInfo() != null) {
+            KlineBattleResult.Ranking meResult = null;
+            for (KlineBattleResult.Ranking ranking : data.getRanking()) {
+                if (ranking.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
+                    meResult = ranking;
                     break;
                 }
             }
 
-            if(meResult == null) return;
-            mTop.setRankInfo(goinType, meResult.getSort());
+            if (meResult == null) return;
+            mTop.setRankInfo(mGoinType, meResult.getSort());
+            mBottomView.updateStock(data.getBattleStockName(),data.getBattleStockCode(),data.getBattleStockStartTime(),data.getBattleStockEndTime(),data.getRise());
             mResultAdapter.clear();
-            mResultAdapter.addAll(data);
+            mResultAdapter.addAll(data.getRanking());
         }
     }
 
     @OnClick(R.id.moreOneBtn)
     public void onViewClicked(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.moreOneBtn:
                 break;
         }
     }
 
-    static class ResultAdapter extends ArrayAdapter<KlineBattleResult> {
+    static class ResultAdapter extends ArrayAdapter<KlineBattleResult.Ranking> {
         interface OnMoreClickListener {
             public void onMoreClick();
         }
@@ -164,7 +145,7 @@ public class KLineResultActivity extends BaseActivity {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), mContext, position,getCount());
+            viewHolder.bindDataWithView(getItem(position), mContext, position, getCount());
             return convertView;
         }
 
@@ -190,7 +171,7 @@ public class KLineResultActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(KlineBattleResult data, Context context, int position,int count) {
+            public void bindDataWithView(KlineBattleResult.Ranking data, Context context, int position, int count) {
                 if (data == null) return;
                 mRank.setText(String.valueOf(position + 1));
                 GlideApp.with(context).load(data.getUserPortrait())
@@ -198,16 +179,15 @@ public class KLineResultActivity extends BaseActivity {
                         .circleCrop().into(mAvatar);
                 mName.setText(data.getUserName());
                 if (data.getProfit() >= 0) {
-                    mUpDown.setTextColor(ContextCompat.getColor(context,R.color.redPrimary));
-                    mUpDown.setText("+"+String.format("%.2f", data.getProfit())+"%");
+                    mUpDown.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                 } else {
-                    mUpDown.setTextColor(ContextCompat.getColor(context,R.color.greenAssist));
-                    mUpDown.setText("-"+String.format("%.2f", data.getProfit())+"%");
+                    mUpDown.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
                 }
-                mReward.setText(String.valueOf(data.getMoney())+"元宝");
-                if(position == count - 1){
+                mUpDown.setText(String.format("%.2f", data.getProfit()) + "%");
+                mReward.setText(String.valueOf(data.getMoney()) + "元宝");
+                if (position == count - 1) {
                     mViewStub.setVisibility(View.GONE);
-                }else{
+                } else {
                     mViewStub.setVisibility(View.VISIBLE);
                 }
             }

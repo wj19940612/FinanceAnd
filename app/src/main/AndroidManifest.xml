@@ -452,6 +452,10 @@
         <activity
             android:name=".activity.arena.KLineResultActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.KlinePracticeResultActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

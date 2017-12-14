@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/purpleBlack">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -98,9 +101,11 @@
         android:textSize="16sp"/>
 
     <com.sbai.finance.view.KlineBottomResultView
+        android:id="@+id/bottomView"
         android:layout_width="347dp"
         android:layout_height="126dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"/>
-</RelativeLayout>
+        android:layout_below="@+id/moreOneBtn"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+</ScrollView>

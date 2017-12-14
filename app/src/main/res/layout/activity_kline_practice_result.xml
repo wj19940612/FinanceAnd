@@ -20,7 +20,7 @@
         android:background="@android:color/transparent"
         app:backFeature="true"
         app:backIcon="@drawable/ic_tb_back_white"
-        app:leftViewLeftPadding="0dp"
+        app:leftViewLeftPadding="14dp"
         app:rightVisible="true"
         app:titleText="@string/practice_score"
         app:titleTextColor="@color/white"/>
@@ -90,7 +90,8 @@
             android:background="@drawable/bg_kline_practice_result_relook"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:text="@string/relook"/>
 
         <TextView
             android:id="@+id/moreOneBtn"
@@ -105,11 +106,11 @@
 
     </LinearLayout>
 
-    <com.sbai.finance.view.KLineBottomResultView
+    <com.sbai.finance.view.KlineBottomResultView
+        android:id="@+id/bottomView"
         android:layout_width="347dp"
         android:layout_height="126dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"/>
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

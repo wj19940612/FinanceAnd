@@ -3366,4 +3366,9 @@ public class Client {
         return new API(POST,"/api/game-bat/battle/battlerank");
     }
 
+    public static API requestKlineOtherName(double profit){
+        return new API("/api/game-bat/signbattle/getAppellation");
+    }
+
+
 }

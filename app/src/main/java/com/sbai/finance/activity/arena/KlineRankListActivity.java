@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.arena;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -37,7 +38,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017\12\12 0012.
  */
 
-public class KlineRankListActivity extends BaseActivity {
+public class KlineRankListActivity extends BaseActivity implements KlineOneByOneRankFragment.OnFragmentRecycleViewScrollListener {
     @BindView(R.id.appBarLayout)
     AppBarLayout mAppBarLayout;
     @BindView(R.id.tip)
@@ -80,12 +81,6 @@ public class KlineRankListActivity extends BaseActivity {
     private boolean mSwipEnabled = true;
     private int mSelectPosition;
     private KlineRank mKlineRank;
-
-
-    public interface OnFragmentRecycleViewScrollListener {
-
-        void onSwipRefreshEnable(boolean enabled, int fragmentPosition);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -143,6 +138,7 @@ public class KlineRankListActivity extends BaseActivity {
         mTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(15, getResources()));
         mTabLayout.setSelectedIndicatorHeight(3);
         mTabLayout.setTabViewTextSize(16);
+        mTabLayout.setSelectedIndicatorColors(Color.WHITE);
         mTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.sliding_rank_tab_text));
         mTabLayout.setViewPager(mViewPager);
         if (mPage > 0) {
@@ -178,6 +174,15 @@ public class KlineRankListActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public void onSwipRefreshEnable(boolean enabled, int fragmentPosition) {
+        mSwipEnabled = enabled;
+        boolean b = enabled && mAppBarVerticalOffset > -1;
+        if (mSwipeRefreshLayout.isEnabled() != b) {
+            mSwipeRefreshLayout.setEnabled(b);
+        }
+    }
+
     private KlineOneByOneRankFragment getOneByOneFragment() {
         return (KlineOneByOneRankFragment) mPagerAdapter.getFragment(FRAGMENT_ONE);
     }
@@ -191,6 +196,7 @@ public class KlineRankListActivity extends BaseActivity {
     }
 
     public void setKlineRank(KlineRank klineRank) {
+        mSwipeRefreshLayout.setRefreshing(false);
         mKlineRank = klineRank;
         updateHeader();
     }
@@ -205,16 +211,22 @@ public class KlineRankListActivity extends BaseActivity {
             mSecondNumber.setVisibility(View.GONE);
             mThirdNumber.setVisibility(View.GONE);
             mTip.setVisibility(View.VISIBLE);
+            mMedal.setVisibility(View.GONE);
 
             if (mKlineRank != null) {
-                mWinRate.setText(String.format(getString(R.string.win_rate), String.valueOf(mKlineRank.getUserRank1v1().getRankingRate())));
+                String rate = "0";
+                if (mKlineRank.getUserRank1v1().getRankingRate() != 0)
+                    rate = String.valueOf(mKlineRank.getUserRank1v1().getRankingRate());
+                mWinRate.setText("胜率: " + rate + "%");
             }
         } else {
             mWinRate.setVisibility(View.GONE);
             mTopNumber.setVisibility(View.VISIBLE);
             mSecondNumber.setVisibility(View.VISIBLE);
             mThirdNumber.setVisibility(View.VISIBLE);
-            mTip.setVisibility(View.GONE);
+            mTip.setVisibility(View.INVISIBLE);
+            mMedal.setVisibility(View.VISIBLE);
+
             if (mKlineRank != null) {
                 mTopNumber.setText(String.valueOf(mKlineRank.getUserRank4v4().getOne()));
                 mSecondNumber.setText(String.valueOf(mKlineRank.getUserRank4v4().getTwo()));

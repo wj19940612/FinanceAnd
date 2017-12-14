@@ -524,6 +524,7 @@
     <string name="you_not_install_weibo">您尚未安装微博</string>
     <string name="countdown">等待倒计时</string>
     <string name="match_stock">比赛股票</string>
+    <string name="same_time_updown">同期涨幅</string>
     <string name="match_score">比赛成绩</string>
     <string name="practice_score">练习成绩</string>
     <string name="match_rank">排名</string>
@@ -531,6 +532,7 @@
     <string name="match_reward">奖金</string>
     <string name="match_record">记录</string>
     <string name="more_one_game">再来一局</string>
+    <string name="relook">复盘</string>
     <string name="get_name">获得称号:</string>
     <string name="one_by_one_rank">1V1榜</string>
     <string name="melee_rank">乱斗榜</string>

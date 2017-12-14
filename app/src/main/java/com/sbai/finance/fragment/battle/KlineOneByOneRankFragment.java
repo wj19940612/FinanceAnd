@@ -48,13 +48,18 @@ public class KlineOneByOneRankFragment extends BaseFragment {
     private List<KlineRank.Rank1V1> mDataList;
     private boolean mHasEnter;
 
-    KlineRankListActivity.OnFragmentRecycleViewScrollListener mOnFragmentRecycleViewScrollListener;
+    public interface OnFragmentRecycleViewScrollListener {
+
+        void onSwipRefreshEnable(boolean enabled, int fragmentPosition);
+    }
+
+    OnFragmentRecycleViewScrollListener mOnFragmentRecycleViewScrollListener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof KlineRankListActivity) {
-            mOnFragmentRecycleViewScrollListener = (KlineRankListActivity.OnFragmentRecycleViewScrollListener) context;
+            mOnFragmentRecycleViewScrollListener = (OnFragmentRecycleViewScrollListener) context;
         }
     }
 
