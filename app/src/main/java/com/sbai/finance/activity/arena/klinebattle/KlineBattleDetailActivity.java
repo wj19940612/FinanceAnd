@@ -6,10 +6,13 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.TextView;
 
+import com.sbai.chart.ColorCfg;
+import com.sbai.chart.KlineChart;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.klinebattle.KlineBattle;
+import com.sbai.finance.view.klinebattle.BattleKline;
 import com.sbai.finance.view.training.guesskline.AgainstProfitView;
 import com.sbai.finance.view.training.guesskline.KlineBattleCountDownView;
 import com.sbai.finance.view.training.guesskline.KlineBattleOperateView;
@@ -31,9 +34,15 @@ public class KlineBattleDetailActivity extends BaseActivity {
     KlineBattleCountDownView mCountdown;
     @BindView(R.id.againstProfit)
     AgainstProfitView mAgainstProfit;
-    @BindView(R.id.operate)
-    KlineBattleOperateView mOperate;
+    @BindView(R.id.operateView)
+    KlineBattleOperateView mOperateView;
+    @BindView(R.id.klineView)
+    BattleKline mKlineView;
     private String mType;
+    //start from 0
+    protected int mCurrentIndex = 39;
+    protected int mRemainKlineAmount;
+    protected KlineBattle mKlineBattle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +51,42 @@ public class KlineBattleDetailActivity extends BaseActivity {
         ButterKnife.bind(this);
         initData(getIntent());
         initTitleView();
+        initKlineView();
+        initOperateView();
+    }
+
+    private void initKlineView() {
+        KlineChart.Settings settings2 = new KlineChart.Settings();
+        settings2.setBaseLines(7);
+        settings2.setNumberScale(2);
+        settings2.setXAxis(40);
+        settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
+        settings2.setColorCfg(new ColorCfg()
+                .put(ColorCfg.BASE_LINE, "#2a2a2a"));
+        settings2.setIndexesEnable(true);
+        settings2.setIndexesBaseLines(2);
+        mKlineView.setDayLine(true);
+        mKlineView.setSettings(settings2);
+    }
+
+    private void initOperateView() {
+        mOperateView.setSelfAvatar();
+        mOperateView.setOperateListener(new KlineBattleOperateView.OperateListener() {
+            @Override
+            public void buy() {
+                buyOperate();
+            }
+
+            @Override
+            public void clear() {
+                clearOperate();
+            }
+
+            @Override
+            public void pass() {
+                passOperate();
+            }
+        });
     }
 
     private void initData(Intent intent) {
@@ -51,10 +96,11 @@ public class KlineBattleDetailActivity extends BaseActivity {
     private void initTitleView() {
         if (TextUtils.isEmpty(mType)) {
             mType = KlineBattle.TYPE_EXERCISE;
+            mPkType.setText(R.string.single_exercise);
         } else if (mType.equalsIgnoreCase(KlineBattle.TYPE_1V1)) {
             mPkType.setText(R.string.one_vs_one_room);
         } else if (mType.equalsIgnoreCase(KlineBattle.TYPE_4V4)) {
-            mPkType.setText(R.string.four_pk);
+            mPkType.setText(R.string.four_pk_room);
         }
         mAgainstProfit.setPkType(mType);
     }
@@ -64,4 +110,20 @@ public class KlineBattleDetailActivity extends BaseActivity {
     public void onViewClicked() {
         getActivity().onBackPressed();
     }
+
+    protected void setRemainKline() {
+        mOperateView.setRemainKline(mRemainKlineAmount);
+    }
+
+    protected void buyOperate() {
+    }
+
+    protected void clearOperate() {
+    }
+
+    protected void passOperate() {
+    }
+
+    protected void battleFinish(){}
+
 }

@@ -12,7 +12,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +47,7 @@ public class KlineBattleOperateView extends LinearLayout {
     RelativeLayout mOperate;
     private Context mContext;
     private OperateListener mOperateListener;
+    private double mProfit;
 
     public interface OperateListener {
         void buy();
@@ -77,70 +80,78 @@ public class KlineBattleOperateView extends LinearLayout {
         mOperateListener = operateListener;
     }
 
-    public KlineBattleOperateView complete() {
+    public void complete() {
         mEndPk.setVisibility(VISIBLE);
         mOperate.setVisibility(GONE);
-        return this;
     }
 
-    public KlineBattleOperateView battling() {
+    public void battling() {
         mEndPk.setVisibility(GONE);
         mOperate.setVisibility(VISIBLE);
-        return this;
     }
 
 
-    public KlineBattleOperateView buySuccess() {
+    public void buySuccess() {
         mBuy.setVisibility(GONE);
         mClear.setVisibility(VISIBLE);
-        return this;
     }
 
-    public KlineBattleOperateView clearSuccess() {
+    public void clearSuccess() {
         mBuy.setVisibility(VISIBLE);
         mClear.setVisibility(GONE);
-        return this;
+        clearPositionProfit();
     }
 
-    public KlineBattleOperateView remainKline(int amount) {
+    public void setRemainKline(int amount) {
+        if (amount < 0) amount = 0;
         mRemainKAmount.setText(String.valueOf(amount));
-        return this;
     }
 
-    public KlineBattleOperateView totalProfit(double totalProfit) {
+    public void setSelfAvatar() {
+        GlideApp.with(mContext)
+                .load(LocalUser.getUser().getUserInfo().getUserPortrait())
+                .placeholder(R.drawable.ic_default_avatar)
+                .circleCrop()
+                .into(mImgAvatar);
+    }
+
+    private void setTotalProfit(double totalProfit) {
         totalProfit = Double.valueOf(FinanceUtil.formatWithScale(totalProfit));
         if (totalProfit == 0) {
             mTotalProfit.setText("0.00");
             mTotalProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
         } else if (totalProfit > 0) {
-            mTotalProfit.setText("+" + FinanceUtil.formatWithScale(totalProfit));
+            mTotalProfit.setText("+" + FinanceUtil.formatToPercentage(totalProfit));
             mTotalProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
         } else {
-            mTotalProfit.setText(FinanceUtil.formatWithScale(totalProfit));
+            mTotalProfit.setText(FinanceUtil.formatToPercentage(totalProfit));
             mTotalProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.greenAssist));
         }
-        return this;
     }
 
-    public KlineBattleOperateView positionProfit(double positionProfit) {
+    public double getTotalProfit() {
+        return mProfit;
+    }
+
+    public void setPositionProfit(double positionProfit) {
+        mProfit = mProfit + positionProfit;
         positionProfit = Double.valueOf(FinanceUtil.formatWithScale(positionProfit));
         if (positionProfit == 0) {
             mPositionProfit.setText("0.00");
             mPositionProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
         } else if (positionProfit > 0) {
-            mPositionProfit.setText("+" + FinanceUtil.formatWithScale(positionProfit));
+            mPositionProfit.setText("+" + FinanceUtil.formatToPercentage(positionProfit));
             mPositionProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
         } else {
-            mPositionProfit.setText(FinanceUtil.formatWithScale(positionProfit));
+            mPositionProfit.setText(FinanceUtil.formatToPercentage(positionProfit));
             mPositionProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.greenAssist));
         }
-        return this;
+        setTotalProfit(mProfit);
     }
 
-    public KlineBattleOperateView clearPositionProfit() {
+    public void clearPositionProfit() {
         mPositionProfit.setText(R.string.no_this_data);
         mPositionProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
-        return this;
     }
 
     @OnClick({R.id.buy, R.id.clear, R.id.pass})

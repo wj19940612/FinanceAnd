@@ -20,6 +20,7 @@ import com.sbai.finance.R;
 public class SlidingTabTitle extends SlidingTabLayout {
 
     private boolean mShowBack;
+    private boolean mWhiteBack;
 
     public SlidingTabTitle(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -34,6 +35,7 @@ public class SlidingTabTitle extends SlidingTabLayout {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.SlidingTabTitle);
 
         mShowBack = typedArray.getBoolean(R.styleable.SlidingTabTitle_showBack, true);
+        mWhiteBack = typedArray.getBoolean(R.styleable.SlidingTabTitle_isWhiteBack, false);
 
         typedArray.recycle();
 
@@ -52,7 +54,11 @@ public class SlidingTabTitle extends SlidingTabLayout {
         TextView leftView = new TextView(getContext());
         leftView.setGravity(Gravity.CENTER);
         leftView.setPadding(paddingHorizontal, 0, paddingHorizontal, 0);
-        leftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back_black, 0, 0, 0);
+        if(mWhiteBack){
+            leftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back_white, 0, 0, 0);
+        }else {
+            leftView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_tb_back_black, 0, 0, 0);
+        }
         leftView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

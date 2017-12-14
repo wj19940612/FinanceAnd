@@ -29,7 +29,7 @@
         android:layout_height="10dp"
         android:background="@android:color/white"/>
 
-    <com.sbai.finance.view.MyListView
+    <com.sbai.finance.view.NoScrollListView
         android:id="@+id/hotListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

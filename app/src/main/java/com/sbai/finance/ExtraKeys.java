@@ -62,5 +62,14 @@ public interface ExtraKeys {
     String PROFILE_INTRODUCE = "profile_introduce";
     String QUESTION_TYPE = "question_type";
     String IS_READ = "is_read";
-    String GUESS_TYPE="guess_type";
+    String GUESS_TYPE = "guess_type";
+
+    String PROFIT = "profit";
+    String KLINEBATTLE = "klinebattle";
+
+    String BATTLE_STOCK_END_TIME = "battle_stock_end_time";
+    String BATTLE_STOCK_START_TIME = "battle_stock_start_time";
+    String BATTLE_STOCK_CODE = "battle_stock_code";
+    String BATTLE_STOCK_NAME = "battle_stock_name";
+    String BATTLE_PROFIT = "battle_profit";
 }

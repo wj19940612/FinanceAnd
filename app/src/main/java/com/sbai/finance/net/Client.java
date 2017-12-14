@@ -3358,6 +3358,18 @@ public class Client {
                         .put("customId", customId));
     }
 
+    public static API requestKlineRankData() {
+        return new API(POST, "/api/game-bat/battle/userrank");
+    }
+
+    public static API requestKlineBattleResult() {
+        return new API(POST, "/api/game-bat/battle/battlerank", new ApiParams().put("userId", "1070"));
+    }
+
+    public static API requestKlineOtherName(double profit) {
+        return new API("/api/game-bat/signbattle/getAppellation");
+    }
+
     /**
      * /user/userAccount/findNonSecretPayStatus.do
      * GET
@@ -3385,5 +3397,72 @@ public class Client {
      */
     public static API getSingleKlineBattleData() {
         return new API("/api/game-bat/signbattle/sign.do");
+    }
+
+    /**
+     * k线对决-查询当前用户是否进行对战
+     */
+    public static API getCurrentKlineBattle() {
+        return new API("/api/game-bat/battle/inf.do");
+    }
+
+    /**
+     * 开始匹配
+     *
+     * @param battleType
+     * @return
+     */
+    public static API requestKlineBattleMatch(String battleType) {
+        return new API(POST, "/api/game-bat/battle/match.do",
+                new ApiParams()
+                        .put("battleType", battleType));
+    }
+
+    /**
+     * 取消匹配
+     *
+     * @param battleType
+     * @return
+     */
+    public static API requestKlineBattleCancleMatch(String battleType) {
+        return new API(POST, "/api/game-bat/battle/cancelmatch.do",
+                new ApiParams()
+                        .put("battleType", battleType));
+    }
+
+    /**
+     * 买
+     *
+     * @return
+     */
+    public static API requestKlineBattleBuy() {
+        return new API(POST, "/api/game-bat/battle/buy.do");
+    }
+
+    /**
+     * 卖
+     *
+     * @return
+     */
+    public static API requestKlineBattleSell() {
+        return new API(POST, "/api/game-bat/battle/sell.do");
+    }
+
+    /**
+     * 观望
+     *
+     * @return
+     */
+    public static API requestKlineBattlePass() {
+        return new API(POST, "/api/game-bat/battle/pass.do");
+    }
+
+    /**
+     * 对战信息
+     *
+     * @return
+     */
+    public static API requestKlineBattleInfo() {
+        return new API(POST, "/api/game-bat/battle/to.do");
     }
 }

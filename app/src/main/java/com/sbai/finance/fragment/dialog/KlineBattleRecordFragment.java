@@ -16,10 +16,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.model.ActivityModel;
-import com.sbai.finance.utils.Launcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +26,7 @@ import butterknife.Unbinder;
  * 猜K 我的战绩
  */
 
-public class GuessKlineRecordFragment extends DialogFragment {
+public class KlineBattleRecordFragment extends DialogFragment {
     @BindView(R.id.dialogDelete)
     AppCompatImageView mDialogDelete;
     @BindView(R.id.onePkCount)
@@ -54,7 +50,7 @@ public class GuessKlineRecordFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_my_guess_kline_record, container, false);
+        View view = inflater.inflate(R.layout.dialog_kline_battle_record, container, false);
         mBinder = ButterKnife.bind(this, view);
         return view;
     }
@@ -92,7 +88,7 @@ public class GuessKlineRecordFragment extends DialogFragment {
         mBinder.unbind();
     }
 
-    @OnClick({R.id.dialogDelete, R.id.button})
+    @OnClick({R.id.dialogDelete})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.dialogDelete:

@@ -22,6 +22,7 @@
 
     <declare-styleable name="SlidingTabTitle">
         <attr name="showBack" format="boolean"/>
+        <attr name="isWhiteBack" format="boolean"/>
     </declare-styleable>
 
     <!--股票价格交易量的加减修改控件-->
