@@ -446,10 +446,10 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.arena.guesskline.GuessKlineActivity"
+            android:name=".activity.arena.klinebattle.KlineBattleActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.arena.guesskline.GuessKlineDetailActivity"/>
+            android:name=".activity.arena.klinebattle.KlineBattleDetailActivity"/>
         <!-- TEST-->
         <activity
             android:name=".activity.TestActivity"

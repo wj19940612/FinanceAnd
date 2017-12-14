@@ -1030,7 +1030,7 @@ public class BattleActivity extends BaseActivity {
                 StartMatchDialog.dismiss(getActivity());
                 showCancelMatchDialog();
             }
-        });
+        },false);
     }
 
     private void showCancelMatchDialog() {

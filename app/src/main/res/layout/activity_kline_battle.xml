@@ -62,7 +62,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/guess_kline_four_pk"
+                        android:text="@string/kline_battle_four_pk"
                         android:textColor="#8A90BE"
                         android:textSize="12sp"/>
 
@@ -96,14 +96,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/one_vs_one_room"
                         android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        tool:text="四人乱斗场"/>
+                        android:textSize="20sp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/guess_kline_one_pk"
+                        android:text="@string/kline_battle_one_vs_one"
                         android:textColor="#8A90BE"
                         android:textSize="12sp"/>
 
@@ -137,14 +137,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/single_exercise"
                         android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        tool:text="四人乱斗场"/>
+                        android:textSize="20sp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/guess_kline_exercise"
+                        android:text="@string/free_exercise_train_skill"
                         android:textColor="#8A90BE"
                         android:textSize="12sp"/>
 

@@ -94,6 +94,10 @@ public class BaseDialog {
         return this;
     }
 
+    public View getCustomView() {
+        return mCustomView;
+    }
+
     public BaseDialog setCancelableOnTouchOutside(boolean cancelable) {
         mCancelableOnTouchOutside = cancelable;
         return this;

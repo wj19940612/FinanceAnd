@@ -113,7 +113,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/you_end_game_please_wait_others"
+            android:text="@string/congratulate_you_end_game_please_wait_others"
             android:textColor="#FEC022 "
             android:visibility="gone"/>
 

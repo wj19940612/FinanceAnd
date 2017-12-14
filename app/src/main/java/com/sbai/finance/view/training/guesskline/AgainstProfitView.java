@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.klinebattle.GuessKline;
+import com.sbai.finance.model.klinebattle.KlineBattle;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,12 +78,12 @@ public class AgainstProfitView extends LinearLayout {
         mContext = context;
     }
 
-    public void setPkType(@GuessKline.GuessType String type) {
-        if (type.equals(GuessKline.TYPE_1V1)) {
+    public void setPkType(@KlineBattle.BattleType String type) {
+        if (type.equals(KlineBattle.TYPE_1V1)) {
             setVisibility(VISIBLE);
             mOnePkArea.setVisibility(VISIBLE);
             mFourPkArea.setVisibility(GONE);
-        } else if (type.equals(GuessKline.TYPE_4V4)) {
+        } else if (type.equals(KlineBattle.TYPE_4V4)) {
             setVisibility(VISIBLE);
             mOnePkArea.setVisibility(GONE);
             mFourPkArea.setVisibility(VISIBLE);

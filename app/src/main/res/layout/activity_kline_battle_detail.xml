@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"/>
 
-    <com.sbai.finance.view.training.guesskline.GuessKlineOperateView
+    <com.sbai.finance.view.training.guesskline.KlineBattleOperateView
         android:id="@+id/operate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

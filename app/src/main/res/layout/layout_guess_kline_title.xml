@@ -23,7 +23,7 @@
         android:textColor="@android:color/white"
         android:textSize="18sp"/>
 
-    <com.sbai.finance.view.training.guesskline.CountDownView
+    <com.sbai.finance.view.training.guesskline.KlineBattleCountDownView
         android:id="@+id/countdown"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
