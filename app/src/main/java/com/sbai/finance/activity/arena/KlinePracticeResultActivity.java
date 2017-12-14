@@ -49,7 +49,12 @@ public class KlinePracticeResultActivity extends BaseActivity {
     KlineBottomResultView mBottomView;
 
     private double mProfit;
-    private KlineBattle mKlineBattle;
+
+    private double mStockRise;
+    private String mStockStartTime;
+    private String mStockEndTime;
+    private String mStockName;
+    private String mStockCode;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,7 +68,11 @@ public class KlinePracticeResultActivity extends BaseActivity {
 
     private void initData() {
         mProfit = getIntent().getDoubleExtra(ExtraKeys.PROFIT, 0);
-        mKlineBattle = getIntent().getParcelableExtra(ExtraKeys.KLINEBATTLE);
+        mStockStartTime = getIntent().getStringExtra(ExtraKeys.BATTLE_STOCK_START_TIME);
+        mStockRise = getIntent().getDoubleExtra(ExtraKeys.BATTLE_PROFIT, 0);
+        mStockEndTime = getIntent().getStringExtra(ExtraKeys.BATTLE_STOCK_END_TIME);
+        mStockName = getIntent().getStringExtra(ExtraKeys.BATTLE_STOCK_NAME);
+        mStockCode = getIntent().getStringExtra(ExtraKeys.BATTLE_STOCK_CODE);
     }
 
     private void initView() {
@@ -101,6 +110,6 @@ public class KlinePracticeResultActivity extends BaseActivity {
     }
 
     private void updateBottomView() {
-        mBottomView.updateStock(mKlineBattle.getBattleVarietyName(), mKlineBattle.getBattleVarietyCode(), mKlineBattle.getBattleStockStartTime(), mKlineBattle.getBattleStockEndTime(), mKlineBattle.getRise());
+        mBottomView.updateStock(mStockName, mStockCode, mStockStartTime, mStockEndTime, mStockRise);
     }
 }
