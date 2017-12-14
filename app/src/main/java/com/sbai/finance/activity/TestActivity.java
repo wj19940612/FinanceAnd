@@ -76,7 +76,7 @@ public class TestActivity extends BaseActivity {
                             }
                             data.add(klineData);
                         }
-                        mBattleKline.setKlineDataList(data);
+                        mBattleKline.initKlineDataList(data);
                     }
                 }).fire();
     }

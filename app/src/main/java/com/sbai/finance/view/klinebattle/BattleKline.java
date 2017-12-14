@@ -5,12 +5,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,20 +46,27 @@ public class BattleKline extends KlineChart {
         return false;
     }
 
-
     @Override
     protected void drawTimeLine(int left, int top, int width, Canvas canvas) {
-
     }
 
     public void addKlineData(BattleKlineData gameKlineData) {
         mDataList.add(gameKlineData);
-        addData(gameKlineData);
+        new DataShowTask(this, mDataList, mDataList.size() - 1).execute();
     }
 
-    public void setKlineDataList(List<BattleKlineData> klineDataList) {
+    /**
+     * 使用 39条数据初始化
+     *
+     * @param klineDataList
+     */
+    public void initKlineDataList(List<BattleKlineData> klineDataList) {
         mDataList = klineDataList;
-        setDataList(new ArrayList<KlineViewData>(klineDataList));
+        new DataShowTask(this, mDataList).execute();
+    }
+
+    @Override
+    protected void calculateMovingAverages(boolean indexesEnable) {
     }
 
     @Override
@@ -113,6 +122,87 @@ public class BattleKline extends KlineChart {
             }
             setTranslucentBgPaint(sPaint, bgColor);
             canvas.drawRect(rectF, sPaint);
+        }
+    }
+
+    static class DataShowTask extends AsyncTask<Void, Void, Void> {
+
+        private final List<BattleKlineData> mDataList;
+        private WeakReference<BattleKline> mRef;
+        private int[] movingAverages;
+        private int mIndex;
+
+        public DataShowTask(BattleKline battleKline, List<BattleKlineData> dataList, int index) {
+            mRef = new WeakReference<>(battleKline);
+            mDataList = dataList;
+            movingAverages = battleKline.getMovingAverages();
+            mIndex = index;
+        }
+
+        public DataShowTask(BattleKline battleKline, List<BattleKlineData> dataList) {
+            mRef = new WeakReference<>(battleKline);
+            mDataList = dataList;
+            movingAverages = battleKline.getMovingAverages();
+            mIndex = -1;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if (mIndex >= 0) {
+                KlineUtils.calculateMovingAverages(mIndex, mDataList, movingAverages);
+            } else {
+                KlineUtils.calculateMovingAverages(mDataList, movingAverages);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            BattleKline kline = mRef.get();
+            if (kline != null) {
+                int start = 0;
+                for (int mv : movingAverages) {
+                    start = Math.max(start, mv);
+                }
+                start = start - 1;
+                kline.setDataList(new ArrayList<KlineViewData>(mDataList.subList(start, mDataList.size())));
+            }
+        }
+    }
+
+    static class KlineUtils {
+
+        public static void calculateMovingAverages(List<BattleKlineData> dataList, int[] movingAverages) {
+            if (dataList != null && dataList.size() > 0) {
+                for (int movingAverage : movingAverages) {
+                    for (int i = 0; i < dataList.size(); i++) {
+                        int start = i - movingAverage + 1;
+                        if (start < 0) continue;
+                        float movingAverageValue = calculateMovingAverageValue(start, movingAverage, dataList);
+                        dataList.get(i).addMovingAverage(movingAverage, movingAverageValue);
+                    }
+                }
+            }
+        }
+
+        public static void calculateMovingAverages(int index, List<BattleKlineData> dataList, int[] movingAverages) {
+            if (dataList != null && index < dataList.size()) {
+                for (int movingAverage : movingAverages) {
+                    int start = index - movingAverage + 1;
+                    if (start < 0) continue;
+                    float movingAverageValue = calculateMovingAverageValue(start, movingAverage, dataList);
+                    dataList.get(index).addMovingAverage(movingAverage, movingAverageValue);
+                }
+            }
+        }
+
+        private static float calculateMovingAverageValue(int start, int movingAverage,
+                                                         List<BattleKlineData> dataList) {
+            float result = 0;
+            for (int i = start; i < start + movingAverage; i++) {
+                result += dataList.get(i).getClosePrice();
+            }
+            return result / movingAverage;
         }
     }
 }
