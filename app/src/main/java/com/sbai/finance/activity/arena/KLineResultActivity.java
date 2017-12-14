@@ -103,7 +103,7 @@ public class KLineResultActivity extends BaseActivity {
 
             if (meResult == null) return;
             mTop.setRankInfo(mGoinType, meResult.getSort());
-            mBottomView.updateStock(data.getBattleStockName(),data.getBattleStockCode(),data.getBattleStockStartTime(),data.getBattleStockEndTime(),data.getRise());
+            mBottomView.updateStock(data.getBattleStockName(), data.getBattleStockCode(), data.getBattleStockStartTime(), data.getBattleStockEndTime(), data.getRise());
             mResultAdapter.clear();
             mResultAdapter.addAll(data.getRanking());
         }

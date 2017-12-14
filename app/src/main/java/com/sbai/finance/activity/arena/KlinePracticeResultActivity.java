@@ -103,9 +103,6 @@ public class KlinePracticeResultActivity extends BaseActivity {
     }
 
     private void updateBottomView() {
-        mBottomView.updateStockName("");
-        mBottomView.updateStockId("SZ002466");
-        mBottomView.updateStockUpDown(12.87);
-        mBottomView.updateStockLine("2011/12/13", "2012/02/11");
+        mBottomView.updateStock(mKlineBattle.getBattleVarietyName(), mKlineBattle.getBattleVarietyCode(), mKlineBattle.getBattleStockStartTime(), mKlineBattle.getBattleStockEndTime(), mKlineBattle.getRise());
     }
 }

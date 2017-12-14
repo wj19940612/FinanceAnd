@@ -48,7 +48,7 @@ public class SingleKlineExerciseActivity extends KlineBattleDetailActivity {
         mRemainKlineAmount = mKlineBattle.getLine();
         mBattleKlineDataList = mKlineBattle.getUserMarkList();
         if (mBattleKlineDataList != null && mBattleKlineDataList.size() >= 40) {
-            mKlineView.setKlineDataList(mBattleKlineDataList.subList(0, 40));
+            mKlineView.initKlineDataList(mBattleKlineDataList.subList(0, 40));
         }
         mCountdown.setTotalTime(200, new KlineBattleCountDownView.OnCountDownListener() {
             @Override

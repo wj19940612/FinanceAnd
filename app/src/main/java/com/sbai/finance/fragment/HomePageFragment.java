@@ -170,7 +170,7 @@ public class HomePageFragment extends BaseFragment {
             @Override
             public void onSelectClick() {
 //                requestOptionalData();
-                Launcher.with(getActivity(), KlineRankListActivity.class).execute();
+                Launcher.with(getActivity(), KLineResultActivity.class).execute();
             }
         });
         mHomeTitleView.setOnClickItemListener(new HomeTitleView.OnClickItemListener() {

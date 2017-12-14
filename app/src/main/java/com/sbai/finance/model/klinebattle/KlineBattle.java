@@ -38,6 +38,7 @@ public class KlineBattle {
     private String battleStockEndTime;
     private String battleStockStartTime;
     private int line;
+    private double rise;
 
     private List<BattleBean> battleStaList;
     private List<BattleKlineData> userMarkList;
@@ -96,6 +97,14 @@ public class KlineBattle {
 
     public void setUserMarkList(List<BattleKlineData> userMarkList) {
         this.userMarkList = userMarkList;
+    }
+
+    public double getRise() {
+        return rise;
+    }
+
+    public void setRise(double rise) {
+        this.rise = rise;
     }
 
     public static class BattleBean {
