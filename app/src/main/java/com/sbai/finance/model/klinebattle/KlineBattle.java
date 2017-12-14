@@ -33,8 +33,54 @@ public class KlineBattle {
     public static final String POSITION_HAVE = "Y";
     public static final String POSITION_NO = "N";
 
+    private String battleVarietyCode;
+    private String battleVarietyName;
+    private String battleStockEndTime;
+    private String battleStockStartTime;
+    private int line;
+
     private List<BattleBean> battleStaList;
     private List<BattleKlineData> userMarkList;
+
+    public String getBattleVarietyCode() {
+        return battleVarietyCode;
+    }
+
+    public void setBattleVarietyCode(String battleVarietyCode) {
+        this.battleVarietyCode = battleVarietyCode;
+    }
+
+    public String getBattleVarietyName() {
+        return battleVarietyName;
+    }
+
+    public void setBattleVarietyName(String battleVarietyName) {
+        this.battleVarietyName = battleVarietyName;
+    }
+
+    public String getBattleStockEndTime() {
+        return battleStockEndTime;
+    }
+
+    public void setBattleStockEndTime(String battleStockEndTime) {
+        this.battleStockEndTime = battleStockEndTime;
+    }
+
+    public String getBattleStockStartTime() {
+        return battleStockStartTime;
+    }
+
+    public void setBattleStockStartTime(String battleStockStartTime) {
+        this.battleStockStartTime = battleStockStartTime;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line = line;
+    }
 
     public List<BattleBean> getBattleStaList() {
         return battleStaList;

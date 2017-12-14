@@ -182,7 +182,7 @@ public class KlineBattleActivity extends BaseActivity {
                         .execute();
                 break;
             case R.id.exercise:
-                Launcher.with(getActivity(), KlineBattleDetailActivity.class)
+                Launcher.with(getActivity(), SingleKlineExerciseActivity.class)
                         .putExtra(ExtraKeys.GUESS_TYPE, KlineBattle.TYPE_EXERCISE)
                         .execute();
                 break;
