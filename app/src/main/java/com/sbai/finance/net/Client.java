@@ -3358,6 +3358,18 @@ public class Client {
                         .put("customId", customId));
     }
 
+    public static API requestKlineRankData(){
+        return new API(POST,"/api/game-bat/battle/userrank");
+    }
+
+    public static API requestKlineBattleResult(){
+        return new API(POST,"/api/game-bat/battle/battlerank",new ApiParams().put("userId","1070"));
+    }
+
+    public static API requestKlineOtherName(double profit){
+        return new API("/api/game-bat/signbattle/getAppellation");
+    }
+
     /**
      * /user/userAccount/findNonSecretPayStatus.do
      * GET
