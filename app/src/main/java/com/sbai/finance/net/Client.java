@@ -3465,4 +3465,21 @@ public class Client {
     public static API requestKlineBattleInfo() {
         return new API(POST, "/api/game-bat/battle/to.do");
     }
+
+    /**
+     * 对战配置
+     *
+     * @return
+     */
+    public static API requestKlineBattleConf() {
+        return new API("/api/game-bat/battle/conf.do");
+    }
+
+    /**
+     * 我的战绩
+     */
+    public static API requestKlineBattleMyRecord() {
+        return new API("/api/game-bat/battle/userbattle.do");
+    }
+
 }

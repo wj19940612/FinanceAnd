@@ -1109,4 +1109,7 @@
     <string name="_total_profit">%1$d\n盈利(元宝)</string>
     <string name="people">人</string>
     <string name="matching_the_number_of_people_in_this_room">正在匹配，房间人数:</string>
+    <string name="_battle_count">%1$d场次</string>
+    <string name="win_ingot">盈利(元宝)</string>
+    <string name="win_pk_rate">胜率</string>
 </resources>

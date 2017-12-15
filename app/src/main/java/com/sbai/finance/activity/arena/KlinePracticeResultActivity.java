@@ -12,7 +12,6 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineOtherName;
-import com.sbai.finance.model.klinebattle.KlineBattle;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
