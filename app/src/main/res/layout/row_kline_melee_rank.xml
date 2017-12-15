@@ -60,7 +60,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bgArenaRanking"
-        android:gravity="center_vertical"
         android:minHeight="60dp"
         android:orientation="horizontal">
 
@@ -69,6 +68,7 @@
             android:layout_width="24dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
             android:gravity="center"
             android:textSize="14sp"
             android:textColor="@color/white"/>
@@ -78,7 +78,8 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_toRightOf="@+id/rank"
-            android:layout_marginLeft="14dp"/>
+            android:layout_marginLeft="14dp"
+            android:layout_centerVertical="true"/>
 
         <TextView
             android:id="@+id/name"
@@ -86,6 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/avatar"
             android:layout_marginLeft="12dp"
+            android:layout_centerVertical="true"
             android:gravity="center"
             android:textSize="12sp"
             android:textColor="@color/white"/>
@@ -95,30 +97,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/avatar"
-            android:layout_marginLeft="98dp"
+            android:layout_marginLeft="100dp"
             android:gravity="center"
             android:textSize="12sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"/>
 
         <TextView
             android:id="@+id/secondCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/avatar"
-            android:layout_marginLeft="158dp"
+            android:layout_marginLeft="160dp"
             android:gravity="center"
             android:textSize="12sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"/>
 
         <TextView
             android:id="@+id/thirdCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/avatar"
-            android:layout_marginLeft="218dp"
+            android:layout_marginLeft="220dp"
             android:gravity="center"
             android:textSize="12sp"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"/>
     </RelativeLayout>
 
 </LinearLayout>

@@ -209,9 +209,11 @@ public class KlineOneByOneRankFragment extends BaseFragment {
                     mHeaderLl.setVisibility(View.GONE);
                 }
 
-                if (position == itemCount - 1) {
+                if (position == itemCount - 1 && position == 0) {
+                    mRankingLL.setBackgroundResource(R.drawable.bg_row_first_bottom);
+                }else if(position == itemCount - 1){
                     mRankingLL.setBackgroundResource(R.drawable.bg_row_rank_bottom);
-                } else if (position == 0) {
+                }else if (position == 0) {
                     mRankingLL.setBackgroundResource(R.drawable.bg_arena_award_ranking_first);
                 } else {
                     if (position % 2 == 0) {
