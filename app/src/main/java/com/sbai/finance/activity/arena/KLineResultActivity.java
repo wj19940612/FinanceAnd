@@ -11,15 +11,20 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.arena.klinebattle.KlineBattlePkActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineBattleResult;
+import com.sbai.finance.model.klinebattle.KlineBattle;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.KLineTopResultView;
 import com.sbai.finance.view.KlineBottomResultView;
 import com.sbai.finance.view.NoScrollListView;
@@ -35,9 +40,6 @@ import butterknife.OnClick;
  */
 
 public class KLineResultActivity extends BaseActivity {
-    public static final String GOIN_TYPE = "goin_type";
-    public static final int TYPE_1V1 = 1;
-    public static final int TYPE_4V4 = 2;
 
 
     @BindView(R.id.titleBar)
@@ -54,7 +56,7 @@ public class KLineResultActivity extends BaseActivity {
     KlineBottomResultView mBottomView;
 
     private ResultAdapter mResultAdapter;
-    private int mGoinType;
+    private String mGoinType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,7 +69,7 @@ public class KLineResultActivity extends BaseActivity {
     }
 
     private void initData() {
-        mGoinType = getIntent().getIntExtra(GOIN_TYPE, 1);
+        mGoinType = getIntent().getStringExtra(ExtraKeys.GUESS_TYPE);
     }
 
     private void initView() {
@@ -75,7 +77,8 @@ public class KLineResultActivity extends BaseActivity {
         mResultAdapter.setOnMoreClickListener(new ResultAdapter.OnMoreClickListener() {
             @Override
             public void onMoreClick() {
-
+                Launcher.with(KLineResultActivity.this,KlineBattlePkActivity.class).putExtra(ExtraKeys.GUESS_TYPE,mGoinType).execute();
+                finish();
             }
         });
         mListView.setAdapter(mResultAdapter);
@@ -145,12 +148,14 @@ public class KLineResultActivity extends BaseActivity {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), mContext, position, getCount());
+            viewHolder.bindDataWithView(getItem(position), mContext, position, getCount(),mOnMoreClickListener);
             return convertView;
         }
 
 
         static class ViewHolder {
+            @BindView(R.id.content)
+            RelativeLayout mContent;
             @BindView(R.id.rank)
             TextView mRank;
             @BindView(R.id.avatar)
@@ -171,7 +176,7 @@ public class KLineResultActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(KlineBattleResult.Ranking data, Context context, int position, int count) {
+            public void bindDataWithView(KlineBattleResult.Ranking data, Context context, int position, int count, final OnMoreClickListener onMoreClickListener) {
                 if (data == null) return;
                 mRank.setText(String.valueOf(position + 1));
                 GlideApp.with(context).load(data.getUserPortrait())
@@ -190,6 +195,14 @@ public class KLineResultActivity extends BaseActivity {
                 } else {
                     mViewStub.setVisibility(View.VISIBLE);
                 }
+                mContent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(onMoreClickListener!=null){
+                            onMoreClickListener.onMoreClick();
+                        }
+                    }
+                });
             }
         }
     }

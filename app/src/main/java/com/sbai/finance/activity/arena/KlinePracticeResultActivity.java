@@ -3,6 +3,7 @@ package com.sbai.finance.activity.arena;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,17 +11,20 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.arena.klinebattle.SingleKlineExerciseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineOtherName;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.KlineBottomResultView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2017\12\12 0012.
@@ -110,5 +114,15 @@ public class KlinePracticeResultActivity extends BaseActivity {
 
     private void updateBottomView() {
         mBottomView.updateStock(mStockName, mStockCode, mStockStartTime, mStockEndTime, mStockRise);
+    }
+
+
+    @OnClick(R.id.moreOneBtn)
+    public void onViewClicked(View view) {
+        switch (view.getId()){
+            case R.id.moreOneBtn:
+                Launcher.with(this, SingleKlineExerciseActivity.class).putExtra(ExtraKeys.GUESS_TYPE,KlineBattle.TYPE_EXERCISE).execute();
+                break;
+        }
     }
 }
