@@ -135,6 +135,11 @@ public class KlineOneByOneRankFragment extends BaseFragment {
 
     private void updateKlineRank(KlineRank data) {
         ((KlineRankListActivity) getActivity()).setKlineRank(data);
+        if (data.getRank1v1() == null || data.getRank1v1().size() == 0) {
+            mEmpty.setVisibility(View.VISIBLE);
+        } else {
+            mEmpty.setVisibility(View.GONE);
+        }
         mOneByOneAdapter.clear();
         mOneByOneAdapter.addAll(data.getRank1v1());
     }

@@ -129,6 +129,11 @@ public class KlineMeleeRankFragment extends BaseFragment {
     }
 
     private void updateKlineRank(KlineRank data) {
+        if (data.getRank4v4() == null || data.getRank4v4().size() == 0) {
+            mEmpty.setVisibility(View.VISIBLE);
+        } else {
+            mEmpty.setVisibility(View.GONE);
+        }
         mMeleeAdapter.clear();
         mMeleeAdapter.addAll(data.getRank4v4());
     }
