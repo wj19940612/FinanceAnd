@@ -202,9 +202,7 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
     }
 
     public void updateHeader() {
-        GlideApp.with(getActivity()).load(LocalUser.getUser().getUserInfo().getUserPortrait())
-                .placeholder(R.drawable.ic_default_avatar)
-                .circleCrop().into(mAvatar);
+
         if (mSelectPosition == FRAGMENT_ONE) {
             mWinRate.setVisibility(View.VISIBLE);
             mTopNumber.setVisibility(View.GONE);
@@ -214,9 +212,14 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
             mMedal.setVisibility(View.GONE);
 
             if (mKlineRank != null) {
+                GlideApp.with(getActivity()).load(mKlineRank.getUserRank1v1().getUserPortrait())
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .circleCrop().into(mAvatar);
+                mName.setText(mKlineRank.getUserRank1v1().getUserName());
+                mRankPosition.setText(mKlineRank.getUserRank1v1().getSort() < 0 ? "未排名" : String.valueOf(mKlineRank.getUserRank1v1().getSort()));
                 String rate = "0";
                 if (mKlineRank.getUserRank1v1().getRankingRate() != 0)
-                    rate = String.valueOf(mKlineRank.getUserRank1v1().getRankingRate());
+                    rate = String.valueOf(mKlineRank.getUserRank1v1().getRankingRate() * 100);
                 mWinRate.setText("胜率: " + rate + "%");
             }
         } else {
@@ -228,6 +231,11 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
             mMedal.setVisibility(View.VISIBLE);
 
             if (mKlineRank != null) {
+                GlideApp.with(getActivity()).load(mKlineRank.getUserRank4v4().getUserPortrait())
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .circleCrop().into(mAvatar);
+                mName.setText(mKlineRank.getUserRank4v4().getUserName());
+                mRankPosition.setText(mKlineRank.getUserRank4v4().getSort() < 0 ? "未排名" : String.valueOf(mKlineRank.getUserRank1v1().getSort()));
                 mTopNumber.setText(String.valueOf(mKlineRank.getUserRank4v4().getOne()));
                 mSecondNumber.setText(String.valueOf(mKlineRank.getUserRank4v4().getTwo()));
                 mThirdNumber.setText(String.valueOf(mKlineRank.getUserRank4v4().getThree()));

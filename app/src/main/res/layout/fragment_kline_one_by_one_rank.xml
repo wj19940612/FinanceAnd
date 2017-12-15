@@ -25,7 +25,7 @@
         android:drawableTop="@drawable/img_no_message"
         android:gravity="center_horizontal"
         android:text="@string/now_not_has_data"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:visibility="gone"/>
 
 </RelativeLayout>

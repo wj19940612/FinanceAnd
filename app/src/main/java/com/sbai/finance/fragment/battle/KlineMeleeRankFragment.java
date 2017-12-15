@@ -91,7 +91,7 @@ public class KlineMeleeRankFragment extends BaseFragment {
 
     public void initScrollState() {
         LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-        boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() == 0;
+        boolean isTop = layoutManager.findFirstCompletelyVisibleItemPosition() <= 0;
         if (mOnFragmentRecycleViewScrollListener != null) {
             mOnFragmentRecycleViewScrollListener.onSwipRefreshEnable(isTop, 0);
         }
