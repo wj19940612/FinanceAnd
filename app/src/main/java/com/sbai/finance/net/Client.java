@@ -3367,7 +3367,7 @@ public class Client {
     }
 
     public static API requestKlineOtherName(double profit) {
-        return new API("/api/game-bat/signbattle/getAppellation");
+        return new API("/api/game-bat/signbattle/getAppellation", new ApiParams().put("profit", profit));
     }
 
     /**
