@@ -42,7 +42,7 @@ public abstract class ChartView extends View {
 
     private enum Action {
         NONE,
-        TOUCH,
+        TOUCH, // touch line
         DRAG,
         ZOOM
     }
@@ -166,9 +166,11 @@ public abstract class ChartView extends View {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == WHAT_LONG_PRESS || msg.what == WHAT_ONE_CLICK) {
-                mAction = Action.TOUCH;
-                MotionEvent e = (MotionEvent) msg.obj;
-                triggerTouchLinesRedraw(e);
+                if (enableDrawTouchLines()) {
+                    mAction = Action.TOUCH;
+                    MotionEvent e = (MotionEvent) msg.obj;
+                    triggerTouchLinesRedraw(e);
+                }
             }
         }
     }
@@ -221,7 +223,7 @@ public abstract class ChartView extends View {
             mMaxTransactionX = calculateMaxTransactionX();
         }
 
-        if (enableMovingAverages()) {
+        if (enableCalculateMovingAverages()) {
             calculateMovingAverages(mSettings.isIndexesEnable());
         }
 
@@ -244,6 +246,13 @@ public abstract class ChartView extends View {
                 left, top2, width, bottomPartHeight,
                 canvas);
 
+        if (enableDrawMovingAverages()) {
+            drawMovingAverageLines(mSettings.isIndexesEnable(),
+                    left, top, width, topPartHeight,
+                    left, top2, width, bottomPartHeight,
+                    canvas);
+        }
+
         if (enableDrawUnstableData()) {
             drawUnstableData(mSettings.isIndexesEnable(),
                     left, top, width, topPartHeight,
@@ -254,7 +263,7 @@ public abstract class ChartView extends View {
         drawTimeLine(left, top + topPartHeight, width, canvas);
 
         if (enableDrawMovingAverages()) {
-            drawTitleAboveBaselines(mSettings.getBaseLines(), left, getTop(), width, topPartHeight,
+            drawTitleAboveBaselines(mSettings.getBaseLines(), left, top, width, topPartHeight,
                     mSettings.getIndexesBaseLines(), left, top2, width, bottomPartHeight,
                     mTouchIndex, canvas);
         }
@@ -272,6 +281,7 @@ public abstract class ChartView extends View {
             onTouchLinesDisappear();
         }
     }
+
 
     protected float calculateMaxTransactionX() {
         return 0;
@@ -367,13 +377,11 @@ public abstract class ChartView extends View {
     }
 
     private boolean triggerTouchLinesRedraw(MotionEvent event) {
-        if (enableDrawTouchLines()) {
-            int newTouchIndex = calculateTouchIndex(event);
-            if (newTouchIndex != mTouchIndex && hasThisTouchIndex(newTouchIndex)) {
-                mTouchIndex = newTouchIndex;
-                redraw();
-                return true;
-            }
+        int newTouchIndex = calculateTouchIndex(event);
+        if (newTouchIndex != mTouchIndex && hasThisTouchIndex(newTouchIndex)) {
+            mTouchIndex = newTouchIndex;
+            redraw();
+            return true;
         }
         return false;
     }
@@ -382,7 +390,7 @@ public abstract class ChartView extends View {
         return false;
     }
 
-    protected boolean enableMovingAverages() {
+    protected boolean enableCalculateMovingAverages() {
         return false;
     }
 
@@ -435,6 +443,26 @@ public abstract class ChartView extends View {
     }
 
     protected void onTouchLinesDisappear() {
+    }
+
+    /**
+     * draw moving averages post real time data draw, specifically for kline
+     *
+     * @param indexesEnable
+     * @param left
+     * @param top
+     * @param width
+     * @param topPartHeight
+     * @param left1
+     * @param top2
+     * @param width1
+     * @param bottomPartHeight
+     * @param canvas
+     */
+    protected void drawMovingAverageLines(boolean indexesEnable,
+                                          int left, int top, int width, int topPartHeight,
+                                          int left1, int top2, int width1, int bottomPartHeight,
+                                          Canvas canvas) {
     }
 
     /**

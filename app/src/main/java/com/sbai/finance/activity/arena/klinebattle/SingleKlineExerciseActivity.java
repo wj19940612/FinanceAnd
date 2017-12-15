@@ -7,6 +7,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.activity.arena.KlinePracticeResultActivity;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.model.klinebattle.KlineBattle;
+import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -54,7 +55,8 @@ public class SingleKlineExerciseActivity extends KlineBattleDetailActivity {
         if (mBattleKlineDataList != null && mBattleKlineDataList.size() >= 40) {
             mKlineView.initKlineDataList(mBattleKlineDataList.subList(0, 40));
         }
-        mCountdown.setTotalTime(200, new KlineBattleCountDownView.OnCountDownListener() {
+        int totalTime = (int) ((mKlineBattle.getEndTime() - SysTime.getSysTime().getSystemTimestamp()) / 1000);
+        mCountdown.setTotalTime(totalTime, new KlineBattleCountDownView.OnCountDownListener() {
             @Override
             public void finish() {
                 battleFinish();

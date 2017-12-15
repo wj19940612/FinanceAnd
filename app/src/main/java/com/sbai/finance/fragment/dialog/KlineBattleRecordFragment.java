@@ -88,7 +88,7 @@ public class KlineBattleRecordFragment extends DialogFragment {
         mBinder.unbind();
     }
 
-    @OnClick({R.id.dialogDelete, R.id.button})
+    @OnClick({R.id.dialogDelete})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.dialogDelete:

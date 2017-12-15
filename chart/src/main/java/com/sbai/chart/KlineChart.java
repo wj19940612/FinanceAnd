@@ -71,7 +71,7 @@ public class KlineChart extends ChartView {
     }
 
     @Override
-    protected boolean enableMovingAverages() {
+    protected boolean enableCalculateMovingAverages() {
         return true;
     }
 
@@ -170,7 +170,7 @@ public class KlineChart extends ChartView {
         paint.setPathEffect(null);
     }
 
-    private void setMovingAveragesPaint(Paint paint, int movingAverage) {
+    protected void setMovingAveragesPaint(Paint paint, int movingAverage) {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(1);
         paint.setPathEffect(null);
@@ -259,11 +259,11 @@ public class KlineChart extends ChartView {
                 min = Math.min(min, data.getMinPrice());
 
                 for (int movingAverage : mMovingAverages) {
-                    int start = i - movingAverage + 1;
-                    if (start < 0) continue;
-                    float mv = mDataList.get(i).getMovingAverage(movingAverage);
-                    max = Math.max(max, mv);
-                    min = Math.min(min, mv);
+                    Float movingAverageValue = mDataList.get(i).getMovingAverage(movingAverage);
+                    if (movingAverageValue != null) {
+                        max = Math.max(max, movingAverageValue.floatValue());
+                        min = Math.min(min, movingAverageValue.floatValue());
+                    }
                 }
             }
 
@@ -325,9 +325,9 @@ public class KlineChart extends ChartView {
             }
             for (int movingAverage : mMovingAverages) {
                 setMovingAveragesTextPaint(sPaint, movingAverage);
-                float movingAverageValue = data.getMovingAverage(movingAverage);
+                Float movingAverageValue = data.getMovingAverage(movingAverage);
                 String maText = "MA" + movingAverage + ":--";
-                if (movingAverageValue != 0) {
+                if (movingAverageValue != null) {
                     maText = "MA" + movingAverage + ":" + formatNumber(movingAverageValue);
                 }
                 float textWidth = sPaint.measureText(maText);
@@ -418,21 +418,22 @@ public class KlineChart extends ChartView {
                     drawIndexes(chartX, data, canvas);
                 }
             }
-            drawMovingAverageLines(canvas);
         }
     }
 
-    private void drawMovingAverageLines(Canvas canvas) {
+    @Override
+    protected void drawMovingAverageLines(boolean indexesEnable, int left, int top, int width, int topPartHeight,
+                                          int left1, int top2, int width1, int bottomPartHeight,
+                                          Canvas canvas) {
         for (int movingAverage : mMovingAverages) {
             setMovingAveragesPaint(sPaint, movingAverage);
             float startX = -1;
             float startY = -1;
             for (int i = mStart; i < mEnd; i++) {
-                int start = i - movingAverage + 1;
-                if (start < 0) continue;
+                Float movingAverageValue = mDataList.get(i).getMovingAverage(movingAverage);
+                if (movingAverageValue == null) continue;
                 float chartX = getChartXOfScreen(i);
-                float movingAverageValue = mDataList.get(i).getMovingAverage(movingAverage);
-                float chartY = getChartY(movingAverageValue);
+                float chartY = getChartY(movingAverageValue.floatValue());
                 if (startX == -1 && startY == -1) { // start
                     startX = chartX;
                     startY = chartY;

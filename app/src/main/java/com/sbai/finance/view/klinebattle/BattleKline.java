@@ -47,7 +47,11 @@ public class BattleKline extends KlineChart {
     }
 
     @Override
-    protected void drawTimeLine(int left, int top, int width, Canvas canvas) {
+    protected void drawTimeLine(int left, int top, int width, Canvas canvas) {}
+
+    @Override
+    protected boolean enableCalculateMovingAverages() {
+        return false;
     }
 
     public void addKlineData(BattleKlineData gameKlineData) {
@@ -63,10 +67,6 @@ public class BattleKline extends KlineChart {
     public void initKlineDataList(List<BattleKlineData> klineDataList) {
         mDataList = klineDataList;
         new DataShowTask(this, mDataList).execute();
-    }
-
-    @Override
-    protected void calculateMovingAverages(boolean indexesEnable) {
     }
 
     @Override
