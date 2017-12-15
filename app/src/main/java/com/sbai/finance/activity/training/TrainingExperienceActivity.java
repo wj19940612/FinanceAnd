@@ -405,7 +405,6 @@ public class TrainingExperienceActivity extends BaseActivity {
 						public void onClick(View v) {
 							Launcher.with(context, LookBigPictureActivity.class)
 									.putExtra(Launcher.EX_PAYLOAD, item.getUserModel().getUserPortrait())
-									.putExtra(Launcher.EX_PAYLOAD_2, 0)
 									.execute();
 						}
 					});
@@ -421,8 +420,6 @@ public class TrainingExperienceActivity extends BaseActivity {
 						@Override
 						public void onClick(View v) {
 							Launcher.with(context, LookBigPictureActivity.class)
-									.putExtra(Launcher.EX_PAYLOAD, "")
-									.putExtra(Launcher.EX_PAYLOAD_2, 0)
 									.execute();
 						}
 					});
@@ -465,6 +462,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 						public void onClick(View v) {
 							Launcher.with(context, LookBigPictureActivity.class)
 									.putExtra(Launcher.EX_PAYLOAD, item.getPicture())
+									.putExtra(Launcher.EX_PAYLOAD_2, -1)
 									.execute();
 						}
 					});

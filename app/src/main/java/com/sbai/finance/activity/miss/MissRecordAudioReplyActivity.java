@@ -243,8 +243,9 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
 
     private void showSubmittingHintDialog() {
         SmartDialog.single(getActivity(), getString(R.string.stop_submit_hint))
-                .setNegative(R.string.again)
-                .setPositive(R.string.stop, new SmartDialog.OnClickListener() {
+                .setTitle(R.string.stop_submit)
+                .setPositive(R.string.again)
+                .setNegative(R.string.exit, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
@@ -261,7 +262,6 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
                 if (mMissReplyAnswer != null) {
                     Launcher.with(getActivity(), LookBigPictureActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, mMissReplyAnswer.getUserPortrait())
-                            .putExtra(Launcher.EX_PAYLOAD_2, 0)
                             .execute();
                 }
                 break;
@@ -321,30 +321,10 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
 
 
     public void convertAudio(String path) {
-        /**
-         *  Update with a valid audio file!
-         *  Supported formats: {@link AndroidAudioConverter.AudioFormat}
-         */
-        File file = new File(path);
+        final File file = new File(path);
         Log.d(TAG, "convertAudio: " + file.getAbsolutePath());
-//        IConvertCallback callback = new IConvertCallback() {
-//            @Override
-//            public void onSuccess(File convertedFile) {
-//                submitMp3File(convertedFile);
-        submitMp3File(file);
         mSubmitting = true;
-//            }
-//
-//            @Override
-//            public void onFailure(Exception error) {
-//                Toast.makeText(MissRecordAudioReplyActivity.this, "ERROR: " + error.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        };
-//        AndroidAudioConverter.with(this)
-//                .setFile(file)
-//                .setFormat(AudioFormat.MP3)
-//                .setCallback(callback)
-//                .convert();
+        submitMp3File(file);
     }
 
     private void submitMp3File(final File convertedFile) {

@@ -173,6 +173,7 @@ public class ExperienceView extends LinearLayout {
 					public void onClick(View v) {
 						Launcher.with(getContext(), LookBigPictureActivity.class)
 								.putExtra(Launcher.EX_PAYLOAD, data.getPicture())
+                                .putExtra(Launcher.EX_PAYLOAD_2, -1)
 								.execute();
 					}
 				});
