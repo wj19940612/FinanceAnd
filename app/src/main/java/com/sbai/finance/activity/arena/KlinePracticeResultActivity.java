@@ -14,6 +14,7 @@ import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.arena.klinebattle.SingleKlineExerciseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineOtherName;
+import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -121,7 +122,7 @@ public class KlinePracticeResultActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.moreOneBtn:
-                Launcher.with(this, SingleKlineExerciseActivity.class).putExtra(ExtraKeys.GUESS_TYPE,KlineBattle.TYPE_EXERCISE).execute();
+                Launcher.with(this, SingleKlineExerciseActivity.class).putExtra(ExtraKeys.GUESS_TYPE, BattleKline.TYPE_EXERCISE).execute();
                 break;
         }
     }
