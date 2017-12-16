@@ -7,6 +7,7 @@ import com.sbai.chart.ColorCfg;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.R;
+import com.sbai.finance.kgame.GamePusher;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.net.Client;
@@ -51,6 +52,14 @@ public class TestActivity extends BaseActivity {
         mBattleKline.setSettings(settings2);
 
         requestKlineDataAndSet(StockKlineData.PERIOD_DAY);
+
+        GamePusher.get().connect();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GamePusher.get().close();
     }
 
     private void requestKlineDataAndSet(int type) {

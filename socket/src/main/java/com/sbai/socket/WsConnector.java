@@ -1,12 +1,12 @@
-package com.sbai.finance.game;
+package com.sbai.socket;
 
-public interface AbsWsClient {
+public interface WsConnector {
 
     void connect();
 
     void close();
 
-    void send(WSMessage wsMessage);
+    void send(WsRequest request);
 
     void onOpen();
 

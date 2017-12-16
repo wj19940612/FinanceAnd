@@ -3465,4 +3465,13 @@ public class Client {
     public static API requestKlineBattleInfo() {
         return new API(POST, "/api/game-bat/battle/to.do");
     }
+
+    /**
+     * 获取游戏 socket 地址
+     *
+     * @return
+     */
+    public static API getGameSocketAddress() {
+        return new API("/api/tcp-gateway/addr", new ApiParams().put("type", "websocket"));
+    }
 }
