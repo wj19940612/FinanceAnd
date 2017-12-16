@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.klinebattle.KlineBattle;
+import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class KlineBattleMatchSuccessDialog extends BaseDialog {
         super(activity);
     }
 
-    public static void get(Activity activity, @NonNull List<KlineBattle.BattleBean> battleBeans, OnDismissListener onDismissListener) {
+    public static void get(Activity activity, @NonNull List<BattleKline.BattleBean> battleBeans, OnDismissListener onDismissListener) {
 
         setCurrentDialog(DIALOG_START_GAME);
 
@@ -50,8 +50,8 @@ public class KlineBattleMatchSuccessDialog extends BaseDialog {
         ImageView avatar2 = customView.findViewById(R.id.avatar2);
         TextView userName3 = customView.findViewById(R.id.userName3);
         ImageView avatar3 = customView.findViewById(R.id.avatar3);
-        List<KlineBattle.BattleBean> battleBeanList = new ArrayList();
-        for (KlineBattle.BattleBean battleBean : battleBeans) {
+        List<BattleKline.BattleBean> battleBeanList = new ArrayList();
+        for (BattleKline.BattleBean battleBean : battleBeans) {
             if (battleBean.getUserId() != LocalUser.getUser().getUserInfo().getId()) {
                 battleBeanList.add(battleBean);
             }

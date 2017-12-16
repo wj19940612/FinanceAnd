@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.activity.arena.KlinePracticeResultActivity;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
-import com.sbai.finance.model.klinebattle.KlineBattle;
+import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -15,6 +15,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.training.guesskline.KlineBattleCountDownView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ import java.util.List;
  */
 
 public class SingleKlineExerciseActivity extends KlineBattleDetailActivity {
-    private List<BattleKlineData> mBattleKlineDataList;
+    private List<BattleKlineData> mBattleUserMarkList;
     private int mPositionIndex = -1;
 
     @Override
@@ -33,9 +34,9 @@ public class SingleKlineExerciseActivity extends KlineBattleDetailActivity {
 
     private void requestKlineData() {
         Client.getSingleKlineBattleData().setTag(TAG)
-                .setCallback(new Callback2D<Resp<KlineBattle>, KlineBattle>() {
+                .setCallback(new Callback2D<Resp<BattleKline>, BattleKline>() {
                     @Override
-                    protected void onRespSuccessData(KlineBattle data) {
+                    protected void onRespSuccessData(BattleKline data) {
                         updateExerciseData(data);
                     }
 
@@ -47,15 +48,19 @@ public class SingleKlineExerciseActivity extends KlineBattleDetailActivity {
                 }).fireFree();
     }
 
-    private void updateExerciseData(KlineBattle data) {
+    private void updateExerciseData(BattleKline data) {
         if (data == null) return;
-        mKlineBattle = data;
-        mRemainKlineAmount = mKlineBattle.getLine();
-        mBattleKlineDataList = mKlineBattle.getUserMarkList();
-        if (mBattleKlineDataList != null && mBattleKlineDataList.size() >= 40) {
-            mKlineView.initKlineDataList(mBattleKlineDataList.subList(0, 40));
+        mBattleKline = data;
+        mRemainKlineAmount = mBattleKline.getLine();
+        mBattleUserMarkList = mBattleKline.getUserMarkList();
+        if (mBattleUserMarkList != null && mBattleUserMarkList.size() >= 40) {
+            List<BattleKlineData> subList = new ArrayList<>();
+            for (int i = 0; i < 40; i++) {
+                subList.add(mBattleUserMarkList.get(i));
+            }
+            mKlineView.initKlineDataList(subList);
         }
-        int totalTime = (int) ((mKlineBattle.getEndTime() - SysTime.getSysTime().getSystemTimestamp()) / 1000);
+        int totalTime = (int) ((mBattleKline.getEndTime() - SysTime.getSysTime().getSystemTimestamp()) / 1000);
         mCountdown.setTotalTime(totalTime, new KlineBattleCountDownView.OnCountDownListener() {
             @Override
             public void finish() {
@@ -67,45 +72,47 @@ public class SingleKlineExerciseActivity extends KlineBattleDetailActivity {
 
     @Override
     protected void buyOperate() {
-        setKlineViewAndOperateView(KlineBattle.BUY);
+        setKlineViewAndOperateView(BattleKline.BUY);
     }
 
     @Override
     protected void clearOperate() {
-        setKlineViewAndOperateView(KlineBattle.SELL);
+        setKlineViewAndOperateView(BattleKline.SELL);
     }
 
     @Override
     protected void passOperate() {
-        setKlineViewAndOperateView(KlineBattle.PASS);
+        setKlineViewAndOperateView(BattleKline.PASS);
     }
 
     private void setKlineViewAndOperateView(String type) {
-        if (mBattleKlineDataList == null) return;
-        if (mCurrentIndex == mBattleKlineDataList.size()) {
-            battleFinish();
-            return;
-        }
-        if (mCurrentIndex + 1 < mBattleKlineDataList.size()) {
+        if (mBattleUserMarkList == null) return;
+        if (mCurrentIndex + 1 < mBattleUserMarkList.size()) {
             BattleKlineData positionKlineData = null;
-            BattleKlineData nextKlineData = mBattleKlineDataList.get(mCurrentIndex + 1);
+            BattleKlineData nextKlineData = mBattleUserMarkList.get(mCurrentIndex + 1);
             mKlineView.addKlineData(nextKlineData);
-            if (type.equalsIgnoreCase(KlineBattle.PASS)) {
+            if (type.equalsIgnoreCase(BattleKline.PASS)) {
                 if (mPositionIndex > -1) {
-                    positionKlineData = mBattleKlineDataList.get(mPositionIndex);
+                    positionKlineData = mBattleUserMarkList.get(mPositionIndex);
                 }
             } else {
-                positionKlineData = mBattleKlineDataList.get(mCurrentIndex);
+                positionKlineData = mBattleUserMarkList.get(mCurrentIndex);
             }
             if (positionKlineData != null) {
-                mOperateView.setPositionProfit((nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice());
+                double positionProfit = (nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice();
+                mOperateView.setPositionProfit(positionProfit);
+                mOperateView.setTotalProfit(positionProfit + mOperateView.getTotalProfit());
             }
-            if (type.equalsIgnoreCase(KlineBattle.BUY)) {
+            if (type.equalsIgnoreCase(BattleKline.BUY)) {
                 mPositionIndex = mCurrentIndex;
                 mOperateView.buySuccess();
-            } else if (type.equalsIgnoreCase(KlineBattle.SELL)) {
+            } else if (type.equalsIgnoreCase(BattleKline.SELL)) {
                 mPositionIndex = -1;
                 mOperateView.clearSuccess();
+            }
+            if (mCurrentIndex == mBattleUserMarkList.size() - 2) {
+                battleFinish();
+                return;
             }
             mCurrentIndex = mCurrentIndex + 1;
             mRemainKlineAmount = mRemainKlineAmount - 1;
@@ -116,13 +123,14 @@ public class SingleKlineExerciseActivity extends KlineBattleDetailActivity {
     @Override
     protected void battleFinish() {
         super.battleFinish();
-        if (mKlineBattle == null) return;
+        if (mBattleKline == null) return;
         Launcher.with(getActivity(), KlinePracticeResultActivity.class)
-                .putExtra(ExtraKeys.BATTLE_STOCK_START_TIME, mKlineBattle.getBattleStockStartTime())
-                .putExtra(ExtraKeys.BATTLE_STOCK_END_TIME, mKlineBattle.getBattleStockEndTime())
-                .putExtra(ExtraKeys.BATTLE_STOCK_CODE, mKlineBattle.getBattleVarietyCode())
-                .putExtra(ExtraKeys.BATTLE_STOCK_NAME, mKlineBattle.getBattleVarietyName())
+                .putExtra(ExtraKeys.BATTLE_STOCK_START_TIME, mBattleKline.getBattleStockStartTime())
+                .putExtra(ExtraKeys.BATTLE_STOCK_END_TIME, mBattleKline.getBattleStockEndTime())
+                .putExtra(ExtraKeys.BATTLE_STOCK_CODE, mBattleKline.getBattleVarietyCode())
+                .putExtra(ExtraKeys.BATTLE_STOCK_NAME, mBattleKline.getBattleVarietyName())
                 .putExtra(ExtraKeys.BATTLE_PROFIT, mOperateView.getTotalProfit())
                 .execute();
+        finish();
     }
 }

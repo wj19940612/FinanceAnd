@@ -33,7 +33,7 @@
     </LinearLayout>
 
 
-    <com.sbai.finance.view.training.guesskline.KlineBattleOperateView
+    <com.sbai.finance.view.training.guesskline.BattleKlineOperateView
         android:id="@+id/operateView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.glide.GlideApp;
 
@@ -24,7 +25,7 @@ import butterknife.OnClick;
  * k线训练操作
  */
 
-public class KlineBattleOperateView extends LinearLayout {
+public class BattleKlineOperateView extends LinearLayout {
     @BindView(R.id.imgRank)
     ImageView mImgRank;
     @BindView(R.id.imgAvatar)
@@ -57,21 +58,21 @@ public class KlineBattleOperateView extends LinearLayout {
         void pass();
     }
 
-    public KlineBattleOperateView(Context context) {
+    public BattleKlineOperateView(Context context) {
         this(context, null);
     }
 
-    public KlineBattleOperateView(Context context, @Nullable AttributeSet attrs) {
+    public BattleKlineOperateView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public KlineBattleOperateView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public BattleKlineOperateView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     private void init(Context context) {
-        LayoutInflater.from(context).inflate(R.layout.view_kline_battle_operate, this, true);
+        LayoutInflater.from(context).inflate(R.layout.view_battle_kline_operate, this, true);
         ButterKnife.bind(this);
         mContext = context;
     }
@@ -115,7 +116,8 @@ public class KlineBattleOperateView extends LinearLayout {
                 .into(mImgAvatar);
     }
 
-    private void setTotalProfit(double totalProfit) {
+    public void setTotalProfit(double totalProfit) {
+        mProfit = totalProfit;
         totalProfit = Double.valueOf(FinanceUtil.formatWithScale(totalProfit));
         if (totalProfit == 0) {
             mTotalProfit.setText("0.00");
@@ -134,7 +136,6 @@ public class KlineBattleOperateView extends LinearLayout {
     }
 
     public void setPositionProfit(double positionProfit) {
-        mProfit = mProfit + positionProfit;
         positionProfit = Double.valueOf(FinanceUtil.formatWithScale(positionProfit));
         if (positionProfit == 0) {
             mPositionProfit.setText("0.00");
@@ -146,7 +147,10 @@ public class KlineBattleOperateView extends LinearLayout {
             mPositionProfit.setText(FinanceUtil.formatToPercentage(positionProfit));
             mPositionProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.greenAssist));
         }
-        setTotalProfit(mProfit);
+    }
+
+    public void setRank(BattleKline.BattleBean battleBean) {
+
     }
 
     public void clearPositionProfit() {

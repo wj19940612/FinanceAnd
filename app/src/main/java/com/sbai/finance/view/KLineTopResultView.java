@@ -8,11 +8,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.model.klinebattle.BattleKline;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sbai.finance.activity.arena.KLineResultActivity.TYPE_1V1;
 
 /**
  * Created by Administrator on 2017\12\12 0012.
@@ -46,8 +46,8 @@ public class KLineTopResultView extends RelativeLayout {
         ButterKnife.bind(this);
     }
 
-    public void setRankInfo(int goinType, int sort) {
-        if (goinType == TYPE_1V1) {
+    public void setRankInfo(String goinType, int sort) {
+        if (goinType == BattleKline.TYPE_1V1) {
             if (sort == 1) {
                 mRank.setText(R.string.win_the_kline);
                 mRankTip.setText(R.string.eat_chicken);

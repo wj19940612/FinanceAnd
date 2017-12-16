@@ -10,7 +10,7 @@ import java.util.List;
  * 猜K 对战信息
  */
 
-public class KlineBattle {
+public class BattleKline {
 
     @StringDef({TYPE_1V1, TYPE_4V4, TYPE_EXERCISE})
     @Retention(RetentionPolicy.SOURCE)

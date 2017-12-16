@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.arena.klinebattle;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,34 +10,42 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.arena.KLineResultActivity;
 import com.sbai.finance.activity.battle.BattleRuleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.fragment.dialog.KlineBattleRecordFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.fund.UserFundInfo;
-import com.sbai.finance.model.klinebattle.KlineBattle;
+import com.sbai.finance.model.klinebattle.BattleKlineConf;
+import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.glide.GlideApp;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
+import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 /**
  * K线对决选择页面
@@ -45,12 +54,6 @@ import butterknife.OnClick;
 public class KlineBattleActivity extends BaseActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
-    @BindView(R.id.fourPk)
-    RelativeLayout mFourPk;
-    @BindView(R.id.onePk)
-    RelativeLayout mOnePk;
-    @BindView(R.id.exercise)
-    RelativeLayout mExercise;
     @BindView(R.id.rank)
     TextView mRank;
     @BindView(R.id.fourPkIngot)
@@ -72,6 +75,15 @@ public class KlineBattleActivity extends BaseActivity {
             }
         }
     };
+    private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                requestUserFindInfo();
+                requestBattleConf();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,13 +91,36 @@ public class KlineBattleActivity extends BaseActivity {
         setContentView(R.layout.activity_kline_battle);
         ButterKnife.bind(this);
         initTitleView();
-        initLoginReceiver();
+        initBroadcastReceiver();
+        requestBattleConf();
+    }
+
+    private void requestBattleConf() {
+        Client.requestKlineBattleConf().setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<BattleKlineConf>>, List<BattleKlineConf>>() {
+                    @Override
+                    protected void onRespSuccessData(List<BattleKlineConf> data) {
+                        updateBattleConf(data);
+                    }
+                }).fireFree();
+    }
+
+    private void updateBattleConf(List<BattleKlineConf> data) {
+        for (BattleKlineConf battleKlineConf : data) {
+            if (battleKlineConf.getBattleType().equalsIgnoreCase(BattleKline.TYPE_4V4)) {
+                mFourPkIngot.setText(getString(R.string.number_ingot, String.valueOf(battleKlineConf.getBounty())));
+            }
+            if (battleKlineConf.getBattleType().equalsIgnoreCase(BattleKline.TYPE_1V1)) {
+                mOnePkIngot.setText(getString(R.string.number_ingot, String.valueOf(battleKlineConf.getBounty())));
+            }
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mLoginBroadcastReceiver);
+        unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 
     private void initTitleView() {
@@ -128,11 +163,13 @@ public class KlineBattleActivity extends BaseActivity {
         });
     }
 
-    private void initLoginReceiver() {
+    private void initBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LoginActivity.ACTION_LOGIN_SUCCESS);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(mLoginBroadcastReceiver, intentFilter);
+
+        registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 
     private void openWalletPage() {
@@ -156,16 +193,18 @@ public class KlineBattleActivity extends BaseActivity {
     }
 
     private void requestUserFindInfo() {
-        Client.requestUserFundInfo()
-                .setTag(TAG)
-                .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
-                    @Override
-                    protected void onRespSuccessData(UserFundInfo data) {
-                        updateUserFund(data);
-                        mUserFundInfo = data;
-                    }
-                })
-                .fireFree();
+        if (LocalUser.getUser().isLogin()) {
+            Client.requestUserFundInfo()
+                    .setTag(TAG)
+                    .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
+                        @Override
+                        protected void onRespSuccessData(UserFundInfo data) {
+                            updateUserFund(data);
+                            mUserFundInfo = data;
+                        }
+                    })
+                    .fireFree();
+        }
     }
 
     private void updateUserFund(UserFundInfo data) {
@@ -200,14 +239,14 @@ public class KlineBattleActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fourPk:
-                judgeCurrentBattle(KlineBattle.TYPE_4V4);
+                judgeCurrentBattle(BattleKline.TYPE_4V4);
                 break;
             case R.id.onePk:
-                judgeCurrentBattle(KlineBattle.TYPE_1V1);
+                judgeCurrentBattle(BattleKline.TYPE_1V1);
                 break;
             case R.id.exercise:
                 Launcher.with(getActivity(), SingleKlineExerciseActivity.class)
-                        .putExtra(ExtraKeys.GUESS_TYPE, KlineBattle.TYPE_EXERCISE)
+                        .putExtra(ExtraKeys.GUESS_TYPE, BattleKline.TYPE_EXERCISE)
                         .execute();
                 break;
             case R.id.rank:
@@ -220,18 +259,19 @@ public class KlineBattleActivity extends BaseActivity {
         if (LocalUser.getUser().isLogin()) {
             Client.getCurrentKlineBattle().setTag(TAG)
                     .setIndeterminate(this)
-                    .setCallback(new Callback<Resp<KlineBattle.BattleBean>>() {
+                    .setCallback(new Callback<Resp<BattleKline.BattleBean>>() {
                         @Override
-                        protected void onRespSuccess(Resp<KlineBattle.BattleBean> resp) {
+                        protected void onRespSuccess(Resp<BattleKline.BattleBean> resp) {
                             if (resp.getData() == null) {
                                 showStartMatchDialog(type);
                             } else {
-                                if (resp.getData().getStatus() == KlineBattle.STATUS_BATTLEING) {
+                                if (resp.getData().getStatus() == BattleKline.STATUS_BATTLEING) {
                                     Launcher.with(getActivity(), KlineBattlePkActivity.class)
                                             .putExtra(ExtraKeys.GUESS_TYPE, type)
                                             .execute();
-                                } else if (resp.getData().getStatus() == KlineBattle.STATUS_END) {
-                                    // TODO: 2017-12-14 复盘页面
+                                } else if (resp.getData().getStatus() == BattleKline.STATUS_END) {
+                                    showStartMatchDialog(type);
+//                                    Launcher.with(getActivity(), KLineResultActivity.class).execute();
                                 }
                             }
                         }
@@ -248,7 +288,7 @@ public class KlineBattleActivity extends BaseActivity {
     }
 
     private void showStartMatchDialog(final String type) {
-        final boolean showMatchedAmount = type.equalsIgnoreCase(KlineBattle.TYPE_4V4);
+        final boolean showMatchedAmount = type.equalsIgnoreCase(BattleKline.TYPE_4V4);
         Client.requestKlineBattleMatch(type).setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
@@ -256,7 +296,8 @@ public class KlineBattleActivity extends BaseActivity {
                         StartMatchDialog.get(getActivity(), new StartMatchDialog.OnCancelListener() {
                             @Override
                             public void onCancel() {
-                                requestCancelMatch(type);
+                                StartMatchDialog.dismiss(getActivity());
+                                showCancelMatchDialog(type);
                             }
                         }, showMatchedAmount);
                     }
@@ -267,6 +308,27 @@ public class KlineBattleActivity extends BaseActivity {
                         ToastUtil.show(failedResp.getMsg());
                     }
                 }).fireFree();
+    }
+
+    private void showCancelMatchDialog(final String type) {
+        SmartDialog.single(getActivity(), getString(R.string.cancel_tip))
+                .setTitle(getString(R.string.cancel_matching))
+                .setCancelableOnTouchOutside(false)
+                .setPositive(R.string.no_waiting, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        requestCancelMatch(type);
+                    }
+                })
+                .setNegative(R.string.continue_match, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        showStartMatchDialog(type);
+                    }
+                })
+                .show();
     }
 
     private void requestCancelMatch(String type) {

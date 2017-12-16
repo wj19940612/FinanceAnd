@@ -3359,15 +3359,15 @@ public class Client {
     }
 
     public static API requestKlineRankData() {
-        return new API(POST, "/api/game-bat/battle/userrank");
+        return new API(POST, "/api/game-bat/battle/userrank",new ApiParams().put("userId",1070));
     }
 
     public static API requestKlineBattleResult() {
-        return new API(POST, "/api/game-bat/battle/battlerank", new ApiParams().put("userId", "1070"));
+        return new API(POST, "/api/game-bat/battle/battlerank", new ApiParams());
     }
 
     public static API requestKlineOtherName(double profit) {
-        return new API("/api/game-bat/signbattle/getAppellation");
+        return new API("/api/game-bat/signbattle/getAppellation", new ApiParams().put("profit", profit));
     }
 
     /**
@@ -3473,5 +3473,16 @@ public class Client {
      */
     public static API getGameSocketAddress() {
         return new API("/api/tcp-gateway/addr", new ApiParams().put("type", "websocket"));
+    }
+
+    public static API requestKlineBattleConf() {
+        return new API("/api/game-bat/battle/conf.do");
+    }
+
+    /**
+     * 我的战绩
+     */
+    public static API requestKlineBattleMyRecord() {
+        return new API("/api/game-bat/battle/userbattle.do");
     }
 }

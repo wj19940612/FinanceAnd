@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
+import android.text.SpannableString;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +18,12 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.model.klinebattle.BattleKlineMyRecord;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.StrUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,6 +78,49 @@ public class KlineBattleRecordFragment extends DialogFragment {
             DisplayMetrics dm = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             window.setLayout((int) (dm.widthPixels * 0.8), WindowManager.LayoutParams.WRAP_CONTENT);
+        }
+        requestMyRecord();
+    }
+
+    private void requestMyRecord() {
+        Client.requestKlineBattleMyRecord()
+                .setCallback(new Callback2D<Resp<BattleKlineMyRecord>, BattleKlineMyRecord>() {
+                    @Override
+                    protected void onRespSuccessData(BattleKlineMyRecord data) {
+                        updateMyRecordData(data);
+                    }
+                }).fireFree();
+    }
+
+    private void updateMyRecordData(BattleKlineMyRecord data) {
+        if (data.getUserRank1v1() != null) {
+            mOnePkCount.setText(getString(R.string._battle_count, data.getUserRank1v1().getBattle1v1Count()));
+            SpannableString str = StrUtil.mergeTextWithRatioColor(data.getUserRank1v1().getWinIngots1v1() + "\n",
+                    getString(R.string.win_ingot), 0.7f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
+            mOnePkProfit.setText(str);
+            SpannableString str1 = StrUtil.mergeTextWithRatioColor(formatWinRate(data.getUserRank1v1().getRankingRate()) + "\n",
+                    getString(R.string.win_pk_rate), 0.7f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
+            mOnePkRate.setText(str1);
+        }
+        if (data.getUserRank4v4() != null) {
+            mFourPkCount.setText(getString(R.string._battle_count, data.getUserRank4v4().getBattle4v4Count()));
+            SpannableString str = StrUtil.mergeTextWithRatioColor(data.getUserRank4v4().getWinIngots4v4() + "\n",
+                    getString(R.string.win_ingot), 0.7f, ContextCompat.getColor(getActivity(), R.color.unluckyText));
+            mFourPkProfit.setText(str);
+            mFirstCount.setText(String.valueOf(data.getUserRank4v4().getOne()));
+            mSecondCount.setText(String.valueOf(data.getUserRank4v4().getTwo()));
+            mThirdCount.setText(String.valueOf(data.getUserRank4v4().getThree()));
+        }
+    }
+
+    private String formatWinRate(double winRate) {
+        winRate = Double.valueOf(FinanceUtil.formatWithScale(winRate));
+        if (winRate == 0) {
+            return "0.0";
+        } else if (winRate > 0) {
+            return "+" + FinanceUtil.formatToPercentage(winRate);
+        } else {
+            return FinanceUtil.formatToPercentage(winRate);
         }
     }
 
