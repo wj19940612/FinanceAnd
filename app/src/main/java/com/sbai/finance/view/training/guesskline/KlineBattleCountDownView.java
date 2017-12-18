@@ -29,8 +29,6 @@ public class KlineBattleCountDownView extends LinearLayout {
     @BindView(R.id.secondLow)
     TextView mSecondLow;
     private Context mContext;
-    //毫秒
-    private long mTotalTime;
     private CountDownTimer mCountDownTimer;
 
     public interface OnCountDownListener {
@@ -57,12 +55,11 @@ public class KlineBattleCountDownView extends LinearLayout {
     }
 
     public void setTotalTime(long totalTime, final OnCountDownListener onCountDownListener) {
-        mTotalTime = totalTime;
-        setRemainTime(mTotalTime);
+        setRemainTime(totalTime);
         mCountDownTimer = new CountDownTimer(totalTime, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                setRemainTime(mTotalTime - millisUntilFinished);
+                setRemainTime(millisUntilFinished);
             }
 
             @Override
