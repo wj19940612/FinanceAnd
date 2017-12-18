@@ -125,11 +125,11 @@ public class AgainstProfitView extends LinearLayout {
     }
 
     private void setTotalProfit(BattleKline.BattleBean battleBean, TextView totalProfit, ImageView imageAvatar, ImageView imageRank) {
-        if (imageAvatar.getTag() == null) {
-            imageAvatar.setTag(battleBean.getUserId());
+        if (totalProfit.getTag() == null) {
+            totalProfit.setTag(battleBean.getUserId());
             setAvatar(battleBean.getUserPortrait(), imageAvatar);
         }
-        int useId = (int) imageAvatar.getTag();
+        int useId = (int) totalProfit.getTag();
         if (useId == battleBean.getUserId()) {
             setTotalProfit(battleBean.getProfit(), totalProfit);
             if (imageRank.getTag() == null || (int) imageRank.getTag() != battleBean.getSort()) {
@@ -179,11 +179,7 @@ public class AgainstProfitView extends LinearLayout {
             default:
                 break;
         }
-        GlideApp.with(mContext)
-                .load(drawable)
-                .placeholder(R.drawable.ic_default_avatar)
-                .circleCrop()
-                .into(imgRank);
+        imgRank.setImageDrawable(drawable);
     }
 
 }
