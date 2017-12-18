@@ -119,9 +119,8 @@ public class BattleKlineOperateView extends LinearLayout {
 
     public void setTotalProfit(double totalProfit) {
         mProfit = totalProfit;
-        totalProfit = Double.valueOf(FinanceUtil.formatWithScale(totalProfit));
         if (totalProfit == 0) {
-            mTotalProfit.setText("0.00");
+            mTotalProfit.setText("0.00%");
             mTotalProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
         } else if (totalProfit > 0) {
             mTotalProfit.setText("+" + FinanceUtil.formatToPercentage(totalProfit));
@@ -137,9 +136,8 @@ public class BattleKlineOperateView extends LinearLayout {
     }
 
     public void setPositionProfit(double positionProfit) {
-        positionProfit = Double.valueOf(FinanceUtil.formatWithScale(positionProfit));
         if (positionProfit == 0) {
-            mPositionProfit.setText("0.00");
+            mPositionProfit.setText("0.00%");
             mPositionProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
         } else if (positionProfit > 0) {
             mPositionProfit.setText("+" + FinanceUtil.formatToPercentage(positionProfit));

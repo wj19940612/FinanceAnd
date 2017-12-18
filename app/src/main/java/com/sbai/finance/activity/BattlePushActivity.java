@@ -121,7 +121,7 @@ public class BattlePushActivity extends StatusBarActivity {
     protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
         if (!LocalUser.getUser().isLogin()) return;
         if (!(getActivity() instanceof BattleKlineActivity) && isValidPage()
-                && battleBean.getCode() == BattleKline.PUSH_CODE_MATCH_SUCCESS) {
+                && battleBean.getCode().equalsIgnoreCase( BattleKline.PUSH_CODE_MATCH_SUCCESS)) {
             SmartDialog.single(getActivity(), getString(R.string.match_success_please_go_to_battle))
                     .setTitle(getString(R.string.join_battle))
                     .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {

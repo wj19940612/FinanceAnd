@@ -26,6 +26,7 @@ public class BattleKlineChart extends KlineChart {
     private static final String TRANS_GREEN = "#262fcc9f";
     private static final String TRANS_RED = "#26f25b57";
     private List<BattleKlineData> mDataList;
+    private BattleKlineData mLastInvisibleData;
 
     protected void setTranslucentBgPaint(Paint paint, String color) {
         paint.setColor(Color.parseColor(color));
@@ -60,8 +61,15 @@ public class BattleKlineChart extends KlineChart {
         new DataShowTask(this, mDataList, mDataList.size() - 1).execute();
     }
 
+    public void setLastInvisibleData(BattleKlineData lastInvisibleData) {
+        mLastInvisibleData = lastInvisibleData;
+    }
+
     public BattleKlineData getLastData() {
-        return mDataList.get(mDataList.size() - 1);
+        if (mDataList != null) {
+            return mDataList.get(mDataList.size() - 1);
+        }
+        return null;
     }
 
     /**
@@ -82,11 +90,16 @@ public class BattleKlineChart extends KlineChart {
         /*
          * 透明背景绘制区：
          * buy 点 ~ sell 点
-         * (start & HP) 点 ~ sell 点
-         * (start & HP) 点 ~ (HP & end - 1) 点
-         * buy 点 ~ (HP & end - 1) 点
+         * buy 点 ~ (end - 1) & Y 点
          *
-         * (HP & end - 1) 点的颜色需要遍历到 sell 点 或者最后一个 HP 点才能确定
+         * (start & HP) 点 ~ sell 点
+         * (start & HP) 点 ~ (end - 1) & Y 点
+         *
+         * (start & HP ) 点 ~ (end - 1 & HP) 点
+         * buy 点 ~ ~ (end - 1 & HP) 点
+         *
+         * (end - 1 & HP) 点的颜色需要遍历到 sell 点 或者最后一个 Y 点才能确定
+         * 并且当这个点已经是最后一个点的时候，需要看 lastInvisibleData 的持仓才能确定
          */
         RectF rectF = null;
         int i = getStart();
@@ -98,29 +111,40 @@ public class BattleKlineChart extends KlineChart {
                 setTranslucentBgPaint(sPaint, bgColor);
                 canvas.drawRect(rectF, sPaint);
                 rectF = null;
-            } else if (rectF != null && data.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS) && i == getEnd() - 1) {
-                rectF.right = left + width;
-            } else if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS) && i == getStart()) {
+            } else if (rectF != null && i == getEnd() - 1 && data.getMark().equalsIgnoreCase(BattleKlineData.MARK_NEW)) {
+                rectF.right = getChartXOfScreen(i);
+                String bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
+                setTranslucentBgPaint(sPaint, bgColor);
+                canvas.drawRect(rectF, sPaint);
+                rectF = null;
+            } else if (i == getStart() && data.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS)) {
                 rectF = getRectF();
                 rectF.top = top;
                 rectF.bottom = top + height;
                 rectF.left = left;
+                rectF.right = left + width;
             } else if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_BUY)) {
                 rectF = getRectF();
                 rectF.top = top;
                 rectF.bottom = top + height;
                 rectF.left = getChartXOfScreen(i);
+                rectF.right = left + width;
             }
         } // i == end
         if (rectF != null) {
             String bgColor = TRANS_RED;
+            if (i == mDataList.size() && mLastInvisibleData != null) {
+                bgColor = mLastInvisibleData.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
+            }
+
             for (; i < mDataList.size(); i++) {
                 BattleKlineData data = mDataList.get(i);
                 if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_SELL)) {
                     bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
                     break;
-                } else if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS)) {
+                } else if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_NEW)) {
                     bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
+                    break;
                 } else {
                     break;
                 }

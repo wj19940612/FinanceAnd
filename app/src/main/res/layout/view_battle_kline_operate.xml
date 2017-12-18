@@ -35,7 +35,7 @@
                     android:id="@+id/imgRank"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:elevation="1dp"
+                    android:elevation="2dp"
                     tool:src="@drawable/ic_guess_kline_four__rank_mine_1"/>
 
                 <ImageView

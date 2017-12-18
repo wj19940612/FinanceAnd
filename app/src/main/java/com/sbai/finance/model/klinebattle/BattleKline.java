@@ -22,10 +22,10 @@ public class BattleKline implements Parcelable {
     }
 
     //推送code
-    public static final int PUSH_CODE_MATCH_FAILED = 8101;//匹配失败
-    public static final int PUSH_CODE_MATCH_SUCCESS = 8102;//匹配成功
-    public static final int PUSH_CODE_BATTLE_FINISH = 8103;//游戏对战结束
-    public static final int PUSH_CODE_AGAINST_PROFIT = 8104;//其他用户盈利情况
+    public static final String PUSH_CODE_MATCH_FAILED = "8101";//匹配失败
+    public static final String PUSH_CODE_MATCH_SUCCESS = "8102";//匹配成功
+    public static final String PUSH_CODE_BATTLE_FINISH = "8103";//游戏对战结束
+    public static final String PUSH_CODE_AGAINST_PROFIT = "8104";//其他用户盈利情况
 
     public static final String TYPE_EXERCISE = "exercise";//本地自己训练的游戏类型
     public static final String TYPE_1V1 = "1v1";
@@ -127,7 +127,7 @@ public class BattleKline implements Parcelable {
         this.rise = rise;
     }
 
-    public static class BattleBean implements Comparable<BattleBean>,Parcelable {
+    public static class BattleBean implements Comparable<BattleBean>, Parcelable {
         /**
          * battleId : 19
          * battleStatus : 1
@@ -142,7 +142,8 @@ public class BattleKline implements Parcelable {
 
         private int battleId;
         private int battleStatus;
-        private int code;
+        private String battleType;
+        private String code;
         private boolean operate;
         private double positions;
         private double profit;
@@ -152,6 +153,14 @@ public class BattleKline implements Parcelable {
         private String userName;
         private String userPortrait;
         private List<BattleBean> otherUsers;
+
+        public String getBattleType() {
+            return battleType;
+        }
+
+        public void setBattleType(String battleType) {
+            this.battleType = battleType;
+        }
 
         public List<BattleBean> getOtherUsers() {
             return otherUsers;
@@ -193,11 +202,11 @@ public class BattleKline implements Parcelable {
             this.battleStatus = battleStatus;
         }
 
-        public int getCode() {
+        public String getCode() {
             return code;
         }
 
-        public void setCode(int code) {
+        public void setCode(String code) {
             this.code = code;
         }
 
@@ -263,7 +272,7 @@ public class BattleKline implements Parcelable {
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.battleId);
             dest.writeInt(this.battleStatus);
-            dest.writeInt(this.code);
+            dest.writeString(this.code);
             dest.writeByte(this.operate ? (byte) 1 : (byte) 0);
             dest.writeDouble(this.positions);
             dest.writeDouble(this.profit);
@@ -273,6 +282,7 @@ public class BattleKline implements Parcelable {
             dest.writeString(this.userName);
             dest.writeString(this.userPortrait);
             dest.writeList(this.otherUsers);
+            dest.writeString(this.battleType);
         }
 
         public BattleBean() {
@@ -281,7 +291,7 @@ public class BattleKline implements Parcelable {
         protected BattleBean(Parcel in) {
             this.battleId = in.readInt();
             this.battleStatus = in.readInt();
-            this.code = in.readInt();
+            this.code = in.readString();
             this.operate = in.readByte() != 0;
             this.positions = in.readDouble();
             this.profit = in.readDouble();
@@ -290,6 +300,7 @@ public class BattleKline implements Parcelable {
             this.userId = in.readInt();
             this.userName = in.readString();
             this.userPortrait = in.readString();
+            this.battleType = in.readString();
             this.otherUsers = new ArrayList<BattleBean>();
             in.readList(this.otherUsers, BattleBean.class.getClassLoader());
         }

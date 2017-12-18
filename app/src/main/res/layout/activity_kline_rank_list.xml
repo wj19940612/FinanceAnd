@@ -39,7 +39,7 @@
                             android:layout_width="347dp"
                             android:layout_height="90dp"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="66dp"
+                            android:layout_marginTop="91dp"
                             android:background="@drawable/bg_kline_rank_list_top"
                             android:orientation="vertical">
 
@@ -181,6 +181,7 @@
                             android:id="@+id/slidingTabLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="25dp"
                             app:showBack="true"
                             app:isWhiteBack="true"/>
 

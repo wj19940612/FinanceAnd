@@ -59,12 +59,13 @@ public class KlineBottomResultView extends LinearLayout {
     }
 
     public void updateStockUpDown(double upDown) {
-        if(upDown>=0){
-            mStockUpDown.setTextColor(ContextCompat.getColor(mContext,R.color.redPrimary));
-        }else{
-            mStockUpDown.setTextColor(ContextCompat.getColor(mContext,R.color.greenAssist));
+        if (upDown >= 0) {
+            mStockUpDown.setTextColor(ContextCompat.getColor(mContext, R.color.redPrimary));
+            mStockUpDown.setText("+" + String.format("%.2f", upDown) + "%");
+        } else {
+            mStockUpDown.setTextColor(ContextCompat.getColor(mContext, R.color.greenAssist));
+            mStockUpDown.setText(String.format("%.2f", upDown) + "%");
         }
-        mStockUpDown.setText("+" + String.format("%.2f", upDown) + "%");
     }
 
     public void updateStockLine(long date1, long date2) {
@@ -81,6 +82,6 @@ public class KlineBottomResultView extends LinearLayout {
         updateStockName(battleStockName);
         updateStockId(battleStockCode);
         updateStockUpDown(rise);
-        updateStockLine(battleStockStartTime,battleStockEndTime);
+        updateStockLine(battleStockStartTime, battleStockEndTime);
     }
 }

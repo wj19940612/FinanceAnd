@@ -28,6 +28,8 @@ import java.util.List;
 
 public class BattleKlinePkActivity extends BattleKlineDetailActivity {
 
+    private boolean mHasPosition;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,7 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
     private void updateBattleData(BattleKline data) {
         mBattleKline = data;
         if (mBattleKline == null) return;
-        int totalTime = (int) ((mBattleKline.getEndTime() - SysTime.getSysTime().getSystemTimestamp()) / 1000);
+        int totalTime = (int) ((mBattleKline.getEndTime() - SysTime.getSysTime().getSystemTimestamp()));
         mCountdown.setTotalTime(totalTime, new KlineBattleCountDownView.OnCountDownListener() {
             @Override
             public void finish() {
@@ -63,31 +65,17 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
         mKlineView.initKlineDataList(mBattleKline.getUserMarkList());
         updateLastProfitData(mBattleKline.getBattleStaList());
         if (mBattleKline.getUserMarkList() != null) {
-            BattleKlineData battleKlineData = mBattleKline.getUserMarkList().get(mBattleKline.getUserMarkList().size() - 1);
-            if (battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS)) {
-                mOperateView.buySuccess();
-                mRemainKlineAmount = data.getLine();
-                setRemainKline();
+            int size = mBattleKline.getUserMarkList().size();
+            if (size > 1) {
+                BattleKlineData battleKlineData = mBattleKline.getUserMarkList().get(size - 2);
+                if (battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS)) {
+                    mOperateView.buySuccess();
+                    mHasPosition = true;
+                }
             }
+            mRemainKlineAmount = data.getLine();
+            setRemainKline();
         }
-    }
-
-    @Override
-    protected void buyOperate() {
-        Client.requestKlineBattleBuy().setTag(TAG)
-                .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
-                    @Override
-                    protected void onRespSuccessData(BattleKlineOperate data) {
-                        updateMyLastOperateData(data, BattleKline.BUY);
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        super.onRespFailure(failedResp);
-                        ToastUtil.show(failedResp.getMsg());
-                    }
-                }).fireFree();
     }
 
     @Override
@@ -131,9 +119,19 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
             return;
         }
         if (type.equalsIgnoreCase(BattleKline.BUY)) {
+            mHasPosition = true;
+            mKlineView.getLastData().setMark(BattleKlineData.MARK_BUY);
             mOperateView.buySuccess();
         } else if (type.equalsIgnoreCase(BattleKline.SELL)) {
+            mHasPosition = false;
+            mKlineView.getLastData().setMark(BattleKlineData.MARK_SELL);
             mOperateView.clearSuccess();
+        } else {
+            if (mHasPosition) {
+                mKlineView.getLastData().setMark(BattleKlineData.MARK_HOLD_PASS);
+            } else {
+                mKlineView.getLastData().setMark(BattleKlineData.MARK_PASS);
+            }
         }
         if (data.getStatus() == BattleKline.STATUS_END) {
             mOperateView.complete();
@@ -144,6 +142,24 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
         }
         mOperateView.setTotalProfit(data.getProfit());
         mOperateView.setPositionProfit(data.getPositions());
+    }
+
+    @Override
+    protected void buyOperate() {
+        Client.requestKlineBattleBuy().setTag(TAG)
+                .setIndeterminate(this)
+                .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
+                    @Override
+                    protected void onRespSuccessData(BattleKlineOperate data) {
+                        updateMyLastOperateData(data, BattleKline.BUY);
+                    }
+
+                    @Override
+                    protected void onRespFailure(Resp failedResp) {
+                        super.onRespFailure(failedResp);
+                        ToastUtil.show(failedResp.getMsg());
+                    }
+                }).fireFree();
     }
 
     @Override
