@@ -33,6 +33,8 @@ public class UpdateSecurityPassActivity extends BaseActivity {
 
     private static final int FAILED_PASS_ERROR = 2006;//密码不正确的返回码
 
+    public static final int REQ_CODE_SET_SECURITY_PASS = 6945; //设置安全密码
+
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
 

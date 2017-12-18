@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by linrongfang on 2017/6/9.
+ * 权限检测
  */
 
 public class PermissionUtil {
@@ -169,7 +169,7 @@ public class PermissionUtil {
             return true;
         } else {
             ActivityCompat.requestPermissions(activity,
-                    new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
             return false;
         }
     }

@@ -30,6 +30,7 @@ import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.training.CreditIntroduceActivity;
+import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.mine.NotReadMessageNumberModel;
@@ -393,7 +394,9 @@ public class MineFragment extends BaseFragment {
                                 .putExtra(Launcher.EX_PAYLOAD, LocalUser.getUser().getUserInfo().getCustomId())
                                 .execute();
                     } else {
-                        Launcher.with(getActivity(), ModifyUserInfoActivity.class).execute();
+                        Launcher.with(getActivity(), LookBigPictureActivity.class)
+                                .putExtra(Launcher.EX_PAYLOAD, LocalUser.getUser().getUserInfo().getUserPortrait())
+                                .execute();
                     }
                 } else {
                     openLoginPage();

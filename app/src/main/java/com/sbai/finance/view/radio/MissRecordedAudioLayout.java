@@ -20,13 +20,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.utils.FileUtils;
 import com.sbai.finance.utils.StrUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.audio.MediaRecorderManager;
 import com.sbai.finance.view.SmartDialog;
-
-import java.io.File;
 
 
 /**
@@ -166,6 +165,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
                 if (isStartRecord) {
                     if (mAudioLength < UNLAWFUL_AUDIO_TIME) {
                         ToastUtil.show(R.string.record_audio_time_is_short);
+                        FileUtils.deleteFile();
                     } else {
                         if (mOnRecordAudioListener != null) {
                             mOnRecordAudioListener.onRecordAudioFinish(mMediaRecorderManager.getRecordAudioPath(), mAudioLength);
@@ -219,8 +219,9 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
     @Override
     public void onError(int what, Exception e) {
+        Log.d(TAG, "onError: " + e.toString());
         switch (what) {
-            case MediaRecorderManager.RECORD_MEDIA_ERROR_CODE:
+            case MediaRecorderManager.RECORD_MEDIA_ERROR_SYSTEM_CODE:
 //                break;
             case MediaRecorderManager.RECORD_MEDIA_ERROR_CODE_PERMISSION:
                 error();
@@ -254,14 +255,14 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
     @Override
     public void onTimeUp(int count) {
-        if (hasRecordPermission) {
-            File file = new File(audioPath);
-            if (file.length() <= 0) {
-                error();
-                hasRecordPermission = false;
-                return;
-            }
-        }
+//        if (hasRecordPermission) {
+//            File file = new File(audioPath);
+//            if (file.length() <= 0) {
+//                error();
+//                hasRecordPermission = false;
+//                return;
+//            }
+//        }
 
         mAudioLength = count;
         if (mInLegalRange) {

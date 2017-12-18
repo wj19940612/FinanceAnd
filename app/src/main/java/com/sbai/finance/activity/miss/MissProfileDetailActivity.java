@@ -512,7 +512,6 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
                     public void onClick(View v) {
                         Launcher.with(getActivity(), LookBigPictureActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
-                                .putExtra(Launcher.EX_PAYLOAD_2, 0)
                                 .execute();
                     }
                 });

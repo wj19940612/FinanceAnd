@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.webkit.WebSettings;
+
 import com.sbai.finance.activity.WebActivity;
 
 public class BannerActivity extends WebActivity {
@@ -36,8 +37,9 @@ public class BannerActivity extends WebActivity {
         getWebView().loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
     }
 
-    private String getHtmlData(String bodyHTML) {
+    protected String getHtmlData(String bodyHTML) {
         String head = "<head><style>img{max-width: 100%; width:auto; height: auto;}</style>" + INFO_HTML_META + "</head>";
-        return "<html>" + head  + bodyHTML + "</html>";
+//        String head = "<head><style>img{width: 100%; height: auto;border:none;vertical-align:top;bottom:0;left:0;display:block} body{margin:0}</style>" + INFO_HTML_META + "</head>";
+        return "<html>" + head + bodyHTML + "</html>";
     }
 }

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
@@ -49,6 +51,10 @@ public class SecurityCenterActivity extends BaseActivity {
     IconTextRow mForgetSecurityPassword;
     @BindView(R.id.allowSmallNoSecretPayment)
     AppCompatImageView mAllowSmallNoSecretPayment;
+    @BindView(R.id.smallNoSecretPaymentRl)
+    RelativeLayout mSmallNoSecretPaymentRl;
+    @BindView(R.id.smallNoSecretPaymentHint)
+    TextView mSmallNoSecretPaymentHint;
 
     private boolean mHasSecurityPassword;
     private boolean mHasLoginPassword;
@@ -61,8 +67,14 @@ public class SecurityCenterActivity extends BaseActivity {
 
         initData(getIntent());
         initViews();
+
         if (mHasSecurityPassword) {
+            mSmallNoSecretPaymentRl.setVisibility(View.VISIBLE);
+            mSmallNoSecretPaymentHint.setVisibility(View.VISIBLE);
             requestUserSmallNoSecretPayment();
+        } else {
+            mSmallNoSecretPaymentRl.setVisibility(View.GONE);
+            mSmallNoSecretPaymentHint.setVisibility(View.GONE);
         }
     }
 
