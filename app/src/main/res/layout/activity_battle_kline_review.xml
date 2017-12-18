@@ -19,7 +19,6 @@
         app:titleText="@string/battle_kline_review"
         app:titleTextColor="@android:color/white"/>
 
-
     <RelativeLayout
         android:id="@+id/profitArea"
         android:layout_width="match_parent"
@@ -105,8 +104,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/purpleBlack"
-        android:paddingBottom="40dp"/>
+        android:background="@color/purpleBlack"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

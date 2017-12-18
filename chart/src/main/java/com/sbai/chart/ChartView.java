@@ -212,8 +212,8 @@ public abstract class ChartView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        int left = getLeft() + getPaddingLeft();
-        int top = getTop() + getPaddingTop();
+        int left = getPaddingLeft();
+        int top = getPaddingTop();
         int width = getWidth() - getPaddingLeft() - getPaddingRight();
         int topPartHeight = getTopPartHeight();
         int bottomPartHeight = getBottomPartHeight();

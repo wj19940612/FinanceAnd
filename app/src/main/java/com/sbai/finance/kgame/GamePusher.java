@@ -137,15 +137,14 @@ public class GamePusher extends SimpleConnector {
     }
 
     private void register() {
-        Log.d(TAG, "register: ");
-
         String tokens = CookieManger.getInstance().getCookies();
         RegisterInfo registerInfo = new RegisterInfo(tokens);
         registerInfo.setDevice(AppInfo.getDeviceHardwareId(App.getAppContext()));
         registerInfo.setChannel(AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"));
         WsRequest<RegisterInfo> request = WsUtils.getRequest(WsRequest.REGISTER, registerInfo);
 
-        send(request);
+        Log.d(TAG, "register: " + registerInfo);
 
+        send(request);
     }
 }
