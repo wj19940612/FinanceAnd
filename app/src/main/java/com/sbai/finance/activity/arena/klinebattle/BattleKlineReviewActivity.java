@@ -56,6 +56,7 @@ public class BattleKlineReviewActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_kline_review);
         ButterKnife.bind(this);
+        translucentStatusBar();
         initData(getIntent());
         initKlineView();
         updateViewData();
@@ -74,9 +75,8 @@ public class BattleKlineReviewActivity extends BaseActivity {
     }
 
     public void setTotalProfit(double totalProfit) {
-        totalProfit = Double.valueOf(FinanceUtil.formatWithScale(totalProfit));
         if (totalProfit == 0) {
-            mTotalProfit.setText("0.00");
+            mTotalProfit.setText("0.00%");
             mTotalProfit.setTextColor(ContextCompat.getColor(getActivity(), R.color.eighty_white));
         } else if (totalProfit > 0) {
             mTotalProfit.setText("+" + FinanceUtil.formatToPercentage(totalProfit));
@@ -106,7 +106,6 @@ public class BattleKlineReviewActivity extends BaseActivity {
         mKlineView.setDayLine(true);
         mKlineView.setSettings(settings2);
     }
-
 
     public void setSelfUserInfo() {
         GlideApp.with(getActivity())
