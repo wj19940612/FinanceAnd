@@ -29,18 +29,11 @@
         android:layout_marginRight="30dp"
         android:layout_marginTop="14dp">
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_alignParentLeft="true"
             android:elevation="2dp">
-
-            <ImageView
-                android:id="@+id/imgRank"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:elevation="1dp"
-                tool:src="@drawable/ic_guess_kline_four__rank_mine_1"/>
 
             <ImageView
                 android:id="@+id/imgAvatar"
@@ -48,7 +41,14 @@
                 android:layout_height="match_parent"
                 android:padding="2dp"
                 tool:src="@drawable/ic_default_avatar_big"/>
-        </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/imgRank"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="1dp"
+                tool:src="@drawable/ic_guess_kline_four__rank_mine_1"/>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

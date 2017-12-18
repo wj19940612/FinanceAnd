@@ -56,6 +56,9 @@ public class KlineBattleCountDownView extends LinearLayout {
 
     public void setTotalTime(long totalTime, final OnCountDownListener onCountDownListener) {
         setRemainTime(totalTime);
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
         mCountDownTimer = new CountDownTimer(totalTime, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {

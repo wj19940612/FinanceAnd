@@ -41,6 +41,10 @@ public class GamePusher extends SimpleConnector {
         mOnPushReceiveListener = onPushReceiveListener;
     }
 
+    public void removeOnPushReceiveListener() {
+        mOnPushReceiveListener = null;
+    }
+
     public GamePusher() {
         mHandler = new Handler(Looper.getMainLooper());
 
@@ -120,7 +124,8 @@ public class GamePusher extends SimpleConnector {
 
     private void ackPushMessage(WsResponse resp) {
         AckPush ackPush = new AckPush(resp.getMsgId());
-        WsRequest request = WsUtils.getRequest(WsRequest.MSG_CONFIRM, ackPush);
+
+        WsRequest request = new WsRequest(WsRequest.MSG_CONFIRM, ackPush);
         send(request);
     }
 
@@ -143,7 +148,7 @@ public class GamePusher extends SimpleConnector {
         RegisterInfo registerInfo = new RegisterInfo(tokens);
         registerInfo.setDevice(AppInfo.getDeviceHardwareId(App.getAppContext()));
         registerInfo.setChannel(AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"));
-        WsRequest<RegisterInfo> request = WsUtils.getRequest(WsRequest.REGISTER, registerInfo);
+        WsRequest<RegisterInfo> request = new WsRequest<>(WsRequest.REGISTER, registerInfo);
 
         send(request);
 

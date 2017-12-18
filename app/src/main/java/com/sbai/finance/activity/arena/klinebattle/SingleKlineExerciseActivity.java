@@ -52,9 +52,9 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
     private void updateExerciseData(BattleKline data) {
         if (data == null) return;
         mBattleKline = data;
-        mRemainKlineAmount = mBattleKline.getLine();
         mBattleUserMarkList = mBattleKline.getUserMarkList();
         if (mBattleUserMarkList != null && mBattleUserMarkList.size() >= 40) {
+            mRemainKlineAmount = mBattleKline.getUserMarkList().size() - 40;
             List<BattleKlineData> subList = new ArrayList<>();
             for (int i = 0; i < 40; i++) {
                 subList.add(mBattleUserMarkList.get(i));
