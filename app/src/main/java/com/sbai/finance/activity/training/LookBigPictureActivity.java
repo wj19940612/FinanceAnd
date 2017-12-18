@@ -37,7 +37,7 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 		ButterKnife.bind(this);
 		initData(getIntent());
 		initTitleBar();
-		if (mMissAvatar != -1) {
+		if (mMissAvatar != 0) {
 			GlideApp.with(this).load(mPortrait)
 					.thumbnail(0.1f)
 					.error(R.drawable.ic_default_avatar_big)
@@ -67,11 +67,11 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 	private void initData(Intent intent) {
 		mPortrait = intent.getStringExtra(Launcher.EX_PAYLOAD);
 		mDelete = intent.getIntExtra(Launcher.EX_PAYLOAD_1, -1);
-		mMissAvatar = intent.getIntExtra(Launcher.EX_PAYLOAD_2, -1);
+		mMissAvatar = intent.getIntExtra(Launcher.EX_PAYLOAD_2, 0);
 	}
 
 	private void initTitleBar() {
-		if (mMissAvatar != -1) {
+		if (mMissAvatar == 0) {
 			mTitleBar.setVisibility(View.GONE);
 		} else {
 			mTitleBar.setVisibility(View.VISIBLE);

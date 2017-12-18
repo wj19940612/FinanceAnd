@@ -327,8 +327,8 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
         mMissAskFragmentAdapter = new MissAskFragmentAdapter(getChildFragmentManager(), getActivity(), this);
         mViewPager.setOffscreenPageLimit(1);
-        mViewPager.setCurrentItem(0, false);
         mViewPager.setAdapter(mMissAskFragmentAdapter);
+        mViewPager.setCurrentItem(0, false);
         mViewPager.post(new Runnable() {
             @Override
             public void run() {

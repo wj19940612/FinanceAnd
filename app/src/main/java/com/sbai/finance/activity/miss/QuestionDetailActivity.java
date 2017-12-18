@@ -443,7 +443,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                 } else {
                     Launcher.with(getActivity(), LookBigPictureActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, mQuestion.getUserPortrait())
-                            .putExtra(Launcher.EX_PAYLOAD_2, 0)
                             .execute();
                 }
             }
@@ -830,7 +829,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                         } else {
                             Launcher.with(context, LookBigPictureActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, userPortrait)
-                                    .putExtra(Launcher.EX_PAYLOAD_2, 0)
                                     .execute();
                         }
                     }

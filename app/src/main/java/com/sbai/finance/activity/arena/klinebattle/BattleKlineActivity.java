@@ -17,16 +17,18 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.arena.KlineRankListActivity;
-import com.sbai.finance.activity.battle.BattleRuleActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
+import com.sbai.finance.activity.web.LocalImageHtmlActivity;
 import com.sbai.finance.fragment.dialog.KlineBattleRecordFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.fund.UserFundInfo;
-import com.sbai.finance.model.klinebattle.BattleKlineConf;
 import com.sbai.finance.model.klinebattle.BattleKline;
+import com.sbai.finance.model.klinebattle.BattleKlineConf;
 import com.sbai.finance.model.klinebattle.BattleKlineMyRecord;
+import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -190,7 +192,17 @@ public class BattleKlineActivity extends BaseActivity {
     }
 
     private void lookBattleRule() {
-        Launcher.with(getActivity(), BattleRuleActivity.class).execute();
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BATTLE_KLINE).setTag(TAG)
+                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
+                    @Override
+                    protected void onRespSuccessData(ArticleProtocol data) {
+                        Launcher.with(getActivity(), LocalImageHtmlActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, getString(R.string.game_help))
+                                .putExtra(WebActivity.EX_HTML, data.getContent())
+                                .execute();
+                    }
+
+                }).fire();
     }
 
     private void lookBattleResult() {

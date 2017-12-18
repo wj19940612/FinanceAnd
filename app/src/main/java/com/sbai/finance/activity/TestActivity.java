@@ -7,6 +7,7 @@ import com.sbai.chart.ColorCfg;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.domain.KlineViewData;
 import com.sbai.finance.R;
+import com.sbai.finance.game.callback.OnPushReceiveListener;
 import com.sbai.finance.kgame.GamePusher;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.model.stock.StockKlineData;
@@ -54,6 +55,12 @@ public class TestActivity extends BaseActivity {
         requestKlineDataAndSet(StockKlineData.PERIOD_DAY);
 
         GamePusher.get().connect();
+        GamePusher.get().setOnPushReceiveListener(new OnPushReceiveListener() {
+            @Override
+            public void onPushReceive(Object o, String originalData) {
+
+            }
+        });
     }
 
     @Override

@@ -103,6 +103,7 @@ public class WriteExperienceActivity extends BaseActivity {
                 if (mIsAddPhoto) {
                     Launcher.with(getActivity(), LookBigPictureActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, mPath)
+                            .putExtra(Launcher.EX_PAYLOAD_2, -1)
                             .putExtra(Launcher.EX_PAYLOAD_1, 0)
                             .executeForResult(REQ_LOOK_BIG_IMAGE);
                 } else {
@@ -135,7 +136,7 @@ public class WriteExperienceActivity extends BaseActivity {
 
     private void requestWriteExperience() {
         if (mPath != null) {
-            String imageURL = ImageUtils.compressImageToBase64(mPath,getActivity());
+            String imageURL = ImageUtils.compressImageToBase64(mPath, getActivity());
             Client.uploadPicture(imageURL).setTag(TAG).setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<List<String>>, List<String>>() {
                         @Override
