@@ -101,7 +101,7 @@ public class KlinePracticeResultActivity extends BaseActivity {
             } else {
                 mUpDown.setTextColor(ContextCompat.getColor(this, R.color.greenAssist));
             }
-            mUpDown.setText("+" + String.format("%.2f", mProfit) + "%");
+            mUpDown.setText("+" + String.format("%.2f", mProfit * 100) + "%");
 
             mOtherName.setText(data.getAppellation());
             mResultTip.setText(data.getDoc());
