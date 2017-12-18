@@ -56,6 +56,7 @@ public class BattleKlineReviewActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_kline_review);
         ButterKnife.bind(this);
+        translucentStatusBar();
         initData(getIntent());
         initKlineView();
         updateViewData();
