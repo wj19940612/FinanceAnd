@@ -125,6 +125,7 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
                 }
             }
             if (mCurrentIndex == mBattleUserMarkList.size() - 2) {
+                mKlineView.setLastInvisibleData(mBattleUserMarkList.get(mBattleUserMarkList.size() - 1));
                 battleFinish();
                 return;
             }
