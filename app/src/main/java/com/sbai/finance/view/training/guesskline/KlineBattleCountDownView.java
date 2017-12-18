@@ -30,6 +30,7 @@ public class KlineBattleCountDownView extends LinearLayout {
     private Context mContext;
     //秒
     private int mTotalTime;
+    private OnCountDownListener mOnCountDownListener;
 
     public interface OnCountDownListener {
         void finish();
@@ -54,7 +55,8 @@ public class KlineBattleCountDownView extends LinearLayout {
         mContext = context;
     }
 
-    public void setTotalTime(int totalTime, final OnCountDownListener onCountDownListener) {
+    public void setTotalTime(int totalTime, OnCountDownListener onCountDownListener) {
+        mOnCountDownListener = onCountDownListener;
         if (totalTime >= 100 * 60) {
             totalTime = 99 * 60 + 59;
         }
@@ -65,8 +67,8 @@ public class KlineBattleCountDownView extends LinearLayout {
             public void run() {
                 setRemainTime(mTotalTime);
                 if (mTotalTime <= 0) {
-                    if (onCountDownListener != null) {
-                        onCountDownListener.finish();
+                    if (mOnCountDownListener != null) {
+                        mOnCountDownListener.finish();
                     }
                     return;
                 }
@@ -77,6 +79,10 @@ public class KlineBattleCountDownView extends LinearLayout {
                 mHandler.postDelayed(this, 1000);
             }
         }, 0);
+    }
+
+    public void removeListener() {
+        mOnCountDownListener = null;
     }
 
     private void setRemainTime(int time) {
