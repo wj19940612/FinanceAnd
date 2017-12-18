@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 
 import com.sbai.chart.ColorCfg;
@@ -12,9 +13,11 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.klinebattle.BattleKline;
+import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.klinebattle.BattleKlineChart;
 import com.sbai.finance.view.training.guesskline.AgainstProfitView;
-import com.sbai.finance.view.training.guesskline.KlineBattleCountDownView;
 import com.sbai.finance.view.training.guesskline.BattleKlineOperateView;
+import com.sbai.finance.view.training.guesskline.KlineBattleCountDownView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,18 +28,16 @@ import butterknife.OnClick;
  */
 
 public class BattleKlineDetailActivity extends BaseActivity {
-    @BindView(R.id.back)
-    TextView mBack;
-    @BindView(R.id.pkType)
-    TextView mPkType;
-    @BindView(R.id.countdown)
-    KlineBattleCountDownView mCountdown;
     @BindView(R.id.againstProfit)
     AgainstProfitView mAgainstProfit;
     @BindView(R.id.operateView)
     BattleKlineOperateView mOperateView;
     @BindView(R.id.klineView)
-    com.sbai.finance.view.klinebattle.BattleKlineChart mKlineView;
+    BattleKlineChart mKlineView;
+    @BindView(R.id.title)
+    TitleBar mTitle;
+    TextView mPkType;
+    KlineBattleCountDownView mCountdown;
     protected String mType;
     //start from 0
     protected int mCurrentIndex = 39;
@@ -48,6 +49,7 @@ public class BattleKlineDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_kline_detail);
         ButterKnife.bind(this);
+        translucentStatusBar();
         initData(getIntent());
         initTitleView();
         initKlineView();
@@ -93,6 +95,9 @@ public class BattleKlineDetailActivity extends BaseActivity {
     }
 
     private void initTitleView() {
+        View customView = mTitle.getCustomView();
+        mCountdown = customView.findViewById(R.id.countdown);
+        mPkType = customView.findViewById(R.id.pkType);
         if (TextUtils.isEmpty(mType)) {
             mType = BattleKline.TYPE_EXERCISE;
             mPkType.setText(R.string.single_exercise);
