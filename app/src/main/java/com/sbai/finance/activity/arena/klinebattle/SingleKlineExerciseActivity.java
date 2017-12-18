@@ -118,10 +118,10 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
             }
             if (positionKlineData != null) {
                 double positionProfit = (nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice();
-                mOperateView.setPositionProfit(positionProfit);
-                mOperateView.setTotalProfit(positionProfit + mOperateView.getTotalProfit());
+                mOperateView.setTotalProfit(positionProfit - mOperateView.getLastPosition() + mOperateView.getTotalProfit());
                 if (mPositionIndex > -1) {
                     nextKlineData.setPositions(positionProfit);
+                    mOperateView.setPositionProfit(positionProfit);
                 }
             }
             if (mCurrentIndex == mBattleUserMarkList.size() - 2) {
