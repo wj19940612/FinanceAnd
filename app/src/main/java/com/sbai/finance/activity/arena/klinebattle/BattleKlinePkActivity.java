@@ -10,11 +10,13 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.model.klinebattle.BattleKlineOperate;
 import com.sbai.finance.model.klinebattle.BattleKline;
+import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
+import com.sbai.finance.view.training.guesskline.KlineBattleCountDownView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,6 +53,13 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
     private void updateBattleData(BattleKline data) {
         mBattleKline = data;
         if (mBattleKline == null) return;
+        int totalTime = (int) ((mBattleKline.getEndTime() - SysTime.getSysTime().getSystemTimestamp()) / 1000);
+        mCountdown.setTotalTime(totalTime, new KlineBattleCountDownView.OnCountDownListener() {
+            @Override
+            public void finish() {
+                battleFinish();
+            }
+        });
         mKlineView.initKlineDataList(mBattleKline.getUserMarkList());
         updateLastProfitData(mBattleKline.getBattleStaList());
         if (mBattleKline.getUserMarkList() != null) {

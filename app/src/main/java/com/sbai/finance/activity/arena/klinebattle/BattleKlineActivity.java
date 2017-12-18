@@ -40,6 +40,7 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.dialog.BaseDialog;
 import com.sbai.finance.view.dialog.BattleKlineMatchSuccessDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.glide.GlideApp;
@@ -71,7 +72,7 @@ public class BattleKlineActivity extends BaseActivity {
     private ImageView mAvatar;
     private TextView mIngot;
     private TextView mRecharge;
-    private StartMatchDialog mStartMatchDialog;
+    private BaseDialog mStartMatchDialog;
     private String mtype;
 
     private UserFundInfo mUserFundInfo;
@@ -317,7 +318,7 @@ public class BattleKlineActivity extends BaseActivity {
                         return;
                     }
                 }
-                mStartMatchDialog.setRoomPeople(battleBean.getOtherUsers().size() + 1);
+                setMatchedPeople(battleBean.getOtherUsers().size() + 1);
             }
         }
     }
@@ -370,7 +371,7 @@ public class BattleKlineActivity extends BaseActivity {
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        mStartMatchDialog = (StartMatchDialog) StartMatchDialog.get(getActivity(), new StartMatchDialog.OnCancelListener() {
+                        mStartMatchDialog = StartMatchDialog.get(getActivity(), new StartMatchDialog.OnCancelListener() {
                             @Override
                             public void onCancel() {
                                 StartMatchDialog.dismiss(getActivity());
@@ -383,7 +384,7 @@ public class BattleKlineActivity extends BaseActivity {
                     protected void onRespFailure(Resp failedResp) {
                         super.onRespFailure(failedResp);
                         if (failedResp.getCode() == Battle.CODE_NO_ENOUGH_MONEY) {
-                            showRechargeDialog();
+                            showRechargeDialog(failedResp.getMsg());
                         } else {
                             ToastUtil.show(failedResp.getMsg());
                         }
@@ -391,8 +392,24 @@ public class BattleKlineActivity extends BaseActivity {
                 }).fireFree();
     }
 
-    private void showRechargeDialog() {
-
+    private void showRechargeDialog(String msg) {
+        SmartDialog.single(getActivity(), msg)
+                .setTitle(getString(R.string.cancel_matching))
+                .setCancelableOnTouchOutside(false)
+                .setPositive(R.string.cancel, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .setNegative(R.string.go_recharge, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        openWalletPage();
+                    }
+                })
+                .show();
     }
 
     private void showCancelMatchDialog(final String type) {
@@ -422,32 +439,19 @@ public class BattleKlineActivity extends BaseActivity {
         }
         if (!TextUtils.isEmpty(mtype)) {
             if (mtype.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
-                SmartDialog.single(getActivity(), getString(R.string.match_overtime))
-                        .setTitle(getString(R.string.match_failed))
-                        .setCancelableOnTouchOutside(false)
-                        .setPositive(R.string.rematch, new SmartDialog.OnClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog) {
-                                dialog.dismiss();
-                                showStartMatchDialog(mtype);
-                            }
-                        })
-                        .setNegative(R.string.later_try_again, new SmartDialog.OnClickListener() {
-                            @Override
-                            public void onClick(Dialog dialog) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .show();
+                ToastUtil.show(R.string.no_people_match_please_try_later);
             } else {
                 ToastUtil.show(R.string.no_match_people_please_try_1v1);
             }
         }
     }
 
-    private void showMatchedPeople() {
-        if (mStartMatchDialog != null) {
-            mStartMatchDialog.setRoomPeople(10);
+    private void setMatchedPeople(int count) {
+        if (mStartMatchDialog != null && mStartMatchDialog.getCustomView() != null) {
+            TextView roomPeople = mStartMatchDialog.getCustomView().findViewById(R.id.roomPeople);
+            if (roomPeople != null) {
+                roomPeople.setText(String.valueOf(count));
+            }
         }
     }
 
