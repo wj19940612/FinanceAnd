@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.arena.KlineRankListActivity;
 import com.sbai.finance.activity.battle.BattleRuleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
@@ -263,12 +264,18 @@ public class BattleKlineActivity extends BaseActivity {
                 judgeCurrentBattle(BattleKline.TYPE_1V1);
                 break;
             case R.id.exercise:
-                Launcher.with(getActivity(), SingleKlineExerciseActivity.class)
-                        .putExtra(ExtraKeys.GUESS_TYPE, BattleKline.TYPE_EXERCISE)
-                        .execute();
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), SingleKlineExerciseActivity.class)
+                            .putExtra(ExtraKeys.GUESS_TYPE, BattleKline.TYPE_EXERCISE)
+                            .execute();
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class)
+                            .execute();
+                }
                 break;
             case R.id.rank:
-                // TODO: 2017-12-13  
+                Launcher.with(getActivity(), KlineRankListActivity.class)
+                        .execute();
                 break;
         }
     }

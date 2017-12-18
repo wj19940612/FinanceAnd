@@ -1116,4 +1116,6 @@
     <string name="go_to_see">前往查看</string>
     <string name="match_success_please_go_to_battle">K线对决已成功匹配，点击进入游戏</string>
     <string name="no_match_people_please_try_1v1">匹配人数不足，到1v1试一下吧</string>
+    <string name="battle_kline_review">复盘</string>
+    <string name="profit_with_colon">收益：</string>
 </resources>

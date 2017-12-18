@@ -72,4 +72,5 @@ public interface ExtraKeys {
     String BATTLE_STOCK_CODE = "battle_stock_code";
     String BATTLE_STOCK_NAME = "battle_stock_name";
     String BATTLE_PROFIT = "battle_profit";
+    String BATTLE_KLINE_DATA = "battle_kline_data";
 }

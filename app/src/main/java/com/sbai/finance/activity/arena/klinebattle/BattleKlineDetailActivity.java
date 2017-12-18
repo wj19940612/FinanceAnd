@@ -36,7 +36,7 @@ public class BattleKlineDetailActivity extends BaseActivity {
     @BindView(R.id.operateView)
     BattleKlineOperateView mOperateView;
     @BindView(R.id.klineView)
-    com.sbai.finance.view.klinebattle.BattleKline mKlineView;
+    com.sbai.finance.view.klinebattle.BattleKlineChart mKlineView;
     protected String mType;
     //start from 0
     protected int mCurrentIndex = 39;

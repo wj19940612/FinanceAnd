@@ -11,10 +11,12 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.arena.klinebattle.BattleKlineReviewActivity;
 import com.sbai.finance.activity.arena.klinebattle.SingleKlineExerciseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineOtherName;
 import com.sbai.finance.model.klinebattle.BattleKline;
+import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -22,6 +24,8 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.KlineBottomResultView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,12 +57,7 @@ public class KlinePracticeResultActivity extends BaseActivity {
     KlineBottomResultView mBottomView;
 
     private double mProfit;
-
-    private double mStockRise;
-    private String mStockStartTime;
-    private String mStockEndTime;
-    private String mStockName;
-    private String mStockCode;
+    private BattleKline mBattleKlineData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,12 +70,8 @@ public class KlinePracticeResultActivity extends BaseActivity {
     }
 
     private void initData() {
-        mProfit = getIntent().getDoubleExtra(ExtraKeys.PROFIT, 0);
-        mStockStartTime = getIntent().getStringExtra(ExtraKeys.BATTLE_STOCK_START_TIME);
-        mStockRise = getIntent().getDoubleExtra(ExtraKeys.BATTLE_PROFIT, 0);
-        mStockEndTime = getIntent().getStringExtra(ExtraKeys.BATTLE_STOCK_END_TIME);
-        mStockName = getIntent().getStringExtra(ExtraKeys.BATTLE_STOCK_NAME);
-        mStockCode = getIntent().getStringExtra(ExtraKeys.BATTLE_STOCK_CODE);
+        mProfit = getIntent().getDoubleExtra(ExtraKeys.BATTLE_PROFIT, 0);
+        mBattleKlineData = getIntent().getParcelableExtra(ExtraKeys.BATTLE_KLINE_DATA);
     }
 
     private void initView() {
@@ -114,16 +109,26 @@ public class KlinePracticeResultActivity extends BaseActivity {
     }
 
     private void updateBottomView() {
-        mBottomView.updateStock(mStockName, mStockCode, mStockStartTime, mStockEndTime, mStockRise);
+        if (mBattleKlineData == null) return;
+        mBottomView.updateStock(mBattleKlineData.getBattleVarietyName(), mBattleKlineData.getBattleVarietyCode(),
+                mBattleKlineData.getBattleStockStartTime(), mBattleKlineData.getBattleStockEndTime(), mBattleKlineData.getRise());
     }
 
 
-    @OnClick(R.id.moreOneBtn)
+    @OnClick({R.id.moreOneBtn, R.id.reLookBtn})
     public void onViewClicked(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.moreOneBtn:
                 Launcher.with(this, SingleKlineExerciseActivity.class).putExtra(ExtraKeys.GUESS_TYPE, BattleKline.TYPE_EXERCISE).execute();
                 break;
+            case R.id.reLookBtn:
+                Launcher.with(this, BattleKlineReviewActivity.class)
+                        .putExtra(ExtraKeys.GUESS_TYPE, BattleKline.TYPE_EXERCISE)
+                        .putExtra(ExtraKeys.BATTLE_PROFIT, mProfit)
+                        .putExtra(ExtraKeys.BATTLE_KLINE_DATA, mBattleKlineData)
+                        .execute();
+                break;
+
         }
     }
 }

@@ -13,7 +13,7 @@ import com.sbai.finance.model.stock.StockKlineData;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.stock.StockCallback;
 import com.sbai.finance.net.stock.StockResp;
-import com.sbai.finance.view.klinebattle.BattleKline;
+import com.sbai.finance.view.klinebattle.BattleKlineChart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 public class TestActivity extends BaseActivity {
 
     @BindView(R.id.gameKline)
-    BattleKline mBattleKline;
+    BattleKlineChart mBattleKline;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

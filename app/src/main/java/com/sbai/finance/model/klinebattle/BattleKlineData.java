@@ -1,5 +1,7 @@
 package com.sbai.finance.model.klinebattle;
 
+import android.os.Parcel;
+
 import com.sbai.chart.domain.KlineViewData;
 
 /**
@@ -45,4 +47,38 @@ public class BattleKlineData extends KlineViewData {
         super(klineViewData);
         mark = MARK_PASS;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeInt(this.id);
+        dest.writeString(this.mark);
+        dest.writeDouble(this.profit);
+        dest.writeDouble(this.positions);
+    }
+
+    protected BattleKlineData(Parcel in) {
+        super(in);
+        this.id = in.readInt();
+        this.mark = in.readString();
+        this.profit = in.readDouble();
+        this.positions = in.readDouble();
+    }
+
+    public static final Creator<BattleKlineData> CREATOR = new Creator<BattleKlineData>() {
+        @Override
+        public BattleKlineData createFromParcel(Parcel source) {
+            return new BattleKlineData(source);
+        }
+
+        @Override
+        public BattleKlineData[] newArray(int size) {
+            return new BattleKlineData[size];
+        }
+    };
 }

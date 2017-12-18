@@ -21,7 +21,7 @@ import java.util.List;
  * <p>
  * k 线对决的 k 线图
  */
-public class BattleKline extends KlineChart {
+public class BattleKlineChart extends KlineChart {
 
     private static final String TRANS_GREEN = "#262fcc9f";
     private static final String TRANS_RED = "#26f25b57";
@@ -33,11 +33,11 @@ public class BattleKline extends KlineChart {
         paint.setPathEffect(null);
     }
 
-    public BattleKline(Context context) {
+    public BattleKlineChart(Context context) {
         super(context);
     }
 
-    public BattleKline(Context context, AttributeSet attrs) {
+    public BattleKlineChart(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -47,7 +47,8 @@ public class BattleKline extends KlineChart {
     }
 
     @Override
-    protected void drawTimeLine(int left, int top, int width, Canvas canvas) {}
+    protected void drawTimeLine(int left, int top, int width, Canvas canvas) {
+    }
 
     @Override
     protected boolean enableCalculateMovingAverages() {
@@ -57,6 +58,10 @@ public class BattleKline extends KlineChart {
     public void addKlineData(BattleKlineData gameKlineData) {
         mDataList.add(gameKlineData);
         new DataShowTask(this, mDataList, mDataList.size() - 1).execute();
+    }
+
+    public BattleKlineData getLastData() {
+        return mDataList.get(mDataList.size() - 1);
     }
 
     /**
@@ -128,18 +133,18 @@ public class BattleKline extends KlineChart {
     static class DataShowTask extends AsyncTask<Void, Void, Void> {
 
         private final List<BattleKlineData> mDataList;
-        private WeakReference<BattleKline> mRef;
+        private WeakReference<BattleKlineChart> mRef;
         private int[] movingAverages;
         private int mIndex;
 
-        public DataShowTask(BattleKline battleKline, List<BattleKlineData> dataList, int index) {
+        public DataShowTask(BattleKlineChart battleKline, List<BattleKlineData> dataList, int index) {
             mRef = new WeakReference<>(battleKline);
             mDataList = dataList;
             movingAverages = battleKline.getMovingAverages();
             mIndex = index;
         }
 
-        public DataShowTask(BattleKline battleKline, List<BattleKlineData> dataList) {
+        public DataShowTask(BattleKlineChart battleKline, List<BattleKlineData> dataList) {
             mRef = new WeakReference<>(battleKline);
             mDataList = dataList;
             movingAverages = battleKline.getMovingAverages();
@@ -158,7 +163,7 @@ public class BattleKline extends KlineChart {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            BattleKline kline = mRef.get();
+            BattleKlineChart kline = mRef.get();
             if (kline != null) {
                 int start = 0;
                 for (int mv : movingAverages) {

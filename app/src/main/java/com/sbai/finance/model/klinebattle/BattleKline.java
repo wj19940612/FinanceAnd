@@ -1,17 +1,20 @@
 package com.sbai.finance.model.klinebattle;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 猜K 对战信息
  */
 
-public class BattleKline {
+public class BattleKline implements Parcelable {
 
     @StringDef({TYPE_1V1, TYPE_4V4, TYPE_EXERCISE})
     @Retention(RetentionPolicy.SOURCE)
@@ -124,7 +127,7 @@ public class BattleKline {
         this.rise = rise;
     }
 
-    public static class BattleBean implements Comparable<BattleBean> {
+    public static class BattleBean implements Comparable<BattleBean>,Parcelable {
         /**
          * battleId : 19
          * battleStatus : 1
@@ -250,6 +253,102 @@ public class BattleKline {
         public int compareTo(@NonNull BattleBean battleBean) {
             return Double.compare(this.profit, battleBean.getProfit());
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.battleId);
+            dest.writeInt(this.battleStatus);
+            dest.writeInt(this.code);
+            dest.writeByte(this.operate ? (byte) 1 : (byte) 0);
+            dest.writeDouble(this.positions);
+            dest.writeDouble(this.profit);
+            dest.writeInt(this.sort);
+            dest.writeInt(this.status);
+            dest.writeInt(this.userId);
+            dest.writeString(this.userName);
+            dest.writeString(this.userPortrait);
+            dest.writeList(this.otherUsers);
+        }
+
+        public BattleBean() {
+        }
+
+        protected BattleBean(Parcel in) {
+            this.battleId = in.readInt();
+            this.battleStatus = in.readInt();
+            this.code = in.readInt();
+            this.operate = in.readByte() != 0;
+            this.positions = in.readDouble();
+            this.profit = in.readDouble();
+            this.sort = in.readInt();
+            this.status = in.readInt();
+            this.userId = in.readInt();
+            this.userName = in.readString();
+            this.userPortrait = in.readString();
+            this.otherUsers = new ArrayList<BattleBean>();
+            in.readList(this.otherUsers, BattleBean.class.getClassLoader());
+        }
+
+        public static final Parcelable.Creator<BattleBean> CREATOR = new Parcelable.Creator<BattleBean>() {
+            @Override
+            public BattleBean createFromParcel(Parcel source) {
+                return new BattleBean(source);
+            }
+
+            @Override
+            public BattleBean[] newArray(int size) {
+                return new BattleBean[size];
+            }
+        };
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.battleVarietyCode);
+        dest.writeString(this.battleVarietyName);
+        dest.writeString(this.battleStockEndTime);
+        dest.writeString(this.battleStockStartTime);
+        dest.writeInt(this.line);
+        dest.writeDouble(this.rise);
+        dest.writeLong(this.endTime);
+        dest.writeTypedList(this.battleStaList);
+        dest.writeTypedList(this.userMarkList);
+    }
+
+    public BattleKline() {
+    }
+
+    protected BattleKline(Parcel in) {
+        this.battleVarietyCode = in.readString();
+        this.battleVarietyName = in.readString();
+        this.battleStockEndTime = in.readString();
+        this.battleStockStartTime = in.readString();
+        this.line = in.readInt();
+        this.rise = in.readDouble();
+        this.endTime = in.readLong();
+        this.battleStaList = in.createTypedArrayList(BattleBean.CREATOR);
+        this.userMarkList = in.createTypedArrayList(BattleKlineData.CREATOR);
+    }
+
+    public static final Parcelable.Creator<BattleKline> CREATOR = new Parcelable.Creator<BattleKline>() {
+        @Override
+        public BattleKline createFromParcel(Parcel source) {
+            return new BattleKline(source);
+        }
+
+        @Override
+        public BattleKline[] newArray(int size) {
+            return new BattleKline[size];
+        }
+    };
 }

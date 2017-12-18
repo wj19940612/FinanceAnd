@@ -60,6 +60,9 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
             }
             mKlineView.initKlineDataList(subList);
         }
+        if (mBattleKline.getEndTime() == 0) {
+            mBattleKline.setEndTime(SysTime.getSysTime().getSystemTimestamp() + 2 * 60 * 1000);
+        }
         int totalTime = (int) ((mBattleKline.getEndTime() - SysTime.getSysTime().getSystemTimestamp()) / 1000);
         mCountdown.setTotalTime(totalTime, new KlineBattleCountDownView.OnCountDownListener() {
             @Override
@@ -90,6 +93,13 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
         if (mCurrentIndex + 1 < mBattleUserMarkList.size()) {
             BattleKlineData positionKlineData = null;
             BattleKlineData nextKlineData = mBattleUserMarkList.get(mCurrentIndex + 1);
+            if (type.equalsIgnoreCase(BattleKline.BUY)) {
+                mKlineView.getLastData().setMark(BattleKlineData.MARK_BUY);
+            } else if (type.equalsIgnoreCase(BattleKline.SELL)) {
+                mKlineView.getLastData().setMark(BattleKlineData.MARK_SELL);
+            } else {
+                mKlineView.getLastData().setMark(BattleKlineData.MARK_PASS);
+            }
             mKlineView.addKlineData(nextKlineData);
             if (type.equalsIgnoreCase(BattleKline.PASS)) {
                 if (mPositionIndex > -1) {
@@ -125,10 +135,7 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
         super.battleFinish();
         if (mBattleKline == null) return;
         Launcher.with(getActivity(), KlinePracticeResultActivity.class)
-                .putExtra(ExtraKeys.BATTLE_STOCK_START_TIME, mBattleKline.getBattleStockStartTime())
-                .putExtra(ExtraKeys.BATTLE_STOCK_END_TIME, mBattleKline.getBattleStockEndTime())
-                .putExtra(ExtraKeys.BATTLE_STOCK_CODE, mBattleKline.getBattleVarietyCode())
-                .putExtra(ExtraKeys.BATTLE_STOCK_NAME, mBattleKline.getBattleVarietyName())
+                .putExtra(ExtraKeys.BATTLE_KLINE_DATA, mBattleKline)
                 .putExtra(ExtraKeys.BATTLE_PROFIT, mOperateView.getTotalProfit())
                 .execute();
         finish();
