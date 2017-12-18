@@ -103,29 +103,39 @@ public class AgainstProfitView extends LinearLayout {
     }
 
     public void setTotalProfit(List<BattleKline.BattleBean> battleBeans) {
-        int size = battleBeans.size();
-        if (size == 0) return;
-        if (size <= 1) {
-            if (!TextUtils.isEmpty(mType) && mType.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
-                setTotalProfit(battleBeans.get(0).getProfit(), mTotalProfit);
-                setAvatar(battleBeans.get(0).getUserPortrait(), mImgAvatar);
-                setRankImg(battleBeans.get(0).getSort(), mImgRank);
-                return;
-            } else {
-                setTotalProfit(battleBeans.get(0).getProfit(), mTotalProfit1);
-                setAvatar(battleBeans.get(0).getUserPortrait(), mImg1Avatar);
-                setRankImg(battleBeans.get(0).getSort(), mImg1Rank);
+        for (int i = 0; i < battleBeans.size(); i++) {
+            if (battleBeans.get(i).getUserId() == LocalUser.getUser().getUserInfo().getId()) {
+                continue;
+            }
+            if (i < 1) {
+                if (mType.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
+                    setTotalProfit(battleBeans.get(i), mTotalProfit, mImgAvatar, mImgRank);
+                    return;
+                } else {
+                    setTotalProfit(battleBeans.get(i), mTotalProfit1, mImg1Avatar, mImg1Rank);
+                }
+            }
+            if (i < 2) {
+                setTotalProfit(battleBeans.get(i), mTotalProfit2, mImg2Avatar, mImg2Rank);
+            }
+            if (i < 3) {
+                setTotalProfit(battleBeans.get(i), mTotalProfit3, mImg3Avatar, mImg3Rank);
             }
         }
-        if (size <= 2) {
-            setTotalProfit(battleBeans.get(1).getProfit(), mTotalProfit2);
-            setAvatar(battleBeans.get(1).getUserPortrait(), mImg2Avatar);
-            setRankImg(battleBeans.get(1).getSort(), mImg2Rank);
+    }
+
+    private void setTotalProfit(BattleKline.BattleBean battleBean, TextView totalProfit, ImageView imageAvatar, ImageView imageRank) {
+        if (imageAvatar.getTag() == null) {
+            imageAvatar.setTag(battleBean.getUserId());
+            setAvatar(battleBean.getUserPortrait(), imageAvatar);
         }
-        if (size <= 3) {
-            setTotalProfit(battleBeans.get(2).getProfit(), mTotalProfit3);
-            setAvatar(battleBeans.get(2).getUserPortrait(), mImg3Avatar);
-            setRankImg(battleBeans.get(2).getSort(), mImg3Rank);
+        int useId = (int) imageAvatar.getTag();
+        if (useId == battleBean.getUserId()) {
+            setTotalProfit(battleBean.getProfit(), totalProfit);
+            if (imageRank.getTag() == null || (int) imageRank.getTag() != battleBean.getSort()) {
+                setRankImg(battleBean.getSort(), imageRank);
+                imageRank.setTag(battleBean.getSort());
+            }
         }
     }
 

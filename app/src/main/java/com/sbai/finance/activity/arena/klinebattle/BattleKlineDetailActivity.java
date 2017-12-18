@@ -24,7 +24,7 @@ import butterknife.OnClick;
  * k线对决页面
  */
 
-public class KlineBattleDetailActivity extends BaseActivity {
+public class BattleKlineDetailActivity extends BaseActivity {
     @BindView(R.id.back)
     TextView mBack;
     @BindView(R.id.pkType)
@@ -37,7 +37,7 @@ public class KlineBattleDetailActivity extends BaseActivity {
     BattleKlineOperateView mOperateView;
     @BindView(R.id.klineView)
     com.sbai.finance.view.klinebattle.BattleKline mKlineView;
-    private String mType;
+    protected String mType;
     //start from 0
     protected int mCurrentIndex = 39;
     protected int mRemainKlineAmount;
@@ -46,7 +46,7 @@ public class KlineBattleDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_kline_battle_detail);
+        setContentView(R.layout.activity_battle_kline_detail);
         ButterKnife.bind(this);
         initData(getIntent());
         initTitleView();

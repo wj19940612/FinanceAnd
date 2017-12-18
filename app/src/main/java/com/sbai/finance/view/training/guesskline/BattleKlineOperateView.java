@@ -1,6 +1,7 @@
 package com.sbai.finance.view.training.guesskline;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -149,8 +150,29 @@ public class BattleKlineOperateView extends LinearLayout {
         }
     }
 
-    public void setRank(BattleKline.BattleBean battleBean) {
-
+    public void setRank(int rank) {
+        Drawable drawable = null;
+        switch (rank) {
+            case 1:
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_guess_kline_four__rank_1);
+                break;
+            case 2:
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_guess_kline_four__rank_2);
+                break;
+            case 3:
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_guess_kline_four__rank_3);
+                break;
+            case 4:
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_guess_kline_four__rank_4);
+                break;
+            default:
+                break;
+        }
+        GlideApp.with(mContext)
+                .load(drawable)
+                .placeholder(R.drawable.ic_default_avatar)
+                .circleCrop()
+                .into(mImgRank);
     }
 
     public void clearPositionProfit() {

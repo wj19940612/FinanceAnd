@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,15 +16,16 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.arena.KLineResultActivity;
 import com.sbai.finance.activity.battle.BattleRuleActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.fragment.dialog.KlineBattleRecordFragment;
 import com.sbai.finance.model.LocalUser;
+import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.klinebattle.BattleKlineConf;
 import com.sbai.finance.model.klinebattle.BattleKline;
+import com.sbai.finance.model.klinebattle.BattleKlineMyRecord;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -35,9 +37,11 @@ import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
+import com.sbai.finance.view.dialog.BattleKlineMatchSuccessDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.glide.GlideApp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -51,7 +55,7 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
  * K线对决选择页面
  */
 
-public class KlineBattleActivity extends BaseActivity {
+public class BattleKlineActivity extends BaseActivity {
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
     @BindView(R.id.rank)
@@ -64,6 +68,8 @@ public class KlineBattleActivity extends BaseActivity {
     private ImageView mAvatar;
     private TextView mIngot;
     private TextView mRecharge;
+    private StartMatchDialog mStartMatchDialog;
+    private String mtype;
 
     private UserFundInfo mUserFundInfo;
     private BroadcastReceiver mLoginBroadcastReceiver = new BroadcastReceiver() {
@@ -88,7 +94,7 @@ public class KlineBattleActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_kline_battle);
+        setContentView(R.layout.activity_battle_kline);
         ButterKnife.bind(this);
         initTitleView();
         initBroadcastReceiver();
@@ -106,7 +112,9 @@ public class KlineBattleActivity extends BaseActivity {
     }
 
     private void updateBattleConf(List<BattleKlineConf> data) {
+        if (data == null) return;
         for (BattleKlineConf battleKlineConf : data) {
+            if (battleKlineConf == null) return;
             if (battleKlineConf.getBattleType().equalsIgnoreCase(BattleKline.TYPE_4V4)) {
                 mFourPkIngot.setText(getString(R.string.number_ingot, String.valueOf(battleKlineConf.getBounty())));
             }
@@ -186,10 +194,20 @@ public class KlineBattleActivity extends BaseActivity {
 
     private void lookBattleResult() {
         if (LocalUser.getUser().isLogin()) {
-            new KlineBattleRecordFragment().show(getSupportFragmentManager());
+            showMyRecordDialog();
         } else {
             Launcher.with(getActivity(), LoginActivity.class).execute();
         }
+    }
+
+    private void showMyRecordDialog() {
+        Client.requestKlineBattleMyRecord()
+                .setCallback(new Callback2D<Resp<BattleKlineMyRecord>, BattleKlineMyRecord>() {
+                    @Override
+                    protected void onRespSuccessData(BattleKlineMyRecord data) {
+                        KlineBattleRecordFragment.newInstance(data).show(getSupportFragmentManager());
+                    }
+                }).fireFree();
     }
 
     private void requestUserFindInfo() {
@@ -255,8 +273,39 @@ public class KlineBattleActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
+        super.onBattleKlinePushReceived(battleBean);
+        if (battleBean.getCode() == BattleKline.PUSH_CODE_MATCH_FAILED) {
+            showMatchTimeoutDialog();
+        } else if (battleBean.getCode() == BattleKline.PUSH_CODE_MATCH_SUCCESS) {
+            if (mStartMatchDialog != null) {
+                if (mtype != null) {
+                    if ((mtype.equalsIgnoreCase(BattleKline.TYPE_1V1) && battleBean.getOtherUsers().size() == 1)
+                            || mtype.equalsIgnoreCase(BattleKline.TYPE_4V4) && battleBean.getOtherUsers().size() == 3) {
+                        mStartMatchDialog.dismiss();
+                        List<BattleKline.BattleBean> battleBeans = new ArrayList<>();
+                        battleBeans.add(battleBean);
+                        battleBeans.addAll(battleBean.getOtherUsers());
+                        BattleKlineMatchSuccessDialog.get(getActivity(), battleBeans, new BattleKlineMatchSuccessDialog.OnDismissListener() {
+                            @Override
+                            public void onDismiss() {
+                                Launcher.with(getActivity(), BattleKlinePkActivity.class)
+                                        .putExtra(ExtraKeys.GUESS_TYPE, mtype)
+                                        .execute();
+                            }
+                        });
+                        return;
+                    }
+                }
+                mStartMatchDialog.setRoomPeople(battleBean.getOtherUsers().size() + 1);
+            }
+        }
+    }
+
     private void judgeCurrentBattle(final String type) {
         if (LocalUser.getUser().isLogin()) {
+            mtype = type;
             Client.getCurrentKlineBattle().setTag(TAG)
                     .setIndeterminate(this)
                     .setCallback(new Callback<Resp<BattleKline.BattleBean>>() {
@@ -266,9 +315,18 @@ public class KlineBattleActivity extends BaseActivity {
                                 showStartMatchDialog(type);
                             } else {
                                 if (resp.getData().getStatus() == BattleKline.STATUS_BATTLEING) {
-                                    Launcher.with(getActivity(), KlineBattlePkActivity.class)
-                                            .putExtra(ExtraKeys.GUESS_TYPE, type)
-                                            .execute();
+                                    SmartDialog.single(getActivity(), getString(R.string.you_have_batting_please_go_to_see))
+                                            .setPositive(R.string.go_to_see, new SmartDialog.OnClickListener() {
+                                                @Override
+                                                public void onClick(Dialog dialog) {
+                                                    Launcher.with(getActivity(), BattleKlinePkActivity.class)
+                                                            .putExtra(ExtraKeys.GUESS_TYPE, type)
+                                                            .execute();
+                                                }
+                                            })
+                                            .setCancelableOnTouchOutside(false)
+                                            .setNegativeVisible(View.GONE)
+                                            .show();
                                 } else if (resp.getData().getStatus() == BattleKline.STATUS_END) {
                                     showStartMatchDialog(type);
 //                                    Launcher.with(getActivity(), KLineResultActivity.class).execute();
@@ -293,7 +351,7 @@ public class KlineBattleActivity extends BaseActivity {
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        StartMatchDialog.get(getActivity(), new StartMatchDialog.OnCancelListener() {
+                        mStartMatchDialog = (StartMatchDialog) StartMatchDialog.get(getActivity(), new StartMatchDialog.OnCancelListener() {
                             @Override
                             public void onCancel() {
                                 StartMatchDialog.dismiss(getActivity());
@@ -305,9 +363,17 @@ public class KlineBattleActivity extends BaseActivity {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         super.onRespFailure(failedResp);
-                        ToastUtil.show(failedResp.getMsg());
+                        if (failedResp.getCode() == Battle.CODE_NO_ENOUGH_MONEY) {
+                            showRechargeDialog();
+                        } else {
+                            ToastUtil.show(failedResp.getMsg());
+                        }
                     }
                 }).fireFree();
+    }
+
+    private void showRechargeDialog() {
+
     }
 
     private void showCancelMatchDialog(final String type) {
@@ -329,6 +395,41 @@ public class KlineBattleActivity extends BaseActivity {
                     }
                 })
                 .show();
+    }
+
+    private void showMatchTimeoutDialog() {
+        if (mStartMatchDialog != null) {
+            mStartMatchDialog.dismiss();
+        }
+        if (!TextUtils.isEmpty(mtype)) {
+            if (mtype.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
+                SmartDialog.single(getActivity(), getString(R.string.match_overtime))
+                        .setTitle(getString(R.string.match_failed))
+                        .setCancelableOnTouchOutside(false)
+                        .setPositive(R.string.rematch, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                dialog.dismiss();
+                                showStartMatchDialog(mtype);
+                            }
+                        })
+                        .setNegative(R.string.later_try_again, new SmartDialog.OnClickListener() {
+                            @Override
+                            public void onClick(Dialog dialog) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            } else {
+                ToastUtil.show(R.string.no_match_people_please_try_1v1);
+            }
+        }
+    }
+
+    private void showMatchedPeople() {
+        if (mStartMatchDialog != null) {
+            mStartMatchDialog.setRoomPeople(10);
+        }
     }
 
     private void requestCancelMatch(String type) {

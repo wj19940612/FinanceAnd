@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.sbai.finance.ExtraKeys;
+import com.sbai.finance.activity.arena.KLineResultActivity;
 import com.sbai.finance.activity.arena.KlinePracticeResultActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
@@ -15,13 +16,15 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * k线Pk练习
  */
 
-public class KlineBattlePkActivity extends KlineBattleDetailActivity {
+public class BattleKlinePkActivity extends BattleKlineDetailActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,7 +70,7 @@ public class KlineBattlePkActivity extends KlineBattleDetailActivity {
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
                     protected void onRespSuccessData(BattleKlineOperate data) {
-                        updateLastOperateData(data, BattleKline.BUY);
+                        updateMyLastOperateData(data, BattleKline.BUY);
                     }
 
                     @Override
@@ -78,28 +81,42 @@ public class KlineBattlePkActivity extends KlineBattleDetailActivity {
                 }).fireFree();
     }
 
-    private void updateLastProfitData(List<BattleKline.BattleBean> battleStaList) {
-        BattleKline.BattleBean myBattleBean = null;
-        for (BattleKline.BattleBean battleBean : battleStaList) {
-            if (battleBean.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
-                myBattleBean = battleBean;
-                if (battleBean.getBattleStatus() == BattleKline.STATUS_END) {
-                    battleFinish();
-                    return;
-                }
-                if (battleBean.getStatus() == BattleKline.STATUS_END) {
-                    mOperateView.complete();
-                }
-                mOperateView.setRank(battleBean);
-            }
-        }
-        if (myBattleBean != null) {
-            battleStaList.remove(myBattleBean);
-            mAgainstProfit.setTotalProfit(battleStaList);
+    @Override
+    protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
+        super.onBattleKlinePushReceived(battleBean);
+        if (battleBean.getCode() == BattleKline.PUSH_CODE_AGAINST_PROFIT) {
+            List<BattleKline.BattleBean> battleBeans = new ArrayList<>();
+            battleBeans.add(battleBean);
+            battleBeans.addAll(battleBean.getOtherUsers());
+            updateLastProfitData(battleBeans);
+        } else if (battleBean.getCode() == BattleKline.PUSH_CODE_BATTLE_FINISH) {
+            battleFinish();
         }
     }
 
-    private void updateLastOperateData(BattleKlineOperate data, String type) {
+    private void updateLastProfitData(List<BattleKline.BattleBean> battleStaList) {
+        Collections.sort(battleStaList, Collections.<BattleKline.BattleBean>reverseOrder());
+        setRankValueByProfit(battleStaList);
+        for (BattleKline.BattleBean battleBean : battleStaList) {
+            if (battleBean != null) {
+                if (battleBean.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
+                    if (battleBean.getBattleStatus() == BattleKline.STATUS_END) {
+                        battleFinish();
+                        return;
+                    }
+                    if (battleBean.getStatus() == BattleKline.STATUS_END) {
+                        mOperateView.complete();
+                    }
+                    mOperateView.setRank(battleBean.getSort());
+                    mOperateView.setTotalProfit(battleBean.getProfit());
+                    mOperateView.setPositionProfit(battleBean.getPositions());
+                }
+            }
+        }
+        mAgainstProfit.setTotalProfit(battleStaList);
+    }
+
+    private void updateMyLastOperateData(BattleKlineOperate data, String type) {
         if (data.getBattleStatus() == BattleKline.STATUS_END) {
             battleFinish();
             return;
@@ -127,7 +144,7 @@ public class KlineBattlePkActivity extends KlineBattleDetailActivity {
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
                     protected void onRespSuccessData(BattleKlineOperate data) {
-                        updateLastOperateData(data, BattleKline.SELL);
+                        updateMyLastOperateData(data, BattleKline.SELL);
                     }
 
                     @Override
@@ -145,7 +162,7 @@ public class KlineBattlePkActivity extends KlineBattleDetailActivity {
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
                     protected void onRespSuccessData(BattleKlineOperate data) {
-                        updateLastOperateData(data, BattleKline.PASS);
+                        updateMyLastOperateData(data, BattleKline.PASS);
                     }
 
                     @Override
@@ -161,13 +178,39 @@ public class KlineBattlePkActivity extends KlineBattleDetailActivity {
     protected void battleFinish() {
         super.battleFinish();
         if (mBattleKline == null) return;
-        Launcher.with(getActivity(), KlinePracticeResultActivity.class)
-                .putExtra(ExtraKeys.BATTLE_STOCK_START_TIME, mBattleKline.getBattleStockStartTime())
-                .putExtra(ExtraKeys.BATTLE_STOCK_END_TIME, mBattleKline.getBattleStockEndTime())
-                .putExtra(ExtraKeys.BATTLE_STOCK_CODE, mBattleKline.getBattleVarietyCode())
-                .putExtra(ExtraKeys.BATTLE_STOCK_NAME, mBattleKline.getBattleVarietyName())
-                .putExtra(ExtraKeys.BATTLE_PROFIT, mOperateView.getTotalProfit())
+        Launcher.with(getActivity(), KLineResultActivity.class)
+                .putExtra(ExtraKeys.GUESS_TYPE, mType)
                 .execute();
         finish();
+    }
+
+    private void setRankValueByProfit(List<BattleKline.BattleBean> battleBeans) {
+        int rank = 1;//名次
+        int size = battleBeans.size();
+        for (int i = 0; i < size - 1; i++) {
+            int n = checkContinue(battleBeans, battleBeans.get(i).getProfit());
+            if (n == 1) {
+                battleBeans.get(i).setSort(rank++);
+            } else {
+                //收益相同，名次相同
+                for (int j = 0; j < n; j++) {
+                    battleBeans.get(i + j).setSort(rank);
+                    ;
+                }
+                rank++;
+                i = i + n - 1;//连续n个相同的收益，排名一样
+            }
+        }
+        battleBeans.get(size - 1).setSort(rank);
+    }
+
+    private int checkContinue(List<BattleKline.BattleBean> battleBeans, double profit) {
+        int count = 0;//统计多少个连续相同的profit
+        for (int i = 0; i < battleBeans.size(); i++) {
+            if (battleBeans.get(i).getProfit() == profit) {
+                count++;
+            }
+        }
+        return count;
     }
 }

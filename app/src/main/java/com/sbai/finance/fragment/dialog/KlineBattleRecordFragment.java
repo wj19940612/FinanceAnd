@@ -54,6 +54,15 @@ public class KlineBattleRecordFragment extends DialogFragment {
     @BindView(R.id.thirdCount)
     TextView mThirdCount;
     Unbinder mBinder;
+    private BattleKlineMyRecord mBattleKlineMyRecord;
+
+    public static KlineBattleRecordFragment newInstance(BattleKlineMyRecord battleKlineMyRecord) {
+        KlineBattleRecordFragment startDialogFragment = new KlineBattleRecordFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("record", battleKlineMyRecord);
+        startDialogFragment.setArguments(bundle);
+        return startDialogFragment;
+    }
 
     @Nullable
     @Override
@@ -67,6 +76,9 @@ public class KlineBattleRecordFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NO_TITLE, R.style.BaseDialog);
+        if (getArguments() != null) {
+            mBattleKlineMyRecord = getArguments().getParcelable("record");
+        }
     }
 
     @Override
@@ -79,17 +91,9 @@ public class KlineBattleRecordFragment extends DialogFragment {
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             window.setLayout((int) (dm.widthPixels * 0.8), WindowManager.LayoutParams.WRAP_CONTENT);
         }
-        requestMyRecord();
-    }
-
-    private void requestMyRecord() {
-        Client.requestKlineBattleMyRecord()
-                .setCallback(new Callback2D<Resp<BattleKlineMyRecord>, BattleKlineMyRecord>() {
-                    @Override
-                    protected void onRespSuccessData(BattleKlineMyRecord data) {
-                        updateMyRecordData(data);
-                    }
-                }).fireFree();
+        if (mBattleKlineMyRecord != null) {
+            updateMyRecordData(mBattleKlineMyRecord);
+        }
     }
 
     private void updateMyRecordData(BattleKlineMyRecord data) {

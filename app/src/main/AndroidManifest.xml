@@ -457,15 +457,15 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".activity.arena.klinebattle.KlineBattleActivity"
+            android:name=".activity.arena.klinebattle.BattleKlineActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.arena.klinebattle.KlineBattleDetailActivity"/>
+            android:name=".activity.arena.klinebattle.BattleKlineDetailActivity"/>
         <activity
             android:name=".activity.arena.klinebattle.SingleKlineExerciseActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.arena.klinebattle.KlineBattlePkActivity"
+            android:name=".activity.arena.klinebattle.BattleKlinePkActivity"
             android:screenOrientation="portrait"/>
         <!-- TEST-->
         <activity

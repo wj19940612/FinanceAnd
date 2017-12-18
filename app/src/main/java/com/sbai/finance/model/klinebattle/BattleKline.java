@@ -1,5 +1,6 @@
 package com.sbai.finance.model.klinebattle;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 
 import java.lang.annotation.Retention;
@@ -16,6 +17,12 @@ public class BattleKline {
     @Retention(RetentionPolicy.SOURCE)
     public @interface BattleType {
     }
+
+    //推送code
+    public static final int PUSH_CODE_MATCH_FAILED = 8101;//匹配失败
+    public static final int PUSH_CODE_MATCH_SUCCESS = 8102;//匹配成功
+    public static final int PUSH_CODE_BATTLE_FINISH = 8103;//游戏对战结束
+    public static final int PUSH_CODE_AGAINST_PROFIT = 8104;//其他用户盈利情况
 
     public static final String TYPE_EXERCISE = "exercise";//本地自己训练的游戏类型
     public static final String TYPE_1V1 = "1v1";
@@ -117,7 +124,7 @@ public class BattleKline {
         this.rise = rise;
     }
 
-    public static class BattleBean {
+    public static class BattleBean implements Comparable<BattleBean> {
         /**
          * battleId : 19
          * battleStatus : 1
@@ -132,7 +139,7 @@ public class BattleKline {
 
         private int battleId;
         private int battleStatus;
-        private String code;
+        private int code;
         private boolean operate;
         private double positions;
         private double profit;
@@ -141,6 +148,15 @@ public class BattleKline {
         private int userId;
         private String userName;
         private String userPortrait;
+        private List<BattleBean> otherUsers;
+
+        public List<BattleBean> getOtherUsers() {
+            return otherUsers;
+        }
+
+        public void setOtherUsers(List<BattleBean> otherUsers) {
+            this.otherUsers = otherUsers;
+        }
 
         public String getUserName() {
             return userName;
@@ -174,11 +190,11 @@ public class BattleKline {
             this.battleStatus = battleStatus;
         }
 
-        public String getCode() {
+        public int getCode() {
             return code;
         }
 
-        public void setCode(String code) {
+        public void setCode(int code) {
             this.code = code;
         }
 
@@ -228,6 +244,11 @@ public class BattleKline {
 
         public void setUserId(int userId) {
             this.userId = userId;
+        }
+
+        @Override
+        public int compareTo(@NonNull BattleBean battleBean) {
+            return Double.compare(this.profit, battleBean.getProfit());
         }
     }
 

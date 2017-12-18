@@ -20,13 +20,13 @@ import java.util.List;
 /**
  * 猜K线开始对战的倒数两秒弹窗
  */
-public class KlineBattleMatchSuccessDialog extends BaseDialog {
+public class BattleKlineMatchSuccessDialog extends BaseDialog {
 
     public interface OnDismissListener {
         void onDismiss();
     }
 
-    public KlineBattleMatchSuccessDialog(Activity activity) {
+    public BattleKlineMatchSuccessDialog(Activity activity) {
         super(activity);
     }
 
@@ -34,7 +34,7 @@ public class KlineBattleMatchSuccessDialog extends BaseDialog {
 
         setCurrentDialog(DIALOG_START_GAME);
 
-        View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_kline_battle_match_success, null);
+        View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_battle_kline_match_success, null);
 
         TextView countDown = customView.findViewById(R.id.countdown);
         LinearLayout onePkArea = customView.findViewById(R.id.onePkArea);
@@ -79,7 +79,7 @@ public class KlineBattleMatchSuccessDialog extends BaseDialog {
         }
 
 
-        KlineBattleMatchSuccessDialog.single(activity)
+        BattleKlineMatchSuccessDialog.single(activity)
                 .setCancelableOnBackPress(false)
                 .setCancelableOnTouchOutside(false)
                 .setCustomView(customView)

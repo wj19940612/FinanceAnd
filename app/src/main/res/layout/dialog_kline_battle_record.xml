@@ -87,6 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:gravity="center"
+                android:lineSpacingExtra="4dp"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
                 tool:text="1254\n盈利元宝"/>
@@ -103,6 +104,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="18dp"
                     android:gravity="center"
+                    android:lineSpacingExtra="4dp"
                     android:textColor="@color/blackPrimary"
                     android:textSize="14sp"
                     tool:text="1254%\n胜率"/>
@@ -159,6 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:gravity="center"
+                android:lineSpacingExtra="4dp"
                 android:textColor="@color/blackPrimary"
                 android:textSize="14sp"
                 tool:text="1254\n盈利元宝"/>

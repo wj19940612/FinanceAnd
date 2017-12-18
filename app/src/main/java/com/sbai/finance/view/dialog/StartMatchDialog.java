@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.sbai.finance.R;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.WaveView;
 import com.sbai.glide.GlideApp;
 
@@ -40,7 +41,7 @@ public class StartMatchDialog extends BaseDialog {
         }
     }
 
-    public static void get(final Activity activity, final OnCancelListener listener, boolean isShowMatchedAmount) {
+    public static BaseDialog get(final Activity activity, final OnCancelListener listener, boolean isShowMatchedAmount) {
 
         setCurrentDialog(DIALOG_START_MATCH);
 
@@ -66,7 +67,7 @@ public class StartMatchDialog extends BaseDialog {
         final ImageView matchHead = (ImageView) customView.findViewById(R.id.matchHead);
         final List<Integer> heads = getHeads();
         final Handler mHandler = new Handler(Looper.getMainLooper());
-        if (activity != null && activity.isFinishing()) return;
+        if (activity != null && activity.isFinishing()) return null;
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -94,7 +95,8 @@ public class StartMatchDialog extends BaseDialog {
         mMatchLoading.setInterpolator(new AccelerateInterpolator());
         mMatchLoading.start();
 
-        StartMatchDialog.single(activity)
+        BaseDialog startMatchDialog = StartMatchDialog.single(activity);
+        startMatchDialog
                 .setCancelableOnBackPress(false)
                 .setCancelableOnTouchOutside(false)
                 .setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -107,6 +109,7 @@ public class StartMatchDialog extends BaseDialog {
                 })
                 .setCustomView(customView)
                 .show();
+        return startMatchDialog;
     }
 
     private static List<Integer> getHeads() {

@@ -1112,4 +1112,8 @@
     <string name="_battle_count">%1$d场次</string>
     <string name="win_ingot">盈利(元宝)</string>
     <string name="win_pk_rate">胜率</string>
+    <string name="you_have_batting_please_go_to_see">您当前有未完成的对局，请前往查看</string>
+    <string name="go_to_see">前往查看</string>
+    <string name="match_success_please_go_to_battle">K线对决已成功匹配，点击进入游戏</string>
+    <string name="no_match_people_please_try_1v1">匹配人数不足，到1v1试一下吧</string>
 </resources>

@@ -127,14 +127,14 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true">
 
-                <ImageView
+                <com.sbai.finance.view.OnTouchAlphaChangeImageView
                     android:id="@+id/buy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:src="@drawable/ic_kline_buy"/>
 
-                <ImageView
+                <com.sbai.finance.view.OnTouchAlphaChangeImageView
                     android:id="@+id/clear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -156,7 +156,7 @@
                 android:textSize="14sp"
                 tool:text="55"/>
 
-            <ImageView
+            <com.sbai.finance.view.OnTouchAlphaChangeImageView
                 android:id="@+id/pass"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

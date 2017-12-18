@@ -17,7 +17,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.TestActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.arena.RewardActivity;
-import com.sbai.finance.activity.arena.klinebattle.KlineBattleActivity;
+import com.sbai.finance.activity.arena.klinebattle.BattleKlineActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
@@ -159,7 +159,7 @@ public class ArenaFragment extends BaseFragment {
                         .execute();
                 break;
             case R.id.klineBattle:
-                Launcher.with(getActivity(), KlineBattleActivity.class)
+                Launcher.with(getActivity(), BattleKlineActivity.class)
                         .execute();
                 break;
             case R.id.moneyRewardArena:
