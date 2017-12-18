@@ -32,15 +32,6 @@ public class StartMatchDialog extends BaseDialog {
         super(activity);
     }
 
-    public void setRoomPeople(int count) {
-        if (getCustomView() != null) {
-            TextView roomPeople = getCustomView().findViewById(R.id.roomPeople);
-            if (roomPeople != null) {
-                roomPeople.setText(String.valueOf(count));
-            }
-        }
-    }
-
     public static BaseDialog get(final Activity activity, final OnCancelListener listener, boolean isShowMatchedAmount) {
 
         setCurrentDialog(DIALOG_START_MATCH);

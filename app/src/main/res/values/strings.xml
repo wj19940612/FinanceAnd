@@ -1119,4 +1119,5 @@
     <string name="no_match_people_please_try_1v1">匹配人数不足，到1v1试一下吧</string>
     <string name="battle_kline_review">复盘</string>
     <string name="profit_with_colon">收益：</string>
+    <string name="no_people_match_please_try_later">暂时无人匹配，请稍后再试</string>
 </resources>
