@@ -203,6 +203,11 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
 
     public void updateHeader() {
 
+        if (!LocalUser.getUser().isLogin()) {
+            mHeader.setVisibility(View.GONE);
+            return;
+        }
+        mHeader.setVisibility(View.VISIBLE);
         if (mSelectPosition == FRAGMENT_ONE) {
             mWinRate.setVisibility(View.VISIBLE);
             mTopNumber.setVisibility(View.GONE);
