@@ -109,32 +109,33 @@ public class AgainstProfitView extends LinearLayout {
             }
             if (i < 1) {
                 if (mType.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
-                    setTotalProfit(battleBeans.get(i), mTotalProfit, mImgAvatar, mImgRank);
+                    setTotalProfit(battleBeans.get(i), mUserName, mTotalProfit, mImgAvatar, mImgRank);
                     return;
                 } else {
-                    setTotalProfit(battleBeans.get(i), mTotalProfit1, mImg1Avatar, mImg1Rank);
+                    setTotalProfit(battleBeans.get(i), mUserName1, mTotalProfit1, mImg1Avatar, mImg1Rank);
                 }
             }
             if (i < 2) {
-                setTotalProfit(battleBeans.get(i), mTotalProfit2, mImg2Avatar, mImg2Rank);
+                setTotalProfit(battleBeans.get(i), mUserName2, mTotalProfit2, mImg2Avatar, mImg2Rank);
             }
             if (i < 3) {
-                setTotalProfit(battleBeans.get(i), mTotalProfit3, mImg3Avatar, mImg3Rank);
+                setTotalProfit(battleBeans.get(i), mUserName3, mTotalProfit3, mImg3Avatar, mImg3Rank);
             }
         }
     }
 
-    private void setTotalProfit(BattleKline.BattleBean battleBean, TextView totalProfit, ImageView imageAvatar, ImageView imageRank) {
+    private void setTotalProfit(BattleKline.BattleBean battleBean, TextView userName, TextView totalProfit, ImageView imageAvatar, ImageView imageRank) {
         if (totalProfit.getTag() == null) {
             totalProfit.setTag(battleBean.getUserId());
             setAvatar(battleBean.getUserPortrait(), imageAvatar);
+            userName.setText(battleBean.getUserName());
         }
         int useId = (int) totalProfit.getTag();
         if (useId == battleBean.getUserId()) {
             setTotalProfit(battleBean.getProfit(), totalProfit);
-            if (imageRank.getTag() == null || (int) imageRank.getTag() != battleBean.getSort()) {
+            if (userName.getTag() == null || (int) imageRank.getTag() != battleBean.getSort()) {
                 setRankImg(battleBean.getSort(), imageRank);
-                imageRank.setTag(battleBean.getSort());
+                userName.setTag(battleBean.getSort());
             }
         }
     }
@@ -179,7 +180,11 @@ public class AgainstProfitView extends LinearLayout {
             default:
                 break;
         }
-        imgRank.setImageDrawable(drawable);
+        GlideApp.with(mContext)
+                .load(drawable)
+                .placeholder(R.drawable.ic_default_avatar)
+                .circleCrop()
+                .into(imgRank);
     }
 
 }
