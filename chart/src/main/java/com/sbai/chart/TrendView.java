@@ -319,13 +319,5 @@ public class TrendView extends FrameLayout {
             }
             return super.getXAxis();
         }
-
-        public boolean isGameMode() {
-            return mGameMode;
-        }
-
-        public void setGameMode(boolean gameMode) {
-            mGameMode = gameMode;
-        }
     }
 }

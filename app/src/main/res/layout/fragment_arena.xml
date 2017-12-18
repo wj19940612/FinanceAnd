@@ -4,7 +4,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/arenaBackground"
+              android:background="@drawable/ic_arena_bg"
               android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
@@ -19,7 +19,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="38dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="15dp">
@@ -81,44 +81,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="27dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bg_arena_future_stair"/>
-
-        <ImageView
-            android:id="@+id/stairHalo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="27dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bg_arena_future_stair_halo"/>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="228dp"
-            android:orientation="horizontal"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.sbai.finance.view.OnTouchAlphaChangeImageView
+                android:id="@+id/klineBattle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/ic_kline_battle"
+                android:text="@string/ordinary_battle"/>
 
             <com.sbai.finance.view.OnTouchAlphaChangeImageView
                 android:id="@+id/moneyRewardArena"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/common_margin"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:src="@drawable/ic_future_reward_arena_banner"/>
 
             <com.sbai.finance.view.OnTouchAlphaChangeImageView
                 android:id="@+id/generalBattleBanner"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/common_margin"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:src="@drawable/ic_future_general_banner"
                 android:text="@string/ordinary_battle"/>
+
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

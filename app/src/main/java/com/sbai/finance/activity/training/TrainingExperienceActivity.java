@@ -35,7 +35,7 @@ import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
-import com.sbai.finance.view.MyListView;
+import com.sbai.finance.view.NoScrollListView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.ApiError;
@@ -69,7 +69,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 	private View mSpit;
 	private View mWhiteSpit;
 	private View mFootView;
-	private MyListView mHotListView;
+	private NoScrollListView mHotListView;
 	private RefreshReceiver mRefreshReceiver;
 	private int mIsFromTrainingResult;
 
@@ -110,7 +110,7 @@ public class TrainingExperienceActivity extends BaseActivity {
 		mHotExperience = (TextView) header.findViewById(R.id.hotExperience);
 		mSpit = header.findViewById(R.id.spit);
 		mWhiteSpit = header.findViewById(R.id.spitWhite);
-		mHotListView = (MyListView) header.findViewById(R.id.hotListView);
+		mHotListView = (NoScrollListView) header.findViewById(R.id.hotListView);
 		mHotExperienceListAdapter = new ExperienceListAdapter(this);
 		mHotListView.setAdapter(mHotExperienceListAdapter);
 		mLatestListView.addHeaderView(header);

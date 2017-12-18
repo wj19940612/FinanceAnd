@@ -445,6 +445,32 @@
             android:name=".activity.miss.MissRecordAudioReplyActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.arena.KlineRankListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.KLineResultActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.KlinePracticeResultActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.arena.klinebattle.BattleKlineActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.klinebattle.BattleKlineDetailActivity"/>
+        <activity
+            android:name=".activity.arena.klinebattle.SingleKlineExerciseActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.klinebattle.BattleKlinePkActivity"
+            android:screenOrientation="portrait"/>
+        <!-- TEST-->
+        <activity
+            android:name=".activity.TestActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:id="@+id/againstPkArea"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#1a1729"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/fourPkArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/common_padding"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="@dimen/common_padding"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp">
+
+                <ImageView
+                    android:id="@+id/img1Rank"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="1dp"
+                    tool:src="@drawable/ic_guess_kline_four__rank_1"/>
+
+                <ImageView
+                    android:id="@+id/img1Avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="1dp"
+                    tool:src="@drawable/ic_default_avatar"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/userName1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                tool:text="马可波罗"/>
+
+            <TextView
+                android:id="@+id/totalProfit1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/redAssist"
+                android:textSize="12sp"
+                tool:text="+12.91%"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp">
+
+                <ImageView
+                    android:id="@+id/img2Rank"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="1dp"
+                    tool:src="@drawable/ic_guess_kline_four__rank_1"/>
+
+                <ImageView
+                    android:id="@+id/img2Avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="1dp"
+                    tool:src="@drawable/ic_default_avatar"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/userName2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                tool:text="马可波罗"/>
+
+            <TextView
+                android:id="@+id/totalProfit2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/redAssist"
+                android:textSize="12sp"
+                tool:text="+12.91%"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp">
+
+                <ImageView
+                    android:id="@+id/img3Rank"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="1dp"
+                    tool:src="@drawable/ic_guess_kline_four__rank_1"/>
+
+                <ImageView
+                    android:id="@+id/img3Avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="1dp"
+                    tool:src="@drawable/ic_default_avatar"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/userName3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                tool:text="马可波罗"/>
+
+            <TextView
+                android:id="@+id/totalProfit3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/redAssist"
+                android:textSize="12sp"
+                tool:text="+12.91%"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/onePkArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="23dp"
+        android:paddingLeft="30dp"
+        android:paddingTop="@dimen/common_padding"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                android:id="@+id/imgRank"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="1dp"
+                tool:background="@drawable/ic_guess_kline_four__rank_1"/>
+
+            <ImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="1dp"
+                tool:src="@drawable/ic_default_avatar"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                tool:text="马可波罗"/>
+
+            <TextView
+                android:id="@+id/totalProfit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/redAssist"
+                android:textSize="12sp"
+                tool:text="+12.91%"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

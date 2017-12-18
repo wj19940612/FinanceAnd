@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#100E19"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/layout_guess_kline_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:fitsSystemWindows="true"/>
+
+    <com.sbai.finance.view.training.guesskline.AgainstProfitView
+        android:id="@+id/againstProfit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.sbai.finance.view.klinebattle.BattleKline
+            android:id="@+id/klineView"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"/>
+    </LinearLayout>
+
+
+    <com.sbai.finance.view.training.guesskline.BattleKlineOperateView
+        android:id="@+id/operateView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
+
+</LinearLayout>

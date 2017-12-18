@@ -1,1 +1,1 @@
-include ':app', ':httplib', ':chart', ':glide', ':mp3record'
+include ':app', ':httplib', ':chart', ':glide', ':socket', ':mp3record'

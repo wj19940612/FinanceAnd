@@ -9,9 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.sbai.finance.R;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.WaveView;
 import com.sbai.glide.GlideApp;
 
@@ -29,11 +32,30 @@ public class StartMatchDialog extends BaseDialog {
         super(activity);
     }
 
-    public static void get(final Activity activity, final OnCancelListener listener) {
+    public void setRoomPeople(int count) {
+        if (getCustomView() != null) {
+            TextView roomPeople = getCustomView().findViewById(R.id.roomPeople);
+            if (roomPeople != null) {
+                roomPeople.setText(String.valueOf(count));
+            }
+        }
+    }
+
+    public static BaseDialog get(final Activity activity, final OnCancelListener listener, boolean isShowMatchedAmount) {
 
         setCurrentDialog(DIALOG_START_MATCH);
 
         View customView = LayoutInflater.from(activity).inflate(R.layout.dialog_start_match, null);
+        LinearLayout fourPkArea = customView.findViewById(R.id.fourPkArea);
+        TextView message = customView.findViewById(R.id.message);
+        if (isShowMatchedAmount) {
+            fourPkArea.setVisibility(View.VISIBLE);
+            message.setVisibility(View.GONE);
+        } else {
+            fourPkArea.setVisibility(View.GONE);
+            message.setVisibility(View.VISIBLE);
+        }
+
         final WaveView mMatchLoading = (WaveView) customView.findViewById(R.id.matchLoading);
         customView.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +67,7 @@ public class StartMatchDialog extends BaseDialog {
         final ImageView matchHead = (ImageView) customView.findViewById(R.id.matchHead);
         final List<Integer> heads = getHeads();
         final Handler mHandler = new Handler(Looper.getMainLooper());
-        if (activity != null && activity.isFinishing()) return;
+        if (activity != null && activity.isFinishing()) return null;
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -73,7 +95,8 @@ public class StartMatchDialog extends BaseDialog {
         mMatchLoading.setInterpolator(new AccelerateInterpolator());
         mMatchLoading.start();
 
-        StartMatchDialog.single(activity)
+        BaseDialog startMatchDialog = StartMatchDialog.single(activity);
+        startMatchDialog
                 .setCancelableOnBackPress(false)
                 .setCancelableOnTouchOutside(false)
                 .setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -86,6 +109,7 @@ public class StartMatchDialog extends BaseDialog {
                 })
                 .setCustomView(customView)
                 .show();
+        return startMatchDialog;
     }
 
     private static List<Integer> getHeads() {

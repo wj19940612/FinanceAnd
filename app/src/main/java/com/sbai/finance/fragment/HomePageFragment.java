@@ -12,6 +12,9 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.arena.KLineResultActivity;
+import com.sbai.finance.activity.arena.KlinePracticeResultActivity;
+import com.sbai.finance.activity.arena.KlineRankListActivity;
 import com.sbai.finance.activity.arena.RewardActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
@@ -166,7 +169,8 @@ public class HomePageFragment extends BaseFragment {
 
             @Override
             public void onSelectClick() {
-                requestOptionalData();
+//                requestOptionalData();
+                Launcher.with(getActivity(), KlineRankListActivity.class).execute();
             }
         });
         mHomeTitleView.setOnClickItemListener(new HomeTitleView.OnClickItemListener() {
@@ -447,7 +451,7 @@ public class HomePageFragment extends BaseFragment {
                             requestStockIndexMarketData(data);
                         }
                     }
-                }).fire();
+                }).fireFree();
     }
 
     private void requestStockIndexMarketData(List<Stock> data) {

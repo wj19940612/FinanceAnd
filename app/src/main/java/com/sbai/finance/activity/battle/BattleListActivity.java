@@ -735,7 +735,7 @@ public class BattleListActivity extends BaseActivity implements
                 StartMatchDialog.dismiss(BattleListActivity.this);
                 showCancelMatchDialog();
             }
-        });
+        }, false);
     }
 
     private void showCancelMatchDialog() {

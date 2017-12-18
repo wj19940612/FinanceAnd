@@ -361,7 +361,7 @@ public class MvKlineView extends RelativeLayout {
                     for (int i = settings.start; i < settings.end; i++) {
                         int start = i - mv + 1;
                         if (start < 0) continue;
-                        float mvValue = dataList.get(i).getK().getMovingAverage(mv);
+                        float mvValue = dataList.get(i).getK().getMovingAverageValue(mv);
                         if (max < mvValue) max = mvValue;
                         if (min > mvValue) min = mvValue;
                     }

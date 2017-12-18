@@ -43,7 +43,7 @@ import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.SerializeObjectUtil;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.view.MyListView;
+import com.sbai.finance.view.NoScrollListView;
 import com.sbai.finance.view.TitleBar;
 
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class StudyRoomActivity extends BaseActivity {
     @BindView(R.id.testTitle)
     TextView mTestTitle;
     @BindView(R.id.listView)
-    MyListView mListView;
+    NoScrollListView mListView;
     @BindView(R.id.commit)
     TextView mCommit;
     @BindView(R.id.testResult)
