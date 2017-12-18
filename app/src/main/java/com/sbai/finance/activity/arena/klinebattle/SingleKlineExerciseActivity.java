@@ -101,14 +101,6 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
             } else {
                 positionKlineData = mBattleUserMarkList.get(mCurrentIndex);
             }
-            if (positionKlineData != null) {
-                double positionProfit = (nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice();
-                mOperateView.setPositionProfit(positionProfit);
-                mOperateView.setTotalProfit(positionProfit + mOperateView.getTotalProfit());
-                if (mPositionIndex > -1) {
-                    nextKlineData.setPositions(positionProfit);
-                }
-            }
             if (type.equalsIgnoreCase(BattleKline.BUY)) {
                 mPositionIndex = mCurrentIndex;
                 mKlineView.getLastData().setMark(BattleKlineData.MARK_BUY);
@@ -122,6 +114,14 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
                     mKlineView.getLastData().setMark(BattleKlineData.MARK_HOLD_PASS);
                 } else {
                     mKlineView.getLastData().setMark(BattleKlineData.MARK_PASS);
+                }
+            }
+            if (positionKlineData != null) {
+                double positionProfit = (nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice();
+                mOperateView.setPositionProfit(positionProfit);
+                mOperateView.setTotalProfit(positionProfit + mOperateView.getTotalProfit());
+                if (mPositionIndex > -1) {
+                    nextKlineData.setPositions(positionProfit);
                 }
             }
             if (mCurrentIndex == mBattleUserMarkList.size() - 2) {

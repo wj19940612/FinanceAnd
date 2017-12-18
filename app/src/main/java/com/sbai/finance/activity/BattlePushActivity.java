@@ -53,7 +53,6 @@ public class BattlePushActivity extends StatusBarActivity {
     protected void onPause() {
         super.onPause();
         WsClient.get().removePushReceiveListener(mPushReceiveListener);
-        WsClient.get().removePushReceiveListener(mKlineBattlePushReceiverListener);
     }
 
     private OnPushReceiveListener<BattleKline.BattleBean> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKline.BattleBean>() {
