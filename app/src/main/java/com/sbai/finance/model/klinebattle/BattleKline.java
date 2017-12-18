@@ -142,6 +142,7 @@ public class BattleKline implements Parcelable {
 
         private int battleId;
         private int battleStatus;
+        private String battleType;
         private String code;
         private boolean operate;
         private double positions;
@@ -152,6 +153,14 @@ public class BattleKline implements Parcelable {
         private String userName;
         private String userPortrait;
         private List<BattleBean> otherUsers;
+
+        public String getBattleType() {
+            return battleType;
+        }
+
+        public void setBattleType(String battleType) {
+            this.battleType = battleType;
+        }
 
         public List<BattleBean> getOtherUsers() {
             return otherUsers;
@@ -273,6 +282,7 @@ public class BattleKline implements Parcelable {
             dest.writeString(this.userName);
             dest.writeString(this.userPortrait);
             dest.writeList(this.otherUsers);
+            dest.writeString(this.battleType);
         }
 
         public BattleBean() {
@@ -290,6 +300,7 @@ public class BattleKline implements Parcelable {
             this.userId = in.readInt();
             this.userName = in.readString();
             this.userPortrait = in.readString();
+            this.battleType = in.readString();
             this.otherUsers = new ArrayList<BattleBean>();
             in.readList(this.otherUsers, BattleBean.class.getClassLoader());
         }

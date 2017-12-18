@@ -281,17 +281,10 @@ public class BattleKlineActivity extends BaseActivity {
                 judgeCurrentBattle(BattleKline.TYPE_1V1);
                 break;
             case R.id.exercise:
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), SingleKlineExerciseActivity.class)
-                            .putExtra(ExtraKeys.GUESS_TYPE, BattleKline.TYPE_EXERCISE)
-                            .execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class)
-                            .execute();
-                }
+                judgeCurrentBattle(BattleKline.TYPE_EXERCISE);
                 break;
             case R.id.rank:
-                judgeCurrentBattle(BattleKline.TYPE_EXERCISE);
+                Launcher.with(getActivity(), KlineRankListActivity.class).execute();
                 break;
         }
     }
@@ -333,7 +326,7 @@ public class BattleKlineActivity extends BaseActivity {
                     .setIndeterminate(this)
                     .setCallback(new Callback<Resp<BattleKline.BattleBean>>() {
                         @Override
-                        protected void onRespSuccess(Resp<BattleKline.BattleBean> resp) {
+                        protected void onRespSuccess(final Resp<BattleKline.BattleBean> resp) {
                             if (resp.getData() == null) {
                                 if (type.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
                                     Launcher.with(getActivity(), SingleKlineExerciseActivity.class).execute();
@@ -348,7 +341,7 @@ public class BattleKlineActivity extends BaseActivity {
                                                 public void onClick(Dialog dialog) {
                                                     dialog.dismiss();
                                                     Launcher.with(getActivity(), BattleKlinePkActivity.class)
-                                                            .putExtra(ExtraKeys.GUESS_TYPE, type)
+                                                            .putExtra(ExtraKeys.GUESS_TYPE, resp.getData().getBattleType())
                                                             .execute();
                                                 }
                                             })
@@ -362,7 +355,7 @@ public class BattleKlineActivity extends BaseActivity {
                                                 public void onClick(Dialog dialog) {
                                                     dialog.dismiss();
                                                     Launcher.with(getActivity(), KLineResultActivity.class)
-                                                            .putExtra(ExtraKeys.GUESS_TYPE, type)
+                                                            .putExtra(ExtraKeys.GUESS_TYPE, resp.getData().getBattleType())
                                                             .execute();
                                                 }
                                             })
