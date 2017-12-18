@@ -55,7 +55,7 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
     private void updateBattleData(BattleKline data) {
         mBattleKline = data;
         if (mBattleKline == null) return;
-        int totalTime = (int) ((mBattleKline.getEndTime() - SysTime.getSysTime().getSystemTimestamp()) / 1000);
+        int totalTime = (int) ((mBattleKline.getEndTime() - SysTime.getSysTime().getSystemTimestamp()));
         mCountdown.setTotalTime(totalTime, new KlineBattleCountDownView.OnCountDownListener() {
             @Override
             public void finish() {

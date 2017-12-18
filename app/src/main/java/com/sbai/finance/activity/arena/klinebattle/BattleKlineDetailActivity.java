@@ -129,7 +129,7 @@ public class BattleKlineDetailActivity extends BaseActivity {
     }
 
     protected void battleFinish() {
-        mCountdown.removeListener();
+        mCountdown.cancelCount();
     }
 
 }
