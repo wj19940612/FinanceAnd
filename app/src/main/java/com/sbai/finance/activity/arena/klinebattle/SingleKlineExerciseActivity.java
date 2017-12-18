@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.activity.arena.KlinePracticeResultActivity;
+import com.sbai.finance.model.ImageFloder;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.model.local.SysTime;
@@ -117,7 +118,11 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
                 mPositionIndex = -1;
                 mOperateView.clearSuccess();
             } else {
-                mKlineView.getLastData().setMark(BattleKlineData.MARK_PASS);
+                if (mPositionIndex > -1) {
+                    mKlineView.getLastData().setMark(BattleKlineData.MARK_HOLD_PASS);
+                } else {
+                    mKlineView.getLastData().setMark(BattleKlineData.MARK_PASS);
+                }
             }
             if (mCurrentIndex == mBattleUserMarkList.size() - 2) {
                 battleFinish();

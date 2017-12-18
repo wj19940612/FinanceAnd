@@ -81,7 +81,9 @@ public class KlineBattleCountDownView extends LinearLayout {
     }
 
     public void removeListener() {
-        mOnCountDownListener = null;
+        if (mOnCountDownListener != null) {
+            mOnCountDownListener = null;
+        }
     }
 
     private void setRemainTime(int time) {
