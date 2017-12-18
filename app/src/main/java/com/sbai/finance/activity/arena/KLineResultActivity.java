@@ -62,6 +62,7 @@ public class KLineResultActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kline_result);
         ButterKnife.bind(this);
+        translucentStatusBar();
         initData();
         initView();
         refreshData();

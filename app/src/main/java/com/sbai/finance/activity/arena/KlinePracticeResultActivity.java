@@ -63,6 +63,7 @@ public class KlinePracticeResultActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kline_practice_result);
+        translucentStatusBar();
         ButterKnife.bind(this);
         initView();
         initData();
@@ -122,6 +123,7 @@ public class KlinePracticeResultActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.moreOneBtn:
                 Launcher.with(this, SingleKlineExerciseActivity.class).putExtra(ExtraKeys.GUESS_TYPE, BattleKline.TYPE_EXERCISE).execute();
+                finish();
                 break;
             case R.id.reLookBtn:
                 Launcher.with(this, BattleKlineReviewActivity.class)
@@ -129,6 +131,7 @@ public class KlinePracticeResultActivity extends BaseActivity {
                         .putExtra(ExtraKeys.BATTLE_PROFIT, mProfit)
                         .putExtra(ExtraKeys.BATTLE_KLINE_DATA, mBattleKlineData)
                         .execute();
+                finish();
                 break;
 
         }
