@@ -42,4 +42,16 @@ public class RegisterInfo {
         }
         return strings;
     }
+
+
+    @Override
+    public String toString() {
+        return "RegisterInfo{" +
+                "host='" + host + '\'' +
+                ", channel='" + channel + '\'' +
+                ", token1='" + token1 + '\'' +
+                ", token2='" + token2 + '\'' +
+                ", device='" + device + '\'' +
+                '}';
+    }
 }

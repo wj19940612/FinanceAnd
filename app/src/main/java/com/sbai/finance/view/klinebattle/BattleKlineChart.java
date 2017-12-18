@@ -86,7 +86,7 @@ public class BattleKlineChart extends KlineChart {
     protected void drawRealTimeData(boolean indexesEnable, int left, int top, int width, int height, int left2, int top2, int width2, int height2, Canvas canvas) {
         super.drawRealTimeData(indexesEnable, left, top, width, height, left2, top2, width2, height2, canvas);
         // draw translucent background
-        if (mDataList == null || mDataList.isEmpty()) return;
+        if (getDataList() == null || getDataList().isEmpty()) return;
         /*
          * 透明背景绘制区：
          * buy 点 ~ sell 点
@@ -104,7 +104,7 @@ public class BattleKlineChart extends KlineChart {
         RectF rectF = null;
         int i = getStart();
         for (; i < getEnd(); i++) {
-            BattleKlineData data = mDataList.get(i);
+            BattleKlineData data = (BattleKlineData) getDataList().get(i);
             if (rectF != null && data.getMark().equalsIgnoreCase(BattleKlineData.MARK_SELL)) {
                 rectF.right = getChartXOfScreen(i);
                 String bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
@@ -122,30 +122,28 @@ public class BattleKlineChart extends KlineChart {
                 rectF.top = top;
                 rectF.bottom = top + height;
                 rectF.left = left;
-                rectF.right = left + width;
+                rectF.right = left + width - mPriceAreaWidth;
             } else if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_BUY)) {
                 rectF = getRectF();
                 rectF.top = top;
                 rectF.bottom = top + height;
                 rectF.left = getChartXOfScreen(i);
-                rectF.right = left + width;
+                rectF.right = left + width - mPriceAreaWidth;
             }
         } // i == end
         if (rectF != null) {
             String bgColor = TRANS_RED;
-            if (i == mDataList.size() && mLastInvisibleData != null) {
+            if (i == getDataList().size() && mLastInvisibleData != null) {
                 bgColor = mLastInvisibleData.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
             }
 
-            for (; i < mDataList.size(); i++) {
-                BattleKlineData data = mDataList.get(i);
+            for (; i < getDataList().size(); i++) {
+                BattleKlineData data = (BattleKlineData) getDataList().get(i);
                 if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_SELL)) {
                     bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
                     break;
                 } else if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_NEW)) {
                     bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
-                    break;
-                } else {
                     break;
                 }
             }
