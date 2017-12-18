@@ -64,7 +64,7 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
         if (mBattleKline.getEndTime() == 0) {
             mBattleKline.setEndTime(SysTime.getSysTime().getSystemTimestamp() + 2 * 60 * 1000);
         }
-        int totalTime = (int) ((mBattleKline.getEndTime() - SysTime.getSysTime().getSystemTimestamp()) / 1000);
+        long totalTime = ((mBattleKline.getEndTime() - SysTime.getSysTime().getSystemTimestamp()));
         mCountdown.setTotalTime(totalTime, new KlineBattleCountDownView.OnCountDownListener() {
             @Override
             public void finish() {
@@ -106,7 +106,7 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
                 mOperateView.setPositionProfit(positionProfit);
                 mOperateView.setTotalProfit(positionProfit + mOperateView.getTotalProfit());
                 if (mPositionIndex > -1) {
-                    mKlineView.getLastData().setPositions(positionProfit);
+                    nextKlineData.setPositions(positionProfit);
                 }
             }
             if (type.equalsIgnoreCase(BattleKline.BUY)) {

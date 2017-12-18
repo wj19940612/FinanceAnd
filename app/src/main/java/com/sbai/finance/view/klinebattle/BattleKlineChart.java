@@ -66,7 +66,10 @@ public class BattleKlineChart extends KlineChart {
     }
 
     public BattleKlineData getLastData() {
-        return mDataList.get(mDataList.size() - 1);
+        if (mDataList != null) {
+            return mDataList.get(mDataList.size() - 1);
+        }
+        return null;
     }
 
     /**

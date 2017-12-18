@@ -1,6 +1,7 @@
 package com.sbai.finance.view.training.guesskline;
 
 import android.content.Context;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
@@ -28,9 +29,7 @@ public class KlineBattleCountDownView extends LinearLayout {
     @BindView(R.id.secondLow)
     TextView mSecondLow;
     private Context mContext;
-    //秒
-    private int mTotalTime;
-    private OnCountDownListener mOnCountDownListener;
+    private CountDownTimer mCountDownTimer;
 
     public interface OnCountDownListener {
         void finish();
@@ -55,41 +54,35 @@ public class KlineBattleCountDownView extends LinearLayout {
         mContext = context;
     }
 
-    public void setTotalTime(int totalTime, OnCountDownListener onCountDownListener) {
-        mOnCountDownListener = onCountDownListener;
-        if (totalTime >= 100 * 60) {
-            totalTime = 99 * 60 + 59;
-        }
-        mTotalTime = totalTime;
-        mMinuteHigh.postDelayed(new Runnable() {
+    public void setTotalTime(long totalTime, final OnCountDownListener onCountDownListener) {
+        setRemainTime(totalTime);
+        mCountDownTimer = new CountDownTimer(totalTime, 1000) {
             @Override
-            public void run() {
-                setRemainTime(mTotalTime);
-                if (mTotalTime <= 0) {
-                    if (mOnCountDownListener != null) {
-                        mOnCountDownListener.finish();
-                    }
-                    return;
-                }
-                mTotalTime = mTotalTime - 1;
-                if (mTotalTime < 0) {
-                    mTotalTime = 0;
-                }
-                mMinuteHigh.postDelayed(this, 1000);
+            public void onTick(long millisUntilFinished) {
+                setRemainTime(millisUntilFinished);
             }
-        }, 0);
+
+            @Override
+            public void onFinish() {
+                if (onCountDownListener != null) {
+                    onCountDownListener.finish();
+                }
+            }
+        };
+        mCountDownTimer.start();
     }
 
-    public void removeListener() {
-        if (mOnCountDownListener != null) {
-            mOnCountDownListener = null;
+    public void cancelCount() {
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
         }
     }
 
-    private void setRemainTime(int time) {
+    private void setRemainTime(long time) {
+        if (time < 0) time = 0;
         int mh, ml, sh, sl;
-        int minutes = time / 60;
-        int seconds = time - minutes * 60;
+        int minutes = (int) (time / 60000);
+        int seconds = (int) (time / 1000 - minutes * 60);
         mh = minutes / 10;
         ml = minutes % 10;
         sh = seconds / 10;
