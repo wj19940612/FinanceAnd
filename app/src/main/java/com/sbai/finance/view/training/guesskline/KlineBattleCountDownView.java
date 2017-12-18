@@ -61,8 +61,7 @@ public class KlineBattleCountDownView extends LinearLayout {
             totalTime = 99 * 60 + 59;
         }
         mTotalTime = totalTime;
-        final Handler mHandler = new Handler(Looper.getMainLooper());
-        mHandler.postDelayed(new Runnable() {
+        mMinuteHigh.postDelayed(new Runnable() {
             @Override
             public void run() {
                 setRemainTime(mTotalTime);
@@ -76,7 +75,7 @@ public class KlineBattleCountDownView extends LinearLayout {
                 if (mTotalTime < 0) {
                     mTotalTime = 0;
                 }
-                mHandler.postDelayed(this, 1000);
+                mMinuteHigh.postDelayed(this, 1000);
             }
         }, 0);
     }

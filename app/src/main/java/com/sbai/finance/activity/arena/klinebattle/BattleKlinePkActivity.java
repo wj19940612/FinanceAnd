@@ -131,9 +131,13 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
             return;
         }
         if (type.equalsIgnoreCase(BattleKline.BUY)) {
+            mKlineView.getLastData().setMark(BattleKlineData.MARK_BUY);
             mOperateView.buySuccess();
         } else if (type.equalsIgnoreCase(BattleKline.SELL)) {
+            mKlineView.getLastData().setMark(BattleKlineData.MARK_SELL);
             mOperateView.clearSuccess();
+        } else {
+            mKlineView.getLastData().setMark(BattleKlineData.MARK_PASS);
         }
         if (data.getStatus() == BattleKline.STATUS_END) {
             mOperateView.complete();
