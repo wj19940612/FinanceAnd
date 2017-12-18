@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.activity.arena.KlinePracticeResultActivity;
+import com.sbai.finance.model.ImageFloder;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.model.local.SysTime;
@@ -63,7 +64,7 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
         if (mBattleKline.getEndTime() == 0) {
             mBattleKline.setEndTime(SysTime.getSysTime().getSystemTimestamp() + 2 * 60 * 1000);
         }
-        int totalTime = (int) ((mBattleKline.getEndTime() - SysTime.getSysTime().getSystemTimestamp()) / 1000);
+        long totalTime = ((mBattleKline.getEndTime() - SysTime.getSysTime().getSystemTimestamp()));
         mCountdown.setTotalTime(totalTime, new KlineBattleCountDownView.OnCountDownListener() {
             @Override
             public void finish() {
@@ -93,14 +94,6 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
         if (mCurrentIndex + 1 < mBattleUserMarkList.size()) {
             BattleKlineData positionKlineData = null;
             BattleKlineData nextKlineData = mBattleUserMarkList.get(mCurrentIndex + 1);
-            if (type.equalsIgnoreCase(BattleKline.BUY)) {
-                mKlineView.getLastData().setMark(BattleKlineData.MARK_BUY);
-            } else if (type.equalsIgnoreCase(BattleKline.SELL)) {
-                mKlineView.getLastData().setMark(BattleKlineData.MARK_SELL);
-            } else {
-                mKlineView.getLastData().setMark(BattleKlineData.MARK_PASS);
-            }
-            mKlineView.addKlineData(nextKlineData);
             if (type.equalsIgnoreCase(BattleKline.PASS)) {
                 if (mPositionIndex > -1) {
                     positionKlineData = mBattleUserMarkList.get(mPositionIndex);
@@ -112,18 +105,30 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
                 double positionProfit = (nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice();
                 mOperateView.setPositionProfit(positionProfit);
                 mOperateView.setTotalProfit(positionProfit + mOperateView.getTotalProfit());
+                if (mPositionIndex > -1) {
+                    nextKlineData.setPositions(positionProfit);
+                }
             }
             if (type.equalsIgnoreCase(BattleKline.BUY)) {
                 mPositionIndex = mCurrentIndex;
+                mKlineView.getLastData().setMark(BattleKlineData.MARK_BUY);
                 mOperateView.buySuccess();
             } else if (type.equalsIgnoreCase(BattleKline.SELL)) {
+                mKlineView.getLastData().setMark(BattleKlineData.MARK_SELL);
                 mPositionIndex = -1;
                 mOperateView.clearSuccess();
+            } else {
+                if (mPositionIndex > -1) {
+                    mKlineView.getLastData().setMark(BattleKlineData.MARK_HOLD_PASS);
+                } else {
+                    mKlineView.getLastData().setMark(BattleKlineData.MARK_PASS);
+                }
             }
             if (mCurrentIndex == mBattleUserMarkList.size() - 2) {
                 battleFinish();
                 return;
             }
+            mKlineView.addKlineData(nextKlineData);
             mCurrentIndex = mCurrentIndex + 1;
             mRemainKlineAmount = mRemainKlineAmount - 1;
             setRemainKline();

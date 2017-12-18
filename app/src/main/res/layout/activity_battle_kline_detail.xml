@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#100E19"
     android:orientation="vertical">
 
-    <include
+    <com.sbai.finance.view.TitleBar
         android:id="@+id/title"
-        layout="@layout/layout_guess_kline_title"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentTop="true"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#1A1729"
+        android:fitsSystemWindows="true"
+        app:backFeature="true"
+        app:backIcon="@drawable/ic_tb_back_white"
+        app:customView="@layout/layout_guess_kline_title"/>
+
 
     <com.sbai.finance.view.training.guesskline.AgainstProfitView
         android:id="@+id/againstProfit"
