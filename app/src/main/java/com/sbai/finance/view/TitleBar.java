@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -19,7 +20,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.sbai.finance.R;
+import com.sbai.glide.GlideApp;
 
 public class TitleBar extends RelativeLayout {
 
@@ -290,9 +294,22 @@ public class TitleBar extends RelativeLayout {
             mRightView.setCompoundDrawablePadding(8);
             mRightView.setCompoundDrawablesWithIntrinsicBounds(null, null, mRightTextRightImage, null);
         }
-
     }
 
+    public void setRightTextRightImage(String rightViewContent) {
+        if (!TextUtils.isEmpty(rightViewContent)) {
+            GlideApp.with(getContext())
+                    .load(rightViewContent)
+                    .into(new SimpleTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                            if (resource != null) {
+                                setRightTextRightImage(resource);
+                            }
+                        }
+                    });
+        }
+    }
 
     public void setRightVisible(boolean rightVisible) {
         mRightVisible = rightVisible;
@@ -337,4 +354,5 @@ public class TitleBar extends RelativeLayout {
     public View getCustomView() {
         return mCustomView;
     }
+
 }

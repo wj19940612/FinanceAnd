@@ -16,6 +16,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.SslErrorHandler;
@@ -30,6 +31,7 @@ import android.widget.ProgressBar;
 import com.sbai.finance.AppJs;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.model.system.JsModel;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.image.ImageUtils;
@@ -75,6 +77,8 @@ public class WebActivity extends BaseActivity {
 
     private BroadcastReceiver mNetworkChangeReceiver;
     private WebViewClient mWebViewClient;
+    private AppJs mAppJs;
+    private JsModel mJsModel;
 
     public TitleBar getTitleBar() {
         return mTitleBar;
@@ -113,6 +117,18 @@ public class WebActivity extends BaseActivity {
                 mWebView.scrollTo(0, 0);
             }
         });
+
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: 2017/12/18 先写死分享
+                if (mJsModel != null) {
+                    if (mAppJs != null) {
+                        mAppJs.openShareDialog(mJsModel.getTitle(), mJsModel.getDescription(), mJsModel.getShareUrl(), mJsModel.getShareThumbnailUrl());
+                    }
+                }
+            }
+        });
     }
 
     private void initLoginReceiver() {
@@ -131,7 +147,12 @@ public class WebActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mWebView.clearHistory();
+        ((ViewGroup) mWebView.getParent()).removeView(mWebView);
+        mWebView.removeAllViews();
         mWebView.destroy();
+        mWebView = null;
+        mAppJs = null;
         LocalBroadcastManager.getInstance(getActivity())
                 .unregisterReceiver(mLoginReceiver);
     }
@@ -205,7 +226,8 @@ public class WebActivity extends BaseActivity {
         mWebView.clearFormData();
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mWebView.setDrawingCacheEnabled(true);
-        mWebView.addJavascriptInterface(new AppJs(this), "AppJs");
+        mAppJs = new AppJs(this);
+        mWebView.addJavascriptInterface(mAppJs, "AppJs");
 
         if (!isFlyme()) {     //魅族max 一旦打开web页面 应用的动画就会出问题  并且max4使用
             if (Build.VERSION.SDK_INT >= 19) {
@@ -334,6 +356,19 @@ public class WebActivity extends BaseActivity {
         return "<html>" + head + bodyHTML + "</html>";
     }
 
+    public void controlTitleBarRightView(boolean rightViewIsShow, int type, String rightViewContent, JsModel content) {
+        mTitleBar.setRightVisible(rightViewIsShow);
+        mTitleBar.setRightViewEnable(rightViewIsShow);
+        switch (type) {
+            case AppJs.MULTIPART_TEXT:
+                mTitleBar.setRightText(rightViewContent);
+                break;
+            case AppJs.MULTIPART_IMAGE:
+                mTitleBar.setRightTextRightImage(rightViewContent);
+                break;
+        }
+    }
+
     protected class WebViewClient extends android.webkit.WebViewClient {
 
         @Override
@@ -378,7 +413,7 @@ public class WebActivity extends BaseActivity {
             } else {
                 mTitleBar.setTitle(mTitle);
             }
-            if (!mUrlSet.contains(url)) {
+            if (!mUrlSet.isEmpty() && !mUrlSet.contains(url)) {
                 hideRightView();
             }
         }
