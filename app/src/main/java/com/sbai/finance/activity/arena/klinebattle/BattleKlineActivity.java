@@ -342,6 +342,7 @@ public class BattleKlineActivity extends BaseActivity {
                                             .setPositive(R.string.go_to_see, new SmartDialog.OnClickListener() {
                                                 @Override
                                                 public void onClick(Dialog dialog) {
+                                                    dialog.dismiss();
                                                     Launcher.with(getActivity(), BattleKlinePkActivity.class)
                                                             .putExtra(ExtraKeys.GUESS_TYPE, type)
                                                             .execute();
@@ -351,8 +352,19 @@ public class BattleKlineActivity extends BaseActivity {
                                             .setNegativeVisible(View.GONE)
                                             .show();
                                 } else if (resp.getData().getStatus() == BattleKline.STATUS_END) {
-                                    showStartMatchDialog(type);
-//                                    Launcher.with(getActivity(), KLineResultActivity.class).execute();
+                                    SmartDialog.single(getActivity(), getString(R.string.you_have_batting_please_go_to_see))
+                                            .setPositive(R.string.go_to_see, new SmartDialog.OnClickListener() {
+                                                @Override
+                                                public void onClick(Dialog dialog) {
+                                                    dialog.dismiss();
+                                                    Launcher.with(getActivity(), BattleKlineReviewActivity.class)
+                                                            .putExtra(ExtraKeys.GUESS_TYPE, type)
+                                                            .execute();
+                                                }
+                                            })
+                                            .setCancelableOnTouchOutside(false)
+                                            .setNegativeVisible(View.GONE)
+                                            .show();
                                 }
                             }
                         }

@@ -3359,7 +3359,7 @@ public class Client {
     }
 
     public static API requestKlineRankData() {
-        return new API(POST, "/api/game-bat/battle/userrank",new ApiParams().put("userId",1070));
+        return new API(POST, "/api/game-bat/battle/userrank", new ApiParams().put("userId", 1070));
     }
 
     public static API requestKlineBattleResult() {
@@ -3485,4 +3485,12 @@ public class Client {
     public static API requestKlineBattleMyRecord() {
         return new API("/api/game-bat/battle/userbattle.do");
     }
+
+    /**
+     * 复盘
+     */
+    public static API requestKlineBattleReview() {
+        return new API("/api/game-bat/battle/replica.do");
+    }
+
 }
