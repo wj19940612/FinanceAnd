@@ -738,7 +738,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                         } else {
                             Launcher.with(context, LookBigPictureActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, userPortrait)
-                                    .putExtra(Launcher.EX_PAYLOAD_2, 0)
                                     .execute();
                         }
                     }

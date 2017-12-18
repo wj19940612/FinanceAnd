@@ -304,7 +304,7 @@ public class RewardMissActivity extends BaseActivity {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        Launcher.with(getActivity(), UpdateSecurityPassActivity.class).putExtra(Launcher.EX_PAYLOAD, false).execute();
+                        Launcher.with(getActivity(), UpdateSecurityPassActivity.class).putExtra(Launcher.EX_PAYLOAD, false).executeForResult(UpdateSecurityPassActivity.REQ_CODE_SET_SECURITY_PASS);
                     }
                 }).show();
     }
@@ -357,10 +357,18 @@ public class RewardMissActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == SecurityCenterActivity.REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT) {
-            boolean booleanExtra = data.getBooleanExtra(Launcher.EX_PAYLOAD, false);
-            mIsAllowAvoidClosePay = booleanExtra;
-            changeSmallFreePayHintViewStatus(mIsAllowAvoidClosePay);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case SecurityCenterActivity.REQ_CODE_ALLOW_SMALL_NO_SECRET_PAYMENT:
+                    boolean booleanExtra = data.getBooleanExtra(Launcher.EX_PAYLOAD, false);
+                    mIsAllowAvoidClosePay = booleanExtra;
+                    changeSmallFreePayHintViewStatus(mIsAllowAvoidClosePay);
+                    break;
+                case UpdateSecurityPassActivity.REQ_CODE_SET_SECURITY_PASS:
+                    requestUserHasSafetyPass();
+                    break;
+            }
+
         }
     }
 }

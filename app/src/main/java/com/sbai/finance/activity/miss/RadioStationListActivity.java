@@ -194,7 +194,6 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
                 if (mRadioInfo == null) return;
                 Launcher.with(getActivity(), LookBigPictureActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, mRadioInfo.getRadioCover())
-                        .putExtra(Launcher.EX_PAYLOAD_2, 0)
                         .execute();
             }
         });
