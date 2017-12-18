@@ -13,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,18 +20,19 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.fragment.battle.KlineMeleeRankFragment;
 import com.sbai.finance.fragment.battle.KlineOneByOneRankFragment;
-import com.sbai.finance.fragment.miss.MissProfileQuestionFragment;
-import com.sbai.finance.fragment.miss.MissProfileRadioFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineRank;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.slidingTab.SlidingTabTitle;
 import com.sbai.glide.GlideApp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2017\12\12 0012.
@@ -258,6 +258,17 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
             }
         }
     };
+
+    @OnClick(R.id.avatar)
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.avatar:
+                if (mKlineRank != null)
+                    Launcher.with(this, LookBigPictureActivity.class).putExtra(Launcher.EX_PAYLOAD, mKlineRank.getUserRank1v1().getUserPortrait())
+                            .execute();
+                break;
+        }
+    }
 
     public static class PagerAdapter extends FragmentPagerAdapter {
 
