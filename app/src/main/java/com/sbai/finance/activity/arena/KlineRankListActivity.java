@@ -134,8 +134,7 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mTabLayout.setTabLeftAndRightMargin((int) Display.dp2Px(80, getResources()));
-        mTabLayout.setPadding(Display.dp2Px(10, getResources()));
-        mTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(15, getResources()));
+        mTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(25, getResources()));
         mTabLayout.setSelectedIndicatorHeight(3);
         mTabLayout.setTabViewTextSize(16);
         mTabLayout.setSelectedIndicatorColors(Color.WHITE);
