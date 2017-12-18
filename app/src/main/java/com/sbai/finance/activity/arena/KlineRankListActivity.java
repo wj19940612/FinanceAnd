@@ -87,6 +87,7 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kline_rank_list);
         ButterKnife.bind(this);
+        translucentStatusBar();
         initView();
         refreshData();
     }
