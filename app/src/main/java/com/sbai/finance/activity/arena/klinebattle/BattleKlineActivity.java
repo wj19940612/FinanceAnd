@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.arena.KLineResultActivity;
 import com.sbai.finance.activity.arena.KlineRankListActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -290,8 +291,7 @@ public class BattleKlineActivity extends BaseActivity {
                 }
                 break;
             case R.id.rank:
-                Launcher.with(getActivity(), KlineRankListActivity.class)
-                        .execute();
+                judgeCurrentBattle(BattleKline.TYPE_EXERCISE);
                 break;
         }
     }
@@ -335,7 +335,11 @@ public class BattleKlineActivity extends BaseActivity {
                         @Override
                         protected void onRespSuccess(Resp<BattleKline.BattleBean> resp) {
                             if (resp.getData() == null) {
-                                showStartMatchDialog(type);
+                                if (type.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
+                                    Launcher.with(getActivity(), SingleKlineExerciseActivity.class).execute();
+                                } else {
+                                    showStartMatchDialog(type);
+                                }
                             } else {
                                 if (resp.getData().getStatus() == BattleKline.STATUS_BATTLEING) {
                                     SmartDialog.single(getActivity(), getString(R.string.you_have_batting_please_go_to_see))
@@ -357,7 +361,7 @@ public class BattleKlineActivity extends BaseActivity {
                                                 @Override
                                                 public void onClick(Dialog dialog) {
                                                     dialog.dismiss();
-                                                    Launcher.with(getActivity(), BattleKlineReviewActivity.class)
+                                                    Launcher.with(getActivity(), KLineResultActivity.class)
                                                             .putExtra(ExtraKeys.GUESS_TYPE, type)
                                                             .execute();
                                                 }
@@ -428,6 +432,7 @@ public class BattleKlineActivity extends BaseActivity {
     }
 
     private void showCancelMatchDialog(final String type) {
+        final boolean showMatchedAmount = type.equalsIgnoreCase(BattleKline.TYPE_4V4);
         SmartDialog.single(getActivity(), getString(R.string.cancel_tip))
                 .setTitle(getString(R.string.cancel_matching))
                 .setCancelableOnTouchOutside(false)
@@ -442,7 +447,13 @@ public class BattleKlineActivity extends BaseActivity {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
-                        showStartMatchDialog(type);
+                        mStartMatchDialog = StartMatchDialog.get(getActivity(), new StartMatchDialog.OnCancelListener() {
+                            @Override
+                            public void onCancel() {
+                                StartMatchDialog.dismiss(getActivity());
+                                showCancelMatchDialog(type);
+                            }
+                        }, showMatchedAmount);
                     }
                 })
                 .show();
