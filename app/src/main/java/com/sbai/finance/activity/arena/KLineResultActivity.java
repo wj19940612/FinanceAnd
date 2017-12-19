@@ -78,11 +78,11 @@ public class KLineResultActivity extends BaseActivity {
         mResultAdapter = new ResultAdapter(this);
         mResultAdapter.setOnMoreClickListener(new ResultAdapter.OnMoreClickListener() {
             @Override
-            public void onMoreClick() {
+            public void onMoreClick(int userId) {
                 Launcher.with(KLineResultActivity.this, BattleKlineReviewActivity.class)
                         .putExtra(ExtraKeys.GUESS_TYPE, mGoinType)
+                        .putExtra(ExtraKeys.USER_ID,userId)
                         .execute();
-                finish();
             }
         });
         mListView.setAdapter(mResultAdapter);
@@ -128,7 +128,7 @@ public class KLineResultActivity extends BaseActivity {
 
     static class ResultAdapter extends ArrayAdapter<KlineBattleResult.Ranking> {
         interface OnMoreClickListener {
-            public void onMoreClick();
+            public void onMoreClick(int userId);
         }
 
         private Context mContext;
@@ -182,7 +182,7 @@ public class KLineResultActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(KlineBattleResult.Ranking data, Context context, int position, int count, final OnMoreClickListener onMoreClickListener) {
+            public void bindDataWithView(final KlineBattleResult.Ranking data, Context context, int position, int count, final OnMoreClickListener onMoreClickListener) {
                 if (data == null) return;
                 mRank.setText(String.valueOf(position + 1));
                 GlideApp.with(context).load(data.getUserPortrait())
@@ -205,7 +205,7 @@ public class KLineResultActivity extends BaseActivity {
                     @Override
                     public void onClick(View view) {
                         if (onMoreClickListener != null) {
-                            onMoreClickListener.onMoreClick();
+                            onMoreClickListener.onMoreClick(data.getUserId());
                         }
                     }
                 });
