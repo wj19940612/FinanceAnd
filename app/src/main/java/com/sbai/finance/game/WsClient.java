@@ -10,9 +10,9 @@ import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 import com.sbai.finance.BuildConfig;
-import com.sbai.finance.net.API;
 import com.sbai.finance.game.callback.OnPushReceiveListener;
 import com.sbai.finance.game.callback.WSCallback;
+import com.sbai.finance.net.API;
 import com.sbai.httplib.CookieManger;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class WsClient implements AbsWsClient {
+public class WsClient implements WsConnector {
 
     private static final String TAG = "WebSocket";
     private static final String HEAD_PROTOCOL = BuildConfig.FLAVOR.equalsIgnoreCase("dev") ? "ws://" : "wss://";

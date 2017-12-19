@@ -194,7 +194,7 @@
                             android:textSize="15sp"
                             tools:text="股票按市场不同可分为"/>
 
-                        <com.sbai.finance.view.MyListView
+                        <com.sbai.finance.view.NoScrollListView
                             android:id="@+id/listView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

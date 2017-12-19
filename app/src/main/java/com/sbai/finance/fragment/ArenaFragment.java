@@ -1,5 +1,7 @@
 package com.sbai.finance.fragment;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -14,8 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
+import com.sbai.finance.activity.TestActivity;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.arena.RewardActivity;
+import com.sbai.finance.activity.arena.klinebattle.BattleKlineActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
@@ -47,7 +51,8 @@ import butterknife.Unbinder;
 public class ArenaFragment extends BaseFragment {
 
     private static final int BREATHE_ANIMATION_DURATION = 1500;
-
+    @BindView(R.id.titleBar)
+    TitleBar mTitleBar;
     @BindView(R.id.avatar)
     ImageView mAvatar;
     @BindView(R.id.nameAndIngot)
@@ -56,22 +61,55 @@ public class ArenaFragment extends BaseFragment {
     TextView mTextArenaKnowledge;
     @BindView(R.id.iconArenaKnowledge)
     ImageView mIconArenaKnowledge;
-    @BindView(R.id.stairHalo)
-    ImageView mStairHalo;
+    @BindView(R.id.klineBattle)
+    OnTouchAlphaChangeImageView mKlineBattle;
     @BindView(R.id.moneyRewardArena)
     OnTouchAlphaChangeImageView mMoneyRewardArena;
     @BindView(R.id.generalBattleBanner)
     OnTouchAlphaChangeImageView mGeneralBattleBanner;
-    @BindView(R.id.titleBar)
-    TitleBar mTitleBar;
-    private Unbinder mBind;
+    Unbinder mBinder;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_arena, container, false);
-        mBind = ButterKnife.bind(this, view);
+        mBinder = ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mTitleBar.setOnTitleBarClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Launcher.with(getActivity(), TestActivity.class).execute();
+            }
+        });
+
+        // TODO: 2017/12/19 增加入口 
+        mTitleBar.setRightVisible(true);
+        mTitleBar.setRightViewEnable(true);
+        mTitleBar.setRightText("活动入口");
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, Client.ACTIVITY_URL_GUESS_HAPPY)
+                        .putExtra(WebActivity.TITLE_BAR_BACKGROUND, ContextCompat.getColor(getActivity(), R.color.guessKlinePrimary))
+                        .putExtra(WebActivity.TITLE_BAR_BACK_ICON, R.drawable.ic_tb_back_white)
+                        .putExtra(WebActivity.TITLE_BAR_HAS_BOTTOM_SPLIT_LINE, false)
+                        .putExtra(WebActivity.TITLE_BAR_CENTER_TITLE_COLOR, ColorStateList.valueOf(Color.WHITE))
+                        .execute();
+            }
+        });
+
+//        Log.d(TAG, "onActivityCreated: "+BuildConfig.FLAVOR);
+//        if (!BuildConfig.FLAVOR.equalsIgnoreCase("dev") || !BuildConfig.FLAVOR.equalsIgnoreCase("alpha") || !BuildConfig.FLAVOR.equalsIgnoreCase("product")) {
+//            mTitleBar.setRightViewEnable(false);
+//            mTitleBar.setRightVisible(false);
+//        }
     }
 
     @Override
@@ -81,7 +119,7 @@ public class ArenaFragment extends BaseFragment {
         updateUserStatus();
     }
 
-    private void updateArenaActivityStatus() {
+    private void requestArenaActivityStatus() {
         Client.requestArenaInfo(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -117,7 +155,6 @@ public class ArenaFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mStairHalo.clearAnimation();
     }
 
     private void startBreatheAnimation() {
@@ -126,18 +163,17 @@ public class ArenaFragment extends BaseFragment {
         alphaAnimation.setRepeatMode(Animation.REVERSE);
         alphaAnimation.setDuration(BREATHE_ANIMATION_DURATION);
         alphaAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        mStairHalo.startAnimation(alphaAnimation);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mBind.unbind();
+        mBinder.unbind();
     }
 
 
     @OnClick({R.id.textArenaKnowledge, R.id.iconArenaKnowledge, R.id.moneyRewardArena,
-            R.id.generalBattleBanner, R.id.nameAndIngot, R.id.avatar})
+            R.id.generalBattleBanner, R.id.nameAndIngot, R.id.avatar, R.id.klineBattle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.textArenaKnowledge:
@@ -147,9 +183,13 @@ public class ArenaFragment extends BaseFragment {
                         .putExtra(WebActivity.EX_URL, Client.ARENA_KNOWLEDGE)
                         .execute();
                 break;
+            case R.id.klineBattle:
+                Launcher.with(getActivity(), BattleKlineActivity.class)
+                        .execute();
+                break;
             case R.id.moneyRewardArena:
                 umengEventCount(UmengCountEventId.ARENA_MRPK);
-                updateArenaActivityStatus();
+                requestArenaActivityStatus();
                 break;
             case R.id.generalBattleBanner:
                 umengEventCount(UmengCountEventId.ARENA_FUTURE_PK);

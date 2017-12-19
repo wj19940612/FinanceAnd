@@ -25,6 +25,15 @@ public class KlineViewData implements Parcelable {
     private String time;
     private long timeStamp;
 
+    public KlineViewData(KlineViewData klineViewData) {
+        this.closePrice = klineViewData.getClosePrice();
+        this.maxPrice = klineViewData.getMaxPrice();
+        this.minPrice = klineViewData.getMinPrice();
+        this.openPrice = klineViewData.getOpenPrice();
+        this.nowVolume = klineViewData.getNowVolume();
+        this.day = klineViewData.getDay();
+    }
+
     // local cache data
     private SparseArray<Float> movingAverages;
 
@@ -67,11 +76,18 @@ public class KlineViewData implements Parcelable {
         movingAverages.put(movingAverageKey, Float.valueOf(movingAverageValue));
     }
 
-    public float getMovingAverage(int movingAverageKey) {
+    public Float getMovingAverage(int movingAverageKey) {
         if (movingAverages != null) {
-            Float movingAverageValue = movingAverages.get(movingAverageKey);
-            if (movingAverageValue != null) {
-                return movingAverageValue.floatValue();
+            return movingAverages.get(movingAverageKey);
+        }
+        return null;
+    }
+
+    public float getMovingAverageValue(int movingAverageKey) {
+        if (movingAverages != null) {
+            Float aFloat = movingAverages.get(movingAverageKey);
+            if (aFloat != null) {
+                return aFloat.floatValue();
             }
             return 0f;
         }
@@ -124,15 +140,4 @@ public class KlineViewData implements Parcelable {
         this.movingAverages = in.readSparseArray(Float.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<KlineViewData> CREATOR = new Parcelable.Creator<KlineViewData>() {
-        @Override
-        public KlineViewData createFromParcel(Parcel source) {
-            return new KlineViewData(source);
-        }
-
-        @Override
-        public KlineViewData[] newArray(int size) {
-            return new KlineViewData[size];
-        }
-    };
 }

@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sbai.chart.ColorCfg;
 import com.sbai.chart.KlineChart;
 import com.sbai.chart.KlineView;
 import com.sbai.chart.TrendView;
@@ -59,11 +60,11 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.BattleOperateView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -804,7 +805,11 @@ public class BattleActivity extends BaseActivity {
         settings.setDisplayMarketTimes(mVariety.getDisplayMarketTimes());
         settings.setLimitUpPercent((float) mVariety.getLimitUpPercent());
         settings.setCalculateXAxisFromOpenMarketTime(true);
-        settings.setGameMode(true);
+        settings.setColorCfg(new ColorCfg()
+                .put(new String[]{ColorCfg.DASH_LINE, ColorCfg.UNSTABLE_PRICE_BG, ColorCfg.REAL_TIME_LINE,
+                        ColorCfg.TOUCH_LINE_TXT_BG, ColorCfg.TOUCH_LINE}, "#ffffff")
+                .put(new String[]{ColorCfg.UNSTABLE_PRICE, ColorCfg.TOUCH_LINE_TXT}, "#000000")
+                .put(ColorCfg.BASE_LINE, "#362d4d"));
         mTrendView.setSettings(settings);
 
         KlineChart.Settings settings2 = new KlineChart.Settings();
@@ -812,8 +817,11 @@ public class BattleActivity extends BaseActivity {
         settings2.setNumberScale(mVariety.getPriceScale());
         settings2.setXAxis(40);
         settings2.setIndexesType(KlineChart.Settings.INDEXES_VOL);
-        settings2.setGameMode(true);
+        settings2.setColorCfg(new ColorCfg()
+                .put(ColorCfg.BASE_LINE, "#362d4d")
+                .put(ColorCfg.TOUCH_LINE, "#ffffff"));
         mKlineView.setSettings(settings2);
+        mKlineView.scaleSideBarText(0.7f);
         mKlineView.setOnReachBorderListener(new KlineView.OnReachBorderListener() {
             @Override
             public void onReachLeftBorder(KlineViewData theLeft, List<KlineViewData> dataList) {
@@ -1022,7 +1030,7 @@ public class BattleActivity extends BaseActivity {
                 StartMatchDialog.dismiss(getActivity());
                 showCancelMatchDialog();
             }
-        });
+        },false);
     }
 
     private void showCancelMatchDialog() {

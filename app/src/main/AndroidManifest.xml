@@ -229,6 +229,9 @@
             android:name=".activity.web.BannerActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.web.LocalImageHtmlActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.web.HideTitleWebActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -420,9 +423,6 @@
             android:name=".activity.home.BroadcastListActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.battle.BattleRuleActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.trade.trade.StockOrderActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -444,6 +444,37 @@
         <activity
             android:name=".activity.miss.MissRecordAudioReplyActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.arena.KlineRankListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.KLineResultActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.KlinePracticeResultActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.arena.klinebattle.BattleKlineActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.klinebattle.BattleKlineDetailActivity"/>
+        <activity
+            android:name=".activity.arena.klinebattle.SingleKlineExerciseActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.klinebattle.BattleKlinePkActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.arena.klinebattle.BattleKlineReviewActivity"
+            android:screenOrientation="portrait"/>
+        <!-- TEST-->
+        <activity
+            android:name=".activity.TestActivity"
             android:screenOrientation="portrait"/>
     </application>
 

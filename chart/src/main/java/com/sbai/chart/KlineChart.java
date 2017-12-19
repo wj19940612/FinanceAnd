@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 
@@ -20,18 +21,12 @@ import java.util.List;
 public class KlineChart extends ChartView {
 
     private static final int CANDLES_WIDTH_DP = 6; //dp
-    private static final int BUTTONS_AREA_WIDTH = 80; //dp
 
     private static final String MA_BLUE = "#6a96ef";
     private static final String MA_PURPLE = "#dc6aef";
     private static final String MA_YELLOW = "#efc86a";
 
-    private static final String GAME_BASELINE = "#362d4d";
-
     public static final String DATE_FORMAT_DAY_MIN = "HH:mm";
-
-    private static final String BASE_LINE = "baseLine";
-    private static final String TOUCH_LINE = "touchLine";
 
     private List<KlineViewData> mDataList;
     private SparseArray<KlineViewData> mVisibleList;
@@ -49,15 +44,19 @@ public class KlineChart extends ChartView {
 
     // visible points index range
     private int mStart;
-    private int mLength;
     private int mEnd;
+    private int mLength;
+
     private float mCandleWidth;
-    private float mMaxBaseLine;
-    private float mMinBaseLine;
     private boolean mInitData;
 
     public KlineChart(Context context) {
         super(context);
+        init();
+    }
+
+    public KlineChart(Context context, AttributeSet attrs) {
+        super(context, attrs);
         init();
     }
 
@@ -72,7 +71,7 @@ public class KlineChart extends ChartView {
     }
 
     @Override
-    protected boolean enableMovingAverages() {
+    protected boolean enableCalculateMovingAverages() {
         return true;
     }
 
@@ -96,11 +95,29 @@ public class KlineChart extends ChartView {
         mCandleWidth = dp2Px(CANDLES_WIDTH_DP);
         mMovingAverages = new int[]{5, 10, 20};
 
-        mMaxBaseLine = Float.MIN_VALUE;
-        mMinBaseLine = Float.MAX_VALUE;
-
         mFirstVisibleIndex = Integer.MAX_VALUE;
         mLastVisibleIndex = Integer.MIN_VALUE;
+    }
+
+    protected int[] getMovingAverages() {
+        return mMovingAverages;
+    }
+
+    protected int getStart() {
+        return mStart;
+    }
+
+    protected int getEnd() {
+        return mEnd;
+    }
+
+    protected List<KlineViewData> getDataList() {
+        return mDataList;
+    }
+
+    public void addData(KlineViewData data) {
+        mDataList.add(data);
+        redraw();
     }
 
     public void setDataList(List<KlineViewData> dataList) {
@@ -153,7 +170,7 @@ public class KlineChart extends ChartView {
         paint.setPathEffect(null);
     }
 
-    private void setMovingAveragesPaint(Paint paint, int movingAverage) {
+    protected void setMovingAveragesPaint(Paint paint, int movingAverage) {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(1);
         paint.setPathEffect(null);
@@ -184,31 +201,14 @@ public class KlineChart extends ChartView {
         paint.setColor(Color.parseColor(ChartColor.BLACK.get()));
         paint.setStyle(Paint.Style.STROKE);
         paint.setPathEffect(null);
-        checkGameMode(paint, TOUCH_LINE);
+        applyColorConfiguration(paint, ColorCfg.TOUCH_LINE);
     }
 
-    protected void setRedRectBgPaint(Paint paint) {
+    protected void setTouchLineTextBgPaint(Paint paint) {
         paint.setColor(Color.parseColor(ChartView.ChartColor.RED.get()));
         paint.setStyle(Paint.Style.FILL);
         paint.setPathEffect(null);
-    }
-
-    @Override
-    protected void setBaseLinePaint(Paint paint) {
-        super.setBaseLinePaint(paint);
-        checkGameMode(paint, BASE_LINE);
-    }
-
-    private void checkGameMode(Paint paint, String tag) {
-        if (!mSettings.isGameMode()) return;
-
-        if (tag.equals(BASE_LINE)) {
-            paint.setColor(Color.parseColor(GAME_BASELINE));
-        }
-
-        if (tag.equals(TOUCH_LINE)) {
-            paint.setColor(Color.parseColor(ChartView.ChartColor.WHITE.get()));
-        }
+        applyColorConfiguration(paint, ColorCfg.TOUCH_LINE_TXT_BG);
     }
 
     private void calculateStartAndEndPosition() {
@@ -223,20 +223,14 @@ public class KlineChart extends ChartView {
     @Override
     protected void calculateMovingAverages(boolean indexesEnable) {
         if (mDataList != null && mDataList.size() > 0) {
-            float max = Float.MIN_VALUE;
-            float min = Float.MAX_VALUE;
             for (int movingAverage : mMovingAverages) {
                 for (int i = mStart; i < mEnd; i++) {
                     int start = i - movingAverage + 1;
                     if (start < 0) continue;
                     float movingAverageValue = calculateMovingAverageValue(start, movingAverage);
                     mDataList.get(i).addMovingAverage(movingAverage, movingAverageValue);
-                    if (max < movingAverageValue) max = movingAverageValue;
-                    if (min > movingAverageValue) min = movingAverageValue;
                 }
             }
-            mMaxBaseLine = max;
-            mMinBaseLine = min;
         }
     }
 
@@ -257,12 +251,20 @@ public class KlineChart extends ChartView {
     @Override
     protected void calculateBaseLines(float[] baselines) {
         if (mDataList != null && mDataList.size() > 0) {
-            float max = mMaxBaseLine;
-            float min = mMinBaseLine;
+            float max = Float.MIN_VALUE;
+            float min = Float.MAX_VALUE;
             for (int i = mStart; i < mEnd; i++) {
                 KlineViewData data = mDataList.get(i);
-                if (max < data.getMaxPrice()) max = data.getMaxPrice();
-                if (min > data.getMinPrice()) min = data.getMinPrice();
+                max = Math.max(max, data.getMaxPrice());
+                min = Math.min(min, data.getMinPrice());
+
+                for (int movingAverage : mMovingAverages) {
+                    Float movingAverageValue = mDataList.get(i).getMovingAverage(movingAverage);
+                    if (movingAverageValue != null) {
+                        max = Math.max(max, movingAverageValue.floatValue());
+                        min = Math.min(min, movingAverageValue.floatValue());
+                    }
+                }
             }
 
             float priceRange = BigDecimal.valueOf(max).subtract(new BigDecimal(min))
@@ -323,9 +325,9 @@ public class KlineChart extends ChartView {
             }
             for (int movingAverage : mMovingAverages) {
                 setMovingAveragesTextPaint(sPaint, movingAverage);
-                float movingAverageValue = data.getMovingAverage(movingAverage);
+                Float movingAverageValue = data.getMovingAverage(movingAverage);
                 String maText = "MA" + movingAverage + ":--";
-                if (movingAverageValue != 0) {
+                if (movingAverageValue != null) {
                     maText = "MA" + movingAverage + ":" + formatNumber(movingAverageValue);
                 }
                 float textWidth = sPaint.measureText(maText);
@@ -416,21 +418,22 @@ public class KlineChart extends ChartView {
                     drawIndexes(chartX, data, canvas);
                 }
             }
-            drawMovingAverageLines(canvas);
         }
     }
 
-    private void drawMovingAverageLines(Canvas canvas) {
+    @Override
+    protected void drawMovingAverageLines(boolean indexesEnable, int left, int top, int width, int topPartHeight,
+                                          int left1, int top2, int width1, int bottomPartHeight,
+                                          Canvas canvas) {
         for (int movingAverage : mMovingAverages) {
             setMovingAveragesPaint(sPaint, movingAverage);
             float startX = -1;
             float startY = -1;
             for (int i = mStart; i < mEnd; i++) {
-                int start = i - movingAverage + 1;
-                if (start < 0) continue;
+                Float movingAverageValue = mDataList.get(i).getMovingAverage(movingAverage);
+                if (movingAverageValue == null) continue;
                 float chartX = getChartXOfScreen(i);
-                float movingAverageValue = mDataList.get(i).getMovingAverage(movingAverage);
-                float chartY = getChartY(movingAverageValue);
+                float chartY = getChartY(movingAverageValue.floatValue());
                 if (startX == -1 && startY == -1) { // start
                     startX = chartX;
                     startY = chartY;
@@ -527,12 +530,12 @@ public class KlineChart extends ChartView {
         }
     }
 
-    private float getChartXOfScreen(int index) {
+    protected float getChartXOfScreen(int index) {
         index = index - mStart; // visible index 0 ~ 39
         return getChartX(index);
     }
 
-    private float getChartXOfScreen(int index, KlineViewData data) {
+    protected float getChartXOfScreen(int index, KlineViewData data) {
         index = index - mStart; // visible index 0 ~ 39
         updateFirstLastVisibleIndex(index);
         mVisibleList.put(index, data);
@@ -546,7 +549,7 @@ public class KlineChart extends ChartView {
 
     @Override
     protected float getChartX(int index) {
-        float offset = super.getChartX(1) / 2;
+        float offset = mCandleWidth / 2;
         float width = getWidth() - getPaddingLeft() - getPaddingRight() - mPriceAreaWidth;
         float chartX = getPaddingLeft() + index * width * 1.0f / mSettings.getXAxis();
         return chartX + offset;
@@ -554,7 +557,7 @@ public class KlineChart extends ChartView {
 
     @Override
     protected int getIndexOfXAxis(float chartX) {
-        float offset = super.getChartX(1) / 2;
+        float offset = mCandleWidth / 2;
         float width = getWidth() - getPaddingLeft() - getPaddingRight() - mPriceAreaWidth;
         chartX = chartX - offset - getPaddingLeft();
         return (int) (chartX * mSettings.getXAxis() / width);
@@ -598,9 +601,6 @@ public class KlineChart extends ChartView {
         mEnd = 0;
         mLength = 0;
         mVisibleList.clear();
-
-        mMaxBaseLine = Float.MIN_VALUE;
-        mMinBaseLine = Float.MAX_VALUE;
 
         mFirstVisibleIndex = Integer.MAX_VALUE;
         mLastVisibleIndex = Integer.MIN_VALUE;
@@ -663,7 +663,7 @@ public class KlineChart extends ChartView {
                 }
                 redRect.bottom = redRect.top + rectHeight;
                 redRect.right = redRect.left + rectWidth;
-                setRedRectBgPaint(sPaint);
+                setTouchLineTextBgPaint(sPaint);
                 canvas.drawRoundRect(redRect, 2, 2, sPaint);
                 float volumeY = redRect.top + rectHeight / 2 + mOffset4CenterBigText;
                 setTouchLineTextPaint(sPaint);
@@ -705,7 +705,6 @@ public class KlineChart extends ChartView {
         public static final int INDEXES_VOL = 1;
 
         private int indexesType;
-        private boolean mGameMode;
 
         public Settings() {
             super();
@@ -718,14 +717,6 @@ public class KlineChart extends ChartView {
 
         public void setIndexesType(int indexesType) {
             this.indexesType = indexesType;
-        }
-
-        public boolean isGameMode() {
-            return mGameMode;
-        }
-
-        public void setGameMode(boolean gameMode) {
-            mGameMode = gameMode;
         }
     }
 

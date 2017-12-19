@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
+    android:layout_width="347dp"
+    android:layout_height="126dp"
+    android:background="@drawable/bg_kline_result_top_one"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="23dp"
+        android:textStyle="bold"
+        android:textSize="36sp"/>
+
+    <TextView
+        android:id="@+id/rankTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rank"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="5dp"
+        android:textSize="20sp"/>
+
+
+</merge>

@@ -25,14 +25,23 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
+import com.sbai.finance.activity.web.LocalImageHtmlActivity;
+import com.sbai.finance.game.PushCode;
+import com.sbai.finance.game.WSMessage;
+import com.sbai.finance.game.WSPush;
+import com.sbai.finance.game.WsClient;
+import com.sbai.finance.game.callback.WSCallback;
+import com.sbai.finance.game.cmd.QuickMatch;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.FutureVersus;
 import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
+import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -47,12 +56,6 @@ import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.StartMatchDialog;
-import com.sbai.finance.game.PushCode;
-import com.sbai.finance.game.WSMessage;
-import com.sbai.finance.game.WSPush;
-import com.sbai.finance.game.WsClient;
-import com.sbai.finance.game.callback.WSCallback;
-import com.sbai.finance.game.cmd.QuickMatch;
 import com.sbai.glide.GlideApp;
 import com.sbai.httplib.BuildConfig;
 
@@ -247,7 +250,17 @@ public class BattleListActivity extends BaseActivity implements
     }
 
     private void lookBattleRule() {
-        Launcher.with(getActivity(), BattleRuleActivity.class).execute();
+        Client.getArticleProtocol(ArticleProtocol.PROTOCOL_BATTLE_ORDINARY).setTag(TAG)
+                .setCallback(new Callback2D<Resp<ArticleProtocol>, ArticleProtocol>() {
+                    @Override
+                    protected void onRespSuccessData(ArticleProtocol data) {
+                        Launcher.with(getActivity(), LocalImageHtmlActivity.class)
+                                .putExtra(WebActivity.EX_TITLE, getString(R.string.game_help))
+                                .putExtra(WebActivity.EX_HTML, data.getContent())
+                                .execute();
+                    }
+
+                }).fire();
     }
 
     private void lookBattleResult() {
@@ -722,7 +735,7 @@ public class BattleListActivity extends BaseActivity implements
                 StartMatchDialog.dismiss(BattleListActivity.this);
                 showCancelMatchDialog();
             }
-        });
+        }, false);
     }
 
     private void showCancelMatchDialog() {
