@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Picture;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -58,6 +60,11 @@ public class WebActivity extends BaseActivity {
     public static final String EX_URL = "url";
     public static final String EX_TITLE = "title";
     public static final String EX_HTML = "html";
+    public static final String TITLE_BAR_BACKGROUND = "title_bar_background";
+    public static final String TITLE_BAR_HAS_BOTTOM_SPLIT_LINE = "title_bar_has_bottom_split_line";
+    public static final String TITLE_BAR_BACK_ICON = "title_bar_back_icon";
+    public static final String TITLE_BAR_CENTER_TITLE_COLOR = "title_bar_center_title_color";
+
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -123,9 +130,7 @@ public class WebActivity extends BaseActivity {
             public void onClick(View view) {
                 // TODO: 2017/12/18 先写死分享
                 if (mJsModel != null) {
-                    if (mAppJs != null) {
-                        mAppJs.openShareDialog(mJsModel.getTitle(), mJsModel.getDescription(), mJsModel.getShareUrl(), mJsModel.getShareThumbnailUrl());
-                    }
+                    mAppJs.openShareDialog(mJsModel.getTitle(), mJsModel.getDescription(), mJsModel.getShareUrl(), mJsModel.getShareThumbnailUrl());
                 }
             }
         });
@@ -183,6 +188,19 @@ public class WebActivity extends BaseActivity {
         mPureHtml = intent.getStringExtra(EX_HTML);
         tryToFixPageUrl();
         mRootUrl = mPageUrl;
+
+        int titleBarBackground = intent.getIntExtra(TITLE_BAR_BACKGROUND, Color.WHITE);
+        boolean titleBarHasBottomSplitLine = intent.getBooleanExtra(TITLE_BAR_HAS_BOTTOM_SPLIT_LINE, true);
+        int backIcon = intent.getIntExtra(TITLE_BAR_BACK_ICON, -1);
+        ColorStateList colorStateList = intent.getParcelableExtra(TITLE_BAR_CENTER_TITLE_COLOR);
+        if (colorStateList != null) {
+            mTitleBar.setTitleColor(colorStateList);
+        }
+        if (backIcon != -1) {
+            mTitleBar.setBackButtonIcon(backIcon);
+        }
+        mTitleBar.setHasBottomSplitLine(titleBarHasBottomSplitLine);
+        mTitleBar.setBackgroundColor(titleBarBackground);
     }
 
     private void tryToFixPageUrl() {
@@ -357,6 +375,8 @@ public class WebActivity extends BaseActivity {
     }
 
     public void controlTitleBarRightView(boolean rightViewIsShow, int type, String rightViewContent, JsModel content) {
+        mUrlSet.add(mPageUrl);
+        mJsModel = content;
         mTitleBar.setRightVisible(rightViewIsShow);
         mTitleBar.setRightViewEnable(rightViewIsShow);
         switch (type) {
@@ -413,7 +433,7 @@ public class WebActivity extends BaseActivity {
             } else {
                 mTitleBar.setTitle(mTitle);
             }
-            if (!mUrlSet.isEmpty() && !mUrlSet.contains(url)) {
+            if (!mUrlSet.contains(url)) {
                 hideRightView();
             }
         }

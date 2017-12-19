@@ -206,6 +206,10 @@ public class TitleBar extends RelativeLayout {
         }
     }
 
+    public void setBackButtonIcon(int backIcon) {
+        mLeftView.setCompoundDrawablesWithIntrinsicBounds(backIcon, 0, 0, 0);
+    }
+
     public void setTitle(int resid) {
         CharSequence title = getContext().getText(resid);
         setTitle(title);
@@ -289,7 +293,7 @@ public class TitleBar extends RelativeLayout {
     }
 
     private void setRightTextRightImage(Drawable rightTextRightImage) {
-        if (mRightTextRightImage != null) {
+        if (rightTextRightImage != null) {
             mRightTextRightImage = rightTextRightImage;
             mRightView.setCompoundDrawablePadding(8);
             mRightView.setCompoundDrawablesWithIntrinsicBounds(null, null, mRightTextRightImage, null);
@@ -311,6 +315,7 @@ public class TitleBar extends RelativeLayout {
         }
     }
 
+
     public void setRightVisible(boolean rightVisible) {
         mRightVisible = rightVisible;
         mRightView.setVisibility(mRightVisible ? VISIBLE : INVISIBLE);
@@ -329,6 +334,7 @@ public class TitleBar extends RelativeLayout {
             mTitleView.setTextColor(ColorStateList.valueOf(Color.parseColor("#222222")));
         }
     }
+
 
     public void setRightTextColor(ColorStateList rightTextColor) {
         mRightTextColor = rightTextColor;
@@ -355,4 +361,8 @@ public class TitleBar extends RelativeLayout {
         return mCustomView;
     }
 
+    public void setHasBottomSplitLine(boolean hasBottomSplitLine) {
+        mHasBottomSplitLine = hasBottomSplitLine;
+        invalidate();
+    }
 }

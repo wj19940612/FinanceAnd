@@ -21,18 +21,17 @@ public class JsModel {
     }
 
     //分享内容
-    private String title;
-    private String description;
+    private String shareTitle;
+    private String shareContent;
     private String shareUrl;
-    private String shareThumbnailUrl;
-    private String shareChannel;
+    private String shareImage;
 
     public String getTitle() {
-        return title;
+        return shareTitle;
     }
 
     public String getDescription() {
-        return description;
+        return shareContent;
     }
 
     public String getShareUrl() {
@@ -40,10 +39,16 @@ public class JsModel {
     }
 
     public String getShareThumbnailUrl() {
-        return shareThumbnailUrl;
+        return shareImage ;
     }
 
-    public String getShareChannel() {
-        return shareChannel;
+    @Override
+    public String toString() {
+        return "JsModel{" +
+                "shareTitle='" + shareTitle + '\'' +
+                ", shareContent='" + shareContent + '\'' +
+                ", shareUrl='" + shareUrl + '\'' +
+                ", shareImage='" + shareImage + '\'' +
+                '}';
     }
 }

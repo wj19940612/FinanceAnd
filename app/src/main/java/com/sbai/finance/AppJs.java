@@ -14,6 +14,7 @@ import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
+import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
 import com.sbai.finance.model.stock.Stock;
 import com.sbai.finance.model.system.JsModel;
@@ -220,20 +221,29 @@ public class AppJs {
                 Launcher.with(mContext, SettingActivity.class).execute();
                 break;
             case JsOpenAppPageType.STOCK_DETAIL_PAGE:
-                Client.getStockInfo(id).setTag(TAG)
-                        .setCallback(new Callback<Resp<Stock>>() {
-                            @Override
-                            protected void onRespSuccess(Resp<Stock> resp) {
-                                Stock result = resp.getData();
-                                Launcher.with(mContext, StockDetailActivity.class)
-                                        .putExtra(Launcher.EX_PAYLOAD, result)
-                                        .execute();
-                            }
-                        }).fireFree();
+                requestStockDetail(id);
                 break;
 
         }
 
+    }
+
+    private void requestStockDetail(String id) {
+        Client.getStockInfo(id).setTag(TAG)
+                .setCallback(new Callback<Resp<Stock>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Stock> resp) {
+                        Stock result = resp.getData();
+                        if (result.getVarietyType().equalsIgnoreCase(Stock.EXPEND)) {
+                            Launcher.with(mContext, StockIndexActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, result).execute();
+                        } else {
+                            Launcher.with(mContext, StockDetailActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, result)
+                                    .execute();
+                        }
+                    }
+                }).fireFree();
     }
 
     @JavascriptInterface
