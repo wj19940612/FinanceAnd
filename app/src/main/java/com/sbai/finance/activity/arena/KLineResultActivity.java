@@ -21,7 +21,6 @@ import com.sbai.finance.activity.arena.klinebattle.BattleKlinePkActivity;
 import com.sbai.finance.activity.arena.klinebattle.BattleKlineReviewActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineBattleResult;
-import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -78,10 +77,12 @@ public class KLineResultActivity extends BaseActivity {
         mResultAdapter = new ResultAdapter(this);
         mResultAdapter.setOnMoreClickListener(new ResultAdapter.OnMoreClickListener() {
             @Override
-            public void onMoreClick(int userId) {
+            public void onMoreClick(KlineBattleResult.Ranking ranking) {
                 Launcher.with(KLineResultActivity.this, BattleKlineReviewActivity.class)
                         .putExtra(ExtraKeys.GUESS_TYPE, mGoinType)
-                        .putExtra(ExtraKeys.USER_ID,userId)
+                        .putExtra(ExtraKeys.USER_ID, ranking.getUserId())
+                        .putExtra(ExtraKeys.USER_NAME, ranking.getUserName())
+                        .putExtra(ExtraKeys.User_Portrait, ranking.getUserPortrait())
                         .execute();
             }
         });
@@ -128,7 +129,7 @@ public class KLineResultActivity extends BaseActivity {
 
     static class ResultAdapter extends ArrayAdapter<KlineBattleResult.Ranking> {
         interface OnMoreClickListener {
-            public void onMoreClick(int userId);
+            public void onMoreClick(KlineBattleResult.Ranking userId);
         }
 
         private Context mContext;
@@ -205,7 +206,7 @@ public class KLineResultActivity extends BaseActivity {
                     @Override
                     public void onClick(View view) {
                         if (onMoreClickListener != null) {
-                            onMoreClickListener.onMoreClick(data.getUserId());
+                            onMoreClickListener.onMoreClick(data);
                         }
                     }
                 });
