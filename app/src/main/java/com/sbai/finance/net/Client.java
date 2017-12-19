@@ -913,7 +913,7 @@ public class Client {
      * @return
      */
     public static API getGussStatus() {
-        return new API(POST,"/user/dictionary/findDictionaryForJson.do?type=stockDeal");
+        return new API(POST, "/user/dictionary/findDictionaryForJson.do?type=stockDeal");
     }
 
 
@@ -3500,8 +3500,9 @@ public class Client {
     /**
      * 复盘
      */
-    public static API requestKlineBattleReview() {
-        return new API("/api/game-bat/battle/replica.do");
+    public static API requestKlineBattleReview(int userId) {
+        return new API("/api/game-bat/battle/replica.do",
+                new ApiParams().put("userId", userId));
     }
 
 }

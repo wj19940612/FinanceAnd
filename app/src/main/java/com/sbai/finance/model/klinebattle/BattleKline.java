@@ -138,7 +138,7 @@ public class BattleKline implements Parcelable {
     public static class UserInfo {
         private int userId;
         private String userName;
-        private String userPortraits;
+        private String userPortrait;
 
         public int getUserId() {
             return userId;
@@ -157,11 +157,11 @@ public class BattleKline implements Parcelable {
         }
 
         public String getUserPortrait() {
-            return userPortraits;
+            return userPortrait;
         }
 
         public void setUserPortrait(String userPortrait) {
-            this.userPortraits = userPortrait;
+            this.userPortrait = userPortrait;
         }
     }
 
@@ -190,7 +190,16 @@ public class BattleKline implements Parcelable {
         private int userId;
         private String userName;
         private String userPortrait;
+        private BattleKlineData next;
         private List<UserInfo> userMatchList;
+
+        public BattleKlineData getNext() {
+            return next;
+        }
+
+        public void setNext(BattleKlineData next) {
+            this.next = next;
+        }
 
         public String getBattleType() {
             return battleType;

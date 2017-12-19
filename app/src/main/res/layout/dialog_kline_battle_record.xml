@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="6dp"
                 android:drawableRight="@drawable/ic_guess_kline_record_four"
-                android:text="@string/one_vs_one"
+                android:text="@string/four_pk"
                 android:textColor="#FEC022"
                 android:textSize="14sp"
                 android:textStyle="bold"/>

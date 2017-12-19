@@ -110,7 +110,7 @@ public class BattleKlineActivity extends BaseActivity {
         @Override
         public void onPushReceive(Object o, String originalData) {
             try {
-                BattleKline.BattleBean battleBean = new Gson().fromJson(o.toString(), BattleKline.BattleBean.class);
+                BattleKline.BattleBean battleBean = new Gson().fromJson(o.toString().replace("\\\\", ""), BattleKline.BattleBean.class);
                 if (battleBean != null) {
                     onBattleKlinePushReceived(battleBean);
                 }

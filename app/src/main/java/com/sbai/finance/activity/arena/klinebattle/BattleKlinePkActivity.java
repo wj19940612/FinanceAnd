@@ -5,10 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.activity.arena.KLineResultActivity;
-import com.sbai.finance.activity.arena.KlinePracticeResultActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
-import com.sbai.finance.model.klinebattle.BattleKlineOperate;
 import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.Callback2D;
@@ -18,7 +16,6 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.training.guesskline.KlineBattleCountDownView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -66,6 +63,7 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
         if (mBattleKline.getBattleStaList().size() > 0) {
             if (mBattleKline.getBattleStaList().get(0).getBattleStatus() == BattleKline.STATUS_END) {
                 battleFinish();
+                return;
             }
         }
         mKlineView.initKlineDataList(mBattleKline.getUserMarkList());
@@ -100,8 +98,10 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
         for (BattleKline.BattleBean item : mBattleStaList) {
             if (item.getUserId() == battleBean.getUserId()) {
                 item.setProfit(battleBean.getProfit());
+                item.setPositions(battleBean.getPositions());
             }
         }
+        updateLastProfitData();
     }
 
     private void updateLastProfitData() {
@@ -127,7 +127,7 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
         mAgainstProfit.setTotalProfit(mBattleStaList);
     }
 
-    private void updateMyLastOperateData(BattleKlineOperate data, String type) {
+    private void updateMyLastOperateData(BattleKline.BattleBean data, String type) {
         if (data.getBattleStatus() == BattleKline.STATUS_END) {
             battleFinish();
             return;
@@ -154,17 +154,18 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
                 mKlineView.addKlineData(data.getNext());
             }
         }
-        mOperateView.setTotalProfit(data.getProfit());
-        mOperateView.setPositionProfit(data.getPositions());
+        mRemainKlineAmount = mRemainKlineAmount - 1;
+        setRemainKline();
+        updateLastProfitData(data);
     }
 
     @Override
     protected void buyOperate() {
         Client.requestKlineBattleBuy().setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
+                .setCallback(new Callback2D<Resp<BattleKline.BattleBean>, BattleKline.BattleBean>() {
                     @Override
-                    protected void onRespSuccessData(BattleKlineOperate data) {
+                    protected void onRespSuccessData(BattleKline.BattleBean data) {
                         updateMyLastOperateData(data, BattleKline.BUY);
                     }
 
@@ -180,9 +181,9 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
     protected void clearOperate() {
         Client.requestKlineBattleSell().setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
+                .setCallback(new Callback2D<Resp<BattleKline.BattleBean>, BattleKline.BattleBean>() {
                     @Override
-                    protected void onRespSuccessData(BattleKlineOperate data) {
+                    protected void onRespSuccessData(BattleKline.BattleBean data) {
                         updateMyLastOperateData(data, BattleKline.SELL);
                     }
 
@@ -198,9 +199,9 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
     protected void passOperate() {
         Client.requestKlineBattlePass().setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
+                .setCallback(new Callback2D<Resp<BattleKline.BattleBean>, BattleKline.BattleBean>() {
                     @Override
-                    protected void onRespSuccessData(BattleKlineOperate data) {
+                    protected void onRespSuccessData(BattleKline.BattleBean data) {
                         updateMyLastOperateData(data, BattleKline.PASS);
                     }
 
