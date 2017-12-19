@@ -145,6 +145,10 @@ public class HomeTitleView extends RelativeLayout {
     TextView mPractice;
     @BindView(R.id.studyRoom)
     TextView mStudyRoom;
+    @BindView(R.id.grailGuessLayout)
+    RelativeLayout mGrailGuessLayout;
+    @BindView(R.id.guessImg)
+    ImageView mGuess;
 
     private GifDrawable mGifFromResource;
     private Context mContext;
@@ -204,6 +208,8 @@ public class HomeTitleView extends RelativeLayout {
         public void onDaySubjuect();
 
         public void onStockSimulate();
+
+        public void onGuess();
     }
 
     private OnLookAllClickListener mOnLookAllClickListener;
@@ -374,7 +380,12 @@ public class HomeTitleView extends RelativeLayout {
         }
     }
 
-    @OnClick({R.id.stockBtn, R.id.futureBtn, R.id.selectBtn, R.id.centerSelectRL, R.id.leftSelectRL, R.id.rightSelectRL, R.id.lookAllBtn, R.id.practice, R.id.studyRoom, R.id.simulateTrade})
+    //更新大盘竞猜按钮状态
+    public void updateGuessStatus(int status) {
+        mGrailGuessLayout.setVisibility(status > 0 ? View.VISIBLE : View.GONE);
+    }
+
+    @OnClick({R.id.stockBtn, R.id.futureBtn, R.id.selectBtn, R.id.centerSelectRL, R.id.leftSelectRL, R.id.rightSelectRL, R.id.lookAllBtn, R.id.practice, R.id.studyRoom, R.id.simulateTrade, R.id.grailGuessLayout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.stockBtn:
@@ -429,6 +440,11 @@ public class HomeTitleView extends RelativeLayout {
             case R.id.studyRoom:
                 if (mOnLookAllClickListener != null) {
                     mOnLookAllClickListener.onDaySubjuect();
+                }
+                break;
+            case R.id.grailGuessLayout:
+                if (mOnLookAllClickListener != null) {
+                    mOnLookAllClickListener.onGuess();
                 }
                 break;
         }

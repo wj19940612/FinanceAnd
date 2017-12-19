@@ -63,6 +63,9 @@ public interface ExtraKeys {
     String QUESTION_TYPE = "question_type";
     String IS_READ = "is_read";
     String GUESS_TYPE = "guess_type";
+    String USER_ID = "user_id";
+    String USER_NAME = "user_name";
+    String User_Portrait="user_portrait";
 
     String PROFIT = "profit";
     String KLINEBATTLE = "klinebattle";

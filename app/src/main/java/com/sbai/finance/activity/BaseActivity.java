@@ -47,6 +47,8 @@ public class BaseActivity extends BattlePushActivity implements
 
     public static final int REQ_QUESTION_DETAIL = 802;
     public static final int REQ_CODE_LOGIN = 803;
+    public static final int REQ_SUBMIT_QUESTION_LOGIN = 1002;
+    public static final int REQ_CODE_COMMENT = 1001;
 
     protected String TAG;
 

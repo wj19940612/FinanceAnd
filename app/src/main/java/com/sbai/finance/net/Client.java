@@ -907,6 +907,15 @@ public class Client {
         return new API("/user/dictionary/findDictionaryForJson.do?type=variety_deal");
     }
 
+    /**
+     * 查询是否允许大盘竞猜(按钮是否显示)
+     *
+     * @return
+     */
+    public static API getGussStatus() {
+        return new API(POST,"/user/dictionary/findDictionaryForJson.do?type=stockDeal");
+    }
+
 
     /**
      * 获取股票实时行情接口

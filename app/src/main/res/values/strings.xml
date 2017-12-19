@@ -992,6 +992,7 @@
     <string name="is_confirm_withdraw">订单撤销后将无法恢复，是否确定\n撤销该订单?</string>
     <string name="confirm_withdraw">确定撤单</string>
     <string name="stock_simulate">A股模拟</string>
+    <string name="grail_guess">大盘竞猜</string>
 
     <!--姐说-->
     <string name="radio">电台</string>

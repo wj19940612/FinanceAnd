@@ -212,7 +212,7 @@
             android:layout_height="44dp"
             android:background="@drawable/bg_white"
             app:hasBottomSplitLine="true"
-            app:leftIcon="@drawable/ic_mine_setting"
+            app:leftIcon="@drawable/ic_mine_setting_blue"
             app:rightIcon="@drawable/ic_arrow_right_tint"
             app:rowText="@string/setting"
             app:rowTextColor="@color/primaryText"
