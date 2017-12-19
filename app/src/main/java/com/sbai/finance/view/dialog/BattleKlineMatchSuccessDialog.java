@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKline;
+import com.sbai.finance.model.mine.UserInfo;
 import com.sbai.glide.GlideApp;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class BattleKlineMatchSuccessDialog extends BaseDialog {
         super(activity);
     }
 
-    public static void get(Activity activity, @NonNull List<BattleKline.BattleBean> battleBeans, OnDismissListener onDismissListener) {
+    public static void get(Activity activity, @NonNull List<BattleKline.UserInfo> battleBeans, OnDismissListener onDismissListener) {
 
         setCurrentDialog(DIALOG_START_GAME);
 
@@ -50,31 +51,31 @@ public class BattleKlineMatchSuccessDialog extends BaseDialog {
         ImageView avatar2 = customView.findViewById(R.id.avatar2);
         TextView userName3 = customView.findViewById(R.id.userName3);
         ImageView avatar3 = customView.findViewById(R.id.avatar3);
-        List<BattleKline.BattleBean> battleBeanList = new ArrayList();
-        for (BattleKline.BattleBean battleBean : battleBeans) {
-            if (battleBean.getUserId() != LocalUser.getUser().getUserInfo().getId()) {
-                battleBeanList.add(battleBean);
+        List<BattleKline.UserInfo> userInfos = new ArrayList();
+        for (BattleKline.UserInfo userInfo: userInfos) {
+            if (userInfo.getUserId() != LocalUser.getUser().getUserInfo().getId()) {
+                userInfos.add(userInfo);
             }
         }
-        if (battleBeanList.size() >= 3) {
+        if (userInfos.size() >= 3) {
             onePkArea.setVisibility(View.GONE);
             fourPkArea.setVisibility(View.VISIBLE);
             if (!activity.isFinishing()) {
-                loadAvatar(activity, battleBeanList.get(0).getUserPortrait(), avatar1);
-                loadAvatar(activity, battleBeanList.get(1).getUserPortrait(), avatar2);
-                loadAvatar(activity, battleBeanList.get(2).getUserPortrait(), avatar3);
-                userName1.setText(battleBeanList.get(0).getUserName());
-                userName2.setText(battleBeanList.get(1).getUserName());
-                userName3.setText(battleBeanList.get(2).getUserName());
+                loadAvatar(activity, userInfos.get(0).getUserPortrait(), avatar1);
+                loadAvatar(activity, userInfos.get(1).getUserPortrait(), avatar2);
+                loadAvatar(activity, userInfos.get(2).getUserPortrait(), avatar3);
+                userName1.setText(userInfos.get(0).getUserName());
+                userName2.setText(userInfos.get(1).getUserName());
+                userName3.setText(userInfos.get(2).getUserName());
             }
-        } else if (battleBeanList.size() >= 1) {
+        } else if (userInfos.size() >= 1) {
             onePkArea.setVisibility(View.GONE);
             fourPkArea.setVisibility(View.VISIBLE);
             if (!activity.isFinishing()) {
                 loadAvatar(activity, LocalUser.getUser().getUserInfo().getUserPortrait(), myAvatar);
-                loadAvatar(activity, battleBeanList.get(0).getUserPortrait(), againstAvatar);
+                loadAvatar(activity, userInfos.get(0).getUserPortrait(), againstAvatar);
                 userName.setText(LocalUser.getUser().getUserInfo().getUserName());
-                againstName.setText(battleBeanList.get(0).getUserName());
+                againstName.setText(userInfos.get(0).getUserName());
             }
         }
 

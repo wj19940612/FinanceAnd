@@ -43,38 +43,19 @@ import java.lang.reflect.Type;
  * APIs:
  */
 public class BattlePushActivity extends StatusBarActivity {
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        GamePusher.get().connect();
-    }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
         WsClient.get().addOnPushReceiveListener(mPushReceiveListener);
-        GamePusher.get().setOnPushReceiveListener(mKlineBattlePushReceiverListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         WsClient.get().removePushReceiveListener(mPushReceiveListener);
-        GamePusher.get().removeOnPushReceiveListener();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        GamePusher.get().close();
-    }
-
-    private OnPushReceiveListener<BattleKline.BattleBean> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKline.BattleBean>() {
-        @Override
-        public void onPushReceive(BattleKline.BattleBean battleBean, String originalData) {
-            onBattleKlinePushReceived(battleBean);
-        }
-    };
     private OnPushReceiveListener<WSPush> mPushReceiveListener = new OnPushReceiveListener<WSPush>() {
         @Override
         public void onPushReceive(WSPush wsPush, String originalData) {
@@ -118,8 +99,7 @@ public class BattlePushActivity extends StatusBarActivity {
                 || getActivity() instanceof NounExplanationActivity
                 || getActivity() instanceof JudgeTrainingActivity
                 || getActivity() instanceof TrainingCountDownActivity
-                || getActivity() instanceof BattleActivity
-                || getActivity() instanceof BattleKlineDetailActivity) {
+                || getActivity() instanceof BattleActivity) {
             return false;
         }
         return true;
@@ -129,29 +109,6 @@ public class BattlePushActivity extends StatusBarActivity {
     }
 
     protected void onBattleOrdersReceived(WSPush<TradeOrder> tradeOrderWSPush) {
-    }
-
-    protected void onBattleKlinePushReceived(final BattleKline.BattleBean battleBean) {
-        if (!LocalUser.getUser().isLogin()) return;
-        if (!(getActivity() instanceof BattleKlineActivity) && isValidPage()
-                && battleBean.getCode().equalsIgnoreCase(BattleKline.PUSH_CODE_MATCH_SUCCESS)) {
-            SmartDialog.single(getActivity(), getString(R.string.match_success_please_go_to_battle))
-                    .setTitle(getString(R.string.join_battle))
-                    .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
-                        @Override
-                        public void onClick(Dialog dialog) {
-                            MissAudioManager.get().stop();
-
-                            dialog.dismiss();
-                            Launcher.with(getActivity(), BattleKlinePkActivity.class)
-                                    .putExtra(ExtraKeys.GUESS_TYPE, battleBean.getBattleType())
-                                    .execute();
-
-                        }
-                    })
-                    .setNegative(R.string.cancel)
-                    .show();
-        }
     }
 
     protected void showQuickJoinBattleDialog(final Battle battle) {

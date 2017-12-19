@@ -29,6 +29,7 @@ import java.util.List;
 public class BattleKlinePkActivity extends BattleKlineDetailActivity {
 
     private boolean mHasPosition;
+    private List<BattleKline.BattleBean> mBattleStaList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,11 +60,17 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
         mCountdown.setTotalTime(totalTime, new KlineBattleCountDownView.OnCountDownListener() {
             @Override
             public void finish() {
-                battleFinish();
+                //  battleFinish();
             }
         });
+        if (mBattleKline.getBattleStaList().size() > 0) {
+            if (mBattleKline.getBattleStaList().get(0).getBattleStatus() == BattleKline.STATUS_END) {
+                battleFinish();
+            }
+        }
         mKlineView.initKlineDataList(mBattleKline.getUserMarkList());
-        updateLastProfitData(mBattleKline.getBattleStaList());
+        mBattleStaList = mBattleKline.getBattleStaList();
+        updateLastProfitData();
         if (mBattleKline.getUserMarkList() != null) {
             int size = mBattleKline.getUserMarkList().size();
             if (size > 1) {
@@ -81,20 +88,27 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
     @Override
     protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
         super.onBattleKlinePushReceived(battleBean);
-        if (battleBean.getCode() == BattleKline.PUSH_CODE_AGAINST_PROFIT) {
-            List<BattleKline.BattleBean> battleBeans = new ArrayList<>();
-            battleBeans.add(battleBean);
-            battleBeans.addAll(battleBean.getOtherUsers());
-            updateLastProfitData(battleBeans);
-        } else if (battleBean.getCode() == BattleKline.PUSH_CODE_BATTLE_FINISH) {
+        if (battleBean.getCode() == String.valueOf(BattleKline.PUSH_CODE_AGAINST_PROFIT)) {
+            updateLastProfitData(battleBean);
+        } else if (battleBean.getCode() == String.valueOf(BattleKline.PUSH_CODE_BATTLE_FINISH)) {
             battleFinish();
         }
     }
 
-    private void updateLastProfitData(List<BattleKline.BattleBean> battleStaList) {
-        Collections.sort(battleStaList, Collections.<BattleKline.BattleBean>reverseOrder());
-        setRankValueByProfit(battleStaList);
-        for (BattleKline.BattleBean battleBean : battleStaList) {
+    private void updateLastProfitData(BattleKline.BattleBean battleBean) {
+        if (mBattleStaList == null) return;
+        for (BattleKline.BattleBean item : mBattleStaList) {
+            if (item.getUserId() == battleBean.getUserId()) {
+                item.setProfit(battleBean.getProfit());
+            }
+        }
+    }
+
+    private void updateLastProfitData() {
+        if (mBattleStaList == null) return;
+        Collections.sort(mBattleStaList, Collections.<BattleKline.BattleBean>reverseOrder());
+        setRankValueByProfit(mBattleStaList);
+        for (BattleKline.BattleBean battleBean : mBattleStaList) {
             if (battleBean != null) {
                 if (battleBean.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
                     if (battleBean.getBattleStatus() == BattleKline.STATUS_END) {
@@ -110,7 +124,7 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
                 }
             }
         }
-        mAgainstProfit.setTotalProfit(battleStaList);
+        mAgainstProfit.setTotalProfit(mBattleStaList);
     }
 
     private void updateMyLastOperateData(BattleKlineOperate data, String type) {
