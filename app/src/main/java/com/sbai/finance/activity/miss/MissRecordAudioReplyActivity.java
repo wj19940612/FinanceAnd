@@ -376,6 +376,7 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
                             boolean delete = convertedFile.delete();
                             mRecordAudioPath = null;
                         }
+                        SmartDialog.dismiss(getActivity());
                     }
 
                     @Override
@@ -407,8 +408,10 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
                 break;
             case SUBMIT_ERROR:
                 changeSubmitStatusText(false);
+
                 mLoading.clearAnimation();
                 mLoading.setVisibility(View.GONE);
+
                 mAudioRecord.setEnabled(true);
                 mSubmitStatus.setText(R.string.restart_submit);
                 mSubmitting = false;
@@ -419,9 +422,10 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
 
                 mLoading.clearAnimation();
                 mLoading.setVisibility(View.VISIBLE);
+                mLoading.setImageResource(R.drawable.ic_training_result_tick);
+
                 mSubmitStatusLL.setBackgroundColor(Color.TRANSPARENT);
                 mSubmitStatusLL.setEnabled(false);
-                mLoading.setImageResource(R.drawable.ic_training_result_tick);
                 mSubmitStatus.setTextColor(ContextCompat.getColor(getActivity(), R.color.unluckyText));
                 mSubmitStatus.setText(R.string.send_success);
                 mAudioRecord.setEnabled(false);

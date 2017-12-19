@@ -66,7 +66,6 @@ public class MediaRecorderManager implements OnMp3RecordListener {
             if (mMediaMediaRecorderPrepareListener != null) {
                 mMediaMediaRecorderPrepareListener.onMediaMediaRecorderPrepared(outputFilePath);
             }
-
             int recordingState = mMP3Recorder.getRecordingState();
             if (recordingState != AudioRecord.RECORDSTATE_RECORDING) {
                 if (mMediaMediaRecorderPrepareListener != null) {
@@ -117,7 +116,7 @@ public class MediaRecorderManager implements OnMp3RecordListener {
     public void deleteRadioFile() {
         if (mRecordAudioPath != null) {
             File file = new File(mRecordAudioPath);
-            if (file != null && file.exists()) {
+            if ( file.exists()) {
                 file.delete();
                 mRecordAudioPath = null;
             }

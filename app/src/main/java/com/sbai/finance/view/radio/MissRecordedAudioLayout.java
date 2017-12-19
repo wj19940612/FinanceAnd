@@ -262,7 +262,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
     @Override
     public void onTimeUp(int count) {
-        if (hasRecordPermission) {
+        if (hasRecordPermission && count == 2) {
             int realVolume = mMediaRecorderManager.getRealVolume();
             if (realVolume <= 0) {
                 error();
