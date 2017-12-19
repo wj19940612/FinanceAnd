@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.DialogBaseActivity;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -36,7 +36,7 @@ import static com.android.volley.DefaultRetryPolicy.DEFAULT_TIMEOUT_MS;
 /**
  * 对小姐姐的提问的评论页面
  */
-public class CommentActivity extends BaseActivity {
+public class CommentActivity extends DialogBaseActivity {
 
     public static final String BROADCAST_ACTION_REPLY_SUCCESS = "broadcast_action_reply_success";
 
@@ -84,6 +84,10 @@ public class CommentActivity extends BaseActivity {
         mRadioId = intent.getIntExtra(ExtraKeys.RADIO, 0);
     }
 
+    @Override
+    protected float getWidthRatio() {
+        return 1;
+    }
 
     @Override
     public void onBackPressed() {
@@ -112,6 +116,7 @@ public class CommentActivity extends BaseActivity {
         }
         mQuestionComment.addTextChangedListener(mValidationWatcher);
     }
+
 
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
@@ -180,7 +185,6 @@ public class CommentActivity extends BaseActivity {
         Client.addComment(mInvitationUserId, mReplyParentId, mCommentType, content, mDataId, mAudioId, mRadioId)
                 .setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIMEOUT_MS, 0, DEFAULT_BACKOFF_MULT))
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -192,8 +196,8 @@ public class CommentActivity extends BaseActivity {
                             setResult(RESULT_OK, intent);
                             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
                             Intent lastIntent = getIntent();
-                            lastIntent.putExtra(ExtraKeys.QUESTION_ID,mDataId);
-                            setResult(RESULT_OK,lastIntent);
+                            lastIntent.putExtra(ExtraKeys.QUESTION_ID, mDataId);
+                            setResult(RESULT_OK, lastIntent);
                             finish();
                         } else {
                             ToastUtil.show(resp.getMsg());

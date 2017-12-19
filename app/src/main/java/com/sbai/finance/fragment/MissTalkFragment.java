@@ -99,7 +99,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
     private Radio mRadio;
     private MediaPlayService mMediaPlayService;
-    private int mPosition;
 
 
     @Nullable
@@ -325,22 +324,16 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             }
         });
 
-        mMissAskFragmentAdapter = new MissAskFragmentAdapter(getChildFragmentManager(), getActivity(), this);
-        mViewPager.setOffscreenPageLimit(1);
-        mViewPager.setAdapter(mMissAskFragmentAdapter);
         mViewPager.setCurrentItem(0, false);
+        mViewPager.setOffscreenPageLimit(1);
+        mMissAskFragmentAdapter = new MissAskFragmentAdapter(getChildFragmentManager(), getActivity(), this);
+        mViewPager.setAdapter(mMissAskFragmentAdapter);
         mViewPager.post(new Runnable() {
             @Override
             public void run() {
                 setVisibleFragmentLabel(0);
             }
         });
-        mSlidingTabLayout.setDistributeEvenly(true);
-        mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
-        mSlidingTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(60, getResources()));
-        mSlidingTabLayout.setSelectedIndicatorHeight(2);
-        mSlidingTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.tab_miss_question));
-        mSlidingTabLayout.setViewPager(mViewPager);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -350,7 +343,6 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             @Override
             public void onPageSelected(int position) {
                 // 在提问页面需要更新数据 然后回调，用来区分那个页面可见
-                mPosition = position;
                 setVisibleFragmentLabel(position);
                 MissAskFragment fragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(position);
                 if (fragment != null) {
@@ -364,6 +356,12 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
             }
         });
 
+        mSlidingTabLayout.setDistributeEvenly(true);
+        mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
+        mSlidingTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(60, getResources()));
+        mSlidingTabLayout.setSelectedIndicatorHeight(2);
+        mSlidingTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.tab_miss_question));
+        mSlidingTabLayout.setViewPager(mViewPager);
 
         mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
 
