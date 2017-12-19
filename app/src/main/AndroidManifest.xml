@@ -451,9 +451,11 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.arena.KLineResultActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.arena.KlinePracticeResultActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
         <activity

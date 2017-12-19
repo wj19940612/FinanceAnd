@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 
 /**
  * Modified by john on 15/12/2017
- *
+ * <p>
  * todo unfinished
  */
 public class WsRequest<T> implements WsReqCode {
