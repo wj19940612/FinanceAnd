@@ -66,7 +66,7 @@ public class BattlePushActivity extends StatusBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        GamePusher.get().close();
+//        GamePusher.get().close();
     }
 
     private OnPushReceiveListener<BattleKline.BattleBean> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKline.BattleBean>() {
@@ -131,7 +131,7 @@ public class BattlePushActivity extends StatusBarActivity {
     protected void onBattleOrdersReceived(WSPush<TradeOrder> tradeOrderWSPush) {
     }
 
-    protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
+    protected void onBattleKlinePushReceived(final BattleKline.BattleBean battleBean) {
         if (!LocalUser.getUser().isLogin()) return;
         if (!(getActivity() instanceof BattleKlineActivity) && isValidPage()
                 && battleBean.getCode().equalsIgnoreCase(BattleKline.PUSH_CODE_MATCH_SUCCESS)) {
@@ -144,7 +144,7 @@ public class BattlePushActivity extends StatusBarActivity {
 
                             dialog.dismiss();
                             Launcher.with(getActivity(), BattleKlinePkActivity.class)
-//                                    .putExtra(ExtraKeys.GUESS_TYPE, battle)
+                                    .putExtra(ExtraKeys.GUESS_TYPE, battleBean.getBattleType())
                                     .execute();
 
                         }
