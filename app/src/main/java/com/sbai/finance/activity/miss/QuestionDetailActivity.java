@@ -435,7 +435,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         mAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 2017/12/11  缺少用户是否是小姐姐 
                 if (mQuestion.isMiss()) {
                     Launcher.with(getActivity(), MissProfileDetailActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, mQuestion.getCustomId())

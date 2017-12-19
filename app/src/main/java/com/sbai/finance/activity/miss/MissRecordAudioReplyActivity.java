@@ -379,6 +379,12 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
                     }
 
                     @Override
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
+                        changeSubmitStatus(SUBMIT_ERROR);
+                    }
+
+                    @Override
                     public void onFinish() {
                         super.onFinish();
                         mSubmitting = false;
