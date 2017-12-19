@@ -41,8 +41,6 @@ import butterknife.OnClick;
 public class KlineRankListActivity extends BaseActivity implements KlineOneByOneRankFragment.OnFragmentRecycleViewScrollListener {
     @BindView(R.id.appBarLayout)
     AppBarLayout mAppBarLayout;
-    @BindView(R.id.tip)
-    TextView mTip;
     @BindView(R.id.slidingTabLayout)
     SlidingTabTitle mTabLayout;
     @BindView(R.id.viewPager)
@@ -213,7 +211,6 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
             mTopNumber.setVisibility(View.GONE);
             mSecondNumber.setVisibility(View.GONE);
             mThirdNumber.setVisibility(View.GONE);
-            mTip.setVisibility(View.VISIBLE);
             mMedal.setVisibility(View.GONE);
 
             if (mKlineRank != null) {
@@ -232,7 +229,6 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
             mTopNumber.setVisibility(View.VISIBLE);
             mSecondNumber.setVisibility(View.VISIBLE);
             mThirdNumber.setVisibility(View.VISIBLE);
-            mTip.setVisibility(View.INVISIBLE);
             mMedal.setVisibility(View.VISIBLE);
 
             if (mKlineRank != null) {
