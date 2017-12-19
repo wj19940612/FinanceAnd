@@ -7,16 +7,16 @@ import com.sbai.finance.App;
 import com.sbai.finance.R;
 import com.sbai.finance.utils.FileUtils;
 import com.songbai.mp3record.MP3Recorder;
+import com.songbai.mp3record.OnMp3RecordListener;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by ${wangJie} on 2017/11/30.
  * 录制音频
  */
 
-public class MediaRecorderManager {
+public class MediaRecorderManager implements OnMp3RecordListener {
     private static final String TAG = "MediaRecorderManager";
 
     public static final int RECORD_MEDIA_ERROR_SYSTEM_CODE = 0;  //录制音频系统抛出的错误
@@ -33,6 +33,7 @@ public class MediaRecorderManager {
         void onMediaMediaRecorderPrepared(String path);
 
         void onError(int what, Exception e);
+
     }
 
     public void setMediaMediaRecorderPrepareListener(MediaMediaRecorderPrepareListener mediaMediaRecorderPrepareListener) {
@@ -59,36 +60,43 @@ public class MediaRecorderManager {
             mMP3Recorder = null;
         }
         mMP3Recorder = new MP3Recorder(new File(outputFilePath));
+        mMP3Recorder.setOnMp3RecordListener(this);
         try {
             mMP3Recorder.start();
             if (mMediaMediaRecorderPrepareListener != null) {
                 mMediaMediaRecorderPrepareListener.onMediaMediaRecorderPrepared(outputFilePath);
             }
-
             int recordingState = mMP3Recorder.getRecordingState();
             if (recordingState != AudioRecord.RECORDSTATE_RECORDING) {
                 if (mMediaMediaRecorderPrepareListener != null) {
                     mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_CODE_PERMISSION, new Exception("   State is not Recording "));
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            if (mMediaMediaRecorderPrepareListener != null) {
-                mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_SYSTEM_CODE, e);
-            }
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            if (mMediaMediaRecorderPrepareListener != null) {
-                mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_SYSTEM_CODE, e);
-            }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            if (mMediaMediaRecorderPrepareListener != null) {
-                mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_SYSTEM_CODE, e);
-            }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG, "onRecordStart: " + e.toString());
+            if (mMediaMediaRecorderPrepareListener != null) {
+                mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_SYSTEM_CODE, e);
+            }
+        }
+    }
+
+    public int getRealVolume() {
+        if (mMP3Recorder != null) {
+            return mMP3Recorder.getRealVolume();
+        }
+        return 0;
+    }
+
+    @Override
+    public void onMp3RecordStart() {
+        Log.d(TAG, "onMp3RecordStart: ");
+    }
+
+    @Override
+    public void onMp3RecordError(Exception e) {
+        Log.d(TAG, "onMp3RecordError: " + e.toString());
+        if (mMediaMediaRecorderPrepareListener != null) {
+            mMediaMediaRecorderPrepareListener.onError(RECORD_MEDIA_ERROR_SYSTEM_CODE, e);
         }
     }
 
@@ -108,10 +116,11 @@ public class MediaRecorderManager {
     public void deleteRadioFile() {
         if (mRecordAudioPath != null) {
             File file = new File(mRecordAudioPath);
-            if (file != null && file.exists()) {
+            if ( file.exists()) {
                 file.delete();
                 mRecordAudioPath = null;
             }
         }
     }
+
 }

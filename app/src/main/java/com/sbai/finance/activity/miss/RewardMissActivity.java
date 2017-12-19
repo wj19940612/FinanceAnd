@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.DialogBaseActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.activity.mine.setting.SecurityCenterActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
@@ -42,7 +43,7 @@ import butterknife.OnClick;
  * 姐说打赏页面
  */
 
-public class RewardMissActivity extends BaseActivity {
+public class RewardMissActivity extends DialogBaseActivity {
 
 
     private static final int SMALL_NO_SECRET_PAYMENT = 100;
@@ -98,6 +99,11 @@ public class RewardMissActivity extends BaseActivity {
                     }
                 })
                 .fire();
+    }
+
+    @Override
+    protected float getWidthRatio() {
+        return 1;
     }
 
     private void requestUserSmallNoSecretPaymentStatus() {
@@ -196,7 +202,6 @@ public class RewardMissActivity extends BaseActivity {
     private void requestUserFindInfo() {
         umengEventCount(UmengCountEventId.MISS_TALK_REWARD);
         Client.requestUserFundInfo()
-                .setIndeterminate(this)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<UserFundInfo>, UserFundInfo>() {
                     @Override
@@ -234,7 +239,6 @@ public class RewardMissActivity extends BaseActivity {
         long rewardMoney = mRewardMoneyContent.getSelectedMoney();
         Client.rewardQuestion(mId, rewardMoney, AccountFundDetail.TYPE_INGOT, null)
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -260,7 +264,6 @@ public class RewardMissActivity extends BaseActivity {
         long rewardMoney = mRewardMoneyContent.getSelectedMoney();
         Client.rewardMiss(mId, rewardMoney, AccountFundDetail.TYPE_INGOT, null)
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -285,7 +288,7 @@ public class RewardMissActivity extends BaseActivity {
 
     private void sendRewardSuccessBroadcast(FragmentActivity activity) {
         Intent intent = new Intent();
-        intent.setAction(ACTION_REWARD_SUCCESS);
+        intent.setAction(BaseActivity.ACTION_REWARD_SUCCESS);
         intent.putExtra(Launcher.EX_PAYLOAD, mType);
         intent.putExtra(Launcher.EX_PAYLOAD_1, mId);
         LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);

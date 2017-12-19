@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <com.sbai.finance.view.TitleBar
+        android:fitsSystemWindows="true"
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,9 +40,10 @@
                 <android.support.design.widget.CollapsingToolbarLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                    app:layout_scrollFlags="scroll">
 
                     <LinearLayout
+                        app:layout_collapseMode="none"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">

@@ -229,12 +229,19 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
         }
     }
 
+
     private void error() {
+        mTimerHandler.removeCallbacksAndMessages(null);
+        isStartRecord = false;
+        mAudioLength = 0;
+        showPermissionDialog();
+    }
+
+    private void stopRecord() {
         mTimerHandler.removeCallbacksAndMessages(null);
         setRecordStatus(RECORD_AUDIO_STATUS_INIT);
         isStartRecord = false;
         mAudioLength = 0;
-        showPermissionDialog();
     }
 
     private void showPermissionDialog() {
@@ -255,21 +262,20 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
     @Override
     public void onTimeUp(int count) {
-//        if (hasRecordPermission) {
-//            File file = new File(audioPath);
-//            if (file.length() <= 0) {
-//                error();
-//                hasRecordPermission = false;
-//                return;
-//            }
-//        }
+        if (hasRecordPermission && count == 2) {
+            int realVolume = mMediaRecorderManager.getRealVolume();
+            if (realVolume <= 0) {
+                error();
+                hasRecordPermission = false;
+                return;
+            }
+        }
 
         mAudioLength = count;
         if (mInLegalRange) {
             SpannableString spannableString = StrUtil.mergeTextWithColor(getContext().getString(R.string.recording), "  " +
                             getContext().getString(R.string.voice_time, count),
                     mAudioLengthTextColor);
-            Log.d(TAG, "onTimeUp: " + count + " " + spannableString.toString());
             mAudioLengthTextView.setText(spannableString);
         } else {
             mAudioLengthTextView.setText("超出范围取消");

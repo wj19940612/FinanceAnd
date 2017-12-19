@@ -74,8 +74,7 @@ public class ArenaFragment extends BaseFragment {
         mBinder = ButterKnife.bind(this, view);
         return view;
     }
-
-    @Override
+    
     public void onResume() {
         super.onResume();
         startBreatheAnimation();

@@ -387,6 +387,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
             public void onSeekChange(int progress) {
                 if (mMediaPlayService != null) {
                     mMediaPlayService.seekTo(progress);
+                    mRadioPlayLL.setMediaPlayProgress(MissAudioManager.get().getCurrentPosition(), MissAudioManager.get().getDuration());
                 }
             }
         });
