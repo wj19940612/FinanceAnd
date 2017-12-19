@@ -18,8 +18,10 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.arena.klinebattle.BattleKlinePkActivity;
+import com.sbai.finance.activity.arena.klinebattle.BattleKlineReviewActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineBattleResult;
+import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -77,7 +79,9 @@ public class KLineResultActivity extends BaseActivity {
         mResultAdapter.setOnMoreClickListener(new ResultAdapter.OnMoreClickListener() {
             @Override
             public void onMoreClick() {
-                Launcher.with(KLineResultActivity.this,BattleKlinePkActivity.class).putExtra(ExtraKeys.GUESS_TYPE,mGoinType).execute();
+                Launcher.with(KLineResultActivity.this, BattleKlineReviewActivity.class)
+                        .putExtra(ExtraKeys.GUESS_TYPE, mGoinType)
+                        .execute();
                 finish();
             }
         });
@@ -116,6 +120,8 @@ public class KLineResultActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.moreOneBtn:
+                Launcher.with(KLineResultActivity.this, BattleKlinePkActivity.class).putExtra(ExtraKeys.GUESS_TYPE, mGoinType).execute();
+                finish();
                 break;
         }
     }
@@ -148,7 +154,7 @@ public class KLineResultActivity extends BaseActivity {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            viewHolder.bindDataWithView(getItem(position), mContext, position, getCount(),mOnMoreClickListener);
+            viewHolder.bindDataWithView(getItem(position), mContext, position, getCount(), mOnMoreClickListener);
             return convertView;
         }
 
@@ -198,7 +204,7 @@ public class KLineResultActivity extends BaseActivity {
                 mContent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(onMoreClickListener!=null){
+                        if (onMoreClickListener != null) {
                             onMoreClickListener.onMoreClick();
                         }
                     }
