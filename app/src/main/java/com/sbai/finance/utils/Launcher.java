@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -36,9 +37,19 @@ public class Launcher {
     private Intent mIntent;
     private Class<?> mClass;
     private ActivityOptionsCompat mOptionsCompat;
+    private Fragment mFragment;
 
     private Launcher() {
         mIntent = new Intent();
+    }
+
+    public static Launcher with(Fragment fragment, Class<?> clazz) {
+        sInstance = new Launcher();
+        sInstance.mFragment = new WeakReference<>(fragment).get();
+        sInstance.mContext = new WeakReference<>(fragment.getActivity()).get();
+        sInstance.mIntent.setClass(sInstance.mContext, clazz);
+        sInstance.mClass = clazz;
+        return sInstance;
     }
 
     public static Launcher with(Context context, Class<?> clazz) {
@@ -126,6 +137,14 @@ public class Launcher {
             if (mContext instanceof Activity) {
                 Activity activity = (Activity) mContext;
                 activity.startActivityForResult(mIntent, requestCode);
+            }
+        }
+    }
+
+    public void excuteForResultFragment(int requestCode){
+        if (mFragment != null && mContext != null) {
+            if (mFragment instanceof Fragment) {
+                mFragment.startActivityForResult(mIntent, requestCode);
             }
         }
     }

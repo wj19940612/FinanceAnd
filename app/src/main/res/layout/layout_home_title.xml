@@ -438,14 +438,6 @@
             android:layout_weight="1"
             android:paddingTop="6dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:elevation="2dp"
-                android:src="@drawable/ic_home_new"/>
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -496,6 +488,47 @@
             android:text="@string/study_room"
             android:textColor="@color/luckyText"
             android:textSize="13sp"/>
+
+        <RelativeLayout
+            android:id="@+id/grailGuessLayout"
+            android:layout_width="0dp"
+            android:layout_height="79dp"
+            android:layout_weight="1"
+            android:paddingTop="6dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:elevation="2dp"
+                android:src="@drawable/ic_home_new"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <ImageView
+                    android:id="@+id/guessImg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="4dp"
+                    android:src="@drawable/ic_home_guss"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/guessImg"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/grail_guess"
+                    android:textColor="@color/luckyText"
+                    android:textSize="13sp"/>
+            </RelativeLayout>
+        </RelativeLayout>
     </LinearLayout>
 
 </merge>
