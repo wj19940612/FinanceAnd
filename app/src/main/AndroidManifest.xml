@@ -473,9 +473,6 @@
             android:name=".activity.arena.klinebattle.BattleKlineReviewActivity"
             android:screenOrientation="portrait"/>
         <!-- TEST-->
-        <activity
-            android:name=".activity.TestActivity"
-            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

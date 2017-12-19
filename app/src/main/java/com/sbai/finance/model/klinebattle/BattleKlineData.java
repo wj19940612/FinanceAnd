@@ -44,11 +44,6 @@ public class BattleKlineData extends KlineViewData {
         return positions;
     }
 
-    public BattleKlineData(KlineViewData klineViewData) {
-        super(klineViewData);
-        mark = MARK_PASS;
-    }
-
     @Override
     public int describeContents() {
         return 0;
