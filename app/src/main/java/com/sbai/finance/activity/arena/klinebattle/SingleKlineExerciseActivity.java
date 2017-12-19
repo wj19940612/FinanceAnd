@@ -52,9 +52,9 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
     private void updateExerciseData(BattleKline data) {
         if (data == null) return;
         mBattleKline = data;
-        mRemainKlineAmount = mBattleKline.getLine();
         mBattleUserMarkList = mBattleKline.getUserMarkList();
         if (mBattleUserMarkList != null && mBattleUserMarkList.size() >= 40) {
+            mRemainKlineAmount = mBattleKline.getUserMarkList().size() - 40;
             List<BattleKlineData> subList = new ArrayList<>();
             for (int i = 0; i < 40; i++) {
                 subList.add(mBattleUserMarkList.get(i));
@@ -101,14 +101,6 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
             } else {
                 positionKlineData = mBattleUserMarkList.get(mCurrentIndex);
             }
-            if (positionKlineData != null) {
-                double positionProfit = (nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice();
-                mOperateView.setPositionProfit(positionProfit);
-                mOperateView.setTotalProfit(positionProfit + mOperateView.getTotalProfit());
-                if (mPositionIndex > -1) {
-                    nextKlineData.setPositions(positionProfit);
-                }
-            }
             if (type.equalsIgnoreCase(BattleKline.BUY)) {
                 mPositionIndex = mCurrentIndex;
                 mKlineView.getLastData().setMark(BattleKlineData.MARK_BUY);
@@ -124,7 +116,16 @@ public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
                     mKlineView.getLastData().setMark(BattleKlineData.MARK_PASS);
                 }
             }
+            if (positionKlineData != null) {
+                double positionProfit = (nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice();
+                mOperateView.setTotalProfit(positionProfit - mOperateView.getLastPosition() + mOperateView.getTotalProfit());
+                if (mPositionIndex > -1) {
+                    nextKlineData.setPositions(positionProfit);
+                    mOperateView.setPositionProfit(positionProfit);
+                }
+            }
             if (mCurrentIndex == mBattleUserMarkList.size() - 2) {
+                mKlineView.setLastInvisibleData(mBattleUserMarkList.get(mBattleUserMarkList.size() - 1));
                 battleFinish();
                 return;
             }

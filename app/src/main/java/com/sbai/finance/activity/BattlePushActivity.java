@@ -1,6 +1,8 @@
 package com.sbai.finance.activity;
 
 import android.app.Dialog;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.gson.Gson;
@@ -41,6 +43,11 @@ import java.lang.reflect.Type;
  * APIs:
  */
 public class BattlePushActivity extends StatusBarActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        GamePusher.get().connect();
+    }
 
     @Override
     protected void onPostResume() {
@@ -53,7 +60,13 @@ public class BattlePushActivity extends StatusBarActivity {
     protected void onPause() {
         super.onPause();
         WsClient.get().removePushReceiveListener(mPushReceiveListener);
-        WsClient.get().removePushReceiveListener(mKlineBattlePushReceiverListener);
+        GamePusher.get().removeOnPushReceiveListener();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        GamePusher.get().close();
     }
 
     private OnPushReceiveListener<BattleKline.BattleBean> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKline.BattleBean>() {
@@ -118,10 +131,10 @@ public class BattlePushActivity extends StatusBarActivity {
     protected void onBattleOrdersReceived(WSPush<TradeOrder> tradeOrderWSPush) {
     }
 
-    protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
+    protected void onBattleKlinePushReceived(final BattleKline.BattleBean battleBean) {
         if (!LocalUser.getUser().isLogin()) return;
         if (!(getActivity() instanceof BattleKlineActivity) && isValidPage()
-                && battleBean.getCode().equalsIgnoreCase( BattleKline.PUSH_CODE_MATCH_SUCCESS)) {
+                && battleBean.getCode().equalsIgnoreCase(BattleKline.PUSH_CODE_MATCH_SUCCESS)) {
             SmartDialog.single(getActivity(), getString(R.string.match_success_please_go_to_battle))
                     .setTitle(getString(R.string.join_battle))
                     .setPositive(R.string.quick_battle, new SmartDialog.OnClickListener() {
@@ -131,7 +144,7 @@ public class BattlePushActivity extends StatusBarActivity {
 
                             dialog.dismiss();
                             Launcher.with(getActivity(), BattleKlinePkActivity.class)
-//                                    .putExtra(ExtraKeys.GUESS_TYPE, battle)
+                                    .putExtra(ExtraKeys.GUESS_TYPE, battleBean.getBattleType())
                                     .execute();
 
                         }

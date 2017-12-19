@@ -51,9 +51,17 @@ public class BattleKline implements Parcelable {
     private double rise;
     private long endTime;
 
-
+    private BattleBean staInfo;
     private List<BattleBean> battleStaList;
     private List<BattleKlineData> userMarkList;
+
+    public BattleBean getStaInfo() {
+        return staInfo;
+    }
+
+    public void setStaInfo(BattleBean staInfo) {
+        this.staInfo = staInfo;
+    }
 
     public long getEndTime() {
         return endTime;

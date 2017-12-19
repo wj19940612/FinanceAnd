@@ -16,7 +16,11 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKline;
+import com.sbai.finance.net.Callback2D;
+import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.KlineBottomResultView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.autofit.AutofitTextView;
@@ -59,20 +63,46 @@ public class BattleKlineReviewActivity extends BaseActivity {
         translucentStatusBar();
         initData(getIntent());
         initKlineView();
-        updateViewData();
+        requestReviewData();
     }
 
-    private void updateViewData() {
+    private void requestReviewData() {
         if (mType.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
-            if (mBattleKline != null) {
-                mImgRank.setVisibility(View.GONE);
-                mKlineView.initKlineDataList(mBattleKline.getUserMarkList().subList(0, mBattleKline.getUserMarkList().size() - 1));
-            }
+            mImgRank.setVisibility(View.GONE);
+            updateKlineData();
+        } else {
+            Client.requestKlineBattleReview().setTag(TAG)
+                    .setCallback(new Callback2D<Resp<BattleKline>, BattleKline>() {
+                        @Override
+                        protected void onRespSuccessData(BattleKline data) {
+                            mBattleKline = data;
+                            updateKlineData();
+                        }
+
+                        @Override
+                        protected void onRespFailure(Resp failedResp) {
+                            super.onRespFailure(failedResp);
+                            ToastUtil.show(failedResp.getMsg());
+                        }
+                    }).fireFree();
         }
-        setTotalProfit(mProfit);
+    }
+
+    private void updateKlineData() {
+        if (mBattleKline != null) {
+            int size = mBattleKline.getUserMarkList().size();
+            mKlineView.initKlineDataList(mBattleKline.getUserMarkList().subList(0, size - 1));
+            mKlineView.setLastInvisibleData(mBattleKline.getUserMarkList().get(size - 1));
+        }
+        if (mType.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
+            setTotalProfit(mProfit);
+        } else {
+            setTotalProfit(mBattleKline.getStaInfo().getProfit());
+        }
         setSelfUserInfo();
         updateBottomView();
     }
+
 
     public void setTotalProfit(double totalProfit) {
         if (totalProfit == 0) {

@@ -50,6 +50,7 @@ public class BattleKlineOperateView extends LinearLayout {
     private Context mContext;
     private OperateListener mOperateListener;
     private double mProfit;
+    private double mLastPosition;
 
     public interface OperateListener {
         void buy();
@@ -135,7 +136,12 @@ public class BattleKlineOperateView extends LinearLayout {
         return mProfit;
     }
 
+    public double getLastPosition() {
+        return mLastPosition;
+    }
+
     public void setPositionProfit(double positionProfit) {
+        mLastPosition = positionProfit;
         if (positionProfit == 0) {
             mPositionProfit.setText("0.00%");
             mPositionProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
@@ -174,6 +180,7 @@ public class BattleKlineOperateView extends LinearLayout {
     }
 
     public void clearPositionProfit() {
+        mLastPosition = 0;
         mPositionProfit.setText(R.string.no_this_data);
         mPositionProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
     }

@@ -25,6 +25,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.web.LocalImageHtmlActivity;
 import com.sbai.finance.fragment.dialog.KlineBattleRecordFragment;
+import com.sbai.finance.kgame.GamePusher;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.fund.UserFundInfo;
