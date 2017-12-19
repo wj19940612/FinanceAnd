@@ -120,7 +120,7 @@ public class ArenaFragment extends BaseFragment {
         updateUserStatus();
     }
 
-    private void updateArenaActivityStatus() {
+    private void requestArenaActivityStatus() {
         Client.requestArenaInfo(ArenaActivityAndUserStatus.DEFAULT_ACTIVITY_CODE)
                 .setTag(TAG)
                 .setIndeterminate(this)
@@ -190,7 +190,7 @@ public class ArenaFragment extends BaseFragment {
                 break;
             case R.id.moneyRewardArena:
                 umengEventCount(UmengCountEventId.ARENA_MRPK);
-                updateArenaActivityStatus();
+                requestArenaActivityStatus();
                 break;
             case R.id.generalBattleBanner:
                 umengEventCount(UmengCountEventId.ARENA_FUTURE_PK);
