@@ -125,8 +125,7 @@ public class GamePusher extends SimpleConnector {
 
     private void ackPushMessage(WsResponse resp) {
         AckPush ackPush = new AckPush(resp.getMsgId());
-
-        WsRequest request = new WsRequest(WsRequest.MSG_CONFIRM, ackPush);
+        WsRequest request = WsUtils.getRequest(WsRequest.MSG_CONFIRM, ackPush);
         send(request);
     }
 

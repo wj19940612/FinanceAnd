@@ -18,7 +18,7 @@ public class WsUtils {
     public static WsRequest getRequest(int code, Object o) {
         WsRequest wsRequest = new WsRequest(code, 0);
         long timestamp = SysTime.getSysTime().getSystemTimestamp();
-        wsRequest.setTimestamp(timestamp);
+        wsRequest.setTimestamp(String.valueOf(timestamp));
         wsRequest.setUuid(createUUID(timestamp));
         return wsRequest;
     }

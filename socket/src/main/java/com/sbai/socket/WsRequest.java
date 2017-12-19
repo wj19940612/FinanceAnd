@@ -11,7 +11,7 @@ public class WsRequest<T> implements WsReqCode {
 
     private int code;
     private String uuid;
-    private long timestamp;
+    private String timestamp;
     private String url;
     private String method;
     private T parameter;
@@ -25,7 +25,7 @@ public class WsRequest<T> implements WsReqCode {
         this.uuid = uuid;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
