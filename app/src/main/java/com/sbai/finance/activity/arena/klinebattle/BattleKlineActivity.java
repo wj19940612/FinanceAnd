@@ -55,6 +55,7 @@ import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.glide.GlideApp;
 import com.sbai.socket.WsResponse;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,9 +111,10 @@ public class BattleKlineActivity extends BaseActivity {
         @Override
         public void onPushReceive(Object o, String originalData) {
             try {
-                BattleKline.BattleBean battleBean = new Gson().fromJson(o.toString().replace("\\\\", ""), BattleKline.BattleBean.class);
-                if (battleBean != null) {
-                    onBattleKlinePushReceived(battleBean);
+                WsResponse<BattleKline.BattleBean> wsResponse = new Gson().fromJson(originalData, new TypeToken<WsResponse<BattleKline.BattleBean>>() {
+                }.getType());
+                if (wsResponse != null) {
+                    onBattleKlinePushReceived(wsResponse.getContent());
                 }
             } catch (Exception e) {
                 ToastUtil.show(e.getMessage());
@@ -431,19 +433,20 @@ public class BattleKlineActivity extends BaseActivity {
 
     private void showRechargeDialog(String msg) {
         SmartDialog.single(getActivity(), msg)
-                .setTitle(getString(R.string.cancel_matching))
+                .setTitle(getString(R.string.match_failed))
                 .setCancelableOnTouchOutside(false)
-                .setPositive(R.string.cancel, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                    }
-                })
-                .setNegative(R.string.go_recharge, new SmartDialog.OnClickListener() {
+                .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         openWalletPage();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
                     }
                 })
                 .show();

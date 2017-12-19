@@ -184,11 +184,7 @@ public class AgainstProfitView extends LinearLayout {
             default:
                 break;
         }
-        GlideApp.with(mContext)
-                .load(drawable)
-                .placeholder(R.drawable.ic_default_avatar)
-                .circleCrop()
-                .into(imgRank);
+        imgRank.setBackground(drawable);
     }
 
 }

@@ -31,7 +31,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:elevation="1dp"
             android:orientation="vertical"
@@ -134,6 +134,7 @@
             android:layout_width="match_parent"
             android:layout_height="153dp"
             android:layout_alignParentBottom="true"
+            android:elevation="-1dp"
             android:background="@drawable/ic_guess_kline_wave">
 
             <TextView
