@@ -11,15 +11,26 @@ import com.sbai.finance.activity.arena.RewardActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
+import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
+import com.sbai.finance.activity.stock.StockDetailActivity;
+import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
+import com.sbai.finance.model.stock.Stock;
+import com.sbai.finance.model.system.JsModel;
 import com.sbai.finance.model.system.JsOpenAppPageType;
+import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
+import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.dialog.ShareDialog;
 
 public class AppJs {
+
+    // h5返回的头部信息
+    public static final int MULTIPART_TEXT = 0;
+    public static final int MULTIPART_IMAGE = 1;
 
     private static final String TAG = "AppJs";
     private static final String ONLY_WE_CHAT_SHARE = "onlywx";
@@ -206,9 +217,33 @@ public class AppJs {
                 break;
             case JsOpenAppPageType.WALLET:
                 break;
+            case JsOpenAppPageType.SECURITY_CENTER_PAGE:
+                Launcher.with(mContext, SettingActivity.class).execute();
+                break;
+            case JsOpenAppPageType.STOCK_DETAIL_PAGE:
+                requestStockDetail(id);
+                break;
 
         }
 
+    }
+
+    private void requestStockDetail(String id) {
+        Client.getStockInfo(id).setTag(TAG)
+                .setCallback(new Callback<Resp<Stock>>() {
+                    @Override
+                    protected void onRespSuccess(Resp<Stock> resp) {
+                        Stock result = resp.getData();
+                        if (result.getVarietyType().equalsIgnoreCase(Stock.EXPEND)) {
+                            Launcher.with(mContext, StockIndexActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, result).execute();
+                        } else {
+                            Launcher.with(mContext, StockDetailActivity.class)
+                                    .putExtra(Launcher.EX_PAYLOAD, result)
+                                    .execute();
+                        }
+                    }
+                }).fireFree();
     }
 
     @JavascriptInterface
@@ -219,5 +254,25 @@ public class AppJs {
     @JavascriptInterface
     public void jsOpenAppPage(int type, String id) {
         jsOpenAppPage(type, id, null, null);
+    }
+
+
+    /**
+     * @param rightViewIsShow  右边按钮是否显示
+     * @param type             0 文字 1图片
+     * @param rightViewContent 右边内容
+     * @param content          内容
+     */
+    @JavascriptInterface
+    public void controlTitleBarRightView(final boolean rightViewIsShow, final int type, final String rightViewContent, final String content) {
+        if (mContext instanceof WebActivity) {
+            final WebActivity activity = (WebActivity) mContext;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.controlTitleBarRightView(rightViewIsShow, type, rightViewContent, JsModel.getJsModel(content));
+                }
+            });
+        }
     }
 }

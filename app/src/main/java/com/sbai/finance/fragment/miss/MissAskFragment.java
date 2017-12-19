@@ -420,7 +420,7 @@ public class MissAskFragment extends MediaPlayFragment {
 
 
     private void updateLatestQuestionList(List<Question> questionList, boolean isRefresh) {
-        if ((questionList == null || questionList.isEmpty()) || mQuestionList.isEmpty()) {
+        if ((questionList == null || questionList.isEmpty()) && mQuestionList.isEmpty()) {
             mEmpty.setVisibility(View.VISIBLE);
             mEmptyRecyclerView.setVisibility(View.GONE);
         } else {
