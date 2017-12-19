@@ -57,7 +57,7 @@ public class Client {
     //音频详情分享
     public static final String SHARE_URL_RADIO = API.getHost() + "/lm/share_audio/index.html?radioId=%d&audioId=%d";
 
-    public static final String ACTIVITY_URL_GUESS_HAPPY = API.getHost() + "/lm/guess/index.html";
+    public static final String ACTIVITY_URL_GUESS_HAPPY = API.getHost() + "/lm/guess/index.html?share=false";
 
     public static String getServiceQQ(String serviceQQ) {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {

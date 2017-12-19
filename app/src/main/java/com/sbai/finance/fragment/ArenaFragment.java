@@ -15,7 +15,6 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sbai.finance.BuildConfig;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.TestActivity;
 import com.sbai.finance.activity.WebActivity;
@@ -89,16 +88,10 @@ public class ArenaFragment extends BaseFragment {
             }
         });
 
-        if (!BuildConfig.FLAVOR.equalsIgnoreCase("dev")
-                || !BuildConfig.FLAVOR.equalsIgnoreCase("alpha")
-                || !BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
-            mTitleBar.setRightViewEnable(false);
-            mTitleBar.setRightVisible(false);
-        }
-
+        // TODO: 2017/12/19 增加入口 
         mTitleBar.setRightVisible(true);
         mTitleBar.setRightViewEnable(true);
-        mTitleBar.setRightText("活动入口" + "");
+        mTitleBar.setRightText("活动入口");
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,6 +104,12 @@ public class ArenaFragment extends BaseFragment {
                         .execute();
             }
         });
+
+//        Log.d(TAG, "onActivityCreated: "+BuildConfig.FLAVOR);
+//        if (!BuildConfig.FLAVOR.equalsIgnoreCase("dev") || !BuildConfig.FLAVOR.equalsIgnoreCase("alpha") || !BuildConfig.FLAVOR.equalsIgnoreCase("product")) {
+//            mTitleBar.setRightViewEnable(false);
+//            mTitleBar.setRightVisible(false);
+//        }
     }
 
     @Override
