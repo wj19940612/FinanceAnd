@@ -1,5 +1,7 @@
 package com.sbai.finance.fragment;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +15,7 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sbai.finance.BuildConfig;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.TestActivity;
 import com.sbai.finance.activity.WebActivity;
@@ -83,6 +86,29 @@ public class ArenaFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Launcher.with(getActivity(), TestActivity.class).execute();
+            }
+        });
+
+        if (!BuildConfig.FLAVOR.equalsIgnoreCase("dev")
+                || !BuildConfig.FLAVOR.equalsIgnoreCase("alpha")
+                || !BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+            mTitleBar.setRightViewEnable(false);
+            mTitleBar.setRightVisible(false);
+        }
+
+        mTitleBar.setRightVisible(true);
+        mTitleBar.setRightViewEnable(true);
+        mTitleBar.setRightText("活动入口" + "");
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, Client.ACTIVITY_URL_GUESS_HAPPY)
+                        .putExtra(WebActivity.TITLE_BAR_BACKGROUND, ContextCompat.getColor(getActivity(), R.color.guessKlinePrimary))
+                        .putExtra(WebActivity.TITLE_BAR_BACK_ICON, R.drawable.ic_tb_back_white)
+                        .putExtra(WebActivity.TITLE_BAR_HAS_BOTTOM_SPLIT_LINE, false)
+                        .putExtra(WebActivity.TITLE_BAR_CENTER_TITLE_COLOR, ColorStateList.valueOf(Color.WHITE))
+                        .execute();
             }
         });
     }

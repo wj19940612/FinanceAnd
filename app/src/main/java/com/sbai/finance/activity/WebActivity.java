@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Picture;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -16,6 +18,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.SslErrorHandler;
@@ -30,6 +33,7 @@ import android.widget.ProgressBar;
 import com.sbai.finance.AppJs;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.model.system.JsModel;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.image.ImageUtils;
@@ -56,6 +60,11 @@ public class WebActivity extends BaseActivity {
     public static final String EX_URL = "url";
     public static final String EX_TITLE = "title";
     public static final String EX_HTML = "html";
+    public static final String TITLE_BAR_BACKGROUND = "title_bar_background";
+    public static final String TITLE_BAR_HAS_BOTTOM_SPLIT_LINE = "title_bar_has_bottom_split_line";
+    public static final String TITLE_BAR_BACK_ICON = "title_bar_back_icon";
+    public static final String TITLE_BAR_CENTER_TITLE_COLOR = "title_bar_center_title_color";
+
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -75,6 +84,8 @@ public class WebActivity extends BaseActivity {
 
     private BroadcastReceiver mNetworkChangeReceiver;
     private WebViewClient mWebViewClient;
+    private AppJs mAppJs;
+    private JsModel mJsModel;
 
     public TitleBar getTitleBar() {
         return mTitleBar;
@@ -113,6 +124,16 @@ public class WebActivity extends BaseActivity {
                 mWebView.scrollTo(0, 0);
             }
         });
+
+        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: 2017/12/18 先写死分享
+                if (mJsModel != null) {
+                    mAppJs.openShareDialog(mJsModel.getTitle(), mJsModel.getDescription(), mJsModel.getShareUrl(), mJsModel.getShareThumbnailUrl());
+                }
+            }
+        });
     }
 
     private void initLoginReceiver() {
@@ -131,7 +152,12 @@ public class WebActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mWebView.clearHistory();
+        ((ViewGroup) mWebView.getParent()).removeView(mWebView);
+        mWebView.removeAllViews();
         mWebView.destroy();
+        mWebView = null;
+        mAppJs = null;
         LocalBroadcastManager.getInstance(getActivity())
                 .unregisterReceiver(mLoginReceiver);
     }
@@ -162,6 +188,19 @@ public class WebActivity extends BaseActivity {
         mPureHtml = intent.getStringExtra(EX_HTML);
         tryToFixPageUrl();
         mRootUrl = mPageUrl;
+
+        int titleBarBackground = intent.getIntExtra(TITLE_BAR_BACKGROUND, Color.WHITE);
+        boolean titleBarHasBottomSplitLine = intent.getBooleanExtra(TITLE_BAR_HAS_BOTTOM_SPLIT_LINE, true);
+        int backIcon = intent.getIntExtra(TITLE_BAR_BACK_ICON, -1);
+        ColorStateList colorStateList = intent.getParcelableExtra(TITLE_BAR_CENTER_TITLE_COLOR);
+        if (colorStateList != null) {
+            mTitleBar.setTitleColor(colorStateList);
+        }
+        if (backIcon != -1) {
+            mTitleBar.setBackButtonIcon(backIcon);
+        }
+        mTitleBar.setHasBottomSplitLine(titleBarHasBottomSplitLine);
+        mTitleBar.setBackgroundColor(titleBarBackground);
     }
 
     private void tryToFixPageUrl() {
@@ -205,7 +244,8 @@ public class WebActivity extends BaseActivity {
         mWebView.clearFormData();
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mWebView.setDrawingCacheEnabled(true);
-        mWebView.addJavascriptInterface(new AppJs(this), "AppJs");
+        mAppJs = new AppJs(this);
+        mWebView.addJavascriptInterface(mAppJs, "AppJs");
 
         if (!isFlyme()) {     //魅族max 一旦打开web页面 应用的动画就会出问题  并且max4使用
             if (Build.VERSION.SDK_INT >= 19) {
@@ -332,6 +372,21 @@ public class WebActivity extends BaseActivity {
     private String getHtmlData(String bodyHTML) {
         String head = "<head><style>img{max-width: 100%; width:auto; height: auto;}</style>" + INFO_HTML_META + "</head>";
         return "<html>" + head + bodyHTML + "</html>";
+    }
+
+    public void controlTitleBarRightView(boolean rightViewIsShow, int type, String rightViewContent, JsModel content) {
+        mUrlSet.add(mPageUrl);
+        mJsModel = content;
+        mTitleBar.setRightVisible(rightViewIsShow);
+        mTitleBar.setRightViewEnable(rightViewIsShow);
+        switch (type) {
+            case AppJs.MULTIPART_TEXT:
+                mTitleBar.setRightText(rightViewContent);
+                break;
+            case AppJs.MULTIPART_IMAGE:
+                mTitleBar.setRightTextRightImage(rightViewContent);
+                break;
+        }
     }
 
     protected class WebViewClient extends android.webkit.WebViewClient {

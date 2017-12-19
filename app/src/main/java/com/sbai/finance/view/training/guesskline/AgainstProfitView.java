@@ -103,10 +103,13 @@ public class AgainstProfitView extends LinearLayout {
     }
 
     public void setTotalProfit(List<BattleKline.BattleBean> battleBeans) {
-        for (int i = 0; i < battleBeans.size(); i++) {
-            if (battleBeans.get(i).getUserId() == LocalUser.getUser().getUserInfo().getId()) {
-                continue;
+        for (BattleKline.BattleBean battleBean : battleBeans) {
+            if (battleBean.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
+                battleBeans.remove(battleBean);
+                break;
             }
+        }
+        for (int i = 0; i < battleBeans.size(); i++) {
             if (i < 1) {
                 if (mType.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
                     setTotalProfit(battleBeans.get(i), mUserName, mTotalProfit, mImgAvatar, mImgRank);

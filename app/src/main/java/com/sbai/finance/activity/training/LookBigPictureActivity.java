@@ -37,7 +37,7 @@ public class LookBigPictureActivity extends BaseActivity implements View.OnClick
 		ButterKnife.bind(this);
 		initData(getIntent());
 		initTitleBar();
-		if (mMissAvatar != 0) {
+		if (mMissAvatar == 0) {
 			GlideApp.with(this).load(mPortrait)
 					.thumbnail(0.1f)
 					.error(R.drawable.ic_default_avatar_big)

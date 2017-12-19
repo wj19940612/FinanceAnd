@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.sbai.finance.App;
 import com.sbai.finance.BuildConfig;
+import com.sbai.finance.Preference;
 import com.sbai.finance.game.callback.OnPushReceiveListener;
 import com.sbai.finance.net.API;
 import com.sbai.finance.net.Callback;
@@ -39,6 +40,10 @@ public class GamePusher extends SimpleConnector {
 
     public void setOnPushReceiveListener(OnPushReceiveListener onPushReceiveListener) {
         mOnPushReceiveListener = onPushReceiveListener;
+    }
+
+    public void removeOnPushReceiveListener() {
+        mOnPushReceiveListener = null;
     }
 
     public GamePusher() {
@@ -139,9 +144,9 @@ public class GamePusher extends SimpleConnector {
     private void register() {
         String tokens = CookieManger.getInstance().getCookies();
         RegisterInfo registerInfo = new RegisterInfo(tokens);
-        registerInfo.setDevice(AppInfo.getDeviceHardwareId(App.getAppContext()));
+        registerInfo.setDevice(Preference.get().getPushClientId());
         registerInfo.setChannel(AppInfo.getMetaData(App.getAppContext(), "UMENG_CHANNEL"));
-        WsRequest<RegisterInfo> request = WsUtils.getRequest(WsRequest.REGISTER, registerInfo);
+        WsRequest<RegisterInfo> request = new WsRequest<>(WsRequest.REGISTER, registerInfo);
 
         Log.d(TAG, "register: " + registerInfo);
 
