@@ -59,9 +59,14 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
         mCountdown.setTotalTime(totalTime, new KlineBattleCountDownView.OnCountDownListener() {
             @Override
             public void finish() {
-                battleFinish();
+                //  battleFinish();
             }
         });
+        if (mBattleKline.getBattleStaList().size() > 0) {
+            if (mBattleKline.getBattleStaList().get(0).getBattleStatus() == BattleKline.STATUS_END) {
+                battleFinish();
+            }
+        }
         mKlineView.initKlineDataList(mBattleKline.getUserMarkList());
         updateLastProfitData(mBattleKline.getBattleStaList());
         if (mBattleKline.getUserMarkList() != null) {
@@ -81,12 +86,9 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
     @Override
     protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
         super.onBattleKlinePushReceived(battleBean);
-        if (battleBean.getCode() == BattleKline.PUSH_CODE_AGAINST_PROFIT) {
-            List<BattleKline.BattleBean> battleBeans = new ArrayList<>();
-            battleBeans.add(battleBean);
-            battleBeans.addAll(battleBean.getOtherUsers());
-            updateLastProfitData(battleBeans);
-        } else if (battleBean.getCode() == BattleKline.PUSH_CODE_BATTLE_FINISH) {
+        if (battleBean.getCode() == String.valueOf(BattleKline.PUSH_CODE_AGAINST_PROFIT)) {
+            updateLastProfitData(battleBean.getUserMatch());
+        } else if (battleBean.getCode() == String.valueOf(BattleKline.PUSH_CODE_BATTLE_FINISH)) {
             battleFinish();
         }
     }
@@ -114,7 +116,7 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
     }
 
     private void updateMyLastOperateData(BattleKlineOperate data, String type) {
-        if (data.getBattleStatus() == BattleKline.STATUS_END) {
+         if (data.getBattleStatus() == BattleKline.STATUS_END) {
             battleFinish();
             return;
         }

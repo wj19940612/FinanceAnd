@@ -157,11 +157,12 @@
         android:paddingBottom="23dp"
         android:paddingLeft="30dp"
         android:paddingTop="@dimen/common_padding"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <FrameLayout
             android:layout_width="36dp"
-            android:layout_height="36dp">
+            android:layout_height="36dp"
+            android:layout_marginRight="@dimen/common_padding">
 
             <ImageView
                 android:id="@+id/imgAvatar"

@@ -1,5 +1,6 @@
 package com.sbai.finance.activity.arena.klinebattle;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,12 +8,19 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.sbai.chart.ColorCfg;
 import com.sbai.chart.KlineChart;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.game.callback.OnPushReceiveListener;
+import com.sbai.finance.kgame.GamePusher;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKline;
+import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.audio.MissAudioManager;
+import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.klinebattle.BattleKlineChart;
 import com.sbai.finance.view.training.guesskline.AgainstProfitView;
@@ -43,6 +51,20 @@ public class BattleKlineDetailActivity extends BaseActivity {
     protected int mCurrentIndex = 39;
     protected int mRemainKlineAmount;
     protected BattleKline mBattleKline;
+    private OnPushReceiveListener mKlineBattlePushReceiverListener = new OnPushReceiveListener() {
+        @Override
+        public void onPushReceive(Object o, String originalData) {
+            BattleKline.BattleBean battleBean = new Gson().fromJson(originalData, BattleKline.BattleBean.class);
+            if (battleBean != null) {
+                onBattleKlinePushReceived(battleBean);
+            }
+        }
+    };
+
+    protected void onBattleKlinePushReceived(final BattleKline.BattleBean battleBean) {
+        if (!LocalUser.getUser().isLogin()) return;
+
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +76,25 @@ public class BattleKlineDetailActivity extends BaseActivity {
         initTitleView();
         initKlineView();
         initOperateView();
+        GamePusher.get().connect();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        GamePusher.get().setOnPushReceiveListener(mKlineBattlePushReceiverListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        GamePusher.get().removeOnPushReceiveListener();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GamePusher.get().close();
     }
 
     private void initKlineView() {
