@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.JsonPrimitive;
@@ -172,7 +173,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                                     .execute();
                         } else {
                             stopVoice();
-                            Launcher.with(MissProfileQuestionFragment.this,LoginActivity.class).executeForResult(REQ_SUBMIT_QUESTION_LOGIN);
+                            Launcher.with(MissProfileQuestionFragment.this, LoginActivity.class).executeForResult(REQ_SUBMIT_QUESTION_LOGIN);
                         }
                     }
                 });
@@ -735,6 +736,8 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
+            @BindView(R.id.contentRL)
+            RelativeLayout mContentRL;
             @BindView(R.id.item)
             LinearLayout mItemLayout;
             @BindView(R.id.month)
@@ -780,8 +783,10 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                 if (theDifferentMonth) {
                     mMonth.setVisibility(View.VISIBLE);
                     mMonth.setText(DateUtil.getFormatYearMonth(item.getCreateTime()));
+                    mContentRL.setPadding(0, (int) Display.dp2Px(14, context.getResources()), 0, (int) Display.dp2Px(14, context.getResources()));
                 } else {
                     mMonth.setVisibility(View.GONE);
+                    mContentRL.setPadding(0, (int) Display.dp2Px(25, context.getResources()), 0, (int) Display.dp2Px(14, context.getResources()));
                 }
 
                 mDay.setText(DateUtil.getFormatDay(item.getCreateTime()).substring(0, 2));
