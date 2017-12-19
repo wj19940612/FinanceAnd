@@ -99,8 +99,7 @@ public class BattlePushActivity extends StatusBarActivity {
                 || getActivity() instanceof NounExplanationActivity
                 || getActivity() instanceof JudgeTrainingActivity
                 || getActivity() instanceof TrainingCountDownActivity
-                || getActivity() instanceof BattleActivity
-                || getActivity() instanceof BattleKlineDetailActivity) {
+                || getActivity() instanceof BattleActivity) {
             return false;
         }
         return true;

@@ -135,6 +135,36 @@ public class BattleKline implements Parcelable {
         this.rise = rise;
     }
 
+    public static class UserInfo {
+        private int userId;
+        private String userName;
+        private String userPortraits;
+
+        public int getUserId() {
+            return userId;
+        }
+
+        public void setUserId(int userId) {
+            this.userId = userId;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public String getUserPortrait() {
+            return userPortraits;
+        }
+
+        public void setUserPortrait(String userPortrait) {
+            this.userPortraits = userPortrait;
+        }
+    }
+
     public static class BattleBean implements Comparable<BattleBean>, Parcelable {
         /**
          * battleId : 19
@@ -160,7 +190,7 @@ public class BattleKline implements Parcelable {
         private int userId;
         private String userName;
         private String userPortrait;
-        private List<BattleBean> userMatchList;
+        private List<UserInfo> userMatchList;
 
         public String getBattleType() {
             return battleType;
@@ -170,11 +200,11 @@ public class BattleKline implements Parcelable {
             this.battleType = battleType;
         }
 
-        public List<BattleBean> getUserMatch() {
+        public List<UserInfo> getUserMatch() {
             return userMatchList;
         }
 
-        public void setUserMatchList(List<BattleBean> userMatchList) {
+        public void setUserMatchList(List<UserInfo> userMatchList) {
             this.userMatchList = userMatchList;
         }
 
@@ -309,7 +339,7 @@ public class BattleKline implements Parcelable {
             this.userName = in.readString();
             this.userPortrait = in.readString();
             this.battleType = in.readString();
-            this.userMatchList = new ArrayList<BattleBean>();
+            this.userMatchList = new ArrayList<UserInfo>();
             in.readList(this.userMatchList, BattleBean.class.getClassLoader());
         }
 

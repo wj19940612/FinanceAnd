@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sbai.chart.ColorCfg;
 import com.sbai.chart.KlineChart;
 import com.sbai.finance.ExtraKeys;
@@ -54,16 +55,19 @@ public class BattleKlineDetailActivity extends BaseActivity {
     private OnPushReceiveListener mKlineBattlePushReceiverListener = new OnPushReceiveListener() {
         @Override
         public void onPushReceive(Object o, String originalData) {
-            BattleKline.BattleBean battleBean = new Gson().fromJson(originalData, BattleKline.BattleBean.class);
-            if (battleBean != null) {
-                onBattleKlinePushReceived(battleBean);
+            try {
+                BattleKline.BattleBean battleBean = new Gson().fromJson(o.toString(), BattleKline.BattleBean.class);
+                if (battleBean != null) {
+                    onBattleKlinePushReceived(battleBean);
+                }
+            } catch (Exception e) {
+
             }
         }
     };
 
     protected void onBattleKlinePushReceived(final BattleKline.BattleBean battleBean) {
         if (!LocalUser.getUser().isLogin()) return;
-
     }
 
     @Override
@@ -95,6 +99,7 @@ public class BattleKlineDetailActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         GamePusher.get().close();
+        mCountdown.cancelCount();
     }
 
     private void initKlineView() {

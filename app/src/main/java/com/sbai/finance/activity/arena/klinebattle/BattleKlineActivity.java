@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -108,10 +109,13 @@ public class BattleKlineActivity extends BaseActivity {
     private OnPushReceiveListener mKlineBattlePushReceiverListener = new OnPushReceiveListener() {
         @Override
         public void onPushReceive(Object o, String originalData) {
-            BattleKline.BattleBean battleBean = new Gson().fromJson(o.toString(), new TypeToken<BattleKline.BattleBean>() {
-            }.getType());
-            if (battleBean != null) {
-                onBattleKlinePushReceived(battleBean);
+            try {
+                BattleKline.BattleBean battleBean = new Gson().fromJson(o.toString(), BattleKline.BattleBean.class);
+                if (battleBean != null) {
+                    onBattleKlinePushReceived(battleBean);
+                }
+            } catch (Exception e) {
+                ToastUtil.show(e.getMessage());
             }
         }
     };
@@ -324,10 +328,7 @@ public class BattleKlineActivity extends BaseActivity {
                     if ((mType.equalsIgnoreCase(BattleKline.TYPE_1V1) && battleBean.getUserMatch().size() == 2)
                             || mType.equalsIgnoreCase(BattleKline.TYPE_4V4) && battleBean.getUserMatch().size() == 4) {
                         mStartMatchDialog.dismiss();
-                        List<BattleKline.BattleBean> battleBeans = new ArrayList<>();
-                        battleBeans.add(battleBean);
-                        battleBeans.addAll(battleBean.getUserMatch());
-                        BattleKlineMatchSuccessDialog.get(getActivity(), battleBeans, new BattleKlineMatchSuccessDialog.OnDismissListener() {
+                        BattleKlineMatchSuccessDialog.get(getActivity(), battleBean.getUserMatch(), new BattleKlineMatchSuccessDialog.OnDismissListener() {
                             @Override
                             public void onDismiss() {
                                 Launcher.with(getActivity(), BattleKlinePkActivity.class)
