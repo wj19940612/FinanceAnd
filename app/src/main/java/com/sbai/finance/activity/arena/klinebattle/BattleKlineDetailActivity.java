@@ -170,7 +170,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
     @Override
     protected void buyOperate() {
         Client.requestKlineBattleBuy().setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<BattleKline.BattleBean>, BattleKline.BattleBean>() {
                     @Override
                     protected void onRespSuccessData(BattleKline.BattleBean data) {
@@ -188,7 +187,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
     @Override
     protected void clearOperate() {
         Client.requestKlineBattleSell().setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<BattleKline.BattleBean>, BattleKline.BattleBean>() {
                     @Override
                     protected void onRespSuccessData(BattleKline.BattleBean data) {
@@ -206,7 +204,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
     @Override
     protected void passOperate() {
         Client.requestKlineBattlePass().setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<BattleKline.BattleBean>, BattleKline.BattleBean>() {
                     @Override
                     protected void onRespSuccessData(BattleKline.BattleBean data) {

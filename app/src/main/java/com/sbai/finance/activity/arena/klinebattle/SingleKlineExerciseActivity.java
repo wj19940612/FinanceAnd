@@ -14,15 +14,13 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.arena.KLineResultActivity;
 import com.sbai.finance.activity.arena.KlinePracticeResultActivity;
-import com.sbai.finance.kgame.GamePusher;
-import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.model.klinebattle.BattleKline;
+import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.klinebattle.BattleKlineChart;
 import com.sbai.finance.view.training.guesskline.AgainstProfitView;
@@ -34,9 +32,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-
-import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 
 /**
  * k线对决 单人练习
@@ -137,12 +132,6 @@ public class SingleKlineExerciseActivity extends BaseActivity {
                         if (data != null) {
                             updateBattleData(data);
                         }
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        super.onRespFailure(failedResp);
-                        ToastUtil.show(failedResp.getMsg());
                     }
                 }).fireFree();
     }

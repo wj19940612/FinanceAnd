@@ -6,17 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -52,8 +48,6 @@ import com.sbai.finance.view.dialog.BattleKlineMatchSuccessDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.glide.GlideApp;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -413,7 +407,6 @@ public class BattleKlineActivity extends BaseActivity {
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
-                        super.onRespFailure(failedResp);
                         if (failedResp.getCode() == Battle.CODE_NO_ENOUGH_MONEY) {
                             showRechargeDialog(failedResp.getMsg());
                         } else {
@@ -500,12 +493,6 @@ public class BattleKlineActivity extends BaseActivity {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
 
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        super.onRespFailure(failedResp);
-                        ToastUtil.show(failedResp.getMsg());
                     }
                 }).fireFree();
 
