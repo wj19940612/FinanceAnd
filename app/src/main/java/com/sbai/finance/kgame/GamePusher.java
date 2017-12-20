@@ -135,7 +135,7 @@ public class GamePusher extends SimpleConnector {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mOnPushReceiveListener.onPushReceive(o, msg);
+                    mOnPushReceiveListener.onOriginPushReceive(o, msg);
                 }
             });
             mMessageIdQueue.add(resp.getMsgId());

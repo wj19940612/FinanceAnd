@@ -19,7 +19,6 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.arena.klinebattle.BattleKlineActivity;
-import com.sbai.finance.activity.arena.klinebattle.BattleKlinePkActivity;
 import com.sbai.finance.activity.arena.klinebattle.BattleKlineReviewActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineBattleResult;
