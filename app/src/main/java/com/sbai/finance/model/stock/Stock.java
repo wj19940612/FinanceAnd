@@ -12,8 +12,6 @@ import android.os.Parcelable;
  */
 public class Stock implements Parcelable {
 
-    public static final String EXPEND = "expend";
-
     public static final int EXCHANGE_STATUS_CLOSE = 0;
     public static final int EXCHANGE_STATUS_OPEN = 1;
 
@@ -21,6 +19,7 @@ public class Stock implements Parcelable {
 
     public static final String OPTIONAL_TYPE_STOCK = "stock";
     public static final String OPTIONAL_TYPE_PLATE = "plate";
+    public static final String OPTIONAL_TYPE_INDEX = "expend";
 
     public static final int PRICE_SCALE = 2;
 
@@ -37,7 +36,7 @@ public class Stock implements Parcelable {
     private int exchangeId;
     private int id;
     private String stockType; // 股票类型 (N新股，ST：ST 股，S：S 股，PUB：普通股)
-    private String type; // 股票标识tye (stk: 股票，plate：板块 )
+    private String type; // 股票标识tye (stock: 股票，plate：板块 ，expend 指数)
     private String varietyCode; // 代码
     private String varietyName;
     private String varietyType; // 股票类型（A：A 股，B：B 股，H：H 股，expend：指数，fund：基金，bonds：债券）

@@ -33,6 +33,8 @@ public class ShrinkTextLayout extends LinearLayout {
     private TextView mContentText;
     private TextView mShrinkBtnTextView;
 
+    private CharSequence mContent;
+
     public ShrinkTextLayout(Context context) {
         this(context, null);
     }
@@ -96,9 +98,16 @@ public class ShrinkTextLayout extends LinearLayout {
     }
 
     public void setContentText(CharSequence contentText) {
+        if (TextUtils.isEmpty(mContent) || !TextUtils.equals(contentText, mContent)) {
+            mContent = contentText;
+            updateContentText(contentText);
+        }
+    }
+
+    private void updateContentText(CharSequence contentText) {
         mContentText.setText(contentText);
         mContentText.setMaxLines(Integer.MAX_VALUE);
-        if(!isSpreadEd){
+        if (!isSpreadEd) {
             mContentText.post(new Runnable() {
                 @Override
                 public void run() {

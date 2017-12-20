@@ -15,9 +15,6 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.arena.KLineResultActivity;
-import com.sbai.finance.activity.arena.KlinePracticeResultActivity;
-import com.sbai.finance.activity.arena.KlineRankListActivity;
 import com.sbai.finance.activity.arena.RewardActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
@@ -71,7 +68,6 @@ import com.sbai.finance.view.LeaderBoardView;
 import com.sbai.finance.view.SevenHourNewsView;
 import com.sbai.finance.view.VerticalScrollTextView;
 import com.sbai.finance.view.dialog.ShareDialog;
-import com.sbai.httplib.ApiCallback;
 import com.sbai.httplib.ApiError;
 import com.sbai.httplib.CookieManger;
 
@@ -193,7 +189,7 @@ public class HomePageFragment extends BaseFragment {
                     umengEventCount(UmengCountEventId.PAGE_OPTIONAL);
                     Stock stock = (Stock) t;
                     if (stock != null) {
-                        if (stock.getVarietyType().equalsIgnoreCase(Stock.EXPEND)) {
+                        if (stock.getType().equalsIgnoreCase(Stock.OPTIONAL_TYPE_INDEX)) {
                             Launcher.with(getActivity(), StockIndexActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, stock).execute();
                         } else {
@@ -818,7 +814,7 @@ public class HomePageFragment extends BaseFragment {
                     protected void onRespSuccess(Resp<Stock> resp) {
                         Stock result = resp.getData();
                         if (result != null) {
-                            if (result.getVarietyType().equalsIgnoreCase(Stock.EXPEND)) {
+                            if (result.getType().equalsIgnoreCase(Stock.OPTIONAL_TYPE_INDEX)) {
                                 Launcher.with(getActivity(), StockIndexActivity.class)
                                         .putExtra(Launcher.EX_PAYLOAD, result).execute();
                             } else {

@@ -337,7 +337,7 @@ public class AppJs {
                     @Override
                     protected void onRespSuccess(Resp<Stock> resp) {
                         Stock result = resp.getData();
-                        if (result.getVarietyType().equalsIgnoreCase(Stock.EXPEND)) {
+                        if (result.getType().equalsIgnoreCase(Stock.OPTIONAL_TYPE_INDEX)) {
                             Launcher.with(mContext, StockIndexActivity.class)
                                     .putExtra(Launcher.EX_PAYLOAD, result).execute();
                         } else {
