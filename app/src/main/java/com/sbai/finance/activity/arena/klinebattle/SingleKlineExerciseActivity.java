@@ -149,11 +149,6 @@ public class SingleKlineExerciseActivity extends BaseActivity {
                 }).fireFree();
     }
 
-    @OnClick(R.id.back)
-    public void onViewClicked() {
-        getActivity().onBackPressed();
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

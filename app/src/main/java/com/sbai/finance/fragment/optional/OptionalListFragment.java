@@ -120,7 +120,7 @@ public class OptionalListFragment extends BaseFragment implements
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Stock stock = (Stock) parent.getItemAtPosition(position);
                 if (stock != null) {
-                    if (stock.getVarietyType().equalsIgnoreCase(Stock.EXPEND)) {
+                    if (stock.getType().equalsIgnoreCase(Stock.OPTIONAL_TYPE_INDEX)) {
                         Launcher.with(getActivity(), StockIndexActivity.class)
                                 .putExtra(Launcher.EX_PAYLOAD, stock).executeForResult(OPTIONAL_CHANGE);
                     } else {

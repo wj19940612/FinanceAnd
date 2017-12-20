@@ -390,7 +390,7 @@ public class StockListFragment extends BaseFragment {
     }
 
     private void launcherIndexActivity(Stock stock) {
-        if (stock != null && stock.getVarietyType().equalsIgnoreCase(Stock.EXPEND)) {
+        if (stock != null && stock.getType().equalsIgnoreCase(Stock.OPTIONAL_TYPE_INDEX)) {
             Launcher.with(getActivity(), StockIndexActivity.class)
                     .putExtra(Launcher.EX_PAYLOAD, stock).execute();
         }

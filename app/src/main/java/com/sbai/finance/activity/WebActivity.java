@@ -129,7 +129,7 @@ public class WebActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if (mJsModel != null) {
-                    mAppJs.openShareDialog(mJsModel.getTitle(), mJsModel.getDescription(), mJsModel.getShareUrl(), mJsModel.getShareThumbnailUrl(), getString(R.string.share_to));
+                    mAppJs.openShareDialog(mJsModel.getTitle(), mJsModel.getDescription(), mJsModel.getShareUrl(), mJsModel.getShareThumbnailUrl(), "", getString(R.string.share_to));
                 }
             }
         });
