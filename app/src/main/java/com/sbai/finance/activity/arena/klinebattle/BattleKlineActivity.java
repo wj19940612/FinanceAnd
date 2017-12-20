@@ -348,19 +348,9 @@ public class BattleKlineActivity extends BaseActivity {
                                 }
                             } else {
                                 if (resp.getData().getStatus() == BattleKline.STATUS_BATTLEING) {
-                                    SmartDialog.single(getActivity(), getString(R.string.you_have_batting_please_go_to_see))
-                                            .setPositive(R.string.go_to_see, new SmartDialog.OnClickListener() {
-                                                @Override
-                                                public void onClick(Dialog dialog) {
-                                                    dialog.dismiss();
-                                                    Launcher.with(getActivity(), BattleKlineDetailActivity.class)
-                                                            .putExtra(ExtraKeys.GUESS_TYPE, resp.getData().getBattleType())
-                                                            .execute();
-                                                }
-                                            })
-                                            .setCancelableOnTouchOutside(false)
-                                            .setNegativeVisible(View.GONE)
-                                            .show();
+                                    Launcher.with(getActivity(), BattleKlineDetailActivity.class)
+                                            .putExtra(ExtraKeys.GUESS_TYPE, resp.getData().getBattleType())
+                                            .execute();
                                 } else if (resp.getData().getStatus() == BattleKline.STATUS_END) {
                                     SmartDialog.single(getActivity(), getString(R.string.you_have_batting_please_go_to_see))
                                             .setPositive(R.string.go_to_see, new SmartDialog.OnClickListener() {
