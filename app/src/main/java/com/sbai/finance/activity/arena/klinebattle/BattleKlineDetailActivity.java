@@ -1,52 +1,29 @@
 package com.sbai.finance.activity.arena.klinebattle;
 
 import android.content.BroadcastReceiver;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.TextView;
 
-import com.sbai.chart.ColorCfg;
-import com.sbai.chart.KlineChart;
-import com.sbai.finance.ExtraKeys;
-import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.arena.KLineResultActivity;
-import com.sbai.finance.activity.arena.KlinePracticeResultActivity;
 import com.sbai.finance.game.callback.OnPushReceiveListener;
 import com.sbai.finance.kgame.GamePusher;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
-import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.ToastUtil;
-import com.sbai.finance.view.TitleBar;
-import com.sbai.finance.view.klinebattle.BattleKlineChart;
-import com.sbai.finance.view.training.guesskline.AgainstProfitView;
-import com.sbai.finance.view.training.guesskline.BattleKlineOperateView;
-import com.sbai.finance.view.training.guesskline.KlineBattleCountDownView;
 
 import java.util.Collections;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 /**
- * k线对决页面
+ * k线对决 多人页面
  */
-
 public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
 
     private List<BattleKline.BattleBean> mBattleStaList;

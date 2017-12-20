@@ -39,9 +39,8 @@ import butterknife.OnClick;
 import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 
 /**
- * k线单人练习
+ * k线对决 单人练习
  */
-
 public class SingleKlineExerciseActivity extends BaseActivity {
     @BindView(R.id.againstProfit)
     AgainstProfitView mAgainstProfit;
@@ -58,6 +57,7 @@ public class SingleKlineExerciseActivity extends BaseActivity {
     protected int mRemainKlineAmount;
     protected BattleKline mBattleKline;
     protected boolean mHasPosition;
+
     private List<BattleKlineData> mBattleUserMarkList;
     private int mPositionIndex = -1;
 
