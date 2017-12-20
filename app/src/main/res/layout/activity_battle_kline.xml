@@ -25,15 +25,39 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_guess_kline_top"/>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="153dp"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/ic_guess_kline_wave"/>
+
+            <TextView
+                android:id="@+id/rank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/common_padding"
+                android:drawablePadding="3dp"
+                android:drawableTop="@drawable/ic_guess_kline_cup"
+                android:gravity="center"
+                android:text="@string/ranking"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"/>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:elevation="1dp"
             android:orientation="vertical"
             android:paddingLeft="42dp"
             android:paddingRight="42dp">
@@ -129,29 +153,6 @@
             </RelativeLayout>
 
         </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="153dp"
-            android:layout_alignParentBottom="true"
-            android:elevation="-1dp"
-            android:background="@drawable/ic_guess_kline_wave">
-
-            <TextView
-                android:id="@+id/rank"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/common_padding"
-                android:drawablePadding="3dp"
-                android:drawableTop="@drawable/ic_guess_kline_cup"
-                android:gravity="center"
-                android:text="@string/ranking"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"/>
-
-        </RelativeLayout>
-    </RelativeLayout>
+    </FrameLayout>
 
 </LinearLayout>
