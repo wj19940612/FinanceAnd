@@ -124,7 +124,11 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
                     }
                     mOperateView.setRank(battleBean.getSort());
                     mOperateView.setTotalProfit(battleBean.getProfit());
-                    mOperateView.setPositionProfit(battleBean.getPositions());
+                    if (mHasPosition) {
+                        mOperateView.setPositionProfit(battleBean.getPositions());
+                    } else {
+                        mOperateView.clearPositionProfit();
+                    }
                 }
             }
         }

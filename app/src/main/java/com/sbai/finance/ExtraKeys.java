@@ -67,13 +67,6 @@ public interface ExtraKeys {
     String USER_NAME = "user_name";
     String User_Portrait="user_portrait";
 
-    String PROFIT = "profit";
-    String KLINEBATTLE = "klinebattle";
-
-    String BATTLE_STOCK_END_TIME = "battle_stock_end_time";
-    String BATTLE_STOCK_START_TIME = "battle_stock_start_time";
-    String BATTLE_STOCK_CODE = "battle_stock_code";
-    String BATTLE_STOCK_NAME = "battle_stock_name";
     String BATTLE_PROFIT = "battle_profit";
     String BATTLE_KLINE_DATA = "battle_kline_data";
 }
