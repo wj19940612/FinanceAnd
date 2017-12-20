@@ -111,6 +111,11 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
                             mStartDialogFragment = StartDialogFragment.newInstance(data);
                             mStartDialogFragment.show(getSupportFragmentManager());
                         }
+
+                        @Override
+                        protected boolean onErrorToast() {
+                            return false;
+                        }
                     }).fireFree();
         }
     }
