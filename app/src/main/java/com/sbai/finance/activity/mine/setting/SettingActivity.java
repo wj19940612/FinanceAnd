@@ -8,7 +8,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 
 import com.google.gson.JsonObject;
-import com.sbai.finance.BuildConfig;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
@@ -21,9 +20,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.AppInfo;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.view.IconTextRow;
 import com.sbai.finance.view.SmartDialog;
@@ -120,10 +117,6 @@ public class SettingActivity extends BaseActivity {
                 Launcher.with(getActivity(), AboutUsActivity.class).execute();
                 break;
             case R.id.appInfo:
-                if (BuildConfig.DEBUG) {
-                    ToastUtil.show(AppInfo.getVersionName(getActivity()) + ": "
-                            + AppInfo.getMetaData(getActivity(), AppInfo.Meta.UMENG_CHANNEL));
-                }
                 break;
             case R.id.logout:
                 if (LocalUser.getUser().isLogin()) {
