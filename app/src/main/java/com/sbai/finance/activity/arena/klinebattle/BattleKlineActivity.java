@@ -16,16 +16,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.arena.KLineResultActivity;
 import com.sbai.finance.activity.arena.KlineRankListActivity;
-import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.web.LocalImageHtmlActivity;
@@ -54,7 +51,6 @@ import com.sbai.finance.view.dialog.BaseDialog;
 import com.sbai.finance.view.dialog.BattleKlineMatchSuccessDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.glide.GlideApp;
-import com.sbai.socket.WsResponse;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -158,12 +154,6 @@ public class BattleKlineActivity extends BaseActivity {
                 mOnePkIngot.setText(getString(R.string.number_ingot, String.valueOf(battleKlineConf.getBounty())));
             }
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        GamePusher.get().removeOnPushReceiveListener();
     }
 
     @Override
