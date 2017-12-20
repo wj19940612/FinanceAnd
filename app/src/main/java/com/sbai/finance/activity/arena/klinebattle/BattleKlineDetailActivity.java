@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.arena.klinebattle;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sbai.chart.ColorCfg;
 import com.sbai.chart.KlineChart;
 import com.sbai.finance.ExtraKeys;
@@ -19,6 +21,7 @@ import com.sbai.finance.kgame.GamePusher;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -30,6 +33,9 @@ import com.sbai.finance.view.training.guesskline.KlineBattleCountDownView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
+import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 /**
  * k线对决页面
@@ -51,19 +57,26 @@ public class BattleKlineDetailActivity extends BaseActivity {
     protected int mCurrentIndex = 39;
     protected int mRemainKlineAmount;
     protected BattleKline mBattleKline;
-    private OnPushReceiveListener mKlineBattlePushReceiverListener = new OnPushReceiveListener() {
+    private OnPushReceiveListener<BattleKline.BattleBean> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKline.BattleBean>() {
         @Override
-        public void onPushReceive(Object o, String originalData) {
-            BattleKline.BattleBean battleBean = new Gson().fromJson(originalData, BattleKline.BattleBean.class);
+        public void onPushReceive(BattleKline.BattleBean battleBean, String originalData) {
             if (battleBean != null) {
                 onBattleKlinePushReceived(battleBean);
             }
         }
     };
 
+    private BroadcastReceiver mNetworkChangeReceiver = new Network.NetworkChangeReceiver() {
+        @Override
+        protected void onNetworkChanged(int availableNetworkType) {
+            if (availableNetworkType > Network.NET_NONE) {
+                GamePusher.get().connect();
+            }
+        }
+    };
+
     protected void onBattleKlinePushReceived(final BattleKline.BattleBean battleBean) {
         if (!LocalUser.getUser().isLogin()) return;
-
     }
 
     @Override
@@ -76,7 +89,7 @@ public class BattleKlineDetailActivity extends BaseActivity {
         initTitleView();
         initKlineView();
         initOperateView();
-        GamePusher.get().connect();
+        registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 
     @Override
@@ -94,7 +107,8 @@ public class BattleKlineDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        GamePusher.get().close();
+        mCountdown.cancelCount();
+        unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 
     private void initKlineView() {

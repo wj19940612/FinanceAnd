@@ -16,6 +16,7 @@ import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.audio.MissAudioManager;
+import com.sbai.finance.utils.audio.OnPlayRadioManager;
 import com.sbai.finance.view.MissFloatWindow;
 
 /**
@@ -23,7 +24,7 @@ import com.sbai.finance.view.MissFloatWindow;
  * 包含音频播放的
  */
 
-public abstract class MediaPlayActivity extends BaseActivity {
+public abstract class MediaPlayActivity extends BaseActivity implements OnPlayRadioManager{
 
     protected MediaPlayService mMediaPlayService;
 

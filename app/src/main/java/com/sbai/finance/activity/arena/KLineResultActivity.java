@@ -1,6 +1,7 @@
 package com.sbai.finance.activity.arena;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,11 +18,11 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.arena.klinebattle.BattleKlineActivity;
 import com.sbai.finance.activity.arena.klinebattle.BattleKlinePkActivity;
 import com.sbai.finance.activity.arena.klinebattle.BattleKlineReviewActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineBattleResult;
-import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -78,11 +79,13 @@ public class KLineResultActivity extends BaseActivity {
         mResultAdapter = new ResultAdapter(this);
         mResultAdapter.setOnMoreClickListener(new ResultAdapter.OnMoreClickListener() {
             @Override
-            public void onMoreClick() {
+            public void onMoreClick(KlineBattleResult.Ranking ranking) {
                 Launcher.with(KLineResultActivity.this, BattleKlineReviewActivity.class)
                         .putExtra(ExtraKeys.GUESS_TYPE, mGoinType)
+                        .putExtra(ExtraKeys.USER_ID, ranking.getUserId())
+                        .putExtra(ExtraKeys.USER_NAME, ranking.getUserName())
+                        .putExtra(ExtraKeys.User_Portrait, ranking.getUserPortrait())
                         .execute();
-                finish();
             }
         });
         mListView.setAdapter(mResultAdapter);
@@ -120,7 +123,9 @@ public class KLineResultActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.moreOneBtn:
-                Launcher.with(KLineResultActivity.this, BattleKlinePkActivity.class).putExtra(ExtraKeys.GUESS_TYPE, mGoinType).execute();
+                Intent intent = new Intent(this, BattleKlineActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
                 break;
         }
@@ -128,7 +133,7 @@ public class KLineResultActivity extends BaseActivity {
 
     static class ResultAdapter extends ArrayAdapter<KlineBattleResult.Ranking> {
         interface OnMoreClickListener {
-            public void onMoreClick();
+            public void onMoreClick(KlineBattleResult.Ranking userId);
         }
 
         private Context mContext;
@@ -182,7 +187,7 @@ public class KLineResultActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(KlineBattleResult.Ranking data, Context context, int position, int count, final OnMoreClickListener onMoreClickListener) {
+            public void bindDataWithView(final KlineBattleResult.Ranking data, Context context, int position, int count, final OnMoreClickListener onMoreClickListener) {
                 if (data == null) return;
                 mRank.setText(String.valueOf(position + 1));
                 GlideApp.with(context).load(data.getUserPortrait())
@@ -205,7 +210,7 @@ public class KLineResultActivity extends BaseActivity {
                     @Override
                     public void onClick(View view) {
                         if (onMoreClickListener != null) {
-                            onMoreClickListener.onMoreClick();
+                            onMoreClickListener.onMoreClick(data);
                         }
                     }
                 });

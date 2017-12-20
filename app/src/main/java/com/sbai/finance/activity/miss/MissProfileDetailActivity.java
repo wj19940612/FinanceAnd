@@ -64,8 +64,6 @@ import butterknife.OnClick;
 public class MissProfileDetailActivity extends MediaPlayActivity implements MissProfileQuestionFragment.OnFragmentRecycleViewScrollListener {
     public static final String CUSTOM_ID = "custom_id";
 
-    public static final int REQ_SUBMIT_QUESTION_LOGIN = 1002;
-
     public static final int FRAGMENT_QUESTION = 0;
     public static final int FRAGMENT_RADIO = 1;
 
@@ -400,35 +398,8 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
         }
     }
 
-    public void gotoQuestionDetail(Question item, Question playingItem) {
-        if (item != null) {
-            if (playingItem != null) {
-                Launcher.with(this, QuestionDetailActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, item.getId())
-                        .putExtra(ExtraKeys.PLAYING_ID, playingItem.getId())
-                        .putExtra(ExtraKeys.PLAYING_URL, playingItem.getAnswerContext())
-                        .putExtra(ExtraKeys.PLAYING_AVATAR, playingItem.getCustomPortrait())
-                        .executeForResult(REQ_QUESTION_DETAIL);
-            } else {
-                Launcher.with(this, QuestionDetailActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, item.getId())
-                        .executeForResult(REQ_QUESTION_DETAIL);
-            }
-        }
-    }
-
     public void praiseAdd(int praiseCount) {
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_SUBMIT_QUESTION_LOGIN && resultCode == RESULT_OK) {
-            Launcher.with(getActivity(), SubmitQuestionActivity.class)
-                    .putExtra(Launcher.EX_PAYLOAD, mCustomId)
-                    .execute();
-        }
     }
 
     AppBarLayout.OnOffsetChangedListener mOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {

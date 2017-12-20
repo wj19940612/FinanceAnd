@@ -19,11 +19,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.CommentActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
@@ -59,9 +61,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static android.app.Activity.RESULT_OK;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
+import static com.sbai.finance.activity.BaseActivity.REQ_CODE_COMMENT;
+import static com.sbai.finance.activity.BaseActivity.REQ_CODE_LOGIN;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
+import static com.sbai.finance.activity.BaseActivity.REQ_SUBMIT_QUESTION_LOGIN;
 import static com.sbai.finance.activity.miss.MissProfileDetailActivity.CUSTOM_ID;
 
 /**
@@ -69,9 +75,6 @@ import static com.sbai.finance.activity.miss.MissProfileDetailActivity.CUSTOM_ID
  */
 
 public class MissProfileQuestionFragment extends MediaPlayFragment {
-
-    private static final int REQ_CODE_COMMENT = 1001;
-
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(android.R.id.empty)
@@ -170,8 +173,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                                     .execute();
                         } else {
                             stopVoice();
-                            Intent intent = new Intent(getActivity(), LoginActivity.class);
-                            startActivityForResult(intent, MissProfileDetailActivity.REQ_SUBMIT_QUESTION_LOGIN);
+                            Launcher.with(MissProfileQuestionFragment.this, LoginActivity.class).executeForResult(REQ_SUBMIT_QUESTION_LOGIN);
                         }
                     }
                 });
@@ -371,7 +373,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         mQuestionListAdapter.setCallback(new QuestionListAdapter.Callback() {
             @Override
             public void itemClick(Question item) {
-                ((MissProfileDetailActivity) getActivity()).gotoQuestionDetail(item, mPlayIngItem);
+                gotoQuestionDetail(item, mPlayIngItem);
 
                 if (mMiss != null && MissAudioManager.get().isStarted(mMiss)) {
                     MissAudioManager.get().stop();
@@ -445,6 +447,23 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                 }
             }
         });
+    }
+
+    public void gotoQuestionDetail(Question item, Question playingItem) {
+        if (item != null) {
+            if (playingItem != null) {
+                Launcher.with(this, QuestionDetailActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, item.getId())
+                        .putExtra(ExtraKeys.PLAYING_ID, playingItem.getId())
+                        .putExtra(ExtraKeys.PLAYING_URL, playingItem.getAnswerContext())
+                        .putExtra(ExtraKeys.PLAYING_AVATAR, playingItem.getCustomPortrait())
+                        .excuteForResultFragment(REQ_QUESTION_DETAIL);
+            } else {
+                Launcher.with(this, QuestionDetailActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, item.getId())
+                        .excuteForResultFragment(REQ_QUESTION_DETAIL);
+            }
+        }
     }
 
     private void toggleQuestionVoice(Question item) {
@@ -562,7 +581,6 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
 
     @Override
     public void onDestroyView() {
-        Log.e("zzz", "onDestroyView");
         super.onDestroyView();
         mHasEnter = false;
         mBind.unbind();
@@ -570,6 +588,11 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQ_SUBMIT_QUESTION_LOGIN && resultCode == RESULT_OK) {
+            Launcher.with(getActivity(), SubmitQuestionActivity.class)
+                    .putExtra(Launcher.EX_PAYLOAD, mCustomId)
+                    .execute();
+        }
         if (requestCode == REQ_QUESTION_DETAIL && data != null) {
             Question question = data.getParcelableExtra(ExtraKeys.QUESTION);
             Praise praise = data.getParcelableExtra(ExtraKeys.PRAISE);
@@ -713,6 +736,8 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
+            @BindView(R.id.contentRL)
+            RelativeLayout mContentRL;
             @BindView(R.id.item)
             LinearLayout mItemLayout;
             @BindView(R.id.month)
@@ -758,8 +783,10 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                 if (theDifferentMonth) {
                     mMonth.setVisibility(View.VISIBLE);
                     mMonth.setText(DateUtil.getFormatYearMonth(item.getCreateTime()));
+                    mContentRL.setPadding(0, (int) Display.dp2Px(14, context.getResources()), 0, (int) Display.dp2Px(14, context.getResources()));
                 } else {
                     mMonth.setVisibility(View.GONE);
+                    mContentRL.setPadding(0, (int) Display.dp2Px(25, context.getResources()), 0, (int) Display.dp2Px(14, context.getResources()));
                 }
 
                 mDay.setText(DateUtil.getFormatDay(item.getCreateTime()).substring(0, 2));

@@ -165,7 +165,6 @@ public class MissAskFragment extends MediaPlayFragment {
         mSet = new HashSet<>();
         initView();
         mRect = new Rect();
-        requestAskList(true);
     }
 
     @Override
@@ -420,13 +419,13 @@ public class MissAskFragment extends MediaPlayFragment {
 
 
     private void updateLatestQuestionList(List<Question> questionList, boolean isRefresh) {
-        if ((questionList == null || questionList.isEmpty()) && mQuestionList.isEmpty()) {
-            mEmpty.setVisibility(View.VISIBLE);
-            mEmptyRecyclerView.setVisibility(View.GONE);
-        } else {
-            mEmpty.setVisibility(View.GONE);
-            mEmptyRecyclerView.setVisibility(View.VISIBLE);
-        }
+//        if ((questionList == null || questionList.isEmpty()) && mQuestionList.isEmpty()) {
+//            mEmpty.setVisibility(View.VISIBLE);
+//            mEmptyRecyclerView.setVisibility(View.GONE);
+//        } else {
+//            mEmpty.setVisibility(View.GONE);
+//            mEmptyRecyclerView.setVisibility(View.VISIBLE);
+//        }
 
         if (questionList.size() < Client.DEFAULT_PAGE_SIZE) { // load completed
             mLoadMore = false;

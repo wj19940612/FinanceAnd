@@ -128,9 +128,8 @@ public class WebActivity extends BaseActivity {
         mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 2017/12/18 先写死分享
                 if (mJsModel != null) {
-                    mAppJs.openShareDialog(mJsModel.getTitle(), mJsModel.getDescription(), mJsModel.getShareUrl(), mJsModel.getShareThumbnailUrl());
+                    mAppJs.openShareDialog(mJsModel.getTitle(), mJsModel.getDescription(), mJsModel.getShareUrl(), mJsModel.getShareThumbnailUrl(), getString(R.string.share_to));
                 }
             }
         });
@@ -375,6 +374,7 @@ public class WebActivity extends BaseActivity {
     }
 
     public void controlTitleBarRightView(boolean rightViewIsShow, int type, String rightViewContent, JsModel content) {
+        Log.d(TAG, "controlTitleBarRightView: " + rightViewIsShow + " " + mPageUrl);
         mUrlSet.add(mPageUrl);
         mJsModel = content;
         mTitleBar.setRightVisible(rightViewIsShow);
@@ -386,6 +386,13 @@ public class WebActivity extends BaseActivity {
             case AppJs.MULTIPART_IMAGE:
                 mTitleBar.setRightTextRightImage(rightViewContent);
                 break;
+        }
+    }
+
+    public void updateTitleText(String titleContent) {
+        if (isNeedViewTitle()) {
+            mTitle = titleContent;
+            mTitleBar.setTitle(mTitle);
         }
     }
 

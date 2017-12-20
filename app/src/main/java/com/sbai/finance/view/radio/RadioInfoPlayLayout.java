@@ -191,11 +191,6 @@ public class RadioInfoPlayLayout extends LinearLayout {
 
     @OnClick(R.id.play)
     public void onViewClicked() {
-        if (mPlay.isSelected()) {
-            mPlay.setSelected(false);
-        } else {
-            mPlay.setSelected(true);
-        }
         if (mOnRadioPlayListener != null) {
             mOnRadioPlayListener.onRadioPlay();
         }

@@ -24,6 +24,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.utils.audio.OnPlayRadioManager;
 import com.sbai.finance.view.SmartDialog;
 
 import butterknife.BindView;
@@ -36,7 +37,7 @@ import static com.android.volley.DefaultRetryPolicy.DEFAULT_TIMEOUT_MS;
 /**
  * 对小姐姐的提问的评论页面
  */
-public class CommentActivity extends BaseActivity {
+public class CommentActivity extends BaseActivity implements OnPlayRadioManager{
 
     public static final String BROADCAST_ACTION_REPLY_SUCCESS = "broadcast_action_reply_success";
 
@@ -114,6 +115,7 @@ public class CommentActivity extends BaseActivity {
     }
 
 
+
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
@@ -180,7 +182,6 @@ public class CommentActivity extends BaseActivity {
         Client.addComment(mInvitationUserId, mReplyParentId, mCommentType, content, mDataId, mAudioId, mRadioId)
                 .setRetryPolicy(new DefaultRetryPolicy(DEFAULT_TIMEOUT_MS, 0, DEFAULT_BACKOFF_MULT))
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
@@ -192,8 +193,8 @@ public class CommentActivity extends BaseActivity {
                             setResult(RESULT_OK, intent);
                             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
                             Intent lastIntent = getIntent();
-                            lastIntent.putExtra(ExtraKeys.QUESTION_ID,mDataId);
-                            setResult(RESULT_OK,lastIntent);
+                            lastIntent.putExtra(ExtraKeys.QUESTION_ID, mDataId);
+                            setResult(RESULT_OK, lastIntent);
                             finish();
                         } else {
                             ToastUtil.show(resp.getMsg());

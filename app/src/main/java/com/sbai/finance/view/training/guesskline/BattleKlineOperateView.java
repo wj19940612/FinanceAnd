@@ -51,6 +51,7 @@ public class BattleKlineOperateView extends LinearLayout {
     private OperateListener mOperateListener;
     private double mProfit;
     private double mLastPosition;
+    private int mRank;
 
     public interface OperateListener {
         void buy();
@@ -155,6 +156,8 @@ public class BattleKlineOperateView extends LinearLayout {
     }
 
     public void setRank(int rank) {
+        if (mRank == rank) return;
+        mRank = rank;
         Drawable drawable = null;
         switch (rank) {
             case 1:
@@ -172,11 +175,7 @@ public class BattleKlineOperateView extends LinearLayout {
             default:
                 break;
         }
-        GlideApp.with(mContext)
-                .load(drawable)
-                .placeholder(R.drawable.ic_default_avatar)
-                .circleCrop()
-                .into(mImgRank);
+        mImgRank.setBackground(drawable);
     }
 
     public void clearPositionProfit() {

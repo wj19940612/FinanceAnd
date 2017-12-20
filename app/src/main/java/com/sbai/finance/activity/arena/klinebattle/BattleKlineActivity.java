@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -50,6 +52,7 @@ import com.sbai.finance.view.dialog.BattleKlineMatchSuccessDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.glide.GlideApp;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,11 +104,9 @@ public class BattleKlineActivity extends BaseActivity {
         }
     };
 
-    private OnPushReceiveListener mKlineBattlePushReceiverListener = new OnPushReceiveListener() {
+    private OnPushReceiveListener<BattleKline.BattleBean> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKline.BattleBean>() {
         @Override
-        public void onPushReceive(Object o, String originalData) {
-            BattleKline.BattleBean battleBean = new Gson().fromJson(o.toString(), new TypeToken<BattleKline.BattleBean>() {
-            }.getType());
+        public void onPushReceive(BattleKline.BattleBean battleBean, String originalData) {
             if (battleBean != null) {
                 onBattleKlinePushReceived(battleBean);
             }
@@ -306,27 +307,22 @@ public class BattleKlineActivity extends BaseActivity {
     }
 
     protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
-        if (battleBean.getCode().equalsIgnoreCase(String.valueOf(BattleKline.PUSH_CODE_MATCH_FAILED))) {
+        if (battleBean.getCode() == BattleKline.PUSH_CODE_MATCH_FAILED) {
             showMatchTimeoutDialog();
-        } else if (battleBean.getCode().equalsIgnoreCase(String.valueOf(BattleKline.PUSH_CODE_MATCH_SUCCESS))) {
+        } else if (battleBean.getCode() == BattleKline.PUSH_CODE_MATCH_SUCCESS) {
             if (mStartMatchDialog != null) {
-                if (mType != null) {
-                    if ((mType.equalsIgnoreCase(BattleKline.TYPE_1V1) && battleBean.getUserMatch().size() == 2)
-                            || mType.equalsIgnoreCase(BattleKline.TYPE_4V4) && battleBean.getUserMatch().size() == 4) {
-                        mStartMatchDialog.dismiss();
-                        List<BattleKline.BattleBean> battleBeans = new ArrayList<>();
-                        battleBeans.add(battleBean);
-                        battleBeans.addAll(battleBean.getUserMatch());
-                        BattleKlineMatchSuccessDialog.get(getActivity(), battleBeans, new BattleKlineMatchSuccessDialog.OnDismissListener() {
-                            @Override
-                            public void onDismiss() {
-                                Launcher.with(getActivity(), BattleKlinePkActivity.class)
-                                        .putExtra(ExtraKeys.GUESS_TYPE, mType)
-                                        .execute();
-                            }
-                        });
-                        return;
-                    }
+                if ((battleBean.getBattleType().equalsIgnoreCase(BattleKline.TYPE_1V1) && battleBean.getUserMatch().size() == 2)
+                        || battleBean.getBattleType().equalsIgnoreCase(BattleKline.TYPE_4V4) && battleBean.getUserMatch().size() == 4) {
+                    mStartMatchDialog.dismiss();
+                    BattleKlineMatchSuccessDialog.get(getActivity(), battleBean.getUserMatch(), new BattleKlineMatchSuccessDialog.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            Launcher.with(getActivity(), BattleKlinePkActivity.class)
+                                    .putExtra(ExtraKeys.GUESS_TYPE, mType)
+                                    .execute();
+                        }
+                    });
+                    return;
                 }
                 setMatchedPeople(battleBean.getUserMatch().size());
             }
@@ -420,19 +416,20 @@ public class BattleKlineActivity extends BaseActivity {
 
     private void showRechargeDialog(String msg) {
         SmartDialog.single(getActivity(), msg)
-                .setTitle(getString(R.string.cancel_matching))
+                .setTitle(getString(R.string.match_failed))
                 .setCancelableOnTouchOutside(false)
-                .setPositive(R.string.cancel, new SmartDialog.OnClickListener() {
-                    @Override
-                    public void onClick(Dialog dialog) {
-                        dialog.dismiss();
-                    }
-                })
-                .setNegative(R.string.go_recharge, new SmartDialog.OnClickListener() {
+                .setPositive(R.string.go_recharge, new SmartDialog.OnClickListener() {
                     @Override
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         openWalletPage();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
                     }
                 })
                 .show();

@@ -52,10 +52,11 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
 
     private static final int REQ_CODE_FEEDBACK_LOGIN = 23333;
 
-    public static final int PAGE_POSITION_MISS = 3;
-    public static final int PAGE_POSITION_MINE = 4;
+    public static final int PAGE_POSITION_HOME = 0;
     public static final int PAGE_POSITION_INFO_NEWS = 1;
     public static final int PAGE_POSITION_ARENA = 2;
+    public static final int PAGE_POSITION_MISS = 3;
+    public static final int PAGE_POSITION_MINE = 4;
 
     @BindView(R.id.viewPager)
     ScrollableViewPager mViewPager;
@@ -109,6 +110,11 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
                             }
                             mStartDialogFragment = StartDialogFragment.newInstance(data);
                             mStartDialogFragment.show(getSupportFragmentManager());
+                        }
+
+                        @Override
+                        protected boolean onErrorToast() {
+                            return false;
                         }
                     }).fireFree();
         }

@@ -57,7 +57,7 @@ public class Client {
     //音频详情分享
     public static final String SHARE_URL_RADIO = API.getHost() + "/lm/share_audio/index.html?radioId=%d&audioId=%d";
 
-    public static final String ACTIVITY_URL_GUESS_HAPPY = API.getHost() + "/lm/guess/index.html";
+    public static final String ACTIVITY_URL_GUESS_HAPPY = API.getHost() + "/lm/guess/index.html?share=false";
 
     public static String getServiceQQ(String serviceQQ) {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
@@ -905,6 +905,15 @@ public class Client {
      */
     public static API getFutureTradeStatus() {
         return new API("/user/dictionary/findDictionaryForJson.do?type=variety_deal");
+    }
+
+    /**
+     * 查询是否允许大盘竞猜(按钮是否显示)
+     *
+     * @return
+     */
+    public static API getGussStatus() {
+        return new API(POST, "/user/dictionary/findDictionaryForJson.do?type=stockDeal");
     }
 
 
@@ -3491,8 +3500,9 @@ public class Client {
     /**
      * 复盘
      */
-    public static API requestKlineBattleReview() {
-        return new API("/api/game-bat/battle/replica.do");
+    public static API requestKlineBattleReview(int userId) {
+        return new API("/api/game-bat/battle/replica.do",
+                new ApiParams().put("userId", userId));
     }
 
 }

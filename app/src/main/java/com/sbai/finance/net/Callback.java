@@ -22,11 +22,11 @@ import com.sbai.httplib.RequestManager;
 
 /**
  * <p>Implement onFailure() with error toast. Handle token expired in onSuccess()<p/>
- *
+ * <p>
  * Two main callbacks to handle our custom reponse: Resp
  * <ul>
- *     <li>onRespSuccess() when Resp.code == 200</li>
- *     <li>onRespFailure() when Resp.code != 200</li>
+ * <li>onRespSuccess() when Resp.code == 200</li>
+ * <li>onRespFailure() when Resp.code != 200</li>
  * </ul>
  *
  * @param <T>

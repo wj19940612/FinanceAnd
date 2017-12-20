@@ -1,7 +1,10 @@
 package com.sbai.finance.fragment;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +44,7 @@ import com.sbai.finance.model.Banner;
 import com.sbai.finance.model.DailyReport;
 import com.sbai.finance.model.Dictum;
 import com.sbai.finance.model.Greeting;
+import com.sbai.finance.model.GuessDealModel;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.NoticeRadio;
 import com.sbai.finance.model.Variety;
@@ -67,6 +71,7 @@ import com.sbai.finance.view.LeaderBoardView;
 import com.sbai.finance.view.SevenHourNewsView;
 import com.sbai.finance.view.VerticalScrollTextView;
 import com.sbai.finance.view.dialog.ShareDialog;
+import com.sbai.httplib.ApiCallback;
 import com.sbai.httplib.ApiError;
 import com.sbai.httplib.CookieManger;
 
@@ -169,8 +174,7 @@ public class HomePageFragment extends BaseFragment {
 
             @Override
             public void onSelectClick() {
-//                requestOptionalData();
-                Launcher.with(getActivity(), KlineRankListActivity.class).execute();
+                requestOptionalData();
             }
         });
         mHomeTitleView.setOnClickItemListener(new HomeTitleView.OnClickItemListener() {
@@ -249,6 +253,17 @@ public class HomePageFragment extends BaseFragment {
                 } else {
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
+            }
+
+            @Override
+            public void onGuess() {
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, Client.ACTIVITY_URL_GUESS_HAPPY)
+                        .putExtra(WebActivity.TITLE_BAR_BACKGROUND, ContextCompat.getColor(getActivity(), R.color.guessKlinePrimary))
+                        .putExtra(WebActivity.TITLE_BAR_BACK_ICON, R.drawable.ic_tb_back_white)
+                        .putExtra(WebActivity.TITLE_BAR_HAS_BOTTOM_SPLIT_LINE, false)
+                        .putExtra(WebActivity.TITLE_BAR_CENTER_TITLE_COLOR, ColorStateList.valueOf(Color.WHITE))
+                        .execute();
             }
         });
         mBanner.setOnViewClickListener(new HomeBanner.OnViewClickListener()
@@ -379,6 +394,7 @@ public class HomePageFragment extends BaseFragment {
             request7NewsData();
             requestImportantNewsData();
             requestUserScore();
+            requestGuessStatus();
         }
     }
 
@@ -841,6 +857,16 @@ public class HomePageFragment extends BaseFragment {
                         dealTypeAndGotoTraining(id, data);
                     }
                 }).fireFree();
+    }
+
+    private void requestGuessStatus() {
+        Client.getGussStatus().setTag(TAG).setCallback(new Callback2D<Resp<GuessDealModel>, GuessDealModel>() {
+
+            @Override
+            protected void onRespSuccessData(GuessDealModel data) {
+                mHomeTitleView.updateGuessStatus(data.getGuessGameStatus());
+            }
+        }).fireFree();
     }
 
     private void dealTypeAndGotoTraining(String id, List<MyTrainingRecord> data) {

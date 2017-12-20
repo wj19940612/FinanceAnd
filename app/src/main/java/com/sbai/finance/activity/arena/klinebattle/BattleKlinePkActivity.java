@@ -5,10 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.activity.arena.KLineResultActivity;
-import com.sbai.finance.activity.arena.KlinePracticeResultActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
-import com.sbai.finance.model.klinebattle.BattleKlineOperate;
 import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.model.local.SysTime;
 import com.sbai.finance.net.Callback2D;
@@ -18,7 +16,6 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.training.guesskline.KlineBattleCountDownView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,6 +26,7 @@ import java.util.List;
 public class BattleKlinePkActivity extends BattleKlineDetailActivity {
 
     private boolean mHasPosition;
+    private List<BattleKline.BattleBean> mBattleStaList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +45,11 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         super.onRespFailure(failedResp);
-                        ToastUtil.show(failedResp.getMsg());
+                        if (failedResp.getCode() == BattleKline.PUSH_CODE_BATTLE_FINISH) {
+                            battleFinish();
+                        } else {
+                            ToastUtil.show(failedResp.getMsg());
+                        }
                     }
                 }).fireFree();
     }
@@ -65,10 +67,12 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
         if (mBattleKline.getBattleStaList().size() > 0) {
             if (mBattleKline.getBattleStaList().get(0).getBattleStatus() == BattleKline.STATUS_END) {
                 battleFinish();
+                return;
             }
         }
         mKlineView.initKlineDataList(mBattleKline.getUserMarkList());
-        updateLastProfitData(mBattleKline.getBattleStaList());
+        mBattleStaList = mBattleKline.getBattleStaList();
+        updateLastProfitData();
         if (mBattleKline.getUserMarkList() != null) {
             int size = mBattleKline.getUserMarkList().size();
             if (size > 1) {
@@ -86,17 +90,29 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
     @Override
     protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
         super.onBattleKlinePushReceived(battleBean);
-        if (battleBean.getCode() == String.valueOf(BattleKline.PUSH_CODE_AGAINST_PROFIT)) {
-            updateLastProfitData(battleBean.getUserMatch());
-        } else if (battleBean.getCode() == String.valueOf(BattleKline.PUSH_CODE_BATTLE_FINISH)) {
+        if (battleBean.getCode() == BattleKline.PUSH_CODE_AGAINST_PROFIT) {
+            updateLastProfitData(battleBean);
+        } else if (battleBean.getCode() == BattleKline.PUSH_CODE_BATTLE_FINISH) {
             battleFinish();
         }
     }
 
-    private void updateLastProfitData(List<BattleKline.BattleBean> battleStaList) {
-        Collections.sort(battleStaList, Collections.<BattleKline.BattleBean>reverseOrder());
-        setRankValueByProfit(battleStaList);
-        for (BattleKline.BattleBean battleBean : battleStaList) {
+    private void updateLastProfitData(BattleKline.BattleBean battleBean) {
+        if (mBattleStaList == null) return;
+        for (BattleKline.BattleBean item : mBattleStaList) {
+            if (item.getUserId() == battleBean.getUserId()) {
+                item.setProfit(battleBean.getProfit());
+                item.setPositions(battleBean.getPositions());
+            }
+        }
+        updateLastProfitData();
+    }
+
+    private void updateLastProfitData() {
+        if (mBattleStaList == null) return;
+        Collections.sort(mBattleStaList, Collections.<BattleKline.BattleBean>reverseOrder());
+        setRankValueByProfit(mBattleStaList);
+        for (BattleKline.BattleBean battleBean : mBattleStaList) {
             if (battleBean != null) {
                 if (battleBean.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
                     if (battleBean.getBattleStatus() == BattleKline.STATUS_END) {
@@ -112,11 +128,11 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
                 }
             }
         }
-        mAgainstProfit.setTotalProfit(battleStaList);
+        mAgainstProfit.setTotalProfit(mBattleStaList);
     }
 
-    private void updateMyLastOperateData(BattleKlineOperate data, String type) {
-         if (data.getBattleStatus() == BattleKline.STATUS_END) {
+    private void updateMyLastOperateData(BattleKline.BattleBean data, String type) {
+        if (data.getBattleStatus() == BattleKline.STATUS_END) {
             battleFinish();
             return;
         }
@@ -142,17 +158,18 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
                 mKlineView.addKlineData(data.getNext());
             }
         }
-        mOperateView.setTotalProfit(data.getProfit());
-        mOperateView.setPositionProfit(data.getPositions());
+        mRemainKlineAmount = mRemainKlineAmount - 1;
+        setRemainKline();
+        updateLastProfitData(data);
     }
 
     @Override
     protected void buyOperate() {
         Client.requestKlineBattleBuy().setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
+                .setCallback(new Callback2D<Resp<BattleKline.BattleBean>, BattleKline.BattleBean>() {
                     @Override
-                    protected void onRespSuccessData(BattleKlineOperate data) {
+                    protected void onRespSuccessData(BattleKline.BattleBean data) {
                         updateMyLastOperateData(data, BattleKline.BUY);
                     }
 
@@ -168,9 +185,9 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
     protected void clearOperate() {
         Client.requestKlineBattleSell().setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
+                .setCallback(new Callback2D<Resp<BattleKline.BattleBean>, BattleKline.BattleBean>() {
                     @Override
-                    protected void onRespSuccessData(BattleKlineOperate data) {
+                    protected void onRespSuccessData(BattleKline.BattleBean data) {
                         updateMyLastOperateData(data, BattleKline.SELL);
                     }
 
@@ -186,9 +203,9 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
     protected void passOperate() {
         Client.requestKlineBattlePass().setTag(TAG)
                 .setIndeterminate(this)
-                .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
+                .setCallback(new Callback2D<Resp<BattleKline.BattleBean>, BattleKline.BattleBean>() {
                     @Override
-                    protected void onRespSuccessData(BattleKlineOperate data) {
+                    protected void onRespSuccessData(BattleKline.BattleBean data) {
                         updateMyLastOperateData(data, BattleKline.PASS);
                     }
 

@@ -108,7 +108,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="190dp">
+        android:layout_height="220dp"
+        android:background="@color/purpleBlack"
+        android:paddingTop="30dp">
 
         <com.sbai.finance.view.KlineBottomResultView
             android:id="@+id/bottomView"

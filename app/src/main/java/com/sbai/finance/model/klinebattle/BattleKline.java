@@ -135,6 +135,36 @@ public class BattleKline implements Parcelable {
         this.rise = rise;
     }
 
+    public static class UserInfo {
+        private int userId;
+        private String userName;
+        private String userPortrait;
+
+        public int getUserId() {
+            return userId;
+        }
+
+        public void setUserId(int userId) {
+            this.userId = userId;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public String getUserPortrait() {
+            return userPortrait;
+        }
+
+        public void setUserPortrait(String userPortrait) {
+            this.userPortrait = userPortrait;
+        }
+    }
+
     public static class BattleBean implements Comparable<BattleBean>, Parcelable {
         /**
          * battleId : 19
@@ -151,7 +181,7 @@ public class BattleKline implements Parcelable {
         private int battleId;
         private int battleStatus;
         private String battleType;
-        private String code;
+        private int code;
         private boolean operate;
         private double positions;
         private double profit;
@@ -160,7 +190,16 @@ public class BattleKline implements Parcelable {
         private int userId;
         private String userName;
         private String userPortrait;
-        private List<BattleBean> userMatchList;
+        private BattleKlineData next;
+        private List<UserInfo> userMatchList;
+
+        public BattleKlineData getNext() {
+            return next;
+        }
+
+        public void setNext(BattleKlineData next) {
+            this.next = next;
+        }
 
         public String getBattleType() {
             return battleType;
@@ -170,11 +209,11 @@ public class BattleKline implements Parcelable {
             this.battleType = battleType;
         }
 
-        public List<BattleBean> getUserMatch() {
+        public List<UserInfo> getUserMatch() {
             return userMatchList;
         }
 
-        public void setUserMatchList(List<BattleBean> userMatchList) {
+        public void setUserMatchList(List<UserInfo> userMatchList) {
             this.userMatchList = userMatchList;
         }
 
@@ -210,11 +249,11 @@ public class BattleKline implements Parcelable {
             this.battleStatus = battleStatus;
         }
 
-        public String getCode() {
+        public int getCode() {
             return code;
         }
 
-        public void setCode(String code) {
+        public void setCode(int code) {
             this.code = code;
         }
 
@@ -280,7 +319,7 @@ public class BattleKline implements Parcelable {
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.battleId);
             dest.writeInt(this.battleStatus);
-            dest.writeString(this.code);
+            dest.writeInt(this.code);
             dest.writeByte(this.operate ? (byte) 1 : (byte) 0);
             dest.writeDouble(this.positions);
             dest.writeDouble(this.profit);
@@ -299,7 +338,7 @@ public class BattleKline implements Parcelable {
         protected BattleBean(Parcel in) {
             this.battleId = in.readInt();
             this.battleStatus = in.readInt();
-            this.code = in.readString();
+            this.code = in.readInt();
             this.operate = in.readByte() != 0;
             this.positions = in.readDouble();
             this.profit = in.readDouble();
@@ -309,7 +348,7 @@ public class BattleKline implements Parcelable {
             this.userName = in.readString();
             this.userPortrait = in.readString();
             this.battleType = in.readString();
-            this.userMatchList = new ArrayList<BattleBean>();
+            this.userMatchList = new ArrayList<UserInfo>();
             in.readList(this.userMatchList, BattleBean.class.getClassLoader());
         }
 

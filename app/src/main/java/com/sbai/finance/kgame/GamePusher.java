@@ -117,6 +117,7 @@ public class GamePusher extends SimpleConnector {
         if (resp.getCode() == WsRespCode.MSG_ACK_SUCCESS) {
             Log.d(TAG, "Msg ack: " + resp.getMsgId());
             mMessageIdQueue.remove(resp.getMsgId());
+            return;
         }
 
         if (resp.getCode() == WsResponse.HEART) {
