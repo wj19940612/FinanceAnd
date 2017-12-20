@@ -54,6 +54,8 @@ public class SimpleConnector implements WsConnector {
 
     @Override
     public void connect() {
+        close();
+
         mConnecting = true;
         AsyncHttpClient.getDefaultInstance().websocket(mUri, null, new AsyncHttpClient.WebSocketConnectCallback() {
             @Override
@@ -62,6 +64,7 @@ public class SimpleConnector implements WsConnector {
 
                 mWebSocket = webSocket;
 
+                Log.d(TAG, "onCompleted: " + isConnected());
                 if (isConnected()) {
                     mNormalClosed = false;
 

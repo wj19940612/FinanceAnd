@@ -40,7 +40,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         @Override
         protected void onNetworkChanged(int availableNetworkType) {
             if (availableNetworkType > Network.NET_NONE) {
-                GamePusher.get().connect();
+                GamePusher.get().open();
             }
         }
     };

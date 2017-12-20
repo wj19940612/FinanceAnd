@@ -81,7 +81,7 @@ public class BattleKlineActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equalsIgnoreCase(LoginActivity.ACTION_LOGIN_SUCCESS)) {
-                GamePusher.get().connect();
+                GamePusher.get().open();
                 updateAvatar();
                 requestUserFindInfo();
             }
@@ -91,7 +91,7 @@ public class BattleKlineActivity extends BaseActivity {
         @Override
         protected void onNetworkChanged(int availableNetworkType) {
             if (availableNetworkType > Network.NET_NONE) {
-                GamePusher.get().connect();
+                GamePusher.get().open();
                 requestUserFindInfo();
                 requestBattleConf();
             }
@@ -117,7 +117,7 @@ public class BattleKlineActivity extends BaseActivity {
         initTitleView();
         initBroadcastReceiver();
         requestBattleConf();
-        GamePusher.get().connect();
+        GamePusher.get().open();
         GamePusher.get().setOnPushReceiveListener(mKlineBattlePushReceiverListener);
     }
 

@@ -43,6 +43,7 @@ public class GamePusher extends SimpleConnector {
     private OnPushReceiveListener mOnPushReceiveListener;
     private Handler mHandler;
     private MessageIdQueue mMessageIdQueue;
+    private boolean mAddressRequesting;
 
     public void setOnPushReceiveListener(OnPushReceiveListener onPushReceiveListener) {
         mOnPushReceiveListener = onPushReceiveListener;
@@ -70,9 +71,9 @@ public class GamePusher extends SimpleConnector {
         });
     }
 
-    @Override
-    public void connect() {
-        if (isConnected()) return;
+    public void open() {
+        if (isConnecting() || isConnected()) return;
+
         Client.getGameSocketAddress()
                 .setCallback(new Callback<Resp<List<SocketAddress>>>() {
                     @Override
@@ -81,12 +82,29 @@ public class GamePusher extends SimpleConnector {
                             connect(resp.getData().get(0));
                         }
                     }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        mAddressRequesting = false;
+                    }
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        mAddressRequesting = true;
+                    }
                 }).fireFree();
     }
 
     private void connect(SocketAddress address) {
         setUri(address.toUri());
-        super.connect();
+        connect();
+    }
+
+    @Override
+    public boolean isConnecting() {
+        return super.isConnecting() || mAddressRequesting;
     }
 
     private void handleMessage(final String msg) {

@@ -16,7 +16,7 @@ import java.util.UUID;
 public class WsUtils {
 
     public static WsRequest getRequest(int code, Object o) {
-        WsRequest wsRequest = new WsRequest(code, 0);
+        WsRequest wsRequest = new WsRequest(code, o);
         long timestamp = SysTime.getSysTime().getSystemTimestamp();
         wsRequest.setTimestamp(String.valueOf(timestamp));
         wsRequest.setUuid(createUUID(timestamp));

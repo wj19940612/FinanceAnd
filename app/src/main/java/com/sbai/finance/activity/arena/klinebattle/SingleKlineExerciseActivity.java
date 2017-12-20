@@ -37,6 +37,7 @@ import butterknife.ButterKnife;
  * k线对决 单人练习
  */
 public class SingleKlineExerciseActivity extends BaseActivity {
+
     @BindView(R.id.againstProfit)
     AgainstProfitView mAgainstProfit;
     @BindView(R.id.operateView)
@@ -45,8 +46,9 @@ public class SingleKlineExerciseActivity extends BaseActivity {
     BattleKlineChart mKlineView;
     @BindView(R.id.title)
     TitleBar mTitle;
-    TextView mPkType;
+
     KlineBattleCountDownView mCountdown;
+
     protected String mType;
     protected int mCurrentIndex = 39;
     protected int mRemainKlineAmount;
@@ -61,11 +63,14 @@ public class SingleKlineExerciseActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_kline_detail);
         ButterKnife.bind(this);
+
         translucentStatusBar();
+
         initData(getIntent());
         initTitleView();
         initKlineView();
         initOperateView();
+
         if (!TextUtils.isEmpty(mType) && mType.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
             requestKlineData();
         }
@@ -77,15 +82,15 @@ public class SingleKlineExerciseActivity extends BaseActivity {
 
     private void initTitleView() {
         View customView = mTitle.getCustomView();
+        TextView pkType = customView.findViewById(R.id.pkType);
         mCountdown = customView.findViewById(R.id.countdown);
-        mPkType = customView.findViewById(R.id.pkType);
         if (TextUtils.isEmpty(mType)) {
             mType = BattleKline.TYPE_EXERCISE;
-            mPkType.setText(R.string.single_exercise);
+            pkType.setText(R.string.single_exercise);
         } else if (mType.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
-            mPkType.setText(R.string.one_vs_one_room);
+            pkType.setText(R.string.one_vs_one_room);
         } else if (mType.equalsIgnoreCase(BattleKline.TYPE_4V4)) {
-            mPkType.setText(R.string.four_pk_room);
+            pkType.setText(R.string.four_pk_room);
         }
         mAgainstProfit.setPkType(mType);
     }

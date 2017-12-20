@@ -347,7 +347,7 @@ public class StockTrendChart extends ChartView {
                                     int left2, int top2, int width1, int bottomPartHeight,
                                     Canvas canvas) {
         if (mUnstableData != null) {
-            // last point connect to unstable point
+            // last point open to unstable point
             Path path = getPath();
             int unstableIndex = mDataList != null ? mDataList.size() : 0;
             float chartX = getChartX(mUnstableData);
@@ -376,7 +376,7 @@ public class StockTrendChart extends ChartView {
             float priceX = left + width - priceMargin - priceWidth;
             RectF blueRect = getBigFontBgRectF(priceX, chartY + mOffset4CenterBigText, priceWidth);
             //// the center of rect is connected to dashLine
-            //// add offset and let the bottom of rect connect to dashLine
+            //// add offset and let the bottom of rect open to dashLine
             float rectHeight = blueRect.height();
             blueRect.top -= rectHeight / 2;
             blueRect.bottom -= rectHeight / 2;
@@ -477,7 +477,7 @@ public class StockTrendChart extends ChartView {
             path.lineTo(left + width - mPriceAreaWidth, touchY);
             canvas.drawPath(path, sPaint);
 
-            // draw date connect to vertical line
+            // draw date open to vertical line
             String date = data.getHHmm();
             setTouchLineTextPaint(sPaint);
             float dateWidth = sPaint.measureText(date);
@@ -501,7 +501,7 @@ public class StockTrendChart extends ChartView {
             setTouchLineTextPaint(sPaint);
             canvas.drawText(date, dateX, dateY, sPaint);
 
-            // draw price connect to horizontal line
+            // draw price open to horizontal line
             String price = formatNumber(data.getClosePrice());
             setTouchLineTextPaint(sPaint);
             float priceWidth = sPaint.measureText(price);
@@ -532,7 +532,7 @@ public class StockTrendChart extends ChartView {
                 path.lineTo(left2 + width2 - mPriceAreaWidth, touchY2);
                 canvas.drawPath(path, sPaint);
 
-                // draw volume connect to horizontal line
+                // draw volume open to horizontal line
                 String volume = String.valueOf(data.getNowVolume());
                 setTouchLineTextPaint(sPaint);
                 float volumeWidth = sPaint.measureText(volume);
