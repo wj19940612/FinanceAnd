@@ -18,8 +18,10 @@ import com.sbai.finance.utils.AppInfo;
 import com.sbai.httplib.CookieManger;
 import com.sbai.socket.SimpleConnector;
 import com.sbai.socket.WsRequest;
+import com.sbai.socket.WsRespCode;
 import com.sbai.socket.WsResponse;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -37,6 +39,7 @@ public class GamePusher extends SimpleConnector {
     private static GamePusher sGamePusher;
     private OnPushReceiveListener mOnPushReceiveListener;
     private Handler mHandler;
+    private MessageIdQueue mMessageIdQueue;
 
     public void setOnPushReceiveListener(OnPushReceiveListener onPushReceiveListener) {
         mOnPushReceiveListener = onPushReceiveListener;
@@ -48,6 +51,7 @@ public class GamePusher extends SimpleConnector {
 
     public GamePusher() {
         mHandler = new Handler(Looper.getMainLooper());
+        mMessageIdQueue = new MessageIdQueue(100);
 
         setOnConnectedListener(new OnConnectedListener() {
             @Override
@@ -65,6 +69,7 @@ public class GamePusher extends SimpleConnector {
 
     @Override
     public void connect() {
+        if (isConnected()) return;
         Client.getGameSocketAddress()
                 .setCallback(new Callback<Resp<List<SocketAddress>>>() {
                     @Override
@@ -97,6 +102,7 @@ public class GamePusher extends SimpleConnector {
         }
 
         if (resp.getCode() == WsResponse.REGISTER_FAILURE) {
+            Log.d(TAG, "Register failure");
             // TODO: 26/06/2017 是否需要重新注册
             return;
         }
@@ -104,16 +110,13 @@ public class GamePusher extends SimpleConnector {
         if (resp.getCode() == WsResponse.PUSH) {
             Log.d(TAG, "onPush: " + resp.getContent());
             ackPushMessage(resp);
-            if (mOnPushReceiveListener != null) {
-                final Object o = resp.getContent();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mOnPushReceiveListener.onPushReceive(o, msg);
-                    }
-                });
-            }
+            onPushReceived(msg, resp);
             return;
+        }
+
+        if (resp.getCode() == WsRespCode.MSG_ACK_SUCCESS) {
+            Log.d(TAG, "Msg ack: " + resp.getMsgId());
+            mMessageIdQueue.remove(resp.getMsgId());
         }
 
         if (resp.getCode() == WsResponse.HEART) {
@@ -123,9 +126,24 @@ public class GamePusher extends SimpleConnector {
         }
     }
 
+    private void onPushReceived(final String msg, WsResponse resp) {
+        if (mMessageIdQueue.contain(resp.getMsgId())) return;
+
+        if (mOnPushReceiveListener != null) {
+            final Object o = resp.getContent();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mOnPushReceiveListener.onPushReceive(o, msg);
+                }
+            });
+            mMessageIdQueue.add(resp.getMsgId());
+        }
+    }
+
     private void ackPushMessage(WsResponse resp) {
         AckPush ackPush = new AckPush(resp.getMsgId());
-        WsRequest request = WsUtils.getRequest(WsRequest.MSG_CONFIRM, ackPush);
+        WsRequest request = WsUtils.getRequest(WsRequest.MSG_ACK, ackPush);
         send(request);
     }
 
@@ -151,5 +169,35 @@ public class GamePusher extends SimpleConnector {
         Log.d(TAG, "register: " + registerInfo);
 
         send(request);
+    }
+
+    static class MessageIdQueue {
+
+        private int mMaxCapacity;
+
+        private LinkedList<Long> mQueue;
+
+        public MessageIdQueue(int maxCapacity) {
+            this.mMaxCapacity = maxCapacity;
+            this.mQueue = new LinkedList<>();
+        }
+
+        public void add(long msgId) {
+            if (mQueue.size() >= mMaxCapacity) {
+                mQueue.removeFirst();
+            }
+            mQueue.addLast(msgId);
+        }
+
+        public void remove(long msgId) {
+            int indexOf = mQueue.indexOf(msgId);
+            if (indexOf >= 0) {
+                mQueue.remove(indexOf);
+            }
+        }
+
+        public boolean contain(long msgId) {
+            return mQueue.contains(msgId);
+        }
     }
 }
