@@ -77,16 +77,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                             updateBattleData(data);
                         }
                     }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        super.onRespFailure(failedResp);
-                        if (failedResp.getCode() == BattleKline.PUSH_CODE_BATTLE_FINISH) {
-                            battleFinish();
-                        } else {
-                            ToastUtil.show(failedResp.getMsg());
-                        }
-                    }
                 }).fireFree();
     }
 

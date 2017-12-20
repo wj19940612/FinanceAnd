@@ -84,6 +84,7 @@ public class SingleKlineExerciseActivity extends BaseActivity {
         View customView = mTitle.getCustomView();
         TextView pkType = customView.findViewById(R.id.pkType);
         mCountdown = customView.findViewById(R.id.countdown);
+        pkType.setText(R.string.single_exercise);
         if (TextUtils.isEmpty(mType)) {
             mType = BattleKline.TYPE_EXERCISE;
             pkType.setText(R.string.single_exercise);
