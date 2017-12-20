@@ -82,7 +82,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
     private ViewTreeObserver.OnPreDrawListener mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
         public boolean onPreDraw() {
-            if (!judgeIsMax()) {
+            if (!judgeIsMax() && mContent.getMaxLines() <= 2) {
                 mBtnLookMore.setVisibility(View.GONE);
             } else {
                 mBtnLookMore.setVisibility(View.VISIBLE);
