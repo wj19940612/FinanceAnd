@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * k线单人练习
+ * k线对决 单人练习
  */
-
 public class SingleKlineExerciseActivity extends BattleKlineDetailActivity {
+
     private List<BattleKlineData> mBattleUserMarkList;
     private int mPositionIndex = -1;
 

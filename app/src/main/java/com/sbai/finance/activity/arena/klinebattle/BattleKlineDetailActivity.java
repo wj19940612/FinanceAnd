@@ -44,9 +44,8 @@ import static com.sbai.finance.utils.Network.registerNetworkChangeReceiver;
 import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 
 /**
- * k线对决页面
+ * k线对决 多人页面
  */
-
 public class BattleKlineDetailActivity extends BaseActivity {
     @BindView(R.id.againstProfit)
     AgainstProfitView mAgainstProfit;
