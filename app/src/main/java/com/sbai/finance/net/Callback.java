@@ -115,7 +115,7 @@ public abstract class Callback<T> extends ApiCallback<T> {
 
     protected void onRespFailure(Resp failedResp) {
         if (onErrorToast()) {
-            ToastUtil.show(failedResp.getMsg() + "" + mUrl);
+            ToastUtil.show(failedResp.getMsg());
         }
     }
 

@@ -16,13 +16,13 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.sbai.finance.R;
+import com.sbai.finance.utils.Display;
 import com.sbai.glide.GlideApp;
 
 public class TitleBar extends RelativeLayout {
@@ -54,6 +54,7 @@ public class TitleBar extends RelativeLayout {
     private float mSplitLineHeight;
     private Drawable mRightTextRightImage;
     private int mLeftViewLeftPadding;
+    private ImageView mRightImageView;
 
     public TitleBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -174,6 +175,12 @@ public class TitleBar extends RelativeLayout {
         mRightView.setGravity(Gravity.CENTER);
         params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         mRightViewParent.addView(mRightView, params);
+
+        mRightImageView = new ImageView(getContext());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) Display.dp2Px(20, getResources()), (int) Display.dp2Px(20, getResources()));
+        layoutParams.gravity = Gravity.CENTER;
+        mRightViewParent.addView(mRightImageView, layoutParams);
+
         params = new LayoutParams(LayoutParams.WRAP_CONTENT, fixedHeight);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
         addView(mRightViewParent, params);
@@ -304,14 +311,7 @@ public class TitleBar extends RelativeLayout {
         if (!TextUtils.isEmpty(rightViewContent)) {
             GlideApp.with(getContext())
                     .load(rightViewContent)
-                    .into(new SimpleTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                            if (resource != null) {
-                                setRightTextRightImage(resource);
-                            }
-                        }
-                    });
+                    .into(mRightImageView);
         }
     }
 
