@@ -325,7 +325,7 @@ public class BattleKlineActivity extends BaseActivity {
                     BattleKlineMatchSuccessDialog.get(getActivity(), battleBean.getUserMatch(), new BattleKlineMatchSuccessDialog.OnDismissListener() {
                         @Override
                         public void onDismiss() {
-                            Launcher.with(getActivity(), BattleKlinePkActivity.class)
+                            Launcher.with(getActivity(), BattleKlineDetailActivity.class)
                                     .putExtra(ExtraKeys.GUESS_TYPE, mType)
                                     .execute();
                         }
@@ -358,7 +358,7 @@ public class BattleKlineActivity extends BaseActivity {
                                                 @Override
                                                 public void onClick(Dialog dialog) {
                                                     dialog.dismiss();
-                                                    Launcher.with(getActivity(), BattleKlinePkActivity.class)
+                                                    Launcher.with(getActivity(), BattleKlineDetailActivity.class)
                                                             .putExtra(ExtraKeys.GUESS_TYPE, resp.getData().getBattleType())
                                                             .execute();
                                                 }

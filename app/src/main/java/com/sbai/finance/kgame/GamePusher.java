@@ -136,15 +136,11 @@ public class GamePusher extends SimpleConnector {
         if (mMessageIdQueue.contain(resp.getMsgId())) return;
 
         if (mOnPushReceiveListener != null) {
-            final JsonObject jsonObject = resp.getContent();
+            final Object o = resp.getContent();
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Type type = mOnPushReceiveListener.getGenericType();
-                    if (type != null) {
-                        Object o = new Gson().fromJson(jsonObject, type);
-                        mOnPushReceiveListener.onPushReceive(o, msg);
-                    }
+                    mOnPushReceiveListener.onOriginPushReceive(o, msg);
                 }
             });
             mMessageIdQueue.add(resp.getMsgId());

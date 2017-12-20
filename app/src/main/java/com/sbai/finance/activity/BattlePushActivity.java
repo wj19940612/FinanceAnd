@@ -1,17 +1,12 @@
 package com.sbai.finance.activity;
 
 import android.app.Dialog;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.arena.klinebattle.BattleKlineActivity;
-import com.sbai.finance.activity.arena.klinebattle.BattleKlineDetailActivity;
-import com.sbai.finance.activity.arena.klinebattle.BattleKlinePkActivity;
 import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.training.JudgeTrainingActivity;
 import com.sbai.finance.activity.training.KlineTrainActivity;
@@ -22,14 +17,11 @@ import com.sbai.finance.game.PushCode;
 import com.sbai.finance.game.WSPush;
 import com.sbai.finance.game.WsClient;
 import com.sbai.finance.game.callback.OnPushReceiveListener;
-import com.sbai.finance.kgame.GamePusher;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.battle.Praise;
 import com.sbai.finance.model.battle.TradeOrder;
-import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.SmartDialog;
 
