@@ -82,7 +82,8 @@ public class AppJs {
         openShareDialog(title, description, shareUrl, shareThumbnailUrl, shareChannel, mContext.getString(R.string.share_and_get_ingot));
     }
 
-    private void openShareDialog(String title, String description, String shareUrl, String shareThumbnailUrl, String shareChannel, String shareTitle) {
+
+    public void openShareDialog(String title, String description, String shareUrl, String shareThumbnailUrl, String shareChannel, String shareTitle) {
         boolean isOnlyWeChatShare = ONLY_WE_CHAT_SHARE.equalsIgnoreCase(shareChannel);
         if (mContext instanceof Activity) {
             final Activity activity = (Activity) mContext;
@@ -247,7 +248,6 @@ public class AppJs {
                 Launcher.with(mContext, MissProfileDetailActivity.class)
                         .putExtra(Launcher.EX_PAYLOAD, missId)
                         .execute();
-                ((WebActivity) mContext).finish();
                 break;
             case JsOpenAppPageType.FUTURE_BATTLE_ORDINARY:
                 Launcher.with(mContext, BattleListActivity.class).execute();
