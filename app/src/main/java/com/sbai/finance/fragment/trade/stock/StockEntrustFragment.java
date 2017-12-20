@@ -170,7 +170,7 @@ public class StockEntrustFragment extends BaseFragment {
     }
 
     private void notifyRefreshData() {
-        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_REFRESH_AUTO));
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(ACTION_REFRESH_MANUAL));
     }
 
     private void updateEntrust(List<Entrust> data, boolean manualRefresh) {
