@@ -16,7 +16,6 @@ import com.sbai.finance.activity.arena.klinebattle.SingleKlineExerciseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineOtherName;
 import com.sbai.finance.model.klinebattle.BattleKline;
-import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -24,8 +23,6 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.KlineBottomResultView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -113,7 +110,7 @@ public class KlinePracticeResultActivity extends BaseActivity {
 
     private void updateBottomView() {
         if (mBattleKlineData == null) return;
-        mBottomView.updateStock(mBattleKlineData.getBattleVarietyName(), mBattleKlineData.getBattleVarietyCode(),
+        mBottomView.updateStock(mBattleKlineData.getBattleStockName(), mBattleKlineData.getBattleStockCode(),
                 mBattleKlineData.getBattleStockStartTime(), mBattleKlineData.getBattleStockEndTime(), mBattleKlineData.getRise());
     }
 

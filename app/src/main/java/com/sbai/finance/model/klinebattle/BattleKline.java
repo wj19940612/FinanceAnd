@@ -43,8 +43,8 @@ public class BattleKline implements Parcelable {
     public static final String POSITION_HAVE = "Y";
     public static final String POSITION_NO = "N";
 
-    private String battleVarietyCode;
-    private String battleVarietyName;
+    private String battleStockCode;
+    private String battleStockName;
     private String battleStockEndTime;
     private String battleStockStartTime;
     private int line;
@@ -71,20 +71,20 @@ public class BattleKline implements Parcelable {
         this.endTime = endTime;
     }
 
-    public String getBattleVarietyCode() {
-        return battleVarietyCode;
+    public String getBattleStockCode() {
+        return battleStockCode;
     }
 
-    public void setBattleVarietyCode(String battleVarietyCode) {
-        this.battleVarietyCode = battleVarietyCode;
+    public void setBattleStockCode(String battleStockCode) {
+        this.battleStockCode = battleStockCode;
     }
 
-    public String getBattleVarietyName() {
-        return battleVarietyName;
+    public String getBattleStockName() {
+        return battleStockName;
     }
 
-    public void setBattleVarietyName(String battleVarietyName) {
-        this.battleVarietyName = battleVarietyName;
+    public void setBattleStockName(String battleStockName) {
+        this.battleStockName = battleStockName;
     }
 
     public String getBattleStockEndTime() {
@@ -372,8 +372,8 @@ public class BattleKline implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.battleVarietyCode);
-        dest.writeString(this.battleVarietyName);
+        dest.writeString(this.battleStockCode);
+        dest.writeString(this.battleStockName);
         dest.writeString(this.battleStockEndTime);
         dest.writeString(this.battleStockStartTime);
         dest.writeInt(this.line);
@@ -387,8 +387,8 @@ public class BattleKline implements Parcelable {
     }
 
     protected BattleKline(Parcel in) {
-        this.battleVarietyCode = in.readString();
-        this.battleVarietyName = in.readString();
+        this.battleStockCode = in.readString();
+        this.battleStockName = in.readString();
         this.battleStockEndTime = in.readString();
         this.battleStockStartTime = in.readString();
         this.line = in.readInt();

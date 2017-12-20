@@ -161,7 +161,7 @@ public class BattleKlineReviewActivity extends BaseActivity {
 
     private void updateBottomView() {
         if (mBattleKline == null) return;
-        mBottomView.updateStock(mBattleKline.getBattleVarietyName(), mBattleKline.getBattleVarietyCode(),
+        mBottomView.updateStock(mBattleKline.getBattleStockName(), mBattleKline.getBattleStockCode(),
                 mBattleKline.getBattleStockStartTime(), mBattleKline.getBattleStockEndTime(), mBattleKline.getRise());
     }
 }
