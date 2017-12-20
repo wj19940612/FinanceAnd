@@ -119,10 +119,18 @@ public class BattleKlineActivity extends BaseActivity {
         setContentView(R.layout.activity_battle_kline);
         ButterKnife.bind(this);
         translucentStatusBar();
+        initData(getIntent());
         initTitleView();
         initBroadcastReceiver();
         requestBattleConf();
         GamePusher.get().connect();
+    }
+
+    private void initData(Intent intent) {
+        mType = intent.getStringExtra(ExtraKeys.GUESS_TYPE);
+        if (!TextUtils.isEmpty(mType)) {
+            judgeCurrentBattle(mType);
+        }
     }
 
     private void requestBattleConf() {

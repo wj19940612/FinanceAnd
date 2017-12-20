@@ -118,11 +118,9 @@ public class AgainstProfitView extends LinearLayout {
                 } else {
                     setTotalProfit(battleBeans1.get(i), mUserName1, mTotalProfit1, mImg1Avatar, mImg1Rank);
                 }
-            }
-            if (i < 2) {
+            } else if (i < 2) {
                 setTotalProfit(battleBeans1.get(i), mUserName2, mTotalProfit2, mImg2Avatar, mImg2Rank);
-            }
-            if (i < 3) {
+            } else if (i < 3) {
                 setTotalProfit(battleBeans1.get(i), mUserName3, mTotalProfit3, mImg3Avatar, mImg3Rank);
             }
         }
@@ -148,7 +146,7 @@ public class AgainstProfitView extends LinearLayout {
         totalProfit = Double.valueOf(FinanceUtil.formatWithScale(totalProfit));
         if (totalProfit == 0) {
             profitView.setText("0.00%");
-            profitView.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
+            profitView.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
         } else if (totalProfit > 0) {
             profitView.setText("+" + FinanceUtil.formatToPercentage(totalProfit));
             profitView.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));
