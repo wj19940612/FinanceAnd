@@ -45,7 +45,11 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         super.onRespFailure(failedResp);
-                        ToastUtil.show(failedResp.getMsg());
+                        if (failedResp.getCode() == BattleKline.PUSH_CODE_BATTLE_FINISH) {
+                            battleFinish();
+                        } else {
+                            ToastUtil.show(failedResp.getMsg());
+                        }
                     }
                 }).fireFree();
     }
