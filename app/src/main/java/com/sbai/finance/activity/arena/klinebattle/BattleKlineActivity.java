@@ -124,6 +124,7 @@ public class BattleKlineActivity extends BaseActivity {
         initBroadcastReceiver();
         requestBattleConf();
         GamePusher.get().connect();
+        GamePusher.get().setOnPushReceiveListener(mKlineBattlePushReceiverListener);
     }
 
     private void initData(Intent intent) {
@@ -161,6 +162,7 @@ public class BattleKlineActivity extends BaseActivity {
         super.onDestroy();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mLoginBroadcastReceiver);
         unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
+        GamePusher.get().removeOnPushReceiveListener();
         GamePusher.get().close();
     }
 
@@ -293,7 +295,6 @@ public class BattleKlineActivity extends BaseActivity {
             mIngot.setText(R.string.not_login);
         }
         updateAvatar();
-        GamePusher.get().setOnPushReceiveListener(mKlineBattlePushReceiverListener);
     }
 
     @OnClick({R.id.fourPk, R.id.onePk, R.id.exercise, R.id.rank})

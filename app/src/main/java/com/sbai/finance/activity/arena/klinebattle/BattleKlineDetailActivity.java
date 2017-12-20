@@ -101,21 +101,10 @@ public class BattleKlineDetailActivity extends BaseActivity {
         initKlineView();
         initOperateView();
         registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
+        GamePusher.get().setOnPushReceiveListener(mKlineBattlePushReceiverListener);
         if (!TextUtils.isEmpty(mType) && !mType.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
             requestBattleInfo();
         }
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        GamePusher.get().setOnPushReceiveListener(mKlineBattlePushReceiverListener);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        GamePusher.get().removeOnPushReceiveListener();
     }
 
     @Override
@@ -123,6 +112,7 @@ public class BattleKlineDetailActivity extends BaseActivity {
         super.onDestroy();
         mCountdown.cancelCount();
         unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
+        GamePusher.get().removeOnPushReceiveListener();
     }
 
     private void initKlineView() {
