@@ -375,7 +375,7 @@ public class WebActivity extends BaseActivity {
     }
 
     public void controlTitleBarRightView(boolean rightViewIsShow, int type, String rightViewContent, JsModel content) {
-        Log.d(TAG, "controlTitleBarRightView: "+rightViewIsShow+" "+mPageUrl);
+        Log.d(TAG, "controlTitleBarRightView: " + rightViewIsShow + " " + mPageUrl);
         mUrlSet.add(mPageUrl);
         mJsModel = content;
         mTitleBar.setRightVisible(rightViewIsShow);
@@ -387,6 +387,13 @@ public class WebActivity extends BaseActivity {
             case AppJs.MULTIPART_IMAGE:
                 mTitleBar.setRightTextRightImage(rightViewContent);
                 break;
+        }
+    }
+
+    public void updateTitleText(String titleContent) {
+        if (isNeedViewTitle()) {
+            mTitle = titleContent;
+            mTitleBar.setTitle(mTitle);
         }
     }
 

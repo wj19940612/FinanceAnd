@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.android.volley.DefaultRetryPolicy;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.DialogBaseActivity;
+import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -24,6 +24,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.utils.audio.OnPlayRadioManager;
 import com.sbai.finance.view.SmartDialog;
 
 import butterknife.BindView;
@@ -36,7 +37,7 @@ import static com.android.volley.DefaultRetryPolicy.DEFAULT_TIMEOUT_MS;
 /**
  * 对小姐姐的提问的评论页面
  */
-public class CommentActivity extends DialogBaseActivity {
+public class CommentActivity extends BaseActivity implements OnPlayRadioManager{
 
     public static final String BROADCAST_ACTION_REPLY_SUCCESS = "broadcast_action_reply_success";
 
@@ -84,10 +85,6 @@ public class CommentActivity extends DialogBaseActivity {
         mRadioId = intent.getIntExtra(ExtraKeys.RADIO, 0);
     }
 
-    @Override
-    protected float getWidthRatio() {
-        return 1;
-    }
 
     @Override
     public void onBackPressed() {

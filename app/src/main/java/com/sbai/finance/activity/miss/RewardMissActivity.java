@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.DialogBaseActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.activity.mine.setting.SecurityCenterActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
@@ -32,6 +31,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
+import com.sbai.finance.utils.audio.OnPlayRadioManager;
 import com.sbai.finance.view.RewardSelectMoneyView;
 import com.sbai.finance.view.SmartDialog;
 
@@ -43,7 +43,7 @@ import butterknife.OnClick;
  * 姐说打赏页面
  */
 
-public class RewardMissActivity extends DialogBaseActivity {
+public class RewardMissActivity extends BaseActivity implements OnPlayRadioManager {
 
 
     private static final int SMALL_NO_SECRET_PAYMENT = 100;
@@ -99,11 +99,6 @@ public class RewardMissActivity extends DialogBaseActivity {
                     }
                 })
                 .fire();
-    }
-
-    @Override
-    protected float getWidthRatio() {
-        return 1;
     }
 
     private void requestUserSmallNoSecretPaymentStatus() {

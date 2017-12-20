@@ -168,6 +168,49 @@ public class AppJs {
         }
     }
 
+    @JavascriptInterface
+    public void jsOpenAppPage(int type) {
+        jsOpenAppPage(type, null, null, null);
+    }
+
+    @JavascriptInterface
+    public void jsOpenAppPage(int type, String id) {
+        jsOpenAppPage(type, id, null, null);
+    }
+
+
+    /**
+     * @param rightViewIsShow  右边按钮是否显示
+     * @param type             0 文字 1图片
+     * @param rightViewContent 右边内容
+     * @param content          内容
+     */
+    @JavascriptInterface
+    public void controlTitleBarRightView(final boolean rightViewIsShow, final int type, final String rightViewContent, final String content) {
+        if (mContext instanceof WebActivity) {
+            final WebActivity activity = (WebActivity) mContext;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.controlTitleBarRightView(rightViewIsShow, type, rightViewContent, JsModel.getJsModel(content));
+                }
+            });
+        }
+    }
+
+    @JavascriptInterface
+    public void updateTitleText(final String titleContent) {
+        if (mContext instanceof WebActivity) {
+            final WebActivity activity = (WebActivity) mContext;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.updateTitleText(titleContent);
+                }
+            });
+        }
+    }
+
     /**
      * h5打开原生页面
      *
@@ -300,35 +343,5 @@ public class AppJs {
                         }
                     }
                 }).fireFree();
-    }
-
-    @JavascriptInterface
-    public void jsOpenAppPage(int type) {
-        jsOpenAppPage(type, null, null, null);
-    }
-
-    @JavascriptInterface
-    public void jsOpenAppPage(int type, String id) {
-        jsOpenAppPage(type, id, null, null);
-    }
-
-
-    /**
-     * @param rightViewIsShow  右边按钮是否显示
-     * @param type             0 文字 1图片
-     * @param rightViewContent 右边内容
-     * @param content          内容
-     */
-    @JavascriptInterface
-    public void controlTitleBarRightView(final boolean rightViewIsShow, final int type, final String rightViewContent, final String content) {
-        if (mContext instanceof WebActivity) {
-            final WebActivity activity = (WebActivity) mContext;
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    activity.controlTitleBarRightView(rightViewIsShow, type, rightViewContent, JsModel.getJsModel(content));
-                }
-            });
-        }
     }
 }
