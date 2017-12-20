@@ -5,7 +5,9 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.App;
 import com.sbai.finance.BuildConfig;
 import com.sbai.finance.Preference;
@@ -21,6 +23,7 @@ import com.sbai.socket.WsRequest;
 import com.sbai.socket.WsRespCode;
 import com.sbai.socket.WsResponse;
 
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -87,9 +90,11 @@ public class GamePusher extends SimpleConnector {
     }
 
     private void handleMessage(final String msg) {
-        WsResponse resp = null;
+        WsResponse<JsonObject> resp = null;
         try {
-            resp = new Gson().fromJson(msg, WsResponse.class);
+            Type type = new TypeToken<WsResponse<JsonObject>>() {
+            }.getType();
+            resp = new Gson().fromJson(msg, type);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
@@ -127,7 +132,7 @@ public class GamePusher extends SimpleConnector {
         }
     }
 
-    private void onPushReceived(final String msg, WsResponse resp) {
+    private void onPushReceived(final String msg, WsResponse<JsonObject> resp) {
         if (mMessageIdQueue.contain(resp.getMsgId())) return;
 
         if (mOnPushReceiveListener != null) {
