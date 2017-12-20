@@ -124,6 +124,7 @@ public class KLineResultActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.moreOneBtn:
                 Intent intent = new Intent(this, BattleKlineActivity.class);
+                intent.putExtra(ExtraKeys.GUESS_TYPE, mGoinType);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();

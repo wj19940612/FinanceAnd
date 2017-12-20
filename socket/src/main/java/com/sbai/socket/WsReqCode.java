@@ -12,6 +12,6 @@ public interface WsReqCode {
     int REGISTER = 1100;
     int UNREGISTER = 1101;
     int MSG_OFFLINE = 1102;
-    int MSG_CONFIRM = 1103;
+    int MSG_ACK = 1103;
     int REQUEST = 1200;
 }
