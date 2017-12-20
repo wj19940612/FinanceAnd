@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.sbai.finance.ExtraKeys;
+import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
 import com.sbai.finance.model.LocalUser;
@@ -26,11 +27,11 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.KeyBoardHelper;
 import com.sbai.finance.utils.KeyBoardUtils;
 import com.sbai.finance.utils.Launcher;
-import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.utils.audio.OnPlayRadioManager;
 import com.sbai.finance.view.PasswordEditText;
 
 import butterknife.BindView;
@@ -38,7 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class LoginActivity extends WeChatActivity {
+public class LoginActivity extends WeChatActivity implements OnPlayRadioManager {
 
     private static final int REQ_CODE_REGISTER = 888;
     private static final int REQ_CODE_IMAGE_AUTH_CODE = 889;
@@ -87,6 +88,11 @@ public class LoginActivity extends WeChatActivity {
         ButterKnife.bind(this);
 
         translucentStatusBar();
+        // 第一次登录不需要弹出软键盘
+        if (!Preference.get().isFirstLogin()) {
+            mPhoneNumber.requestFocus();
+        }
+        Preference.get().setFirstLogin(false);
 
         if (!TextUtils.isEmpty(LocalUser.getUser().getPhone())) {
             mPhoneNumber.setText(LocalUser.getUser().getPhone());
@@ -94,8 +100,6 @@ public class LoginActivity extends WeChatActivity {
             mPhoneNumber.clearFocus();
             mPassword.requestFocus();
             mGetAuthCode.setEnabled(checkObtainAuthCodeEnable());
-        } else {
-            mPhoneNumber.requestFocus();
         }
         mPhoneNumber.addTextChangedListener(mPhoneValidationWatcher);
         mAuthCode.addTextChangedListener(mValidationWatcher);
@@ -114,7 +118,6 @@ public class LoginActivity extends WeChatActivity {
         initListener();
 
         setKeyboardHelper();
-        MissAudioManager.get().stop();
     }
 
     private void initListener() {

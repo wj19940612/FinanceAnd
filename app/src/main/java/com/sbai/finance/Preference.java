@@ -51,6 +51,7 @@ public class Preference {
         String SHOW_BIND_WECHAT = "show_bind_wechat";
         String FIRST_OPEN_APP = "first_open_app";
         String UPDATE_OPEN_APP_TIME = "update_open_app_time";
+        String FIRST_LOGIN = "first_login";
     }
 
     private static Preference sInstance;
@@ -334,5 +335,13 @@ public class Preference {
         long systemTimestamp = SysTime.getSysTime().getSystemTimestamp();
         long time = systemTimestamp - mPrefs.getLong(Key.UPDATE_OPEN_APP_TIME, 0);
         return time > UPDATE_OPEN_APP_TIME;
+    }
+
+    public boolean isFirstLogin() {
+        return mPrefs.getBoolean(Key.FIRST_LOGIN, true);
+    }
+
+    public void setFirstLogin(boolean isFirstLogin) {
+        apply(Key.FIRST_LOGIN, isFirstLogin);
     }
 }

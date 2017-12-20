@@ -98,15 +98,16 @@ public class ShrinkTextLayout extends LinearLayout {
     public void setContentText(CharSequence contentText) {
         mContentText.setText(contentText);
         mContentText.setMaxLines(Integer.MAX_VALUE);
-        mContentText.post(new Runnable() {
-            @Override
-            public void run() {
-                boolean needShow = mContentText.getLineCount() > mTextMaxLines;
-                mShrinkBtnTextView.setVisibility(needShow ? VISIBLE : GONE);
-                //必须在获取行数后才可进行设置最多行数，不然获取不到正确的最大行数
-                mContentText.setMaxLines(mTextMaxLines);
-            }
-        });
-
+        if(!isSpreadEd){
+            mContentText.post(new Runnable() {
+                @Override
+                public void run() {
+                    boolean needShow = mContentText.getLineCount() > mTextMaxLines;
+                    mShrinkBtnTextView.setVisibility(needShow ? VISIBLE : GONE);
+                    //必须在获取行数后才可进行设置最多行数，不然获取不到正确的最大行数
+                    mContentText.setMaxLines(mTextMaxLines);
+                }
+            });
+        }
     }
 }

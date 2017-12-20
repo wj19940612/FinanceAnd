@@ -16,7 +16,6 @@ import android.widget.ScrollView;
 
 import com.sbai.finance.Preference;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.MediaPlayActivity;
 import com.sbai.finance.game.WsClient;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.local.SysTime;
@@ -28,6 +27,7 @@ import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.SecurityUtil;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.audio.MissAudioManager;
+import com.sbai.finance.utils.audio.OnPlayRadioManager;
 import com.sbai.finance.view.RequestProgress;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.httplib.ApiIndeterminate;
@@ -137,7 +137,7 @@ public class BaseActivity extends BattlePushActivity implements
 
         updatePageOpenTime();
 
-        boolean isCanPlayAudioPage = this instanceof MediaPlayActivity;
+        boolean isCanPlayAudioPage = this instanceof OnPlayRadioManager;
         if (!isCanPlayAudioPage && MissAudioManager.get().isPlaying()) {
             MissAudioManager.get().stop();
         }
@@ -174,6 +174,10 @@ public class BaseActivity extends BattlePushActivity implements
         mRequestProgress.dismissAll();
 
         stopScheduleJob();
+    }
+
+    protected boolean needStopPlayRadio() {
+        return true;
     }
 
     protected FragmentActivity getActivity() {

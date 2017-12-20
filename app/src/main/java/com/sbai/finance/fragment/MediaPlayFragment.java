@@ -13,13 +13,14 @@ import com.sbai.finance.net.Client;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.audio.MissAudioManager;
+import com.sbai.finance.utils.audio.OnPlayRadioManager;
 import com.sbai.finance.view.MissFloatWindow;
 
 /**
  * Created by ${wangJie} on 2017/11/23.
  */
 
-public abstract class MediaPlayFragment extends BaseFragment {
+public abstract class MediaPlayFragment extends BaseFragment implements OnPlayRadioManager{
 
 
     public MediaPlayService mMediaPlayService;
