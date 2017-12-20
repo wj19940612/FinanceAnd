@@ -86,9 +86,9 @@ public class BattleKlinePkActivity extends BattleKlineDetailActivity {
     @Override
     protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
         super.onBattleKlinePushReceived(battleBean);
-        if (battleBean.getCode() == String.valueOf(BattleKline.PUSH_CODE_AGAINST_PROFIT)) {
+        if (battleBean.getCode() == BattleKline.PUSH_CODE_AGAINST_PROFIT) {
             updateLastProfitData(battleBean);
-        } else if (battleBean.getCode() == String.valueOf(BattleKline.PUSH_CODE_BATTLE_FINISH)) {
+        } else if (battleBean.getCode() == BattleKline.PUSH_CODE_BATTLE_FINISH) {
             battleFinish();
         }
     }

@@ -108,16 +108,11 @@ public class BattleKlineActivity extends BaseActivity {
         }
     };
 
-    private OnPushReceiveListener mKlineBattlePushReceiverListener = new OnPushReceiveListener() {
+    private OnPushReceiveListener<BattleKline.BattleBean> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKline.BattleBean>() {
         @Override
-        public void onPushReceive(Object o, String originalData) {
-            try {
-                BattleKline.BattleBean battleBean = new Gson().fromJson(o.toString().replace(" ",""), BattleKline.BattleBean.class);
-                if (battleBean != null) {
-                    onBattleKlinePushReceived(battleBean);
-                }
-            } catch (Exception e) {
-                ToastUtil.show(e.getMessage());
+        public void onPushReceive(BattleKline.BattleBean battleBean, String originalData) {
+            if (battleBean != null) {
+                onBattleKlinePushReceived(battleBean);
             }
         }
     };
@@ -322,24 +317,22 @@ public class BattleKlineActivity extends BaseActivity {
     }
 
     protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
-        if (battleBean.getCode().equalsIgnoreCase(String.valueOf(BattleKline.PUSH_CODE_MATCH_FAILED))) {
+        if (battleBean.getCode() == BattleKline.PUSH_CODE_MATCH_FAILED) {
             showMatchTimeoutDialog();
-        } else if (battleBean.getCode().equalsIgnoreCase(String.valueOf(BattleKline.PUSH_CODE_MATCH_SUCCESS))) {
+        } else if (battleBean.getCode() == BattleKline.PUSH_CODE_MATCH_SUCCESS) {
             if (mStartMatchDialog != null) {
-                if (mType != null) {
-                    if ((mType.equalsIgnoreCase(BattleKline.TYPE_1V1) && battleBean.getUserMatch().size() == 2)
-                            || mType.equalsIgnoreCase(BattleKline.TYPE_4V4) && battleBean.getUserMatch().size() == 4) {
-                        mStartMatchDialog.dismiss();
-                        BattleKlineMatchSuccessDialog.get(getActivity(), battleBean.getUserMatch(), new BattleKlineMatchSuccessDialog.OnDismissListener() {
-                            @Override
-                            public void onDismiss() {
-                                Launcher.with(getActivity(), BattleKlinePkActivity.class)
-                                        .putExtra(ExtraKeys.GUESS_TYPE, mType)
-                                        .execute();
-                            }
-                        });
-                        return;
-                    }
+                if ((battleBean.getBattleType().equalsIgnoreCase(BattleKline.TYPE_1V1) && battleBean.getUserMatch().size() == 2)
+                        || battleBean.getBattleType().equalsIgnoreCase(BattleKline.TYPE_4V4) && battleBean.getUserMatch().size() == 4) {
+                    mStartMatchDialog.dismiss();
+                    BattleKlineMatchSuccessDialog.get(getActivity(), battleBean.getUserMatch(), new BattleKlineMatchSuccessDialog.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            Launcher.with(getActivity(), BattleKlinePkActivity.class)
+                                    .putExtra(ExtraKeys.GUESS_TYPE, mType)
+                                    .execute();
+                        }
+                    });
+                    return;
                 }
                 setMatchedPeople(battleBean.getUserMatch().size());
             }
