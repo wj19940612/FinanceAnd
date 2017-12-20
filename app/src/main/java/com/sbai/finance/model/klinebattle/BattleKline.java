@@ -181,7 +181,7 @@ public class BattleKline implements Parcelable {
         private int battleId;
         private int battleStatus;
         private String battleType;
-        private String code;
+        private int code;
         private boolean operate;
         private double positions;
         private double profit;
@@ -249,11 +249,11 @@ public class BattleKline implements Parcelable {
             this.battleStatus = battleStatus;
         }
 
-        public String getCode() {
+        public int getCode() {
             return code;
         }
 
-        public void setCode(String code) {
+        public void setCode(int code) {
             this.code = code;
         }
 
@@ -319,7 +319,7 @@ public class BattleKline implements Parcelable {
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.battleId);
             dest.writeInt(this.battleStatus);
-            dest.writeString(this.code);
+            dest.writeInt(this.code);
             dest.writeByte(this.operate ? (byte) 1 : (byte) 0);
             dest.writeDouble(this.positions);
             dest.writeDouble(this.profit);
@@ -338,7 +338,7 @@ public class BattleKline implements Parcelable {
         protected BattleBean(Parcel in) {
             this.battleId = in.readInt();
             this.battleStatus = in.readInt();
-            this.code = in.readString();
+            this.code = in.readInt();
             this.operate = in.readByte() != 0;
             this.positions = in.readDouble();
             this.profit = in.readDouble();

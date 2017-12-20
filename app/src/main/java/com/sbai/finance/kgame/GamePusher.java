@@ -104,12 +104,12 @@ public class GamePusher extends SimpleConnector {
         if (resp.getCode() == WsResponse.PUSH) {
             Log.d(TAG, "onPush: " + resp.getContent());
             ackPushMessage(resp);
+            final Object o = resp.getContent();
             if (mOnPushReceiveListener != null) {
-                final Object o = resp.getContent();
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mOnPushReceiveListener.onPushReceive(o, msg);
+                        mOnPushReceiveListener.onOriginPushReceive(o, msg);
                     }
                 });
             }
