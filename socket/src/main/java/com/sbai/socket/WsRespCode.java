@@ -21,6 +21,7 @@ public interface WsRespCode {
     int REGISTER_FAILURE = 2101;
 
     int MSG_OFFLINE_SUCCESS = 2103;
+    int MSG_ACK_SUCCESS = 2104;
 
     int REQUEST_SUCCESS = 2200;
     int REQUEST_FAILURE = 2201;

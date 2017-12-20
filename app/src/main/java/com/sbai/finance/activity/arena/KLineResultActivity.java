@@ -19,7 +19,6 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.arena.klinebattle.BattleKlineActivity;
-import com.sbai.finance.activity.arena.klinebattle.BattleKlinePkActivity;
 import com.sbai.finance.activity.arena.klinebattle.BattleKlineReviewActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineBattleResult;
@@ -124,6 +123,7 @@ public class KLineResultActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.moreOneBtn:
                 Intent intent = new Intent(this, BattleKlineActivity.class);
+                intent.putExtra(ExtraKeys.GUESS_TYPE, mGoinType);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();

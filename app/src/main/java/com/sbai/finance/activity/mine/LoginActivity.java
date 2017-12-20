@@ -31,6 +31,7 @@ import com.sbai.finance.utils.StrFormatter;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.ValidationWatcher;
+import com.sbai.finance.utils.audio.OnPlayRadioManager;
 import com.sbai.finance.view.PasswordEditText;
 
 import butterknife.BindView;
@@ -38,7 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class LoginActivity extends WeChatActivity {
+public class LoginActivity extends WeChatActivity implements OnPlayRadioManager {
 
     private static final int REQ_CODE_REGISTER = 888;
     private static final int REQ_CODE_IMAGE_AUTH_CODE = 889;

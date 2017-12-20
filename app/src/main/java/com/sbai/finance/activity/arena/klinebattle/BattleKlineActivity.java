@@ -16,16 +16,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.arena.KLineResultActivity;
 import com.sbai.finance.activity.arena.KlineRankListActivity;
-import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.web.LocalImageHtmlActivity;
@@ -54,7 +51,6 @@ import com.sbai.finance.view.dialog.BaseDialog;
 import com.sbai.finance.view.dialog.BattleKlineMatchSuccessDialog;
 import com.sbai.finance.view.dialog.StartMatchDialog;
 import com.sbai.glide.GlideApp;
-import com.sbai.socket.WsResponse;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -108,16 +104,11 @@ public class BattleKlineActivity extends BaseActivity {
         }
     };
 
-    private OnPushReceiveListener mKlineBattlePushReceiverListener = new OnPushReceiveListener() {
+    private OnPushReceiveListener<BattleKline.BattleBean> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKline.BattleBean>() {
         @Override
-        public void onPushReceive(Object o, String originalData) {
-            try {
-                BattleKline.BattleBean battleBean = new Gson().fromJson(o.toString().replace(" ",""), BattleKline.BattleBean.class);
-                if (battleBean != null) {
-                    onBattleKlinePushReceived(battleBean);
-                }
-            } catch (Exception e) {
-                ToastUtil.show(e.getMessage());
+        public void onPushReceive(BattleKline.BattleBean battleBean, String originalData) {
+            if (battleBean != null) {
+                onBattleKlinePushReceived(battleBean);
             }
         }
     };
@@ -128,10 +119,19 @@ public class BattleKlineActivity extends BaseActivity {
         setContentView(R.layout.activity_battle_kline);
         ButterKnife.bind(this);
         translucentStatusBar();
+        initData(getIntent());
         initTitleView();
         initBroadcastReceiver();
         requestBattleConf();
         GamePusher.get().connect();
+        GamePusher.get().setOnPushReceiveListener(mKlineBattlePushReceiverListener);
+    }
+
+    private void initData(Intent intent) {
+        mType = intent.getStringExtra(ExtraKeys.GUESS_TYPE);
+        if (!TextUtils.isEmpty(mType)) {
+            judgeCurrentBattle(mType);
+        }
     }
 
     private void requestBattleConf() {
@@ -158,16 +158,11 @@ public class BattleKlineActivity extends BaseActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        GamePusher.get().removeOnPushReceiveListener();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mLoginBroadcastReceiver);
         unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
+        GamePusher.get().removeOnPushReceiveListener();
         GamePusher.get().close();
     }
 
@@ -300,7 +295,6 @@ public class BattleKlineActivity extends BaseActivity {
             mIngot.setText(R.string.not_login);
         }
         updateAvatar();
-        GamePusher.get().setOnPushReceiveListener(mKlineBattlePushReceiverListener);
     }
 
     @OnClick({R.id.fourPk, R.id.onePk, R.id.exercise, R.id.rank})
@@ -322,24 +316,22 @@ public class BattleKlineActivity extends BaseActivity {
     }
 
     protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
-        if (battleBean.getCode().equalsIgnoreCase(String.valueOf(BattleKline.PUSH_CODE_MATCH_FAILED))) {
+        if (battleBean.getCode() == BattleKline.PUSH_CODE_MATCH_FAILED) {
             showMatchTimeoutDialog();
-        } else if (battleBean.getCode().equalsIgnoreCase(String.valueOf(BattleKline.PUSH_CODE_MATCH_SUCCESS))) {
+        } else if (battleBean.getCode() == BattleKline.PUSH_CODE_MATCH_SUCCESS) {
             if (mStartMatchDialog != null) {
-                if (mType != null) {
-                    if ((mType.equalsIgnoreCase(BattleKline.TYPE_1V1) && battleBean.getUserMatch().size() == 2)
-                            || mType.equalsIgnoreCase(BattleKline.TYPE_4V4) && battleBean.getUserMatch().size() == 4) {
-                        mStartMatchDialog.dismiss();
-                        BattleKlineMatchSuccessDialog.get(getActivity(), battleBean.getUserMatch(), new BattleKlineMatchSuccessDialog.OnDismissListener() {
-                            @Override
-                            public void onDismiss() {
-                                Launcher.with(getActivity(), BattleKlinePkActivity.class)
-                                        .putExtra(ExtraKeys.GUESS_TYPE, mType)
-                                        .execute();
-                            }
-                        });
-                        return;
-                    }
+                if ((battleBean.getBattleType().equalsIgnoreCase(BattleKline.TYPE_1V1) && battleBean.getUserMatch().size() == 2)
+                        || battleBean.getBattleType().equalsIgnoreCase(BattleKline.TYPE_4V4) && battleBean.getUserMatch().size() == 4) {
+                    mStartMatchDialog.dismiss();
+                    BattleKlineMatchSuccessDialog.get(getActivity(), battleBean.getUserMatch(), new BattleKlineMatchSuccessDialog.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            Launcher.with(getActivity(), BattleKlineDetailActivity.class)
+                                    .putExtra(ExtraKeys.GUESS_TYPE, mType)
+                                    .execute();
+                        }
+                    });
+                    return;
                 }
                 setMatchedPeople(battleBean.getUserMatch().size());
             }
@@ -367,7 +359,7 @@ public class BattleKlineActivity extends BaseActivity {
                                                 @Override
                                                 public void onClick(Dialog dialog) {
                                                     dialog.dismiss();
-                                                    Launcher.with(getActivity(), BattleKlinePkActivity.class)
+                                                    Launcher.with(getActivity(), BattleKlineDetailActivity.class)
                                                             .putExtra(ExtraKeys.GUESS_TYPE, resp.getData().getBattleType())
                                                             .execute();
                                                 }

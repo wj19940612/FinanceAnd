@@ -79,11 +79,15 @@ public class AppJs {
      */
     @JavascriptInterface
     public void openShareDialog(String title, String description, String shareUrl, String shareThumbnailUrl, String shareChannel) {
+        openShareDialog(title, description, shareUrl, shareThumbnailUrl, shareChannel, mContext.getString(R.string.share_and_get_ingot));
+    }
+
+    private void openShareDialog(String title, String description, String shareUrl, String shareThumbnailUrl, String shareChannel, String shareTitle) {
         boolean isOnlyWeChatShare = ONLY_WE_CHAT_SHARE.equalsIgnoreCase(shareChannel);
         if (mContext instanceof Activity) {
             final Activity activity = (Activity) mContext;
             ShareDialog.with(activity)
-                    .setTitle(mContext.getString(R.string.share_and_get_ingot))
+                    .setTitle(shareTitle)
                     .setTitleVisible(true)
                     .setShareTitle(title)
                     .hasWeiBo(!isOnlyWeChatShare)
@@ -165,6 +169,49 @@ public class AppJs {
         if (mContext instanceof WebActivity) {
             WebActivity activity = (WebActivity) mContext;
             Launcher.with(activity, LoginActivity.class).execute();
+        }
+    }
+
+    @JavascriptInterface
+    public void jsOpenAppPage(int type) {
+        jsOpenAppPage(type, null, null, null);
+    }
+
+    @JavascriptInterface
+    public void jsOpenAppPage(int type, String id) {
+        jsOpenAppPage(type, id, null, null);
+    }
+
+
+    /**
+     * @param rightViewIsShow  右边按钮是否显示
+     * @param type             0 文字 1图片
+     * @param rightViewContent 右边内容
+     * @param content          内容
+     */
+    @JavascriptInterface
+    public void controlTitleBarRightView(final boolean rightViewIsShow, final int type, final String rightViewContent, final String content) {
+        if (mContext instanceof WebActivity) {
+            final WebActivity activity = (WebActivity) mContext;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.controlTitleBarRightView(rightViewIsShow, type, rightViewContent, JsModel.getJsModel(content));
+                }
+            });
+        }
+    }
+
+    @JavascriptInterface
+    public void updateTitleText(final String titleContent) {
+        if (mContext instanceof WebActivity) {
+            final WebActivity activity = (WebActivity) mContext;
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.updateTitleText(titleContent);
+                }
+            });
         }
     }
 
@@ -300,35 +347,5 @@ public class AppJs {
                         }
                     }
                 }).fireFree();
-    }
-
-    @JavascriptInterface
-    public void jsOpenAppPage(int type) {
-        jsOpenAppPage(type, null, null, null);
-    }
-
-    @JavascriptInterface
-    public void jsOpenAppPage(int type, String id) {
-        jsOpenAppPage(type, id, null, null);
-    }
-
-
-    /**
-     * @param rightViewIsShow  右边按钮是否显示
-     * @param type             0 文字 1图片
-     * @param rightViewContent 右边内容
-     * @param content          内容
-     */
-    @JavascriptInterface
-    public void controlTitleBarRightView(final boolean rightViewIsShow, final int type, final String rightViewContent, final String content) {
-        if (mContext instanceof WebActivity) {
-            final WebActivity activity = (WebActivity) mContext;
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    activity.controlTitleBarRightView(rightViewIsShow, type, rightViewContent, JsModel.getJsModel(content));
-                }
-            });
-        }
     }
 }

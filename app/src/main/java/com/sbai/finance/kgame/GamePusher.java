@@ -5,7 +5,9 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.App;
 import com.sbai.finance.BuildConfig;
 import com.sbai.finance.Preference;
@@ -18,8 +20,11 @@ import com.sbai.finance.utils.AppInfo;
 import com.sbai.httplib.CookieManger;
 import com.sbai.socket.SimpleConnector;
 import com.sbai.socket.WsRequest;
+import com.sbai.socket.WsRespCode;
 import com.sbai.socket.WsResponse;
 
+import java.lang.reflect.Type;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -37,6 +42,7 @@ public class GamePusher extends SimpleConnector {
     private static GamePusher sGamePusher;
     private OnPushReceiveListener mOnPushReceiveListener;
     private Handler mHandler;
+    private MessageIdQueue mMessageIdQueue;
 
     public void setOnPushReceiveListener(OnPushReceiveListener onPushReceiveListener) {
         mOnPushReceiveListener = onPushReceiveListener;
@@ -48,6 +54,7 @@ public class GamePusher extends SimpleConnector {
 
     public GamePusher() {
         mHandler = new Handler(Looper.getMainLooper());
+        mMessageIdQueue = new MessageIdQueue(100);
 
         setOnConnectedListener(new OnConnectedListener() {
             @Override
@@ -65,6 +72,7 @@ public class GamePusher extends SimpleConnector {
 
     @Override
     public void connect() {
+        if (isConnected()) return;
         Client.getGameSocketAddress()
                 .setCallback(new Callback<Resp<List<SocketAddress>>>() {
                     @Override
@@ -82,9 +90,11 @@ public class GamePusher extends SimpleConnector {
     }
 
     private void handleMessage(final String msg) {
-        WsResponse resp = null;
+        WsResponse<JsonObject> resp = null;
         try {
-            resp = new Gson().fromJson(msg, WsResponse.class);
+            Type type = new TypeToken<WsResponse<JsonObject>>() {
+            }.getType();
+            resp = new Gson().fromJson(msg, type);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
@@ -97,6 +107,7 @@ public class GamePusher extends SimpleConnector {
         }
 
         if (resp.getCode() == WsResponse.REGISTER_FAILURE) {
+            Log.d(TAG, "Register failure");
             // TODO: 26/06/2017 是否需要重新注册
             return;
         }
@@ -104,15 +115,13 @@ public class GamePusher extends SimpleConnector {
         if (resp.getCode() == WsResponse.PUSH) {
             Log.d(TAG, "onPush: " + resp.getContent());
             ackPushMessage(resp);
-            if (mOnPushReceiveListener != null) {
-                final Object o = resp.getContent();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mOnPushReceiveListener.onPushReceive(o, msg);
-                    }
-                });
-            }
+            onPushReceived(msg, resp);
+            return;
+        }
+
+        if (resp.getCode() == WsRespCode.MSG_ACK_SUCCESS) {
+            Log.d(TAG, "Msg ack: " + resp.getMsgId());
+            mMessageIdQueue.remove(resp.getMsgId());
             return;
         }
 
@@ -123,9 +132,28 @@ public class GamePusher extends SimpleConnector {
         }
     }
 
+    private void onPushReceived(final String msg, WsResponse<JsonObject> resp) {
+        if (mMessageIdQueue.contain(resp.getMsgId())) return;
+
+        if (mOnPushReceiveListener != null) {
+            final JsonObject jsonObject = resp.getContent();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Type type = mOnPushReceiveListener.getGenericType();
+                    if (type != null) {
+                        Object o = new Gson().fromJson(jsonObject, type);
+                        mOnPushReceiveListener.onPushReceive(o, msg);
+                    }
+                }
+            });
+            mMessageIdQueue.add(resp.getMsgId());
+        }
+    }
+
     private void ackPushMessage(WsResponse resp) {
         AckPush ackPush = new AckPush(resp.getMsgId());
-        WsRequest request = WsUtils.getRequest(WsRequest.MSG_CONFIRM, ackPush);
+        WsRequest request = WsUtils.getRequest(WsRequest.MSG_ACK, ackPush);
         send(request);
     }
 
@@ -151,5 +179,35 @@ public class GamePusher extends SimpleConnector {
         Log.d(TAG, "register: " + registerInfo);
 
         send(request);
+    }
+
+    static class MessageIdQueue {
+
+        private int mMaxCapacity;
+
+        private LinkedList<Long> mQueue;
+
+        public MessageIdQueue(int maxCapacity) {
+            this.mMaxCapacity = maxCapacity;
+            this.mQueue = new LinkedList<>();
+        }
+
+        public void add(long msgId) {
+            if (mQueue.size() >= mMaxCapacity) {
+                mQueue.removeFirst();
+            }
+            mQueue.addLast(msgId);
+        }
+
+        public void remove(long msgId) {
+            int indexOf = mQueue.indexOf(msgId);
+            if (indexOf >= 0) {
+                mQueue.remove(indexOf);
+            }
+        }
+
+        public boolean contain(long msgId) {
+            return mQueue.contains(msgId);
+        }
     }
 }

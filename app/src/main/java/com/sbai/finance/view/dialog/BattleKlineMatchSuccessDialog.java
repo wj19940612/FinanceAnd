@@ -52,7 +52,7 @@ public class BattleKlineMatchSuccessDialog extends BaseDialog {
         TextView userName3 = customView.findViewById(R.id.userName3);
         ImageView avatar3 = customView.findViewById(R.id.avatar3);
         List<BattleKline.UserInfo> userInfos = new ArrayList();
-        for (BattleKline.UserInfo userInfo: userInfos) {
+        for (BattleKline.UserInfo userInfo: battleBeans) {
             if (userInfo.getUserId() != LocalUser.getUser().getUserInfo().getId()) {
                 userInfos.add(userInfo);
             }
@@ -69,8 +69,8 @@ public class BattleKlineMatchSuccessDialog extends BaseDialog {
                 userName3.setText(userInfos.get(2).getUserName());
             }
         } else if (userInfos.size() >= 1) {
-            onePkArea.setVisibility(View.GONE);
-            fourPkArea.setVisibility(View.VISIBLE);
+            onePkArea.setVisibility(View.VISIBLE);
+            fourPkArea.setVisibility(View.GONE);
             if (!activity.isFinishing()) {
                 loadAvatar(activity, LocalUser.getUser().getUserInfo().getUserPortrait(), myAvatar);
                 loadAvatar(activity, userInfos.get(0).getUserPortrait(), againstAvatar);

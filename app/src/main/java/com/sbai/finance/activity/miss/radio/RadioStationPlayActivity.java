@@ -159,7 +159,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     private void requestRadioReplyList() {
         if (mRadio == null) return;
         Client.requestRadioReplyList(mPage, mRadio.getRadioId(), mRadio.getAudioId())
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<QuestionReply>, QuestionReply>() {
                     @Override
                     protected void onRespSuccessData(QuestionReply questionReply) {
@@ -203,7 +202,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         if (mRadio != null) {
             Client.requestRadioDetails(mRadio.getRadioId())
                     .setTag(TAG)
-                    .setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<RadioDetails>, RadioDetails>() {
 
                         @Override
@@ -273,7 +271,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     private void updateListenNumber() {
         Client.listenRadioAudio(mVoiceId)
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback<Resp<Object>>() {
 
                     @Override
@@ -287,7 +284,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     private void requestAudioDetails(final boolean automaticPlay) {
         Client.requestVoiceDetails(mVoiceId)
                 .setTag(TAG)
-                .setIndeterminate(this)
                 .setCallback(new Callback2D<Resp<Radio>, Radio>() {
 
                     @Override
