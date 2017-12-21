@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.sbai.finance.R;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKline;
+import com.sbai.finance.model.klinebattle.BattleKlineInfo;
 import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.glide.GlideApp;
 
@@ -103,9 +104,9 @@ public class AgainstProfitView extends LinearLayout {
         }
     }
 
-    public void setTotalProfit(List<BattleKline.BattleBean> battleBeans) {
-        List<BattleKline.BattleBean> battleBeans1 = new ArrayList<>();
-        for (BattleKline.BattleBean battleBean : battleBeans) {
+    public void setTotalProfit(List<BattleKlineInfo> battleBeans) {
+        List<BattleKlineInfo> battleBeans1 = new ArrayList<>();
+        for (BattleKlineInfo battleBean : battleBeans) {
             if (battleBean.getUserId() != LocalUser.getUser().getUserInfo().getId()) {
                 battleBeans1.add(battleBean);
             }
@@ -126,7 +127,7 @@ public class AgainstProfitView extends LinearLayout {
         }
     }
 
-    private void setTotalProfit(BattleKline.BattleBean battleBean, TextView userName, TextView totalProfit, ImageView imageAvatar, ImageView imageRank) {
+    private void setTotalProfit(BattleKlineInfo battleBean, TextView userName, TextView totalProfit, ImageView imageAvatar, ImageView imageRank) {
         if (totalProfit.getTag() == null) {
             totalProfit.setTag(battleBean.getUserId());
             setAvatar(battleBean.getUserPortrait(), imageAvatar);
