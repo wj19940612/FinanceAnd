@@ -21,6 +21,8 @@ public class BattleKlineData extends KlineViewData {
 
     private int id;
     private String mark;
+
+    // 额外添加用于画操盘盈利背景的字段
     private double positions;
 
     public void setMark(String mark) {
