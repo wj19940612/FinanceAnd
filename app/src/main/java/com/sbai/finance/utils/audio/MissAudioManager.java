@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.sbai.finance.App;
+import com.sbai.finance.utils.ToastUtil;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -112,6 +113,19 @@ public class MissAudioManager {
 
         if (mMediaPlayer == null) {
             mMediaPlayer = new MyMediaPlayer();
+
+            mMediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                @Override
+                public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                    switch (what) {
+                        case MediaPlayer.MEDIA_INFO_BUFFERING_END:     //播放结束  MEDIA_INFO_NETWORK_BANDWIDTH  网络异常这个看不到
+                            ToastUtil.show("播放结束了");
+                            break;
+                    }
+                    return false;
+                }
+            });
+
             mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -142,7 +156,9 @@ public class MissAudioManager {
                     } else { // prepared, start
                         mMediaPlayer.start();
                         requestAudioFocus();
-                        onPlay();
+                        if (mMediaPlayer.isPlaying()) {
+                            onPlay();
+                        }
                     }
                 }
             });
