@@ -210,15 +210,15 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
     private void updateFloatState() {
         if (MissAudioManager.get().isPlaying()) {
             MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-            if (audio != null) {
-                if (audio instanceof Radio) {
+            if(audio != null){
+                if(audio instanceof Radio){
                     mMissFloatWindow.startAnim();
                     mMissFloatWindow.setVisibility(View.VISIBLE);
-                    mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
-                } else if (audio instanceof Question) {
+                    mMissFloatWindow.setMissAvatar(((Radio)audio).getUserPortrait());
+                }else if(audio instanceof Question){
                     mMissFloatWindow.startAnim();
                     mMissFloatWindow.setVisibility(View.VISIBLE);
-                    mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
+                    mMissFloatWindow.setMissAvatar(((Question)audio).getCustomPortrait());
                 }
             }
 

@@ -230,9 +230,9 @@ public class KlineOneByOneRankFragment extends BaseFragment {
 
                 mName.setText(data.getUserName());
                 if (data.getRankingRate() >= 0) {
-                    mWinRate.setText("+" + String.format("%.2f", data.getRankingRate() * 100) + "%");
+                    mWinRate.setText("+" + String.format("%.2f", data.getRankingRate() * 100) );
                 } else {
-                    mWinRate.setText(String.format("%.2f", data.getRankingRate() * 100) + "%");
+                    mWinRate.setText(String.format("%.2f", data.getRankingRate() * 100));
                 }
 
 

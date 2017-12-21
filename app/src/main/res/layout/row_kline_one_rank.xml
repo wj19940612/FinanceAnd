@@ -70,7 +70,7 @@
             android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/rank"
-            android:layout_marginLeft="14dp"/>
+            android:layout_marginLeft="11dp"/>
 
         <TextView
             android:id="@+id/name"
