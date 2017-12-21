@@ -30,6 +30,7 @@ import com.sbai.finance.model.battle.Battle;
 import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.model.klinebattle.BattleKlineConf;
+import com.sbai.finance.model.klinebattle.BattleKlineInfo;
 import com.sbai.finance.model.klinebattle.BattleKlineMyRecord;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.net.Callback;
@@ -98,11 +99,11 @@ public class BattleKlineActivity extends BaseActivity {
         }
     };
 
-    private OnPushReceiveListener<BattleKline.BattleBean> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKline.BattleBean>() {
+    private OnPushReceiveListener<BattleKlineInfo> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKlineInfo>() {
         @Override
-        public void onPushReceive(BattleKline.BattleBean battleBean, String originalData) {
-            if (battleBean != null) {
-                onBattleKlinePushReceived(battleBean);
+        public void onPushReceive(BattleKlineInfo battleKlineInfo, String originalData) {
+            if (battleKlineInfo != null) {
+                onBattleKlinePushReceived(battleKlineInfo);
             }
         }
     };
@@ -309,15 +310,15 @@ public class BattleKlineActivity extends BaseActivity {
         }
     }
 
-    protected void onBattleKlinePushReceived(BattleKline.BattleBean battleBean) {
-        if (battleBean.getCode() == BattleKline.PUSH_CODE_MATCH_FAILED) {
+    protected void onBattleKlinePushReceived(BattleKlineInfo battleKlineInfo) {
+        if (battleKlineInfo.getCode() == BattleKline.PUSH_CODE_MATCH_FAILED) {
             showMatchTimeoutDialog();
-        } else if (battleBean.getCode() == BattleKline.PUSH_CODE_MATCH_SUCCESS) {
+        } else if (battleKlineInfo.getCode() == BattleKline.PUSH_CODE_MATCH_SUCCESS) {
             if (mStartMatchDialog != null) {
-                if ((battleBean.getBattleType().equalsIgnoreCase(BattleKline.TYPE_1V1) && battleBean.getUserMatch().size() == 2)
-                        || battleBean.getBattleType().equalsIgnoreCase(BattleKline.TYPE_4V4) && battleBean.getUserMatch().size() == 4) {
+                if ((battleKlineInfo.getBattleType().equalsIgnoreCase(BattleKline.TYPE_1V1) && battleKlineInfo.getUserMatch().size() == 2)
+                        || battleKlineInfo.getBattleType().equalsIgnoreCase(BattleKline.TYPE_4V4) && battleKlineInfo.getUserMatch().size() == 4) {
                     mStartMatchDialog.dismiss();
-                    BattleKlineMatchSuccessDialog.get(getActivity(), battleBean.getUserMatch(), new BattleKlineMatchSuccessDialog.OnDismissListener() {
+                    BattleKlineMatchSuccessDialog.get(getActivity(), battleKlineInfo.getUserMatch(), new BattleKlineMatchSuccessDialog.OnDismissListener() {
                         @Override
                         public void onDismiss() {
                             Launcher.with(getActivity(), BattleKlineDetailActivity.class)
@@ -327,7 +328,7 @@ public class BattleKlineActivity extends BaseActivity {
                     });
                     return;
                 }
-                setMatchedPeople(battleBean.getUserMatch().size());
+                setMatchedPeople(battleKlineInfo.getUserMatch().size());
             }
         }
     }
@@ -337,9 +338,9 @@ public class BattleKlineActivity extends BaseActivity {
             mType = type;
             Client.getCurrentKlineBattle().setTag(TAG)
                     .setIndeterminate(this)
-                    .setCallback(new Callback<Resp<BattleKline.BattleBean>>() {
+                    .setCallback(new Callback<Resp<BattleKlineInfo>>() {
                         @Override
-                        protected void onRespSuccess(final Resp<BattleKline.BattleBean> resp) {
+                        protected void onRespSuccess(final Resp<BattleKlineInfo> resp) {
                             if (resp.getData() == null) {
                                 if (type.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
                                     Launcher.with(getActivity(), SingleKlineExerciseActivity.class).execute();
@@ -367,12 +368,6 @@ public class BattleKlineActivity extends BaseActivity {
                                             .show();
                                 }
                             }
-                        }
-
-                        @Override
-                        protected void onRespFailure(Resp failedResp) {
-                            super.onRespFailure(failedResp);
-                            ToastUtil.show(failedResp.getMsg());
                         }
                     }).fireFree();
         } else {
