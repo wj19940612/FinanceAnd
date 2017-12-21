@@ -36,16 +36,7 @@ public class BattleKlineInfo implements Comparable<BattleKlineInfo>, Parcelable 
     private int userId;
     private String userName;
     private String userPortrait;
-    private BattleKlineData next;
-    private List<BattleKlineUserInfo> userMatchList;
 
-    public BattleKlineData getNext() {
-        return next;
-    }
-
-    public void setNext(BattleKlineData next) {
-        this.next = next;
-    }
 
     public String getBattleType() {
         return battleType;
@@ -53,14 +44,6 @@ public class BattleKlineInfo implements Comparable<BattleKlineInfo>, Parcelable 
 
     public void setBattleType(String battleType) {
         this.battleType = battleType;
-    }
-
-    public List<BattleKlineUserInfo> getUserMatch() {
-        return userMatchList;
-    }
-
-    public void setUserMatchList(List<BattleKlineUserInfo> userMatchList) {
-        this.userMatchList = userMatchList;
     }
 
     public String getUserName() {
@@ -174,7 +157,6 @@ public class BattleKlineInfo implements Comparable<BattleKlineInfo>, Parcelable 
         dest.writeInt(this.userId);
         dest.writeString(this.userName);
         dest.writeString(this.userPortrait);
-        dest.writeList(this.userMatchList);
         dest.writeString(this.battleType);
     }
 
@@ -194,8 +176,6 @@ public class BattleKlineInfo implements Comparable<BattleKlineInfo>, Parcelable 
         this.userName = in.readString();
         this.userPortrait = in.readString();
         this.battleType = in.readString();
-        this.userMatchList = new ArrayList<BattleKlineUserInfo>();
-        in.readList(this.userMatchList, BattleKlineInfo.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<BattleKlineInfo> CREATOR = new Parcelable.Creator<BattleKlineInfo>() {

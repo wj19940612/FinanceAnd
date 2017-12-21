@@ -10,6 +10,7 @@ import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.model.klinebattle.BattleKlineInfo;
+import com.sbai.finance.model.klinebattle.BattleKlineOperate;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -145,7 +146,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         mAgainstProfit.setTotalProfit(mBattleKlineInfos);
     }
 
-    protected void updateMyLastOperateData(BattleKlineInfo data, String type) {
+    protected void updateMyLastOperateData(BattleKlineOperate data, String type) {
         if (data.getBattleStatus() == BattleKline.STATUS_END) {
             battleFinish();
             return;
@@ -161,16 +162,10 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
     @Override
     protected void buyOperate() {
         Client.requestKlineBattleBuy().setTag(TAG)
-                .setCallback(new Callback2D<Resp<BattleKlineInfo>, BattleKlineInfo>() {
+                .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
-                    protected void onRespSuccessData(BattleKlineInfo data) {
+                    protected void onRespSuccessData(BattleKlineOperate data) {
                         updateMyLastOperateData(data, BattleKline.BUY);
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        super.onRespFailure(failedResp);
-                        ToastUtil.show(failedResp.getMsg());
                     }
                 }).fireFree();
     }
@@ -178,16 +173,10 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
     @Override
     protected void clearOperate() {
         Client.requestKlineBattleSell().setTag(TAG)
-                .setCallback(new Callback2D<Resp<BattleKlineInfo>, BattleKlineInfo>() {
+                .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
-                    protected void onRespSuccessData(BattleKlineInfo data) {
+                    protected void onRespSuccessData(BattleKlineOperate data) {
                         updateMyLastOperateData(data, BattleKline.SELL);
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        super.onRespFailure(failedResp);
-                        ToastUtil.show(failedResp.getMsg());
                     }
                 }).fireFree();
     }
@@ -195,16 +184,10 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
     @Override
     protected void passOperate() {
         Client.requestKlineBattlePass().setTag(TAG)
-                .setCallback(new Callback2D<Resp<BattleKlineInfo>,BattleKlineInfo>() {
+                .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
-                    protected void onRespSuccessData(BattleKlineInfo data) {
+                    protected void onRespSuccessData(BattleKlineOperate data) {
                         updateMyLastOperateData(data, BattleKline.PASS);
-                    }
-
-                    @Override
-                    protected void onRespFailure(Resp failedResp) {
-                        super.onRespFailure(failedResp);
-                        ToastUtil.show(failedResp.getMsg());
                     }
                 }).fireFree();
     }

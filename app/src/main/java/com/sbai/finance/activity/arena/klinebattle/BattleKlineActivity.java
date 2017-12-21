@@ -31,6 +31,7 @@ import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.model.klinebattle.BattleKlineConf;
 import com.sbai.finance.model.klinebattle.BattleKlineInfo;
+import com.sbai.finance.model.klinebattle.BattleKlineMatch;
 import com.sbai.finance.model.klinebattle.BattleKlineMyRecord;
 import com.sbai.finance.model.mutual.ArticleProtocol;
 import com.sbai.finance.net.Callback;
@@ -99,11 +100,11 @@ public class BattleKlineActivity extends BaseActivity {
         }
     };
 
-    private OnPushReceiveListener<BattleKlineInfo> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKlineInfo>() {
+    private OnPushReceiveListener<BattleKlineMatch> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKlineMatch>() {
         @Override
-        public void onPushReceive(BattleKlineInfo battleKlineInfo, String originalData) {
-            if (battleKlineInfo != null) {
-                onBattleKlinePushReceived(battleKlineInfo);
+        public void onPushReceive(BattleKlineMatch battleKlineMatch, String originalData) {
+            if (battleKlineMatch != null) {
+                onBattleKlinePushReceived(battleKlineMatch);
             }
         }
     };
@@ -310,15 +311,15 @@ public class BattleKlineActivity extends BaseActivity {
         }
     }
 
-    protected void onBattleKlinePushReceived(BattleKlineInfo battleKlineInfo) {
-        if (battleKlineInfo.getCode() == BattleKline.PUSH_CODE_MATCH_FAILED) {
+    protected void onBattleKlinePushReceived(BattleKlineMatch battleKlineMatch) {
+        if (battleKlineMatch.getCode() == BattleKline.PUSH_CODE_MATCH_FAILED) {
             showMatchTimeoutDialog();
-        } else if (battleKlineInfo.getCode() == BattleKline.PUSH_CODE_MATCH_SUCCESS) {
+        } else if (battleKlineMatch.getCode() == BattleKline.PUSH_CODE_MATCH_SUCCESS) {
             if (mStartMatchDialog != null) {
-                if ((battleKlineInfo.getBattleType().equalsIgnoreCase(BattleKline.TYPE_1V1) && battleKlineInfo.getUserMatch().size() == 2)
-                        || battleKlineInfo.getBattleType().equalsIgnoreCase(BattleKline.TYPE_4V4) && battleKlineInfo.getUserMatch().size() == 4) {
+                if ((battleKlineMatch.getBattleType().equalsIgnoreCase(BattleKline.TYPE_1V1) && battleKlineMatch.getUserMatchList().size() == 2)
+                        || battleKlineMatch.getBattleType().equalsIgnoreCase(BattleKline.TYPE_4V4) && battleKlineMatch.getUserMatchList().size() == 4) {
                     mStartMatchDialog.dismiss();
-                    BattleKlineMatchSuccessDialog.get(getActivity(), battleKlineInfo.getUserMatch(), new BattleKlineMatchSuccessDialog.OnDismissListener() {
+                    BattleKlineMatchSuccessDialog.get(getActivity(), battleKlineMatch.getUserMatchList(), new BattleKlineMatchSuccessDialog.OnDismissListener() {
                         @Override
                         public void onDismiss() {
                             Launcher.with(getActivity(), BattleKlineDetailActivity.class)
@@ -328,7 +329,7 @@ public class BattleKlineActivity extends BaseActivity {
                     });
                     return;
                 }
-                setMatchedPeople(battleKlineInfo.getUserMatch().size());
+                setMatchedPeople(battleKlineMatch.getUserMatchList().size());
             }
         }
     }
