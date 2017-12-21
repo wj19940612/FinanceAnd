@@ -346,7 +346,7 @@ public class BattleKlineActivity extends BaseActivity {
                                 if (type.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
                                     Launcher.with(getActivity(), SingleKlineExerciseActivity.class).execute();
                                 } else {
-                                    showStartMatchDialog(type);
+                                    requestMatch(type);
                                 }
                             } else {
                                 if (resp.getData().getStatus() == BattleKline.STATUS_BATTLEING) {
@@ -376,30 +376,36 @@ public class BattleKlineActivity extends BaseActivity {
         }
     }
 
-    private void showStartMatchDialog(final String type) {
-        final boolean showMatchedAmount = type.equalsIgnoreCase(BattleKline.TYPE_4V4);
+    private void requestMatch(final String type) {
         Client.requestKlineBattleMatch(type).setTag(TAG)
                 .setCallback(new Callback<Resp<Object>>() {
                     @Override
                     protected void onRespSuccess(Resp<Object> resp) {
-                        mStartMatchDialog = StartMatchDialog.get(getActivity(), new StartMatchDialog.OnCancelListener() {
-                            @Override
-                            public void onCancel() {
-                                StartMatchDialog.dismiss(getActivity());
-                                showCancelMatchDialog(type);
-                            }
-                        }, showMatchedAmount);
+                        showStartMatchDialog(type);
                     }
 
                     @Override
                     protected void onRespFailure(Resp failedResp) {
                         if (failedResp.getCode() == Battle.CODE_NO_ENOUGH_MONEY) {
                             showRechargeDialog(failedResp.getMsg());
-                        } else {
-                            ToastUtil.show(failedResp.getMsg());
+                        } else if (failedResp.getCode() == Resp.CODE_BATTLE_NOW_MATCH_1V1) {
+                            showStartMatchDialog(BattleKline.TYPE_1V1);
+                        } else if (failedResp.getCode() == Resp.CODE_BATTLE_NOW_MATCH_4V4) {
+                            showStartMatchDialog(BattleKline.TYPE_4V4);
                         }
                     }
                 }).fireFree();
+    }
+
+    private void showStartMatchDialog(final String type) {
+        final boolean showMatchedAmount = type.equalsIgnoreCase(BattleKline.TYPE_4V4);
+        mStartMatchDialog = StartMatchDialog.get(getActivity(), new StartMatchDialog.OnCancelListener() {
+            @Override
+            public void onCancel() {
+                StartMatchDialog.dismiss(getActivity());
+                showCancelMatchDialog(type);
+            }
+        }, showMatchedAmount);
     }
 
     private void showRechargeDialog(String msg) {
