@@ -376,11 +376,6 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
     }
 
     @Override
-    public String getAvatar() {
-        return getCustomPortrait();
-    }
-
-    @Override
     public String toString() {
         return "Question{" +
                 "answerContext='" + answerContext + '\'' +

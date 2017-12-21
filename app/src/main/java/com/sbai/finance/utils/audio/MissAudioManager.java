@@ -289,8 +289,6 @@ public class MissAudioManager {
 
         String getAudioUrl();
 
-        String getAvatar();
-
     }
 
     public interface OnAudioListener {

@@ -89,11 +89,6 @@ public class Radio implements Parcelable, MissAudioManager.IAudio {
         return audio;
     }
 
-    @Override
-    public String getAvatar() {
-        return getUserPortrait();
-    }
-
     public String getRadioName() {
         return radioName;
     }

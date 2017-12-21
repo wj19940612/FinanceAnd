@@ -204,10 +204,16 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
     private void initFloatWindow() {
         if (MissAudioManager.get().isPlaying()) {
             MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-            if (audio.getAvatar() != null) {
-                mMissFloatWindow.startAnim();
-                mMissFloatWindow.setVisibility(View.VISIBLE);
-                mMissFloatWindow.setMissAvatar(audio.getAvatar());
+            if(audio != null){
+                if(audio instanceof Radio){
+                    mMissFloatWindow.startAnim();
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                    mMissFloatWindow.setMissAvatar(((Radio)audio).getUserPortrait());
+                }else if(audio instanceof Question){
+                    mMissFloatWindow.startAnim();
+                    mMissFloatWindow.setVisibility(View.VISIBLE);
+                    mMissFloatWindow.setMissAvatar(((Question)audio).getCustomPortrait());
+                }
             }
 
         }
