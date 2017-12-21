@@ -109,6 +109,8 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     private int mPage;
     private boolean mPlayThisVoice;
 
+    private String mTitleRadioName;
+
     protected MediaPlayService mMediaPlayService;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -303,6 +305,11 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     private void updateAudioDetail(Radio radio, boolean automaticPlay) {
         mRadio = radio;
+        if (mRadio.getAudioName().length() > 18) {
+            mTitleRadioName = mRadio.getAudioName().substring(0, 16) + "...";
+        } else {
+            mTitleRadioName = mRadio.getAudioName();
+        }
         mRadioCollect.setSelected(radio.getIsCollect() == RadioDetails.COLLECT);
         updateAudio();
         requestRadioReplyList();
@@ -434,7 +441,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
             if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
                 if (mRadio != null)
-                    mTitle.setText(mRadio.getAudioName());
+                    mTitle.setText(mTitleRadioName);
             } else {
                 if (!TextUtils.isEmpty(mTitle.getText())) {
                     mTitle.setText("");
