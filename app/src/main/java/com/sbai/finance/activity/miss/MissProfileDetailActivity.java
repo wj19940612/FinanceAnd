@@ -342,6 +342,7 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
             mNoFollow.setText(R.string.edit_profile);
         } else {
             if (miss.isAttention() == 0) {
+                mFollow.setBackground(getResources().getDrawable(R.drawable.btn_radio_station_subscribe));
                 mFollow.setVisibility(View.VISIBLE);
                 mNoFollow.setVisibility(View.GONE);
             } else {
@@ -359,7 +360,9 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
                 .placeholder(R.drawable.ic_default_avatar)
                 .circleCrop()
                 .into(mAvatar);
-        mFansNumber.setText("粉丝");
+        mFollow.setBackground(getResources().getDrawable(R.drawable.btn_radio_station_subscribe_not));
+        mProfileIntroduce.setText(R.string.the_miss_down);
+        mFansNumber.setText(R.string.follower);
         mFansNumber.setVisibility(View.VISIBLE);
     }
 

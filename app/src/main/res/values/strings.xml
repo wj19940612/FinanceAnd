@@ -707,6 +707,8 @@
     <string name="no_miss_now">现在还没有小姐姐哦</string>
     <string name="no_miss_introduce">小姐姐还没有写简介</string>
     <string name="question_detail">提问详情</string>
+    <string name="the_miss_down">该小姐姐已下线</string>
+    <string name="follower">粉丝</string>
 
     <!--首页 训练-->
     <string name="study_everyday">每日一题</string>
