@@ -141,18 +141,11 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
     private void updateFloatStatus() {
         if (MissAudioManager.get().isPlaying()) {
             MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-            if (audio != null) {
-                if (audio instanceof Radio) {
-                    mMissFloatWindow.startAnim();
-                    mMissFloatWindow.setVisibility(View.VISIBLE);
-                    mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
-                } else if (audio instanceof Question) {
-                    mMissFloatWindow.startAnim();
-                    mMissFloatWindow.setVisibility(View.VISIBLE);
-                    mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
-                }
+            if (audio.getAvatar() != null) {
+                mMissFloatWindow.startAnim();
+                mMissFloatWindow.setVisibility(View.VISIBLE);
+                mMissFloatWindow.setMissAvatar(audio.getAvatar());
             }
-
         }
     }
 

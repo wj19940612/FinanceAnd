@@ -192,4 +192,9 @@ public class Miss implements Serializable, MissAudioManager.IAudio {
     public String getAudioUrl() {
         return briefingSound;
     }
+
+    @Override
+    public String getAvatar() {
+        return getPortrait();
+    }
 }

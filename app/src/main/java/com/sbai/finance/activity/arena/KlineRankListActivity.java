@@ -69,6 +69,8 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
     CollapsingToolbarLayout mCollapsingToolbarLayout;
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.tip)
+    TextView mTip;
 
     public static final int FRAGMENT_ONE = 0;
     public static final int FRAGMENT_MELEE = 1;
@@ -203,6 +205,7 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
 
         if (!LocalUser.getUser().isLogin()) {
             mHeader.setVisibility(View.GONE);
+            mTip.setVisibility(View.GONE);
             return;
         }
         mHeader.setVisibility(View.VISIBLE);
@@ -212,7 +215,7 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
             mSecondNumber.setVisibility(View.GONE);
             mThirdNumber.setVisibility(View.GONE);
             mMedal.setVisibility(View.GONE);
-
+            mTip.setText(R.string.battle_have_30);
             if (mKlineRank != null) {
                 GlideApp.with(getActivity()).load(mKlineRank.getUserRank1v1().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
@@ -230,7 +233,7 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
             mSecondNumber.setVisibility(View.VISIBLE);
             mThirdNumber.setVisibility(View.VISIBLE);
             mMedal.setVisibility(View.VISIBLE);
-
+            mTip.setText("");
             if (mKlineRank != null) {
                 GlideApp.with(getActivity()).load(mKlineRank.getUserRank4v4().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)

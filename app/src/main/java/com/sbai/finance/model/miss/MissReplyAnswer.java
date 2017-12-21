@@ -176,6 +176,11 @@ public class MissReplyAnswer implements MissAudioManager.IAudio {
         return audioPath;
     }
 
+    @Override
+    public String getAvatar() {
+        return null;
+    }
+
     public static class ReplyVOBean {
         /**
          * customContext : https://esongtest.oss-cn-shanghai.aliyuncs.com/upload/20171012/等我回家 (Live).mp3
