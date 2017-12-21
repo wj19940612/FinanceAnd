@@ -314,6 +314,9 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
                 }
                 mBottomTabs.selectTab(position);
                 refreshNotReadMessageCount();
+                if (LocalUser.getUser().isLogin()) {
+                    requestUserFund();
+                }
             }
 
             @Override

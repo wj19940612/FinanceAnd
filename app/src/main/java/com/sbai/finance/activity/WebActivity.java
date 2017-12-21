@@ -170,7 +170,6 @@ public class WebActivity extends BaseActivity {
 
             } else if (mWebView.canGoBack()) {
                 mWebView.goBack();
-
             } else {
                 super.onBackPressed();
             }
@@ -366,6 +365,7 @@ public class WebActivity extends BaseActivity {
     public void hideRightView() {
         mTitleBar.setRightVisible(false);
         mTitleBar.setRightViewEnable(false);
+        mTitleBar.setRightImageViewVisible(false);
     }
 
     private String getHtmlData(String bodyHTML) {
@@ -379,6 +379,7 @@ public class WebActivity extends BaseActivity {
         mJsModel = content;
         mTitleBar.setRightVisible(rightViewIsShow);
         mTitleBar.setRightViewEnable(rightViewIsShow);
+        mTitleBar.setRightImageViewVisible(rightViewIsShow);
         switch (type) {
             case AppJs.MULTIPART_TEXT:
                 mTitleBar.setRightText(rightViewContent);

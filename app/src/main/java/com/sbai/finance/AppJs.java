@@ -16,7 +16,9 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.activity.mine.setting.SecurityCenterActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
+import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.RadioStationListActivity;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
@@ -234,6 +236,9 @@ public class AppJs {
             case JsOpenAppPageType.SELF_STUDY_ROOM:
                 break;
             case JsOpenAppPageType.QUESTION_DETAIL:
+                Launcher.with(mContext, QuestionDetailActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, Integer.parseInt(id))
+                        .execute();
                 break;
             case JsOpenAppPageType.TRAINING:
                 break;
@@ -244,10 +249,14 @@ public class AppJs {
             case JsOpenAppPageType.FEED_BACK_REPLY:
                 break;
             case JsOpenAppPageType.MISS_INFO_PAGE:
-                int missId = Integer.parseInt(id);
-                Launcher.with(mContext, MissProfileDetailActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, missId)
-                        .execute();
+                try {
+                    int missId = Integer.parseInt(id);
+                    Launcher.with(mContext, MissProfileDetailActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, missId)
+                            .execute();
+                } catch (NumberFormatException e) {
+
+                }
                 break;
             case JsOpenAppPageType.FUTURE_BATTLE_ORDINARY:
                 Launcher.with(mContext, BattleListActivity.class).execute();
@@ -267,6 +276,9 @@ public class AppJs {
                         .putExtra(WebActivity.EX_URL, String.format(Client.MISS_TOP_DETAILS_H5_URL, id))
                         .execute();
                 break;
+            case JsOpenAppPageType.AUDIO_DETAIL:
+                openRadioDetailPage(id);
+                break;
             case JsOpenAppPageType.SECURITY_CENTER_PAGE:
                 openSecurityCenterPage();
                 break;
@@ -274,7 +286,10 @@ public class AppJs {
                 requestStockDetail(id);
                 break;
             case JsOpenAppPageType.RADIO_DETAIL_PAGE:
-                openRadioDetailPage(id);
+                int radioId = Integer.parseInt(id);
+                Launcher.with(mContext, RadioStationListActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, radioId)
+                        .execute();
                 break;
             case JsOpenAppPageType.MISS_HOME_PAGE:
                 Launcher.with(mContext, MainActivity.class)
@@ -297,9 +312,9 @@ public class AppJs {
 
     private void openRadioDetailPage(String id) {
         try {
-            Integer radioId = Integer.valueOf(id);
-            Launcher.with(mContext, RadioStationListActivity.class)
-                    .putExtra(Launcher.EX_PAYLOAD, radioId.intValue()).execute();
+            int radioId = Integer.valueOf(id);
+            Launcher.with(mContext, RadioStationPlayActivity.class)
+                    .putExtra(ExtraKeys.IAudio, radioId).execute();
         } catch (NumberFormatException e) {
             Log.d(TAG, "jsOpenAppPage: " + e.toString());
         }
