@@ -83,12 +83,6 @@ public class BattleKlineReviewActivity extends BaseActivity {
                             mBattleKline = data;
                             updateKlineData();
                         }
-
-                        @Override
-                        protected void onRespFailure(Resp failedResp) {
-                            super.onRespFailure(failedResp);
-                            ToastUtil.show(failedResp.getMsg());
-                        }
                     }).fireFree();
         }
     }
