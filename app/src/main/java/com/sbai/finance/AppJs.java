@@ -286,10 +286,15 @@ public class AppJs {
                 requestStockDetail(id);
                 break;
             case JsOpenAppPageType.RADIO_DETAIL_PAGE:
-                int radioId = Integer.parseInt(id);
-                Launcher.with(mContext, RadioStationListActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, radioId)
-                        .execute();
+                try {
+                    int radioId = Integer.parseInt(id);
+                    Launcher.with(mContext, RadioStationListActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD, radioId)
+                            .execute();
+                }catch (NumberFormatException e){
+
+                }
+
                 break;
             case JsOpenAppPageType.MISS_HOME_PAGE:
                 Launcher.with(mContext, MainActivity.class)

@@ -77,7 +77,6 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
     private int mRadioStationId;
     private RadioStationAdapter mRadioStationAdapter;
     private RadioInfo mRadioInfo;
-    private Radio mRadio;
 
     private ViewTreeObserver.OnPreDrawListener mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
@@ -121,9 +120,9 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
 
     private void initData(Intent intent) {
         mRadioStationId = intent.getIntExtra(Launcher.EX_PAYLOAD, -1);
-        mRadio = intent.getParcelableExtra(ExtraKeys.RADIO);
-        if (mRadio != null) {
-            mRadioStationId = mRadio.getRadioId();
+        Radio radio = intent.getParcelableExtra(ExtraKeys.RADIO);
+        if (radio != null) {
+            mRadioStationId = radio.getRadioId();
         }
     }
 
