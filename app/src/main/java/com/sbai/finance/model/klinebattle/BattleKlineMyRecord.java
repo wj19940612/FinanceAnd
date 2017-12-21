@@ -41,7 +41,7 @@ public class BattleKlineMyRecord implements Parcelable {
          */
 
         private int battle1v1Count;
-        private int rankingRate;
+        private double rankingRate;
         private int winIngots1v1;
 
         public int getBattle1v1Count() {
@@ -52,7 +52,7 @@ public class BattleKlineMyRecord implements Parcelable {
             this.battle1v1Count = battle1v1Count;
         }
 
-        public int getRankingRate() {
+        public double getRankingRate() {
             return rankingRate;
         }
 
@@ -76,7 +76,7 @@ public class BattleKlineMyRecord implements Parcelable {
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.battle1v1Count);
-            dest.writeInt(this.rankingRate);
+            dest.writeDouble(this.rankingRate);
             dest.writeInt(this.winIngots1v1);
         }
 
@@ -85,7 +85,7 @@ public class BattleKlineMyRecord implements Parcelable {
 
         protected UserRank1v1Bean(Parcel in) {
             this.battle1v1Count = in.readInt();
-            this.rankingRate = in.readInt();
+            this.rankingRate = in.readDouble();
             this.winIngots1v1 = in.readInt();
         }
 
@@ -114,7 +114,7 @@ public class BattleKlineMyRecord implements Parcelable {
 
         private int battle4v4Count;
         private int one;
-        private int rankingRate;
+        private double rankingRate;
         private int three;
         private int two;
         private int winIngots4v4;
@@ -135,7 +135,7 @@ public class BattleKlineMyRecord implements Parcelable {
             this.one = one;
         }
 
-        public int getRankingRate() {
+        public double getRankingRate() {
             return rankingRate;
         }
 
@@ -176,7 +176,7 @@ public class BattleKlineMyRecord implements Parcelable {
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.battle4v4Count);
             dest.writeInt(this.one);
-            dest.writeInt(this.rankingRate);
+            dest.writeDouble(this.rankingRate);
             dest.writeInt(this.three);
             dest.writeInt(this.two);
             dest.writeInt(this.winIngots4v4);
@@ -188,7 +188,7 @@ public class BattleKlineMyRecord implements Parcelable {
         protected UserRank4v4Bean(Parcel in) {
             this.battle4v4Count = in.readInt();
             this.one = in.readInt();
-            this.rankingRate = in.readInt();
+            this.rankingRate = in.readDouble();
             this.three = in.readInt();
             this.two = in.readInt();
             this.winIngots4v4 = in.readInt();
