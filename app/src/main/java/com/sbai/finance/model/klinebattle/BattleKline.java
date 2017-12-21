@@ -53,6 +53,15 @@ public class BattleKline implements Parcelable {
 
     private List<BattleKlineInfo> battleStaList;
     private List<BattleKlineData> userMarkList;
+    private BattleKlineInfo staInfo;
+
+    public BattleKlineInfo getStaInfo() {
+        return staInfo;
+    }
+
+    public void setStaInfo(BattleKlineInfo staInfo) {
+        this.staInfo = staInfo;
+    }
 
     public long getEndTime() {
         return endTime;

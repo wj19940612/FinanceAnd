@@ -17,12 +17,10 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKline;
-import com.sbai.finance.model.klinebattle.BattleKlineReview;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.FinanceUtil;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.KlineBottomResultView;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.autofit.AutofitTextView;
@@ -55,7 +53,7 @@ public class BattleKlineReviewActivity extends BaseActivity {
     KlineBottomResultView mBottomView;
     private String mType;
     private double mProfit;
-    private BattleKlineReview mBattleKline;
+    private BattleKline mBattleKline;
     private int mUserId;
     private String mUserName;
     private String mUserPortrait;
@@ -77,9 +75,9 @@ public class BattleKlineReviewActivity extends BaseActivity {
             updateKlineData();
         } else {
             Client.requestKlineBattleReview(mUserId).setTag(TAG)
-                    .setCallback(new Callback2D<Resp<BattleKlineReview>, BattleKlineReview>() {
+                    .setCallback(new Callback2D<Resp<BattleKline>, BattleKline>() {
                         @Override
-                        protected void onRespSuccessData(BattleKlineReview data) {
+                        protected void onRespSuccessData(BattleKline data) {
                             mBattleKline = data;
                             updateKlineData();
                         }
