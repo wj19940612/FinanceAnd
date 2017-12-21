@@ -159,6 +159,16 @@
 
                         </LinearLayout>
 
+                        <TextView
+                            android:id="@+id/tip"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_below="@+id/header"
+                            android:textColor="@color/luckyText"
+                            android:textSize="12sp"
+                            android:gravity="center"
+                            android:text="@string/battle_have_30"/>
+
                     </RelativeLayout>
 
                     <android.support.v7.widget.Toolbar

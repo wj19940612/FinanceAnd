@@ -35,6 +35,9 @@ public class Resp<T> {
     public static final int CODE_PRIZE_EXCHANGE_NOT_START = 5117;
     //已听过语音
     public static final int CODE_LISTENED = 4707;
+    //正在匹配中
+    public static final int CODE_BATTLE_NOW_MATCH_1V1 = 8007;
+    public static final int CODE_BATTLE_NOW_MATCH_4V4 = 8008;
 
     private int code;
     private String msg;
