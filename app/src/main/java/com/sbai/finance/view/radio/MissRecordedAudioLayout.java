@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -57,6 +58,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
     private String audioPath;
 
     private boolean hasRecordPermission = true;
+    private Rect mRect;
 
     public interface OnRecordAudioListener {
         void onRecordAudioFinish(String audioPath, int audioLength);
@@ -75,6 +77,8 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
     private volatile boolean isStartRecord;  //是否开始长按录制
     private TimerHandler mTimerHandler;
     private int mAudioLength;
+
+    private boolean isLegalAreaUp;
 
     public MissRecordedAudioLayout(Context context) {
         this(context, null);
@@ -134,7 +138,15 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
                 mRecordBtnY = point[1];
                 mRecordAudioBtnWidth = mRecordAudioBtn.getWidth();
                 mRecordAudioBtnHeight = mRecordAudioBtn.getHeight();
-//                Log.d(TAG, "run: " + mRecordBtnX + "  " + mRecordBtnY + " " + mRecordAudioBtnWidth + " " + mRecordAudioBtnHeight);
+
+                int offsetWidth = mRecordAudioBtnWidth / 2;
+                int offsetHeight = mRecordAudioBtnHeight / 2;
+
+                Log.d(TAG, "run: " + mRecordBtnX + "  " + mRecordBtnY + " " + mRecordAudioBtnWidth + " " + mRecordAudioBtnHeight);
+
+                Log.d(TAG, "run: " + mRecordAudioBtn.getLeft() + "  " + mRecordAudioBtn.getTop() + "  " + mRecordAudioBtn.getRight() + "  " + mRecordAudioBtn.getBottom() + " " + offsetWidth + " " + offsetHeight);
+
+                mRect = new Rect(mRecordBtnX - mRecordAudioBtnWidth, mRecordBtnY - mRecordAudioBtnHeight, mRecordBtnX + mRecordAudioBtnWidth, mRecordBtnY + mRecordAudioBtnHeight);
             }
         });
 
@@ -167,7 +179,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
                         ToastUtil.show(R.string.record_audio_time_is_short);
                         FileUtils.deleteFile();
                     } else {
-                        if (mOnRecordAudioListener != null) {
+                        if (mOnRecordAudioListener != null && mInLegalRange) {
                             mOnRecordAudioListener.onRecordAudioFinish(mMediaRecorderManager.getRecordAudioPath(), mAudioLength);
                         }
                         reset();
@@ -188,12 +200,13 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
     }
 
     private boolean pointISInsideRecordBtn(float x, float y) {
-        boolean x1 = x > (mRecordBtnX - 20);
+        boolean x1 = x > (mRecordBtnX - 30);
         boolean x2 = (mRecordBtnX + mRecordAudioBtnWidth) > x;
         boolean y1 = y > (mRecordBtnY - 30);
         boolean y2 = (mRecordBtnY + mRecordAudioBtnHeight + 50) > y;
-//        Log.d(TAG, "pointISInsideRecordBtn: " + x1 + " " + x2 + "  " + y1 + "  " + y2 + " " + y);
+        Log.d(TAG, "pointISInsideRecordBtn: " + x1 + " " + x2 + "  " + y1 + "  " + y2 + " " + y + " x " + x);
         return x1 && x2 && y1 && y2;
+//        return mRect.contains((int) x, (int) y);
     }
 
     private void reset() {

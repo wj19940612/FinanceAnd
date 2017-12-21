@@ -244,7 +244,7 @@ public class SingleKlineExerciseActivity extends BaseActivity {
             }
             updateOperateView(type);
             updateLastProfit(type);
-            updateNextKlineView(mBattleUserMarkList.get(mCurrentIndex++));
+            updateNextKlineView(mBattleUserMarkList.get(++mCurrentIndex));
         }
     }
 
@@ -258,11 +258,13 @@ public class SingleKlineExerciseActivity extends BaseActivity {
         } else {
             positionKlineData = mBattleUserMarkList.get(mCurrentIndex);
         }
-        double positionProfit = (nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice();
-        mOperateView.setTotalProfit(positionProfit - mOperateView.getLastPosition() + mOperateView.getTotalProfit());
-        if (mHasPosition) {
-            nextKlineData.setPositions(positionProfit);
-            mOperateView.setPositionProfit(positionProfit);
+        if (positionKlineData != null) {
+            double positionProfit = (nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice();
+            mOperateView.setTotalProfit(positionProfit - mOperateView.getLastPosition() + mOperateView.getTotalProfit());
+            if (mHasPosition) {
+                nextKlineData.setPositions(positionProfit);
+                mOperateView.setPositionProfit(positionProfit);
+            }
         }
     }
 }

@@ -179,6 +179,7 @@ public class TitleBar extends RelativeLayout {
         mRightImageView = new ImageView(getContext());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) Display.dp2Px(20, getResources()), (int) Display.dp2Px(20, getResources()));
         layoutParams.gravity = Gravity.CENTER;
+        mRightImageView.setVisibility(GONE);
         mRightViewParent.addView(mRightImageView, layoutParams);
 
         params = new LayoutParams(LayoutParams.WRAP_CONTENT, fixedHeight);
@@ -318,7 +319,7 @@ public class TitleBar extends RelativeLayout {
 
     public void setRightVisible(boolean rightVisible) {
         mRightVisible = rightVisible;
-        mRightView.setVisibility(mRightVisible ? VISIBLE : INVISIBLE);
+        mRightView.setVisibility(mRightVisible ? VISIBLE : GONE);
     }
 
     public void setOnRightViewClickListener(OnClickListener listener) {
@@ -347,6 +348,10 @@ public class TitleBar extends RelativeLayout {
 
     public void setRightViewEnable(boolean enable) {
         mRightViewParent.setEnabled(enable);
+    }
+
+    public void setRightImageViewVisible(boolean visible) {
+        mRightImageView.setVisibility(visible ? VISIBLE : INVISIBLE);
     }
 
     public CharSequence getTitle() {

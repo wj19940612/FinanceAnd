@@ -61,7 +61,7 @@ import butterknife.OnClick;
 /**
  * Modified by john on 24/11/2017
  * <p>
- * 股票交易操作页面，买入卖出，如果从股票详情页面进入，当前账户为模拟，如果从账户页面进入，依赖于当前保存是什么账户
+ * 股票交易操作页面，买入卖出
  */
 public class StockTradeOperateActivity extends BaseActivity implements
         StockTradeOperateFragment.OnPostTradeSuccessListener,

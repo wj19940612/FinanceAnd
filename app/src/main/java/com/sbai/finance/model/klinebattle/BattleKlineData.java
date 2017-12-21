@@ -7,7 +7,7 @@ import com.sbai.chart.domain.KlineViewData;
 /**
  * Modified by john on 13/12/2017
  * <p>
- * Description:
+ * Description: k 线对决的 k 线数据
  * <p>
  * APIs:
  */
@@ -21,7 +21,8 @@ public class BattleKlineData extends KlineViewData {
 
     private int id;
     private String mark;
-    private double profit;
+
+    // 额外添加用于画操盘盈利背景的字段
     private double positions;
 
     public void setMark(String mark) {
@@ -34,10 +35,6 @@ public class BattleKlineData extends KlineViewData {
 
     public String getMark() {
         return mark;
-    }
-
-    public double getProfit() {
-        return profit;
     }
 
     public double getPositions() {
@@ -54,7 +51,6 @@ public class BattleKlineData extends KlineViewData {
         super.writeToParcel(dest, flags);
         dest.writeInt(this.id);
         dest.writeString(this.mark);
-        dest.writeDouble(this.profit);
         dest.writeDouble(this.positions);
     }
 
@@ -62,7 +58,6 @@ public class BattleKlineData extends KlineViewData {
         super(in);
         this.id = in.readInt();
         this.mark = in.readString();
-        this.profit = in.readDouble();
         this.positions = in.readDouble();
     }
 

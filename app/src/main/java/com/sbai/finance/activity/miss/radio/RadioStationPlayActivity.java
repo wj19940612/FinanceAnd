@@ -109,6 +109,8 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     private int mPage;
     private boolean mPlayThisVoice;
 
+    private String mTitleRadioName;
+
     protected MediaPlayService mMediaPlayService;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -143,11 +145,8 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        mSet.clear();
-        mPage = 0;
-        mRecyclerView.scrollToPosition(0);
+        refreshReplyData();
         requestAudioDetails(true);
-        requestRadioReplyList();
     }
 
     @Override
@@ -306,6 +305,11 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     private void updateAudioDetail(Radio radio, boolean automaticPlay) {
         mRadio = radio;
+        if (mRadio.getAudioName().length() > 18) {
+            mTitleRadioName = mRadio.getAudioName().substring(0, 16) + "...";
+        } else {
+            mTitleRadioName = mRadio.getAudioName();
+        }
         mRadioCollect.setSelected(radio.getIsCollect() == RadioDetails.COLLECT);
         updateAudio();
         requestRadioReplyList();
@@ -414,11 +418,15 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     }
 
     private void refreshRadioReviewData() {
+        refreshReplyData();
+        requestAudioDetails(false);
+    }
+
+    private void refreshReplyData() {
         mSet.clear();
         mPage = 0;
         mRecyclerView.scrollToPosition(0);
         requestRadioReplyList();
-        requestAudioDetails(false);
     }
 
     private AppBarLayout.OnOffsetChangedListener sOnOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
@@ -433,7 +441,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
             if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
                 if (mRadio != null)
-                    mTitle.setText(mRadio.getAudioName());
+                    mTitle.setText(mTitleRadioName);
             } else {
                 if (!TextUtils.isEmpty(mTitle.getText())) {
                     mTitle.setText("");
@@ -509,10 +517,16 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     @Override
     public void onOtherReceive(Context context, Intent intent) {
-        if (CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS.equalsIgnoreCase(intent.getAction())
-                || LoginActivity.ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())
+        if (LoginActivity.ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())
                 || LoginActivity.ACTION_LOGOUT_SUCCESS.equalsIgnoreCase(intent.getAction())) {
             refreshRadioReviewData();
+        }
+
+        if (CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS.equalsIgnoreCase(intent.getAction())) {
+            mSet.clear();
+            mPage = 0;
+            mRecyclerView.scrollToPosition(0);
+            requestRadioReplyList();
         }
     }
 
@@ -630,7 +644,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                     openCommentPage();
                     break;
                 case CommentActivity.REQ_CODE_COMMENT:
-                    refreshRadioReviewData();
+                    refreshReplyData();
                     break;
             }
         }
