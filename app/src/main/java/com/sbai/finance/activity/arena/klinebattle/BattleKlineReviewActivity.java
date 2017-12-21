@@ -17,6 +17,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.klinebattle.BattleKline;
+import com.sbai.finance.model.klinebattle.BattleKlineReview;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -54,7 +55,7 @@ public class BattleKlineReviewActivity extends BaseActivity {
     KlineBottomResultView mBottomView;
     private String mType;
     private double mProfit;
-    private BattleKline mBattleKline;
+    private BattleKlineReview mBattleKline;
     private int mUserId;
     private String mUserName;
     private String mUserPortrait;
@@ -76,17 +77,11 @@ public class BattleKlineReviewActivity extends BaseActivity {
             updateKlineData();
         } else {
             Client.requestKlineBattleReview(mUserId).setTag(TAG)
-                    .setCallback(new Callback2D<Resp<BattleKline>, BattleKline>() {
+                    .setCallback(new Callback2D<Resp<BattleKlineReview>, BattleKlineReview>() {
                         @Override
-                        protected void onRespSuccessData(BattleKline data) {
+                        protected void onRespSuccessData(BattleKlineReview data) {
                             mBattleKline = data;
                             updateKlineData();
-                        }
-
-                        @Override
-                        protected void onRespFailure(Resp failedResp) {
-                            super.onRespFailure(failedResp);
-                            ToastUtil.show(failedResp.getMsg());
                         }
                     }).fireFree();
         }
