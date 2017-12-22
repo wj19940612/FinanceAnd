@@ -66,6 +66,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        stopScheduleJob();
         unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
         GamePusher.get().removeOnPushReceiveListener();
     }
@@ -75,9 +76,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                 .setCallback(new Callback2D<Resp<BattleKline>, BattleKline>() {
                     @Override
                     protected void onRespSuccessData(BattleKline data) {
-                        if (data != null) {
-                            updateBattleData(data);
-                        }
+                        updateBattleData(data);
                     }
                 }).fireFree();
     }
@@ -158,6 +157,17 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         updateLastProfitData(data);
         updateNextKlineView(data.getNext());
     }
+
+    @Override
+    protected void onCountDownFinish() {
+        startScheduleJob(5 * 1000);
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        requestBattleInfo();
+    }
+
 
     @Override
     protected void buyOperate() {

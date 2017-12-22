@@ -167,8 +167,7 @@ public class SingleKlineExerciseActivity extends BaseActivity {
     }
 
     protected void updateNextKlineView(BattleKlineData battleKlineData) {
-        mRemainKlineAmount = mRemainKlineAmount - 1;
-        mOperateView.setRemainKline(mRemainKlineAmount);
+        updateRemainKlineAmount();
         mKlineView.addKlineData(battleKlineData);
     }
 
@@ -185,7 +184,7 @@ public class SingleKlineExerciseActivity extends BaseActivity {
                     break;
                 }
             }
-            mRemainKlineAmount = mBattleKline.getUserMarkList().size()  - mCurrentIndex;
+            mRemainKlineAmount = mBattleKline.getUserMarkList().size() - mCurrentIndex;
             mKlineView.initKlineDataList(subList);
         }
         updateCountDownTime();
@@ -201,11 +200,13 @@ public class SingleKlineExerciseActivity extends BaseActivity {
         mCountdown.setTotalTime(totalTime, new KlineBattleCountDownView.OnCountDownListener() {
             @Override
             public void finish() {
-                if (mType.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
-                    battleFinish();
-                }
+                onCountDownFinish();
             }
         });
+    }
+
+    protected void onCountDownFinish() {
+        battleFinish();
     }
 
     protected void battleFinish() {
@@ -237,11 +238,11 @@ public class SingleKlineExerciseActivity extends BaseActivity {
 
     private void updateMyLastOperateData(String type) {
         if (mBattleUserMarkList == null) return;
-        if (mCurrentIndex + 1 < mBattleUserMarkList.size()) {
+        if (mCurrentIndex < mBattleUserMarkList.size()) {
             if (type.equalsIgnoreCase(BattleKline.BUY)) {
                 mPositionIndex = mCurrentIndex;
             }
-            if (mCurrentIndex == mBattleUserMarkList.size() - 2) {
+            if (mCurrentIndex == mBattleUserMarkList.size() - 1) {
                 mKlineView.setLastInvisibleData(mBattleUserMarkList.get(mBattleUserMarkList.size() - 1));
                 battleFinish();
                 return;
