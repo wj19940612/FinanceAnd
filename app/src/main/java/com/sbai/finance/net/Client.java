@@ -3370,11 +3370,11 @@ public class Client {
     }
 
     public static API requestKlineRankData() {
-        return new API(POST, "/api/game-bat/battle/userrank", new ApiParams().put("userId", 1070));
+        return new API(POST, "/api/game-bat/battle/userrank");
     }
 
     public static API requestKlineBattleResult() {
-        return new API(POST, "/api/game-bat/battle/battlerank", new ApiParams());
+        return new API(POST, "/api/game-bat/battle/battlerank");
     }
 
     public static API requestKlineOtherName(double profit) {
