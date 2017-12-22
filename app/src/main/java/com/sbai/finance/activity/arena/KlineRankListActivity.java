@@ -210,16 +210,16 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mTip.getLayoutParams();
         if (!LocalUser.getUser().isLogin()) {
             mHeader.setVisibility(View.GONE);
-            layoutParams.setMargins(0,(int) Display.dp2Px(MARGIN_TIP_NOT_LOGIN,getResources()),0,0);
+            layoutParams.setMargins(0, (int) Display.dp2Px(MARGIN_TIP_NOT_LOGIN, getResources()), 0, 0);
             mTip.setLayoutParams(layoutParams);
             if (mSelectPosition == FRAGMENT_ONE) {
                 mTip.setText(R.string.battle_have_30);
-            }else{
+            } else {
                 mTip.setText("");
             }
             return;
         }
-        layoutParams.setMargins(0,(int) Display.dp2Px(MARGIN_TIP_LOGIN,getResources()),0,0);
+        layoutParams.setMargins(0, (int) Display.dp2Px(MARGIN_TIP_LOGIN, getResources()), 0, 0);
         mTip.setLayoutParams(layoutParams);
         mHeader.setVisibility(View.VISIBLE);
         if (mSelectPosition == FRAGMENT_ONE) {
@@ -229,15 +229,15 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
             mThirdNumber.setVisibility(View.GONE);
             mMedal.setVisibility(View.GONE);
             mTip.setText(R.string.battle_have_30);
-            if (mKlineRank != null) {
+            if (mKlineRank != null && mKlineRank.getUserRank1v1() != null) {
                 GlideApp.with(getActivity()).load(mKlineRank.getUserRank1v1().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop().into(mAvatar);
                 mName.setText(mKlineRank.getUserRank1v1().getUserName());
-                mRankPosition.setText(mKlineRank.getUserRank1v1().getSort() < 0 ? "未上榜" : String.valueOf(mKlineRank.getUserRank1v1().getSort()));
-                if (mKlineRank.getUserRank1v1().getRankingRate() != 0){
-                    mWinRate.setText("胜率: " +String.format("%.2f",mKlineRank.getUserRank1v1().getRankingRate()) + "%");
-                }else{
+                mRankPosition.setText(mKlineRank.getUserRank1v1().getSort() < 0 ? getString(R.string.not_up_rank) : String.valueOf(mKlineRank.getUserRank1v1().getSort()));
+                if (mKlineRank.getUserRank1v1().getRankingRate() != 0) {
+                    mWinRate.setText("胜率: " + String.format("%.2f", mKlineRank.getUserRank1v1().getRankingRate()) + "%");
+                } else {
                     mWinRate.setText("胜率: 0%");
                 }
             }
@@ -248,7 +248,7 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
             mThirdNumber.setVisibility(View.VISIBLE);
             mMedal.setVisibility(View.VISIBLE);
             mTip.setText("");
-            if (mKlineRank != null) {
+            if (mKlineRank != null && mKlineRank.getUserRank4v4() != null) {
                 GlideApp.with(getActivity()).load(mKlineRank.getUserRank4v4().getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop().into(mAvatar);
