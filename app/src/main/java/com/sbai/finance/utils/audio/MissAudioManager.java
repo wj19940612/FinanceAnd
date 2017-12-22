@@ -5,7 +5,6 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.sbai.finance.App;
-import com.sbai.finance.utils.ToastUtil;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -119,7 +118,7 @@ public class MissAudioManager {
                 public boolean onInfo(MediaPlayer mp, int what, int extra) {
                     switch (what) {
                         case MediaPlayer.MEDIA_INFO_BUFFERING_END:     //播放结束  MEDIA_INFO_NETWORK_BANDWIDTH  网络异常这个看不到
-                            ToastUtil.show("播放结束了");
+//                            ToastUtil.show("播放结束了");
                             break;
                     }
                     return false;

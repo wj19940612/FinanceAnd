@@ -59,15 +59,6 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
     private boolean hasRecordPermission = true;
     private Rect mRect;
-
-    public interface OnRecordAudioListener {
-        void onRecordAudioFinish(String audioPath, int audioLength);
-    }
-
-    public void setOnRecordAudioListener(OnRecordAudioListener onRecordAudioListener) {
-        mOnRecordAudioListener = onRecordAudioListener;
-    }
-
     private TextView mAudioLengthTextView;
     private AppCompatButton mRecordAudioBtn;
 
@@ -78,7 +69,13 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
     private TimerHandler mTimerHandler;
     private int mAudioLength;
 
-    private boolean isLegalAreaUp;
+    public interface OnRecordAudioListener {
+        void onRecordAudioFinish(String audioPath, int audioLength);
+    }
+
+    public void setOnRecordAudioListener(OnRecordAudioListener onRecordAudioListener) {
+        mOnRecordAudioListener = onRecordAudioListener;
+    }
 
     public MissRecordedAudioLayout(Context context) {
         this(context, null);
