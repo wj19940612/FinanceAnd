@@ -236,7 +236,7 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
                 mName.setText(mKlineRank.getUserRank1v1().getUserName());
                 mRankPosition.setText(mKlineRank.getUserRank1v1().getSort() < 0 ? getString(R.string.not_up_rank) : String.valueOf(mKlineRank.getUserRank1v1().getSort()));
                 if (mKlineRank.getUserRank1v1().getRankingRate() != 0) {
-                    mWinRate.setText("胜率: " + String.format("%.2f", mKlineRank.getUserRank1v1().getRankingRate()) + "%");
+                    mWinRate.setText("胜率: " + String.format("%.2f", mKlineRank.getUserRank1v1().getRankingRate()*100) + "%");
                 } else {
                     mWinRate.setText("胜率: 0%");
                 }

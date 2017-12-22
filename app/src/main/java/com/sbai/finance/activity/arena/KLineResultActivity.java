@@ -43,6 +43,7 @@ import butterknife.OnClick;
 
 public class KLineResultActivity extends BaseActivity {
 
+    public static final int DOGFALL = -1;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -101,18 +102,22 @@ public class KLineResultActivity extends BaseActivity {
     }
 
     private void updateData(KlineBattleResult data) {
-        //搜索自己的数据
         if (data.getRanking() != null && data.getRanking().size() != 0 && LocalUser.getUser().getUserInfo() != null) {
             KlineBattleResult.Ranking meResult = null;
+            boolean dogfall = true;
+            KlineBattleResult.Ranking firstRank = data.getRanking().get(0);
+            //搜索自己的数据 并且判断是否平局
             for (KlineBattleResult.Ranking ranking : data.getRanking()) {
                 if (ranking.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
                     meResult = ranking;
-                    break;
+                }
+                if (firstRank.getSort() != ranking.getSort()) {
+                    dogfall = false;
                 }
             }
 
             if (meResult == null) return;
-            mTop.setRankInfo(mGoinType, meResult.getSort());
+            mTop.setRankInfo(mGoinType, dogfall ? DOGFALL : meResult.getSort());
             mBottomView.updateStock(data.getBattleStockName(), data.getBattleStockCode(), data.getBattleStockStartTime(), data.getBattleStockEndTime(), data.getRise());
             mResultAdapter.clear();
             mResultAdapter.addAll(data.getRanking());
@@ -190,7 +195,7 @@ public class KLineResultActivity extends BaseActivity {
 
             public void bindDataWithView(final KlineBattleResult.Ranking data, Context context, int position, int count, final OnMoreClickListener onMoreClickListener) {
                 if (data == null) return;
-                mRank.setText(String.valueOf(position + 1));
+                mRank.setText(data.getSort());
                 GlideApp.with(context).load(data.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop().into(mAvatar);
