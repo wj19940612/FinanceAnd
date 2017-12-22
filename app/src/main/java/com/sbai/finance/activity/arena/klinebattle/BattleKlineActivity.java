@@ -349,7 +349,7 @@ public class BattleKlineActivity extends BaseActivity {
                                     requestMatch(type);
                                 }
                             } else {
-                                if (resp.getData().getStatus() == BattleKline.STATUS_BATTLEING) {
+                                if (resp.getData().getStatus() == BattleKline.STATUS_BATTLING) {
                                     if (type.equalsIgnoreCase(resp.getData().getBattleType())) {
                                         goBattlingActivity(resp.getData().getBattleType());
                                     } else {

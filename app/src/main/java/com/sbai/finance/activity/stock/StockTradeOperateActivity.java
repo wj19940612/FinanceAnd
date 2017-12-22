@@ -509,11 +509,18 @@ public class StockTradeOperateActivity extends BaseActivity implements
                 .setCallback(new Callback2D<Resp<List<StockUser>>, List<StockUser>>() {
                     @Override
                     protected void onRespSuccessData(List<StockUser> data) {
-                        for (StockUser stockUser : data) {
-                            if (stockUser.getActive() == StockUser.ACCOUNT_ACTIVE) {
-                                refreshStockUser(stockUser);
+                        if (data.isEmpty()) return;
+                        StockUser stockUser = null;
+                        for (StockUser item : data) {
+                            if (item.getActive() == StockUser.ACCOUNT_ACTIVE) {
+                                stockUser = item;
                                 break;
                             }
+                        }
+                        if (stockUser == null) {
+                            requestSwitchAccount(data.get(0));
+                        } else {
+                            refreshStockUser(stockUser);
                         }
                     }
                 }).fireFree();
