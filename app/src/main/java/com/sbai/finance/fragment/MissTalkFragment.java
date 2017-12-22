@@ -122,7 +122,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
 
     private void changeFloatWindowView() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-        if(mMissFloatWindow!=null){
+        if (mMissFloatWindow != null) {
             if (audio instanceof Question) {
                 Question playQuestion = (Question) audio;
                 mMissFloatWindow.setMissAvatar(playQuestion.getCustomPortrait());
@@ -362,6 +362,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
         mSlidingTabLayout.setSelectedIndicatorHeight(2);
         mSlidingTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.tab_miss_question));
         mSlidingTabLayout.setViewPager(mViewPager);
+        mSlidingTabLayout.setTabIndex(0);
 
         mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
 
