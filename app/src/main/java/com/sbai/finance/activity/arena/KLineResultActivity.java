@@ -195,7 +195,7 @@ public class KLineResultActivity extends BaseActivity {
 
             public void bindDataWithView(final KlineBattleResult.Ranking data, Context context, int position, int count, final OnMoreClickListener onMoreClickListener) {
                 if (data == null) return;
-                mRank.setText(data.getSort());
+                mRank.setText(String.valueOf(data.getSort()));
                 GlideApp.with(context).load(data.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop().into(mAvatar);

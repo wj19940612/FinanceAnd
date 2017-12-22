@@ -187,6 +187,11 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
         }
     }
 
+    @Override
+    public void onFinish() {
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
     private KlineOneByOneRankFragment getOneByOneFragment() {
         return (KlineOneByOneRankFragment) mPagerAdapter.getFragment(FRAGMENT_ONE);
     }
@@ -236,7 +241,7 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
                 mName.setText(mKlineRank.getUserRank1v1().getUserName());
                 mRankPosition.setText(mKlineRank.getUserRank1v1().getSort() < 0 ? getString(R.string.not_up_rank) : String.valueOf(mKlineRank.getUserRank1v1().getSort()));
                 if (mKlineRank.getUserRank1v1().getRankingRate() != 0) {
-                    mWinRate.setText("胜率: " + String.format("%.2f", mKlineRank.getUserRank1v1().getRankingRate()*100) + "%");
+                    mWinRate.setText("胜率: " + String.format("%.2f", mKlineRank.getUserRank1v1().getRankingRate() * 100) + "%");
                 } else {
                     mWinRate.setText("胜率: 0%");
                 }
@@ -253,7 +258,7 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop().into(mAvatar);
                 mName.setText(mKlineRank.getUserRank4v4().getUserName());
-                mRankPosition.setText(mKlineRank.getUserRank4v4().getSort() < 0 ? "未排名" : String.valueOf(mKlineRank.getUserRank1v1().getSort()));
+                mRankPosition.setText(mKlineRank.getUserRank4v4().getSort() < 0 ? getString(R.string.not_up_rank) : String.valueOf(mKlineRank.getUserRank4v4().getSort()));
                 mTopNumber.setText(String.valueOf(mKlineRank.getUserRank4v4().getOne()));
                 mSecondNumber.setText(String.valueOf(mKlineRank.getUserRank4v4().getTwo()));
                 mThirdNumber.setText(String.valueOf(mKlineRank.getUserRank4v4().getThree()));
