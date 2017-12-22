@@ -245,8 +245,9 @@ public class WebActivity extends BaseActivity {
         mAppJs = new AppJs(this);
         mWebView.addJavascriptInterface(mAppJs, "AppJs");
 
+        // 5.0以下的手机就不要开硬件加速了。部分19手机开了硬件加速会有问题
         if (!isFlyme()) {     //魅族max 一旦打开web页面 应用的动画就会出问题  并且max4使用
-            if (Build.VERSION.SDK_INT >= 19) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
                 mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
             } else {
                 mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);

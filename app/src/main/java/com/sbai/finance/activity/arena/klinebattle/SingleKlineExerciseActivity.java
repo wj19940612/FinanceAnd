@@ -50,7 +50,7 @@ public class SingleKlineExerciseActivity extends BaseActivity {
     KlineBattleCountDownView mCountdown;
 
     protected String mType;
-    protected int mCurrentIndex = 39;
+    protected int mCurrentIndex;
     protected int mRemainKlineAmount;
     protected BattleKline mBattleKline;
     protected boolean mHasPosition;
@@ -176,12 +176,16 @@ public class SingleKlineExerciseActivity extends BaseActivity {
         if (data == null) return;
         mBattleKline = data;
         mBattleUserMarkList = mBattleKline.getUserMarkList();
-        if (mBattleUserMarkList != null && mBattleUserMarkList.size() >= 40) {
-            mRemainKlineAmount = mBattleKline.getUserMarkList().size() - 40;
+        if (mBattleUserMarkList != null) {
             List<BattleKlineData> subList = new ArrayList<>();
-            for (int i = 0; i < 40; i++) {
+            for (int i = 0; i < mBattleUserMarkList.size(); i++) {
                 subList.add(mBattleUserMarkList.get(i));
+                if (mBattleUserMarkList.get(i).getMark().equalsIgnoreCase(BattleKlineData.MARK_NEW)) {
+                    mCurrentIndex = i;
+                    break;
+                }
             }
+            mRemainKlineAmount = mBattleKline.getUserMarkList().size()  - mCurrentIndex;
             mKlineView.initKlineDataList(subList);
         }
         updateCountDownTime();
@@ -260,7 +264,9 @@ public class SingleKlineExerciseActivity extends BaseActivity {
         }
         if (positionKlineData != null) {
             double positionProfit = (nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice();
-            mOperateView.setTotalProfit(positionProfit - mOperateView.getLastPosition() + mOperateView.getTotalProfit());
+            if (type.equalsIgnoreCase(BattleKline.BUY)) {
+                mOperateView.setTotalProfit(positionProfit - mOperateView.getLastPosition() + mOperateView.getTotalProfit());
+            }
             if (mHasPosition) {
                 nextKlineData.setPositions(positionProfit);
                 mOperateView.setPositionProfit(positionProfit);

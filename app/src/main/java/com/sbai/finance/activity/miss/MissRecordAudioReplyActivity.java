@@ -214,6 +214,11 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MissAudioManager.get().stop();
+    }
 
     @Override
     public void onBackPressed() {

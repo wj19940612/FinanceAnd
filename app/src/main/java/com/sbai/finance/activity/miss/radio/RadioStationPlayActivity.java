@@ -470,7 +470,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
-        changeFloatWindowView();
     }
 
     @Override
@@ -496,7 +495,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
             mRadioPlayLL.onPlayPause();
         }
-
     }
 
     @Override

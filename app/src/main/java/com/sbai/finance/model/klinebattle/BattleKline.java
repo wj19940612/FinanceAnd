@@ -39,10 +39,6 @@ public class BattleKline implements Parcelable {
     public static final String SELL = "S";
     public static final String PASS = "P";
 
-    //N 无持仓 Y 有持仓
-    public static final String POSITION_HAVE = "Y";
-    public static final String POSITION_NO = "N";
-
     private String battleStockCode;
     private String battleStockName;
     private String battleStockEndTime;
