@@ -28,6 +28,7 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
 
     private List<BattleKlineInfo> mBattleKlineInfos;
+    private boolean mFirstEnter;
     private OnPushReceiveListener<BattleKlineInfo> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKlineInfo>() {
         @Override
         public void onPushReceive(BattleKlineInfo battleKlineInfo, String originalData) {
@@ -83,6 +84,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
     protected void updateBattleData(BattleKline data) {
         mBattleKline = data;
         updateCountDownTime();
+        if (mBattleKline.getBattleStaList() == null) return;
         if (mBattleKline.getBattleStaList().size() > 0) {
             if (mBattleKline.getBattleStaList().get(0).getBattleStatus() == BattleKline.STATUS_END) {
                 battleFinish();
@@ -99,13 +101,12 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                 if (battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS)) {
                     mOperateView.buySuccess();
                     mHasPosition = true;
-                } else {
-                    mOperateView.clearTotalProfit();
                 }
             }
             mRemainKlineAmount = data.getLine();
             updateRemainKlineAmount();
         }
+        mFirstEnter = true;
     }
 
     private void updateLastProfitData(BattleKlineInfo battleKlineInfo) {
@@ -134,7 +135,12 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                         mOperateView.complete();
                     }
                     mOperateView.setRank(battleBean.getSort());
-                    mOperateView.setTotalProfit(battleBean.getProfit());
+                    if (mFirstEnter && battleBean.getProfit() == 0) {
+                        mOperateView.clearTotalProfit();
+                        mFirstEnter = false;
+                    } else {
+                        mOperateView.setTotalProfit(battleBean.getProfit());
+                    }
                     if (mHasPosition) {
                         mOperateView.setPositionProfit(battleBean.getPositions());
                     } else {

@@ -77,7 +77,6 @@ public class BattleKlineActivity extends BaseActivity {
     private TextView mIngot;
     private TextView mRecharge;
     private BaseDialog mStartMatchDialog;
-    private String mType;
 
     private BroadcastReceiver mLoginBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -124,9 +123,9 @@ public class BattleKlineActivity extends BaseActivity {
     }
 
     private void initData(Intent intent) {
-        mType = intent.getStringExtra(ExtraKeys.GUESS_TYPE);
-        if (!TextUtils.isEmpty(mType)) {
-            judgeCurrentBattle(mType);
+        String type = intent.getStringExtra(ExtraKeys.GUESS_TYPE);
+        if (!TextUtils.isEmpty(type)) {
+            judgeCurrentBattle(type);
         }
     }
 
@@ -311,19 +310,19 @@ public class BattleKlineActivity extends BaseActivity {
         }
     }
 
-    protected void onBattleKlinePushReceived(BattleKlineMatch battleKlineMatch) {
+    protected void onBattleKlinePushReceived(final BattleKlineMatch battleKlineMatch) {
         if (battleKlineMatch.getCode() == BattleKline.PUSH_CODE_MATCH_FAILED) {
             showMatchTimeoutDialog();
         } else if (battleKlineMatch.getCode() == BattleKline.PUSH_CODE_MATCH_SUCCESS) {
             if (mStartMatchDialog != null) {
                 if ((battleKlineMatch.getBattleType().equalsIgnoreCase(BattleKline.TYPE_1V1) && battleKlineMatch.getUserMatchList().size() == 2)
                         || battleKlineMatch.getBattleType().equalsIgnoreCase(BattleKline.TYPE_4V4) && battleKlineMatch.getUserMatchList().size() == 4) {
-                    mStartMatchDialog.dismiss();
+                    SmartDialog.dismiss(this);
                     BattleKlineMatchSuccessDialog.get(getActivity(), battleKlineMatch.getUserMatchList(), new BattleKlineMatchSuccessDialog.OnDismissListener() {
                         @Override
                         public void onDismiss() {
                             Launcher.with(getActivity(), BattleKlineDetailActivity.class)
-                                    .putExtra(ExtraKeys.GUESS_TYPE, mType)
+                                    .putExtra(ExtraKeys.GUESS_TYPE, battleKlineMatch.getBattleType())
                                     .execute();
                         }
                     });
@@ -336,7 +335,6 @@ public class BattleKlineActivity extends BaseActivity {
 
     private void judgeCurrentBattle(final String type) {
         if (LocalUser.getUser().isLogin()) {
-            mType = type;
             Client.getCurrentKlineBattle().setTag(TAG)
                     .setIndeterminate(this)
                     .setCallback(new Callback<Resp<BattleKlineInfo>>() {
@@ -452,7 +450,6 @@ public class BattleKlineActivity extends BaseActivity {
                     public void onClick(Dialog dialog) {
                         dialog.dismiss();
                         openWalletPage();
-                        dialog.dismiss();
                     }
                 })
                 .setNegative(R.string.cancel, new SmartDialog.OnClickListener() {
