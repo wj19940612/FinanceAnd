@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.R;
@@ -74,6 +75,9 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
 
     public static final int FRAGMENT_ONE = 0;
     public static final int FRAGMENT_MELEE = 1;
+
+    public static final int MARGIN_TIP_LOGIN = 181;
+    public static final int MARGIN_TIP_NOT_LOGIN = 80;
 
     private int mPage;
     private PagerAdapter mPagerAdapter;
@@ -203,11 +207,20 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
 
     public void updateHeader() {
 
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mTip.getLayoutParams();
         if (!LocalUser.getUser().isLogin()) {
             mHeader.setVisibility(View.GONE);
-            mTip.setVisibility(View.GONE);
+            layoutParams.setMargins(0,(int) Display.dp2Px(MARGIN_TIP_NOT_LOGIN,getResources()),0,0);
+            mTip.setLayoutParams(layoutParams);
+            if (mSelectPosition == FRAGMENT_ONE) {
+                mTip.setText(R.string.battle_have_30);
+            }else{
+                mTip.setText("");
+            }
             return;
         }
+        layoutParams.setMargins(0,(int) Display.dp2Px(MARGIN_TIP_LOGIN,getResources()),0,0);
+        mTip.setLayoutParams(layoutParams);
         mHeader.setVisibility(View.VISIBLE);
         if (mSelectPosition == FRAGMENT_ONE) {
             mWinRate.setVisibility(View.VISIBLE);
@@ -221,11 +234,12 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop().into(mAvatar);
                 mName.setText(mKlineRank.getUserRank1v1().getUserName());
-                mRankPosition.setText(mKlineRank.getUserRank1v1().getSort() < 0 ? "未排名" : String.valueOf(mKlineRank.getUserRank1v1().getSort()));
-                String rate = "0";
-                if (mKlineRank.getUserRank1v1().getRankingRate() != 0)
-                    rate = String.valueOf(mKlineRank.getUserRank1v1().getRankingRate() * 100);
-                mWinRate.setText("胜率: " + rate + "%");
+                mRankPosition.setText(mKlineRank.getUserRank1v1().getSort() < 0 ? "未上榜" : String.valueOf(mKlineRank.getUserRank1v1().getSort()));
+                if (mKlineRank.getUserRank1v1().getRankingRate() != 0){
+                    mWinRate.setText("胜率: " +String.format("%.2f",mKlineRank.getUserRank1v1().getRankingRate()) + "%");
+                }else{
+                    mWinRate.setText("胜率: 0%");
+                }
             }
         } else {
             mWinRate.setVisibility(View.GONE);

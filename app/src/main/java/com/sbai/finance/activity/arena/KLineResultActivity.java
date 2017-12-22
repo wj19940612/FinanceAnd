@@ -22,6 +22,7 @@ import com.sbai.finance.activity.arena.klinebattle.BattleKlineActivity;
 import com.sbai.finance.activity.arena.klinebattle.BattleKlineReviewActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineBattleResult;
+import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -57,7 +58,7 @@ public class KLineResultActivity extends BaseActivity {
     KlineBottomResultView mBottomView;
 
     private ResultAdapter mResultAdapter;
-    private String mGoinType;
+    private String mGoinType = BattleKline.TYPE_1V1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,7 +112,7 @@ public class KLineResultActivity extends BaseActivity {
             }
 
             if (meResult == null) return;
-            mTop.setRankInfo(mGoinType, meResult.getSort());
+            mTop.setRankInfo(BattleKline.TYPE_4V4, 3);
             mBottomView.updateStock(data.getBattleStockName(), data.getBattleStockCode(), data.getBattleStockStartTime(), data.getBattleStockEndTime(), data.getRise());
             mResultAdapter.clear();
             mResultAdapter.addAll(data.getRanking());
@@ -196,10 +197,11 @@ public class KLineResultActivity extends BaseActivity {
                 mName.setText(data.getUserName());
                 if (data.getProfit() >= 0) {
                     mUpDown.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                    mUpDown.setText("+" + String.format("%.2f", data.getProfit() * 100) + "%");
                 } else {
                     mUpDown.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                    mUpDown.setText(String.format("%.2f", data.getProfit() * 100) + "%");
                 }
-                mUpDown.setText(String.format("%.2f", data.getProfit()) + "%");
                 mReward.setText(String.valueOf(data.getMoney()) + "元宝");
                 if (position == count - 1) {
                     mViewStub.setVisibility(View.GONE);

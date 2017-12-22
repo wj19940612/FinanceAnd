@@ -38,18 +38,18 @@ public class App extends Application {
     }
 
     private void handleUncaughtException() {
-//        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-//            @Override
-//            public void uncaughtException(Thread t, Throwable e) {
-//                Intent intent = new Intent(sContext, CatchCrashActivity.class);
-//                intent.putExtra(Launcher.EX_PAYLOAD, e);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
-//
-//                Preference.get().setForeground(false);
-//                System.exit(1);
-//            }
-//        });
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                Intent intent = new Intent(sContext, CatchCrashActivity.class);
+                intent.putExtra(Launcher.EX_PAYLOAD, e);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
+                Preference.get().setForeground(false);
+                System.exit(1);
+            }
+        });
     }
 
     public static Context getAppContext() {

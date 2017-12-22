@@ -15,6 +15,7 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.WebActivity;
+import com.sbai.finance.activity.arena.KLineResultActivity;
 import com.sbai.finance.activity.arena.RewardActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.evaluation.EvaluationStartActivity;
