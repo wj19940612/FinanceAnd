@@ -312,7 +312,7 @@ public class BattleKlineActivity extends BaseActivity {
 
     protected void onBattleKlinePushReceived(final BattleKlineMatch battleKlineMatch) {
         if (battleKlineMatch.getCode() == BattleKline.PUSH_CODE_MATCH_FAILED) {
-            showMatchTimeoutDialog();
+            showMatchTimeoutDialog(battleKlineMatch.getBattleType());
         } else if (battleKlineMatch.getCode() == BattleKline.PUSH_CODE_MATCH_SUCCESS) {
             if (mStartMatchDialog != null) {
                 if ((battleKlineMatch.getBattleType().equalsIgnoreCase(BattleKline.TYPE_1V1) && battleKlineMatch.getUserMatchList().size() == 2)
@@ -489,12 +489,10 @@ public class BattleKlineActivity extends BaseActivity {
                 .show();
     }
 
-    private void showMatchTimeoutDialog() {
-        if (mStartMatchDialog != null) {
-            mStartMatchDialog.dismiss();
-        }
-        if (!TextUtils.isEmpty(mType)) {
-            if (mType.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
+    private void showMatchTimeoutDialog(String type) {
+        SmartDialog.dismiss(this);
+        if (!TextUtils.isEmpty(type)) {
+            if (type.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
                 ToastUtil.show(R.string.no_people_match_please_try_later);
             } else {
                 ToastUtil.show(R.string.no_match_people_please_try_1v1);
