@@ -15,7 +15,6 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.Network;
-import com.sbai.finance.utils.ToastUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -100,6 +99,8 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                 if (battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS)) {
                     mOperateView.buySuccess();
                     mHasPosition = true;
+                } else {
+                    mOperateView.clearTotalProfit();
                 }
             }
             mRemainKlineAmount = data.getLine();

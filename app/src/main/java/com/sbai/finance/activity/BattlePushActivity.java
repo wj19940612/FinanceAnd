@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.arena.klinebattle.SingleKlineExerciseActivity;
 import com.sbai.finance.activity.battle.BattleActivity;
 import com.sbai.finance.activity.training.JudgeTrainingActivity;
 import com.sbai.finance.activity.training.KlineTrainActivity;
@@ -115,6 +116,9 @@ public class BattlePushActivity extends StatusBarActivity {
                         Launcher.with(getActivity(), BattleActivity.class)
                                 .putExtra(ExtraKeys.BATTLE, battle)
                                 .execute();
+                        if (getActivity() instanceof SingleKlineExerciseActivity) {
+                            finish();
+                        }
 
                     }
                 })
