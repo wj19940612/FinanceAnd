@@ -164,9 +164,23 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        stopPlay();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        stopPlay();
+    }
+
+    private void stopPlay() {
         MissAudioManager.get().stop();
+        mPlay.setSelected(false);
+        stopScheduleJob();
+        mAudioLength.setText(getString(R.string.voice_time, mRecordAudioLength));
+        mTotalTime = mRecordAudioLength;
     }
 
     private void requestQuestionDetail(int questionId) {
@@ -214,11 +228,6 @@ public class MissRecordAudioReplyActivity extends MediaPlayActivity implements M
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        MissAudioManager.get().stop();
-    }
 
     @Override
     public void onBackPressed() {

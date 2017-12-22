@@ -138,7 +138,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
 
 //                Log.d(TAG, "run: " + mRecordBtnX + "  " + mRecordBtnY + " " + mRecordAudioBtnWidth + " " + mRecordAudioBtnHeight);
 
-                mRect = new Rect(mRecordBtnX , mRecordBtnY , mRecordBtnX + mRecordAudioBtnWidth, mRecordBtnY + mRecordAudioBtnHeight);
+                mRect = new Rect(mRecordBtnX, mRecordBtnY, mRecordBtnX + mRecordAudioBtnWidth, mRecordBtnY + mRecordAudioBtnHeight);
             }
         });
 
@@ -202,6 +202,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
     }
 
     private void reset() {
+        mInLegalRange = true;
         mTimerHandler.resetCount();
         mTimerHandler.removeCallbacksAndMessages(null);
         isStartRecord = false;
