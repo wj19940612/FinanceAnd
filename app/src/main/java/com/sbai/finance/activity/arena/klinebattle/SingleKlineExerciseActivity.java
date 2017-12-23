@@ -168,7 +168,9 @@ public class SingleKlineExerciseActivity extends BaseActivity {
 
     protected void updateNextKlineView(BattleKlineData battleKlineData) {
         updateRemainKlineAmount();
-        mKlineView.addKlineData(battleKlineData);
+        if (mRemainKlineAmount > 0) {
+            mKlineView.addKlineData(battleKlineData);
+        }
     }
 
     protected void updateBattleData(BattleKline data) {

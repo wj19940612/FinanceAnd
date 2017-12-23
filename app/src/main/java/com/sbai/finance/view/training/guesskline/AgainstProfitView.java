@@ -69,6 +69,7 @@ public class AgainstProfitView extends LinearLayout {
     LinearLayout mAgainstPkArea;
     private Context mContext;
     private String mType;
+    private boolean mFirstEnter = true;
 
     public AgainstProfitView(Context context) {
         this(context, null);
@@ -111,19 +112,31 @@ public class AgainstProfitView extends LinearLayout {
                 battleBeans1.add(battleBean);
             }
         }
-        for (int i = 0; i < battleBeans1.size(); i++) {
-            if (i < 1) {
-                if (mType.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
-                    setTotalProfit(battleBeans1.get(i), mUserName, mTotalProfit, mImgAvatar, mImgRank);
-                    return;
-                } else {
-                    setTotalProfit(battleBeans1.get(i), mUserName1, mTotalProfit1, mImg1Avatar, mImg1Rank);
+        if (mFirstEnter) {
+            mFirstEnter = false;
+            for (int i = 0; i < battleBeans1.size(); i++) {
+                if (i < 1) {
+                    if (mType.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
+                        setTotalProfit(battleBeans1.get(i), mUserName, mTotalProfit, mImgAvatar, mImgRank);
+                    } else {
+                        setTotalProfit(battleBeans1.get(i), mUserName1, mTotalProfit1, mImg1Avatar, mImg1Rank);
+                    }
+                } else if (i < 2) {
+                    setTotalProfit(battleBeans1.get(i), mUserName2, mTotalProfit2, mImg2Avatar, mImg2Rank);
+                } else if (i < 3) {
+                    setTotalProfit(battleBeans1.get(i), mUserName3, mTotalProfit3, mImg3Avatar, mImg3Rank);
                 }
-            } else if (i < 2) {
-                setTotalProfit(battleBeans1.get(i), mUserName2, mTotalProfit2, mImg2Avatar, mImg2Rank);
-            } else if (i < 3) {
-                setTotalProfit(battleBeans1.get(i), mUserName3, mTotalProfit3, mImg3Avatar, mImg3Rank);
             }
+            return;
+        }
+        for (int i = 0; i < battleBeans1.size(); i++) {
+            if (mType.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
+                setTotalProfit(battleBeans1.get(i), mUserName, mTotalProfit, mImgAvatar, mImgRank);
+            } else {
+                setTotalProfit(battleBeans1.get(i), mUserName1, mTotalProfit1, mImg1Avatar, mImg1Rank);
+            }
+            setTotalProfit(battleBeans1.get(i), mUserName2, mTotalProfit2, mImg2Avatar, mImg2Rank);
+            setTotalProfit(battleBeans1.get(i), mUserName3, mTotalProfit3, mImg3Avatar, mImg3Rank);
         }
     }
 

@@ -49,7 +49,9 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
 
     private void onBattleKlinePushReceived(final BattleKlineInfo battleKlineInfo) {
         if (battleKlineInfo.getCode() == BattleKline.PUSH_CODE_AGAINST_PROFIT) {
-            updateLastProfitData(battleKlineInfo);
+            if (battleKlineInfo.getUserId() != LocalUser.getUser().getUserInfo().getId()) {
+                updateLastProfitData(battleKlineInfo);
+            }
         } else if (battleKlineInfo.getCode() == BattleKline.PUSH_CODE_BATTLE_FINISH) {
             battleFinish();
         }
@@ -82,6 +84,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
     }
 
     protected void updateBattleData(BattleKline data) {
+        mFirstEnter = true;
         mBattleKline = data;
         updateCountDownTime();
         if (mBattleKline.getBattleStaList() == null) return;
@@ -106,7 +109,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
             mRemainKlineAmount = data.getLine();
             updateRemainKlineAmount();
         }
-        mFirstEnter = true;
     }
 
     private void updateLastProfitData(BattleKlineInfo battleKlineInfo) {
