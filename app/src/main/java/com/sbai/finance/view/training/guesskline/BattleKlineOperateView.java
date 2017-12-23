@@ -189,6 +189,18 @@ public class BattleKlineOperateView extends LinearLayout {
         mPositionProfit.setTextColor(ContextCompat.getColor(getContext(), R.color.eighty_white));
     }
 
+    public void enableOperateView() {
+        mBuy.setEnabled(true);
+        mClear.setEnabled(true);
+        mPass.setEnabled(true);
+    }
+
+    public void disableOperateView() {
+        mBuy.setEnabled(false);
+        mClear.setEnabled(false);
+        mPass.setEnabled(false);
+    }
+
     @OnClick({R.id.buy, R.id.clear, R.id.pass})
     public void onViewClicked(View view) {
         switch (view.getId()) {

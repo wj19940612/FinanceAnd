@@ -119,7 +119,6 @@ public class BattleKlineActivity extends BaseActivity {
         initBroadcastReceiver();
         requestBattleConf();
         GamePusher.get().open();
-        GamePusher.get().setOnPushReceiveListener(mKlineBattlePushReceiverListener);
     }
 
     private void initData(Intent intent) {
@@ -290,6 +289,12 @@ public class BattleKlineActivity extends BaseActivity {
             mIngot.setText(R.string.not_login);
         }
         updateAvatar();
+        GamePusher.get().setOnPushReceiveListener(mKlineBattlePushReceiverListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @OnClick({R.id.fourPk, R.id.onePk, R.id.exercise, R.id.rank})

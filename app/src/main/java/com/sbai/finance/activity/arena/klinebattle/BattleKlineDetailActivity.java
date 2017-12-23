@@ -180,33 +180,51 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
 
     @Override
     protected void buyOperate() {
+        mOperateView.disableOperateView();
         Client.requestKlineBattleBuy().setTag(TAG)
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
                     protected void onRespSuccessData(BattleKlineOperate data) {
                         updateMyLastOperateData(data, BattleKline.BUY);
                     }
+
+                    @Override
+                    public void onFinish() {
+                        mOperateView.enableOperateView();
+                    }
                 }).fireFree();
     }
 
     @Override
     protected void clearOperate() {
+        mOperateView.disableOperateView();
         Client.requestKlineBattleSell().setTag(TAG)
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
                     protected void onRespSuccessData(BattleKlineOperate data) {
                         updateMyLastOperateData(data, BattleKline.SELL);
                     }
+
+                    @Override
+                    public void onFinish() {
+                        mOperateView.enableOperateView();
+                    }
                 }).fireFree();
     }
 
     @Override
     protected void passOperate() {
+        mOperateView.disableOperateView();
         Client.requestKlineBattlePass().setTag(TAG)
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
                     protected void onRespSuccessData(BattleKlineOperate data) {
                         updateMyLastOperateData(data, BattleKline.PASS);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        mOperateView.enableOperateView();
                     }
                 }).fireFree();
     }
