@@ -135,6 +135,9 @@ public class BattleKlineChart extends KlineChart {
             String bgColor = TRANS_RED;
             if (i == getDataList().size() && mLastInvisibleData != null) {
                 bgColor = mLastInvisibleData.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
+                if (getDataList().size() < getSettings().getXAxis()) {
+                    rectF.right = left + getChartXOfScreen(i - 1);
+                }
             }
 
             for (; i < getDataList().size(); i++) {
