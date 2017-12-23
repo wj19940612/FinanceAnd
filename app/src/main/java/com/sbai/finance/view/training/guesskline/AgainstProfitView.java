@@ -157,7 +157,6 @@ public class AgainstProfitView extends LinearLayout {
     }
 
     private void setTotalProfit(double totalProfit, TextView profitView) {
-        totalProfit = Double.valueOf(FinanceUtil.formatWithScale(totalProfit));
         if (totalProfit == 0) {
             profitView.setText("0.00%");
             profitView.setTextColor(ContextCompat.getColor(getContext(), R.color.redPrimary));

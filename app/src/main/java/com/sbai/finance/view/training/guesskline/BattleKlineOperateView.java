@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -47,6 +48,7 @@ public class BattleKlineOperateView extends LinearLayout {
     TextView mEndPk;
     @BindView(R.id.operate)
     RelativeLayout mOperate;
+    private View mBattleSettlingView;
     private Context mContext;
     private OperateListener mOperateListener;
     private double mProfit;
@@ -78,6 +80,18 @@ public class BattleKlineOperateView extends LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.view_battle_kline_operate, this, true);
         ButterKnife.bind(this);
         mContext = context;
+
+        mBattleSettlingView = LayoutInflater.from(getContext()).inflate(R.layout.view_battle_settling, null);
+        mBattleSettlingView.setVisibility(GONE);
+        addView(mBattleSettlingView);
+    }
+
+    public void showWaitFinishView() {
+        if (mBattleSettlingView.getVisibility() != VISIBLE) {
+            mBattleSettlingView.setVisibility(VISIBLE);
+            mBattleSettlingView.findViewById(R.id.loading).startAnimation(
+                    AnimationUtils.loadAnimation(getContext(), R.anim.loading));
+        }
     }
 
     public void setOperateListener(OperateListener operateListener) {

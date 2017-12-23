@@ -87,16 +87,15 @@ public class BattleKlineReviewActivity extends BaseActivity {
 
     private void updateKlineData() {
         if (mBattleKline != null) {
-            int size = mBattleKline.getUserMarkList().size();
-            mKlineView.initKlineDataList(mBattleKline.getUserMarkList().subList(0, size - 1));
-            mKlineView.setLastInvisibleData(mBattleKline.getUserMarkList().get(size - 1));
+            mKlineView.initKlineDataList(mBattleKline.getUserMarkList());
         }
         if (mType.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
             setTotalProfit(mProfit);
+            setSelfUserInfo(mUserPortrait);
         } else {
             setTotalProfit(mBattleKline.getStaInfo().getProfit());
+            setSelfUserInfo(mBattleKline.getStaInfo().getUserPortrait());
         }
-        setSelfUserInfo();
         updateBottomView();
     }
 
@@ -143,9 +142,9 @@ public class BattleKlineReviewActivity extends BaseActivity {
         mKlineView.setSettings(settings2);
     }
 
-    public void setSelfUserInfo() {
+    public void setSelfUserInfo(String url) {
         GlideApp.with(getActivity())
-                .load(mUserPortrait)
+                .load(url)
                 .placeholder(R.drawable.ic_default_avatar)
                 .circleCrop()
                 .into(mImgAvatar);

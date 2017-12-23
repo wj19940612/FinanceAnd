@@ -46,7 +46,7 @@ public class BattleKline implements Parcelable {
     private int line;
     private double rise;
     private long endTime;
-
+    private String lastMark;
     private List<BattleKlineInfo> battleStaList;
     private List<BattleKlineData> userMarkList;
     private BattleKlineInfo staInfo;
@@ -69,6 +69,14 @@ public class BattleKline implements Parcelable {
 
     public String getBattleStockCode() {
         return battleStockCode;
+    }
+
+    public String getLastMark() {
+        return lastMark;
+    }
+
+    public void setLastMark(String lastMark) {
+        this.lastMark = lastMark;
     }
 
     public void setBattleStockCode(String battleStockCode) {

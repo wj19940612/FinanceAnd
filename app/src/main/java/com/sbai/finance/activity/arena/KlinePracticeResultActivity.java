@@ -93,8 +93,10 @@ public class KlinePracticeResultActivity extends BaseActivity {
             GlideApp.with(this).load(LocalUser.getUser().getUserInfo().getUserPortrait())
                     .placeholder(R.drawable.ic_default_avatar)
                     .circleCrop().into(mAvatar);
-
-            if (mProfit >= 0) {
+            if (mProfit == 0) {
+                mUpDown.setTextColor(ContextCompat.getColor(this, R.color.white));
+                mUpDown.setText("0.00%");
+            } else if (mProfit > 0) {
                 mUpDown.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
                 mUpDown.setText("+" + String.format("%.2f", mProfit * 100) + "%");
             } else {

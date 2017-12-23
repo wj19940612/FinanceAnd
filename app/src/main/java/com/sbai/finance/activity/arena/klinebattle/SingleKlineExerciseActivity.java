@@ -168,9 +168,7 @@ public class SingleKlineExerciseActivity extends BaseActivity {
 
     protected void updateNextKlineView(BattleKlineData battleKlineData) {
         updateRemainKlineAmount();
-        if (mRemainKlineAmount > 0) {
-            mKlineView.addKlineData(battleKlineData);
-        }
+        mKlineView.addKlineData(battleKlineData);
     }
 
     protected void updateBattleData(BattleKline data) {
@@ -245,7 +243,6 @@ public class SingleKlineExerciseActivity extends BaseActivity {
                 mPositionIndex = mCurrentIndex;
             }
             if (mCurrentIndex == mBattleUserMarkList.size() - 1) {
-                mKlineView.setLastInvisibleData(mBattleUserMarkList.get(mBattleUserMarkList.size() - 1));
                 battleFinish();
                 return;
             }

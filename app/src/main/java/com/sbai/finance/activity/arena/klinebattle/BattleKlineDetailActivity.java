@@ -28,7 +28,7 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
 
     private List<BattleKlineInfo> mBattleKlineInfos;
-    private boolean mFirstEnter;
+    private boolean mNoneOperate = true;
     private OnPushReceiveListener<BattleKlineInfo> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKlineInfo>() {
         @Override
         public void onPushReceive(BattleKlineInfo battleKlineInfo, String originalData) {
@@ -70,7 +70,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         super.onDestroy();
         stopScheduleJob();
         unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
-        GamePusher.get().removeOnPushReceiveListener();
     }
 
     private void requestBattleInfo() {
@@ -84,7 +83,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
     }
 
     protected void updateBattleData(BattleKline data) {
-        mFirstEnter = true;
         mBattleKline = data;
         updateCountDownTime();
         if (mBattleKline.getBattleStaList() == null) return;
@@ -99,9 +97,10 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         updateLastProfitData();
         if (mBattleKline.getUserMarkList() != null) {
             int size = mBattleKline.getUserMarkList().size();
-            if (size > 1) {
-                BattleKlineData battleKlineData = mBattleKline.getUserMarkList().get(size - 2);
-                if (battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS)) {
+            if (size > 0) {
+                BattleKlineData battleKlineData = mBattleKline.getUserMarkList().get(size - 1);
+                if (battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS) ||
+                        battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_BUY)) {
                     mOperateView.buySuccess();
                     mHasPosition = true;
                 }
@@ -137,9 +136,8 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                         mOperateView.complete();
                     }
                     mOperateView.setRank(battleBean.getSort());
-                    if (mFirstEnter && battleBean.getProfit() == 0) {
+                    if (mNoneOperate && battleBean.getProfit() == 0 && !mHasPosition) {
                         mOperateView.clearTotalProfit();
-                        mFirstEnter = false;
                     } else {
                         mOperateView.setTotalProfit(battleBean.getProfit());
                     }
@@ -170,6 +168,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
     @Override
     protected void onCountDownFinish() {
         startScheduleJob(5 * 1000);
+        mOperateView.showWaitFinishView();
     }
 
     @Override
@@ -180,6 +179,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
 
     @Override
     protected void buyOperate() {
+        mNoneOperate = false;
         mOperateView.disableOperateView();
         Client.requestKlineBattleBuy().setTag(TAG)
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
@@ -197,6 +197,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
 
     @Override
     protected void clearOperate() {
+        mNoneOperate = false;
         mOperateView.disableOperateView();
         Client.requestKlineBattleSell().setTag(TAG)
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
@@ -214,6 +215,9 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
 
     @Override
     protected void passOperate() {
+        if (mHasPosition) {
+            mNoneOperate = false;
+        }
         mOperateView.disableOperateView();
         Client.requestKlineBattlePass().setTag(TAG)
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
