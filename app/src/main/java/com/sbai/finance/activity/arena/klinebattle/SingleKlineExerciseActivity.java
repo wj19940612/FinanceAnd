@@ -264,7 +264,7 @@ public class SingleKlineExerciseActivity extends BaseActivity {
         }
         if (positionKlineData != null) {
             double positionProfit = (nextKlineData.getClosePrice() - positionKlineData.getClosePrice()) / positionKlineData.getClosePrice();
-            if (type.equalsIgnoreCase(BattleKline.BUY)) {
+            if (type.equalsIgnoreCase(BattleKline.BUY) || mHasPosition) {
                 mOperateView.setTotalProfit(positionProfit - mOperateView.getLastPosition() + mOperateView.getTotalProfit());
             }
             if (mHasPosition) {

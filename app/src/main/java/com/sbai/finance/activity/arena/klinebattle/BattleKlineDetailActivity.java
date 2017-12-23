@@ -157,12 +157,13 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
             battleFinish();
             return;
         }
-        if (data.getStatus() == BattleKline.STATUS_END) {
-            mOperateView.complete();
-        }
         updateOperateView(type);
         updateLastProfitData(data);
-        updateNextKlineView(data.getNext());
+        if (data.getStatus() == BattleKline.STATUS_END) {
+            mOperateView.complete();
+        } else {
+            updateNextKlineView(data.getNext());
+        }
     }
 
     @Override

@@ -91,11 +91,10 @@ public class BattleKlineReviewActivity extends BaseActivity {
         }
         if (mType.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
             setTotalProfit(mProfit);
-            setSelfUserInfo(mUserPortrait);
         } else {
             setTotalProfit(mBattleKline.getStaInfo().getProfit());
-            setSelfUserInfo(mBattleKline.getStaInfo().getUserPortrait());
         }
+        setSelfUserInfo();
         updateBottomView();
     }
 
@@ -123,9 +122,6 @@ public class BattleKlineReviewActivity extends BaseActivity {
         if (TextUtils.isEmpty(mUserName)) {
             mUserName = LocalUser.getUser().getUserInfo().getUserName();
         }
-        if (TextUtils.isEmpty(mUserPortrait)) {
-            mUserPortrait = LocalUser.getUser().getUserInfo().getUserPortrait();
-        }
     }
 
     private void initKlineView() {
@@ -142,9 +138,9 @@ public class BattleKlineReviewActivity extends BaseActivity {
         mKlineView.setSettings(settings2);
     }
 
-    public void setSelfUserInfo(String url) {
+    public void setSelfUserInfo() {
         GlideApp.with(getActivity())
-                .load(url)
+                .load(mUserPortrait)
                 .placeholder(R.drawable.ic_default_avatar)
                 .circleCrop()
                 .into(mImgAvatar);

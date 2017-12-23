@@ -90,7 +90,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/countdown"
-        android:gravity="center"
         android:orientation="horizontal"
         android:paddingTop="14dp"
         android:visibility="visible">
@@ -113,6 +112,7 @@
                 android:id="@+id/userName1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:textColor="@color/unluckyText"
                 android:textSize="12sp"
                 tool:text="麦田里"/>
@@ -137,9 +137,10 @@
                 android:id="@+id/userName2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:textColor="@color/unluckyText"
                 android:textSize="12sp"
-                tool:text="麦田里的守望者"/>
+                tool:text="麦田里的守望者麦田里的守望者"/>
 
         </LinearLayout>
 
@@ -161,6 +162,7 @@
                 android:id="@+id/userName3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:textColor="@color/unluckyText"
                 android:textSize="12sp"
                 tool:text="麦田里的守望者"/>
