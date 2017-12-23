@@ -32,16 +32,12 @@ public class BattleKline implements Parcelable {
     public static final String TYPE_4V4 = "4v4";
     // 0 已结束 1对战中
     public static final int STATUS_END = 0;
-    public static final int STATUS_BATTLEING = 1;
+    public static final int STATUS_BATTLING = 1;
 
     //B 买 S卖 P观望
     public static final String BUY = "B";
     public static final String SELL = "S";
     public static final String PASS = "P";
-
-    //N 无持仓 Y 有持仓
-    public static final String POSITION_HAVE = "Y";
-    public static final String POSITION_NO = "N";
 
     private String battleStockCode;
     private String battleStockName;

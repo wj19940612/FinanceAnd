@@ -51,6 +51,8 @@ public class KlineOneByOneRankFragment extends BaseFragment {
     public interface OnFragmentRecycleViewScrollListener {
 
         void onSwipRefreshEnable(boolean enabled, int fragmentPosition);
+
+        void onFinish();
     }
 
     OnFragmentRecycleViewScrollListener mOnFragmentRecycleViewScrollListener;
@@ -129,6 +131,14 @@ public class KlineOneByOneRankFragment extends BaseFragment {
             @Override
             protected void onRespSuccessData(KlineRank data) {
                 updateKlineRank(data);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                if (mOnFragmentRecycleViewScrollListener != null) {
+                    mOnFragmentRecycleViewScrollListener.onFinish();
+                }
             }
         }).fireFree();
     }
@@ -229,12 +239,7 @@ public class KlineOneByOneRankFragment extends BaseFragment {
                         .circleCrop().into(mAvatar);
 
                 mName.setText(data.getUserName());
-                if (data.getRankingRate() >= 0) {
-                    mWinRate.setText("+" + String.format("%.2f", data.getRankingRate() * 100) );
-                } else {
-                    mWinRate.setText(String.format("%.2f", data.getRankingRate() * 100));
-                }
-
+                mWinRate.setText(String.format("%.2f", data.getRankingRate() * 100)+"%");
 
             }
         }

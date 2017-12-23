@@ -145,6 +145,7 @@ public class WebActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mWebView.reload();    //粗暴的处理方式。。。。。。。
         mWebView.onResume();
     }
 

@@ -22,6 +22,7 @@ import com.sbai.finance.activity.arena.klinebattle.BattleKlineActivity;
 import com.sbai.finance.activity.arena.klinebattle.BattleKlineReviewActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineBattleResult;
+import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -42,6 +43,7 @@ import butterknife.OnClick;
 
 public class KLineResultActivity extends BaseActivity {
 
+    public static final int DOGFALL = -1;
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -57,7 +59,7 @@ public class KLineResultActivity extends BaseActivity {
     KlineBottomResultView mBottomView;
 
     private ResultAdapter mResultAdapter;
-    private String mGoinType;
+    private String mGoinType = BattleKline.TYPE_1V1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,18 +102,22 @@ public class KLineResultActivity extends BaseActivity {
     }
 
     private void updateData(KlineBattleResult data) {
-        //搜索自己的数据
         if (data.getRanking() != null && data.getRanking().size() != 0 && LocalUser.getUser().getUserInfo() != null) {
             KlineBattleResult.Ranking meResult = null;
+            boolean dogfall = true;
+            KlineBattleResult.Ranking firstRank = data.getRanking().get(0);
+            //搜索自己的数据 并且判断是否平局
             for (KlineBattleResult.Ranking ranking : data.getRanking()) {
                 if (ranking.getUserId() == LocalUser.getUser().getUserInfo().getId()) {
                     meResult = ranking;
-                    break;
+                }
+                if (firstRank.getSort() != ranking.getSort()) {
+                    dogfall = false;
                 }
             }
 
             if (meResult == null) return;
-            mTop.setRankInfo(mGoinType, meResult.getSort());
+            mTop.setRankInfo(mGoinType, dogfall ? DOGFALL : meResult.getSort());
             mBottomView.updateStock(data.getBattleStockName(), data.getBattleStockCode(), data.getBattleStockStartTime(), data.getBattleStockEndTime(), data.getRise());
             mResultAdapter.clear();
             mResultAdapter.addAll(data.getRanking());
@@ -189,17 +195,18 @@ public class KLineResultActivity extends BaseActivity {
 
             public void bindDataWithView(final KlineBattleResult.Ranking data, Context context, int position, int count, final OnMoreClickListener onMoreClickListener) {
                 if (data == null) return;
-                mRank.setText(String.valueOf(position + 1));
+                mRank.setText(String.valueOf(data.getSort()));
                 GlideApp.with(context).load(data.getUserPortrait())
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop().into(mAvatar);
                 mName.setText(data.getUserName());
                 if (data.getProfit() >= 0) {
                     mUpDown.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
+                    mUpDown.setText("+" + String.format("%.2f", data.getProfit() * 100) + "%");
                 } else {
                     mUpDown.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
+                    mUpDown.setText(String.format("%.2f", data.getProfit() * 100) + "%");
                 }
-                mUpDown.setText(String.format("%.2f", data.getProfit()) + "%");
                 mReward.setText(String.valueOf(data.getMoney()) + "元宝");
                 if (position == count - 1) {
                     mViewStub.setVisibility(View.GONE);

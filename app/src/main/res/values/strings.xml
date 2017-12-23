@@ -543,7 +543,8 @@
     <string name="win_the_kline">胜利</string>
     <string name="eat_chicken">大吉大利，今晚吃鸡</string>
     <string name="fail_the_kline">失败</string>
-    <string name="more_attention_miss">多关注"解说"有助于提升</string>
+    <string name="dogfall">平局</string>
+    <string name="more_attention_miss">多关注\"姐说\"有助于提升</string>
     <string name="kline_first">第1名</string>
     <string name="kline_second">第2名</string>
     <string name="kline_third">第3名</string>
@@ -1123,4 +1124,5 @@
     <string name="battle_kline_review">复盘</string>
     <string name="profit_with_colon">收益：</string>
     <string name="no_people_match_please_try_later">暂时无人匹配，请稍后再试</string>
+    <string name="not_up_rank">未上榜</string>
 </resources>

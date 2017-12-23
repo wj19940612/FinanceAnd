@@ -13,6 +13,8 @@ import com.sbai.finance.model.klinebattle.BattleKline;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sbai.finance.activity.arena.KLineResultActivity.DOGFALL;
+
 
 /**
  * Created by Administrator on 2017\12\12 0012.
@@ -47,50 +49,62 @@ public class KLineTopResultView extends RelativeLayout {
     }
 
     public void setRankInfo(String goinType, int sort) {
-        if (goinType == BattleKline.TYPE_1V1) {
-            if (sort == 1) {
+        if (goinType.equals(BattleKline.TYPE_1V1)) {
+            if (sort == DOGFALL) {
+                mRank.setText(R.string.dogfall);
+                mRankTip.setText(R.string.more_attention_miss);
+                mRank.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                mRankTip.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_four));
+            } else if (sort == 1) {
                 mRank.setText(R.string.win_the_kline);
                 mRankTip.setText(R.string.eat_chicken);
-
                 mRank.setTextColor(ContextCompat.getColor(mContext, R.color.yellowColor2));
                 mRankTip.setTextColor(ContextCompat.getColor(mContext, R.color.yellowColor2));
-                ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_one);
+                setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_one));
             } else {
                 mRank.setText(R.string.fail_the_kline);
                 mRankTip.setText(R.string.more_attention_miss);
                 mRank.setTextColor(ContextCompat.getColor(mContext, R.color.white));
                 mRankTip.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-                ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_four);
+                setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_four));
             }
         } else {
             switch (sort) {
+                case DOGFALL:
+                    mRank.setText(R.string.dogfall);
+                    mRankTip.setText(R.string.more_attention_miss);
+                    mRank.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                    mRankTip.setTextColor(ContextCompat.getColor(mContext, R.color.white));
+                    setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_four));
+                    break;
                 case 1:
                     mRank.setText(R.string.kline_first);
                     mRankTip.setText(R.string.eat_chicken);
                     mRank.setTextColor(ContextCompat.getColor(mContext, R.color.yellowColor2));
                     mRankTip.setTextColor(ContextCompat.getColor(mContext, R.color.yellowColor2));
-                    ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_one);
+                    setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_one));
                     break;
                 case 2:
                     mRank.setText(R.string.kline_second);
                     mRankTip.setText(R.string.very_nice_deal);
                     mRank.setTextColor(ContextCompat.getColor(mContext, R.color.white));
                     mRankTip.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-                    ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_two);
+                    setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_two));
                     break;
                 case 3:
                     mRank.setText(R.string.kline_third);
                     mRankTip.setText(R.string.deal_not_bad);
                     mRank.setTextColor(ContextCompat.getColor(mContext, R.color.white));
                     mRankTip.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-                    ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_three);
+                    setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_three));
                     break;
                 case 4:
                     mRank.setText(R.string.kline_four);
                     mRankTip.setText(R.string.more_attention_miss);
                     mRank.setTextColor(ContextCompat.getColor(mContext, R.color.white));
                     mRankTip.setTextColor(ContextCompat.getColor(mContext, R.color.white));
-                    ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_four);
+                    setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_kline_result_top_four));
                     break;
             }
         }
