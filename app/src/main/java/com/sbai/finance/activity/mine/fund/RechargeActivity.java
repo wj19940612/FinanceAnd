@@ -548,14 +548,11 @@ public class RechargeActivity extends BaseActivity {
         }
     }
 
+
     @Override
     public void onBackPressed() {
         mRechargeCount.clearFocus();
-        if (KeyBoardUtils.isSHowKeyboard(mRechargeCount)) {
-            KeyBoardUtils.closeKeyboard(mRechargeCount);
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     @Override

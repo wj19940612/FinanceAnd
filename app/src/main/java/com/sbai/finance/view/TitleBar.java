@@ -310,6 +310,12 @@ public class TitleBar extends RelativeLayout {
 
     public void setRightTextRightImage(String rightViewContent) {
         if (!TextUtils.isEmpty(rightViewContent)) {
+            if (getContext() instanceof Activity) {
+                Activity activity = (Activity) getContext();
+                if (activity.isFinishing()) {
+                    return;
+                }
+            }
             GlideApp.with(getContext())
                     .load(rightViewContent)
                     .into(mRightImageView);

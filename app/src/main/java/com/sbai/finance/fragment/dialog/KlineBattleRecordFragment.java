@@ -118,7 +118,6 @@ public class KlineBattleRecordFragment extends DialogFragment {
     }
 
     private String formatWinRate(double winRate) {
-        winRate = Double.valueOf(FinanceUtil.formatWithScale(winRate));
         if (winRate == 0) {
             return "0.00%";
         } else {
