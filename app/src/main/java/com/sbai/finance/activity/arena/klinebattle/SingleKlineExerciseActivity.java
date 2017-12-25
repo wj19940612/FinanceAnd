@@ -250,7 +250,8 @@ public class SingleKlineExerciseActivity extends BaseActivity {
             }
             if (mCurrentIndex == mBattleUserMarkList.size() - 2) {
                 updateLastProfit(BattleKline.PASS);
-                updateNextKlineView(mBattleUserMarkList.get(++mCurrentIndex));
+                mBattleUserMarkList.get(mCurrentIndex + 1).setMark(BattleKlineData.MARK_SELL);
+                updateNextKlineView(mBattleUserMarkList.get(mCurrentIndex + 1));
                 battleFinish();
                 return;
             }
