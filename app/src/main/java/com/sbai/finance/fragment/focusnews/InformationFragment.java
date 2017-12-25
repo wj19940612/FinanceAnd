@@ -455,12 +455,12 @@ public class InformationFragment extends BaseFragment {
                 });
                 if (TextUtils.isEmpty(item.getTitle())) {
                     mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                    mContent.setTextColor(ContextCompat.getColor(context, R.color.luckyText));
+                    mContent.setTextColor(ContextCompat.getColor(context, R.color.newInfoColor));
                     mContent.setText(Html.fromHtml(item.getContent().toString().trim()));
                 } else {
                     mContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                     mContent.setText(StrUtil.mergeTextWithRatioColorBold(item.getTitle(), Html.fromHtml(item.getContent()).toString().trim(), 0.93f,
-                            ContextCompat.getColor(context, R.color.primaryText), ContextCompat.getColor(context, R.color.luckyText)));
+                            ContextCompat.getColor(context, R.color.primaryText), ContextCompat.getColor(context, R.color.newInfoColor)));
                 }
                 mContent.setMaxLines(3);
                 mContent.setEllipsize(TextUtils.TruncateAt.END);

@@ -1,8 +1,5 @@
 package com.sbai.finance.view;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
 import android.text.Spannable;
@@ -10,9 +7,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -23,13 +18,8 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.DailyReport;
-import com.sbai.finance.model.system.Share;
-import com.sbai.finance.net.Callback2D;
-import com.sbai.finance.net.Client;
-import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
-import com.sbai.finance.view.dialog.ShareDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -229,7 +219,7 @@ public class SevenHourNewsView extends RelativeLayout {
         AbsoluteSizeSpan bigSizeSpan = new AbsoluteSizeSpan(((int) Display.sp2Px(TEXT_BIG_SP, getResources())));
         spannableStringBuilder.setSpan(bigSizeSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
-        ForegroundColorSpan smallColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.luckyText));
+        ForegroundColorSpan smallColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.newInfoColor));
         spannableStringBuilder.setSpan(smallColorSpan, title.length(), title.length() + content.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
         AbsoluteSizeSpan smallSizeSpan = new AbsoluteSizeSpan(((int) Display.sp2Px(TEXT_SMALL_SP, getResources())));
