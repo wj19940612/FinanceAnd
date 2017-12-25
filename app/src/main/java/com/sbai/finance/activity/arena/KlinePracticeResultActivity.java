@@ -130,7 +130,6 @@ public class KlinePracticeResultActivity extends BaseActivity {
                         .putExtra(ExtraKeys.BATTLE_PROFIT, mProfit)
                         .putExtra(ExtraKeys.BATTLE_KLINE_DATA, mBattleKlineData)
                         .execute();
-                finish();
                 break;
 
         }
