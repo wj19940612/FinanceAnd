@@ -37,7 +37,7 @@ import static com.android.volley.DefaultRetryPolicy.DEFAULT_TIMEOUT_MS;
 /**
  * 对小姐姐的提问的评论页面
  */
-public class CommentActivity extends BaseActivity implements OnPlayRadioManager{
+public class CommentActivity extends BaseActivity implements OnPlayRadioManager {
 
     public static final String BROADCAST_ACTION_REPLY_SUCCESS = "broadcast_action_reply_success";
 
@@ -101,6 +101,12 @@ public class CommentActivity extends BaseActivity implements OnPlayRadioManager{
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, R.anim.slide_out_to_bottom);
+    }
+
+    @Override
     protected void onPostResume() {
         super.onPostResume();
     }
@@ -112,8 +118,8 @@ public class CommentActivity extends BaseActivity implements OnPlayRadioManager{
             mQuestionComment.setHint(getString(R.string.reply_someBody, mUserName));
         }
         mQuestionComment.addTextChangedListener(mValidationWatcher);
-    }
 
+    }
 
 
     private ValidationWatcher mValidationWatcher = new ValidationWatcher() {

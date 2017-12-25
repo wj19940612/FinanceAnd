@@ -314,10 +314,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".activity.miss.CommentActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/BaseDialog.Bottom"/>
-        <activity
             android:name=".activity.evaluation.EvaluationStartActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -331,6 +327,10 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.miss.RewardMissActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseDialog.Activity"/>
+        <activity
+            android:name=".activity.miss.CommentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BaseDialog.Bottom"/>
         <activity

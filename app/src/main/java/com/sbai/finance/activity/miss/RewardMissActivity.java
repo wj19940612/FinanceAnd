@@ -194,6 +194,12 @@ public class RewardMissActivity extends BaseActivity implements OnPlayRadioManag
         }
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, R.anim.slide_out_to_bottom);
+    }
+
     private void requestUserFindInfo() {
         umengEventCount(UmengCountEventId.MISS_TALK_REWARD);
         Client.requestUserFundInfo()
