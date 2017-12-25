@@ -27,6 +27,7 @@ import com.sbai.finance.fragment.battle.KlineOneByOneRankFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.battle.KlineRank;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.slidingTab.SlidingTabTitle;
 import com.sbai.glide.GlideApp;
@@ -241,7 +242,7 @@ public class KlineRankListActivity extends BaseActivity implements KlineOneByOne
                 mName.setText(mKlineRank.getUserRank1v1().getUserName());
                 mRankPosition.setText(mKlineRank.getUserRank1v1().getSort() < 0 ? getString(R.string.not_up_rank) : String.valueOf(mKlineRank.getUserRank1v1().getSort()));
                 if (mKlineRank.getUserRank1v1().getRankingRate() != 0) {
-                    mWinRate.setText("胜率: " + String.format("%.2f", mKlineRank.getUserRank1v1().getRankingRate() * 100) + "%");
+                    mWinRate.setText("胜率: " + FinanceUtil.formatToPercentage(mKlineRank.getUserRank1v1().getRankingRate()));
                 } else {
                     mWinRate.setText("胜率: 0.00%");
                 }

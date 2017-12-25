@@ -19,6 +19,7 @@ import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.KlineBottomResultView;
 import com.sbai.finance.view.TitleBar;
@@ -98,10 +99,10 @@ public class KlinePracticeResultActivity extends BaseActivity {
                 mUpDown.setText("0.00%");
             } else if (mProfit > 0) {
                 mUpDown.setTextColor(ContextCompat.getColor(this, R.color.redPrimary));
-                mUpDown.setText("+" + String.format("%.2f", mProfit * 100) + "%");
+                mUpDown.setText("+" +  FinanceUtil.formatToPercentage(mProfit));
             } else {
                 mUpDown.setTextColor(ContextCompat.getColor(this, R.color.greenAssist));
-                mUpDown.setText(String.format("%.2f", mProfit * 100) + "%");
+                mUpDown.setText( FinanceUtil.formatToPercentage(mProfit));
             }
 
 

@@ -26,6 +26,7 @@ import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.FinanceUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.view.KLineTopResultView;
 import com.sbai.finance.view.KlineBottomResultView;
@@ -205,10 +206,10 @@ public class KLineResultActivity extends BaseActivity {
                     mUpDown.setText("0.00%");
                 } else if (data.getProfit() > 0) {
                     mUpDown.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
-                    mUpDown.setText("+" + String.format("%.2f", data.getProfit() * 100) + "%");
+                    mUpDown.setText("+" + FinanceUtil.formatToPercentage(data.getProfit()));
                 } else {
                     mUpDown.setTextColor(ContextCompat.getColor(context, R.color.greenAssist));
-                    mUpDown.setText(String.format("%.2f", data.getProfit() * 100) + "%");
+                    mUpDown.setText(FinanceUtil.formatToPercentage(data.getProfit()));
                 }
                 mReward.setText(String.valueOf(data.getMoney()) + "元宝");
                 if (position == count - 1) {

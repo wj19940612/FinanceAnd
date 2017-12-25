@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.FinanceUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,10 +62,10 @@ public class KlineBottomResultView extends LinearLayout {
     public void updateStockUpDown(double upDown) {
         if (upDown >= 0) {
             mStockUpDown.setTextColor(ContextCompat.getColor(mContext, R.color.redPrimary));
-            mStockUpDown.setText("+" + String.format("%.2f", upDown * 100) + "%");
+            mStockUpDown.setText("+" + FinanceUtil.formatToPercentage(upDown));
         } else {
             mStockUpDown.setTextColor(ContextCompat.getColor(mContext, R.color.greenAssist));
-            mStockUpDown.setText(String.format("%.2f", upDown * 100) + "%");
+            mStockUpDown.setText(FinanceUtil.formatToPercentage(upDown));
         }
     }
 
