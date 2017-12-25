@@ -87,9 +87,7 @@ public class BattleKlineReviewActivity extends BaseActivity {
 
     private void updateKlineData() {
         if (mBattleKline != null) {
-            int size = mBattleKline.getUserMarkList().size();
-            mKlineView.initKlineDataList(mBattleKline.getUserMarkList().subList(0, size - 1));
-            mKlineView.setLastInvisibleData(mBattleKline.getUserMarkList().get(size - 1));
+            mKlineView.initKlineDataList(mBattleKline.getUserMarkList());
         }
         if (mType.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
             setTotalProfit(mProfit);
@@ -123,9 +121,6 @@ public class BattleKlineReviewActivity extends BaseActivity {
         mUserPortrait = getIntent().getStringExtra(ExtraKeys.User_Portrait);
         if (TextUtils.isEmpty(mUserName)) {
             mUserName = LocalUser.getUser().getUserInfo().getUserName();
-        }
-        if (TextUtils.isEmpty(mUserPortrait)) {
-            mUserPortrait = LocalUser.getUser().getUserInfo().getUserPortrait();
         }
     }
 

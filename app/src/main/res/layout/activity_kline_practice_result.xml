@@ -116,8 +116,8 @@
             android:layout_width="347dp"
             android:layout_height="126dp"
             android:layout_below="@+id/btnLayout"
-            android:layout_marginTop="40dp"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"/>
 
     </RelativeLayout>
 </ScrollView>

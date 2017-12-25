@@ -26,7 +26,6 @@ public class BattleKlineChart extends KlineChart {
     private static final String TRANS_GREEN = "#262fcc9f";
     private static final String TRANS_RED = "#26f25b57";
     private List<BattleKlineData> mDataList;
-    private BattleKlineData mLastInvisibleData;
 
     protected void setTranslucentBgPaint(Paint paint, String color) {
         paint.setColor(Color.parseColor(color));
@@ -59,10 +58,6 @@ public class BattleKlineChart extends KlineChart {
     public void addKlineData(BattleKlineData gameKlineData) {
         mDataList.add(gameKlineData);
         new DataShowTask(this, mDataList, mDataList.size() - 1).execute();
-    }
-
-    public void setLastInvisibleData(BattleKlineData lastInvisibleData) {
-        mLastInvisibleData = lastInvisibleData;
     }
 
     public BattleKlineData getLastData() {
@@ -133,10 +128,6 @@ public class BattleKlineChart extends KlineChart {
         } // i == end
         if (rectF != null) {
             String bgColor = TRANS_RED;
-            if (i == getDataList().size() && mLastInvisibleData != null) {
-                bgColor = mLastInvisibleData.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
-            }
-
             for (; i < getDataList().size(); i++) {
                 BattleKlineData data = (BattleKlineData) getDataList().get(i);
                 if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_SELL)) {

@@ -61,10 +61,10 @@ public class KlineBottomResultView extends LinearLayout {
     public void updateStockUpDown(double upDown) {
         if (upDown >= 0) {
             mStockUpDown.setTextColor(ContextCompat.getColor(mContext, R.color.redPrimary));
-            mStockUpDown.setText("+" + String.format("%.2f", upDown) + "%");
+            mStockUpDown.setText("+" + String.format("%.2f", upDown * 100) + "%");
         } else {
             mStockUpDown.setTextColor(ContextCompat.getColor(mContext, R.color.greenAssist));
-            mStockUpDown.setText(String.format("%.2f", upDown) + "%");
+            mStockUpDown.setText(String.format("%.2f", upDown * 100) + "%");
         }
     }
 

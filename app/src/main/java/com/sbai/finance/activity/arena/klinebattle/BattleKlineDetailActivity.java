@@ -28,7 +28,7 @@ import static com.sbai.finance.utils.Network.unregisterNetworkChangeReceiver;
 public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
 
     private List<BattleKlineInfo> mBattleKlineInfos;
-    private boolean mFirstEnter;
+    private boolean mNoneOperate = true;
     private OnPushReceiveListener<BattleKlineInfo> mKlineBattlePushReceiverListener = new OnPushReceiveListener<BattleKlineInfo>() {
         @Override
         public void onPushReceive(BattleKlineInfo battleKlineInfo, String originalData) {
@@ -49,7 +49,9 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
 
     private void onBattleKlinePushReceived(final BattleKlineInfo battleKlineInfo) {
         if (battleKlineInfo.getCode() == BattleKline.PUSH_CODE_AGAINST_PROFIT) {
-            updateLastProfitData(battleKlineInfo);
+            if (battleKlineInfo.getUserId() != LocalUser.getUser().getUserInfo().getId()) {
+                updateLastProfitData(battleKlineInfo);
+            }
         } else if (battleKlineInfo.getCode() == BattleKline.PUSH_CODE_BATTLE_FINISH) {
             battleFinish();
         }
@@ -68,7 +70,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         super.onDestroy();
         stopScheduleJob();
         unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
-        GamePusher.get().removeOnPushReceiveListener();
     }
 
     private void requestBattleInfo() {
@@ -96,9 +97,10 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         updateLastProfitData();
         if (mBattleKline.getUserMarkList() != null) {
             int size = mBattleKline.getUserMarkList().size();
-            if (size > 1) {
-                BattleKlineData battleKlineData = mBattleKline.getUserMarkList().get(size - 2);
-                if (battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS)) {
+            if (size > 0) {
+                BattleKlineData battleKlineData = mBattleKline.getUserMarkList().get(size - 1);
+                if (battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS) ||
+                        battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_BUY)) {
                     mOperateView.buySuccess();
                     mHasPosition = true;
                 }
@@ -106,7 +108,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
             mRemainKlineAmount = data.getLine();
             updateRemainKlineAmount();
         }
-        mFirstEnter = true;
     }
 
     private void updateLastProfitData(BattleKlineInfo battleKlineInfo) {
@@ -135,9 +136,8 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                         mOperateView.complete();
                     }
                     mOperateView.setRank(battleBean.getSort());
-                    if (mFirstEnter && battleBean.getProfit() == 0) {
+                    if (mNoneOperate && battleBean.getProfit() == 0 && !mHasPosition) {
                         mOperateView.clearTotalProfit();
-                        mFirstEnter = false;
                     } else {
                         mOperateView.setTotalProfit(battleBean.getProfit());
                     }
@@ -157,17 +157,19 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
             battleFinish();
             return;
         }
-        if (data.getStatus() == BattleKline.STATUS_END) {
-            mOperateView.complete();
-        }
         updateOperateView(type);
         updateLastProfitData(data);
-        updateNextKlineView(data.getNext());
+        if (data.getStatus() == BattleKline.STATUS_END) {
+            mOperateView.complete();
+        } else {
+            updateNextKlineView(data.getNext());
+        }
     }
 
     @Override
     protected void onCountDownFinish() {
         startScheduleJob(5 * 1000);
+        mOperateView.showWaitFinishView();
     }
 
     @Override
@@ -178,33 +180,56 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
 
     @Override
     protected void buyOperate() {
+        mNoneOperate = false;
+        mOperateView.disableOperateView();
         Client.requestKlineBattleBuy().setTag(TAG)
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
                     protected void onRespSuccessData(BattleKlineOperate data) {
                         updateMyLastOperateData(data, BattleKline.BUY);
                     }
+
+                    @Override
+                    public void onFinish() {
+                        mOperateView.enableOperateView();
+                    }
                 }).fireFree();
     }
 
     @Override
     protected void clearOperate() {
+        mNoneOperate = false;
+        mOperateView.disableOperateView();
         Client.requestKlineBattleSell().setTag(TAG)
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
                     protected void onRespSuccessData(BattleKlineOperate data) {
                         updateMyLastOperateData(data, BattleKline.SELL);
                     }
+
+                    @Override
+                    public void onFinish() {
+                        mOperateView.enableOperateView();
+                    }
                 }).fireFree();
     }
 
     @Override
     protected void passOperate() {
+        if (mHasPosition) {
+            mNoneOperate = false;
+        }
+        mOperateView.disableOperateView();
         Client.requestKlineBattlePass().setTag(TAG)
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
                     protected void onRespSuccessData(BattleKlineOperate data) {
                         updateMyLastOperateData(data, BattleKline.PASS);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        mOperateView.enableOperateView();
                     }
                 }).fireFree();
     }

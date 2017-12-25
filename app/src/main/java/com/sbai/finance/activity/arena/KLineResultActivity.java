@@ -200,7 +200,10 @@ public class KLineResultActivity extends BaseActivity {
                         .placeholder(R.drawable.ic_default_avatar)
                         .circleCrop().into(mAvatar);
                 mName.setText(data.getUserName());
-                if (data.getProfit() >= 0) {
+                if (data.getProfit() == 0) {
+                    mUpDown.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    mUpDown.setText("0.00%");
+                } else if (data.getProfit() > 0) {
                     mUpDown.setTextColor(ContextCompat.getColor(context, R.color.redPrimary));
                     mUpDown.setText("+" + String.format("%.2f", data.getProfit() * 100) + "%");
                 } else {
