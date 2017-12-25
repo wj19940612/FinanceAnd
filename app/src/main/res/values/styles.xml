@@ -145,6 +145,20 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+
+    <style name="BaseDialog.Activity" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
+    </style>
+
     <style name="MarketDataStock">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
