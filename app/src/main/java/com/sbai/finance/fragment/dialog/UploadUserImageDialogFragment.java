@@ -1,12 +1,10 @@
 package com.sbai.finance.fragment.dialog;
 
-import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -175,7 +173,7 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.takePhoneFromCamera:
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) && PermissionUtil.cameraIsCanUse()) {
                     if (mImageDealType == IMAGE_TYPE_CLIPPING_IMMOBILIZATION_AREA) {
                         openAreaTakePage();
                     } else {
@@ -232,18 +230,10 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
     }
 
     private void openAreaTakePage() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-            if (PermissionUtil.checkPermission(getContext(), Manifest.permission.CAMERA)) {
-                startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
-            } else {
-                ToastUtil.show(getString(R.string.please_open_camera_permission));
-            }
+        if (PermissionUtil.cameraIsCanUse()) {
+            startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
         } else {
-            if (PermissionUtil.cameraIsCanUse()) {
-                startActivityForResult(new Intent(getActivity(), AreaTakePhoneActivity.class), REQ_CODE_AREA_TAKE_PHONE);
-            } else {
-                ToastUtil.show(getString(R.string.please_open_camera_permission));
-            }
+            ToastUtil.show(getString(R.string.please_open_camera_permission));
         }
     }
 
