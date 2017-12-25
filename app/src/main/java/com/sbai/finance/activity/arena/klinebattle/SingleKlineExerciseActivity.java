@@ -185,7 +185,7 @@ public class SingleKlineExerciseActivity extends BaseActivity {
             List<BattleKlineData> subList = new ArrayList<>();
             for (int i = 0; i < mBattleUserMarkList.size(); i++) {
                 subList.add(mBattleUserMarkList.get(i));
-                if (mBattleUserMarkList.get(i).getMark().equalsIgnoreCase(BattleKlineData.MARK_NEW)) {
+                if (mBattleUserMarkList.get(i).getMark().equalsIgnoreCase(BattleKlineData.MARK_OP)) {
                     mCurrentIndex = i;
                     break;
                 }
