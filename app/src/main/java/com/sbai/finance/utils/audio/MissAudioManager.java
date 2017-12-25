@@ -2,6 +2,7 @@ package com.sbai.finance.utils.audio;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.sbai.finance.App;
@@ -91,6 +92,9 @@ public class MissAudioManager {
     }
 
     public void start(IAudio audio, int source) {
+        if (audio == null || !TextUtils.isEmpty(audio.getAudioUrl())) {
+            return;
+        }
         mSource = source;
         start(audio);
     }
