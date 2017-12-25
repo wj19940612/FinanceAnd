@@ -30,7 +30,6 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.sbai.finance.App;
 import com.sbai.finance.AppJs;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
@@ -40,7 +39,6 @@ import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.image.ImageUtils;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.dialog.ShareDialog;
-import com.sbai.glide.GlideApp;
 import com.sbai.httplib.CookieManger;
 import com.umeng.analytics.MobclickAgent;
 
@@ -162,7 +160,6 @@ public class WebActivity extends BaseActivity {
         mAppJs = null;
         LocalBroadcastManager.getInstance(getActivity())
                 .unregisterReceiver(mLoginReceiver);
-        GlideApp.with(App.getAppContext()).pauseRequestsRecursive();
     }
 
     @Override
