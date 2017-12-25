@@ -87,10 +87,10 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
 
     private void requestCurrentBattle() {
         Client.getCurrentKlineBattle().setTag(TAG)
-                .setCallback(new Callback<Resp<BattleKlineInfo>>() {
+                .setCallback(new Callback2D<Resp<BattleKlineInfo>, BattleKlineInfo>() {
                     @Override
-                    protected void onRespSuccess(final Resp<BattleKlineInfo> resp) {
-                        if (resp.getData().getStatus() == BattleKline.STATUS_END) {
+                    protected void onRespSuccessData(BattleKlineInfo data) {
+                        if (data.getStatus() == BattleKline.STATUS_END) {
                             battleFinish();
                         }
                     }
@@ -176,9 +176,9 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         updateLastProfitData(data);
         if (data.getStatus() == BattleKline.STATUS_END) {
             mOperateView.complete();
-        } else {
-            updateNextKlineView(data.getNext());
+            mOperateView.clearPositionProfit();
         }
+        updateNextKlineView(data.getNext());
     }
 
     @Override

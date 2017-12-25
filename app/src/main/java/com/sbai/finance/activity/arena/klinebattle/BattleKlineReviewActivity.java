@@ -91,6 +91,7 @@ public class BattleKlineReviewActivity extends BaseActivity {
         }
         if (mType.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
             setTotalProfit(mProfit);
+            mUserPortrait = LocalUser.getUser().getUserInfo().getUserPortrait();
         } else {
             setTotalProfit(mBattleKline.getStaInfo().getProfit());
         }
