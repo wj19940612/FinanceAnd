@@ -376,4 +376,10 @@ public class TitleBar extends RelativeLayout {
         mHasBottomSplitLine = hasBottomSplitLine;
         invalidate();
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        GlideApp.with(getContext()).clear(mRightImageView);
+    }
 }
