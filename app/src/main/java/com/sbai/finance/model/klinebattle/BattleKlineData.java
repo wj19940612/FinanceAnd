@@ -13,7 +13,8 @@ import com.sbai.chart.domain.KlineViewData;
  */
 public class BattleKlineData extends KlineViewData {
 
-    public static final String MARK_NEW = "Y";
+    public static final String MARK_NOT_OP = "N";
+    public static final String MARK_OP = "Y";
     public static final String MARK_BUY = "B";
     public static final String MARK_SELL = "S";
     public static final String MARK_PASS = "P";

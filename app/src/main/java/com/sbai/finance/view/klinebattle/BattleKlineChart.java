@@ -106,7 +106,13 @@ public class BattleKlineChart extends KlineChart {
                 setTranslucentBgPaint(sPaint, bgColor);
                 canvas.drawRect(rectF, sPaint);
                 rectF = null;
-            } else if (rectF != null && i == getEnd() - 1 && data.getMark().equalsIgnoreCase(BattleKlineData.MARK_NEW)) {
+            } else if (rectF != null && i == getEnd() - 1 && data.getMark().equalsIgnoreCase(BattleKlineData.MARK_OP)) {
+                rectF.right = getChartXOfScreen(i);
+                String bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
+                setTranslucentBgPaint(sPaint, bgColor);
+                canvas.drawRect(rectF, sPaint);
+                rectF = null;
+            } else if (rectF != null && i == getEnd() - 1 && data.getMark().equalsIgnoreCase(BattleKlineData.MARK_NOT_OP)) { // 最后一个结束数据
                 rectF.right = getChartXOfScreen(i);
                 String bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
                 setTranslucentBgPaint(sPaint, bgColor);
@@ -133,7 +139,10 @@ public class BattleKlineChart extends KlineChart {
                 if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_SELL)) {
                     bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
                     break;
-                } else if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_NEW)) {
+                } else if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_OP)) {
+                    bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
+                    break;
+                } else if (data.getMark().equalsIgnoreCase(BattleKlineData.MARK_NOT_OP)) { // 最后一个结束数据
                     bgColor = data.getPositions() >= 0 ? TRANS_RED : TRANS_GREEN;
                     break;
                 }

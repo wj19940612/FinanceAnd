@@ -151,17 +151,23 @@ public class SingleKlineExerciseActivity extends BaseActivity {
     protected void updateOperateView(String type) {
         if (type.equalsIgnoreCase(BattleKline.BUY)) {
             mHasPosition = true;
-            mKlineView.getLastData().setMark(BattleKlineData.MARK_BUY);
+            if (mKlineView.getLastData() != null) {
+                mKlineView.getLastData().setMark(BattleKlineData.MARK_BUY);
+            }
             mOperateView.buySuccess();
         } else if (type.equalsIgnoreCase(BattleKline.SELL)) {
             mHasPosition = false;
-            mKlineView.getLastData().setMark(BattleKlineData.MARK_SELL);
+            if (mKlineView.getLastData() != null) {
+                mKlineView.getLastData().setMark(BattleKlineData.MARK_SELL);
+            }
             mOperateView.clearSuccess();
         } else {
-            if (mHasPosition) {
-                mKlineView.getLastData().setMark(BattleKlineData.MARK_HOLD_PASS);
-            } else {
-                mKlineView.getLastData().setMark(BattleKlineData.MARK_PASS);
+            if (mKlineView.getLastData() != null) {
+                if (mHasPosition) {
+                    mKlineView.getLastData().setMark(BattleKlineData.MARK_HOLD_PASS);
+                } else {
+                    mKlineView.getLastData().setMark(BattleKlineData.MARK_PASS);
+                }
             }
         }
     }
@@ -179,12 +185,12 @@ public class SingleKlineExerciseActivity extends BaseActivity {
             List<BattleKlineData> subList = new ArrayList<>();
             for (int i = 0; i < mBattleUserMarkList.size(); i++) {
                 subList.add(mBattleUserMarkList.get(i));
-                if (mBattleUserMarkList.get(i).getMark().equalsIgnoreCase(BattleKlineData.MARK_NEW)) {
+                if (mBattleUserMarkList.get(i).getMark().equalsIgnoreCase(BattleKlineData.MARK_OP)) {
                     mCurrentIndex = i;
                     break;
                 }
             }
-            mRemainKlineAmount = mBattleKline.getUserMarkList().size() - mCurrentIndex;
+            mRemainKlineAmount = mBattleKline.getLine();
             mKlineView.initKlineDataList(subList);
         }
         updateCountDownTime();
@@ -242,7 +248,10 @@ public class SingleKlineExerciseActivity extends BaseActivity {
             if (type.equalsIgnoreCase(BattleKline.BUY)) {
                 mPositionIndex = mCurrentIndex;
             }
-            if (mCurrentIndex == mBattleUserMarkList.size() - 1) {
+            if (mCurrentIndex == mBattleUserMarkList.size() - 2) {
+                updateLastProfit(BattleKline.PASS);
+                mBattleUserMarkList.get(mCurrentIndex + 1).setMark(BattleKlineData.MARK_SELL);
+                updateNextKlineView(mBattleUserMarkList.get(mCurrentIndex + 1));
                 battleFinish();
                 return;
             }
