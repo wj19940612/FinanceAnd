@@ -322,6 +322,7 @@ public class MissAudioManager {
     }
 
     private void onStart() {
+        Log.d("MediaPlayer", "onStart: ");
         for (WeakReference<OnAudioListener> reference : mAudioViewList) {
             if (reference.get() != null) {
                 reference.get().onAudioStart();
@@ -330,6 +331,7 @@ public class MissAudioManager {
     }
 
     private void onPlay() {
+        Log.d("MediaPlayer", "onPlay: ");
         for (WeakReference<OnAudioListener> reference : mAudioViewList) {
             if (reference.get() != null) {
                 reference.get().onAudioPlay();

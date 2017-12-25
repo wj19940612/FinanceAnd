@@ -132,7 +132,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         setSupportActionBar(mToolbar);
         ButterKnife.bind(this);
         mRootMissFloatWindow = mMissFloatWindow;
-        translucentStatusBar();
+//        translucentStatusBar();
 
         mSet = new HashSet<>();
         initData();
@@ -242,7 +242,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
             } else if (audio instanceof Radio) {
                 Radio playRadio = (Radio) audio;
                 mMissFloatWindow.setMissAvatar(playRadio.getUserPortrait());
-                if (mRadio != null && mRadio.getId() == ((Radio) audio).getId()) {
+                if (mRadio != null && mRadio.getId() == playRadio.getId()) {
                     mMissFloatWindow.setVisibility(View.GONE);
                     mPlayThisVoice = true;
                     mRadioPlayLL.startAnimation();
@@ -258,6 +258,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                     && !MissAudioManager.get().isPaused(audio)
                     && automaticPlay) {
                 mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
+                mPlayThisVoice = true;
                 mRadioPlayLL.setPlayStatus(mRadio);
                 updateListenNumber();
             }
@@ -470,6 +471,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
+        changeFloatWindowView();
     }
 
     @Override
