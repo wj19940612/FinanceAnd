@@ -99,13 +99,11 @@ public class BattleKlineMatchSuccessDialog extends BaseDialog {
     }
 
     private static void startCountDown(final TextView message, final Activity activity, final OnDismissListener onDismissListener) {
-        CountDownTimer timer = new CountDownTimer(3000, 1000) {
+        CountDownTimer timer = new CountDownTimer(2000, 500) {
             @Override
             public void onTick(long millisUntilFinished) {
-                int count = (int) (millisUntilFinished / 1000);
+                int count = (int) (Math.ceil(millisUntilFinished / 1000f));
                 if (count == 0) {
-                    cancel();
-                    onFinish();
                     return;
                 }
                 message.setText(activity.getString(R.string.match_success_x_seconds_start_battle, count));
