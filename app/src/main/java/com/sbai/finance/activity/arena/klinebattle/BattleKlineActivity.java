@@ -437,6 +437,7 @@ public class BattleKlineActivity extends BaseActivity {
 
     private void showStartMatchDialog(final String type) {
         final boolean showMatchedAmount = type.equalsIgnoreCase(BattleKline.TYPE_4V4);
+        SmartDialog.dismiss(this);
         mStartMatchDialog = StartMatchDialog.get(getActivity(), new StartMatchDialog.OnCancelListener() {
             @Override
             public void onCancel() {
@@ -495,7 +496,7 @@ public class BattleKlineActivity extends BaseActivity {
     }
 
     private void showMatchTimeoutDialog(final String type) {
-        SmartDialog.dismiss(this);
+        StartMatchDialog.dismiss(getActivity());
         String msg;
         if (type.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
             msg = getString(R.string.no_people_match_please_try_later);

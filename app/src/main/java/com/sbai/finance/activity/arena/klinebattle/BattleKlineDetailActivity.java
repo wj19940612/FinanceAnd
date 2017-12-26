@@ -161,7 +161,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                     }
                     if (battleBean.getStatus() == BattleKline.STATUS_END) {
                         mOperateView.complete();
-                        mOperateView.clearPositionProfit();
                     }
                 }
             }
