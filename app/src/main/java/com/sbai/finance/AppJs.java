@@ -84,7 +84,7 @@ public class AppJs {
         openShareDialog(title, description, shareUrl, shareThumbnailUrl, shareChannel, mContext.getString(R.string.share_and_get_ingot));
     }
 
-
+    @JavascriptInterface
     public void openShareDialog(String title, String description, String shareUrl, String shareThumbnailUrl, String shareChannel, String shareTitle) {
         boolean isOnlyWeChatShare = ONLY_WE_CHAT_SHARE.equalsIgnoreCase(shareChannel);
         if (mContext instanceof Activity) {
