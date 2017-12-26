@@ -494,15 +494,31 @@ public class BattleKlineActivity extends BaseActivity {
                 .show();
     }
 
-    private void showMatchTimeoutDialog(String type) {
+    private void showMatchTimeoutDialog(final String type) {
         SmartDialog.dismiss(this);
-        if (!TextUtils.isEmpty(type)) {
-            if (type.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
-                ToastUtil.show(R.string.no_people_match_please_try_later);
-            } else {
-                ToastUtil.show(R.string.no_match_people_please_try_1v1);
-            }
+        String msg;
+        if (type.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
+            msg = getString(R.string.no_people_match_please_try_later);
+        } else {
+            msg = getString(R.string.no_match_people_please_try_1v1);
         }
+        SmartDialog.single(getActivity(), msg)
+                .setTitle(getString(R.string.match_failed))
+                .setCancelableOnTouchOutside(false)
+                .setPositive(R.string.rematch, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                        requestMatch(type);
+                    }
+                })
+                .setNegative(R.string.later_try_again, new SmartDialog.OnClickListener() {
+                    @Override
+                    public void onClick(Dialog dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     private void setMatchedPeople(int count) {
