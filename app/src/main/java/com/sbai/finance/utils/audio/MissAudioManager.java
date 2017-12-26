@@ -92,7 +92,7 @@ public class MissAudioManager {
     }
 
     public void start(IAudio audio, int source) {
-        if (audio == null || !TextUtils.isEmpty(audio.getAudioUrl())) {
+        if (audio == null || TextUtils.isEmpty(audio.getAudioUrl())) {
             return;
         }
         mSource = source;
