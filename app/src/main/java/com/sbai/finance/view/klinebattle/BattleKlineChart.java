@@ -56,6 +56,7 @@ public class BattleKlineChart extends KlineChart {
     }
 
     public void addKlineData(BattleKlineData gameKlineData) {
+        if (mDataList == null) return;
         mDataList.add(gameKlineData);
         new DataShowTask(this, mDataList, mDataList.size() - 1).execute();
     }
@@ -73,6 +74,7 @@ public class BattleKlineChart extends KlineChart {
      * @param klineDataList
      */
     public void initKlineDataList(List<BattleKlineData> klineDataList) {
+        if (klineDataList == null) return;
         mDataList = klineDataList;
         new DataShowTask(this, mDataList).execute();
     }
