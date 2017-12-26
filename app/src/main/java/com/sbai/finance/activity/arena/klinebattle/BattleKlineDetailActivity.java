@@ -113,7 +113,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         if (mBattleKline.getUserMarkList() != null) {
             int size = mBattleKline.getUserMarkList().size();
             if (size > 0) {
-                BattleKlineData battleKlineData = mBattleKline.getUserMarkList().get(size - 1);
+                BattleKlineData battleKlineData = mBattleKline.getUserMarkList().get(size - 2);
                 if (battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS) ||
                         battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_BUY)) {
                     mOperateView.buySuccess();
@@ -131,6 +131,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
             if (item.getUserId() == battleKlineInfo.getUserId()) {
                 item.setProfit(battleKlineInfo.getProfit());
                 item.setPositions(battleKlineInfo.getPositions());
+                item.setStatus(battleKlineInfo.getStatus());
             }
         }
         updateLastProfitData();
@@ -147,9 +148,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                         battleFinish();
                         return;
                     }
-                    if (battleBean.getStatus() == BattleKline.STATUS_END) {
-                        mOperateView.complete();
-                    }
                     mOperateView.setRank(battleBean.getSort());
                     if (mNoneOperate && battleBean.getProfit() == 0 && !mHasPosition) {
                         mOperateView.clearTotalProfit();
@@ -159,6 +157,10 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                     if (mHasPosition) {
                         mOperateView.setPositionProfit(battleBean.getPositions());
                     } else {
+                        mOperateView.clearPositionProfit();
+                    }
+                    if (battleBean.getStatus() == BattleKline.STATUS_END) {
+                        mOperateView.complete();
                         mOperateView.clearPositionProfit();
                     }
                 }
@@ -174,10 +176,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         }
         updateOperateView(type);
         updateLastProfitData(data);
-        if (data.getStatus() == BattleKline.STATUS_END) {
-            mOperateView.complete();
-            mOperateView.clearPositionProfit();
-        }
         updateNextKlineView(data.getNext());
     }
 
