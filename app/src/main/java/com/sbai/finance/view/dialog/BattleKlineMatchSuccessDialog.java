@@ -53,7 +53,7 @@ public class BattleKlineMatchSuccessDialog extends BaseDialog {
         TextView userName3 = customView.findViewById(R.id.userName3);
         ImageView avatar3 = customView.findViewById(R.id.avatar3);
         List<BattleKlineUserInfo> userInfos = new ArrayList();
-        for (BattleKlineUserInfo userInfo: battleKlineUserInfos) {
+        for (BattleKlineUserInfo userInfo : battleKlineUserInfos) {
             if (userInfo.getUserId() != LocalUser.getUser().getUserInfo().getId()) {
                 userInfos.add(userInfo);
             }
@@ -103,7 +103,11 @@ public class BattleKlineMatchSuccessDialog extends BaseDialog {
             @Override
             public void onTick(long millisUntilFinished) {
                 int count = (int) (millisUntilFinished / 1000);
-                if (count == 0) return;
+                if (count == 0) {
+                    cancel();
+                    onFinish();
+                    return;
+                }
                 message.setText(activity.getString(R.string.match_success_x_seconds_start_battle, count));
             }
 

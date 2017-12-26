@@ -182,6 +182,7 @@ public class SingleKlineExerciseActivity extends BaseActivity {
         mBattleKline = data;
         mBattleUserMarkList = mBattleKline.getUserMarkList();
         if (mBattleUserMarkList != null) {
+            mBattleUserMarkList.get(mBattleUserMarkList.size() - 1).setMark(BattleKlineData.MARK_NOT_OP);
             List<BattleKlineData> subList = new ArrayList<>();
             for (int i = 0; i < mBattleUserMarkList.size(); i++) {
                 subList.add(mBattleUserMarkList.get(i));
