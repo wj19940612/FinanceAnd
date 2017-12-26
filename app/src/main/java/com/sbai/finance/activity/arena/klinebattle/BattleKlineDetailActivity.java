@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.game.callback.OnPushReceiveListener;
 import com.sbai.finance.kgame.GamePusher;
 import com.sbai.finance.model.LocalUser;
@@ -12,11 +11,9 @@ import com.sbai.finance.model.klinebattle.BattleKline;
 import com.sbai.finance.model.klinebattle.BattleKlineData;
 import com.sbai.finance.model.klinebattle.BattleKlineInfo;
 import com.sbai.finance.model.klinebattle.BattleKlineOperate;
-import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
-import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.Network;
 
 import java.util.Collections;
@@ -46,6 +43,9 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         protected void onNetworkChanged(int availableNetworkType) {
             if (availableNetworkType > Network.NET_NONE) {
                 GamePusher.get().open();
+                if (mBattleKline == null) {
+                    requestBattleInfo();
+                }
             }
         }
     };
