@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,7 +28,7 @@ import butterknife.OnClick;
  * k线训练操作
  */
 
-public class BattleKlineOperateView extends LinearLayout {
+public class BattleKlineOperateView extends FrameLayout {
     @BindView(R.id.imgRank)
     ImageView mImgRank;
     @BindView(R.id.imgAvatar)
@@ -87,11 +88,9 @@ public class BattleKlineOperateView extends LinearLayout {
     }
 
     public void showWaitFinishView() {
-        if (mBattleSettlingView.getVisibility() != VISIBLE) {
-            mBattleSettlingView.setVisibility(VISIBLE);
-            mBattleSettlingView.findViewById(R.id.loading).startAnimation(
-                    AnimationUtils.loadAnimation(getContext(), R.anim.loading));
-        }
+        mBattleSettlingView.setVisibility(VISIBLE);
+        mBattleSettlingView.findViewById(R.id.loading).startAnimation(
+                AnimationUtils.loadAnimation(getContext(), R.anim.loading));
     }
 
     public void setOperateListener(OperateListener operateListener) {

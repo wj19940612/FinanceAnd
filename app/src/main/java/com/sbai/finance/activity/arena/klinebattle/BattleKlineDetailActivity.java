@@ -182,6 +182,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
     protected void onCountDownFinish() {
         startScheduleJob(5 * 1000);
         mOperateView.showWaitFinishView();
+        mOperateView.disableOperateView();
     }
 
     @Override
