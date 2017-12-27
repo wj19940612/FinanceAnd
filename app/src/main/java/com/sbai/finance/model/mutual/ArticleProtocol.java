@@ -11,8 +11,8 @@ public class ArticleProtocol {
     public static final int PROTOCOL_RECHARGE_SERVICE = 6;
     public static final int PROTOCOL_STOCK_SIMULATE = 7;
 
-    public static final int PROTOCOL_BATTLE_ORDINARY = 8;  //普通期货对战的游戏帮助
-    public static final int PROTOCOL_BATTLE_KLINE = 10;  //k线对决的游戏规则
+    public static final int PROTOCOL_BATTLE_ORDINARY = 12;  //普通期货对战的游戏帮助     测试环境 8 正式环境 12
+    public static final int PROTOCOL_BATTLE_KLINE = 11;  //k线对决的游戏规则   测试环境 10 正式环境 11
 
     /**
      * content : 如影随形
