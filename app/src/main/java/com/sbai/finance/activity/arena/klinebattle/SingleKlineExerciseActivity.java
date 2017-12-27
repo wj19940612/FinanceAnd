@@ -214,9 +214,16 @@ public class SingleKlineExerciseActivity extends BaseActivity {
 
     protected void onCountDownFinish() {
         if (mHasPosition) {
+            int size = mBattleUserMarkList.size();
+            for (int i = mCurrentIndex; i < size - 1; i++) {
+                mBattleUserMarkList.get(i).setMark(BattleKlineData.MARK_HOLD_PASS);
+                mKlineView.addKlineData(mBattleUserMarkList.get(i));
+            }
+            mBattleUserMarkList.get(size - 1).setMark(BattleKlineData.MARK_SELL);
+            mKlineView.addKlineData(mBattleUserMarkList.get(size - 1));
+
+            mCurrentIndex = size - 2;
             updateLastProfit(BattleKline.PASS);
-            mBattleUserMarkList.get(mCurrentIndex + 1).setMark(BattleKlineData.MARK_SELL);
-            updateNextKlineView(mBattleUserMarkList.get(mCurrentIndex + 1));
         }
         battleFinish();
     }
