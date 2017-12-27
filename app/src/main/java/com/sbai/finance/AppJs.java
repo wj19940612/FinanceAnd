@@ -291,7 +291,7 @@ public class AppJs {
                     Launcher.with(mContext, RadioStationListActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, radioId)
                             .execute();
-                }catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
 
                 }
 
