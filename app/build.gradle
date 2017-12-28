@@ -8,8 +8,8 @@ android {
         applicationId "com.sbai.finance"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 55
-        versionName "2.2.0"
+        versionCode 56
+        versionName "2.3.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField('String', 'HOST', '\"lemi.ailemi.com\"')
@@ -123,7 +123,7 @@ android {
 //        huawei {}
 //        vivo {}
 //        oppo {}
-//        others {}
+        others {}
 //        baiduapk1 {}
 //        baiduapk2 {}
 //        baiduapk3 {}
