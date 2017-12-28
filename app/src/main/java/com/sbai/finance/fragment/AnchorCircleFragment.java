@@ -31,7 +31,7 @@ import com.sbai.finance.activity.miss.MissProfileDetailActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
 import com.sbai.finance.activity.miss.SubmitQuestionActivity;
 import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
-import com.sbai.finance.fragment.miss.MissAskFragment;
+import com.sbai.finance.fragment.anchor.MissAskFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.MissSwitcherModel;
@@ -70,7 +70,10 @@ import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_CODE_LOGIN;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
-public class MissTalkFragment extends MediaPlayFragment implements MissAskFragment.OnMissAskPageListener {
+/**
+ *  米圈
+ */
+public class AnchorCircleFragment extends MediaPlayFragment implements MissAskFragment.OnMissAskPageListener {
 
     @BindView(R.id.titleBar)
     TitleBar mTitleBar;
@@ -104,7 +107,7 @@ public class MissTalkFragment extends MediaPlayFragment implements MissAskFragme
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_miss_talk, container, false);
+        View view = inflater.inflate(R.layout.fragment_anchor_circle, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }

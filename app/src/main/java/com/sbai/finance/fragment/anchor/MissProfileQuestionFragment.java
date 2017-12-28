@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment.miss;
+package com.sbai.finance.fragment.anchor;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.CommentActivity;
 import com.sbai.finance.activity.miss.MissProfileDetailActivity;
@@ -65,7 +64,6 @@ import static android.app.Activity.RESULT_OK;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_CODE_COMMENT;
-import static com.sbai.finance.activity.BaseActivity.REQ_CODE_LOGIN;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 import static com.sbai.finance.activity.BaseActivity.REQ_SUBMIT_QUESTION_LOGIN;
 import static com.sbai.finance.activity.miss.MissProfileDetailActivity.CUSTOM_ID;

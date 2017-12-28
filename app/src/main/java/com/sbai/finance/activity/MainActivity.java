@@ -19,10 +19,10 @@ import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.MediaPlayActivity;
 import com.sbai.finance.fragment.ArenaFragment;
+import com.sbai.finance.fragment.AnchorCircleFragment;
 import com.sbai.finance.fragment.HomePageFragment;
 import com.sbai.finance.fragment.InformationAndFocusFragment;
 import com.sbai.finance.fragment.MineFragment;
-import com.sbai.finance.fragment.MissTalkFragment;
 import com.sbai.finance.fragment.dialog.system.StartDialogFragment;
 import com.sbai.finance.fragment.dialog.system.UpdateVersionDialogFragment;
 import com.sbai.finance.game.WsClient;
@@ -71,7 +71,7 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mMediaPlayService = ((MediaPlayService.MediaBinder) iBinder).getMediaPlayService();
-            MissTalkFragment fragment = (MissTalkFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_MISS);
+            AnchorCircleFragment fragment = (AnchorCircleFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_MISS);
             if (fragment != null) {
                 fragment.setService(mMediaPlayService);
             }
@@ -382,7 +382,7 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
                 case 2:
                     return new ArenaFragment();
                 case 3:
-                    return new MissTalkFragment();
+                    return new AnchorCircleFragment();
                 case 4:
                     return new MineFragment();
             }

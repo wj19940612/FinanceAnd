@@ -1,4 +1,4 @@
-package com.sbai.finance.fragment.miss;
+package com.sbai.finance.fragment.anchor;
 
 import android.content.Context;
 import android.content.Intent;
