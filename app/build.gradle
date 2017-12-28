@@ -123,7 +123,7 @@ android {
 //        huawei {}
 //        vivo {}
 //        oppo {}
-//        others {}
+        others {}
 //        baiduapk1 {}
 //        baiduapk2 {}
 //        baiduapk3 {}

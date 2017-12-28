@@ -228,6 +228,7 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
                         onMediaPlayCurrentPosition(IAudioId, source, mediaPlayCurrentPosition, totalDuration);
                         break;
                     default:
+                        Log.e("zzz","action:"+intent.getAction());
                         onOtherReceive(context, intent);
                         break;
                 }

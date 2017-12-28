@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -288,6 +289,7 @@ public class RewardMissActivity extends BaseActivity implements OnPlayRadioManag
     }
 
     private void sendRewardSuccessBroadcast(FragmentActivity activity) {
+        Log.e("zzz","onOtherRewardBor");
         Intent intent = new Intent();
         intent.setAction(BaseActivity.ACTION_REWARD_SUCCESS);
         intent.putExtra(Launcher.EX_PAYLOAD, mType);

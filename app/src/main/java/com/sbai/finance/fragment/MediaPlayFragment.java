@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.View;
 
 import com.sbai.finance.R;
@@ -41,12 +42,17 @@ public abstract class MediaPlayFragment extends BaseFragment implements OnPlayRa
                 mRootMissFloatWindow.setVisibility(View.GONE);
             }
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMediaPlayBroadcastReceiver, getIntentFilter());
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
+        super.onStop();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMediaPlayBroadcastReceiver);
     }
 
