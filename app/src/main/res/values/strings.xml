@@ -11,7 +11,7 @@
     <!-- Main -->
     <string name="home">首页</string>
     <string name="information">资讯</string>
-    <string name="miss_talk">姐说</string>
+    <string name="anchor_circle">米圈</string>
     <string name="arena">竞技场</string>
     <string name="mine">我的</string>>
 
@@ -1125,4 +1125,9 @@
     <string name="profit_with_colon">收益：</string>
     <string name="no_people_match_please_try_later">暂时无人匹配，请稍后再试</string>
     <string name="not_up_rank">未上榜</string>
+
+    <!--米圈-->
+    <string name="recommend">推荐</string>
+    <string name="question_and_answer">问答</string>
+
 </resources>

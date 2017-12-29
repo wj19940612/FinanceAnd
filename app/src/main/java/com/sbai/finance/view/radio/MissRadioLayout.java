@@ -4,18 +4,24 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
 import com.sbai.finance.model.miss.Question;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.glide.GlideApp;
 
@@ -39,7 +45,6 @@ public class MissRadioLayout extends LinearLayout {
     private Rect mRect;
 
     public interface OnMissRadioPlayListener {
-        void onMissRadioPlay(Radio radio);
 
         void onMissRadioClick(Radio radio);
     }
@@ -77,10 +82,54 @@ public class MissRadioLayout extends LinearLayout {
         int defaultPadding = (int) Display.dp2Px(14, getResources());
         setPadding(defaultPadding, defaultPadding, defaultPadding, defaultPadding);
 
+        createRecommendRadioView(radioList);
+
+        for (int i = 0; i < mPlayStateList.size(); i++) {
+            final PlayStatus playStatus = mPlayStateList.get(i);
+            final ImageView playImageView = playStatus.getImageView();
+            View view = playStatus.getView();
+
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    if (mOnMissRadioPlayListener != null) {
+//                        mOnMissRadioPlayListener.onMissRadioClick(playStatus.getRadio());
+//                    }
+
+                    Launcher.with(getContext(), RadioStationPlayActivity.class)
+                            .putExtra(ExtraKeys.RADIO, playStatus.getRadio())
+                            .execute();
+                }
+            });
+            playImageView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mPlayRadio = playStatus.getRadio();
+                    mRadioTextView = playStatus.getRadioTextView();
+                    mPlayImageView = playImageView;
+                }
+            });
+        }
+        updatePlayStatus();
+    }
+
+    private void createRecommendRadioView(List<Radio> radioList) {
         LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         ImageView imageView = new ImageView(getContext());
         imageView.setImageResource(R.drawable.ic_miss_radio_title);
         addView(imageView, layoutParams);
+
+
+        RelativeLayout relativeLayout = new RelativeLayout(getContext());
+        relativeLayout.addView(imageView);
+
+
+        TextView moreRadioTextView = new TextView(getContext());
+        moreRadioTextView.setText(R.string.more);
+        moreRadioTextView.setTextSize(14, TypedValue.COMPLEX_UNIT_SP);
+        moreRadioTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.unluckyText));
+
+        addView(relativeLayout);
 
         layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(0, (int) Display.dp2Px(9, getResources()), 0, 0);
@@ -116,33 +165,6 @@ public class MissRadioLayout extends LinearLayout {
             playStatus.setRadioTextView(radioLength);
             mPlayStateList.add(playStatus);
         }
-
-        for (int i = 0; i < mPlayStateList.size(); i++) {
-            final PlayStatus playStatus = mPlayStateList.get(i);
-            final ImageView playImageView = playStatus.getImageView();
-            View view = playStatus.getView();
-
-            view.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mOnMissRadioPlayListener != null) {
-                        mOnMissRadioPlayListener.onMissRadioClick(playStatus.getRadio());
-                    }
-                }
-            });
-            playImageView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mPlayRadio = playStatus.getRadio();
-                    mRadioTextView = playStatus.getRadioTextView();
-                    mPlayImageView = playImageView;
-                    if (mOnMissRadioPlayListener != null) {
-                        mOnMissRadioPlayListener.onMissRadioPlay(playStatus.getRadio());
-                    }
-                }
-            });
-        }
-        updatePlayStatus();
     }
 
     private void unChangePlay() {
@@ -156,7 +178,7 @@ public class MissRadioLayout extends LinearLayout {
         }
     }
 
-
+    @Deprecated
     public void updatePlayStatus() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
         unChangePlay();
@@ -182,6 +204,7 @@ public class MissRadioLayout extends LinearLayout {
         }
     }
 
+    @Deprecated
     public void setPlayProgress(int mediaPlayCurrentPosition, int totalDuration) {
         if (totalDuration == 0) return;
         if (mRadioTextView != null) {
@@ -193,6 +216,7 @@ public class MissRadioLayout extends LinearLayout {
         }
     }
 
+    @Deprecated
     public void onMediaPause() {
         if (mPlayImageView != null) {
             mPlayImageView.setSelected(false);
@@ -201,12 +225,14 @@ public class MissRadioLayout extends LinearLayout {
         }
     }
 
+    @Deprecated
     public void onMediaResume() {
         if (mPlayImageView != null) {
             mPlayImageView.setSelected(true);
         }
     }
 
+    @Deprecated
     public void onMediaStop() {
         if (mRadioTextView != null) {
             if (mPlayRadio != null) {
@@ -218,6 +244,7 @@ public class MissRadioLayout extends LinearLayout {
         }
     }
 
+    @Deprecated
     public boolean onPlayViewIsVisible() {
         if (getVisibility() != VISIBLE) {
             return false;

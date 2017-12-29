@@ -1,7 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<!--<android.support.v4.widget.NestedScrollView-->
 
-</android.support.constraint.ConstraintLayout>
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.sbai.finance.view.radio.MissRadioLayout
+                android:id="@+id/missRadioLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.sbai.finance.view.MissRadioViewSwitcher
+                android:id="@+id/missRadioViewSwitcher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/common_padding"
+                android:layout_marginTop="@dimen/common_padding"/>
+
+            <FrameLayout
+                android:id="@+id/point"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+<!--</android.support.v4.widget.NestedScrollView>-->

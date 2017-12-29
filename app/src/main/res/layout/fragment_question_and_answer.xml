@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <com.sbai.finance.view.TitleBar
+        android:fitsSystemWindows="true"
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hasBottomSplitLine="true"
+        app:rightImage="@drawable/ic_ask_her_question_black"
+        app:rightText="@string/ask_question"
+        app:rightTextColor="@color/primaryText"
+        app:rightTextSize="17sp"
+        app:rightVisible="true"
+        app:titleText="@string/anchor_circle"
+        app:titleTextColor="@color/primaryText"/>
+
+    <com.sbai.finance.view.VerticalSwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titleBar">
+
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appBarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent">
+
+                <android.support.design.widget.CollapsingToolbarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_scrollFlags="scroll">
+
+                    <LinearLayout
+                        app:layout_collapseMode="none"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.sbai.finance.view.EmptyRecyclerView
+                            android:id="@+id/recyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/common_padding"
+                            android:background="@android:color/white"/>
+
+                    </LinearLayout>
+                </android.support.design.widget.CollapsingToolbarLayout>
+
+                <com.sbai.finance.view.slidingTab.SlidingTabLayout
+                    android:id="@+id/slidingTabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"/>
+            </android.support.design.widget.AppBarLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        </android.support.design.widget.CoordinatorLayout>
+    </com.sbai.finance.view.VerticalSwipeRefreshLayout>
+
+    <com.sbai.finance.view.MissFloatWindow
+        android:id="@+id/missFloatWindow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="14dp"
+        android:layout_marginRight="14dp"
+        android:visibility="gone"/>
+</RelativeLayout>
