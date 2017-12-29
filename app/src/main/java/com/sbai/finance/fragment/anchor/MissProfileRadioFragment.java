@@ -25,8 +25,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.activity.miss.MissProfileDetailActivity;
-import com.sbai.finance.activity.miss.RadioStationListActivity;
+import com.sbai.finance.activity.anchor.MissProfileDetailActivity;
+import com.sbai.finance.activity.anchor.RadioStationListActivity;
 import com.sbai.finance.fragment.MediaPlayFragment;
 import com.sbai.finance.model.miss.Miss;
 import com.sbai.finance.model.miss.Question;
@@ -51,7 +51,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.activity.miss.MissProfileDetailActivity.CUSTOM_ID;
+import static com.sbai.finance.activity.anchor.MissProfileDetailActivity.CUSTOM_ID;
 
 /**
  * Created by Administrator on 2017\11\23 0023.

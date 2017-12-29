@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
+import com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity;
 import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;

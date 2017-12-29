@@ -3505,4 +3505,8 @@ public class Client {
                 new ApiParams().put("userId", userId));
     }
 
+    // TODO: 2017/12/29 所有的电台 
+    public static API requestRadioListData() {
+        return new API("/explain/audioManage/getRecommendLatestAudio.do");
+    }
 }

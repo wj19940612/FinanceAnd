@@ -17,7 +17,7 @@ import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.MediaPlayActivity;
+import com.sbai.finance.activity.anchor.MediaPlayActivity;
 import com.sbai.finance.fragment.AnchorCircleFragment;
 import com.sbai.finance.fragment.ArenaFragment;
 import com.sbai.finance.fragment.HomePageFragment;

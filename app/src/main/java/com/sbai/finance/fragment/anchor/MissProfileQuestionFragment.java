@@ -26,11 +26,11 @@ import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.CommentActivity;
-import com.sbai.finance.activity.miss.MissProfileDetailActivity;
-import com.sbai.finance.activity.miss.QuestionDetailActivity;
-import com.sbai.finance.activity.miss.RewardMissActivity;
-import com.sbai.finance.activity.miss.SubmitQuestionActivity;
+import com.sbai.finance.activity.anchor.CommentActivity;
+import com.sbai.finance.activity.anchor.MissProfileDetailActivity;
+import com.sbai.finance.activity.anchor.QuestionDetailActivity;
+import com.sbai.finance.activity.anchor.RewardMissActivity;
+import com.sbai.finance.activity.anchor.SubmitQuestionActivity;
 import com.sbai.finance.fragment.MediaPlayFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Miss;
@@ -66,7 +66,7 @@ import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.REQ_CODE_COMMENT;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 import static com.sbai.finance.activity.BaseActivity.REQ_SUBMIT_QUESTION_LOGIN;
-import static com.sbai.finance.activity.miss.MissProfileDetailActivity.CUSTOM_ID;
+import static com.sbai.finance.activity.anchor.MissProfileDetailActivity.CUSTOM_ID;
 
 /**
  * Created by Administrator on 2017\11\22 0022.

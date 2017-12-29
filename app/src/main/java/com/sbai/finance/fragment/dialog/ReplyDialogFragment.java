@@ -12,7 +12,7 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.CommentActivity;
+import com.sbai.finance.activity.anchor.CommentActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.QuestionReply;
 import com.sbai.finance.model.radio.Radio;

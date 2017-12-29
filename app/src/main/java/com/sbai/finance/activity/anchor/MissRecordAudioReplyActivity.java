@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.miss;
+package com.sbai.finance.activity.anchor;
 
 import android.app.Dialog;
 import android.graphics.Color;

@@ -16,7 +16,7 @@ import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.view.MissRadioViewSwitcher;
-import com.sbai.finance.view.radio.MissRadioLayout;
+import com.sbai.finance.view.radio.AnchorRecommendRadioLayout;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ import butterknife.Unbinder;
 public class RecommendFragment extends BaseFragment {
 
     @BindView(R.id.missRadioLayout)
-    MissRadioLayout mMissRadioLayout;
+    AnchorRecommendRadioLayout mAnchorRecommendRadioLayout;
     @BindView(R.id.missRadioViewSwitcher)
     MissRadioViewSwitcher mMissRadioViewSwitcher;
     @BindView(R.id.point)
@@ -72,7 +72,7 @@ public class RecommendFragment extends BaseFragment {
                 .setCallback(new Callback2D<Resp<List<Radio>>, List<Radio>>() {
                     @Override
                     protected void onRespSuccessData(List<Radio> data) {
-                        mMissRadioLayout.setMissRadioList(data);
+                        mAnchorRecommendRadioLayout.setMissRadioList(data);
                     }
                 })
                 .fireFree();

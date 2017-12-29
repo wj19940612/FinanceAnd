@@ -999,6 +999,8 @@
 
     <!--姐说-->
     <string name="radio">电台</string>
+    <string name="not_has_radio_now">暂无电台</string>
+    <string name="time_update">%1$s更新</string>
 
     <!--电台-->
     <string name="look_more">查看更多</string>

@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.activity.anchor.QuestionDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.net.Callback2D;

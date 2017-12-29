@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.miss.radio;
+package com.sbai.finance.activity.anchor.radio;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -29,9 +29,9 @@ import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.CommentActivity;
-import com.sbai.finance.activity.miss.MediaPlayActivity;
-import com.sbai.finance.activity.miss.MissProfileDetailActivity;
+import com.sbai.finance.activity.anchor.CommentActivity;
+import com.sbai.finance.activity.anchor.MediaPlayActivity;
+import com.sbai.finance.activity.anchor.MissProfileDetailActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.fragment.dialog.ReplyDialogFragment;
 import com.sbai.finance.model.LocalUser;

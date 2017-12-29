@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.miss;
+package com.sbai.finance.activity.anchor;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
+import com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.miss.Question;

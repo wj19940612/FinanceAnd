@@ -1,4 +1,4 @@
-package com.sbai.finance.activity.miss;
+package com.sbai.finance.activity.anchor;
 
 import android.content.ComponentName;
 import android.content.Context;

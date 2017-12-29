@@ -14,7 +14,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.sbai.finance.view.radio.MissRadioLayout
+            <com.sbai.finance.view.radio.AnchorRecommendRadioLayout
                 android:id="@+id/missRadioLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
