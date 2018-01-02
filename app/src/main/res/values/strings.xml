@@ -1125,4 +1125,7 @@
     <string name="profit_with_colon">收益：</string>
     <string name="no_people_match_please_try_later">暂时无人匹配，请稍后再试</string>
     <string name="not_up_rank">未上榜</string>
+
+    <!--积分-->
+    <string name="get_integration">+%d积分</string>
 </resources>

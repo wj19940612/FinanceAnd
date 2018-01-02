@@ -289,7 +289,6 @@ public class RewardMissActivity extends BaseActivity implements OnPlayRadioManag
     }
 
     private void sendRewardSuccessBroadcast(FragmentActivity activity) {
-        Log.e("zzz","onOtherRewardBor");
         Intent intent = new Intent();
         intent.setAction(BaseActivity.ACTION_REWARD_SUCCESS);
         intent.putExtra(Launcher.EX_PAYLOAD, mType);

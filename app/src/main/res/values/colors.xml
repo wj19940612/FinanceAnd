@@ -33,6 +33,8 @@
     <color name="banner_number">#FF8B00</color>
     <color name="news_content">#5C5C5C</color>
     <color name="blueScoreText">#6595C2</color>
+    <color name="integrationText">#3B3B3B</color>
+    <color name="integrationTipText">#AAAAAA</color>
 
     <color name="unluckyText">#999</color>
     <color name="luckyText">#666</color>

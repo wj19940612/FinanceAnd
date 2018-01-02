@@ -291,7 +291,6 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
 
     @Override
     public void onOtherReceive(Context context, Intent intent) {
-        Log.e("zzz","onOtherReceive");
         if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
             if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_MISS) {
                 if (mMiss != null) {

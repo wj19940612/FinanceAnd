@@ -296,4 +296,9 @@
         <attr name="shrinkBtnTextSize" format="dimension|reference"/>
         <attr name="shrinkBtnTextColor" format="color|reference"/>
     </declare-styleable>
+
+    <declare-styleable name="IntegrationTaskView">
+        <attr name="hasBottomLine" format="boolean"/>
+        <attr name="itemTitle" format="string"/>
+    </declare-styleable>
 </resources>
