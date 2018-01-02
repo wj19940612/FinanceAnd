@@ -143,8 +143,8 @@ public class HomeTitleView extends RelativeLayout {
     RelativeLayout mSimulateTrade;
     @BindView(R.id.practice)
     TextView mPractice;
-    @BindView(R.id.studyRoom)
-    TextView mStudyRoom;
+    @BindView(R.id.studyRoomLayout)
+    RelativeLayout mStudyRoom;
     @BindView(R.id.grailGuessLayout)
     RelativeLayout mGrailGuessLayout;
     @BindView(R.id.guessImg)
@@ -385,7 +385,7 @@ public class HomeTitleView extends RelativeLayout {
         mGrailGuessLayout.setVisibility(status > 0 ? View.VISIBLE : View.GONE);
     }
 
-    @OnClick({R.id.stockBtn, R.id.futureBtn, R.id.selectBtn, R.id.centerSelectRL, R.id.leftSelectRL, R.id.rightSelectRL, R.id.lookAllBtn, R.id.practice, R.id.studyRoom, R.id.simulateTrade, R.id.grailGuessLayout})
+    @OnClick({R.id.stockBtn, R.id.futureBtn, R.id.selectBtn, R.id.centerSelectRL, R.id.leftSelectRL, R.id.rightSelectRL, R.id.lookAllBtn, R.id.practice, R.id.studyRoomLayout, R.id.simulateTrade, R.id.grailGuessLayout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.stockBtn:
@@ -437,7 +437,7 @@ public class HomeTitleView extends RelativeLayout {
                     mOnLookAllClickListener.onPractice();
                 }
                 break;
-            case R.id.studyRoom:
+            case R.id.studyRoomLayout:
                 if (mOnLookAllClickListener != null) {
                     mOnLookAllClickListener.onDaySubjuect();
                 }

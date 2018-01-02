@@ -469,6 +469,9 @@
         <activity
             android:name=".activity.arena.klinebattle.BattleKlineReviewActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.mine.TaskCenterActivity"
+            android:screenOrientation="portrait"/>
         <!-- TEST-->
     </application>
 

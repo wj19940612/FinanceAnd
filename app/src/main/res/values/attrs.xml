@@ -300,5 +300,6 @@
     <declare-styleable name="IntegrationTaskView">
         <attr name="hasBottomLine" format="boolean"/>
         <attr name="itemTitle" format="string"/>
+        <attr name="icon" format="reference"/>
     </declare-styleable>
 </resources>

@@ -1,11 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <ImageView
+            android:id="@+id/backImg"
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:background="@drawable/bg_task_center_head"/>
+
+        <com.sbai.finance.view.TitleBar
+            android:id="@+id/titleBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            app:backFeature="true"
+            app:backIcon="@drawable/ic_tb_back_white"
+            app:titleText="@string/task_center_title"/>
+
+        <TextView
+            android:id="@+id/getIntegrationTip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:text="@string/today_get_integration"
+            android:textColor="@color/white"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/getIntegration"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:layout_below="@+id/getIntegrationTip"
+            android:layout_centerHorizontal="true"
+            android:drawableLeft="@drawable/ic_get_integration"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="40sp"/>
+
+        <com.sbai.finance.view.mine.TaskProgressView
+            android:id="@+id/taskProgress"
+            android:layout_width="match_parent"
+            android:layout_height="86dp"
+            android:layout_below="@+id/backImg"
+            android:background="@color/white"
+            android:gravity="center_horizontal"/>
+
+        <LinearLayout
+            android:id="@+id/newTaskLayout"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_below="@+id/taskProgress"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="@dimen/common_margin"
+                android:gravity="center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/primaryText"
+                android:textStyle="bold"
+                android:text="@string/newer_task"/>
+
+            <View
+                android:id="@+id/tipLine"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="13dp"
+                android:background="@color/split"/>
+
+            <com.sbai.finance.view.mine.IntegrationTaskView
+                android:layout_width="match_parent"
+                android:layout_height="63dp"
+                app:icon="@drawable/ic_task_financial_evaluation"
+                app:itemTitle="@string/finance_evaluation"
+                app:hasBottomLine="true"/>
+
+            <com.sbai.finance.view.mine.IntegrationTaskView
+                android:layout_width="match_parent"
+                android:layout_height="63dp"
+                app:icon="@drawable/ic_task_certification"
+                app:itemTitle="@string/real_name_authentication"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/normalTaskLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/newTaskLayout"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="@dimen/common_margin"
+                android:gravity="center_vertical"
+                android:textSize="14sp"
+                android:textColor="@color/primaryText"
+                android:textStyle="bold"
+                android:text="@string/newer_task"/>
+
+            <View
+                android:id="@+id/normalTipLine"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="13dp"
+                android:background="@color/split"/>
+
+            <com.sbai.finance.view.mine.IntegrationTaskView
+                android:layout_width="match_parent"
+                android:layout_height="63dp"
+                app:icon="@drawable/ic_task_stock"
+                app:itemTitle="@string/future_battle"
+                app:hasBottomLine="true"/>
+
+            <com.sbai.finance.view.mine.IntegrationTaskView
+                android:layout_width="match_parent"
+                android:layout_height="63dp"
+                app:icon="@drawable/ic_task_kline"
+                app:itemTitle="@string/kline_battle"
+                app:hasBottomLine="true"/>
+
+            <com.sbai.finance.view.mine.IntegrationTaskView
+                android:layout_width="match_parent"
+                android:layout_height="63dp"
+                app:icon="@drawable/ic_task_buy_radio"
+                app:itemTitle="@string/buy_radio_or_article"
+                app:hasBottomLine="true"/>
+
+            <com.sbai.finance.view.mine.IntegrationTaskView
+                android:layout_width="match_parent"
+                android:layout_height="63dp"
+                app:icon="@drawable/ic_task_guess"
+                app:itemTitle="@string/grail_guessing"
+                app:hasBottomLine="true"/>
+
+            <com.sbai.finance.view.mine.IntegrationTaskView
+                android:layout_width="match_parent"
+                android:layout_height="63dp"
+                app:icon="@drawable/ic_task_question"
+                app:itemTitle="@string/goto_miss_question"
+                app:hasBottomLine="false"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

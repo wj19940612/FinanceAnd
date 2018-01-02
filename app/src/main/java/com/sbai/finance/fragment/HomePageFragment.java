@@ -27,6 +27,7 @@ import com.sbai.finance.activity.home.StockFutureActivity;
 import com.sbai.finance.activity.leaderboard.LeaderBoardsListActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.TaskCenterActivity;
 import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.userinfo.CreditApproveActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
@@ -238,9 +239,9 @@ public class HomePageFragment extends BaseFragment {
 
             @Override
             public void onDaySubjuect() {
+                //点击任务中心
                 umengEventCount(UmengCountEventId.PAGE_STUDY_ROOM);
-                Launcher.with(getActivity(), StudyRoomActivity.class).execute();
-                //点击一日一题
+                Launcher.with(getActivity(), TaskCenterActivity.class).execute();
             }
 
             @Override

@@ -1128,4 +1128,16 @@
 
     <!--积分-->
     <string name="get_integration">+%d积分</string>
+    <string name="task_center_title">做任务 赚积分</string>
+    <string name="today_get_integration">今日获取积分</string>
+    <string name="newer_task">新手任务</string>
+    <string name="future_battle">期货对战</string>
+    <string name="kline_battle">K线对战</string>
+    <string name="buy_radio_or_article">购买电台或文章</string>
+    <string name="grail_guessing">大盘猜猜乐</string>
+    <string name="goto_miss_question">向小姐姐提问</string>
+    <string name="task_center">任务中心</string>
+    <string name="goto_finish">去完成</string>
+    <string name="receive_integration">领取</string>
+    <string name="received_integration">已领取</string>
 </resources>

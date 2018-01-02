@@ -476,21 +476,8 @@
             android:textColor="@color/luckyText"
             android:textSize="13sp"/>
 
-        <TextView
-            android:id="@+id/studyRoom"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawablePadding="4dp"
-            android:drawableTop="@drawable/ic_home_practice"
-            android:gravity="center"
-            android:paddingTop="17dp"
-            android:text="@string/study_room"
-            android:textColor="@color/luckyText"
-            android:textSize="13sp"/>
-
         <RelativeLayout
-            android:id="@+id/grailGuessLayout"
+            android:id="@+id/studyRoomLayout"
             android:layout_width="0dp"
             android:layout_height="79dp"
             android:layout_weight="1"
@@ -504,6 +491,39 @@
                 android:layout_marginRight="10dp"
                 android:elevation="2dp"
                 android:src="@drawable/ic_home_new"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <ImageView
+                    android:id="@+id/studyRoom"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="4dp"
+                    android:src="@drawable/ic_home_task"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/studyRoom"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/grail_guess"
+                    android:textColor="@color/luckyText"
+                    android:textSize="13sp"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/grailGuessLayout"
+            android:layout_width="0dp"
+            android:layout_height="79dp"
+            android:layout_weight="1"
+            android:paddingTop="6dp"
+            android:visibility="visible">
 
             <RelativeLayout
                 android:layout_width="match_parent"
