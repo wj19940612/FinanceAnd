@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.miss.Miss;
+import com.sbai.finance.model.anchor.Anchor;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -97,9 +97,9 @@ public class SubmitQuestionActivity extends BaseActivity {
 
     private void requestMissData() {
         Client.getMissList().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Miss>>, List<Miss>>() {
+                .setCallback(new Callback2D<Resp<List<Anchor>>, List<Anchor>>() {
                     @Override
-                    protected void onRespSuccessData(List<Miss> data) {
+                    protected void onRespSuccessData(List<Anchor> data) {
                         updateMissData(data);
                     }
                 }).fireFree();
@@ -127,7 +127,7 @@ public class SubmitQuestionActivity extends BaseActivity {
                 }).fire();
     }
 
-    private void updateMissData(List<Miss> data) {
+    private void updateMissData(List<Anchor> data) {
         mGirdViewAdapter.clear();
         mGirdViewAdapter.addAll(data);
         mGirdViewAdapter.notifyDataSetChanged();
@@ -195,7 +195,7 @@ public class SubmitQuestionActivity extends BaseActivity {
         }
     };
 
-    static class GirdViewAdapter extends ArrayAdapter<Miss> {
+    static class GirdViewAdapter extends ArrayAdapter<Anchor> {
         interface OnSelectedCallback {
             void onClick(int oldIndex, int index);
         }
@@ -236,7 +236,7 @@ public class SubmitQuestionActivity extends BaseActivity {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindDataWithView(Miss item, final int position, final OnSelectedCallback callBack) {
+            private void bindDataWithView(Anchor item, final int position, final OnSelectedCallback callBack) {
                 mMissInfo.setImgRes(item.getPortrait()).setUserName(item.getName());
                 if (mDefaultMissId == item.getId()) {
                     setSelected(position, callBack);

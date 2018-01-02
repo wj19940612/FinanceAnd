@@ -3509,4 +3509,9 @@ public class Client {
     public static API requestRadioListData() {
         return new API("/explain/audioManage/getRecommendLatestAudio.do");
     }
+
+    // TODO: 2018/1/2  获取推荐的观点
+    public static API requestRecommendPoint() {
+        return new API("");
+    }
 }

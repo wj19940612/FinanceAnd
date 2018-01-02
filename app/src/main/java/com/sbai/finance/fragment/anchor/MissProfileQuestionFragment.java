@@ -33,10 +33,10 @@ import com.sbai.finance.activity.anchor.RewardMissActivity;
 import com.sbai.finance.activity.anchor.SubmitQuestionActivity;
 import com.sbai.finance.fragment.MediaPlayFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.miss.Miss;
-import com.sbai.finance.model.miss.Praise;
-import com.sbai.finance.model.miss.Question;
-import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.model.anchor.Anchor;
+import com.sbai.finance.model.anchor.Praise;
+import com.sbai.finance.model.anchor.Question;
+import com.sbai.finance.model.anchor.RewardInfo;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
@@ -90,7 +90,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
     private Long mCreateTime;
     private int mPageSize = 20;
 
-    private Miss mMiss;
+    private Anchor mAnchor;
     private Question mPlayIngItem;
 
     OnFragmentRecycleViewScrollListener mOnFragmentRecycleViewScrollListener;
@@ -124,8 +124,8 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         }
     }
 
-    public void setMiss(Miss miss) {
-        mMiss = miss;
+    public void setAnchor(Anchor anchor) {
+        mAnchor = anchor;
     }
 
     public void refresh() {
@@ -292,18 +292,18 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         Log.e("zzz","onOtherReceive");
         if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
             if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_MISS) {
-                if (mMiss != null) {
-                    int rewardCount = mMiss.getTotalAward() + 1;
-                    mMiss.setTotalAward(rewardCount);
+                if (mAnchor != null) {
+                    int rewardCount = mAnchor.getTotalAward() + 1;
+                    mAnchor.setTotalAward(rewardCount);
                 }
             }
         }
 
         if (ACTION_REWARD_SUCCESS.equalsIgnoreCase(intent.getAction())) {
             if (intent.getIntExtra(Launcher.EX_PAYLOAD, -1) == RewardInfo.TYPE_QUESTION) {
-                if (mMiss != null) {
-                    int rewardCount = mMiss.getTotalAward() + 1;
-                    mMiss.setTotalAward(rewardCount);
+                if (mAnchor != null) {
+                    int rewardCount = mAnchor.getTotalAward() + 1;
+                    mAnchor.setTotalAward(rewardCount);
                 }
 
                 for (int i = 0; i < mQuestionListAdapter.getCount(); i++) {
@@ -373,7 +373,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
             public void itemClick(Question item) {
                 gotoQuestionDetail(item, mPlayIngItem);
 
-                if (mMiss != null && MissAudioManager.get().isStarted(mMiss)) {
+                if (mAnchor != null && MissAudioManager.get().isStarted(mAnchor)) {
                     MissAudioManager.get().stop();
                 }
             }
@@ -390,13 +390,13 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                             item.setPriseCount(praise.getPriseCount());
                             mQuestionListAdapter.notifyDataSetChanged();
                             int praiseCount;
-                            if (mMiss != null) {
+                            if (mAnchor != null) {
                                 if (praise.getIsPrise() == 0) {
-                                    praiseCount = mMiss.getTotalPrise() - 1;
-                                    mMiss.setTotalPrise(praiseCount);
+                                    praiseCount = mAnchor.getTotalPrise() - 1;
+                                    mAnchor.setTotalPrise(praiseCount);
                                 } else {
-                                    praiseCount = mMiss.getTotalPrise() + 1;
-                                    mMiss.setTotalPrise(praiseCount);
+                                    praiseCount = mAnchor.getTotalPrise() + 1;
+                                    mAnchor.setTotalPrise(praiseCount);
                                 }
                                 ((MissProfileDetailActivity) getActivity()).praiseAdd(praiseCount);
 //                                mPraiseNumber.setText(getString(R.string.praise_number, StrFormatter.getFormatCount(praiseCount)));
@@ -605,13 +605,13 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
                         item.setListenCount(question.getListenCount());
 
                         if (praise != null) {
-                            if (mMiss != null) {
+                            if (mAnchor != null) {
                                 if (question.getIsPrise() == 0) {
-                                    mMiss.setTotalPrise(mMiss.getTotalPrise() - 1);
+                                    mAnchor.setTotalPrise(mAnchor.getTotalPrise() - 1);
                                 } else {
-                                    mMiss.setTotalPrise(mMiss.getTotalPrise() + 1);
+                                    mAnchor.setTotalPrise(mAnchor.getTotalPrise() + 1);
                                 }
-                                ((MissProfileDetailActivity) getActivity()).praiseAdd(mMiss.getTotalPrise());
+                                ((MissProfileDetailActivity) getActivity()).praiseAdd(mAnchor.getTotalPrise());
                             }
                         }
 

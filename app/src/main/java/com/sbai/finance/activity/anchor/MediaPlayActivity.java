@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.anchor.Question;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.ToastUtil;

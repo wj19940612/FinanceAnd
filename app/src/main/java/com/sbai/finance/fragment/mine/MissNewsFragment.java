@@ -24,7 +24,7 @@ import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.NewsActivity;
 import com.sbai.finance.activity.anchor.QuestionDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.miss.MissMessage;
+import com.sbai.finance.model.anchor.MissMessage;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -45,7 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static com.sbai.finance.model.miss.MissMessage.TYPE_MISS_TOPIC;
+import static com.sbai.finance.model.anchor.MissMessage.TYPE_MISS_TOPIC;
 
 /**
  * 姐说消息

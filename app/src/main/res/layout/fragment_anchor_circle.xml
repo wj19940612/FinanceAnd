@@ -2,7 +2,31 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:orientation="vertical"
               tools:context="com.sbai.finance.fragment.AnchorCircleFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.sbai.finance.view.slidingTab.SlidingTabLayout
+            android:id="@+id/slidingTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"/>
+
+        <TextView
+            android:id="@+id/askAQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/ic_ask_her_question_black"
+            android:drawablePadding="4dp"
+            android:text="@string/ask_question"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"/>
+    </RelativeLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"

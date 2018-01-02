@@ -17,7 +17,7 @@ import android.widget.ViewSwitcher;
 
 import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
-import com.sbai.finance.model.miss.MissSwitcherModel;
+import com.sbai.finance.model.anchor.MissSwitcherModel;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;

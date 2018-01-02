@@ -23,7 +23,7 @@ import com.sbai.finance.fragment.dialog.RewardInputSafetyPassDialogFragment;
 import com.sbai.finance.fragment.dialog.RewardOtherMoneyDialogFragment;
 import com.sbai.finance.model.fund.UserFundInfo;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
-import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.model.anchor.RewardInfo;
 import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;

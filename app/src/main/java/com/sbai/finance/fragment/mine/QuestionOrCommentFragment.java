@@ -21,7 +21,7 @@ import com.sbai.finance.activity.MainActivity;
 import com.sbai.finance.activity.anchor.QuestionDetailActivity;
 import com.sbai.finance.activity.anchor.SubmitQuestionActivity;
 import com.sbai.finance.fragment.BaseFragment;
-import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.anchor.Question;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;

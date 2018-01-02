@@ -2,6 +2,7 @@ package com.sbai.finance.activity.anchor;
 
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
@@ -29,14 +30,16 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
+import com.sbai.finance.fragment.anchor.AnchorPointFragment;
 import com.sbai.finance.fragment.anchor.MissProfileQuestionFragment;
 import com.sbai.finance.fragment.anchor.MissProfileRadioFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.miss.Attention;
-import com.sbai.finance.model.miss.Miss;
+import com.sbai.finance.model.anchor.Anchor;
+import com.sbai.finance.model.anchor.Attention;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -60,11 +63,12 @@ import butterknife.OnClick;
  * Created by Administrator on 2017\11\22 0022.
  */
 
-public class MissProfileDetailActivity extends MediaPlayActivity implements MissProfileQuestionFragment.OnFragmentRecycleViewScrollListener {
+public class MissProfileDetailActivity extends BaseActivity implements MissProfileQuestionFragment.OnFragmentRecycleViewScrollListener {
     public static final String CUSTOM_ID = "custom_id";
 
     public static final int FRAGMENT_QUESTION = 0;
     public static final int FRAGMENT_RADIO = 1;
+    public static final int FRAGMENT_POINT = 2;
 
     @BindView(R.id.avatar)
     ImageView mAvatar;
@@ -111,7 +115,7 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
     private int mCustomId;
     private boolean mSwipEnabled = true;
     private int mAppBarVerticalOffset = -1;
-    private Miss mMiss;
+    private Anchor mAnchor;
     public MediaPlayService mMediaPlayService;
     private int mPosition;
 
@@ -175,8 +179,8 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
 
         mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
 
-        mProfileFragmentAdapter = new ProfileFragmentAdapter(getSupportFragmentManager(), mCustomId);
-        mViewPager.setOffscreenPageLimit(1);
+        mProfileFragmentAdapter = new ProfileFragmentAdapter(getSupportFragmentManager(), mCustomId, getActivity());
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mProfileFragmentAdapter);
         mViewPager.setCurrentItem(mCurrentItem);
 
@@ -266,8 +270,8 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
 
     private void setPositionBtn(int position) {
         if (position == FRAGMENT_QUESTION) {
-            if (mMiss != null) {
-                if (LocalUser.getUser().isMiss() && LocalUser.getUser().getUserInfo().getCustomId() == mMiss.getId()) {
+            if (mAnchor != null) {
+                if (LocalUser.getUser().isMiss() && LocalUser.getUser().getUserInfo().getCustomId() == mAnchor.getId()) {
                     //是当前小姐姐，隐藏我要提问按钮
                     mAsk.setVisibility(View.GONE);
                     mCreateRadio.setVisibility(View.GONE);
@@ -280,8 +284,8 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
                 mCreateRadio.setVisibility(View.GONE);
             }
         } else if (position == FRAGMENT_RADIO) {
-            if (mMiss != null) {
-                if (LocalUser.getUser().isMiss() && LocalUser.getUser().getUserInfo().getCustomId() == mMiss.getId()) {
+            if (mAnchor != null) {
+                if (LocalUser.getUser().isMiss() && LocalUser.getUser().getUserInfo().getCustomId() == mAnchor.getId()) {
                     //是当前小姐姐，显示创建电台
                     mAsk.setVisibility(View.GONE);
                     mCreateRadio.setVisibility(View.VISIBLE);
@@ -298,11 +302,11 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
 
     public void refreshData() {
         Client.getMissDetail(mCustomId).setTag(TAG)
-                .setCallback(new Callback2D<Resp<Miss>, Miss>() {
+                .setCallback(new Callback2D<Resp<Anchor>, Anchor>() {
                     @Override
-                    protected void onRespSuccessData(Miss miss) {
-                        setMiss(miss);
-                        updateMissDetail(miss);
+                    protected void onRespSuccessData(Anchor anchor) {
+                        setAnchor(anchor);
+                        updateMissDetail(anchor);
                     }
 
                     @Override
@@ -319,28 +323,28 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
                 }).fire();
     }
 
-    private void updateMissDetail(Miss miss) {
-        GlideApp.with(this).load(miss.getPortrait())
+    private void updateMissDetail(Anchor anchor) {
+        GlideApp.with(this).load(anchor.getPortrait())
                 .placeholder(R.drawable.ic_default_avatar)
                 .circleCrop()
                 .into(mAvatar);
 
-        mName.setText(miss.getName());
+        mName.setText(anchor.getName());
 
-        setFansNumber(miss.getTotalAttention());
+        setFansNumber(anchor.getTotalAttention());
 
-        if (!TextUtils.isEmpty(miss.getBriefingText())) {
-            mProfileIntroduce.setText(miss.getBriefingText());
+        if (!TextUtils.isEmpty(anchor.getBriefingText())) {
+            mProfileIntroduce.setText(anchor.getBriefingText());
         } else {
             mProfileIntroduce.setText(R.string.no_miss_introduce);
         }
-        if (LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getCustomId() == miss.getId()) {
+        if (LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getCustomId() == anchor.getId()) {
             //是小姐姐自己
             mFollow.setVisibility(View.GONE);
             mNoFollow.setVisibility(View.VISIBLE);
             mNoFollow.setText(R.string.edit_profile);
         } else {
-            if (miss.isAttention() == 0) {
+            if (anchor.isAttention() == 0) {
                 mFollow.setBackground(getResources().getDrawable(R.drawable.btn_radio_station_subscribe));
                 mFollow.setVisibility(View.VISIBLE);
                 mNoFollow.setVisibility(View.GONE);
@@ -387,16 +391,16 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
         mFansNumber.setText(spannableStringBuilder);
     }
 
-    public void setMiss(Miss miss) {
-        mMiss = miss;
+    public void setAnchor(Anchor anchor) {
+        mAnchor = anchor;
         MissProfileQuestionFragment missProfileQuestionFragment = getMissProfileQuestionFragment();
         if (missProfileQuestionFragment != null) {
-            missProfileQuestionFragment.setMiss(miss);
+            missProfileQuestionFragment.setAnchor(anchor);
         }
 
         MissProfileRadioFragment missProfileRadioFragment = getMissProfileRadioFragment();
         if (missProfileRadioFragment != null) {
-            missProfileRadioFragment.setMiss(miss);
+            missProfileRadioFragment.setMiss(anchor);
         }
     }
 
@@ -414,8 +418,8 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
             }
 
             if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
-                if (mMiss != null)
-                    mTitleBar.setTitle(mMiss.getName());
+                if (mAnchor != null)
+                    mTitleBar.setTitle(mAnchor.getName());
                 mBack.setVisibility(View.GONE);
             } else {
                 if (!TextUtils.isEmpty(mTitleBar.getTitle())) {
@@ -466,8 +470,8 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
                 if (!hasNetWork()) {
                     return;
                 }
-                if (mMiss != null) {
-                    if (LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getCustomId() == mMiss.getId()) {
+                if (mAnchor != null) {
+                    if (LocalUser.getUser().getUserInfo() != null && LocalUser.getUser().getUserInfo().getCustomId() == mAnchor.getId()) {
                         Launcher.with(getActivity(), ModifyUserInfoActivity.class).execute();
                     } else {
                         attention();
@@ -477,14 +481,14 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
                 }
                 break;
             case R.id.avatar:
-                if (mMiss == null) {
+                if (mAnchor == null) {
                     return;
                 }
                 mAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Launcher.with(getActivity(), LookBigPictureActivity.class)
-                                .putExtra(Launcher.EX_PAYLOAD, mMiss.getPortrait())
+                                .putExtra(Launcher.EX_PAYLOAD, mAnchor.getPortrait())
                                 .execute();
                     }
                 });
@@ -502,11 +506,11 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
     }
 
     private void attention() {
-        if (mMiss != null) {
+        if (mAnchor != null) {
             if (LocalUser.getUser().isLogin()) {
                 umengEventCount(UmengCountEventId.MISS_TALK_ATTENTION);
 
-                Client.attention(mMiss.getId()).setCallback(new Callback2D<Resp<Attention>, Attention>() {
+                Client.attention(mAnchor.getId()).setCallback(new Callback2D<Resp<Attention>, Attention>() {
 
                     @Override
                     protected void onRespSuccessData(Attention attention) {
@@ -529,50 +533,18 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
         }
     }
 
-    @Override
-    protected boolean needRegisterBroadcast() {
-        return false;
-    }
-
-    @Override
-    public void onMediaPlayStart(int IAudioId, int source) {
-
-    }
-
-    @Override
-    public void onMediaPlay(int IAudioId, int source) {
-
-    }
-
-    @Override
-    public void onMediaPlayResume(int IAudioId, int source) {
-
-    }
-
-    @Override
-    public void onMediaPlayPause(int IAudioId, int source) {
-
-    }
-
-    @Override
-    protected void onMediaPlayStop(int IAudioId, int source) {
-
-    }
-
-    @Override
-    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
-
-    }
 
     static class ProfileFragmentAdapter extends FragmentPagerAdapter {
 
         private FragmentManager mFragmentManager;
         private int mCustomId;
+        private Context mContext;
 
-        public ProfileFragmentAdapter(FragmentManager fm, int customId) {
+        public ProfileFragmentAdapter(FragmentManager fm, int customId, Context context) {
             super(fm);
             mFragmentManager = fm;
             mCustomId = customId;
+            mContext = context;
         }
 
         @Override
@@ -582,22 +554,26 @@ public class MissProfileDetailActivity extends MediaPlayActivity implements Miss
                     return MissProfileQuestionFragment.newInstance(mCustomId);
                 case FRAGMENT_RADIO:
                     return MissProfileRadioFragment.newInstance(mCustomId);
+                case FRAGMENT_POINT:
+                    return AnchorPointFragment.newInstance(AnchorPointFragment.POINT_TYPE_ANCHOR);
             }
             return null;
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case FRAGMENT_QUESTION:
-                    return "问答";
+                    return mContext.getString(R.string.question_and_answer);
                 case FRAGMENT_RADIO:
-                    return "电台";
+                    return mContext.getString(R.string.radio);
+                case FRAGMENT_POINT:
+                    return mContext.getString(R.string.point);
             }
             return super.getPageTitle(position);
         }

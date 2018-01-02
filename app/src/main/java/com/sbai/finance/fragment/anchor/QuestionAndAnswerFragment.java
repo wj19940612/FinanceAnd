@@ -33,10 +33,10 @@ import com.sbai.finance.activity.anchor.SubmitQuestionActivity;
 import com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity;
 import com.sbai.finance.fragment.MediaPlayFragment;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.miss.Miss;
-import com.sbai.finance.model.miss.Praise;
-import com.sbai.finance.model.miss.Question;
-import com.sbai.finance.model.miss.RewardInfo;
+import com.sbai.finance.model.anchor.Anchor;
+import com.sbai.finance.model.anchor.Praise;
+import com.sbai.finance.model.anchor.Question;
+import com.sbai.finance.model.anchor.RewardInfo;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -267,14 +267,14 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
         gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 //        recyclerView.setEmptyView(emptyView);
-        mMissListAdapter = new MissListAdapter(getActivity(), new ArrayList<Miss>());
+        mMissListAdapter = new MissListAdapter(getActivity(), new ArrayList<Anchor>());
         mRecyclerView.setAdapter(mMissListAdapter);
-        mMissListAdapter.setOnItemClickListener(new OnItemClickListener<Miss>() {
+        mMissListAdapter.setOnItemClickListener(new OnItemClickListener<Anchor>() {
             @Override
-            public void onItemClick(Miss miss, int position) {
-                if (miss != null) {
+            public void onItemClick(Anchor anchor, int position) {
+                if (anchor != null) {
                     Launcher.with(getActivity(), MissProfileDetailActivity.class)
-                            .putExtra(Launcher.EX_PAYLOAD, miss.getId()).execute();
+                            .putExtra(Launcher.EX_PAYLOAD, anchor.getId()).execute();
                 }
             }
         });
@@ -473,11 +473,11 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
 
     private void requestMissList() {
         Client.getMissList().setTag(TAG)
-                .setCallback(new Callback2D<Resp<List<Miss>>, List<Miss>>() {
+                .setCallback(new Callback2D<Resp<List<Anchor>>, List<Anchor>>() {
                     @Override
-                    protected void onRespSuccessData(List<Miss> missList) {
+                    protected void onRespSuccessData(List<Anchor> anchorList) {
                         mMissListAdapter.clear();
-                        mMissListAdapter.addAll(missList);
+                        mMissListAdapter.addAll(anchorList);
                     }
 
                     @Override
@@ -506,23 +506,23 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
             this.mOnItemClickListener = onItemClickListener;
         }
 
-        private List<Miss> mMissList;
+        private List<Anchor> mAnchorList;
         private Context mContext;
         private LayoutInflater mLayoutInflater;
 
-        public MissListAdapter(Context context, List<Miss> missList) {
-            this.mMissList = missList;
+        public MissListAdapter(Context context, List<Anchor> anchorList) {
+            this.mAnchorList = anchorList;
             this.mContext = context;
             mLayoutInflater = LayoutInflater.from(context);
         }
 
         public void clear() {
-            mMissList.clear();
-            notifyItemRangeRemoved(0, mMissList.size());
+            mAnchorList.clear();
+            notifyItemRangeRemoved(0, mAnchorList.size());
         }
 
-        public void addAll(List<Miss> missList) {
-            mMissList.addAll(missList);
+        public void addAll(List<Anchor> anchorList) {
+            mAnchorList.addAll(anchorList);
             notifyDataSetChanged();
         }
 
@@ -534,12 +534,12 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mContext, mMissList.get(position), mOnItemClickListener, position);
+            holder.bindDataWithView(mContext, mAnchorList.get(position), mOnItemClickListener, position);
         }
 
         @Override
         public int getItemCount() {
-            return mMissList != null ? mMissList.size() : 0;
+            return mAnchorList != null ? mAnchorList.size() : 0;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -554,7 +554,7 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
                 ButterKnife.bind(this, itemView);
             }
 
-            public void bindDataWithView(Context context, final Miss item, final OnItemClickListener onItemClickListener, final int position) {
+            public void bindDataWithView(Context context, final Anchor item, final OnItemClickListener onItemClickListener, final int position) {
                 if (item == null) return;
                 GlideApp.with(context).load(item.getPortrait())
                         .placeholder(R.drawable.ic_default_avatar_big)

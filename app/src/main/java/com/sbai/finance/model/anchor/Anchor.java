@@ -1,4 +1,4 @@
-package com.sbai.finance.model.miss;
+package com.sbai.finance.model.anchor;
 
 import com.sbai.finance.utils.audio.MissAudioManager;
 
@@ -8,7 +8,7 @@ import java.io.Serializable;
  * 小姐姐列表
  */
 
-public class Miss implements Serializable, MissAudioManager.IAudio {
+public class Anchor implements Serializable, MissAudioManager.IAudio {
 
     /**
      * briefingSound : aaa

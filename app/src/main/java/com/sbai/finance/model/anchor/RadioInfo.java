@@ -1,4 +1,4 @@
-package com.sbai.finance.model.miss;
+package com.sbai.finance.model.anchor;
 
 /**
  * Created by Administrator on 2017\11\21 0021.

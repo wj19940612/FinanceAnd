@@ -28,9 +28,9 @@ import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.anchor.MissProfileDetailActivity;
 import com.sbai.finance.activity.anchor.RadioStationListActivity;
 import com.sbai.finance.fragment.MediaPlayFragment;
-import com.sbai.finance.model.miss.Miss;
-import com.sbai.finance.model.miss.Question;
-import com.sbai.finance.model.miss.RadioInfo;
+import com.sbai.finance.model.anchor.Anchor;
+import com.sbai.finance.model.anchor.Question;
+import com.sbai.finance.model.anchor.RadioInfo;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -83,7 +83,7 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
         return missProfileRadioFragment;
     }
 
-    public void setMiss(Miss miss) {
+    public void setMiss(Anchor anchor) {
 
     }
 

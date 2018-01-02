@@ -1131,5 +1131,7 @@
     <!--米圈-->
     <string name="recommend">推荐</string>
     <string name="question_and_answer">问答</string>
+    <string name="now_not_has_point">暂无观点</string>
+    <string name="point">观点</string>
 
 </resources>

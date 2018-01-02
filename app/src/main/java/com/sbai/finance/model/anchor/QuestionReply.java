@@ -1,4 +1,4 @@
-package com.sbai.finance.model.miss;
+package com.sbai.finance.model.anchor;
 
 import android.os.Parcel;
 import android.os.Parcelable;

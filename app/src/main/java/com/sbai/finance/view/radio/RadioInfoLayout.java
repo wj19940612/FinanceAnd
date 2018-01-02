@@ -22,7 +22,7 @@ import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.anchor.MissProfileDetailActivity;
 import com.sbai.finance.activity.anchor.RadioStationListActivity;
 import com.sbai.finance.model.LocalUser;
-import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.anchor.Question;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.model.radio.RadioDetails;
 import com.sbai.finance.net.Callback;
