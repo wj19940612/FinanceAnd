@@ -1018,7 +1018,7 @@ public class Client {
      * @return
      */
     public static API getOptional() {
-        return new API("/api/stock-va/opt/find.do");
+        return new API("/api/stock-va/opt/find.do", new ApiParams().put("pageSize", 1000));
     }
 
     /**

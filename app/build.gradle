@@ -84,7 +84,7 @@ android {
         dev {
 //            minSdkVersion 21
             versionNameSuffix '-dev'
-            applicationIdSuffix '.dev'
+            // applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
             buildConfigField('String', 'HOST', '\"devlm.esongbai.abc\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
@@ -118,12 +118,12 @@ android {
         // channel use default (prod) configuration
 //        tencent {}
 //        m360 {}
-        xiaomi {}
+//        xiaomi {}
 //        baidu {}
 //        huawei {}
 //        vivo {}
 //        oppo {}
-        others {}
+//        others {}
 //        baiduapk1 {}
 //        baiduapk2 {}
 //        baiduapk3 {}

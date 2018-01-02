@@ -55,7 +55,7 @@ import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
  */
 
 public class OptionalListFragment extends BaseFragment implements
-        SwipeRefreshLayout.OnRefreshListener, CustomSwipeRefreshLayout.OnLoadMoreListener {
+        SwipeRefreshLayout.OnRefreshListener {
 
     public static final int OPTIONAL_CHANGE = 222;
     public static final String OPTIONAL_CHANGE_ACTION = "222";
@@ -112,8 +112,6 @@ public class OptionalListFragment extends BaseFragment implements
         mListView.setEmptyView(mEmpty);
         mListView.setAdapter(mSlideListAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setOnLoadMoreListener(this);
-        mSwipeRefreshLayout.setLoadMoreEnable(true);
         mSwipeRefreshLayout.setAdapter(mListView, mSlideListAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -188,9 +186,6 @@ public class OptionalListFragment extends BaseFragment implements
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
-        if (mSwipeRefreshLayout.isLoading()) {
-            mSwipeRefreshLayout.setLoading(false);
-        }
     }
 
     @OnClick(R.id.addOptional)
@@ -214,18 +209,13 @@ public class OptionalListFragment extends BaseFragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OPTIONAL_CHANGE && resultCode == RESULT_OK) {
-             requestOptionalData();
+            requestOptionalData();
         }
     }
 
     @Override
     public void onRefresh() {
         requestOptionalData();
-    }
-
-    @Override
-    public void onLoadMore() {
-//        requestOptionalData();
     }
 
     public static class SlideListAdapter extends ArrayAdapter<Stock> {
