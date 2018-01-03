@@ -97,6 +97,7 @@ public class BuyRadioDetailActivity extends BaseActivity {
     }
 
     private void initView() {
+        mMiliRecharge.setEnabled(false);
         mCheckboxClick.setChecked(true);
 //        BuyRadioResultDialog.get(this, new BuyRadioResultDialog.OnCallback() {
 //            @Override
@@ -108,68 +109,63 @@ public class BuyRadioDetailActivity extends BaseActivity {
 
     @OnClick({R.id.aliRecharge, R.id.miliRecharge})
     public void onViewClicked(View view) {
+        //米粒足够的时候，只能选支付宝或者米粒支付，不考虑其他
+        //米粒不够的时候，只能支付宝或者两个一起支付，不考虑其他
         switch (view.getId()) {
             case R.id.aliRecharge:
-                if (!mCheckboxClick.isChecked() && !mMiliCheckboxClick.isChecked()) {
-                    //两个按钮都没点
-                    mCheckboxClick.setChecked(true);
-                } else if (mCheckboxClick.isChecked() && !mMiliCheckboxClick.isChecked()) {
-
-                } else if (!mCheckboxClick.isChecked() && mMiliCheckboxClick.isChecked()) {
-                    //点了米粒按钮
+                if (!mCheckboxClick.isChecked() && mMiliCheckboxClick.isChecked()) {
+                    //此时只点了米粒按钮
+                    //单纯米粒不足以支付，两个按钮可以共存
                     if (mMili / 100 < money) {
                         mCheckboxClick.setChecked(true);
+                    } else {
+                        //当米粒足够的时候，只能出现单选
+                        mCheckboxClick.setChecked(true);
+                        mDeduction.setVisibility(View.GONE);
+                        mMiliCheckboxClick.setChecked(false);
                     }
-                }else{
-                    //两个按钮都点了
                 }
                 break;
             case R.id.miliRecharge:
-                if (!mCheckboxClick.isChecked() && !mMiliCheckboxClick.isChecked()) {
-
-                } else if (mCheckboxClick.isChecked() && !mMiliCheckboxClick.isChecked()) {
-                    //支付宝按钮有，没点米粒的按钮
-                    dealMiliTip();
-                    calcPayNum();
-                    mMiliCheckboxClick.setChecked(true);
-                } else if (!mCheckboxClick.isChecked() && mMiliCheckboxClick.isChecked()) {
-                    //点了米粒按钮
-                    if (mMili / 100 < money) {
-                        mCheckboxClick.setChecked(true);
+                if (mCheckboxClick.isChecked() && !mMiliCheckboxClick.isChecked()) {
+                    //计算抵扣的数额
+                    float deduction = calcPayNum();
+                    mDeduction.setText(String.format(getString(R.string.have_deduction_num), deduction));
+                    mDeduction.setVisibility(View.VISIBLE);
+                    //支付宝按钮有，没点米粒的按钮,如果米粒足够支付，支付宝的要去掉
+                    if (deduction >= money && mMili != 0) {
+                        mCheckboxClick.setChecked(false);
                     }
-                }else{
+                    mMiliCheckboxClick.setChecked(true);
+                } else {
                     //两个按钮都点了
+                    mDeduction.setVisibility(View.GONE);
+                    mMiliCheckboxClick.setChecked(false);
                 }
 
                 break;
         }
+    }
+
+    private float calcPayNum() {
+        float deductionNum;
+        if (mMili / 100 >= money) {
+            mCheckboxClick.setChecked(false);
+            deductionNum = money;
+        } else {
+            deductionNum = mMili / 100;
+        }
+        return deductionNum;
     }
 
     private void dealMiliTip() {
         if (mMili == 0) {
             mMiliCheckboxClick.setVisibility(View.GONE);
             mNoMiliTip.setVisibility(View.VISIBLE);
-            mDeduction.setVisibility(View.GONE);
         } else {
+            mMiliRecharge.setEnabled(true);
             mMiliCheckboxClick.setVisibility(View.VISIBLE);
             mNoMiliTip.setVisibility(View.GONE);
-            mDeduction.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void calcPayNum(){
-        if (!mMiliCheckboxClick.isChecked()) {
-            float deductionNum;
-            if (mMili / 100 >= money) {
-                mCheckboxClick.setChecked(false);
-                deductionNum = money;
-            } else {
-                deductionNum = mMili / 100;
-            }
-            mDeduction.setVisibility(View.VISIBLE);
-            mDeduction.setText(String.format(getString(R.string.have_deduction_num), deductionNum));
-        } else {
-            mDeduction.setVisibility(View.GONE);
         }
     }
 
@@ -181,6 +177,7 @@ public class BuyRadioDetailActivity extends BaseActivity {
                     protected void onRespSuccessData(UserFundInfo data) {
                         mMili = data.getYuanbao();
                         mMiliPayName.setText(String.format(getString(R.string.mili_pay), data.getYuanbao()));
+                        dealMiliTip();
                     }
                 })
                 .fireFree();
