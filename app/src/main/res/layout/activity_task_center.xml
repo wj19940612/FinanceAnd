@@ -13,7 +13,7 @@
             android:id="@+id/backImg"
             android:layout_width="match_parent"
             android:layout_height="175dp"
-            android:background="@drawable/bg_task_center_head"/>
+            android:background="@drawable/bg_task_head"/>
 
         <com.sbai.finance.view.TitleBar
             android:id="@+id/titleBar"

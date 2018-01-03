@@ -82,4 +82,5 @@
     <!-- mine -->
     <color name="taskProgress">#FFB300</color>
     <color name="taskProgressNot">#56FFA900</color>
+    <color name="payNum">#F55A53</color>
 </resources>

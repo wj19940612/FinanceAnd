@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/successIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="213dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_pay_radio_success"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/successIcon"
+        android:layout_marginTop="15dp"
+        android:textSize="28sp"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:text="@string/pay_success"/>
+
+    <TextView
+        android:id="@+id/tip"
+        android:layout_width="252dp"
+        android:layout_height="28dp"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="15dp"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:text="@string/pay_tip"/>
+
+    <TextView
+        android:id="@+id/integrationAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="28dp"
+        android:drawableBottom="@drawable/ic_pay_integration_add"
+        android:drawablePadding="1dp"
+        android:textSize="18sp"
+        android:textColor="@color/yellowAssist"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:text="@string/get_integration"/>
+
+</RelativeLayout>

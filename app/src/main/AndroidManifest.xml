@@ -472,6 +472,9 @@
         <activity
             android:name=".activity.mine.TaskCenterActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.miss.radio.BuyRadioDetailActivity"
+            android:screenOrientation="portrait"/>
         <!-- TEST-->
     </application>
 

@@ -32,6 +32,7 @@ import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.userinfo.CreditApproveActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
 import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.activity.miss.radio.BuyRadioDetailActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.activity.studyroom.StudyRoomActivity;
@@ -241,7 +242,7 @@ public class HomePageFragment extends BaseFragment {
             public void onDaySubjuect() {
                 //点击任务中心
                 umengEventCount(UmengCountEventId.PAGE_STUDY_ROOM);
-                Launcher.with(getActivity(), TaskCenterActivity.class).execute();
+                Launcher.with(getActivity(), BuyRadioDetailActivity.class).execute();
             }
 
             @Override

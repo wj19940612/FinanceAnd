@@ -1127,7 +1127,7 @@
     <string name="not_up_rank">未上榜</string>
 
     <!--积分-->
-    <string name="get_integration">+%d积分</string>
+    <string name="get_integration">+%1$d积分</string>
     <string name="task_center_title">做任务 赚积分</string>
     <string name="today_get_integration">今日获取积分</string>
     <string name="newer_task">新手任务</string>
@@ -1140,4 +1140,15 @@
     <string name="goto_finish">去完成</string>
     <string name="receive_integration">领取</string>
     <string name="received_integration">已领取</string>
+    <string name="pay_detail">支付详情</string>
+    <string name="pay_content">购买内容:</string>
+    <string name="ali_pay">支付宝支付</string>
+    <string name="mili_pay">米粒:%1$d</string>
+    <string name="pay_mili_tip">*1元=100米粒</string>
+    <string name="sure_to_pay">确认支付(%1$.2f元)</string>
+    <string name="question_to_ask_custom">遇到任何问题，请联系客服></string>
+    <string name="no_mili">米粒不足></string>
+    <string name="pay_success">支付成功</string>
+    <string name="pay_tip">购买的内容可在我的收藏，订阅中查看哦</string>
+    <string name="have_deduction_num">已抵扣%1$.2f元</string>
 </resources>

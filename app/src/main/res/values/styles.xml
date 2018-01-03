@@ -18,6 +18,20 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <!-- 底部出现的 Dialog 主题 -->
+    <style name="DialogTheme.NoTitleAndBottomEnter" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/ActionSheetDialogAnimation</item>
+    </style>
+
+    <!-- ActionSheet进出动画 -->
+    <style name="ActionSheetDialogAnimation" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
+        <item name="android:windowExitAnimation">@null</item>
+    </style>
+
     <style name="AppTheme.Splash">
         <item name="android:windowBackground">@drawable/bg_splash</item>
         <item name="android:windowNoTitle">true</item>

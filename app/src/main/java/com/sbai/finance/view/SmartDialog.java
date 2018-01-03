@@ -72,6 +72,8 @@ public class SmartDialog {
     private boolean mDialogDeleteShow = false;
     private boolean mCancelableOnTouchOutside;
 
+    private int mStyle = R.style.DialogTheme_NoTitle;
+
 
     public interface OnClickListener {
         void onClick(Dialog dialog);
@@ -354,6 +356,11 @@ public class SmartDialog {
         return this;
     }
 
+    public SmartDialog setStyle(int style){
+        mStyle = style;
+        return this;
+    }
+
     public void show() {
         if (mDialog != null) { // single dialog
             setupDialog();
@@ -374,7 +381,7 @@ public class SmartDialog {
     }
 
     private void create() {
-        mDialog = new AppCompatDialog(mActivity, R.style.DialogTheme_NoTitle);
+        mDialog = new AppCompatDialog(mActivity, mStyle);
         mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialogInterface) {
