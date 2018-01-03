@@ -136,7 +136,7 @@ public class AnchorRecommendRadioLayout extends LinearLayout {
 
         relativeLayout.addView(moreRadioTextView, rlLayoutParams);
 
-        moreRadioTextView.setOnClickListener(new OnClickListener() {
+        relativeLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Launcher.with(getContext(), AllRadioListActivity.class).execute();

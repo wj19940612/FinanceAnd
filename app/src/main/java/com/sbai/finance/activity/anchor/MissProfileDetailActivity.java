@@ -269,9 +269,11 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
     }
 
     private void setPositionBtn(int position) {
-        if (position == FRAGMENT_QUESTION) {
-            if (mAnchor != null) {
-                if (LocalUser.getUser().isMiss() && LocalUser.getUser().getUserInfo().getCustomId() == mAnchor.getId()) {
+
+
+        switch (position) {
+            case FRAGMENT_QUESTION:
+                if (mAnchor != null && LocalUser.getUser().isMiss() && LocalUser.getUser().getUserInfo().getCustomId() == mAnchor.getId()) {
                     //是当前小姐姐，隐藏我要提问按钮
                     mAsk.setVisibility(View.GONE);
                     mCreateRadio.setVisibility(View.GONE);
@@ -279,13 +281,11 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                     mAsk.setVisibility(View.VISIBLE);
                     mCreateRadio.setVisibility(View.GONE);
                 }
-            } else {
-                mAsk.setVisibility(View.VISIBLE);
-                mCreateRadio.setVisibility(View.GONE);
-            }
-        } else if (position == FRAGMENT_RADIO) {
-            if (mAnchor != null) {
-                if (LocalUser.getUser().isMiss() && LocalUser.getUser().getUserInfo().getCustomId() == mAnchor.getId()) {
+                break;
+            case FRAGMENT_RADIO:
+                if (mAnchor != null
+                        && LocalUser.getUser().isMiss()
+                        && LocalUser.getUser().getUserInfo().getCustomId() == mAnchor.getId()) {
                     //是当前小姐姐，显示创建电台
                     mAsk.setVisibility(View.GONE);
                     mCreateRadio.setVisibility(View.VISIBLE);
@@ -293,10 +293,12 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                     mAsk.setVisibility(View.GONE);
                     mCreateRadio.setVisibility(View.GONE);
                 }
-            } else {
+                break;
+            case FRAGMENT_POINT:
                 mAsk.setVisibility(View.GONE);
                 mCreateRadio.setVisibility(View.GONE);
-            }
+                break;
+
         }
     }
 

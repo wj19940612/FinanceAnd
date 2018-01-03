@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/common_padding"
     android:background="@android:color/white">
 
     <ImageView
@@ -89,7 +88,7 @@
         android:layout_marginLeft="@dimen/common_padding"
         android:layout_marginRight="@dimen/common_padding"
         android:layout_marginTop="8dp"
-        android:background="@color/split"
+        android:background="@color/background"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/threeImageLayout"/>
@@ -130,9 +129,18 @@
         tools:text="20:20"/>
 
     <View
+        android:id="@+id/commentSplit"
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:layout_marginTop="@dimen/common_padding"
         android:background="@color/background"
         app:layout_constraintTop_toBottomOf="@+id/pointPublishTime"/>
+    <!--<View-->
+        <!--android:visibility="gone"-->
+        <!--android:id="@+id/anchorSplit"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="10dp"-->
+        <!--android:background="@color/background"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/commentSplit"/>-->
+
 </android.support.constraint.ConstraintLayout>

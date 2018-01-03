@@ -407,7 +407,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     }
 
     // Add by JohnZ
-    private void highlightItem(int position) {
+    public void highlightItem(int position) {
         for (int i = 0; i < mTabStrip.getChildCount(); i++) {
             View view = mTabStrip.getChildAt(i);
             view.setSelected(false);

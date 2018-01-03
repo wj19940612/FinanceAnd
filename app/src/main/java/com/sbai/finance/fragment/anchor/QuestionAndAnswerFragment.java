@@ -25,14 +25,11 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.anchor.CommentActivity;
 import com.sbai.finance.activity.anchor.MissProfileDetailActivity;
 import com.sbai.finance.activity.anchor.QuestionDetailActivity;
-import com.sbai.finance.activity.anchor.SubmitQuestionActivity;
 import com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity;
 import com.sbai.finance.fragment.MediaPlayFragment;
-import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.anchor.Anchor;
 import com.sbai.finance.model.anchor.Praise;
 import com.sbai.finance.model.anchor.Question;
@@ -45,11 +42,11 @@ import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnItemClickListener;
+import com.sbai.finance.utils.OnPageSelectedListener;
 import com.sbai.finance.utils.UmengCountEventId;
 import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.MissFloatWindow;
-import com.sbai.finance.view.TitleBar;
 import com.sbai.finance.view.VerticalSwipeRefreshLayout;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 import com.sbai.glide.GlideApp;
@@ -64,7 +61,6 @@ import butterknife.Unbinder;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGIN_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_LOGOUT_SUCCESS;
 import static com.sbai.finance.activity.BaseActivity.ACTION_REWARD_SUCCESS;
-import static com.sbai.finance.activity.BaseActivity.REQ_CODE_LOGIN;
 import static com.sbai.finance.activity.BaseActivity.REQ_QUESTION_DETAIL;
 
 /**
@@ -74,8 +70,7 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
 
 
     Unbinder unbinder;
-    @BindView(R.id.titleBar)
-    TitleBar mTitleBar;
+
     @BindView(R.id.recyclerView)
     EmptyRecyclerView mRecyclerView;
     @BindView(R.id.slidingTabLayout)
@@ -215,23 +210,6 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
         }
     }
 
-    @Override
-    protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
-        super.onMediaPlayCurrentPosition(IAudioId, source, mediaPlayCurrentPosition, totalDuration);
-//        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
-//            mMissRadioLayout.setPlayProgress(mediaPlayCurrentPosition, totalDuration);
-//            boolean isVisible = mMissRadioLayout.onPlayViewIsVisible();
-//            if (isVisible) {
-//                if (mMissFloatWindow.getVisibility() == View.VISIBLE) {
-//                    mMissFloatWindow.setVisibility(View.GONE);
-//                }
-//            } else {
-//                if (mMissFloatWindow.getVisibility() == View.GONE) {
-//                    mMissFloatWindow.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        }
-    }
 
     public void setService(MediaPlayService mediaPlayService) {
         mMediaPlayService = mediaPlayService;
@@ -260,13 +238,11 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
 
 
     private void initView() {
-        initTitleBar();
         initSwipeRefreshLayout();
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         gridLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(gridLayoutManager);
-//        recyclerView.setEmptyView(emptyView);
         mMissListAdapter = new MissListAdapter(getActivity(), new ArrayList<Anchor>());
         mRecyclerView.setAdapter(mMissListAdapter);
         mMissListAdapter.setOnItemClickListener(new OnItemClickListener<Anchor>() {
@@ -279,9 +255,8 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
             }
         });
 
-        mViewPager.setCurrentItem(0, false);
-        mViewPager.setOffscreenPageLimit(1);
         mMissAskFragmentAdapter = new MissAskFragmentAdapter(getChildFragmentManager(), getActivity(), this);
+        mViewPager.setOffscreenPageLimit(1);
         mViewPager.setAdapter(mMissAskFragmentAdapter);
         mViewPager.post(new Runnable() {
             @Override
@@ -289,38 +264,28 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
                 setVisibleFragmentLabel(0);
             }
         });
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        mViewPager.addOnPageChangeListener(mOnPageSelectedListener);
 
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                // 在提问页面需要更新数据 然后回调，用来区分那个页面可见
-                setVisibleFragmentLabel(position);
-                MissAskFragment fragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(position);
-                if (fragment != null) {
-                    fragment.refreshData();
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        mSlidingTabLayout.setDistributeEvenly(true);
         mSlidingTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mSlidingTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(60, getResources()));
         mSlidingTabLayout.setSelectedIndicatorHeight(2);
-        mSlidingTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.tab_miss_question));
+        mSlidingTabLayout.setCustomTabView(R.layout.view_question_and_answer_title, R.id.questionAndAnswerTitle);
         mSlidingTabLayout.setViewPager(mViewPager);
-        mSlidingTabLayout.setTabIndex(0);
 
         mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
+        mSlidingTabLayout.highlightItem(0);
     }
+
+    private OnPageSelectedListener mOnPageSelectedListener = new OnPageSelectedListener() {
+        @Override
+        public void onPageSelected(int position) {
+            setVisibleFragmentLabel(position);
+            MissAskFragment fragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(position);
+            if (fragment != null) {
+                fragment.refreshData();
+            }
+        }
+    };
 
     private void setVisibleFragmentLabel(int position) {
         MissAskFragment missAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(position);
@@ -381,21 +346,6 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
                     }
                 }
 
-            }
-        });
-    }
-
-    private void initTitleBar() {
-        mTitleBar.setOnRightViewClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
-                } else {
-                    MissAudioManager.get().stop();
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivityForResult(intent, REQ_CODE_LOGIN);
-                }
             }
         });
     }
@@ -494,6 +444,8 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mViewPager.removeOnPageChangeListener(mOnPageSelectedListener);
+        mOnOffsetChangedListener = null;
         unbinder.unbind();
         stopScheduleJob();
     }
@@ -577,9 +529,6 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CODE_LOGIN && resultCode == BaseActivity.RESULT_OK) {
-            Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
-        }
 
         if (requestCode == REQ_QUESTION_DETAIL && resultCode == BaseActivity.RESULT_OK) {
             if (data != null) {

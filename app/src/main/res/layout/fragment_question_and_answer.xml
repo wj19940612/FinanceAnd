@@ -7,25 +7,11 @@
     android:background="@color/background"
     android:orientation="vertical">
 
-    <com.sbai.finance.view.TitleBar
-        android:fitsSystemWindows="true"
-        android:id="@+id/titleBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hasBottomSplitLine="true"
-        app:rightImage="@drawable/ic_ask_her_question_black"
-        app:rightText="@string/ask_question"
-        app:rightTextColor="@color/primaryText"
-        app:rightTextSize="17sp"
-        app:rightVisible="true"
-        app:titleText="@string/anchor_circle"
-        app:titleTextColor="@color/primaryText"/>
 
     <com.sbai.finance.view.VerticalSwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/titleBar">
+        android:layout_height="match_parent">
 
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
@@ -52,7 +38,6 @@
                             android:id="@+id/recyclerView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/common_padding"
                             android:background="@android:color/white"/>
 
                     </LinearLayout>
@@ -62,10 +47,10 @@
                     android:id="@+id/slidingTabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"/>
+                    android:background="@color/background"/>
             </android.support.design.widget.AppBarLayout>
 
-            <android.support.v4.view.ViewPager
+            <com.sbai.finance.view.ScrollableViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

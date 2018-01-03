@@ -89,6 +89,7 @@ public class AnchorPointFragment extends BaseFragment {
         mSet = new HashSet<>();
 
         mAnchorPointAdapter = new AnchorPointAdapter(new ArrayList<AnchorPoint>(), getActivity());
+        mAnchorPointAdapter.setPointType(POINT_TYPE_ANCHOR);
         mEmptyRecyclerView.setEmptyView(mEmpty);
         mEmptyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mEmptyRecyclerView.setAdapter(mAnchorPointAdapter);
@@ -225,6 +226,7 @@ public class AnchorPointFragment extends BaseFragment {
                 if (pointType == AnchorPointFragment.POINT_TYPE_ANCHOR) {
                     mAnchorInfoLayout.setVisibility(View.GONE);
                 } else {
+
                     mAnchorInfoLayout.setVisibility(View.VISIBLE);
                     mHasLabelLayout.setAvatar(anchorPoint.getAnchorPortrait(), Question.USER_IDENTITY_MISS);
                     mAnchorName.setText(anchorPoint.getAnchorName());

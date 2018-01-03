@@ -88,7 +88,6 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
-//        translucentStatusBar();
         checkVersion();
         requestServiceConnectWay();
         handleIntentData(getIntent());
