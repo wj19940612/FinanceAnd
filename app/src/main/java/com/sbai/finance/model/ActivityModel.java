@@ -167,4 +167,5 @@ public class ActivityModel implements Parcelable {
             return new ActivityModel[size];
         }
     };
+
 }
