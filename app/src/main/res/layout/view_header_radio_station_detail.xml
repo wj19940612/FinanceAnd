@@ -161,4 +161,10 @@
            android:src="@drawable/ic_little_right_arrow"/>
 
    </RelativeLayout>
+
+    <View
+        android:id="@+id/stub"
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
+        android:visibility="gone"/>
 </LinearLayout>

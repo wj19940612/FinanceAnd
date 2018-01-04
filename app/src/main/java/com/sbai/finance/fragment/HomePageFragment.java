@@ -241,7 +241,7 @@ public class HomePageFragment extends BaseFragment {
             public void onDaySubjuect() {
                 //点击任务中心
                 umengEventCount(UmengCountEventId.PAGE_STUDY_ROOM);
-                Launcher.with(getActivity(), BuyRadioDetailActivity.class).execute();
+                Launcher.with(getActivity(), TaskCenterActivity.class).execute();
             }
 
             @Override

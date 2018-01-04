@@ -1,12 +1,18 @@
 package com.sbai.finance.activity.anchor;
 
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Html;
 import android.text.Layout;
 import android.text.TextUtils;
@@ -19,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,6 +43,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.AliPayHelper;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
@@ -79,12 +87,12 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
     ImageView mIsNeedPayIcon;
     RelativeLayout mGotoPayLayout;
     TextView mPayNumView;
+    View mStub;
 
     private int mRadioStationId;
     private RadioStationAdapter mRadioStationAdapter;
     private RadioInfo mRadioInfo;
-    private boolean mRadioGet;
-    private boolean mListGet;
+    private Rect mRect;
 
     private ViewTreeObserver.OnPreDrawListener mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
@@ -99,6 +107,21 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         }
     };
 
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mMediaPlayService = ((MediaPlayService.MediaBinder) iBinder).getMediaPlayService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+        }
+    };
+
+    interface OnPlayClickListener {
+        public void onPlay(Radio radio);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,16 +130,24 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         mRootMissFloatWindow = mMissFloatWindow;
         initData(getIntent());
 
-        mRadioStationAdapter = new RadioStationAdapter(this);
+        mRadioStationAdapter = new RadioStationAdapter(this, new OnPlayClickListener() {
+            @Override
+            public void onPlay(Radio radio) {
+                toggleQuestionVoice(radio);
+            }
+        });
         mListView.setAdapter(mRadioStationAdapter);
         mListView.setOnItemClickListener(this);
+        mRect = new Rect();
 
         initFloatWindow();
-
         initHeaderView();
         initSwipeRefreshLayout();
         refreshData();
         requestClickNewInfo(mRadioStationId);
+
+        Intent intent = new Intent(getActivity(), MediaPlayService.class);
+        bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -136,7 +167,6 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
 
     private void refreshData() {
         requestRadioStationDetail();
-        requestRadioProgram();
     }
 
     private void initHeaderView() {
@@ -152,6 +182,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         mIsNeedPayIcon = header.findViewById(R.id.payStatus);
         mGotoPayLayout = header.findViewById(R.id.payLayout);
         mPayNumView = header.findViewById(R.id.payKey);
+        mStub = header.findViewById(R.id.stub);
         mBtnLookMore.setTag(false);
         mBtnLookMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,11 +256,9 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
             if (audio != null) {
                 if (audio instanceof Radio) {
                     mMissFloatWindow.startAnim();
-                    mMissFloatWindow.setVisibility(View.VISIBLE);
                     mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
                 } else if (audio instanceof Question) {
                     mMissFloatWindow.startAnim();
-                    mMissFloatWindow.setVisibility(View.VISIBLE);
                     mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
                 }
             }
@@ -242,7 +271,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
             @Override
             public void onRefresh() {
                 requestRadioStationDetail();
-                requestRadioProgram();
+
             }
         });
     }
@@ -278,21 +307,19 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (position != 0) {
+        if (position != 0 && (mRadioInfo.getPaid() == 0 || position < 4 || mRadioInfo.getUserPayment() > 0)) {
             Radio radioInfo = (Radio) parent.getItemAtPosition(position);
             Launcher.with(this, RadioStationPlayActivity.class).putExtra(ExtraKeys.RADIO, radioInfo).executeForResult(222);
         }
     }
 
     private void requestRadioStationDetail() {
-        mRadioGet = false;
         Client.requestRadioDetail(mRadioStationId).setTag(TAG).setCallback(new Callback2D<Resp<RadioInfo>, RadioInfo>() {
             @Override
             protected void onRespSuccessData(RadioInfo radioInfo) {
                 if (radioInfo != null) {
                     updateRadioDetail(radioInfo);
-                    mRadioGet = true;
-                    notifyData();
+                    requestRadioProgram();
                 }
             }
 
@@ -331,20 +358,22 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         if (radioInfo.getPaid() == 0) {
             mIsNeedPayIcon.setVisibility(View.GONE);
             mGotoPayLayout.setVisibility(View.GONE);
+            mStub.setVisibility(View.VISIBLE);
         } else {
             if (radioInfo.getUserPayment() == 0) {
                 mIsNeedPayIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_radio_need_pay));
                 mGotoPayLayout.setVisibility(View.VISIBLE);
+                mStub.setVisibility(View.GONE);
                 mPayNumView.setText(String.format(getString(R.string.need_pay_radio_key), radioInfo.getRadioPrice()));
             } else {
                 mIsNeedPayIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_radio_have_pay));
                 mGotoPayLayout.setVisibility(View.GONE);
+                mStub.setVisibility(View.VISIBLE);
             }
         }
     }
 
     private void requestRadioProgram() {
-        mListGet = false;
         Client.requestRadioDetailAudio(mRadioStationId).setTag(TAG).setCallback(new Callback2D<Resp<List<Radio>>, List<Radio>>() {
 
             @Override
@@ -352,8 +381,6 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
                 if (data != null) {
                     updateAudio(data);
                 }
-                mListGet = true;
-                notifyData();
             }
         }).fireFree();
     }
@@ -371,62 +398,126 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         }
     }
 
-    private void notifyData() {
-        if (mListGet && mRadioGet) {
-            mRadioStationAdapter.notifyDataSetChanged();
-        }
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
+        unbindService(mServiceConnection);
+    }
+
+    private void toggleQuestionVoice(Radio radio) {
+        if (MissAudioManager.get().isStarted(radio)) {
+            if (mMediaPlayService != null) {
+                mMediaPlayService.onPausePlay(radio);
+            }
+        } else if (MissAudioManager.get().isPaused(radio)) {
+            if (mMediaPlayService != null) {
+                mMediaPlayService.onResume();
+            }
+        } else {
+            updateQuestionListenCount(radio);
+            if (mMediaPlayService != null) {
+                mMediaPlayService.startPlay(radio, MediaPlayService.MEDIA_SOURCE_RADIO_DETAIL);
+            }
+        }
+    }
+
+    private void updateQuestionListenCount(Radio radio) {
+        Client.listenRadioAudio(radio.getAudioId())
+                .setTag(TAG)
+                .setCallback(new Callback<Resp<Object>>() {
+
+                    @Override
+                    protected void onRespSuccess(Resp<Object> resp) {
+
+                    }
+                })
+                .fireFree();
     }
 
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
+        mRadioStationAdapter.notifyDataSetChanged();
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
         if (audio instanceof Question) {
             mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
+        } else if (audio instanceof Radio) {
+            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
         }
     }
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
+        startScheduleJob(100);
         mMissFloatWindow.startAnim();
     }
 
     @Override
     public void onMediaPlayResume(int IAudioId, int source) {
-        mMissFloatWindow.setVisibility(View.VISIBLE);
+        startScheduleJob(100);
         mMissFloatWindow.startAnim();
+        mRadioStationAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onMediaPlayPause(int IAudioId, int source) {
+        stopScheduleJob();
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
+        mRadioStationAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onMediaPlayStop(int IAudioId, int source) {
+        stopScheduleJob();
         mMissFloatWindow.stopAnim();
         mMissFloatWindow.setVisibility(View.GONE);
+        mRadioStationAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
+        int firstVisiblePosition = mListView.getFirstVisiblePosition() + 1;//有header
+        int lastVisiblePosition = mListView.getLastVisiblePosition();
+        boolean visibleItemsStarted = false;
+        if (firstVisiblePosition >= 0 && lastVisiblePosition >= 0 && mRadioStationAdapter.getCount() > 0) {
+            if (mRadioStationAdapter != null && mRadioStationAdapter.getCount() > 0) {
+                for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
+                    if (i > mRadioStationAdapter.getCount()) continue; // Skip header
+                    Radio radio = mRadioStationAdapter.getItem(i - 1);
+                    if (radio != null && MissAudioManager.get().isStarted(radio)) {
+                        View view = mListView.getChildAt(i - firstVisiblePosition + 1);
+                        visibleItemsStarted = view.getGlobalVisibleRect(mRect);
+                        TextView soundTime = view.findViewById(R.id.countDown);
+                        int pastTime = MissAudioManager.get().getCurrentPosition();
+                        soundTime.setText(DateUtil.formatMediaLength((radio.getAudioTime() * 1000 - pastTime) / 1000));
+                    }
+                }
+            }
+        }
 
+        if (mRadioStationAdapter.getCount() > 0) {
+            if (visibleItemsStarted && mMissFloatWindow.getVisibility() == View.VISIBLE) {
+                mMissFloatWindow.setVisibility(View.GONE);
+            }
+
+            if (!visibleItemsStarted && mMissFloatWindow.getVisibility() == View.GONE) {
+                mMissFloatWindow.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
 
-    static class RadioStationAdapter extends ArrayAdapter<Radio> {
+    class RadioStationAdapter extends ArrayAdapter<Radio> {
         private Context mContext;
+        private OnPlayClickListener mOnPlacyClickListener;
 
-        private RadioStationAdapter(@NonNull Context context) {
+        private RadioStationAdapter(@NonNull Context context, OnPlayClickListener onPlacyClickListener) {
             super(context, 0);
             this.mContext = context;
+            this.mOnPlacyClickListener = onPlacyClickListener;
         }
 
         @NonNull
@@ -442,11 +533,11 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            viewHolder.bindingData(mContext, getItem(position), position, getCount());
+            viewHolder.bindingData(mContext, getItem(position), position, getCount(), mRadioInfo, mOnPlacyClickListener);
             return convertView;
         }
 
-        static class ViewHolder {
+        class ViewHolder {
             @BindView(R.id.cover)
             ImageView mCover;
             @BindView(R.id.title)
@@ -457,24 +548,61 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
             TextView mTime;
             @BindView(R.id.split)
             View mSplitView;
+            @BindView(R.id.playIcon)
+            ImageView mPlayIcon;
+            @BindView(R.id.countDown)
+            TextView mCountDown;
+            @BindView(R.id.keyIcon)
+            ImageView mKeyIcon;
 
             ViewHolder(View view) {
                 ButterKnife.bind(this, view);
             }
 
-            private void bindingData(Context context, Radio item, int position, int count) {
+            private void bindingData(Context context, final Radio item, int position, int count, final RadioInfo radioInfo, final OnPlayClickListener onPlacyClickListener) {
                 GlideApp.with(context).load(item.getAudioCover())
                         .placeholder(R.drawable.ic_default_image)
                         .centerCrop()
                         .into(mCover);
 
                 mTitle.setText(item.getAudioName());
-
                 mListenerNumber.setText(String.valueOf(item.getViewNumber()));
 
                 mTime.setText(DateUtil.formatDefaultStyleTime(item.getReviewTime()));
                 if (position == count - 1) {
                     mSplitView.setVisibility(View.GONE);
+                }
+
+                if (MissAudioManager.get().isStarted(item)) {
+                    mPlayIcon.setImageResource(R.drawable.ic_pause);
+                    int pastTime = MissAudioManager.get().getCurrentPosition();
+                    mCountDown.setText(DateUtil.formatMediaLength((item.getAudioTime() * 1000 - pastTime) / 1000));
+                } else if (MissAudioManager.get().isPaused(item)) {
+                    mPlayIcon.setImageResource(R.drawable.ic_play);
+                    int pastTime = MissAudioManager.get().getCurrentPosition();
+                    mCountDown.setText(DateUtil.formatMediaLength((item.getAudioTime() * 1000 - pastTime) / 1000));
+                } else {
+                    mPlayIcon.setImageResource(R.drawable.ic_play);
+                    mCountDown.setText(DateUtil.formatMediaLength((item.getAudioTime())));
+                }
+
+                mPlayIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (onPlacyClickListener != null) {
+                            onPlacyClickListener.onPlay(item);
+                        }
+                    }
+                });
+
+                if (radioInfo.getPaid() == 0 || position < 3 || radioInfo.getUserPayment() > 0) {
+                    mPlayIcon.setVisibility(View.VISIBLE);
+                    mCountDown.setVisibility(View.VISIBLE);
+                    mKeyIcon.setVisibility(View.GONE);
+                } else {
+                    mPlayIcon.setVisibility(View.GONE);
+                    mCountDown.setVisibility(View.GONE);
+                    mKeyIcon.setVisibility(View.VISIBLE);
                 }
             }
         }

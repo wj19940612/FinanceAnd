@@ -59,11 +59,12 @@
         <LinearLayout
             android:id="@+id/newTaskLayout"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/taskProgress"
             android:orientation="vertical"
             android:layout_marginTop="10dp"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
@@ -83,17 +84,21 @@
                 android:background="@color/split"/>
 
             <com.sbai.finance.view.mine.IntegrationTaskView
+                android:id="@+id/evaluationTask"
                 android:layout_width="match_parent"
                 android:layout_height="63dp"
                 app:icon="@drawable/ic_task_financial_evaluation"
                 app:itemTitle="@string/finance_evaluation"
-                app:hasBottomLine="true"/>
+                app:hasBottomLine="true"
+                android:visibility="gone"/>
 
             <com.sbai.finance.view.mine.IntegrationTaskView
+                android:id="@+id/certificationTask"
                 android:layout_width="match_parent"
                 android:layout_height="63dp"
                 app:icon="@drawable/ic_task_certification"
-                app:itemTitle="@string/real_name_authentication"/>
+                app:itemTitle="@string/real_name_authentication"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <LinearLayout
@@ -103,7 +108,8 @@
             android:layout_below="@+id/newTaskLayout"
             android:orientation="vertical"
             android:layout_marginTop="10dp"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
@@ -123,39 +129,49 @@
                 android:background="@color/split"/>
 
             <com.sbai.finance.view.mine.IntegrationTaskView
+                android:id="@+id/futureTask"
                 android:layout_width="match_parent"
                 android:layout_height="63dp"
                 app:icon="@drawable/ic_task_stock"
                 app:itemTitle="@string/future_battle"
-                app:hasBottomLine="true"/>
+                app:hasBottomLine="true"
+                android:visibility="gone"/>
 
             <com.sbai.finance.view.mine.IntegrationTaskView
+                android:id="@+id/klineTask"
                 android:layout_width="match_parent"
                 android:layout_height="63dp"
                 app:icon="@drawable/ic_task_kline"
                 app:itemTitle="@string/kline_battle"
-                app:hasBottomLine="true"/>
+                app:hasBottomLine="true"
+                android:visibility="gone"/>
 
             <com.sbai.finance.view.mine.IntegrationTaskView
+                android:id="@+id/radioTask"
                 android:layout_width="match_parent"
                 android:layout_height="63dp"
                 app:icon="@drawable/ic_task_buy_radio"
                 app:itemTitle="@string/buy_radio_or_article"
-                app:hasBottomLine="true"/>
+                app:hasBottomLine="true"
+                android:visibility="gone"/>
 
             <com.sbai.finance.view.mine.IntegrationTaskView
+                android:id="@+id/guessTask"
                 android:layout_width="match_parent"
                 android:layout_height="63dp"
                 app:icon="@drawable/ic_task_guess"
                 app:itemTitle="@string/grail_guessing"
-                app:hasBottomLine="true"/>
+                app:hasBottomLine="true"
+                android:visibility="gone"/>
 
             <com.sbai.finance.view.mine.IntegrationTaskView
+                android:id="@+id/questionTask"
                 android:layout_width="match_parent"
                 android:layout_height="63dp"
                 app:icon="@drawable/ic_task_question"
                 app:itemTitle="@string/goto_miss_question"
-                app:hasBottomLine="false"/>
+                app:hasBottomLine="false"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

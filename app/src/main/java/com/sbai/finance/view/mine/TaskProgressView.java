@@ -1,11 +1,15 @@
 package com.sbai.finance.view.mine;
 
+import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -20,10 +24,18 @@ import butterknife.ButterKnife;
  */
 
 public class TaskProgressView extends RelativeLayout {
-    @BindView(R.id.firstAward)
-    ImageView mFirstAward;
-    @BindView(R.id.secondAward)
+    @BindView(R.id.firstAwardLayout)
+    RelativeLayout mFirstAwardLayout;
+    @BindView(R.id.firstAwardIcon)
+    ImageView mFirstAwardIcon;
+    @BindView(R.id.firstAwardFlash)
+    ImageView mFirstAwardFlash;
+    @BindView(R.id.secondAwardLayout)
+    RelativeLayout mSecondAwardLayout;
+    @BindView(R.id.secondAwardIcon)
     ImageView mSecondAward;
+    @BindView(R.id.secondAwardFlash)
+    ImageView mSecondAwardFlash;
     @BindView(R.id.firstProgress)
     View mFirstProgress;
     @BindView(R.id.secondProgress)
@@ -38,6 +50,7 @@ public class TaskProgressView extends RelativeLayout {
     public static final int MAX_PROGRESS_NUM = 5;
     private Context mContext;
     private View[] mProgressViews = new View[MAX_PROGRESS_NUM];
+    private OnOpenAwardListener mOnOpenAwardListener;
 
     public TaskProgressView(Context context) {
         this(context, null);
@@ -53,6 +66,10 @@ public class TaskProgressView extends RelativeLayout {
         init();
     }
 
+    public interface OnOpenAwardListener{
+        public void  onOpenAward();
+    }
+
     private void init() {
         LayoutInflater.from(mContext).inflate(R.layout.view_task_center_progress, this, true);
         ButterKnife.bind(this);
@@ -61,6 +78,10 @@ public class TaskProgressView extends RelativeLayout {
         mProgressViews[2] = mThirdProgress;
         mProgressViews[3] = mFourthProgress;
         mProgressViews[4] = mFifthProgress;
+    }
+
+    public void setOnOpenAwardListener(OnOpenAwardListener onOpenAwardListener){
+        mOnOpenAwardListener = onOpenAwardListener;
     }
 
     public void setProgress(int progress) {
@@ -86,5 +107,36 @@ public class TaskProgressView extends RelativeLayout {
                 mProgressViews[i].setBackgroundColor(ContextCompat.getColor(mContext, R.color.taskProgressNot));
             }
         }
+    }
+
+    //达到第一个礼物目标，还未领取
+    public void flashFirstIcon(){
+        mFirstAwardIcon.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_task_award));
+        mFirstAwardFlash.setVisibility(View.VISIBLE);
+        mFirstAwardFlash.startAnimation(getFlashAnim());
+        mFirstAwardIcon.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mOnOpenAwardListener.onOpenAward();
+            }
+        });
+    }
+
+    //打开第一个礼物
+    public void openFirstIcon(){
+        mFirstAwardIcon.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_task_award_open));
+        mFirstAwardIcon.setOnClickListener(null);
+        mFirstAwardFlash.clearAnimation();
+        mFirstAwardFlash.setVisibility(View.GONE);
+    }
+
+    private Animation getFlashAnim(){
+        Animation animation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        animation.setDuration(2500);
+        animation.setRepeatCount(Animation.INFINITE);
+        animation.setRepeatMode(Animation.RESTART);
+        animation.setInterpolator(new LinearInterpolator());
+        animation.setFillAfter(true);//设置为true，动画转化结束后被应用
+        return animation;
     }
 }

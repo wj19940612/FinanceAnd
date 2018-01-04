@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
+import com.sbai.finance.activity.miss.radio.BuyRadioDetailActivity;
 import com.sbai.finance.model.fund.AliPayResult;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -78,6 +79,10 @@ public class AliPayHelper {
                                 protected void onRespSuccess(Resp<Object> resp) {
                                     if (resp.isSuccess()) {
                                         ToastUtil.show(resp.getMsg());
+                                        if(mFragmentActivity instanceof BuyRadioDetailActivity){
+                                            ((BuyRadioDetailActivity) mFragmentActivity).startDialog(resp);
+                                            return;
+                                        }
                                         mFragmentActivity.setResult(Activity.RESULT_OK);
                                         mFragmentActivity.finish();
                                     } else {

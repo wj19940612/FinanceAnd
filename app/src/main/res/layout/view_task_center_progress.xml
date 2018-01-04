@@ -48,19 +48,51 @@
             android:background="@drawable/bg_task_right_progress"/>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/firstAward"
+    <RelativeLayout
+        android:id="@+id/firstAwardLayout"
         android:layout_width="52dp"
         android:layout_height="52dp"
         android:layout_above="@+id/progressLayout"
-        android:layout_marginLeft="156dp"
-        android:background="@drawable/ic_task_award"/>
+        android:layout_marginLeft="156dp">
 
-    <ImageView
-        android:id="@+id/secondAward"
+        <ImageView
+            android:id="@+id/firstAwardFlash"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_task_award_flash"/>
+
+        <ImageView
+            android:id="@+id/firstAwardIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_task_award"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/secondAwardLayout"
         android:layout_width="52dp"
         android:layout_height="52dp"
         android:layout_above="@+id/progressLayout"
-        android:layout_marginLeft="278dp"
-        android:background="@drawable/ic_task_award_not"/>
+        android:layout_marginLeft="278dp">
+
+        <ImageView
+            android:id="@+id/secondAwardFlash"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_task_award_flash"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/secondAwardIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_task_award_not"/>
+
+
+    </RelativeLayout>
 </merge>

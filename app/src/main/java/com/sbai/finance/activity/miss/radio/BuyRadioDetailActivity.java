@@ -74,17 +74,7 @@ public class BuyRadioDetailActivity extends BaseActivity {
 
     @Override
     public void onTimeUp(int count) {
-
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
+        SmartDialog.dismiss(this);
         stopScheduleJob();
     }
 
@@ -110,12 +100,6 @@ public class BuyRadioDetailActivity extends BaseActivity {
         mCheckboxClick.setOnCheckedChangeListener(onCheckedChangeListener);
         mMiliCheckboxClick.setOnCheckedChangeListener(onCheckedChangeListener);
         mCheckboxClick.setChecked(true);
-//        BuyRadioResultDialog.get(this, new BuyRadioResultDialog.OnCallback() {
-//            @Override
-//            public void onDialogClick() {
-//
-//            }
-//        }, 200);
     }
 
     @OnClick({R.id.aliRecharge, R.id.miliRecharge})
@@ -210,5 +194,15 @@ public class BuyRadioDetailActivity extends BaseActivity {
                     }
                 })
                 .fireFree();
+    }
+
+    public void startDialog(Resp<Object> resp) {
+        startScheduleJob(2000);
+        BuyRadioResultDialog.get(this, new BuyRadioResultDialog.OnCallback() {
+            @Override
+            public void onDialogClick() {
+
+            }
+        }, 200);
     }
 }

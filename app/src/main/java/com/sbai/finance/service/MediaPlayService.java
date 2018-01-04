@@ -39,6 +39,7 @@ public class MediaPlayService extends Service implements TimerHandler.TimerCallb
     public static final int MEDIA_SOURCE_HOT_QUESTION = 2;//音频的来源  最热提问
     public static final int MEDIA_SOURCE_LATEST_QUESTION = 3;//音频的来源  最新提问
     public static final int MEDIA_SOURCE_MISS_PROFILE = 4;//音频的来源  小姐姐个人主页
+    public static final int MEDIA_SOURCE_RADIO_DETAIL = 5;//音频的来源  电台的音频列表
 
 
     private TimerHandler mTimerHandler;

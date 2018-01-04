@@ -1157,6 +1157,7 @@
     <string name="pay_tip">购买的内容可在我的收藏，订阅中查看哦</string>
     <string name="have_deduction_num">已抵扣%1$.2f元</string>
     <string name="need_pay_radio_key">解锁电台需支付%1$.1f元</string>
+    <string name="integration">积分</string>
     <!--米圈-->
     <string name="recommend">推荐</string>
     <string name="question_and_answer">问答</string>

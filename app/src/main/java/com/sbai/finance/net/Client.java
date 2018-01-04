@@ -3178,7 +3178,6 @@ public class Client {
     }
 
     /**
-     *
      * /explain/topicManage/findTopic.do
      * 获取话题列表(薛松)
      *
@@ -3546,5 +3545,26 @@ public class Client {
         return new API(POST, "/explain/user/viewpoint/findById.do",
                 new ApiParams()
                         .put("id", id));
+    }
+
+    /**
+     * 获取任务中心的任务列表
+     */
+    public static API requestTaskData() {
+        return new API(POST, "/api/mall/mission/task");
+    }
+
+    /**
+     * 领取积分(含宝箱)
+     */
+    public static API requestReceiveIntegration(int taskType) {
+        return new API(POST, "/api/mall/mission/gain.do", new ApiParams().put("taskType", taskType));
+    }
+
+    /**
+     * 宝箱进度
+     */
+    public static API requestBoxProgress() {
+        return new API("/api/mall/mission/progress.do");
     }
 }
