@@ -208,7 +208,8 @@
         android:background="@drawable/bg_buy_radio_pay"
         android:gravity="center"
         android:textSize="15sp"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:text="@string/sure_to_pay"/>
 
     <TextView
         android:id="@+id/payTip"

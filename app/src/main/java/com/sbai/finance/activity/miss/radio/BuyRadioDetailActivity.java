@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -73,7 +74,7 @@ public class BuyRadioDetailActivity extends BaseActivity {
 
     @Override
     public void onTimeUp(int count) {
-        super.onTimeUp(count);
+
     }
 
     @Override
@@ -93,11 +94,21 @@ public class BuyRadioDetailActivity extends BaseActivity {
     }
 
     private void initData() {
-        money = 3;
+        money = 200;
     }
 
     private void initView() {
         mMiliRecharge.setEnabled(false);
+        mPayBtn.setEnabled(false);
+        CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                float needPay = calcPayNum();
+                mPayBtn.setText(String.format(getString(R.string.sure_to_pay_num), needPay));
+            }
+        };
+        mCheckboxClick.setOnCheckedChangeListener(onCheckedChangeListener);
+        mMiliCheckboxClick.setOnCheckedChangeListener(onCheckedChangeListener);
         mCheckboxClick.setChecked(true);
 //        BuyRadioResultDialog.get(this, new BuyRadioResultDialog.OnCallback() {
 //            @Override
@@ -129,7 +140,7 @@ public class BuyRadioDetailActivity extends BaseActivity {
             case R.id.miliRecharge:
                 if (mCheckboxClick.isChecked() && !mMiliCheckboxClick.isChecked()) {
                     //计算抵扣的数额
-                    float deduction = calcPayNum();
+                    float deduction = calcDeductionNum();
                     mDeduction.setText(String.format(getString(R.string.have_deduction_num), deduction));
                     mDeduction.setVisibility(View.VISIBLE);
                     //支付宝按钮有，没点米粒的按钮,如果米粒足够支付，支付宝的要去掉
@@ -137,7 +148,7 @@ public class BuyRadioDetailActivity extends BaseActivity {
                         mCheckboxClick.setChecked(false);
                     }
                     mMiliCheckboxClick.setChecked(true);
-                } else {
+                } else if (mCheckboxClick.isChecked() && mMiliCheckboxClick.isChecked()) {
                     //两个按钮都点了
                     mDeduction.setVisibility(View.GONE);
                     mMiliCheckboxClick.setChecked(false);
@@ -148,9 +159,20 @@ public class BuyRadioDetailActivity extends BaseActivity {
     }
 
     private float calcPayNum() {
+        float needPayNum = 0f;
+        if (mCheckboxClick.isChecked() && !mMiliCheckboxClick.isChecked()) {
+            needPayNum = money;
+        } else if (!mCheckboxClick.isChecked() && mMiliCheckboxClick.isChecked()) {
+            needPayNum = money;
+        } else if (mCheckboxClick.isChecked() && mMiliCheckboxClick.isChecked()) {
+            needPayNum = money - mMili / 100;
+        }
+        return needPayNum;
+    }
+
+    private float calcDeductionNum() {
         float deductionNum;
         if (mMili / 100 >= money) {
-            mCheckboxClick.setChecked(false);
             deductionNum = money;
         } else {
             deductionNum = mMili / 100;
@@ -160,6 +182,7 @@ public class BuyRadioDetailActivity extends BaseActivity {
 
     private void dealMiliTip() {
         if (mMili == 0) {
+            mMiliRecharge.setEnabled(false);
             mMiliCheckboxClick.setVisibility(View.GONE);
             mNoMiliTip.setVisibility(View.VISIBLE);
         } else {
@@ -178,6 +201,12 @@ public class BuyRadioDetailActivity extends BaseActivity {
                         mMili = data.getYuanbao();
                         mMiliPayName.setText(String.format(getString(R.string.mili_pay), data.getYuanbao()));
                         dealMiliTip();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        mPayBtn.setEnabled(true);
                     }
                 })
                 .fireFree();

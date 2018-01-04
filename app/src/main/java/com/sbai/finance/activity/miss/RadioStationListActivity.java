@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.text.Layout;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.miss.radio.BuyRadioDetailActivity;
 import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
@@ -34,6 +36,7 @@ import com.sbai.finance.net.Callback;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
+import com.sbai.finance.utils.AliPayHelper;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.audio.MissAudioManager;
@@ -73,10 +76,15 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
     TextView mListenerNumber;
     TextView mContent;
     TextView mBtnLookMore;
+    ImageView mIsNeedPayIcon;
+    RelativeLayout mGotoPayLayout;
+    TextView mPayNumView;
 
     private int mRadioStationId;
     private RadioStationAdapter mRadioStationAdapter;
     private RadioInfo mRadioInfo;
+    private boolean mRadioGet;
+    private boolean mListGet;
 
     private ViewTreeObserver.OnPreDrawListener mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
@@ -141,12 +149,23 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         mListenerNumber = header.findViewById(R.id.listenerNumber);
         mContent = header.findViewById(R.id.content);
         mBtnLookMore = header.findViewById(R.id.btnLookMore);
+        mIsNeedPayIcon = header.findViewById(R.id.payStatus);
+        mGotoPayLayout = header.findViewById(R.id.payLayout);
+        mPayNumView = header.findViewById(R.id.payKey);
         mBtnLookMore.setTag(false);
         mBtnLookMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean hasExpand = (boolean) view.getTag();
                 expandOrStopContent(hasExpand);
+            }
+        });
+        mGotoPayLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mRadioInfo != null)
+                    Launcher.with(RadioStationListActivity.this, BuyRadioDetailActivity.class).putExtra(ExtraKeys.BUY_TYPE, AliPayHelper.PAY_DEFAULT).putExtra(ExtraKeys.BUY_ID, mRadioInfo.getId()).putExtra(ExtraKeys.MONEY, mRadioInfo.getRadioPrice())
+                            .execute();
             }
         });
         View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -203,15 +222,15 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
     private void initFloatWindow() {
         if (MissAudioManager.get().isPlaying()) {
             MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-            if(audio != null){
-                if(audio instanceof Radio){
+            if (audio != null) {
+                if (audio instanceof Radio) {
                     mMissFloatWindow.startAnim();
                     mMissFloatWindow.setVisibility(View.VISIBLE);
-                    mMissFloatWindow.setMissAvatar(((Radio)audio).getUserPortrait());
-                }else if(audio instanceof Question){
+                    mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+                } else if (audio instanceof Question) {
                     mMissFloatWindow.startAnim();
                     mMissFloatWindow.setVisibility(View.VISIBLE);
-                    mMissFloatWindow.setMissAvatar(((Question)audio).getCustomPortrait());
+                    mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
                 }
             }
 
@@ -266,11 +285,14 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
     }
 
     private void requestRadioStationDetail() {
+        mRadioGet = false;
         Client.requestRadioDetail(mRadioStationId).setTag(TAG).setCallback(new Callback2D<Resp<RadioInfo>, RadioInfo>() {
             @Override
             protected void onRespSuccessData(RadioInfo radioInfo) {
                 if (radioInfo != null) {
                     updateRadioDetail(radioInfo);
+                    mRadioGet = true;
+                    notifyData();
                 }
             }
 
@@ -306,9 +328,23 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         mContent.setText(Html.fromHtml(radioInfo.getRadioIntroduction()).toString());
         mListenerNumber.setText(String.valueOf(radioInfo.getListenNumber()));
         mContent.getViewTreeObserver().addOnPreDrawListener(mOnPreDrawListener);
+        if (radioInfo.getPaid() == 0) {
+            mIsNeedPayIcon.setVisibility(View.GONE);
+            mGotoPayLayout.setVisibility(View.GONE);
+        } else {
+            if (radioInfo.getUserPayment() == 0) {
+                mIsNeedPayIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_radio_need_pay));
+                mGotoPayLayout.setVisibility(View.VISIBLE);
+                mPayNumView.setText(String.format(getString(R.string.need_pay_radio_key), radioInfo.getRadioPrice()));
+            } else {
+                mIsNeedPayIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_radio_have_pay));
+                mGotoPayLayout.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void requestRadioProgram() {
+        mListGet = false;
         Client.requestRadioDetailAudio(mRadioStationId).setTag(TAG).setCallback(new Callback2D<Resp<List<Radio>>, List<Radio>>() {
 
             @Override
@@ -316,6 +352,8 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
                 if (data != null) {
                     updateAudio(data);
                 }
+                mListGet = true;
+                notifyData();
             }
         }).fireFree();
     }
@@ -330,6 +368,12 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         }
         for (Radio audioInfo : data) {
             mRadioStationAdapter.add(audioInfo);
+        }
+    }
+
+    private void notifyData() {
+        if (mListGet && mRadioGet) {
+            mRadioStationAdapter.notifyDataSetChanged();
         }
     }
 

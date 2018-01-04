@@ -79,8 +79,8 @@
     <color name="smallWhite">#66FFFFFF</color>
     <color name="littleWhite">#16FFFFFF</color>
 
-    <!-- mine -->
     <color name="taskProgress">#FFB300</color>
     <color name="taskProgressNot">#56FFA900</color>
     <color name="payNum">#F55A53</color>
+    <color name="keyBg">#FFFBF1</color>
 </resources>

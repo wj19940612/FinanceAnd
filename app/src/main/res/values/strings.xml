@@ -1145,10 +1145,12 @@
     <string name="ali_pay">支付宝支付</string>
     <string name="mili_pay">米粒:%1$d</string>
     <string name="pay_mili_tip">*1元=100米粒</string>
-    <string name="sure_to_pay">确认支付(%1$.2f元)</string>
+    <string name="sure_to_pay_num">确认支付(%1$.2f元)</string>
+    <string name="sure_to_pay">确认支付</string>
     <string name="question_to_ask_custom">遇到任何问题，请联系客服></string>
     <string name="no_mili">米粒不足></string>
     <string name="pay_success">支付成功</string>
     <string name="pay_tip">购买的内容可在我的收藏，订阅中查看哦</string>
     <string name="have_deduction_num">已抵扣%1$.2f元</string>
+    <string name="need_pay_radio_key">解锁电台需支付%1$.1f元</string>
 </resources>

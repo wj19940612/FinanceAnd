@@ -42,6 +42,9 @@ public class RadioInfo {
     private String radioHostName;//电台主播名称
     private long showTime;       //展示时间
     private int show;            //1-展示 0-下架
+    private int paid;            //1-付费 0-免费
+    private int userPayment;     //1-已付款 0-未付款
+    private float radioPrice;    //价格
 
     public long getCreateTime() {
         return createTime;
@@ -193,5 +196,29 @@ public class RadioInfo {
 
     public void setShow(int show) {
         this.show = show;
+    }
+
+    public int getPaid() {
+        return paid;
+    }
+
+    public void setPaid(int paid) {
+        this.paid = paid;
+    }
+
+    public int getUserPayment() {
+        return userPayment;
+    }
+
+    public void setUserPayment(int userPayment) {
+        this.userPayment = userPayment;
+    }
+
+    public float getRadioPrice() {
+        return radioPrice;
+    }
+
+    public void setRadioPrice(float radioPrice) {
+        this.radioPrice = radioPrice;
     }
 }

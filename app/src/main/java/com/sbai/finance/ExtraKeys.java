@@ -69,4 +69,8 @@ public interface ExtraKeys {
 
     String BATTLE_PROFIT = "battle_profit";
     String BATTLE_KLINE_DATA = "battle_kline_data";
+
+    String BUY_TYPE = "buy_type";
+    String BUY_ID = "buy_id";
+    String MONEY = "money";
 }
