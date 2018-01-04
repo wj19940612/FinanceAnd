@@ -79,7 +79,8 @@ public class AnchorCircleFragment extends BaseFragment {
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mTabLayout.setPadding(Display.dp2Px(15, getResources()));
-        mTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(70, getResources()));
+        mTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(35, getResources()));
+        mTabLayout.setHorizontalMargin((int) Display.dp2Px(80,getResources()));
         mTabLayout.setViewPager(mViewPager);
         mTabLayout.setTabViewTextSize(16);
         mTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.sliding_tab_text));

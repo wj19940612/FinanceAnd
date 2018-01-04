@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.annotation.Px;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -94,6 +95,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private ViewPager.OnPageChangeListener mViewPagerPageChangeListener;
 
     private final SlidingTabStrip mTabStrip;
+
+    private int mHorizontalMargin;
 
     public SlidingTabLayout(Context context) {
         this(context, null);
@@ -236,6 +239,15 @@ public class SlidingTabLayout extends HorizontalScrollView {
     }
 
     /**
+     * 设置文字所有边距
+     *
+     * @param horizontalMargin
+     */
+    public void setHorizontalMargin(@Px int horizontalMargin) {
+        mHorizontalMargin = horizontalMargin;
+    }
+
+    /**
      * Create a default view to be used for tabs. This is called if a custom tab view is not set via
      * {@link #setCustomTabView(int, int)}.
      */
@@ -272,7 +284,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
         return textView;
     }
 
-    private void populateTabStrip() {
+    protected void populateTabStrip() {
         final PagerAdapter adapter = mViewPager.getAdapter();
         final OnClickListener tabClickListener = new TabClickListener();
         mTabItems = new TextView[adapter.getCount()];
@@ -300,6 +312,16 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 lp.height = LinearLayout.LayoutParams.WRAP_CONTENT;
                 lp.width = 0;
                 lp.weight = 1;
+            }
+
+            if (mHorizontalMargin != 0) {
+                if (i == 0) {
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tabView.getLayoutParams();
+                    layoutParams.setMargins(mHorizontalMargin, 0, 0, 0);
+                } else if (i == adapter.getCount() - 1) {
+                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tabView.getLayoutParams();
+                    layoutParams.setMargins(0, 0, mHorizontalMargin, 0);
+                }
             }
 
             tabTitleView.setText(adapter.getPageTitle(i));
