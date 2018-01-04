@@ -61,6 +61,8 @@ public class Client {
 
     //观点详情页
     private static final String POINT_DETAIL_PAGE_URL = API.getHost() + "/lm/viewpoint/index.html?id=%d";
+    
+    public static final String INTEGRAL_SHOP = API.getHost() + "/lm/score/index.html";
 
     public static String getServiceQQ(String serviceQQ) {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
