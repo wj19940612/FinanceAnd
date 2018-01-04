@@ -9,9 +9,8 @@ public class Task {
     public static final String RULE_KLINE_BATTLE = "kline01"; //K线对战
     public static final String RULE_RADIO = "radio01"; //收听电台
     public static final String RULE_GUESS = "guessstock01"; //参与猜大盘
-    public static final String RULE_FUTURE_BATTLE = "futureswar01"; //姐说提问
-    public static final String RULE_FUTURE_BATTLE = "futureswar01"; //期货对战
-    public static final String
+//    public static final String RULE_FUTURE_BATTLE = "futureswar01"; //姐说提问
+//    public static final String RULE_FUTURE_BATTLE = "futureswar01"; //期货对战
 
     private int completeCount;  //需要完成的次数
     private long createTime;
