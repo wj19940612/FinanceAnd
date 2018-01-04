@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context="com.sbai.finance.activity.anchor.radio.AllRadioListActivity">
+
+    <com.sbai.finance.view.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backFeature="true"
+        app:titleText="@string/radio"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ListView
+                android:layout_marginTop="@dimen/common_padding"
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:scrollbars="none"/>
+
+            <TextView
+                android:id="@android:id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawablePadding="10dp"
+                android:drawableTop="@drawable/img_no_message"
+                android:gravity="center"
+                android:text="@string/not_has_radio_now"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

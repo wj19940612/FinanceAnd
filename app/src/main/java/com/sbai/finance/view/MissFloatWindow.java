@@ -14,9 +14,9 @@ import android.widget.LinearLayout;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.miss.QuestionDetailActivity;
-import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
-import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.activity.anchor.QuestionDetailActivity;
+import com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity;
+import com.sbai.finance.model.anchor.Question;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Launcher;

@@ -64,7 +64,6 @@ import com.sbai.finance.utils.Network;
 import com.sbai.finance.utils.TimerHandler;
 import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.utils.UmengCountEventId;
-import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.BattleOperateView;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
@@ -160,8 +159,6 @@ public class BattleActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle);
         ButterKnife.bind(this);
-
-        MissAudioManager.get().stop();
 
         initData(getIntent());
         initBattleOperateView();

@@ -12,6 +12,8 @@ import android.widget.ScrollView;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.net.API;
 import com.sbai.finance.utils.TimerHandler;
+import com.sbai.finance.utils.audio.MissAudioManager;
+import com.sbai.finance.utils.audio.OnPlayRadioManager;
 import com.sbai.httplib.ApiIndeterminate;
 import com.umeng.analytics.MobclickAgent;
 
@@ -40,7 +42,17 @@ public class BaseFragment extends Fragment implements
         MobclickAgent.onPageStart(TAG);
     }
 
-    
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        boolean isCanPlayPage = this instanceof OnPlayRadioManager;
+        if (isVisibleToUser) {
+            if (!isCanPlayPage && MissAudioManager.get().isPlaying()) {
+                MissAudioManager.get().stop();
+            }
+        }
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

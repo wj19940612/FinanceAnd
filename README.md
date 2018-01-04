@@ -29,7 +29,7 @@
 # 统一命名
 - 训练：Training
 - 发现：Discovery
-- 小姐姐：Miss
+- 主播：Anchor
 - 姐说：MissTalk
 - 对战：Battle
 - 股票：Stock

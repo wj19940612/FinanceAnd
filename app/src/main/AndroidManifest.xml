@@ -302,15 +302,15 @@
         <!-- 排行榜 -->
 
         <activity
-            android:name=".activity.miss.radio.RadioStationPlayActivity"
+            android:name=".activity.anchor.radio.RadioStationPlayActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.miss.QuestionDetailActivity"
+            android:name=".activity.anchor.QuestionDetailActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"/>
         <activity
-            android:name=".activity.miss.SubmitQuestionActivity"
+            android:name=".activity.anchor.SubmitQuestionActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
@@ -326,18 +326,23 @@
             android:name=".activity.evaluation.HistoryEvaluationResultActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.miss.RewardMissActivity"
+            android:name=".activity.anchor.RewardMissActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BaseDialog.Activity"/>
         <activity
-            android:name=".activity.miss.CommentActivity"
+            android:name=".activity.anchor.CommentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BaseDialog.Bottom"/>
         <activity
-            android:name=".activity.miss.MissProfileDetailActivity"
+            android:name=".activity.anchor.MissProfileDetailActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.miss.RadioStationListActivity"
+            android:name=".activity.anchor.RadioStationListActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.anchor.radio.AllRadioListActivity"
+            android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"/>
 
         <!-- 发现 -->
@@ -441,10 +446,9 @@
             android:name=".activity.mine.WaitForMeAnswerActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.miss.MissRecordAudioReplyActivity"
+            android:name=".activity.anchor.MissRecordAudioReplyActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.arena.KlineRankListActivity"
             android:screenOrientation="portrait"/>
@@ -456,7 +460,6 @@
             android:name=".activity.arena.KlinePracticeResultActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name=".activity.arena.klinebattle.BattleKlineActivity"
             android:screenOrientation="portrait"/>
@@ -469,7 +472,7 @@
         <activity
             android:name=".activity.arena.klinebattle.BattleKlineReviewActivity"
             android:screenOrientation="portrait"/>
-        <!-- TEST-->
+        <!-- TEST -->
     </application>
 
 </manifest>

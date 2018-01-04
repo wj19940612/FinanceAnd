@@ -5,13 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.style.ImageSpan;
-import android.widget.TextView;
-
-import com.sbai.finance.R;
-import com.sbai.finance.fragment.miss.MissProfileRadioFragment;
 
 /**
  * Created by Administrator on 2017\11\27 0027.

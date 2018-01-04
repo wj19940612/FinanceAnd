@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/rootView"
+    android:background="@android:color/white">
+
+    <ImageView
+        android:id="@+id/needPay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_anchor_need_pay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/anchorInfoLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginTop="@dimen/common_padding"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginTop="@dimen/common_padding">
+
+        <com.sbai.finance.view.HasLabelImageLayout
+            android:id="@+id/hasLabelLayout"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:label_view_height="12dp"
+            app:label_view_width="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/anchorName"/>
+
+        <TextView
+            android:id="@+id/anchorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:textColor="@color/unluckyText"
+            android:textSize="12sp"
+            tools:text="溺水的鱼嘎嘎和工行"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/pointTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/primaryText"
+        android:textSize="15sp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/anchorInfoLayout"
+        tools:text="溺水的鱼大家点击手机"/>
+
+    <TextView
+        android:id="@+id/pointContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:paddingRight="@dimen/common_padding"
+        android:textColor="@color/luckyText"
+        app:layout_constraintStart_toStartOf="@id/pointTitle"
+        app:layout_constraintTop_toBottomOf="@+id/pointTitle"
+        tools:text="数据啊开发和第三的空间就是的设计开发环境肯定撒回复打算尽快发货的空否会多少积分考核等级考试发挥打算尽快发货单接口是否好看的减肥发到手机凤凰"/>
+
+    <com.sbai.finance.view.ThreeImageLayout
+        android:id="@+id/threeImageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@id/pointTitle"
+        app:layout_constraintTop_toBottomOf="@+id/pointContent"/>
+
+    <View
+        android:id="@+id/split"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:layout_marginRight="@dimen/common_padding"
+        android:layout_marginTop="8dp"
+        android:background="@color/background"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/threeImageLayout"/>
+
+    <TextView
+        android:id="@+id/prise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_padding"
+        android:drawablePadding="4dp"
+        android:text="@string/praise"
+        android:textColor="@color/luckyText"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/pointTitle"
+        app:layout_constraintTop_toBottomOf="@+id/split"
+        android:drawableLeft="@drawable/ic_miss_praise"/>
+
+    <TextView
+        android:id="@+id/review"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:drawableLeft="@drawable/ic_miss_comment"
+        android:drawablePadding="4dp"
+        android:text="@string/comment"
+        android:textColor="@color/luckyText"
+        android:textSize="12sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/prise"
+        app:layout_constraintLeft_toRightOf="@+id/prise"/>
+
+    <TextView
+        android:id="@+id/pointPublishTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/common_padding"
+        app:layout_constraintBaseline_toBaselineOf="@+id/review"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="20:20"/>
+
+    <View
+        android:id="@+id/commentSplit"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_marginTop="@dimen/common_padding"
+        android:background="@color/background"
+        app:layout_constraintTop_toBottomOf="@+id/pointPublishTime"/>
+    <!--<View-->
+        <!--android:visibility="gone"-->
+        <!--android:id="@+id/anchorSplit"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="10dp"-->
+        <!--android:background="@color/background"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/commentSplit"/>-->
+
+</android.support.constraint.ConstraintLayout>

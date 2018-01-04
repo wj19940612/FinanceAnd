@@ -106,7 +106,7 @@ public class MissRecordedAudioLayout extends LinearLayout implements View.OnTouc
         mAudioLengthTextView = new TextView(getContext());
         mAudioLengthTextView.setGravity(Gravity.CENTER);
         mAudioLengthTextView.setPadding(dp2px(14), dp2px(8), dp2px(8), dp2px(14));
-        mAudioLengthTextView.setBackgroundResource(R.drawable.bg_splite_rounded);
+        mAudioLengthTextView.setBackgroundResource(R.drawable.bg_split_one_hundred_rounded);
         mAudioLengthTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.unluckyText));
         mAudioLengthTextView.setText(R.string.recording);
         mAudioLengthTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);

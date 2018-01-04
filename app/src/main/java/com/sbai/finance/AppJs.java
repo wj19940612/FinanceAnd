@@ -15,10 +15,10 @@ import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.activity.mine.setting.SecurityCenterActivity;
-import com.sbai.finance.activity.miss.MissProfileDetailActivity;
-import com.sbai.finance.activity.miss.QuestionDetailActivity;
-import com.sbai.finance.activity.miss.RadioStationListActivity;
-import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
+import com.sbai.finance.activity.anchor.MissProfileDetailActivity;
+import com.sbai.finance.activity.anchor.QuestionDetailActivity;
+import com.sbai.finance.activity.anchor.RadioStationListActivity;
+import com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity;
 import com.sbai.finance.activity.stock.StockDetailActivity;
 import com.sbai.finance.activity.stock.StockIndexActivity;
 import com.sbai.finance.model.mine.cornucopia.AccountFundDetail;
@@ -298,7 +298,7 @@ public class AppJs {
                 break;
             case JsOpenAppPageType.MISS_HOME_PAGE:
                 Launcher.with(mContext, MainActivity.class)
-                        .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_MISS)
+                        .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_ANCHOR)
                         .execute();
                 break;
             case JsOpenAppPageType.HOME_PAGE:

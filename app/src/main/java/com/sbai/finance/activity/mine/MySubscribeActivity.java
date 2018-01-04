@@ -27,7 +27,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.miss.RadioStationListActivity;
+import com.sbai.finance.activity.anchor.RadioStationListActivity;
 import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;

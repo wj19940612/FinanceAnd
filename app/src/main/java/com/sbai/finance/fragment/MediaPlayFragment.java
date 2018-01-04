@@ -4,11 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.View;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.anchor.Question;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.service.MediaPlayService;

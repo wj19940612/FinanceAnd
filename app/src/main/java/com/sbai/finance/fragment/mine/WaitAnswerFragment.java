@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.mine.WaitForMeAnswerActivity;
-import com.sbai.finance.activity.miss.MissRecordAudioReplyActivity;
+import com.sbai.finance.activity.anchor.MissRecordAudioReplyActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.Answer;
 import com.sbai.finance.net.Callback2D;

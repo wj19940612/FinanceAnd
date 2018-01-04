@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.sbai.finance.R;
-import com.sbai.finance.model.miss.Question;
+import com.sbai.finance.model.anchor.Question;
 import com.sbai.finance.utils.Display;
 import com.sbai.glide.GlideApp;
 

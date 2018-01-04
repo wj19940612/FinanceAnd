@@ -29,7 +29,7 @@ import com.sbai.finance.activity.mine.fund.WalletActivity;
 import com.sbai.finance.activity.mine.setting.SettingActivity;
 import com.sbai.finance.activity.mine.setting.UpdateSecurityPassActivity;
 import com.sbai.finance.activity.mine.userinfo.ModifyUserInfoActivity;
-import com.sbai.finance.activity.miss.MissProfileDetailActivity;
+import com.sbai.finance.activity.anchor.MissProfileDetailActivity;
 import com.sbai.finance.activity.training.CreditIntroduceActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
