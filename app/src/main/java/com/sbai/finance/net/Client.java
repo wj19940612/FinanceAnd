@@ -59,6 +59,9 @@ public class Client {
 
     public static final String ACTIVITY_URL_GUESS_HAPPY = API.getHost() + "/lm/guess/index.html?share=false";
 
+    //观点详情页
+    private static final String POINT_DETAIL_PAGE_URL = API.getHost() + "/lm/viewpoint/index.html?id=%d";
+
     public static String getServiceQQ(String serviceQQ) {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
 //            return "mqqwpa://im/chat?chat_type=wpa&uin=" + serviceQQ + "&version=1";
@@ -3178,7 +3181,6 @@ public class Client {
     }
 
     /**
-     *
      * /explain/topicManage/findTopic.do
      * 获取话题列表(薛松)
      *

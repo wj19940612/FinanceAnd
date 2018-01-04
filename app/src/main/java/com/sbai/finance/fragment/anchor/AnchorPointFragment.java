@@ -179,8 +179,8 @@ public class AnchorPointFragment extends BaseFragment {
                     .setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<AnchorPoint>, AnchorPoint>() {
                         @Override
-                        protected void onRespSuccessData(AnchorPoint data) {
-                            // TODO: 2018/1/3 h5详情  
+                        protected void onRespSuccessData(AnchorPoint anchorPoint) {
+                            
                         }
 
                         @Override
