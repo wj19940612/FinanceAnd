@@ -3564,4 +3564,18 @@ public class Client {
                 new ApiParams()
                         .put("id", id));
     }
+
+    /**
+     * /explain/audioManage/audioListen.do
+     * POST
+     * [App]音频--收听,音频收听完调用(薛松)
+     *
+     * @param audioId
+     * @return
+     */
+    public static API submitAudioIsListenComplete(int audioId) {
+        return new API(POST, "/explain/audioManage/audioListen.do",
+                new ApiParams()
+                        .put("audioId", audioId));
+    }
 }

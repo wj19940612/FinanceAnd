@@ -173,7 +173,6 @@ public class MissAudioManager {
                         mOnCompletedListener.onCompleted(mAudio.getAudioUrl());
                     }
                     stop();
-
                 }
             });
 
