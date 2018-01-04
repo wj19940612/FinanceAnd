@@ -141,6 +141,7 @@
     <string name="finance_evaluation">金融测评</string>
     <string name="finance_evaluation_hint">测测金融水平</string>
     <string name="wallet">钱包</string>
+    <string name="integral_shop">积分商城</string>
     <string name="my_collection">我的收藏</string>
     <string name="my_question_and_answer">我的问答</string>
     <string name="now_not_has_data">暂无数据</string>
@@ -362,6 +363,7 @@
     <string name="mine_crash">我的现金(元)</string>
     <string name="mine_score">我的模拟金</string>
     <string name="mine_ingot">我的元宝</string>
+    <string name="mine_integral_">我的积分: %1$d</string>
     <string name="confirm_payment_money">确认支付  (%1$s元)</string>
     <string name="confirm_payment_ingot">确认支付  (%1$s元宝)</string>
     <string name="confirm_money">确认支付</string>
