@@ -8,6 +8,10 @@ import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 
+import com.sbai.finance.ExtraKeys;
+import com.sbai.finance.activity.MainActivity;
+import com.sbai.finance.model.product.PayProductInfo;
+
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -17,18 +21,18 @@ public class Launcher {
     public static final String EX_PAYLOAD = "payload";
     /**
      * @deprecated
-     * */
+     */
     public static final String EX_PAYLOAD_1 = "payload1";
     /**
      * @deprecated
-     * */
+     */
     public static final String EX_PAYLOAD_2 = "payload2";
     /**
      * @deprecated
-     * */
+     */
     public static final String EX_PAYLOAD_3 = "payload3";
 
-    public static final String EX_PAY_END="pay";
+    public static final String EX_PAY_END = "pay";
 
 
     private static Launcher sInstance;
@@ -141,11 +145,16 @@ public class Launcher {
         }
     }
 
-    public void excuteForResultFragment(int requestCode){
+    public void excuteForResultFragment(int requestCode) {
         if (mFragment != null && mContext != null) {
             if (mFragment instanceof Fragment) {
                 mFragment.startActivityForResult(mIntent, requestCode);
             }
         }
+    }
+
+    // TODO: 2018/1/4 先写在里面
+    public static void openBuyPage(Context context, PayProductInfo payProductInfo) {
+        Launcher.with(context, MainActivity.class).putExtra(ExtraKeys.PAY_PRODUCT,payProductInfo).execute();
     }
 }

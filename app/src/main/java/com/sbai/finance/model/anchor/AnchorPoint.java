@@ -1,14 +1,16 @@
 package com.sbai.finance.model.anchor;
 
-import com.sbai.finance.utils.audio.ProductFreeStatusCode;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.sbai.finance.model.product.PayProductInfo;
 
 /**
  * Created by ${wangJie} on 2018/1/2.
  * 主播观点model
  */
 
-public class AnchorPoint implements ProductFreeStatusCode {
-
+public class AnchorPoint implements PayProductInfo, Parcelable {
 
     /**
      * commentCount : 0
@@ -39,7 +41,15 @@ public class AnchorPoint implements ProductFreeStatusCode {
     private int userUse;    //用户是否已购买  0 没有购买  1 购买
     private String viewDesc; //内容
     private String viewTitle;
+    private int datapraise;  // 0 没点赞  1 已点赞
 
+    public int getDatapraise() {
+        return datapraise;
+    }
+
+    public void setDatapraise(int datapraise) {
+        this.datapraise = datapraise;
+    }
 
     public int getCommentCount() {
         return commentCount;
@@ -144,4 +154,74 @@ public class AnchorPoint implements ProductFreeStatusCode {
     public void setViewTitle(String viewTitle) {
         this.viewTitle = viewTitle;
     }
+
+    @Override
+    public int getProductType() {
+        return PRODUCT_TYPE_POINT;
+    }
+
+    @Override
+    public double getPrice() {
+        return getMoney();
+    }
+
+    @Override
+    public int getProductId() {
+        return getId();
+    }
+
+    public AnchorPoint() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.commentCount);
+        dest.writeInt(this.customId);
+        dest.writeInt(this.free);
+        dest.writeInt(this.id);
+        dest.writeString(this.imgUrls);
+        dest.writeInt(this.money);
+        dest.writeString(this.name);
+        dest.writeString(this.portrait);
+        dest.writeInt(this.praiseCount);
+        dest.writeLong(this.updateTime);
+        dest.writeInt(this.userUse);
+        dest.writeString(this.viewDesc);
+        dest.writeString(this.viewTitle);
+        dest.writeInt(this.datapraise);
+    }
+
+    protected AnchorPoint(Parcel in) {
+        this.commentCount = in.readInt();
+        this.customId = in.readInt();
+        this.free = in.readInt();
+        this.id = in.readInt();
+        this.imgUrls = in.readString();
+        this.money = in.readInt();
+        this.name = in.readString();
+        this.portrait = in.readString();
+        this.praiseCount = in.readInt();
+        this.updateTime = in.readLong();
+        this.userUse = in.readInt();
+        this.viewDesc = in.readString();
+        this.viewTitle = in.readString();
+        this.datapraise = in.readInt();
+    }
+
+    public static final Creator<AnchorPoint> CREATOR = new Creator<AnchorPoint>() {
+        @Override
+        public AnchorPoint createFromParcel(Parcel source) {
+            return new AnchorPoint(source);
+        }
+
+        @Override
+        public AnchorPoint[] newArray(int size) {
+            return new AnchorPoint[size];
+        }
+    };
 }

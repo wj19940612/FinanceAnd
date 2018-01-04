@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,11 +18,13 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.anchor.CommentActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.anchor.AnchorPoint;
+import com.sbai.finance.model.anchor.Praise;
 import com.sbai.finance.model.anchor.Question;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -164,9 +167,20 @@ public class AnchorPointFragment extends BaseFragment {
         });
     }
 
-    private void praisePoint(AnchorPoint anchorPoint, int position) {
+    private void praisePoint(final AnchorPoint anchorPoint, int position) {
         if (LocalUser.getUser().isLogin()) {
-            // TODO: 2018/1/3 点赞
+            Client.praisePoint(anchorPoint.getId())
+                    .setIndeterminate(this)
+                    .setTag(TAG)
+                    .setCallback(new Callback2D<Resp<Praise>, Praise>() {
+                        @Override
+                        protected void onRespSuccessData(Praise data) {
+                            anchorPoint.setPraiseCount(data.getPriseCount());
+                            anchorPoint.setDatapraise(data.getIsPrise());
+                            mAnchorPointAdapter.notifyDataSetChanged();
+                        }
+                    })
+                    .fire();
         } else {
             Launcher.with(getActivity(), LoginActivity.class).execute();
         }
@@ -180,7 +194,13 @@ public class AnchorPointFragment extends BaseFragment {
                     .setCallback(new Callback2D<Resp<AnchorPoint>, AnchorPoint>() {
                         @Override
                         protected void onRespSuccessData(AnchorPoint data) {
-                            // TODO: 2018/1/3 h5详情  
+                            if (data.getFree() == AnchorPoint.PRODUCT_RATE_CHARGE
+                                    && data.getUserUse() == AnchorPoint.PRODUCT_RECHARGE_STATUS_NOT_PAY) {
+                                Launcher.openBuyPage(getActivity(), data);
+                            } else {
+                                String url = String.format(Client.PAGE_URL_POINT_DETAIL, data.getId());
+                                Launcher.with(getActivity(), WebActivity.class).putExtra(WebActivity.EX_URL, url).execute();
+                            }
                         }
 
                         @Override
@@ -342,6 +362,12 @@ public class AnchorPointFragment extends BaseFragment {
             TextView mReview;
             @BindView(R.id.pointPublishTime)
             TextView mPointPublishTime;
+            @BindView(R.id.commentSplit)
+            View mCommentSplit;
+            @BindView(R.id.anchorSplit)
+            View mAnchorSplit;
+            @BindView(R.id.rootView)
+            ConstraintLayout mRootView;
 
 
             ViewHolder(View view) {
@@ -352,6 +378,7 @@ public class AnchorPointFragment extends BaseFragment {
             public void bindDataWithView(final AnchorPoint anchorPoint, final int position, Context context, int pointType, final OnPointCallBack onPointCallBack) {
                 if (pointType == AnchorPointFragment.POINT_TYPE_ANCHOR) {
                     mAnchorInfoLayout.setVisibility(View.GONE);
+                    mAnchorSplit.setVisibility(View.VISIBLE);
                 } else {
                     mAnchorInfoLayout.setVisibility(View.VISIBLE);
                     mHasLabelLayout.setAvatar(anchorPoint.getPortrait(), Question.USER_IDENTITY_MISS);
@@ -366,12 +393,12 @@ public class AnchorPointFragment extends BaseFragment {
                 if (anchorPoint.getFree() == AnchorPoint.PRODUCT_RATE_FREE) {
                     mNeedPay.setVisibility(View.INVISIBLE);
                 } else {
+                    mNeedPay.setVisibility(View.VISIBLE);
                     boolean alreadyPay = anchorPoint.getUserUse() == AnchorPoint.PRODUCT_RECHARGE_STATUS_ALREADY_PAY;
                     mNeedPay.setSelected(alreadyPay);
                 }
 
-                // TODO: 2018/1/4 是否点赞
-                if (true) {
+                if (anchorPoint.getDatapraise() == Praise.IS_PRAISE) {
                     mPrise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_praise, 0, 0, 0);
                 } else {
                     mPrise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_unpraise, 0, 0, 0);
@@ -389,11 +416,21 @@ public class AnchorPointFragment extends BaseFragment {
                     mReview.setText(StrFormatter.getFormatCount(anchorPoint.getCommentCount()));
                 }
 
+
                 mPrise.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (onPointCallBack != null) {
                             onPointCallBack.onPraise(anchorPoint, position);
+                        }
+                    }
+                });
+
+                mRootView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onPointCallBack != null) {
+                            onPointCallBack.onItemClick(anchorPoint, position);
                         }
                     }
                 });

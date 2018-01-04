@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/rootView"
     android:background="@android:color/white">
 
     <ImageView
@@ -26,8 +26,7 @@
         android:orientation="horizontal"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginTop="@dimen/common_padding">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.sbai.finance.view.HasLabelImageLayout
             android:id="@+id/hasLabelLayout"
@@ -52,10 +51,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/common_padding"
-        android:layout_marginTop="8dp"
+        android:paddingTop="8dp"
         android:textColor="@color/primaryText"
         android:textSize="15sp"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/anchorInfoLayout"
         tools:text="溺水的鱼大家点击手机"/>
@@ -99,13 +97,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_padding"
+        android:drawableLeft="@drawable/ic_miss_praise"
         android:drawablePadding="4dp"
         android:text="@string/praise"
         android:textColor="@color/luckyText"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@id/pointTitle"
-        app:layout_constraintTop_toBottomOf="@+id/split"
-        android:drawableLeft="@drawable/ic_miss_praise"/>
+        app:layout_constraintTop_toBottomOf="@+id/split"/>
 
     <TextView
         android:id="@+id/review"
@@ -136,12 +134,13 @@
         android:layout_marginTop="@dimen/common_padding"
         android:background="@color/background"
         app:layout_constraintTop_toBottomOf="@+id/pointPublishTime"/>
-    <!--<View-->
-        <!--android:visibility="gone"-->
-        <!--android:id="@+id/anchorSplit"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="10dp"-->
-        <!--android:background="@color/background"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/commentSplit"/>-->
+
+    <View
+        android:id="@+id/anchorSplit"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/background"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/commentSplit"/>
 
 </android.support.constraint.ConstraintLayout>

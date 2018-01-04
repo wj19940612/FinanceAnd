@@ -40,13 +40,17 @@ public class BaseFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         MobclickAgent.onPageStart(TAG);
+        boolean isCanPlayPage = this instanceof OnPlayRadioManager;
+        if (!isCanPlayPage && MissAudioManager.get().isPlaying()) {
+            MissAudioManager.get().stop();
+        }
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         boolean isCanPlayPage = this instanceof OnPlayRadioManager;
-        if (isVisibleToUser) {
+        if(isVisibleToUser){
             if (!isCanPlayPage && MissAudioManager.get().isPlaying()) {
                 MissAudioManager.get().stop();
             }

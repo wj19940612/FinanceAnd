@@ -59,6 +59,10 @@ public class Client {
 
     public static final String ACTIVITY_URL_GUESS_HAPPY = API.getHost() + "/lm/guess/index.html?share=false";
 
+    //观点详情页面链接
+    public static final String PAGE_URL_POINT_DETAIL = API.getHost() + "/lm/viewpoint/index.html?id=%d";
+
+
     public static String getServiceQQ(String serviceQQ) {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
 //            return "mqqwpa://im/chat?chat_type=wpa&uin=" + serviceQQ + "&version=1";
@@ -3178,7 +3182,6 @@ public class Client {
     }
 
     /**
-     *
      * /explain/topicManage/findTopic.do
      * 获取话题列表(薛松)
      *
@@ -3544,6 +3547,19 @@ public class Client {
      */
     public static API requestPointDetail(int id) {
         return new API(POST, "/explain/user/viewpoint/findById.do",
+                new ApiParams()
+                        .put("id", id));
+    }
+
+    /**
+     * /explain/user/viewpoint/praise/like.do
+     * POST
+     * 观点app-观点点赞 - 取消点赞（陈适）
+     *
+     * @param id
+     */
+    public static API praisePoint(int id) {
+        return new API(POST, "/explain/user/viewpoint/praise/like.do",
                 new ApiParams()
                         .put("id", id));
     }
