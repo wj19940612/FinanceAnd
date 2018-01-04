@@ -9,8 +9,15 @@ public class Task {
     public static final String RULE_KLINE_BATTLE = "kline01"; //K线对战
     public static final String RULE_RADIO = "radio01"; //收听电台
     public static final String RULE_GUESS = "guessstock01"; //参与猜大盘
-//    public static final String RULE_FUTURE_BATTLE = "futureswar01"; //姐说提问
-//    public static final String RULE_FUTURE_BATTLE = "futureswar01"; //期货对战
+    public static final String RULE_ASK = "ask01"; //姐说提问
+    public static final String RULE_DISCUSS = "discuss01"; //姐说音频、文章、话题、问题评论
+    public static final String RULE_INVITE = "invite01"; //邀请新用户注册成功
+    public static final String RULE_CERTIFICATION = "certification01"; //实名认证通过审核
+    public static final String RULE_EVALUATION = "evaluation01"; //金融测评完成
+    public static final String RULE_HEAD = "Head01"; //完成三个每日任务（宝箱1）
+    public static final String RULE_BOX01 = "box01"; //姐说音频、文章、话题、问题评论
+    public static final String RULE_BOX02 = "box02"; //完成五个每日任务（宝箱2）
+
 
     private int completeCount;  //需要完成的次数
     private long createTime;

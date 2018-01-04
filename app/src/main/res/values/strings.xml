@@ -1135,6 +1135,7 @@
     <string name="task_center_title">做任务 赚积分</string>
     <string name="today_get_integration">今日获取积分</string>
     <string name="newer_task">新手任务</string>
+    <string name="normal_task">日常任务</string>
     <string name="future_battle">期货对战</string>
     <string name="kline_battle">K线对战</string>
     <string name="buy_radio_or_article">购买电台或文章</string>
