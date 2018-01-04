@@ -193,6 +193,7 @@ public class AnchorPointFragment extends BaseFragment {
                     .setIndeterminate(this)
                     .setCallback(new Callback2D<Resp<AnchorPoint>, AnchorPoint>() {
                         @Override
+
                         protected void onRespSuccessData(AnchorPoint data) {
                             if (data.getFree() == AnchorPoint.PRODUCT_RATE_CHARGE
                                     && data.getUserUse() == AnchorPoint.PRODUCT_RECHARGE_STATUS_NOT_PAY) {

@@ -97,7 +97,7 @@ public class AnchorRecommendRadioLayout extends LinearLayout {
                     .load(radio.getRadioCover())
                     .into(radioCover);
             voiceName.setText(radio.getAudioName());
-            radioUpdateTime.setText(getContext().getString(R.string.time_update, DateUtil.formatDefaultStyleTime(radio.getReviewTime())));
+            radioUpdateTime.setText(getContext().getString(R.string.time_update, DateUtil.formatDefaultStyleTime(radio.getModifyTime())));
             radioName.setText(radio.getRadioName());
             radioOwnerName.setText(radio.getRadioHostName());
             addView(view, layoutParams);

@@ -254,6 +254,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         } else {
             if (mRadio == null) return;
             if (mMediaPlayService != null
+                    && mRadio.getId() != MissAudioManager.get().getAudio().getAudioId()
                     && !MissAudioManager.get().isStarted(audio)
                     && automaticPlay) {
                 mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);

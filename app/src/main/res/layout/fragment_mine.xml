@@ -115,9 +115,24 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/bg_white"
             android:visibility="visible"
+            app:hasBottomSplitLine="true"
             app:leftIcon="@drawable/ic_mine_wallet"
             app:rightIcon="@drawable/ic_arrow_right_tint"
             app:rowText="@string/wallet"
+            app:rowTextColor="@color/primaryText"
+            app:rowTextSize="15sp"
+            app:rowVerticalPadding="0dp"
+            app:splitLineColor="@color/split"/>
+
+        <com.sbai.finance.view.IconTextRow
+            android:id="@+id/shop"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_white"
+            android:visibility="visible"
+            app:leftIcon="@drawable/ic_integral_shop"
+            app:rightIcon="@drawable/ic_arrow_right_tint"
+            app:rowText="@string/integral_shop"
             app:rowTextColor="@color/primaryText"
             app:rowTextSize="15sp"
             app:rowVerticalPadding="0dp"/>
