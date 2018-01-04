@@ -1,14 +1,12 @@
 package com.sbai.finance.model.anchor;
 
-import com.sbai.finance.utils.audio.MissAudioManager;
-
 import java.io.Serializable;
 
 /**
  * 小姐姐列表
  */
 
-public class Anchor implements Serializable, MissAudioManager.IAudio {
+public class Anchor implements Serializable {
 
     /**
      * briefingSound : aaa
@@ -181,16 +179,6 @@ public class Anchor implements Serializable, MissAudioManager.IAudio {
                 ", soundTime=" + soundTime +
                 ", isAttention=" + isAttention +
                 '}';
-    }
-
-    @Override
-    public int getAudioId() {
-        return id;
-    }
-
-    @Override
-    public String getAudioUrl() {
-        return briefingSound;
     }
 
 }

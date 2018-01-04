@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/rootView"
     android:background="@android:color/white">
 
     <ImageView
@@ -104,7 +105,7 @@
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@id/pointTitle"
         app:layout_constraintTop_toBottomOf="@+id/split"
-        tools:drawableLeft="@drawable/ic_miss_praise"/>
+        android:drawableLeft="@drawable/ic_miss_praise"/>
 
     <TextView
         android:id="@+id/review"

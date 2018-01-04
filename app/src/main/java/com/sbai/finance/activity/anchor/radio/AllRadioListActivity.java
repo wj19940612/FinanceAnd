@@ -8,19 +8,23 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.anchor.RadioStationListActivity;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.glide.GlideApp;
 
 import java.util.HashSet;
@@ -51,7 +55,16 @@ public class AllRadioListActivity extends BaseActivity {
         mListView.setEmptyView(mEmpty);
         mRadioListAdapter = new RadioListAdapter(getActivity());
         mListView.setAdapter(mRadioListAdapter);
-        requestRadio();
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Radio radio = (Radio) parent.getAdapter().getItem(position);
+                if (radio != null)
+                    Launcher.with(getActivity(), RadioStationListActivity.class)
+                            .putExtra(ExtraKeys.RADIO, radio)
+                            .execute();
+            }
+        });
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -60,6 +73,12 @@ public class AllRadioListActivity extends BaseActivity {
                 requestRadio();
             }
         });
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        requestRadio();
     }
 
     private void requestRadio() {
@@ -149,6 +168,13 @@ public class AllRadioListActivity extends BaseActivity {
                 mRadioName.setText(radio.getRadioName());
                 mRadioOwnerName.setText(radio.getRadioHostName());
 
+                if (radio.getRadioPaid() == Radio.PRODUCT_RATE_CHARGE) {
+                    mNeedPay.setVisibility(View.VISIBLE);
+                    boolean alreadyPay = radio.getUserPayment() == Radio.PRODUCT_RECHARGE_STATUS_ALREADY_PAY;
+                    mNeedPay.setSelected(alreadyPay);
+                } else {
+                    mNeedPay.setVisibility(View.INVISIBLE);
+                }
             }
         }
     }

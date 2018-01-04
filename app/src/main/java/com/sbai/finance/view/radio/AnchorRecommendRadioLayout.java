@@ -73,7 +73,7 @@ public class AnchorRecommendRadioLayout extends LinearLayout {
         imageLayoutParams.setMargins((int) Display.dp2Px(14, getResources()), 0, 0, 0);
         ImageView imageView = new ImageView(getContext());
         imageView.setImageResource(R.drawable.ic_miss_radio_title);
-        relativeLayout.addView(imageView,imageLayoutParams);
+        relativeLayout.addView(imageView, imageLayoutParams);
 
         createMoreRadioTextView(relativeLayout);
 
@@ -111,13 +111,21 @@ public class AnchorRecommendRadioLayout extends LinearLayout {
                 }
             });
 
-            // TODO: 2017/12/29  需要增加是否付费
-            if (i % 2 == 0) {
-                needPay.setVisibility(VISIBLE);
+            if (radio.getRadioPaid() == Radio.PRODUCT_RATE_CHARGE) {
+                needPay.setVisibility(View.VISIBLE);
+                boolean alreadyPay = radio.getUserPayment() == Radio.PRODUCT_RECHARGE_STATUS_ALREADY_PAY;
+                needPay.setSelected(alreadyPay);
             } else {
-                needPay.setVisibility(GONE);
+                needPay.setVisibility(View.INVISIBLE);
             }
         }
+
+        relativeLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Launcher.with(getContext(), AllRadioListActivity.class).execute();
+            }
+        });
     }
 
     private void createMoreRadioTextView(RelativeLayout relativeLayout) {
@@ -135,12 +143,5 @@ public class AnchorRecommendRadioLayout extends LinearLayout {
         rlLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
         relativeLayout.addView(moreRadioTextView, rlLayoutParams);
-
-        relativeLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Launcher.with(getContext(), AllRadioListActivity.class).execute();
-            }
-        });
     }
 }

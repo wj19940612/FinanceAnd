@@ -15,9 +15,10 @@ import android.text.TextUtils;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.anchor.CommentActivity;
+import com.sbai.finance.activity.anchor.MediaPlayActivity;
 import com.sbai.finance.activity.mine.FeedbackActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
-import com.sbai.finance.activity.anchor.MediaPlayActivity;
 import com.sbai.finance.fragment.AnchorCircleFragment;
 import com.sbai.finance.fragment.ArenaFragment;
 import com.sbai.finance.fragment.HomePageFragment;
@@ -55,7 +56,7 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
     public static final int PAGE_POSITION_HOME = 0;
     public static final int PAGE_POSITION_INFO_NEWS = 1;
     public static final int PAGE_POSITION_ARENA = 2;
-    public static final int PAGE_POSITION_MISS = 3;
+    public static final int PAGE_POSITION_ANCHOR = 3;
     public static final int PAGE_POSITION_MINE = 4;
 
     @BindView(R.id.viewPager)
@@ -71,7 +72,7 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mMediaPlayService = ((MediaPlayService.MediaBinder) iBinder).getMediaPlayService();
-            AnchorCircleFragment fragment = (AnchorCircleFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_MISS);
+            AnchorCircleFragment fragment = (AnchorCircleFragment) mMainFragmentsAdapter.getFragment(PAGE_POSITION_ANCHOR);
             if (fragment != null) {
                 fragment.setService(mMediaPlayService);
             }
@@ -292,6 +293,9 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
                 case REQ_CODE_FEEDBACK_LOGIN:
                     Launcher.with(getActivity(), FeedbackActivity.class).execute();
                     break;
+                case CommentActivity.REQ_CODE_COMMENT:
+                    mMainFragmentsAdapter.getFragment(PAGE_POSITION_ANCHOR).onActivityResult(requestCode, resultCode, data); //处理米圈内部的回调
+                    break;
             }
         }
     }
@@ -308,7 +312,7 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
 
             @Override
             public void onPageSelected(int position) {
-                if (position != PAGE_POSITION_MISS) {
+                if (position != PAGE_POSITION_ANCHOR) {
                     MissAudioManager.get().stop();
                 }
                 mBottomTabs.selectTab(position);
@@ -329,7 +333,7 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
             public void onTabClick(int position) {
                 mBottomTabs.selectTab(position);
                 mViewPager.setCurrentItem(position, false);
-                if (position == PAGE_POSITION_MISS) {
+                if (position == PAGE_POSITION_ANCHOR) {
                     umengEventCount(UmengCountEventId.MISS_TALK_NAVIGATION);
                 }
             }
@@ -353,7 +357,7 @@ public class MainActivity extends MediaPlayActivity implements OnNoReadNewsListe
     }
 
     public void switchToMissFragment() {
-        mViewPager.setCurrentItem(PAGE_POSITION_MISS, false);
+        mViewPager.setCurrentItem(PAGE_POSITION_ANCHOR, false);
     }
 
     @Override

@@ -3178,6 +3178,7 @@ public class Client {
     }
 
     /**
+     *
      * /explain/topicManage/findTopic.do
      * 获取话题列表(薛松)
      *
@@ -3505,13 +3506,45 @@ public class Client {
                 new ApiParams().put("userId", userId));
     }
 
-    // TODO: 2017/12/29 所有的电台 
+    /**
+     * /explain/audioManage/more.do
+     * GET
+     * 小姐姐管理--更多电台(薛松)
+     *
+     * @return
+     */
     public static API requestRadioListData() {
-        return new API("/explain/audioManage/getRecommendLatestAudio.do");
+        return new API("/explain/audioManage/more.do");
     }
 
-    // TODO: 2018/1/2  获取推荐的观点
-    public static API requestRecommendPoint() {
-        return new API("");
+    /**
+     * /explain/user/viewpoint/list.do
+     * POST
+     * 观点app-列表
+     *
+     * @param page
+     * @param customId
+     * @return
+     */
+    public static API requestAnchorPoint(int page, int customId) {
+        return new API("/explain/user/viewpoint/list.do",
+                new ApiParams()
+                        .put("page", page)
+                        .put("pageSize", DEFAULT_PAGE_SIZE)
+                        .put("customId", customId));
+    }
+
+    /**
+     * /explain/user/viewpoint/findById.do
+     * POST
+     * 观点app-具体观点
+     *
+     * @param id
+     * @return
+     */
+    public static API requestPointDetail(int id) {
+        return new API(POST, "/explain/user/viewpoint/findById.do",
+                new ApiParams()
+                        .put("id", id));
     }
 }

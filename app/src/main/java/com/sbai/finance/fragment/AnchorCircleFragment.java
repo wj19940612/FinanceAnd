@@ -9,13 +9,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.anchor.CommentActivity;
 import com.sbai.finance.activity.anchor.SubmitQuestionActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.anchor.QuestionAndAnswerFragment;
@@ -132,8 +135,26 @@ public class AnchorCircleFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_CODE_LOGIN && resultCode == BaseActivity.RESULT_OK) {
-            Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+        int iad = data.getIntExtra(ExtraKeys.QUESTION_ID, -1);
+
+        Log.d(TAG, "onActivityResult: "+iad);
+        if (resultCode == BaseActivity.RESULT_OK) {
+            switch (requestCode) {
+                case REQ_CODE_LOGIN:
+                    Launcher.with(getActivity(), SubmitQuestionActivity.class).execute();
+                    break;
+                case CommentActivity.REQ_CODE_COMMENT:
+                    if (data != null) {
+                        int id = data.getIntExtra(ExtraKeys.QUESTION_ID, -1);
+                        if (id != -1) {
+                            RecommendFragment fragment = (RecommendFragment) mAnchorCircleFragmentAdapter.getFragment(PAGE_POSITION_RECOMMEND);
+                            if(fragment!=null){
+                                fragment.updatePointComment(id);
+                            }
+                        }
+                    }
+                    break;
+            }
         }
     }
 

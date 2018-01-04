@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
@@ -39,10 +38,9 @@ import static com.android.volley.DefaultRetryPolicy.DEFAULT_TIMEOUT_MS;
  */
 public class CommentActivity extends BaseActivity implements OnPlayRadioManager {
 
-    public static final String BROADCAST_ACTION_REPLY_SUCCESS = "broadcast_action_reply_success";
-
     public static final int COMMENT_TYPE_RADIO = 3;
     public static final int COMMENT_TYPE_QUESTION = 1;  //评论的类型：4话题,3电台
+    public static final int COMMENT_TYPE_POINT = 6;  //评论的类型：6 观点  todo 需要后台确认
 
     public static final int REQ_CODE_COMMENT = 5091;
     public static final int REQ_CODE_COMMENT_LOGIN = 1705;
@@ -103,7 +101,7 @@ public class CommentActivity extends BaseActivity implements OnPlayRadioManager 
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(0, R.anim.slide_out_to_bottom);
+//        overridePendingTransition(0, R.anim.slide_out_to_bottom);
     }
 
     @Override
@@ -194,13 +192,8 @@ public class CommentActivity extends BaseActivity implements OnPlayRadioManager 
                         if (resp.isSuccess()) {
                             ToastUtil.show(R.string.publish_success);
                             Intent intent = new Intent();
-                            intent.setAction(BROADCAST_ACTION_REPLY_SUCCESS);
                             intent.putExtra(ExtraKeys.QUESTION_ID, mDataId);
                             setResult(RESULT_OK, intent);
-                            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-                            Intent lastIntent = getIntent();
-                            lastIntent.putExtra(ExtraKeys.QUESTION_ID, mDataId);
-                            setResult(RESULT_OK, lastIntent);
                             finish();
                         } else {
                             ToastUtil.show(resp.getMsg());

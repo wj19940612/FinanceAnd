@@ -169,7 +169,7 @@ public class MyCollectAudioFragment extends BaseFragment {
             @Override
             public void onGoingViewClick() {
                 Launcher.with(getActivity(), MainActivity.class)
-                        .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_MISS)
+                        .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_ANCHOR)
                         .execute();
                 getActivity().finish();
             }

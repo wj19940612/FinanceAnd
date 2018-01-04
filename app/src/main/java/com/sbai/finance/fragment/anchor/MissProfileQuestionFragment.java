@@ -372,10 +372,6 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
             @Override
             public void itemClick(Question item) {
                 gotoQuestionDetail(item, mPlayIngItem);
-
-                if (mAnchor != null && MissAudioManager.get().isStarted(mAnchor)) {
-                    MissAudioManager.get().stop();
-                }
             }
 
             @Override

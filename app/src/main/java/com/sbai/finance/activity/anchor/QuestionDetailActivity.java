@@ -200,7 +200,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                     @Override
                     public void onSharePlatformClick(ShareDialog.SHARE_PLATFORM platform) {
                         Client.share().setTag(TAG).fire();
-                        stopQuestionVoice();
+                        MissAudioManager.get().stop();
                         switch (platform) {
                             case SINA_WEIBO:
                                 umengEventCount(UmengCountEventId.MISS_TALK_SHARE_WEIBO);
@@ -273,8 +273,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         IntentFilter filter = super.getIntentFilter();
         filter.addAction(ACTION_REWARD_SUCCESS);
         filter.addAction(ACTION_LOGIN_SUCCESS);
-        filter.addAction(CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
         return filter;
     }
 
@@ -345,22 +343,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
             mListView.removeFooterView(mFootView);
             mFootView = null;
             requestQuestionReplyList(true);
-        }
-
-        if (Intent.ACTION_SCREEN_OFF.equalsIgnoreCase(intent.getAction())) {
-            stopQuestionVoice();
-        }
-
-        if (CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-            mSet.clear();
-            mPage = 0;
-            mReplayMsgId = null;
-            mSwipeRefreshLayout.setLoadMoreEnable(true);
-            mListView.removeFooterView(mFootView);
-            mFootView = null;
-            requestQuestionDetail();
-            requestQuestionReplyList(true);
-            mListView.setSelection(0);
         }
     }
 
@@ -568,11 +550,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
     }
 
 
-    public void stopQuestionVoice() {
-        MissAudioManager.get().stop();
-    }
-
-
     private void requestQuestionReplyList(final boolean isRefresh) {
         Client.getQuestionReplyList(mType, mQuestionId, mPage, mPageSize, mReplayMsgId)
                 .setTag(TAG)
@@ -684,7 +661,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                     }
                 }).fire();
             } else {
-                stopQuestionVoice();
                 Launcher.with(getActivity(), LoginActivity.class).execute();
             }
         }
@@ -704,7 +680,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                     }
                 }).fire();
             } else {
-                stopQuestionVoice();
                 Launcher.with(getActivity(), LoginActivity.class).execute();
             }
         }
@@ -719,7 +694,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
                         .executeForResult(CommentActivity.REQ_CODE_COMMENT);
 
             } else {
-                stopQuestionVoice();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivityForResult(intent, CommentActivity.REQ_CODE_COMMENT_LOGIN);
             }
@@ -731,7 +705,6 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
             if (LocalUser.getUser().isLogin()) {
                 RewardMissActivity.show(getActivity(), mQuestionId, RewardInfo.TYPE_QUESTION);
             } else {
-                stopQuestionVoice();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivityForResult(intent, REQ_REWARD_LOGIN);
             }
@@ -904,6 +877,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
             requestQuestionDetail();
             requestQuestionReplyList(true);
             mListView.setSelection(0);
+
         }
 
         if (requestCode == CommentActivity.REQ_CODE_COMMENT_LOGIN && resultCode == RESULT_OK) {

@@ -376,6 +376,11 @@ public class Question implements Parcelable, MissAudioManager.IAudio {
     }
 
     @Override
+    public int getSource() {
+        return MissAudioManager.IAudio.AUDIO_SOURCE_QUESTION;
+    }
+
+    @Override
     public String toString() {
         return "Question{" +
                 "answerContext='" + answerContext + '\'' +

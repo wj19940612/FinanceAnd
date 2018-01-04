@@ -1,6 +1,7 @@
 package com.sbai.finance.fragment.anchor;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,15 +14,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.anchor.CommentActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.BaseFragment;
+import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.anchor.AnchorPoint;
 import com.sbai.finance.model.anchor.Question;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
+import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
+import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.EmptyRecyclerView;
 import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.finance.view.ThreeImageLayout;
@@ -54,6 +62,11 @@ public class AnchorPointFragment extends BaseFragment {
     private Unbinder mBind;
     private HashSet<Integer> mSet;
     private AnchorPointAdapter mAnchorPointAdapter;
+    private int mCustomId;
+    private int mPage;
+
+    private boolean mLoadMore;
+    private ArrayList<AnchorPoint> mAnchorPointArrayList;
 
     public AnchorPointFragment() {
     }
@@ -65,6 +78,11 @@ public class AnchorPointFragment extends BaseFragment {
         args.putInt(POINT_TYPE_KEY, pointType);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public AnchorPointFragment setAnchorId(int customId) {
+        mCustomId = customId;
+        return this;
     }
 
     @Override
@@ -87,23 +105,108 @@ public class AnchorPointFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSet = new HashSet<>();
+        mAnchorPointArrayList = new ArrayList<>();
 
-        mAnchorPointAdapter = new AnchorPointAdapter(new ArrayList<AnchorPoint>(), getActivity());
+        initRecycleView();
+
+        requestRecommendPoint();
+    }
+
+    private void initRecycleView() {
+        mAnchorPointAdapter = new AnchorPointAdapter(mAnchorPointArrayList, getActivity());
         mAnchorPointAdapter.setPointType(POINT_TYPE_ANCHOR);
         mEmptyRecyclerView.setEmptyView(mEmpty);
         mEmptyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mEmptyRecyclerView.setAdapter(mAnchorPointAdapter);
 
-        requestRecommendPoint();
+        mEmptyRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (!recyclerView.canScrollVertically(RecyclerView.VERTICAL)) {
+                    requestRecommendPoint();
+                }
+
+            }
+        });
+
+        initListener();
+    }
+
+    private void initListener() {
+        mAnchorPointAdapter.setOnPointCallBack(new AnchorPointAdapter.OnPointCallBack() {
+            @Override
+            public void onItemClick(AnchorPoint anchorPoint, int position) {
+                requestPointDetail(anchorPoint, position);
+            }
+
+            @Override
+            public void onPraise(AnchorPoint anchorPoint, int position) {
+                praisePoint(anchorPoint, position);
+            }
+
+            @Override
+            public void onReview(AnchorPoint anchorPoint, int position) {
+                if (LocalUser.getUser().isLogin()) {
+                    Launcher.with(getActivity(), CommentActivity.class)
+                            .putExtra(Launcher.EX_PAYLOAD_1, anchorPoint.getId())
+                            .putExtra(ExtraKeys.COMMENT_SOURCE, CommentActivity.COMMENT_TYPE_POINT)
+                            .executeForResult(CommentActivity.REQ_CODE_COMMENT);
+                } else {
+                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                }
+            }
+        });
+    }
+
+    private void praisePoint(AnchorPoint anchorPoint, int position) {
+        if (LocalUser.getUser().isLogin()) {
+            // TODO: 2018/1/3 点赞
+        } else {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
+    }
+
+    private void requestPointDetail(final AnchorPoint anchorPoint, final int position) {
+        if (anchorPoint != null) {
+            Client.requestPointDetail(anchorPoint.getId())
+                    .setTag(TAG)
+                    .setIndeterminate(this)
+                    .setCallback(new Callback2D<Resp<AnchorPoint>, AnchorPoint>() {
+                        @Override
+                        protected void onRespSuccessData(AnchorPoint data) {
+                            // TODO: 2018/1/3 h5详情  
+                        }
+
+                        @Override
+                        protected void onRespFailure(Resp failedResp) {
+                            super.onRespFailure(failedResp);
+                            if (failedResp.getCode() == Resp.CODE_POINT_ALREADY_BUY) {
+                                ToastUtil.show(failedResp.getMsg());
+                            } else if (failedResp.getCode() == Resp.CODE_POINT_IS_DELETE || failedResp.getCode() == Resp.CODE_POINT_IS_SOLD_OUT) {
+                                mAnchorPointArrayList.remove(anchorPoint);
+                                mAnchorPointAdapter.notifyItemRemoved(position);
+                            }
+                        }
+                    })
+                    .fire();
+
+        }
     }
 
     public void refreshData() {
         mSet.clear();
+        mLoadMore = true;
         requestRecommendPoint();
     }
 
     private void requestRecommendPoint() {
-        Client.requestRecommendPoint()
+        Client.requestAnchorPoint(mPage, mCustomId)
                 .setTag(TAG)
                 .setCallback(new Callback2D<Resp<List<AnchorPoint>>, List<AnchorPoint>>() {
                     @Override
@@ -112,27 +215,18 @@ public class AnchorPointFragment extends BaseFragment {
                     }
                 })
                 .fireFree();
-
-        // TODO: 2018/1/2 模拟数据
-        ArrayList<AnchorPoint> pointArrayList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            AnchorPoint anchorPoint = new AnchorPoint();
-            anchorPoint.setId(i);
-            anchorPoint.setAnchorName(i + " 溺水的鱼 " + i + " 号 ");
-            anchorPoint.setAnchorPortrait("http://img.zcool.cn/community/0117e2571b8b246ac72538120dd8a4.jpg@1280w_1l_2o_100sh.jpg");
-            anchorPoint.setPointContent("肯定撒付款的时间阿卡丽点时空裂缝建档立卡手机开了莱克斯顿荆防颗粒的手机" + i + "\n 客户端空间是否会尽快回答是否可结合当升科技复合大师可见\n dadasd ");
-            anchorPoint.setPointTitle("这是第  " + i + " 推荐观点");
-            anchorPoint.setTime(System.currentTimeMillis());
-            anchorPoint.setImageContent("http://d.hiphotos.baidu.com/image/pic/item/3801213fb80e7beca7ccb433252eb9389a506bca.jpg,http://f.hiphotos.baidu.com/image/pic/item/0bd162d9f2d3572c3c8859318013632763d0c3f1.jpg,http://d.hiphotos.baidu.com/image/pic/item/b90e7bec54e736d1040cf5e091504fc2d562693e.jpg");
-            pointArrayList.add(anchorPoint);
-        }
-
-        updateAnchorPointList(pointArrayList);
     }
 
     private void updateAnchorPointList(List<AnchorPoint> data) {
         if (mSet.isEmpty()) {
             mAnchorPointAdapter.clear();
+        }
+
+        if (data.size() < Client.DEFAULT_PAGE_SIZE) {
+            mLoadMore = false;
+        } else {
+            mLoadMore = true;
+            mPage++;
         }
 
         for (AnchorPoint result : data) {
@@ -148,12 +242,41 @@ public class AnchorPointFragment extends BaseFragment {
         mBind.unbind();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == BaseActivity.RESULT_OK) {
+            switch (requestCode) {
+                case CommentActivity.REQ_CODE_COMMENT:
+                    if (data != null) {
+                        int id = data.getIntExtra(ExtraKeys.QUESTION_ID, -1);
+                        if (mAnchorPointArrayList != null && !mAnchorPointArrayList.isEmpty())
+                            for (AnchorPoint result : mAnchorPointArrayList) {
+                                if (result.getId() == id) {
+                                    result.setCommentCount(1);
+                                    mAnchorPointAdapter.notifyDataSetChanged();
+                                }
+                            }
+                    }
+                    break;
+            }
+        }
+    }
 
     static class AnchorPointAdapter extends RecyclerView.Adapter<AnchorPointAdapter.ViewHolder> {
+
+        public interface OnPointCallBack {
+            void onItemClick(AnchorPoint anchorPoint, int position);
+
+            void onPraise(AnchorPoint anchorPoint, int position);
+
+            void onReview(AnchorPoint anchorPoint, int position);
+        }
 
         private ArrayList<AnchorPoint> mAnchorPointArrayList;
         private Context mContext;
         private int mPointType;
+        private OnPointCallBack mOnPointCallBack;
 
         public AnchorPointAdapter(ArrayList<AnchorPoint> anchorPointArrayList, @NonNull Context context) {
             mContext = context;
@@ -175,6 +298,9 @@ public class AnchorPointFragment extends BaseFragment {
             mPointType = pointType;
         }
 
+        public void setOnPointCallBack(OnPointCallBack onPointCallBack) {
+            mOnPointCallBack = onPointCallBack;
+        }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -184,7 +310,7 @@ public class AnchorPointFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bindDataWithView(mAnchorPointArrayList.get(position), position, mContext, mPointType);
+            holder.bindDataWithView(mAnchorPointArrayList.get(position), position, mContext, mPointType, mOnPointCallBack);
         }
 
         @Override
@@ -217,51 +343,73 @@ public class AnchorPointFragment extends BaseFragment {
             @BindView(R.id.pointPublishTime)
             TextView mPointPublishTime;
 
+
             ViewHolder(View view) {
                 super(view);
                 ButterKnife.bind(this, view);
             }
 
-            public void bindDataWithView(AnchorPoint anchorPoint, int position, Context context, int pointType) {
+            public void bindDataWithView(final AnchorPoint anchorPoint, final int position, Context context, int pointType, final OnPointCallBack onPointCallBack) {
                 if (pointType == AnchorPointFragment.POINT_TYPE_ANCHOR) {
                     mAnchorInfoLayout.setVisibility(View.GONE);
                 } else {
-
                     mAnchorInfoLayout.setVisibility(View.VISIBLE);
-                    mHasLabelLayout.setAvatar(anchorPoint.getAnchorPortrait(), Question.USER_IDENTITY_MISS);
-                    mAnchorName.setText(anchorPoint.getAnchorName());
+                    mHasLabelLayout.setAvatar(anchorPoint.getPortrait(), Question.USER_IDENTITY_MISS);
+                    mAnchorName.setText(anchorPoint.getName());
                 }
 
-                mPointTitle.setText(anchorPoint.getPointTitle());
-                mPointContent.setText(anchorPoint.getPointContent());
-                mThreeImageLayout.setImagePath(anchorPoint.getImageContent());
-                if (anchorPoint.getPrise() == 0) {
+                mPointTitle.setText(anchorPoint.getViewTitle());
+                mPointContent.setText(anchorPoint.getViewDesc());
+                mThreeImageLayout.setImagePath(anchorPoint.getImgUrls());
+                mPointPublishTime.setText(DateUtil.formatDefaultStyleTime(anchorPoint.getUpdateTime()));
+
+                if (anchorPoint.getFree() == AnchorPoint.PRODUCT_RATE_FREE) {
+                    mNeedPay.setVisibility(View.INVISIBLE);
+                } else {
+                    boolean alreadyPay = anchorPoint.getUserUse() == AnchorPoint.PRODUCT_RECHARGE_STATUS_ALREADY_PAY;
+                    mNeedPay.setSelected(alreadyPay);
+                }
+
+                // TODO: 2018/1/4 是否点赞
+                if (true) {
+                    mPrise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_praise, 0, 0, 0);
+                } else {
+                    mPrise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_unpraise, 0, 0, 0);
+                }
+
+                if (anchorPoint.getPraiseCount() == 0) {
                     mPrise.setText(R.string.praise);
                 } else {
-                    mPrise.setText(StrFormatter.getFormatCount(anchorPoint.getPrise()));
+                    mPrise.setText(StrFormatter.getFormatCount(anchorPoint.getPraiseCount()));
                 }
+
+                if (anchorPoint.getCommentCount() == 0) {
+                    mReview.setText(R.string.comment);
+                } else {
+                    mReview.setText(StrFormatter.getFormatCount(anchorPoint.getCommentCount()));
+                }
+
                 mPrise.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: 2018/1/2 点赞
-
+                        if (onPointCallBack != null) {
+                            onPointCallBack.onPraise(anchorPoint, position);
+                        }
                     }
                 });
-
-                if (anchorPoint.getReview() == 0) {
-                    mReview.setText(R.string.comment);
-                } else {
-                    mReview.setText(StrFormatter.getFormatCount(anchorPoint.getReview()));
-                }
 
                 mReview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: 2018/1/2  评论
+                        if (onPointCallBack != null) {
+                            if (anchorPoint.getCommentCount() == 0) {
+                                onPointCallBack.onReview(anchorPoint, position);
+                            } else {
+                                onPointCallBack.onItemClick(anchorPoint, position);
+                            }
+                        }
                     }
                 });
-
-                mPointPublishTime.setText(DateUtil.formatDefaultStyleTime(anchorPoint.getTime()));
             }
         }
     }

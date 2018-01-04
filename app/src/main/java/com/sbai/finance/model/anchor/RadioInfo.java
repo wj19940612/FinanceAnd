@@ -1,10 +1,13 @@
 package com.sbai.finance.model.anchor;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Administrator on 2017\11\21 0021.
  */
 
-public class RadioInfo {
+public class RadioInfo implements Parcelable {
 
     /**
      * createTime : 1510911789000
@@ -42,6 +45,27 @@ public class RadioInfo {
     private String radioHostName;//电台主播名称
     private long showTime;       //展示时间
     private int show;            //1-展示 0-下架
+
+    private int paid;          //音频是否收费：0免费,1收费
+    private int radioPaid;     // 电台是否收费
+    private double radioPrice;
+    private int userPayment;   //1 是否已经付款
+
+    public int getPaid() {
+        return paid;
+    }
+
+    public int getRadioPaid() {
+        return radioPaid;
+    }
+
+    public double getRadioPrice() {
+        return radioPrice;
+    }
+
+    public int getUserPayment() {
+        return userPayment;
+    }
 
     public long getCreateTime() {
         return createTime;
@@ -194,4 +218,77 @@ public class RadioInfo {
     public void setShow(int show) {
         this.show = show;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.createTime);
+        dest.writeInt(this.id);
+        dest.writeInt(this.isSubscriber);
+        dest.writeInt(this.listenNumber);
+        dest.writeLong(this.modifyTime);
+        dest.writeString(this.radioCover);
+        dest.writeInt(this.radioHost);
+        dest.writeString(this.radioIntroduction);
+        dest.writeString(this.radioName);
+        dest.writeInt(this.radioNumber);
+        dest.writeInt(this.radioStatus);
+        dest.writeInt(this.recommend);
+        dest.writeInt(this.recommendHits);
+        dest.writeInt(this.subscribe);
+        dest.writeInt(this.updateUserId);
+        dest.writeString(this.userPortrait);
+        dest.writeString(this.radioHostName);
+        dest.writeLong(this.showTime);
+        dest.writeInt(this.show);
+        dest.writeInt(this.paid);
+        dest.writeInt(this.radioPaid);
+        dest.writeDouble(this.radioPrice);
+        dest.writeInt(this.userPayment);
+    }
+
+    public RadioInfo() {
+    }
+
+    protected RadioInfo(Parcel in) {
+        this.createTime = in.readLong();
+        this.id = in.readInt();
+        this.isSubscriber = in.readInt();
+        this.listenNumber = in.readInt();
+        this.modifyTime = in.readLong();
+        this.radioCover = in.readString();
+        this.radioHost = in.readInt();
+        this.radioIntroduction = in.readString();
+        this.radioName = in.readString();
+        this.radioNumber = in.readInt();
+        this.radioStatus = in.readInt();
+        this.recommend = in.readInt();
+        this.recommendHits = in.readInt();
+        this.subscribe = in.readInt();
+        this.updateUserId = in.readInt();
+        this.userPortrait = in.readString();
+        this.radioHostName = in.readString();
+        this.showTime = in.readLong();
+        this.show = in.readInt();
+        this.paid = in.readInt();
+        this.radioPaid = in.readInt();
+        this.radioPrice = in.readDouble();
+        this.userPayment = in.readInt();
+    }
+
+    public static final Parcelable.Creator<RadioInfo> CREATOR = new Parcelable.Creator<RadioInfo>() {
+        @Override
+        public RadioInfo createFromParcel(Parcel source) {
+            return new RadioInfo(source);
+        }
+
+        @Override
+        public RadioInfo[] newArray(int size) {
+            return new RadioInfo[size];
+        }
+    };
 }

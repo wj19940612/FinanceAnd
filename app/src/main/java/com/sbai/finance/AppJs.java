@@ -298,7 +298,7 @@ public class AppJs {
                 break;
             case JsOpenAppPageType.MISS_HOME_PAGE:
                 Launcher.with(mContext, MainActivity.class)
-                        .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_MISS)
+                        .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_ANCHOR)
                         .execute();
                 break;
             case JsOpenAppPageType.HOME_PAGE:

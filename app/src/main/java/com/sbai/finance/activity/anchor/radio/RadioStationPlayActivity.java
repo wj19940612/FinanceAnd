@@ -462,7 +462,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     @Override
     protected IntentFilter getIntentFilter() {
         IntentFilter intentFilter = super.getIntentFilter();
-        intentFilter.addAction(CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS);
         intentFilter.addAction(LoginActivity.ACTION_LOGIN_SUCCESS);
         intentFilter.addAction(LoginActivity.ACTION_LOGOUT_SUCCESS);
         return intentFilter;
@@ -519,13 +518,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         if (LoginActivity.ACTION_LOGIN_SUCCESS.equalsIgnoreCase(intent.getAction())
                 || LoginActivity.ACTION_LOGOUT_SUCCESS.equalsIgnoreCase(intent.getAction())) {
             refreshRadioReviewData();
-        }
-
-        if (CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS.equalsIgnoreCase(intent.getAction())) {
-            mSet.clear();
-            mPage = 0;
-            mRecyclerView.scrollToPosition(0);
-            requestRadioReplyList();
         }
     }
 

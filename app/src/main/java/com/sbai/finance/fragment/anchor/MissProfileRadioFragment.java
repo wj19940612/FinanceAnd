@@ -146,27 +146,29 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
     }
 
     public void refresh() {
-        Client.requestRadiosOfMiss(mCustomId).setTag(TAG).setCallback(new Callback2D<Resp<List<RadioInfo>>, List<RadioInfo>>() {
-            @Override
-            public void onFailure(ApiError apiError) {
-                super.onFailure(apiError);
-                mEmpty.setVisibility(View.VISIBLE);
-                mRadioAdapter.clear();
-                mRadioAdapter.notifyDataSetChanged();
-            }
+        Client.requestRadiosOfMiss(mCustomId)
+                .setTag(TAG)
+                .setCallback(new Callback2D<Resp<List<RadioInfo>>, List<RadioInfo>>() {
+                    @Override
+                    public void onFailure(ApiError apiError) {
+                        super.onFailure(apiError);
+                        mEmpty.setVisibility(View.VISIBLE);
+                        mRadioAdapter.clear();
+                        mRadioAdapter.notifyDataSetChanged();
+                    }
 
-            @Override
-            protected void onRespSuccessData(List<RadioInfo> data) {
-                if (data != null && data.size() != 0) {
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    mEmpty.setVisibility(View.GONE);
-                    updateRadioData(data);
-                } else {
-                    mEmpty.setVisibility(View.VISIBLE);
-                }
+                    @Override
+                    protected void onRespSuccessData(List<RadioInfo> data) {
+                        if (data != null && data.size() != 0) {
+                            mRecyclerView.setVisibility(View.VISIBLE);
+                            mEmpty.setVisibility(View.GONE);
+                            updateRadioData(data);
+                        } else {
+                            mEmpty.setVisibility(View.VISIBLE);
+                        }
 
-            }
-        }).fireFree();
+                    }
+                }).fireFree();
     }
 
     private void updateRadioData(List<RadioInfo> data) {
@@ -210,15 +212,15 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
     private void updateFloatState() {
         if (MissAudioManager.get().isPlaying()) {
             MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-            if(audio != null){
-                if(audio instanceof Radio){
+            if (audio != null) {
+                if (audio instanceof Radio) {
                     mMissFloatWindow.startAnim();
                     mMissFloatWindow.setVisibility(View.VISIBLE);
-                    mMissFloatWindow.setMissAvatar(((Radio)audio).getUserPortrait());
-                }else if(audio instanceof Question){
+                    mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+                } else if (audio instanceof Question) {
                     mMissFloatWindow.startAnim();
                     mMissFloatWindow.setVisibility(View.VISIBLE);
-                    mMissFloatWindow.setMissAvatar(((Question)audio).getCustomPortrait());
+                    mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
                 }
             }
 
@@ -331,6 +333,8 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
             CardView mContent;
             @BindView(R.id.coverRL)
             RelativeLayout mCoverRL;
+            @BindView(R.id.needPay)
+            ImageView mNeedPay;
 
             ViewHolder(View view) {
                 super(view);
@@ -375,6 +379,14 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
                         }
                     }
                 });
+
+                if (radioInfo.getRadioPaid() == Radio.RADIO_RATE_CHARGE) {
+                    mNeedPay.setVisibility(View.VISIBLE);
+                    boolean alreadyPay = radioInfo.getUserPayment() == Radio.RADIO_RECHARGE_STATUS_ALREADY_PAY;
+                    mNeedPay.setSelected(alreadyPay);
+                } else {
+                    mNeedPay.setVisibility(View.GONE);
+                }
             }
 
             private void setSpanIconText(TextView textView, String str, Context context) {

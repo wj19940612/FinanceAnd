@@ -557,7 +557,7 @@ public class MissProfileDetailActivity extends BaseActivity implements MissProfi
                 case FRAGMENT_RADIO:
                     return MissProfileRadioFragment.newInstance(mCustomId);
                 case FRAGMENT_POINT:
-                    return AnchorPointFragment.newInstance(AnchorPointFragment.POINT_TYPE_ANCHOR);
+                    return AnchorPointFragment.newInstance(AnchorPointFragment.POINT_TYPE_ANCHOR).setAnchorId(mCustomId);
             }
             return null;
         }

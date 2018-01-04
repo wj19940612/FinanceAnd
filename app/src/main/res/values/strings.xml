@@ -172,7 +172,9 @@
 
     <string name="article">文章</string>
 
-    <string name="miss_is_answering">小姐姐正在抢答中~</string>
+    <string name="miss_is_battle_answering">主播正在抢答中~</string>
+    <string name="miss_is_answering">主播正在回答中~</string>
+
     <string name="question_replay_content_award"> %1$s人点赞  %2$s人评论 %3$s人打赏</string>
     <string name="question_replay_content">%1$s人评论</string>
     <string name="send_message_connect">您好, 感谢您使用我们的APP!
@@ -602,7 +604,7 @@
     <!--姐说-->
     <string name="question">提问</string>
     <string name="question_reward_will_gain_money">每次问题被打赏,可以获得一半的赏金哦~</string>
-    <string name="choose_miss_answer">选择心仪的小姐姐来回答：</string>
+    <string name="choose_miss_answer">选择心仪的主播来回答：</string>
     <string name="commit">提交</string>
     <string name="words_number">%1$d/140</string>
     <string name="words_number2">%1$d/40</string>
@@ -627,7 +629,7 @@
     <string name="most_reward_ten_million_ingot">最高打赏金额1000万米粒</string>
     <string name="all_read">全部已读</string>
     <string name="success_reward">成功打赏</string>
-    <string name="question_commit_and_please_wait_miss_answer">问题提交成功,请耐心等候小姐姐回复</string>
+    <string name="question_commit_and_please_wait_miss_answer">问题提交成功,请耐心等候主播回复</string>
     <string name="publish_success">发布成功</string>
     <string name="ignot_not_enough">米粒不足</string>
     <string name="praise">赞</string>
@@ -705,10 +707,10 @@
     <string name="praise_number">%1$s人点赞</string>
     <string name="count">(%1$s)</string>
     <string name="reply_someBody">回复%1$s :</string>
-    <string name="no_miss_now">现在还没有小姐姐哦</string>
-    <string name="no_miss_introduce">小姐姐还没有写简介</string>
+    <string name="no_miss_now">现在还没有主播哦</string>
+    <string name="no_miss_introduce">主播还没有写简介</string>
     <string name="question_detail">提问详情</string>
-    <string name="the_miss_down">该小姐姐已下线</string>
+    <string name="the_miss_down">该主播已下线</string>
     <string name="follower">粉丝</string>
 
     <!--首页 训练-->
@@ -753,9 +755,9 @@
     <string name="train_grade">L%1$d</string>
     <string name="trade_level">我的交易水平:%1$s  （超过了%2$s的交易用户）</string>
     <string name="advise">建议:%1$s</string>
-    <string name="no_miss">小姐姐不存在</string>
-    <string name="ask_miss">点击右上角+号,对小姐姐提问吧</string>
-    <string name="miss_first_time">快用提问夺走小姐姐的“第一次”吧</string>
+    <string name="no_miss">主播不存在</string>
+    <string name="ask_miss">点击右上角+号,对主播提问吧</string>
+    <string name="miss_first_time">快用提问夺走主播的“第一次”吧</string>
     <string-array name="credit_grade">
         <item>较差</item>
         <item>中等</item>
@@ -779,8 +781,8 @@
     <string name="share_title">登录用户分享就得10米粒,每日最多30米粒</string>
     <string name="train_share_share_title">大家都在用乐米进行%1$s，你还不快来加入我们?</string>
     <string name="train_share_description">快来和我一起进行最有趣的金融训练课程，乐米金融，金融小白的第一站</string>
-    <string name="question_share_share_title">这个小姐姐对于金融的见解好独特！</string>
-    <string name="question_share_description">快来一起听小姐姐的语音回答,学金融知识,乐米金融,金融小白的第一站!</string>
+    <string name="question_share_share_title">这个主播对于金融的见解好独特！</string>
+    <string name="question_share_description">快来一起听主播的语音回答,学金融知识,乐米金融,金融小白的第一站!</string>
 
     <!--Training-->
     <string name="my_grade">我的成绩</string>
@@ -860,7 +862,7 @@
     <string name="audio">音频</string>
     <!--我的回复-->
     <string name="not_has_reply_news">暂无回复消息</string>
-    <string name="there_show_miss_answers_and_others_comment">在这里会显示小姐姐的回答\n和TA人的评论回复消息</string>
+    <string name="there_show_miss_answers_and_others_comment">在这里会显示主播的回答\n和TA人的评论回复消息</string>
     <!--我的回复-->
     <string name="not_has_sys_news">暂无系统消息</string>
     <string name="there_show_sys_news">在这里会显示系统的提醒消息</string>

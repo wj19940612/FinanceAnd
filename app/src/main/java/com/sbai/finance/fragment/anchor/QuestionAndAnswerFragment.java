@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
-import com.sbai.finance.activity.anchor.CommentActivity;
 import com.sbai.finance.activity.anchor.MissProfileDetailActivity;
 import com.sbai.finance.activity.anchor.QuestionDetailActivity;
 import com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity;
@@ -144,7 +143,6 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
         intentFilter.addAction(ACTION_LOGIN_SUCCESS);
         intentFilter.addAction(ACTION_LOGOUT_SUCCESS);
         intentFilter.addAction(ACTION_REWARD_SUCCESS);
-        intentFilter.addAction(CommentActivity.BROADCAST_ACTION_REPLY_SUCCESS);
         return intentFilter;
     }
 

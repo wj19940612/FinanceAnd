@@ -257,10 +257,6 @@ public class MissAskFragment extends MediaPlayFragment {
         }
     }
 
-    @Override
-    public void onOtherReceive(Context context, Intent intent) {
-        super.onOtherReceive(context, intent);
-    }
 
     public void updateRewardInfo(int rewardId) {
         for (Question result : mMissAskAdapter.getMissAskList()) {
@@ -355,7 +351,6 @@ public class MissAskFragment extends MediaPlayFragment {
                 if (LocalUser.getUser().isLogin()) {
                     RewardMissActivity.show(getActivity(), item.getId(), RewardInfo.TYPE_QUESTION);
                 } else {
-                    MissAudioManager.get().stop();
                     Launcher.with(getActivity(), LoginActivity.class).execute();
                 }
             }
