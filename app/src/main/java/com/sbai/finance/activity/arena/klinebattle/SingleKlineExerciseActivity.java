@@ -3,7 +3,6 @@ package com.sbai.finance.activity.arena.klinebattle;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -55,7 +54,7 @@ public class SingleKlineExerciseActivity extends BaseActivity {
     protected BattleKline mBattleKline;
     protected boolean mHasPosition;
 
-    private List<BattleKlineData> mBattleUserMarkList;
+    protected List<BattleKlineData> mBattleUserMarkList;
     private int mPositionIndex = -1;
 
     @Override
@@ -70,29 +69,22 @@ public class SingleKlineExerciseActivity extends BaseActivity {
         initTitleView();
         initKlineView();
         initOperateView();
-
-        if (!TextUtils.isEmpty(mType) && mType.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
-            requestKlineData();
-        }
+        requestKlineData();
     }
 
     private void initData(Intent intent) {
         mType = intent.getStringExtra(ExtraKeys.GUESS_TYPE);
     }
 
-    private void initTitleView() {
+    protected void initTitleView() {
+        initTitleView(getString(R.string.single_exercise));
+    }
+
+    protected void initTitleView(String titleText) {
         View customView = mTitle.getCustomView();
         TextView pkType = customView.findViewById(R.id.pkType);
         mCountdown = customView.findViewById(R.id.countdown);
-        pkType.setText(R.string.single_exercise);
-        if (TextUtils.isEmpty(mType)) {
-            mType = BattleKline.TYPE_EXERCISE;
-            pkType.setText(R.string.single_exercise);
-        } else if (mType.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
-            pkType.setText(R.string.one_vs_one_room);
-        } else if (mType.equalsIgnoreCase(BattleKline.TYPE_4V4)) {
-            pkType.setText(R.string.four_pk_room);
-        }
+        pkType.setText(titleText);
         mAgainstProfit.setPkType(mType);
     }
 
@@ -130,14 +122,12 @@ public class SingleKlineExerciseActivity extends BaseActivity {
         });
     }
 
-    private void requestKlineData() {
+    protected void requestKlineData() {
         Client.getSingleKlineBattleData().setTag(TAG)
                 .setCallback(new Callback2D<Resp<BattleKline>, BattleKline>() {
                     @Override
                     protected void onRespSuccessData(BattleKline data) {
-                        if (data != null) {
-                            updateBattleData(data);
-                        }
+                        updateBattleData(data);
                     }
                 }).fireFree();
     }
@@ -146,6 +136,62 @@ public class SingleKlineExerciseActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mCountdown.cancelCount();
+    }
+
+    protected void updateBattleData(BattleKline data) {
+        if (data == null) return;
+        mBattleKline = data;
+        mBattleUserMarkList = mBattleKline.getUserMarkList();
+        if (mBattleUserMarkList != null && mType.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
+            mBattleUserMarkList.get(mBattleUserMarkList.size() - 1).setMark(BattleKlineData.MARK_NOT_OP);
+            List<BattleKlineData> subList = new ArrayList<>();
+            for (int i = 0; i < mBattleUserMarkList.size(); i++) {
+                subList.add(mBattleUserMarkList.get(i));
+                if (mBattleUserMarkList.get(i).getMark().equalsIgnoreCase(BattleKlineData.MARK_OP)) {
+                    mCurrentIndex = i;
+                    break;
+                }
+            }
+            mKlineView.initKlineDataList(subList);
+        }
+        mRemainKlineAmount = mBattleKline.getLine();
+        updateCountDownTime();
+        updateRemainKlineAmount();
+    }
+
+    protected void buyOperate() {
+        mPositionIndex = mCurrentIndex;
+        updateLastOperateData(BattleKline.BUY);
+    }
+
+    protected void clearOperate() {
+        updateLastOperateData(BattleKline.SELL);
+    }
+
+    protected void passOperate() {
+        updateLastOperateData(BattleKline.PASS);
+    }
+
+    private void updateLastOperateData(String type) {
+        if (mBattleUserMarkList == null) return;
+        if (mCurrentIndex < mBattleUserMarkList.size()) {
+            if (!isBattleFinish()) {
+                updateOperateView(type);
+                updateLastProfit(type);
+                updateNextKlineView(mBattleUserMarkList.get(++mCurrentIndex));
+            }
+        }
+    }
+
+    protected boolean isBattleFinish() {
+        if (mCurrentIndex == mBattleUserMarkList.size() - 2) {
+            updateLastProfit(BattleKline.PASS);
+            mBattleUserMarkList.get(mCurrentIndex + 1).setMark(BattleKlineData.MARK_SELL);
+            updateNextKlineView(mBattleUserMarkList.get(mCurrentIndex + 1));
+            battleFinish();
+            return true;
+        }
+        return false;
     }
 
     protected void updateOperateView(String type) {
@@ -175,27 +221,6 @@ public class SingleKlineExerciseActivity extends BaseActivity {
     protected void updateNextKlineView(BattleKlineData battleKlineData) {
         updateRemainKlineAmount();
         mKlineView.addKlineData(battleKlineData);
-    }
-
-    protected void updateBattleData(BattleKline data) {
-        if (data == null) return;
-        mBattleKline = data;
-        mBattleUserMarkList = mBattleKline.getUserMarkList();
-        if (mBattleUserMarkList != null) {
-            mBattleUserMarkList.get(mBattleUserMarkList.size() - 1).setMark(BattleKlineData.MARK_NOT_OP);
-            List<BattleKlineData> subList = new ArrayList<>();
-            for (int i = 0; i < mBattleUserMarkList.size(); i++) {
-                subList.add(mBattleUserMarkList.get(i));
-                if (mBattleUserMarkList.get(i).getMark().equalsIgnoreCase(BattleKlineData.MARK_OP)) {
-                    mCurrentIndex = i;
-                    break;
-                }
-            }
-            mRemainKlineAmount = mBattleKline.getLine();
-            mKlineView.initKlineDataList(subList);
-        }
-        updateCountDownTime();
-        updateRemainKlineAmount();
     }
 
     protected void updateRemainKlineAmount() {
@@ -241,37 +266,6 @@ public class SingleKlineExerciseActivity extends BaseActivity {
                     .execute();
         }
         finish();
-    }
-
-    protected void buyOperate() {
-        updateMyLastOperateData(BattleKline.BUY);
-    }
-
-    protected void clearOperate() {
-        updateMyLastOperateData(BattleKline.SELL);
-    }
-
-    protected void passOperate() {
-        updateMyLastOperateData(BattleKline.PASS);
-    }
-
-    private void updateMyLastOperateData(String type) {
-        if (mBattleUserMarkList == null) return;
-        if (mCurrentIndex < mBattleUserMarkList.size()) {
-            if (type.equalsIgnoreCase(BattleKline.BUY)) {
-                mPositionIndex = mCurrentIndex;
-            }
-            if (mCurrentIndex == mBattleUserMarkList.size() - 2) {
-                updateLastProfit(BattleKline.PASS);
-                mBattleUserMarkList.get(mCurrentIndex + 1).setMark(BattleKlineData.MARK_SELL);
-                updateNextKlineView(mBattleUserMarkList.get(mCurrentIndex + 1));
-                battleFinish();
-                return;
-            }
-            updateOperateView(type);
-            updateLastProfit(type);
-            updateNextKlineView(mBattleUserMarkList.get(++mCurrentIndex));
-        }
     }
 
     private void updateLastProfit(String type) {

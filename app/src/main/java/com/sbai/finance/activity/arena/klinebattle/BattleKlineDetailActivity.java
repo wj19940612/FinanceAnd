@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.sbai.finance.R;
 import com.sbai.finance.game.callback.OnPushReceiveListener;
 import com.sbai.finance.kgame.GamePusher;
 import com.sbai.finance.model.LocalUser;
@@ -44,7 +45,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
             if (availableNetworkType > Network.NET_NONE) {
                 GamePusher.get().open();
                 if (mBattleKline == null) {
-                    requestBattleInfo();
+                    requestKlineData();
                 }
             }
         }
@@ -65,7 +66,15 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         super.onCreate(savedInstanceState);
         registerNetworkChangeReceiver(this, mNetworkChangeReceiver);
         GamePusher.get().setOnPushReceiveListener(mKlineBattlePushReceiverListener);
-        requestBattleInfo();
+    }
+
+    @Override
+    protected void initTitleView() {
+        if (mType.equalsIgnoreCase(BattleKline.TYPE_1V1)) {
+            initTitleView(getString(R.string.one_vs_one_room));
+        } else if (mType.equalsIgnoreCase(BattleKline.TYPE_4V4)) {
+            initTitleView(getString(R.string.four_pk_room));
+        }
     }
 
     @Override
@@ -75,7 +84,8 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         unregisterNetworkChangeReceiver(this, mNetworkChangeReceiver);
     }
 
-    private void requestBattleInfo() {
+    @Override
+    protected void requestKlineData() {
         Client.requestKlineBattleInfo().setTag(TAG)
                 .setCallback(new Callback2D<Resp<BattleKline>, BattleKline>() {
                     @Override
@@ -97,31 +107,32 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                 }).fireFree();
     }
 
+    @Override
     protected void updateBattleData(BattleKline data) {
-        mBattleKline = data;
-        updateCountDownTime();
-        if (mBattleKline.getBattleStaList() == null) return;
-        if (mBattleKline.getBattleStaList().size() > 0) {
-            if (mBattleKline.getBattleStaList().get(0).getBattleStatus() == BattleKline.STATUS_END) {
-                battleFinish();
-                return;
-            }
-        }
-        mKlineView.initKlineDataList(mBattleKline.getUserMarkList());
-        mBattleKlineInfos = mBattleKline.getBattleStaList();
-        updateLastProfitData();
-        if (mBattleKline.getUserMarkList() != null) {
-            int size = mBattleKline.getUserMarkList().size();
+        super.updateBattleData(data);
+        //update operate view
+        if (mBattleUserMarkList != null) {
+            mKlineView.initKlineDataList(mBattleUserMarkList);
+            int size = mBattleUserMarkList.size();
             if (size > 0) {
-                BattleKlineData battleKlineData = mBattleKline.getUserMarkList().get(size - 2);
+                BattleKlineData battleKlineData = mBattleUserMarkList.get(size - 2);
                 if (battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_HOLD_PASS) ||
                         battleKlineData.getMark().equalsIgnoreCase(BattleKlineData.MARK_BUY)) {
                     mOperateView.buySuccess();
                     mHasPosition = true;
                 }
             }
-            mRemainKlineAmount = data.getLine();
-            updateRemainKlineAmount();
+        }
+        //update user profit info
+        mBattleKlineInfos = mBattleKline.getBattleStaList();
+        if (mBattleKlineInfos != null) {
+            if (mBattleKlineInfos.size() > 0) {
+                if (mBattleKlineInfos.get(0).getBattleStatus() == BattleKline.STATUS_END) {
+                    battleFinish();
+                    return;
+                }
+            }
+            updateLastProfitData();
         }
     }
 
@@ -168,28 +179,6 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         mAgainstProfit.setTotalProfit(mBattleKlineInfos);
     }
 
-    protected void updateMyLastOperateData(BattleKlineOperate data, String type) {
-        if (data.getBattleStatus() == BattleKline.STATUS_END) {
-            battleFinish();
-            return;
-        }
-        updateOperateView(type);
-        updateLastProfitData(data);
-        updateNextKlineView(data.getNext());
-    }
-
-    @Override
-    protected void onCountDownFinish() {
-        startScheduleJob(5 * 1000);
-        mOperateView.showWaitFinishView();
-        mOperateView.disableOperateView();
-    }
-
-    @Override
-    public void onTimeUp(int count) {
-        requestCurrentBattle();
-    }
-
 
     @Override
     protected void buyOperate() {
@@ -199,7 +188,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
                     protected void onRespSuccessData(BattleKlineOperate data) {
-                        updateMyLastOperateData(data, BattleKline.BUY);
+                        updateLastOperateData(data, BattleKline.BUY);
                     }
 
                     @Override
@@ -217,7 +206,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
                     protected void onRespSuccessData(BattleKlineOperate data) {
-                        updateMyLastOperateData(data, BattleKline.SELL);
+                        updateLastOperateData(data, BattleKline.SELL);
                     }
 
                     @Override
@@ -237,7 +226,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                 .setCallback(new Callback2D<Resp<BattleKlineOperate>, BattleKlineOperate>() {
                     @Override
                     protected void onRespSuccessData(BattleKlineOperate data) {
-                        updateMyLastOperateData(data, BattleKline.PASS);
+                        updateLastOperateData(data, BattleKline.PASS);
                     }
 
                     @Override
@@ -247,6 +236,35 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
                 }).fireFree();
     }
 
+    protected void updateLastOperateData(BattleKlineOperate data, String type) {
+        if (!isBattleFinish(data)) {
+            updateOperateView(type);
+            updateLastProfitData(data);
+            updateNextKlineView(data.getNext());
+        }
+    }
+
+    protected boolean isBattleFinish(BattleKlineOperate data) {
+        if (data.getBattleStatus() == BattleKline.STATUS_END) {
+            battleFinish();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected void onCountDownFinish() {
+        startScheduleJob(5 * 1000);
+        mOperateView.showWaitFinishView();
+        mOperateView.disableOperateView();
+    }
+
+    @Override
+    public void onTimeUp(int count) {
+        requestCurrentBattle();
+    }
+
+    
     private void setRankValueByProfit(List<BattleKlineInfo> battleKlineInfos) {
         int rank = 1;//名次
         int size = battleKlineInfos.size();

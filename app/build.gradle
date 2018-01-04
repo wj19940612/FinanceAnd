@@ -102,7 +102,7 @@ android {
 //            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-alpha'
             versionCode 178
-            versionName "2.3.12.272"
+            versionName "2.3.12.28"
             buildConfigField('String', 'HOST', '\"testlemi.ailemi.com\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 
