@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.activity.miss.QuestionDetailActivity;
+import com.sbai.finance.activity.anchor.QuestionDetailActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.net.Callback2D;
@@ -132,7 +132,7 @@ public class MyCollectQuestionFragment extends BaseFragment {
             @Override
             public void onGoingViewClick() {
                 Launcher.with(getActivity(), MainActivity.class)
-                        .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_MISS)
+                        .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_ANCHOR)
                         .execute();
                 getActivity().finish();
             }
@@ -274,7 +274,7 @@ public class MyCollectQuestionFragment extends BaseFragment {
                 } else {
                     mContent.setSelected(false);
                     mTitle.setEnabled(false);
-                    mContent.setText(context.getString(R.string.miss_is_answering));
+                    mContent.setText(context.getString(R.string.miss_is_battle_answering));
                 }
 
             }

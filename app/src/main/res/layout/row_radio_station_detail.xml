@@ -35,8 +35,19 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
             android:layout_toRightOf="@+id/cover"
+            android:layout_marginRight="42dp"
             android:textColor="@color/primaryText"
             android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/cover"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@+id/cover"
+            android:textColor="@color/unluckyText"
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/listenerNumber"
@@ -44,20 +55,47 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/cover"
             android:layout_marginLeft="14dp"
-            android:layout_toRightOf="@+id/cover"
+            android:layout_toRightOf="@+id/time"
             android:drawableLeft="@drawable/ic_miss_listen"
             android:drawablePadding="2dp"
             android:textColor="@color/unluckyText"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            android:text="121"/>
 
-        <TextView
-            android:id="@+id/time"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/cover"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal"
             android:layout_alignParentRight="true"
-            android:textColor="@color/unluckyText"
-            android:textSize="12sp"/>
+            android:layout_marginRight="@dimen/common_margin">
+
+            <ImageView
+                android:id="@+id/playIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_play"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/countDown"
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/playIcon"
+                android:layout_marginTop="1dp"
+                android:gravity="center"
+                android:textSize="9sp"
+                android:textColor="@color/unluckyText"
+                android:text="03:58"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/keyIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_key"/>
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <View

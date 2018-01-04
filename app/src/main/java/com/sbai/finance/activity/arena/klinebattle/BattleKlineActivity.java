@@ -347,7 +347,9 @@ public class BattleKlineActivity extends BaseActivity {
                         protected void onRespSuccess(final Resp<BattleKlineInfo> resp) {
                             if (resp.getData() == null) {
                                 if (type.equalsIgnoreCase(BattleKline.TYPE_EXERCISE)) {
-                                    Launcher.with(getActivity(), SingleKlineExerciseActivity.class).execute();
+                                    Launcher.with(getActivity(), SingleKlineExerciseActivity.class)
+                                            .putExtra(ExtraKeys.GUESS_TYPE,BattleKline.TYPE_EXERCISE)
+                                            .execute();
                                 } else {
                                     requestMatch(type);
                                 }

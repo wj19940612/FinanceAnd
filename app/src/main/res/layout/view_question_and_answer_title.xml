@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+    <TextView
+        android:layout_centerInParent="true"
+        android:id="@+id/questionAndAnswerTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_padding"
+        android:background="@drawable/bg_white_transparent"
+        android:gravity="center"
+        android:minWidth="70dp"
+        android:padding="5dp"
+        android:textColor="@color/sliding_tab_text"
+        tools:text="溺水的鱼"/>
+</RelativeLayout>

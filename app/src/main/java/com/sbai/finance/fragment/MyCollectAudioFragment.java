@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.MainActivity;
-import com.sbai.finance.activity.miss.radio.RadioStationPlayActivity;
+import com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity;
 import com.sbai.finance.model.mine.MyCollect;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
@@ -169,7 +169,7 @@ public class MyCollectAudioFragment extends BaseFragment {
             @Override
             public void onGoingViewClick() {
                 Launcher.with(getActivity(), MainActivity.class)
-                        .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_MISS)
+                        .putExtra(ExtraKeys.MAIN_PAGE_CURRENT_ITEM, MainActivity.PAGE_POSITION_ANCHOR)
                         .execute();
                 getActivity().finish();
             }

@@ -11,7 +11,7 @@
     <!-- Main -->
     <string name="home">首页</string>
     <string name="information">资讯</string>
-    <string name="miss_talk">姐说</string>
+    <string name="anchor_circle">米圈</string>
     <string name="arena">竞技场</string>
     <string name="mine">我的</string>>
 
@@ -157,7 +157,7 @@
     <string name="we_chat_">微信:%1$s</string>
     <string name="copy_success">复制成功</string>
     <string name="install_qq_first">请先安装QQ</string>
-    <string name="my_ingot_">我的元宝: %1$d</string>
+    <string name="my_ingot_">我的米粒: %1$d</string>
     <string name="wait_me_answer">等我答</string>
     <string name="my_subscribe">我的订阅</string>
     <string name="wait_answer">待回答</string>
@@ -172,7 +172,9 @@
 
     <string name="article">文章</string>
 
-    <string name="miss_is_answering">小姐姐正在抢答中~</string>
+    <string name="miss_is_battle_answering">主播正在抢答中~</string>
+    <string name="miss_is_answering">主播正在回答中~</string>
+
     <string name="question_replay_content_award"> %1$s人点赞  %2$s人评论 %3$s人打赏</string>
     <string name="question_replay_content">%1$s人评论</string>
     <string name="send_message_connect">您好, 感谢您使用我们的APP!
@@ -334,7 +336,7 @@
     <string name="share_desc">乐米金融，金融小白的第一战!</string>
     <string name="invite_you_join_future_battle">用户%1$s邀您参与期货对战——我敢邀，你敢来么？</string>
     <string name="future_battle_desc">紧张激烈的对战游戏，勇者无所畏惧！宝藏等你开启，赶快来应战吧！</string>
-    <string name="share_and_get_ingot">登录用户分享即可得10元宝，每日最多可得30元宝</string>
+    <string name="share_and_get_ingot">登录用户分享即可得10米粒，每日最多可得30米粒</string>
 
     <!--股票排行榜-->
     <string name="stock_no_data">--</string>
@@ -361,14 +363,14 @@
     <string name="next">下一步</string>
     <string name="mine_crash">我的现金(元)</string>
     <string name="mine_score">我的模拟金</string>
-    <string name="mine_ingot">我的元宝</string>
+    <string name="mine_ingot">我的米粒</string>
     <string name="confirm_payment_money">确认支付  (%1$s元)</string>
-    <string name="confirm_payment_ingot">确认支付  (%1$s元宝)</string>
+    <string name="confirm_payment_ingot">确认支付  (%1$s米粒)</string>
     <string name="confirm_money">确认支付</string>
-    <string name="ingot_recharge">元宝充值</string>
+    <string name="ingot_recharge">米粒充值</string>
     <string name="score_recharge">模拟金充值</string>
     <string name="balance_not_enough">余额不足</string>
-    <string name="number_ingot">%1$s元宝</string>
+    <string name="number_ingot">%1$s米粒</string>
 
     <!--银行卡绑定-->
     <string name="bind_bank_card_warn">持卡人必须与账号信息一致,信息不做其他用途</string>
@@ -386,9 +388,9 @@
     <string name="choose_futures">选择期货</string>
     <string name="pattern">模式</string>
     <string name="integral_war">模拟金战</string>
-    <string name="ingot_war">元宝战</string>
+    <string name="ingot_war">米粒战</string>
     <string name="score">模拟金</string>
-    <string name="ingot">元宝</string>
+    <string name="ingot">米粒</string>
     <string name="cash">现金</string>
     <string name="versusing">对战中</string>
     <string name="versus_end">已结束</string>
@@ -448,7 +450,7 @@
     <string name="minus_int">-%1$d</string>
     <!--  聚宝盆  -->
     <string name="rule">规则</string>
-    <string name="ingot_number">%1$s  元宝</string>
+    <string name="ingot_number">%1$s  米粒</string>
     <string name="integrate_number">%1$s  模拟金</string>
     <string name="go_recharge">去充值</string>
     <string name="is_not_set_safety_pass">为了您的账户安全，请设置安全密码</string>
@@ -564,7 +566,7 @@
     <string name="is_already_latest_version">已经是最新版本了</string>
 
 
-    <string name="battle_list_ingot_number">元宝:%1$s</string>
+    <string name="battle_list_ingot_number">米粒:%1$s</string>
 
     <!--金融水平测试 -->
     <string name="level_test_title">测测你的金融水平</string>
@@ -602,7 +604,7 @@
     <!--姐说-->
     <string name="question">提问</string>
     <string name="question_reward_will_gain_money">每次问题被打赏,可以获得一半的赏金哦~</string>
-    <string name="choose_miss_answer">选择心仪的小姐姐来回答：</string>
+    <string name="choose_miss_answer">选择心仪的主播来回答：</string>
     <string name="commit">提交</string>
     <string name="words_number">%1$d/140</string>
     <string name="words_number2">%1$d/40</string>
@@ -622,14 +624,14 @@
     <string name="continue_comment">继续</string>
     <string name="other">其他</string>
     <string name="confirm_reward">确认打赏</string>
-    <string name="other_money_ingot">其他金额(元宝)</string>
-    <string name="at_least_ten_ingot">最少10元宝哦～</string>
-    <string name="most_reward_ten_million_ingot">最高打赏金额1000万元宝</string>
+    <string name="other_money_ingot">其他金额(米粒)</string>
+    <string name="at_least_ten_ingot">最少10米粒哦～</string>
+    <string name="most_reward_ten_million_ingot">最高打赏金额1000万米粒</string>
     <string name="all_read">全部已读</string>
     <string name="success_reward">成功打赏</string>
-    <string name="question_commit_and_please_wait_miss_answer">问题提交成功,请耐心等候小姐姐回复</string>
+    <string name="question_commit_and_please_wait_miss_answer">问题提交成功,请耐心等候主播回复</string>
     <string name="publish_success">发布成功</string>
-    <string name="ignot_not_enough">元宝不足</string>
+    <string name="ignot_not_enough">米粒不足</string>
     <string name="praise">赞</string>
     <string name="play_failure">播放失败</string>
 
@@ -679,7 +681,7 @@
     <string name="this_week">本周</string>
     <string name="week">周</string>
     <string name="integrate_number_no_blank">%1$s分</string>
-    <string name="ingot_number_no_blank">%1$d元宝</string>
+    <string name="ingot_number_no_blank">%1$d米粒</string>
     <string name="thank_you_feedback">感谢反馈,我们会尽快为您准备</string>
     <string name="hand_in_paper">交卷</string>
     <string name="answer_wrong">答错了哦</string>
@@ -705,10 +707,10 @@
     <string name="praise_number">%1$s人点赞</string>
     <string name="count">(%1$s)</string>
     <string name="reply_someBody">回复%1$s :</string>
-    <string name="no_miss_now">现在还没有小姐姐哦</string>
-    <string name="no_miss_introduce">小姐姐还没有写简介</string>
+    <string name="no_miss_now">现在还没有主播哦</string>
+    <string name="no_miss_introduce">主播还没有写简介</string>
     <string name="question_detail">提问详情</string>
-    <string name="the_miss_down">该小姐姐已下线</string>
+    <string name="the_miss_down">该主播已下线</string>
     <string name="follower">粉丝</string>
 
     <!--首页 训练-->
@@ -753,9 +755,9 @@
     <string name="train_grade">L%1$d</string>
     <string name="trade_level">我的交易水平:%1$s  （超过了%2$s的交易用户）</string>
     <string name="advise">建议:%1$s</string>
-    <string name="no_miss">小姐姐不存在</string>
-    <string name="ask_miss">点击右上角+号,对小姐姐提问吧</string>
-    <string name="miss_first_time">快用提问夺走小姐姐的“第一次”吧</string>
+    <string name="no_miss">主播不存在</string>
+    <string name="ask_miss">点击右上角+号,对主播提问吧</string>
+    <string name="miss_first_time">快用提问夺走主播的“第一次”吧</string>
     <string-array name="credit_grade">
         <item>较差</item>
         <item>中等</item>
@@ -776,11 +778,11 @@
     <string name="difficulty">难度</string>
     <string name="complete_number">%1$d人已完成</string>
     <string name="train_level">L%1$d</string>
-    <string name="share_title">登录用户分享就得10元宝,每日最多30元宝</string>
+    <string name="share_title">登录用户分享就得10米粒,每日最多30米粒</string>
     <string name="train_share_share_title">大家都在用乐米进行%1$s，你还不快来加入我们?</string>
     <string name="train_share_description">快来和我一起进行最有趣的金融训练课程，乐米金融，金融小白的第一站</string>
-    <string name="question_share_share_title">这个小姐姐对于金融的见解好独特！</string>
-    <string name="question_share_description">快来一起听小姐姐的语音回答,学金融知识,乐米金融,金融小白的第一站!</string>
+    <string name="question_share_share_title">这个主播对于金融的见解好独特！</string>
+    <string name="question_share_description">快来一起听主播的语音回答,学金融知识,乐米金融,金融小白的第一站!</string>
 
     <!--Training-->
     <string name="my_grade">我的成绩</string>
@@ -860,7 +862,7 @@
     <string name="audio">音频</string>
     <!--我的回复-->
     <string name="not_has_reply_news">暂无回复消息</string>
-    <string name="there_show_miss_answers_and_others_comment">在这里会显示小姐姐的回答\n和TA人的评论回复消息</string>
+    <string name="there_show_miss_answers_and_others_comment">在这里会显示主播的回答\n和TA人的评论回复消息</string>
     <!--我的回复-->
     <string name="not_has_sys_news">暂无系统消息</string>
     <string name="there_show_sys_news">在这里会显示系统的提醒消息</string>
@@ -886,7 +888,7 @@
     <string name="my_profit_count">+%1$d</string>
     <string name="battle_count">对战场次></string>
     <string name="not_login">未登录</string>
-    <string name="ingot_">元宝：%1$s</string>
+    <string name="ingot_">米粒：%1$s</string>
     <string name="ranking_">排名</string>
     <string name="profit">盈利</string>
     <string name="predict_award">预计奖品</string>
@@ -905,7 +907,7 @@
     <string name="battle_result">对战结果</string>
     <string name="against_user">对战者</string>
     <string name="win_rate">胜率：%1$s</string>
-    <string name="battle_count_profit">对局总数：%1$s场  元宝结算: %2$s个</string>
+    <string name="battle_count_profit">对局总数：%1$s场  米粒结算: %2$s个</string>
     <string name="arena_score">%1$s(模拟金)</string>
     <string name="ingot_is_not_enough">您的%1$s不足%2$s,暂时不能参赛</string>
     <string name="exchange_details">兑换详情</string>
@@ -999,6 +1001,8 @@
 
     <!--姐说-->
     <string name="radio">电台</string>
+    <string name="not_has_radio_now">暂无电台</string>
+    <string name="time_update">%1$s更新</string>
 
     <!--电台-->
     <string name="look_more">查看更多</string>
@@ -1087,10 +1091,10 @@
 
     <string name="start_small_and_free_payment_immediately">开启小额免密支付></string>
     <string name="small_no_secret_payment">小额免密支付</string>
-    <string name="small_no_secret_payment_hint">当元宝付款金额小于等于100元宝时，无需输入交易密码。</string>
-    <string name="ten_ingot">10元宝</string>
-    <string name="one_hundred_ingot">100元宝</string>
-    <string name="ten_hundred_ingot">1000元宝</string>
+    <string name="small_no_secret_payment_hint">当米粒付款金额小于等于100米粒时，无需输入交易密码。</string>
+    <string name="ten_ingot">10米粒</string>
+    <string name="one_hundred_ingot">100米粒</string>
+    <string name="ten_hundred_ingot">1000米粒</string>
     <string name="one_tenth_yuan">0.1元</string>
     <string name="one_yuan">1元</string>
     <string name="ten_yuan">10元</string>
@@ -1111,11 +1115,11 @@
     <string name="congratulate_you_end_game_please_wait_others">恭喜您已完成本局比赛,请等待其他玩家完成</string>
     <string name="one_vs_one">1V1</string>
     <string name="four_pk">乱斗</string>
-    <string name="_total_profit">%1$d\n盈利(元宝)</string>
+    <string name="_total_profit">%1$d\n盈利(米粒)</string>
     <string name="people">人</string>
     <string name="matching_the_number_of_people_in_this_room">正在匹配，房间人数:</string>
     <string name="_battle_count">%1$d场次</string>
-    <string name="win_ingot">盈利(元宝)</string>
+    <string name="win_ingot">盈利(米粒)</string>
     <string name="win_pk_rate">胜率</string>
     <string name="you_have_batting_please_go_to_see">您当前有未完成的对局，请前往查看</string>
     <string name="go_to_see">前往查看</string>
@@ -1153,4 +1157,9 @@
     <string name="pay_tip">购买的内容可在我的收藏，订阅中查看哦</string>
     <string name="have_deduction_num">已抵扣%1$.2f元</string>
     <string name="need_pay_radio_key">解锁电台需支付%1$.1f元</string>
+    <!--米圈-->
+    <string name="recommend">推荐</string>
+    <string name="question_and_answer">问答</string>
+    <string name="now_not_has_point">暂无观点</string>
+    <string name="point">观点</string>
 </resources>

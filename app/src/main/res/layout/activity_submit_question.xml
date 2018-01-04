@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context="com.sbai.finance.activity.miss.SubmitQuestionActivity">
+    tools:context="com.sbai.finance.activity.anchor.SubmitQuestionActivity">
 
     <com.sbai.finance.view.TitleBar
         android:id="@+id/title"

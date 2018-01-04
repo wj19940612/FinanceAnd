@@ -165,6 +165,7 @@ public class MissAudioManager {
                     }
                 }
             });
+            //音频播放完成
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
@@ -172,8 +173,10 @@ public class MissAudioManager {
                         mOnCompletedListener.onCompleted(mAudio.getAudioUrl());
                     }
                     stop();
+
                 }
             });
+
         }
 
         mMediaPlayer.reset();
@@ -192,7 +195,6 @@ public class MissAudioManager {
 
     private void initializeAndPrepare(String audioUrl) {
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        Log.d("MediaPlayer", "播放地址: " + audioUrl);
         try {
             mMediaPlayer.setDataSource(audioUrl);
             mMediaPlayer.prepareAsync();
@@ -304,10 +306,15 @@ public class MissAudioManager {
 
     public interface IAudio {
 
+        int AUDIO_SOURCE_QUESTION = 0;
+        int AUDIO_SOURCE_RADIO = 4;
+        int AUDIO_SOURCE_REPLY = 8;
+
         int getAudioId();
 
         String getAudioUrl();
 
+        int getSource();
     }
 
     public interface OnAudioListener {

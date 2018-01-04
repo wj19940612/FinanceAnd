@@ -9,6 +9,7 @@ import android.view.View;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.utils.Launcher;
+import com.sbai.finance.utils.audio.OnPlayRadioManager;
 import com.sbai.finance.view.SmartDialog;
 import com.sbai.finance.view.TitleBar;
 import com.sbai.glide.GlideApp;
@@ -19,7 +20,7 @@ import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 
-public class LookBigPictureActivity extends BaseActivity implements View.OnClickListener {
+public class LookBigPictureActivity extends BaseActivity implements View.OnClickListener,OnPlayRadioManager {
 
 	@BindView(R.id.imageView)
 	PhotoView mImageView;

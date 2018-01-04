@@ -39,6 +39,11 @@ public class Resp<T> {
     public static final int CODE_BATTLE_NOW_MATCH_1V1 = 8007;
     public static final int CODE_BATTLE_NOW_MATCH_4V4 = 8008;
 
+
+    public static final int CODE_POINT_ALREADY_BUY = 4723; //没有购买该观点
+    public static final int CODE_POINT_IS_DELETE = 4721; //当前观点已经删除
+    public static final int CODE_POINT_IS_SOLD_OUT = 4722; //当前观点已下架
+
     private int code;
     private String msg;
     private int page;

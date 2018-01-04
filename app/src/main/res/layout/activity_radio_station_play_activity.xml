@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:fitsSystemWindows="true"
-    tools:context="com.sbai.finance.activity.miss.radio.RadioStationPlayActivity">
+    tools:context="com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

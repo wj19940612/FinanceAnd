@@ -84,7 +84,7 @@ android {
         dev {
 //            minSdkVersion 21
             versionNameSuffix '-dev'
-            // applicationIdSuffix '.dev'
+            applicationIdSuffix '.dev'
             resConfigs "xxhdpi"
             buildConfigField('String', 'HOST', '\"devlm.esongbai.abc\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
@@ -102,7 +102,7 @@ android {
 //            applicationId "com.sbai.finance.alpha"
             versionNameSuffix '-alpha'
             versionCode 178
-            versionName "2.3.12.272"
+            versionName "2.3.12.28"
             buildConfigField('String', 'HOST', '\"testlemi.ailemi.com\"')
             buildConfigField('boolean', 'IS_PROD', 'false')
 
@@ -146,6 +146,10 @@ android {
         }
     }
 }
+
+
+
+
 
 
 
