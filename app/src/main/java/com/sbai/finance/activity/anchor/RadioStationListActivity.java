@@ -359,12 +359,12 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
             mStub.setVisibility(View.VISIBLE);
         } else {
             if (radioInfo.getUserPayment() == 0) {
-                mIsNeedPayIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_radio_need_pay));
+                mIsNeedPayIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_need_pay));
                 mGotoPayLayout.setVisibility(View.VISIBLE);
                 mStub.setVisibility(View.GONE);
                 mPayNumView.setText(String.format(getString(R.string.need_pay_radio_key), radioInfo.getRadioPrice()));
             } else {
-                mIsNeedPayIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_radio_have_pay));
+                mIsNeedPayIcon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_already_pay));
                 mGotoPayLayout.setVisibility(View.GONE);
                 mStub.setVisibility(View.VISIBLE);
             }

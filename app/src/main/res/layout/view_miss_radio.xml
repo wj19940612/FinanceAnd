@@ -102,7 +102,7 @@
         android:id="@+id/needPay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/bg_radio_pay_status"
+        android:src="@drawable/bg_pay_status"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 

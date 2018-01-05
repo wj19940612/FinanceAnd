@@ -133,7 +133,7 @@
             android:layout_height="28dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/ic_radio_need_pay"/>
+            android:src="@drawable/ic_need_pay"/>
     </RelativeLayout>
 
    <RelativeLayout
