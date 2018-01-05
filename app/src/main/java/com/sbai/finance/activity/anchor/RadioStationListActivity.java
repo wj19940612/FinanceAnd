@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.Html;
 import android.text.Layout;
 import android.text.TextUtils;
@@ -25,15 +24,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.miss.radio.BuyRadioDetailActivity;
-import com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity;
 import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.anchor.Question;
@@ -419,7 +417,7 @@ public class RadioStationListActivity extends MediaPlayActivity implements Adapt
         } else {
             updateQuestionListenCount(radio);
             if (mMediaPlayService != null) {
-                mMediaPlayService.startPlay(radio, MediaPlayService.MEDIA_SOURCE_RADIO_DETAIL);
+                mMediaPlayService.startPlay(radio);
             }
         }
     }

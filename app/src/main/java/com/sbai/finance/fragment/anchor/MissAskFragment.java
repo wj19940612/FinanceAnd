@@ -223,9 +223,7 @@ public class MissAskFragment extends MediaPlayFragment {
     protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
 //        if ((mMissAskType == MISS_ASK_TYPE_HOT && source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION)
 //                || (mMissAskType == MISS_ASK_TYPE_LATEST && source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION)) {
-        if (source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION ||
-                source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION ||
-                source == MediaPlayService.MEDIA_SOURCE_MISS_PROFILE) {
+        if (source == MissAudioManager.IAudio.AUDIO_SOURCE_QUESTION) {
             if (mSelectPosition == -1 || (mQuestionList == null || mQuestionList.isEmpty())) return;
 
             LinearLayoutManager layoutManager = (LinearLayoutManager) mEmptyRecyclerView.getLayoutManager();
@@ -370,9 +368,9 @@ public class MissAskFragment extends MediaPlayFragment {
                     } else {
                         if (mMediaPlayService != null) {
                             if (mMissAskType == MISS_ASK_TYPE_HOT) {
-                                mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_HOT_QUESTION);
+                                mMediaPlayService.startPlay(item);
                             } else {
-                                mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION);
+                                mMediaPlayService.startPlay(item);
                             }
                         }
                         updateQuestionListenCount(item);

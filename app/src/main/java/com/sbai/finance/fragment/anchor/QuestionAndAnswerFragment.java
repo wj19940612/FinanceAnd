@@ -222,7 +222,7 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
     }
 
     private void notifyFragmentDataSetChange(int source) {
-        if (source != MediaPlayService.MEDIA_SOURCE_HOT_QUESTION) {
+//        if (source != MediaPlayService.MEDIA_SOURCE_HOT_QUESTION) {
             MissAskFragment missHotAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(0);
             if (missHotAskFragment != null) {
                 missHotAskFragment.notifyFragmentDataSetChange();
@@ -231,7 +231,7 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
             if (missLatestAskFragment != null) {
                 missLatestAskFragment.notifyFragmentDataSetChange();
             }
-        }
+//        }
     }
 
 

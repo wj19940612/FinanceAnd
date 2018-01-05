@@ -478,7 +478,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         mMissFloatWindow.setOnMissFloatWindowClickListener(new MissFloatWindow.OnMissFloatWindowClickListener() {
             @Override
             public void onClick(int source) {
-                if (source == MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION || source == MediaPlayService.MEDIA_SOURCE_HOT_QUESTION) {
+                if (source == MissAudioManager.IAudio.AUDIO_SOURCE_QUESTION) {
                     umengEventCount(UmengCountEventId.MISS_TALK_QUESTION_DETAIL);
                 }
             }
@@ -518,8 +518,7 @@ public class QuestionDetailActivity extends MediaPlayActivity implements Adapter
         } else {
             updateQuestionListenCount(question);
             if (mMediaPlayService != null) {
-                int source = question.isLatestQuestion() ? MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION : MediaPlayService.MEDIA_SOURCE_HOT_QUESTION;
-                mMediaPlayService.startPlay(question, source);
+                mMediaPlayService.startPlay(question);
             }
         }
     }

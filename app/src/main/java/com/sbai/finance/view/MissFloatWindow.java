@@ -18,7 +18,6 @@ import com.sbai.finance.activity.anchor.QuestionDetailActivity;
 import com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity;
 import com.sbai.finance.model.anchor.Question;
 import com.sbai.finance.model.radio.Radio;
-import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.audio.MissAudioManager;
 
@@ -77,14 +76,14 @@ public class MissFloatWindow extends LinearLayout {
                 MissAudioManager.IAudio audio = missAudioManager.getAudio();
                 if (audio instanceof Question) {
                     if (mOnMissFloatWindowClickListener != null) {
-                        mOnMissFloatWindowClickListener.onClick(MediaPlayService.MEDIA_SOURCE_LATEST_QUESTION);
+                        mOnMissFloatWindowClickListener.onClick(MissAudioManager.IAudio.AUDIO_SOURCE_QUESTION);
                     }
                     Launcher.with(getContext(), QuestionDetailActivity.class)
                             .putExtra(Launcher.EX_PAYLOAD, ((Question) audio).getId())
                             .execute();
                 } else if (audio instanceof Radio) {
                     if (mOnMissFloatWindowClickListener != null) {
-                        mOnMissFloatWindowClickListener.onClick(MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
+                        mOnMissFloatWindowClickListener.onClick(MissAudioManager.IAudio.AUDIO_SOURCE_RADIO);
                     }
                     Launcher.with(getContext(), RadioStationPlayActivity.class)
                             .putExtra(ExtraKeys.RADIO, (Radio) audio)

@@ -233,7 +233,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                 && pauseRadioIsNotThisAudio
                 && !MissAudioManager.get().isPaused(mRadio)
                 && automaticPlay) {
-            mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
+            mMediaPlayService.startPlay(mRadio);
             mRadioPlayLL.setPlayStatus(mRadio);
             updateListenNumber();
         }
@@ -349,7 +349,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
                     }
                 } else {
                     if (mMediaPlayService != null) {
-                        mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
+                        mMediaPlayService.startPlay(mRadio);
                     }
                     updateListenNumber();
                 }
@@ -463,21 +463,21 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     @Override
     public void onMediaPlayPause(int IAudioId, int source) {
         mRadioPlayLL.setPlayStatus(mRadio);
-        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+        if (source == MissAudioManager.IAudio.AUDIO_SOURCE_RADIO) {
             mRadioPlayLL.onPlayPause();
         }
     }
 
     @Override
     protected void onMediaPlayStop(int IAudioId, int source) {
-        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+        if (source == MissAudioManager.IAudio.AUDIO_SOURCE_RADIO) {
             mRadioPlayLL.onPlayStop();
         }
     }
 
     @Override
     protected void onMediaPlayError(int IAudioId, int source) {
-        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+        if (source == MissAudioManager.IAudio.AUDIO_SOURCE_RADIO) {
             mRadioPlayLL.stopAnimation();
         }
     }
@@ -492,7 +492,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     @Override
     protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
-        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
+        if (source == MissAudioManager.IAudio.AUDIO_SOURCE_RADIO) {
             mRadioPlayLL.setMediaPlayProgress(mediaPlayCurrentPosition, totalDuration);
         }
     }

@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +24,12 @@ import android.widget.TextView;
 import com.google.gson.JsonPrimitive;
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
-import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.anchor.CommentActivity;
 import com.sbai.finance.activity.anchor.MissProfileDetailActivity;
 import com.sbai.finance.activity.anchor.QuestionDetailActivity;
 import com.sbai.finance.activity.anchor.RewardMissActivity;
 import com.sbai.finance.activity.anchor.SubmitQuestionActivity;
+import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.MediaPlayFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.anchor.Anchor;
@@ -471,7 +470,7 @@ public class MissProfileQuestionFragment extends MediaPlayFragment {
         } else {
             updateQuestionListenCount(item);
             if (mMediaPlayService != null) {
-                mMediaPlayService.startPlay(item, MediaPlayService.MEDIA_SOURCE_MISS_PROFILE);
+                mMediaPlayService.startPlay(item);
             }
         }
     }
