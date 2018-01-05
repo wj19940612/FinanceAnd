@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.sbai.finance.App;
+import com.sbai.finance.net.Client;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -171,6 +172,13 @@ public class MissAudioManager {
                 public void onCompletion(MediaPlayer mp) {
                     if (mOnCompletedListener != null) {
                         mOnCompletedListener.onCompleted(mAudio.getAudioUrl());
+                    }
+                    if (mAudio != null) {
+                        boolean isRadioSource = mAudio.getSource() == IAudio.AUDIO_SOURCE_RADIO;
+                        if (isRadioSource) {
+                            Client.submitAudioIsListenComplete(mAudio.getAudioId())
+                                    .fire();
+                        }
                     }
                     stop();
                 }

@@ -89,17 +89,6 @@ public class MissAskFragment extends MediaPlayFragment {
                     mMissAskAdapter.notifyDataSetChanged();
                     Log.d(TAG, "updateQuestion: " + result.getId());
                 }
-                if (MissAudioManager.get().isStarted(result)) {
-                    MissAudioManager.get().setOnCompletedListener(new MissAudioManager.OnCompletedListener() {
-                        @Override
-                        public void onCompleted(String url) {
-                            mMissAskAdapter.notifyDataSetChanged();
-                            if (mOnMissAskPageListener != null) {
-                                mOnMissAskPageListener.onChangeMissFloatWindow(true);
-                            }
-                        }
-                    });
-                }
             }
         }
     }
@@ -165,11 +154,6 @@ public class MissAskFragment extends MediaPlayFragment {
         mSet = new HashSet<>();
         initView();
         mRect = new Rect();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         refreshData();
     }
 
@@ -213,10 +197,16 @@ public class MissAskFragment extends MediaPlayFragment {
     @Override
     protected void onMediaPlayStop(int IAudioId, int source) {
         notifyAdapterDataChanged(source);
+
+        if (mOnMissAskPageListener != null) {
+            mOnMissAskPageListener.onChangeMissFloatWindow(true);
+        }
     }
 
     private void notifyAdapterDataChanged(int source) {
-        mMissAskAdapter.notifyDataSetChanged();
+        if (source == MissAudioManager.IAudio.AUDIO_SOURCE_QUESTION) {
+            mMissAskAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

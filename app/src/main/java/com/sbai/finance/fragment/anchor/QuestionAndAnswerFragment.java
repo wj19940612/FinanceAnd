@@ -120,6 +120,11 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
             if (!MissAudioManager.get().isPlaying()) {
                 mMissFloatWindow.setVisibility(View.GONE);
             }
+            if (audio != null
+                    && audio.getSource() == MissAudioManager.IAudio.AUDIO_SOURCE_RADIO
+                    && MissAudioManager.get().isPlaying()) {
+                mMissFloatWindow.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -223,14 +228,14 @@ public class QuestionAndAnswerFragment extends MediaPlayFragment implements Miss
 
     private void notifyFragmentDataSetChange(int source) {
 //        if (source != MediaPlayService.MEDIA_SOURCE_HOT_QUESTION) {
-            MissAskFragment missHotAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(0);
-            if (missHotAskFragment != null) {
-                missHotAskFragment.notifyFragmentDataSetChange();
-            }
-            MissAskFragment missLatestAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(1);
-            if (missLatestAskFragment != null) {
-                missLatestAskFragment.notifyFragmentDataSetChange();
-            }
+        MissAskFragment missHotAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(0);
+        if (missHotAskFragment != null) {
+            missHotAskFragment.notifyFragmentDataSetChange();
+        }
+        MissAskFragment missLatestAskFragment = (MissAskFragment) mMissAskFragmentAdapter.getFragment(1);
+        if (missLatestAskFragment != null) {
+            missLatestAskFragment.notifyFragmentDataSetChange();
+        }
 //        }
     }
 

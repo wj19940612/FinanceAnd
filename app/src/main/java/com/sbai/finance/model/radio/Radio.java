@@ -23,6 +23,8 @@ public class Radio implements Parcelable, MissAudioManager.IAudio, PayProductInf
     public static final int USER_COLLECT_TYPE_VOICE = 3;
     public static final int USER_COLLECT_TYPE_RADIO = 4;
 
+    public static final int AUDIO_IS_ALREADY_LISTEN = 1;
+    public static final int AUDIO_IS_NOT_LISTEN = 0;
 
     /**
      * audio : https://esongtest.oss-cn-shanghai.aliyuncs.com/upload/20171012/Free-Converter.com-20170815035134-6148604140.m4a
@@ -91,6 +93,8 @@ public class Radio implements Parcelable, MissAudioManager.IAudio, PayProductInf
     private int radioPaid;     // 电台是否收费
     private double radioPrice;
     private int userPayment;   //1 是否已经付款
+
+    private int listen;        //是否收听：0未收听，1已收听
 
     @Override
     public int getAudioId() {
@@ -290,6 +294,13 @@ public class Radio implements Parcelable, MissAudioManager.IAudio, PayProductInf
     public Radio() {
     }
 
+    public int getListen() {
+        return listen;
+    }
+
+    public void setListen(int listen) {
+        this.listen = listen;
+    }
 
     @Override
     public String toString() {
@@ -314,6 +325,15 @@ public class Radio implements Parcelable, MissAudioManager.IAudio, PayProductInf
                 ", updateUserId=" + updateUserId +
                 ", viewNumber=" + viewNumber +
                 ", radioName='" + radioName + '\'' +
+                ", radioCover='" + radioCover + '\'' +
+                ", reviewTime=" + reviewTime +
+                ", userPortrait='" + userPortrait + '\'' +
+                ", deleted=" + deleted +
+                ", paid=" + paid +
+                ", radioPaid=" + radioPaid +
+                ", radioPrice=" + radioPrice +
+                ", userPayment=" + userPayment +
+                ", listen=" + listen +
                 '}';
     }
 
@@ -416,6 +436,7 @@ public class Radio implements Parcelable, MissAudioManager.IAudio, PayProductInf
         dest.writeInt(this.radioPaid);
         dest.writeDouble(this.radioPrice);
         dest.writeInt(this.userPayment);
+        dest.writeInt(this.listen);
     }
 
     protected Radio(Parcel in) {
@@ -447,6 +468,7 @@ public class Radio implements Parcelable, MissAudioManager.IAudio, PayProductInf
         this.radioPaid = in.readInt();
         this.radioPrice = in.readDouble();
         this.userPayment = in.readInt();
+        this.listen = in.readInt();
     }
 
     public static final Creator<Radio> CREATOR = new Creator<Radio>() {
@@ -460,5 +482,4 @@ public class Radio implements Parcelable, MissAudioManager.IAudio, PayProductInf
             return new Radio[size];
         }
     };
-
 }
