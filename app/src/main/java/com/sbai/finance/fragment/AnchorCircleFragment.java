@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import com.sbai.finance.service.MediaPlayService;
 import com.sbai.finance.utils.Display;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.OnPageSelectedListener;
+import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.slidingTab.SlidingTabLayout;
 
 import butterknife.BindView;
@@ -79,7 +79,8 @@ public class AnchorCircleFragment extends BaseFragment {
         mTabLayout.setDistributeEvenly(true);
         mTabLayout.setDividerColors(ContextCompat.getColor(getActivity(), android.R.color.transparent));
         mTabLayout.setPadding(Display.dp2Px(15, getResources()));
-        mTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(70, getResources()));
+        mTabLayout.setSelectedIndicatorPadding((int) Display.dp2Px(35, getResources()));
+        mTabLayout.setHorizontalMargin((int) Display.dp2Px(80, getResources()));
         mTabLayout.setViewPager(mViewPager);
         mTabLayout.setTabViewTextSize(16);
         mTabLayout.setTabViewTextColor(ContextCompat.getColorStateList(getActivity(), R.color.sliding_tab_text));
@@ -115,12 +116,22 @@ public class AnchorCircleFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // 这里需要特殊处理下
+        if (mViewPager.getCurrentItem() == PAGE_POSITION_RECOMMEND && MissAudioManager.get().isPlaying()) {
+            MissAudioManager.get().stop();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mViewPager.removeOnPageChangeListener(mOnPageSelectedListener);
         mOnPageSelectedListener = null;
         mBind.unbind();
     }
+
 
     @OnClick(R.id.askAQuestion)
     public void onViewClicked() {
@@ -135,9 +146,6 @@ public class AnchorCircleFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        int iad = data.getIntExtra(ExtraKeys.QUESTION_ID, -1);
-
-        Log.d(TAG, "onActivityResult: "+iad);
         if (resultCode == BaseActivity.RESULT_OK) {
             switch (requestCode) {
                 case REQ_CODE_LOGIN:
@@ -148,7 +156,7 @@ public class AnchorCircleFragment extends BaseFragment {
                         int id = data.getIntExtra(ExtraKeys.QUESTION_ID, -1);
                         if (id != -1) {
                             RecommendFragment fragment = (RecommendFragment) mAnchorCircleFragmentAdapter.getFragment(PAGE_POSITION_RECOMMEND);
-                            if(fragment!=null){
+                            if (fragment != null) {
                                 fragment.updatePointComment(id);
                             }
                         }

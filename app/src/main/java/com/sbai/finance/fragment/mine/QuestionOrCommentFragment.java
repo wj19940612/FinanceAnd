@@ -321,7 +321,6 @@ public class QuestionOrCommentFragment extends BaseFragment {
                 } else {
                     mContent.setSelected(false);
                     mTitle.setEnabled(false);
-                    // TODO: 2018/1/3 需要判断是否制定过小姐姐
                     if (question.getAppointCustomId() != 0) {
                         mContent.setText(context.getString(R.string.miss_is_answering));
                     } else {

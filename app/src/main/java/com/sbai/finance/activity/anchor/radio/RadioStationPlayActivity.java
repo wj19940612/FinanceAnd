@@ -51,7 +51,6 @@ import com.sbai.finance.utils.OnItemClickListener;
 import com.sbai.finance.utils.RenderScriptGaussianBlur;
 import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.finance.view.HasLabelImageLayout;
-import com.sbai.finance.view.MissFloatWindow;
 import com.sbai.finance.view.dialog.ShareDialog;
 import com.sbai.finance.view.radio.RadioInfoLayout;
 import com.sbai.finance.view.radio.RadioInfoPlayLayout;
@@ -86,8 +85,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     AppBarLayout mAppBarLayout;
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @BindView(R.id.missFloatWindow)
-    MissFloatWindow mMissFloatWindow;
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.bg)
@@ -107,7 +104,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     private ArrayList<QuestionReply.DataBean> mQuestionReplyList;
     private RadioReviewAdapter mRadioReviewAdapter;
     private int mPage;
-    private boolean mPlayThisVoice;
 
     private String mTitleRadioName;
 
@@ -131,7 +127,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         setContentView(R.layout.activity_radio_station_play_activity);
         setSupportActionBar(mToolbar);
         ButterKnife.bind(this);
-        mRootMissFloatWindow = mMissFloatWindow;
 //        translucentStatusBar();
 
         mSet = new HashSet<>();
@@ -145,7 +140,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        refreshReplyData();
         requestAudioDetails(true);
     }
 
@@ -233,34 +227,15 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     private void initMissFloatWindow(boolean automaticPlay) {
         MissAudioManager missAudioManager = MissAudioManager.get();
         MissAudioManager.IAudio audio = missAudioManager.getAudio();
-        if (missAudioManager.isPlaying()) {
-            if (audio instanceof Question) {
-                mMissFloatWindow.setVisibility(View.VISIBLE);
-                Question question = (Question) audio;
-                mMissFloatWindow.setMissAvatar(question.getCustomPortrait());
-                mPlayThisVoice = true;
-            } else if (audio instanceof Radio) {
-                Radio playRadio = (Radio) audio;
-                mMissFloatWindow.setMissAvatar(playRadio.getUserPortrait());
-                if (mRadio != null && mRadio.getId() == playRadio.getId()) {
-                    mMissFloatWindow.setVisibility(View.GONE);
-                    mPlayThisVoice = true;
-                    mRadioPlayLL.startAnimation();
-                } else {
-                    mMissFloatWindow.setVisibility(View.VISIBLE);
-                    mPlayThisVoice = false;
-                }
-            }
-        } else {
-            if (mRadio == null) return;
-            if (mMediaPlayService != null
-                    && !MissAudioManager.get().isStarted(audio)
-                    && automaticPlay) {
-                mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
-                mPlayThisVoice = true;
-                mRadioPlayLL.setPlayStatus(mRadio);
-                updateListenNumber();
-            }
+        if (mRadio == null) return;
+        boolean pauseRadioIsNotThisAudio = (audio == null || mRadio.getId() != audio.getAudioId());
+        if (mMediaPlayService != null
+                && pauseRadioIsNotThisAudio
+                && !MissAudioManager.get().isPaused(mRadio)
+                && automaticPlay) {
+            mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
+            mRadioPlayLL.setPlayStatus(mRadio);
+            updateListenNumber();
         }
         if (mRadio != null && MissAudioManager.get().isPaused(mRadio)) {
             mRadioPlayLL.setMediaPlayProgress(MissAudioManager.get().getCurrentPosition(), mRadio.getAudioTime() * 1000);
@@ -287,9 +262,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
                     @Override
                     protected void onRespSuccessData(Radio radio) {
-                        if (MissAudioManager.get().isPlaying() && MissAudioManager.get().getAudio() instanceof Radio) {
-                            mMissFloatWindow.setMissAvatar(radio.getUserPortrait());
-                        }
                         updateAudioDetail(radio, automaticPlay);
                     }
 
@@ -469,13 +441,13 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     @Override
     public void onMediaPlayStart(int IAudioId, int source) {
-        changeFloatWindowView();
+        changePlayStatus();
     }
 
     @Override
     public void onMediaPlay(int IAudioId, int source) {
         mRadioPlayLL.setPlayStatus(mRadio);
-        changeFloatWindowView();
+        changePlayStatus();
     }
 
     @Override
@@ -485,13 +457,12 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         if (mRadio != null && audio != null && mRadio.getId() == audio.getAudioId()) {
             mRadioPlayLL.startAnimation();
         }
-        changeFloatWindowView();
+        changePlayStatus();
     }
 
     @Override
     public void onMediaPlayPause(int IAudioId, int source) {
         mRadioPlayLL.setPlayStatus(mRadio);
-        mMissFloatWindow.setVisibility(View.GONE);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
             mRadioPlayLL.onPlayPause();
         }
@@ -499,7 +470,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     @Override
     protected void onMediaPlayStop(int IAudioId, int source) {
-        mMissFloatWindow.setVisibility(View.GONE);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
             mRadioPlayLL.onPlayStop();
         }
@@ -507,7 +477,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     @Override
     protected void onMediaPlayError(int IAudioId, int source) {
-        mMissFloatWindow.setVisibility(View.GONE);
         if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
             mRadioPlayLL.stopAnimation();
         }
@@ -523,21 +492,16 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
 
     @Override
     protected void onMediaPlayCurrentPosition(int IAudioId, int source, int mediaPlayCurrentPosition, int totalDuration) {
-        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO && mPlayThisVoice) {
+        if (source == MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO) {
             mRadioPlayLL.setMediaPlayProgress(mediaPlayCurrentPosition, totalDuration);
         }
     }
 
-    private void changeFloatWindowView() {
+    private void changePlayStatus() {
         MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-        if (audio instanceof Question) {
-            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
-        } else if (audio instanceof Radio) {
-            mMissFloatWindow.setMissAvatar(((Radio) audio).getUserPortrait());
+        if (audio instanceof Radio) {
             if (mRadio != null) {
                 if (mRadio.getId() == audio.getAudioId()) {
-                    mMissFloatWindow.setMissAvatar(mRadio.getUserPortrait());
-                    mPlayThisVoice = true;
                     mRadioPlayLL.startAnimation();
                 }
             } else {

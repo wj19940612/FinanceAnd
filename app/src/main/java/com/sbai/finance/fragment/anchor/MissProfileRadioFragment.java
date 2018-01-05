@@ -27,7 +27,7 @@ import com.sbai.finance.R;
 import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.anchor.MissProfileDetailActivity;
 import com.sbai.finance.activity.anchor.RadioStationListActivity;
-import com.sbai.finance.fragment.MediaPlayFragment;
+import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.anchor.Anchor;
 import com.sbai.finance.model.anchor.Question;
 import com.sbai.finance.model.anchor.RadioInfo;
@@ -57,7 +57,7 @@ import static com.sbai.finance.activity.anchor.MissProfileDetailActivity.CUSTOM_
  * Created by Administrator on 2017\11\23 0023.
  */
 
-public class MissProfileRadioFragment extends MediaPlayFragment {
+public class MissProfileRadioFragment extends BaseFragment {
 
     Unbinder mBind;
     @BindView(R.id.recyclerView)
@@ -135,7 +135,6 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
-        mRootMissFloatWindow = mMissFloatWindow;
     }
 
     @Override
@@ -233,36 +232,36 @@ public class MissProfileRadioFragment extends MediaPlayFragment {
         mBind.unbind();
     }
 
-    @Override
-    public void onMediaPlayStart(int IAudioId, int source) {
-        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
-        if (audio instanceof Question) {
-            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
-        }
-    }
-
-    @Override
-    public void onMediaPlay(int IAudioId, int source) {
-        mMissFloatWindow.startAnim();
-    }
-
-    @Override
-    public void onMediaPlayResume(int IAudioId, int source) {
-        mMissFloatWindow.setVisibility(View.VISIBLE);
-        mMissFloatWindow.startAnim();
-    }
-
-    @Override
-    public void onMediaPlayPause(int IAudioId, int source) {
-        mMissFloatWindow.stopAnim();
-        mMissFloatWindow.setVisibility(View.GONE);
-    }
-
-    @Override
-    protected void onMediaPlayStop(int IAudioId, int source) {
-        mMissFloatWindow.stopAnim();
-        mMissFloatWindow.setVisibility(View.GONE);
-    }
+//    @Override
+//    public void onMediaPlayStart(int IAudioId, int source) {
+//        MissAudioManager.IAudio audio = MissAudioManager.get().getAudio();
+//        if (audio instanceof Question) {
+//            mMissFloatWindow.setMissAvatar(((Question) audio).getCustomPortrait());
+//        }
+//    }
+//
+//    @Override
+//    public void onMediaPlay(int IAudioId, int source) {
+//        mMissFloatWindow.startAnim();
+//    }
+//
+//    @Override
+//    public void onMediaPlayResume(int IAudioId, int source) {
+//        mMissFloatWindow.setVisibility(View.VISIBLE);
+//        mMissFloatWindow.startAnim();
+//    }
+//
+//    @Override
+//    public void onMediaPlayPause(int IAudioId, int source) {
+//        mMissFloatWindow.stopAnim();
+//        mMissFloatWindow.setVisibility(View.GONE);
+//    }
+//
+//    @Override
+//    protected void onMediaPlayStop(int IAudioId, int source) {
+//        mMissFloatWindow.stopAnim();
+//        mMissFloatWindow.setVisibility(View.GONE);
+//    }
 
     static class RadioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

@@ -3,9 +3,9 @@ package com.sbai.finance.model.radio;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sbai.finance.model.product.PayProductInfo;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.utils.audio.MissAudioManager;
-import com.sbai.finance.utils.audio.ProductFreeStatusCode;
 
 /**
  * Created by ${wangJie} on 2017/11/20.
@@ -15,7 +15,7 @@ import com.sbai.finance.utils.audio.ProductFreeStatusCode;
  * 姐说主页电台信息
  */
 
-public class Radio implements Parcelable, MissAudioManager.IAudio, ProductFreeStatusCode {
+public class Radio implements Parcelable, MissAudioManager.IAudio, PayProductInfo {
 
     //  /user/user/collect.do 1问答2、日报3、音频4、电台
     private static final int USER_COLLECT_TYPE_QUESTION = 1;
@@ -105,6 +105,21 @@ public class Radio implements Parcelable, MissAudioManager.IAudio, ProductFreeSt
     @Override
     public int getSource() {
         return MissAudioManager.IAudio.AUDIO_SOURCE_RADIO;
+    }
+
+    @Override
+    public int getProductType() {
+        return PRODUCT_TYPE_RADIO;
+    }
+
+    @Override
+    public double getPrice() {
+        return getRadioPrice();
+    }
+
+    @Override
+    public int getProductId() {
+        return getId();
     }
 
     public String getRadioName() {
@@ -440,4 +455,5 @@ public class Radio implements Parcelable, MissAudioManager.IAudio, ProductFreeSt
             return new Radio[size];
         }
     };
+
 }

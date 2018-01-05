@@ -6,17 +6,19 @@
              tools:context="com.sbai.finance.fragment.anchor.AnchorPointFragment">
 
     <com.sbai.finance.view.EmptyRecyclerView
-        android:background="@color/background"
-        android:layout_marginTop="@dimen/common_padding"
         android:id="@+id/emptyRecyclerView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_padding"
+        android:background="@color/background"/>
 
     <TextView
+        android:textColor="@android:color/black"
         android:id="@+id/empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
         android:drawablePadding="10dp"
         android:drawableTop="@drawable/img_no_message"
         android:gravity="center"

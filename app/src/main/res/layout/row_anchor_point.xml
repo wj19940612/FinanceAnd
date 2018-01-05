@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/rootView"
     android:background="@android:color/white">
 
     <ImageView
@@ -26,8 +26,7 @@
         android:orientation="horizontal"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginTop="@dimen/common_padding">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.sbai.finance.view.HasLabelImageLayout
             android:id="@+id/hasLabelLayout"
@@ -52,10 +51,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/common_padding"
-        android:layout_marginTop="8dp"
+        android:paddingTop="8dp"
         android:textColor="@color/primaryText"
         android:textSize="15sp"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/anchorInfoLayout"
         tools:text="溺水的鱼大家点击手机"/>
@@ -94,54 +92,68 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/threeImageLayout"/>
 
-    <TextView
-        android:id="@+id/prise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_padding"
-        android:drawablePadding="4dp"
-        android:text="@string/praise"
-        android:textColor="@color/luckyText"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@id/pointTitle"
-        app:layout_constraintTop_toBottomOf="@+id/split"
-        android:drawableLeft="@drawable/ic_miss_praise"/>
-
-    <TextView
-        android:id="@+id/review"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="22dp"
-        android:drawableLeft="@drawable/ic_miss_comment"
-        android:drawablePadding="4dp"
-        android:text="@string/comment"
-        android:textColor="@color/luckyText"
-        android:textSize="12sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/prise"
-        app:layout_constraintLeft_toRightOf="@+id/prise"/>
-
-    <TextView
-        android:id="@+id/pointPublishTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/common_padding"
-        app:layout_constraintBaseline_toBaselineOf="@+id/review"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="20:20"/>
-
-    <View
-        android:id="@+id/commentSplit"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="4dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/common_padding"
-        android:background="@color/background"
-        app:layout_constraintTop_toBottomOf="@+id/pointPublishTime"/>
-    <!--<View-->
-        <!--android:visibility="gone"-->
-        <!--android:id="@+id/anchorSplit"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="10dp"-->
-        <!--android:background="@color/background"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/commentSplit"/>-->
+        app:layout_constraintStart_toStartOf="@id/pointTitle"
+        app:layout_constraintTop_toBottomOf="@+id/split">
+
+        <TextView
+            android:id="@+id/prise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/common_padding"
+            android:drawableLeft="@drawable/ic_miss_praise"
+            android:drawablePadding="4dp"
+            android:text="@string/praise"
+            android:textColor="@color/luckyText"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/review"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
+            android:layout_toRightOf="@+id/prise"
+            android:drawableLeft="@drawable/ic_miss_comment"
+            android:drawablePadding="4dp"
+            android:text="@string/comment"
+            android:textColor="@color/luckyText"
+            android:textSize="12sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/prise"
+            app:layout_constraintLeft_toRightOf="@+id/prise"/>
+
+        <TextView
+            android:id="@+id/pointPublishTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/common_padding"
+            app:layout_constraintBaseline_toBaselineOf="@+id/review"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="20:20"/>
+
+        <View
+            android:id="@+id/commentSplit"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_below="@+id/pointPublishTime"
+            android:layout_marginTop="@dimen/common_padding"
+            android:background="@color/background"
+            app:layout_constraintTop_toBottomOf="@+id/pointPublishTime"
+            app:layout_goneMarginBottom="0dp"
+            app:layout_goneMarginTop="0dp"/>
+
+        <View
+            android:id="@+id/anchorSplit"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_below="@+id/commentSplit"
+            android:background="@color/background"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/commentSplit"/>
+    </RelativeLayout>
+
 
 </android.support.constraint.ConstraintLayout>

@@ -164,7 +164,7 @@ public class AllRadioListActivity extends BaseActivity {
                         .load(radio.getRadioCover())
                         .into(mRadioCover);
                 mVoiceName.setText(radio.getAudioName());
-                mRadioUpdateTime.setText(context.getString(R.string.time_update, DateUtil.formatDefaultStyleTime(radio.getReviewTime())));
+                mRadioUpdateTime.setText(context.getString(R.string.time_update, DateUtil.formatDefaultStyleTime(radio.getModifyTime())));
                 mRadioName.setText(radio.getRadioName());
                 mRadioOwnerName.setText(radio.getRadioHostName());
 

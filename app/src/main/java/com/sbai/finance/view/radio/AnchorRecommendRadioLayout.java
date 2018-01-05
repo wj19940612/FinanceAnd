@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.anchor.RadioStationListActivity;
 import com.sbai.finance.activity.anchor.radio.AllRadioListActivity;
-import com.sbai.finance.activity.anchor.radio.RadioStationPlayActivity;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Display;
@@ -97,7 +97,7 @@ public class AnchorRecommendRadioLayout extends LinearLayout {
                     .load(radio.getRadioCover())
                     .into(radioCover);
             voiceName.setText(radio.getAudioName());
-            radioUpdateTime.setText(getContext().getString(R.string.time_update, DateUtil.formatDefaultStyleTime(radio.getReviewTime())));
+            radioUpdateTime.setText(getContext().getString(R.string.time_update, DateUtil.formatDefaultStyleTime(radio.getModifyTime())));
             radioName.setText(radio.getRadioName());
             radioOwnerName.setText(radio.getRadioHostName());
             addView(view, layoutParams);
@@ -105,7 +105,7 @@ public class AnchorRecommendRadioLayout extends LinearLayout {
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Launcher.with(getContext(), RadioStationPlayActivity.class)
+                    Launcher.with(getContext(), RadioStationListActivity.class)
                             .putExtra(ExtraKeys.RADIO, radio)
                             .execute();
                 }

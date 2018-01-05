@@ -59,6 +59,11 @@ public class Client {
 
     public static final String ACTIVITY_URL_GUESS_HAPPY = API.getHost() + "/lm/guess/index.html?share=false";
 
+    //观点详情页面链接
+    public static final String PAGE_URL_POINT_DETAIL = API.getHost() + "/lm/viewpoint/index.html?id=%d";
+
+    public static final String INTEGRAL_SHOP = API.getHost() + "/lm/score/index.html";
+
     public static String getServiceQQ(String serviceQQ) {
 //        if (qqType == ChannelServiceInfo.QQ_TYPE_NORMAL) {
 //            return "mqqwpa://im/chat?chat_type=wpa&uin=" + serviceQQ + "&version=1";
@@ -3548,6 +3553,7 @@ public class Client {
     }
 
     /**
+<<<<<<< HEAD
      * 获取任务中心的任务列表
      */
     public static API requestTaskData() {
@@ -3566,5 +3572,31 @@ public class Client {
      */
     public static API requestBoxProgress() {
         return new API("/api/mall/mission/progress.do");
+    }
+
+     /** /explain/user/viewpoint/praise/like.do
+     * POST
+     * 观点app-观点点赞 - 取消点赞（陈适）
+     *
+     * @param id
+     */
+    public static API praisePoint(int id) {
+        return new API(POST, "/explain/user/viewpoint/praise/like.do",
+                new ApiParams()
+                        .put("id", id));
+    }
+
+    /**
+     * /explain/audioManage/audioListen.do
+     * POST
+     * [App]音频--收听,音频收听完调用(薛松)
+     *
+     * @param audioId
+     * @return
+     */
+    public static API submitAudioIsListenComplete(int audioId) {
+        return new API(POST, "/explain/audioManage/audioListen.do",
+                new ApiParams()
+                        .put("audioId", audioId));
     }
 }

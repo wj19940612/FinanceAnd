@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.sbai.finance.R;
 import com.sbai.finance.model.radio.Radio;
+import com.sbai.finance.net.Client;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.audio.MissAudioManager;
 import com.sbai.glide.GlideApp;
@@ -50,11 +51,11 @@ public class RadioInfoPlayLayout extends LinearLayout {
     private Unbinder mBind;
     private Radio mRadio;
 
-//    private RotateAnimation mRotateAnimation;
 
     private OnRadioPlayListener mOnRadioPlayListener;
     private Animation mRotateAnimation;
 
+    private int mTotalDuration;
 
     public interface OnRadioPlayListener {
         void onRadioPlay();
@@ -83,12 +84,6 @@ public class RadioInfoPlayLayout extends LinearLayout {
     }
 
     private void createVoicePlayRotateAnimation() {
-//        mRotateAnimation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-//        LinearInterpolator lin = new LinearInterpolator();
-//        mRotateAnimation.setInterpolator(lin);
-//        mRotateAnimation.setDuration(5000);
-//        mRotateAnimation.setRepeatCount(-1);
-//        mRotateAnimation.setFillAfter(false);
         mRotateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.infinite_rotate);
     }
 
@@ -126,8 +121,8 @@ public class RadioInfoPlayLayout extends LinearLayout {
     }
 
     public void setMediaPlayProgress(int mediaPlayCurrentPosition, int totalDuration) {
-//        Log.d(TAG, "setMediaPlayProgress: " + mediaPlayCurrentPosition + "  " + totalDuration);
         if (totalDuration != 0) {
+            mTotalDuration = totalDuration;
             mRadioSeekBar.setMax(totalDuration);
             setRadioProgress(mediaPlayCurrentPosition);
             mProgressLength.setText(DateUtil.format(mediaPlayCurrentPosition / 1000 * 1000, DateUtil.FORMAT_MINUTE_SECOND));
@@ -165,7 +160,7 @@ public class RadioInfoPlayLayout extends LinearLayout {
         mProgressLength.setText(R.string.start_time);
     }
 
-    public void onPlayPause(){
+    public void onPlayPause() {
         mPlay.setSelected(false);
         mVoiceCover.clearAnimation();
     }
@@ -175,6 +170,10 @@ public class RadioInfoPlayLayout extends LinearLayout {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
             if (mOnRadioPlayListener != null && b) {
                 mOnRadioPlayListener.onSeekChange(progress);
+            }
+            if (progress == mTotalDuration && mRadio != null) {
+                Client.submitAudioIsListenComplete(mRadio.getAudioId())
+                        .fire();
             }
         }
 

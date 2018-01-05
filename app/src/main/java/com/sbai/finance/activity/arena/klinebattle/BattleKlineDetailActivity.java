@@ -264,7 +264,7 @@ public class BattleKlineDetailActivity extends SingleKlineExerciseActivity {
         requestCurrentBattle();
     }
 
-    
+
     private void setRankValueByProfit(List<BattleKlineInfo> battleKlineInfos) {
         int rank = 1;//名次
         int size = battleKlineInfos.size();

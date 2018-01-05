@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.sbai.finance.Preference;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.activity.mine.MyCollectionActivity;
 import com.sbai.finance.activity.mine.MyQuestionAndAnswerActivity;
@@ -97,6 +98,8 @@ public class MineFragment extends BaseFragment {
     LinearLayout mMineSubscribe;
     @BindView(R.id.waitMeAnswer)
     IconTextRow mWaitMeAnswer;
+    @BindView(R.id.shop)
+    IconTextRow mShop;
 
     private int messageReadCount = -1;
     private int questionReadCount = -1;
@@ -301,6 +304,7 @@ public class MineFragment extends BaseFragment {
     public void updateIngotNumber(UserFundInfo userFundInfo) {
         if (userFundInfo != null) {
             mWallet.setSubText(getString(R.string.my_ingot_, userFundInfo.getYuanbao()));
+            mShop.setSubText(getString(R.string.mine_integral_, Math.round(Math.floor(userFundInfo.getCredit()))));
         }
     }
 
@@ -315,6 +319,7 @@ public class MineFragment extends BaseFragment {
             mUserName.setText(R.string.to_login);
 //            mFinanceEvaluation.setSubText(R.string.finance_evaluation_hint);
             mWallet.setSubText("");
+            mShop.setSubText("");
             mMessage.setSubTextVisible(View.GONE);
 //            mFeedback.setSubTextVisible(View.GONE);
             setNoReadNewsCount(0);
@@ -375,7 +380,7 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.userInfoArea, R.id.lemiScoreArea, R.id.wallet, R.id.mineQuestionsAndAnswers, R.id.mineCollection,
+    @OnClick({R.id.userInfoArea, R.id.lemiScoreArea, R.id.wallet, R.id.shop, R.id.mineQuestionsAndAnswers, R.id.mineCollection,
             R.id.message, R.id.setting, R.id.mineSubscribe, R.id.waitMeAnswer, R.id.userHeadImage})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -428,6 +433,11 @@ public class MineFragment extends BaseFragment {
                 } else {
                     openLoginPage();
                 }
+                break;
+            case R.id.shop:
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, Client.INTEGRAL_SHOP)
+                        .execute();
                 break;
 
             case R.id.mineQuestionsAndAnswers:

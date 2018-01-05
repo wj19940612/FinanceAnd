@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,12 +18,14 @@ import android.widget.TextView;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
+import com.sbai.finance.activity.WebActivity;
 import com.sbai.finance.activity.anchor.CommentActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
 import com.sbai.finance.fragment.BaseFragment;
 import com.sbai.finance.model.LocalUser;
 import com.sbai.finance.model.anchor.AnchorPoint;
 import com.sbai.finance.model.anchor.MissSwitcherModel;
+import com.sbai.finance.model.anchor.Praise;
 import com.sbai.finance.model.anchor.Question;
 import com.sbai.finance.model.radio.Radio;
 import com.sbai.finance.net.Callback2D;
@@ -85,6 +88,11 @@ public class RecommendFragment extends BaseFragment {
 
         initView();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         refreshData();
     }
 
@@ -107,6 +115,17 @@ public class RecommendFragment extends BaseFragment {
     }
 
     private void initListener() {
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) return;
+                AnchorPoint anchorPoint = (AnchorPoint) parent.getAdapter().getItem(position);
+                requestPointDetail(anchorPoint);
+            }
+        });
+
+
         mRecommendPointAdapter.setOnPointCallBack(new AnchorPointFragment.AnchorPointAdapter.OnPointCallBack() {
             @Override
             public void onItemClick(AnchorPoint anchorPoint, int position) {
@@ -115,7 +134,7 @@ public class RecommendFragment extends BaseFragment {
 
             @Override
             public void onPraise(AnchorPoint anchorPoint, int position) {
-                // TODO: 2018/1/3 点赞
+                praisePoint(anchorPoint);
             }
 
             @Override
@@ -131,6 +150,65 @@ public class RecommendFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    private void praisePoint(final AnchorPoint anchorPoint) {
+        if (LocalUser.getUser().isLogin()) {
+            Client.praisePoint(anchorPoint.getId())
+                    .setIndeterminate(this)
+                    .setTag(TAG)
+                    .setCallback(new Callback2D<Resp<Praise>, Praise>() {
+                        @Override
+                        protected void onRespSuccessData(Praise data) {
+                            anchorPoint.setPraiseCount(data.getPriseCount());
+                            anchorPoint.setPraise(data.getIsPrise());
+                            mRecommendPointAdapter.notifyDataSetChanged();
+                        }
+                    })
+                    .fire();
+        } else {
+            Launcher.with(getActivity(), LoginActivity.class).execute();
+        }
+    }
+
+    private void requestPointDetail(final AnchorPoint anchorPoint) {
+        if (anchorPoint != null) {
+//            Client.requestPointDetail(anchorPoint.getId())
+//                    .setTag(TAG)
+//                    .setCallback(new Callback2D<Resp<AnchorPoint>, AnchorPoint>() {
+//                        @Override
+//                        protected void onRespSuccessData(AnchorPoint data) {
+                            handlePoint(anchorPoint);
+//                        }
+//
+//                        @Override
+//                        protected void onRespFailure(Resp failedResp) {
+//                            super.onRespFailure(failedResp);
+//                            if (failedResp.getCode() == Resp.CODE_POINT_ALREADY_BUY) {
+//                                ToastUtil.show(failedResp.getMsg());
+//                            } else if (failedResp.getCode() == Resp.CODE_POINT_IS_DELETE || failedResp.getCode() == Resp.CODE_POINT_IS_SOLD_OUT) {
+//                                ToastUtil.show(failedResp.getMsg());
+//                                mRecommendPointAdapter.remove(anchorPoint);
+//                            }
+//                        }
+//                    })
+//                    .fire();
+
+        }
+    }
+
+    private void handlePoint(AnchorPoint anchorPoint) {
+        if (anchorPoint.getFree() == AnchorPoint.PRODUCT_RATE_CHARGE
+                && anchorPoint.getUserUse() == AnchorPoint.PRODUCT_RECHARGE_STATUS_NOT_PAY) {
+            if (LocalUser.getUser().isLogin()) {
+                Launcher.openBuyPage(getActivity(), anchorPoint);
+            } else {
+                Launcher.with(getActivity(), LoginActivity.class).execute();
+            }
+        } else {
+            String url = String.format(Client.PAGE_URL_POINT_DETAIL, anchorPoint.getId());
+            Launcher.with(getActivity(), WebActivity.class).putExtra(WebActivity.EX_URL, url).execute();
+        }
     }
 
     private void createListHeadView() {
@@ -301,8 +379,8 @@ public class RecommendFragment extends BaseFragment {
                 mPointContent.setText(anchorPoint.getViewDesc());
                 mThreeImageLayout.setImagePath(anchorPoint.getImgUrls());
                 mPointPublishTime.setText(DateUtil.formatDefaultStyleTime(anchorPoint.getUpdateTime()));
-                // TODO: 2018/1/4 是否点赞
-                if (true) {
+
+                if (anchorPoint.getPraise() == Praise.IS_PRAISE) {
                     mPrise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_praise, 0, 0, 0);
                 } else {
                     mPrise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_unpraise, 0, 0, 0);
@@ -311,6 +389,7 @@ public class RecommendFragment extends BaseFragment {
                 if (anchorPoint.getFree() == AnchorPoint.PRODUCT_RATE_FREE) {
                     mNeedPay.setVisibility(View.INVISIBLE);
                 } else {
+                    mNeedPay.setVisibility(View.VISIBLE);
                     boolean alreadyPay = anchorPoint.getUserUse() == AnchorPoint.PRODUCT_RECHARGE_STATUS_ALREADY_PAY;
                     mNeedPay.setSelected(alreadyPay);
                 }

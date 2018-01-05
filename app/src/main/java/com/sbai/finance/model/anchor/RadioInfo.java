@@ -295,4 +295,5 @@ public class RadioInfo implements Parcelable {
             return new RadioInfo[size];
         }
     };
+
 }

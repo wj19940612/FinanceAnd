@@ -65,7 +65,7 @@ public interface ExtraKeys {
     String GUESS_TYPE = "guess_type";
     String USER_ID = "user_id";
     String USER_NAME = "user_name";
-    String User_Portrait="user_portrait";
+    String User_Portrait = "user_portrait";
 
     String BATTLE_PROFIT = "battle_profit";
     String BATTLE_KLINE_DATA = "battle_kline_data";
@@ -73,4 +73,5 @@ public interface ExtraKeys {
     String BUY_TYPE = "buy_type";
     String BUY_ID = "buy_id";
     String MONEY = "money";
+    String PAY_PRODUCT = "pay_product";
 }
