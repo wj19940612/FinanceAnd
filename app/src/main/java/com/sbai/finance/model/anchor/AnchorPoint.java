@@ -33,7 +33,7 @@ public class AnchorPoint implements PayProductInfo, Parcelable {
     private int free;         //  0 免费 1 付费
     private int id;
     private String imgUrls;
-    private int money;        //收费金额
+    private double money;        //收费金额
     private String name;      //主播昵称
     private String portrait;  //主播昵称
     private int praiseCount;  // 点赞
@@ -91,11 +91,11 @@ public class AnchorPoint implements PayProductInfo, Parcelable {
         this.imgUrls = imgUrls;
     }
 
-    public int getMoney() {
+    public double getMoney() {
         return money;
     }
 
-    public void setMoney(int money) {
+    public void setMoney(double money) {
         this.money = money;
     }
 
@@ -190,7 +190,7 @@ public class AnchorPoint implements PayProductInfo, Parcelable {
         dest.writeInt(this.free);
         dest.writeInt(this.id);
         dest.writeString(this.imgUrls);
-        dest.writeInt(this.money);
+        dest.writeDouble(this.money);
         dest.writeString(this.name);
         dest.writeString(this.portrait);
         dest.writeInt(this.praiseCount);
@@ -207,7 +207,7 @@ public class AnchorPoint implements PayProductInfo, Parcelable {
         this.free = in.readInt();
         this.id = in.readInt();
         this.imgUrls = in.readString();
-        this.money = in.readInt();
+        this.money = in.readDouble();
         this.name = in.readString();
         this.portrait = in.readString();
         this.praiseCount = in.readInt();

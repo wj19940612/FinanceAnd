@@ -17,10 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sbai.finance.R;
-import com.sbai.finance.activity.ContentImgActivity;
 import com.sbai.finance.activity.mine.ImageSelectActivity;
 import com.sbai.finance.activity.mine.userinfo.AreaTakePhoneActivity;
 import com.sbai.finance.activity.mine.userinfo.ClipHeadImageActivity;
+import com.sbai.finance.activity.training.LookBigPictureActivity;
 import com.sbai.finance.utils.FileUtils;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.PermissionUtil;
@@ -196,8 +196,8 @@ public class UploadUserImageDialogFragment extends BottomDialogFragment {
                 break;
 
             case R.id.lookHDPicture:
-                Launcher.with(getActivity(), ContentImgActivity.class)
-                        .putExtra(Launcher.EX_PAYLOAD, new String[]{HDPictureUrl})
+                Launcher.with(getActivity(), LookBigPictureActivity.class)
+                        .putExtra(Launcher.EX_PAYLOAD, HDPictureUrl)
                         .execute();
                 this.dismissAllowingStateLoss();
                 break;

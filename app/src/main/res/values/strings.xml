@@ -1169,4 +1169,8 @@
     <string name="question_and_answer">问答</string>
     <string name="now_not_has_point">暂无观点</string>
     <string name="point">观点</string>
+
+    <string name="save_to_the_gallery">是否保存到相册</string>
+    <string name="image_save_to_">图片保存至%1$s</string>
+    <string name="image_save_fail">图片保存失败</string>
 </resources>
