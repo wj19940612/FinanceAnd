@@ -170,6 +170,11 @@ public class AnchorPoint implements PayProductInfo, Parcelable {
         return getId();
     }
 
+    @Override
+    public String getProductName() {
+        return getName();
+    }
+
     public AnchorPoint() {
     }
 

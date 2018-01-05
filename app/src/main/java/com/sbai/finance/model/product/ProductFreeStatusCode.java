@@ -14,8 +14,8 @@ public interface ProductFreeStatusCode extends Parcelable {
     int PRODUCT_RECHARGE_STATUS_NOT_PAY = 0;
     int PRODUCT_RECHARGE_STATUS_ALREADY_PAY = 1;
 
-    int PRODUCT_TYPE_POINT = 2;
-    int PRODUCT_TYPE_RADIO = 4;
-    int PRODUCT_TYPE_AUDIO = 8;
+    int PRODUCT_TYPE_POINT = 3;
+    int PRODUCT_TYPE_RADIO = 1;
+    int PRODUCT_TYPE_AUDIO = 2;
 
 }

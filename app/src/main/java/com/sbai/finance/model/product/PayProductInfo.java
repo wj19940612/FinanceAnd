@@ -12,4 +12,6 @@ public interface PayProductInfo extends ProductFreeStatusCode {
     double getPrice();
 
     int getProductId();
+
+    String getProductName();
 }

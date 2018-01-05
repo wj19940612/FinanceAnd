@@ -9,9 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.R;
 import com.sbai.finance.activity.BaseActivity;
 import com.sbai.finance.model.fund.UserFundInfo;
+import com.sbai.finance.model.product.PayProductInfo;
 import com.sbai.finance.net.Callback2D;
 import com.sbai.finance.net.Client;
 import com.sbai.finance.net.Resp;
@@ -58,7 +60,7 @@ public class BuyRadioDetailActivity extends BaseActivity {
     TextView mDeduction;
 
     private float mMili;
-    private float money;
+    private double money;
 
     private boolean mEntered;
 
@@ -84,6 +86,10 @@ public class BuyRadioDetailActivity extends BaseActivity {
     }
 
     private void initData() {
+        PayProductInfo payProductInfo = getIntent().getParcelableExtra(ExtraKeys.PAY_PRODUCT);
+        if (payProductInfo != null) {
+            money = payProductInfo.getPrice();
+        }
         money = 200;
     }
 
@@ -93,7 +99,7 @@ public class BuyRadioDetailActivity extends BaseActivity {
         CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                float needPay = calcPayNum();
+                double needPay = calcPayNum();
                 mPayBtn.setText(String.format(getString(R.string.sure_to_pay_num), needPay));
             }
         };
@@ -124,7 +130,7 @@ public class BuyRadioDetailActivity extends BaseActivity {
             case R.id.miliRecharge:
                 if (mCheckboxClick.isChecked() && !mMiliCheckboxClick.isChecked()) {
                     //计算抵扣的数额
-                    float deduction = calcDeductionNum();
+                    double deduction = calcDeductionNum();
                     mDeduction.setText(String.format(getString(R.string.have_deduction_num), deduction));
                     mDeduction.setVisibility(View.VISIBLE);
                     //支付宝按钮有，没点米粒的按钮,如果米粒足够支付，支付宝的要去掉
@@ -142,8 +148,8 @@ public class BuyRadioDetailActivity extends BaseActivity {
         }
     }
 
-    private float calcPayNum() {
-        float needPayNum = 0f;
+    private double calcPayNum() {
+        double needPayNum = 0f;
         if (mCheckboxClick.isChecked() && !mMiliCheckboxClick.isChecked()) {
             needPayNum = money;
         } else if (!mCheckboxClick.isChecked() && mMiliCheckboxClick.isChecked()) {
@@ -154,8 +160,8 @@ public class BuyRadioDetailActivity extends BaseActivity {
         return needPayNum;
     }
 
-    private float calcDeductionNum() {
-        float deductionNum;
+    private double calcDeductionNum() {
+        double deductionNum;
         if (mMili / 100 >= money) {
             deductionNum = money;
         } else {

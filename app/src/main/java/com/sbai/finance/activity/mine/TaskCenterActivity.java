@@ -2,6 +2,8 @@ package com.sbai.finance.activity.mine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -235,11 +237,13 @@ public class TaskCenterActivity extends BaseActivity {
             }
             if (task.getRuleCode().equals(Task.RULE_GUESS)) {
                 //参与猜大盘
-                if (LocalUser.getUser().isLogin()) {
-                    Launcher.with(getActivity(), StockOrderActivity.class).execute();
-                } else {
-                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                }
+                Launcher.with(getActivity(), WebActivity.class)
+                        .putExtra(WebActivity.EX_URL, Client.ACTIVITY_URL_GUESS_HAPPY)
+                        .putExtra(WebActivity.TITLE_BAR_BACKGROUND, ContextCompat.getColor(getActivity(), R.color.guessKlinePrimary))
+                        .putExtra(WebActivity.TITLE_BAR_BACK_ICON, R.drawable.ic_tb_back_white)
+                        .putExtra(WebActivity.TITLE_BAR_HAS_BOTTOM_SPLIT_LINE, false)
+                        .putExtra(WebActivity.TITLE_BAR_CENTER_TITLE_COLOR, ColorStateList.valueOf(Color.WHITE))
+                        .execute();
             }
             if (task.getRuleCode().equals(Task.RULE_ASK)) {
                 //姐说提问

@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 
 import com.sbai.finance.ExtraKeys;
 import com.sbai.finance.activity.MainActivity;
+import com.sbai.finance.activity.miss.radio.BuyRadioDetailActivity;
 import com.sbai.finance.model.product.PayProductInfo;
 
 import java.io.Serializable;
@@ -153,8 +154,7 @@ public class Launcher {
         }
     }
 
-    // TODO: 2018/1/4 先写在里面
     public static void openBuyPage(Context context, PayProductInfo payProductInfo) {
-        Launcher.with(context, MainActivity.class).putExtra(ExtraKeys.PAY_PRODUCT,payProductInfo).execute();
+        Launcher.with(context, BuyRadioDetailActivity.class).putExtra(ExtraKeys.PAY_PRODUCT,payProductInfo).execute();
     }
 }

@@ -122,6 +122,11 @@ public class Radio implements Parcelable, MissAudioManager.IAudio, PayProductInf
         return getId();
     }
 
+    @Override
+    public String getProductName() {
+        return getRadioName();
+    }
+
     public String getRadioName() {
         return radioName;
     }
