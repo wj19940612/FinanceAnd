@@ -13,6 +13,7 @@ import com.sbai.finance.activity.arena.RewardActivity;
 import com.sbai.finance.activity.arena.klinebattle.BattleKlineActivity;
 import com.sbai.finance.activity.battle.BattleListActivity;
 import com.sbai.finance.activity.mine.LoginActivity;
+import com.sbai.finance.activity.mine.TaskCenterActivity;
 import com.sbai.finance.activity.mine.fund.VirtualProductExchangeActivity;
 import com.sbai.finance.activity.mine.setting.SecurityCenterActivity;
 import com.sbai.finance.activity.anchor.MissProfileDetailActivity;
@@ -309,6 +310,9 @@ public class AppJs {
             case JsOpenAppPageType.BATTLE_KLINE:
                 Launcher.with(mContext, BattleKlineActivity.class)
                         .execute();
+                break;
+            case JsOpenAppPageType.TASK_CENTER:
+                Launcher.with(mContext, TaskCenterActivity.class).execute();
                 break;
 
         }

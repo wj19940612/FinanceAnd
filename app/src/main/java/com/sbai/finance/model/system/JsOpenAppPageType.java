@@ -6,7 +6,7 @@ package com.sbai.finance.model.system;
  * <p>
  * //0 日报 1用户相关的信息,3 学一学, 4关注小姐姐用户的推送-后台,5训练 6活动 7模块 8反馈 9关注小姐姐用户的推送-前台自动 10 期货对战普通场 11 期货对战上进场 12 充值 13钱包  14  直接跳转h5页面的
  * 15 向主播提问-指定小姐姐  16 向主播提问-未指定小姐姐 17、话题 18 小姐姐上传的音频通过审核  19 音频详情页  20 安全中心页面  21 股票详情  22 电台详情页 23 姐说主页  24 首页
- * 25 k线对决
+ * 25 k线对决  26 任务中心
  */
 
 public interface JsOpenAppPageType {
@@ -35,4 +35,5 @@ public interface JsOpenAppPageType {
     int MISS_HOME_PAGE = 23;    //姐说主页
     int HOME_PAGE = 24;        //首页
     int BATTLE_KLINE = 25;    //k线对决
+    int TASK_CENTER = 26;     //任务中心
 }
