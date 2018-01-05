@@ -1159,6 +1159,9 @@
     <string name="have_deduction_num">已抵扣%1$.2f元</string>
     <string name="need_pay_radio_key">解锁电台需支付%1$.1f元</string>
     <string name="integration">积分</string>
+    <string name="task_comment">回帖</string>
+    <string name="task_invite">邀请好友注册</string>
+    <string name="task_modify_head">修改头像昵称</string>
     <!--米圈-->
     <string name="recommend">推荐</string>
     <string name="question_and_answer">问答</string>

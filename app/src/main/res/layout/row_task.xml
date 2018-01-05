@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="62dp">
 
         <ImageView
             android:id="@+id/icon"
@@ -62,17 +62,19 @@
                 android:id="@+id/goBtn"
                 android:layout_width="66dp"
                 android:layout_height="24dp"
-                android:gravity="center" />
+                android:gravity="center"
+                android:layout_centerHorizontal="true"/>
 
             <TextView
                 android:id="@+id/progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/goBtn"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="3dp"
+                android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:textSize="15sp"
-                android:textColor="@color/unluckyText" />
+                android:textColor="@color/progressText" />
         </RelativeLayout>
 
     </RelativeLayout>

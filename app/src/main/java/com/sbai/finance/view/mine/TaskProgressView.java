@@ -33,7 +33,7 @@ public class TaskProgressView extends RelativeLayout {
     @BindView(R.id.secondAwardLayout)
     RelativeLayout mSecondAwardLayout;
     @BindView(R.id.secondAwardIcon)
-    ImageView mSecondAward;
+    ImageView mSecondAwardIcon;
     @BindView(R.id.secondAwardFlash)
     ImageView mSecondAwardFlash;
     @BindView(R.id.firstProgress)
@@ -66,8 +66,8 @@ public class TaskProgressView extends RelativeLayout {
         init();
     }
 
-    public interface OnOpenAwardListener{
-        public void  onOpenAward();
+    public interface OnOpenAwardListener {
+        public void onOpenAward(boolean first);
     }
 
     private void init() {
@@ -80,7 +80,7 @@ public class TaskProgressView extends RelativeLayout {
         mProgressViews[4] = mFifthProgress;
     }
 
-    public void setOnOpenAwardListener(OnOpenAwardListener onOpenAwardListener){
+    public void setOnOpenAwardListener(OnOpenAwardListener onOpenAwardListener) {
         mOnOpenAwardListener = onOpenAwardListener;
     }
 
@@ -110,27 +110,63 @@ public class TaskProgressView extends RelativeLayout {
     }
 
     //达到第一个礼物目标，还未领取
-    public void flashFirstIcon(){
-        mFirstAwardIcon.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_task_award));
-        mFirstAwardFlash.setVisibility(View.VISIBLE);
-        mFirstAwardFlash.startAnimation(getFlashAnim());
-        mFirstAwardIcon.setOnClickListener(new OnClickListener() {
+    public void flashIcon(final boolean first) {
+        ImageView icon;
+        ImageView flash;
+        if (first) {
+            icon = mFirstAwardIcon;
+            flash = mFirstAwardFlash;
+        } else {
+            icon = mSecondAwardIcon;
+            flash = mSecondAwardFlash;
+        }
+        icon.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_task_award));
+        flash.setVisibility(View.VISIBLE);
+        flash.startAnimation(getFlashAnim());
+        icon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mOnOpenAwardListener.onOpenAward();
+                openIcon(first);
+                mOnOpenAwardListener.onOpenAward(first);
             }
         });
     }
 
     //打开第一个礼物
-    public void openFirstIcon(){
-        mFirstAwardIcon.setImageDrawable(ContextCompat.getDrawable(mContext,R.drawable.ic_task_award_open));
-        mFirstAwardIcon.setOnClickListener(null);
-        mFirstAwardFlash.clearAnimation();
-        mFirstAwardFlash.setVisibility(View.GONE);
+    public void openIcon(boolean first) {
+        ImageView icon;
+        ImageView flash;
+        if (first) {
+            icon = mFirstAwardIcon;
+            flash = mFirstAwardFlash;
+        } else {
+            icon = mSecondAwardIcon;
+            flash = mSecondAwardFlash;
+        }
+        icon.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_task_award_open));
+        icon.setOnClickListener(null);
+        flash.clearAnimation();
+        flash.setVisibility(View.GONE);
     }
 
-    private Animation getFlashAnim(){
+    //还未到达能拿的礼物
+    public void setNotArriveAwardIcon(boolean first) {
+        ImageView icon;
+        ImageView flash;
+        if (first) {
+            icon = mFirstAwardIcon;
+            flash = mFirstAwardFlash;
+        } else {
+            icon = mSecondAwardIcon;
+            flash = mSecondAwardFlash;
+        }
+        icon.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_task_award_not));
+        icon.setOnClickListener(null);
+        flash.clearAnimation();
+        flash.setVisibility(View.GONE);
+    }
+
+    private Animation getFlashAnim() {
         Animation animation = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         animation.setDuration(2500);
         animation.setRepeatCount(Animation.INFINITE);

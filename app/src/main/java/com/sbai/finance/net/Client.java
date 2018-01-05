@@ -3551,14 +3551,14 @@ public class Client {
      * 获取任务中心的任务列表
      */
     public static API requestTaskData() {
-        return new API(POST, "/api/mall/mission/task");
+        return new API("/api/mall/mission/task");
     }
 
     /**
      * 领取积分(含宝箱)
      */
-    public static API requestReceiveIntegration(int taskType) {
-        return new API(POST, "/api/mall/mission/gain.do", new ApiParams().put("taskType", taskType));
+    public static API requestReceiveIntegration(int taskType, String ruleCode) {
+        return new API(POST, "/api/mall/mission/gain.do", new ApiParams().put("taskType", taskType).put("ruleCode",ruleCode));
     }
 
     /**

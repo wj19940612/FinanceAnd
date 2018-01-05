@@ -14,14 +14,14 @@ public class Task {
     public static final String RULE_INVITE = "invite01"; //邀请新用户注册成功
     public static final String RULE_CERTIFICATION = "certification01"; //实名认证通过审核
     public static final String RULE_EVALUATION = "evaluation01"; //金融测评完成
-    public static final String RULE_HEAD = "Head01"; //完成三个每日任务（宝箱1）
-    public static final String RULE_BOX01 = "box01"; //姐说音频、文章、话题、问题评论
+    public static final String RULE_HEAD = "Head01"; //修改一次头像和昵称
+    public static final String RULE_BOX01 = "box01"; //完成三个每日任务（宝箱1）
     public static final String RULE_BOX02 = "box02"; //完成五个每日任务（宝箱2）
 
 
     private int completeCount;  //需要完成的次数
     private long createTime;
-    private int gain;           //是否已经领取积分
+    private int gain;           //是否已经领取积分 0-未达成 1-已领取 2-未领取
     private int id;
     private int integral;       //可获取积分
     private String jumpContent; //跳转类型

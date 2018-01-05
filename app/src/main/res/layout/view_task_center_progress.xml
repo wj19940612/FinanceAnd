@@ -59,15 +59,13 @@
             android:id="@+id/firstAwardFlash"
             android:layout_width="52dp"
             android:layout_height="52dp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/ic_task_award_flash"/>
+            android:layout_centerInParent="true"/>
 
         <ImageView
             android:id="@+id/firstAwardIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/ic_task_award"/>
+            android:layout_centerInParent="true"/>
 
     </RelativeLayout>
 
@@ -83,15 +81,13 @@
             android:layout_width="52dp"
             android:layout_height="52dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/ic_task_award_flash"
             android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/secondAwardIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/ic_task_award_not"/>
+            android:layout_centerInParent="true"/>
 
 
     </RelativeLayout>
