@@ -34,7 +34,6 @@ import com.sbai.finance.net.Resp;
 import com.sbai.finance.utils.DateUtil;
 import com.sbai.finance.utils.Launcher;
 import com.sbai.finance.utils.StrFormatter;
-import com.sbai.finance.utils.ToastUtil;
 import com.sbai.finance.view.CustomSwipeRefreshLayout;
 import com.sbai.finance.view.HasLabelImageLayout;
 import com.sbai.finance.view.MissRadioViewSwitcher;
@@ -174,38 +173,41 @@ public class RecommendFragment extends BaseFragment {
 
     private void requestPointDetail(final AnchorPoint anchorPoint) {
         if (anchorPoint != null) {
-            Client.requestPointDetail(anchorPoint.getId())
-                    .setTag(TAG)
-                    .setIndeterminate(this)
-                    .setCallback(new Callback2D<Resp<AnchorPoint>, AnchorPoint>() {
-                        @Override
-                        protected void onRespSuccessData(AnchorPoint data) {
-                            if (data.getFree() == AnchorPoint.PRODUCT_RATE_CHARGE
-                                    && data.getUserUse() == AnchorPoint.PRODUCT_RECHARGE_STATUS_NOT_PAY) {
-                                if (LocalUser.getUser().isLogin()) {
-                                    Launcher.openBuyPage(getActivity(), data);
-                                } else {
-                                    Launcher.with(getActivity(), LoginActivity.class).execute();
-                                }
-                            } else {
-                                String url = String.format(Client.PAGE_URL_POINT_DETAIL, data.getId());
-                                Launcher.with(getActivity(), WebActivity.class).putExtra(WebActivity.EX_URL, url).execute();
-                            }
-                        }
+//            Client.requestPointDetail(anchorPoint.getId())
+//                    .setTag(TAG)
+//                    .setCallback(new Callback2D<Resp<AnchorPoint>, AnchorPoint>() {
+//                        @Override
+//                        protected void onRespSuccessData(AnchorPoint data) {
+                            handlePoint(anchorPoint);
+//                        }
+//
+//                        @Override
+//                        protected void onRespFailure(Resp failedResp) {
+//                            super.onRespFailure(failedResp);
+//                            if (failedResp.getCode() == Resp.CODE_POINT_ALREADY_BUY) {
+//                                ToastUtil.show(failedResp.getMsg());
+//                            } else if (failedResp.getCode() == Resp.CODE_POINT_IS_DELETE || failedResp.getCode() == Resp.CODE_POINT_IS_SOLD_OUT) {
+//                                ToastUtil.show(failedResp.getMsg());
+//                                mRecommendPointAdapter.remove(anchorPoint);
+//                            }
+//                        }
+//                    })
+//                    .fire();
 
-                        @Override
-                        protected void onRespFailure(Resp failedResp) {
-                            super.onRespFailure(failedResp);
-                            if (failedResp.getCode() == Resp.CODE_POINT_ALREADY_BUY) {
-                                ToastUtil.show(failedResp.getMsg());
-                            } else if (failedResp.getCode() == Resp.CODE_POINT_IS_DELETE || failedResp.getCode() == Resp.CODE_POINT_IS_SOLD_OUT) {
-                                ToastUtil.show(failedResp.getMsg());
-                                mRecommendPointAdapter.remove(anchorPoint);
-                            }
-                        }
-                    })
-                    .fire();
+        }
+    }
 
+    private void handlePoint(AnchorPoint anchorPoint) {
+        if (anchorPoint.getFree() == AnchorPoint.PRODUCT_RATE_CHARGE
+                && anchorPoint.getUserUse() == AnchorPoint.PRODUCT_RECHARGE_STATUS_NOT_PAY) {
+            if (LocalUser.getUser().isLogin()) {
+                Launcher.openBuyPage(getActivity(), anchorPoint);
+            } else {
+                Launcher.with(getActivity(), LoginActivity.class).execute();
+            }
+        } else {
+            String url = String.format(Client.PAGE_URL_POINT_DETAIL, anchorPoint.getId());
+            Launcher.with(getActivity(), WebActivity.class).putExtra(WebActivity.EX_URL, url).execute();
         }
     }
 

@@ -51,6 +51,7 @@ public class RadioInfo implements Parcelable {
     private double radioPrice;
     private int userPayment;   //1 是否已经付款
 
+
     public int getPaid() {
         return paid;
     }
@@ -291,4 +292,5 @@ public class RadioInfo implements Parcelable {
             return new RadioInfo[size];
         }
     };
+
 }
