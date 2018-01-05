@@ -176,7 +176,7 @@ public class AnchorPointFragment extends BaseFragment {
                         @Override
                         protected void onRespSuccessData(Praise data) {
                             anchorPoint.setPraiseCount(data.getPriseCount());
-                            anchorPoint.setDatapraise(data.getIsPrise());
+                            anchorPoint.setPraise(data.getIsPrise());
                             mAnchorPointAdapter.notifyDataSetChanged();
                         }
                     })
@@ -197,7 +197,11 @@ public class AnchorPointFragment extends BaseFragment {
                         protected void onRespSuccessData(AnchorPoint data) {
                             if (data.getFree() == AnchorPoint.PRODUCT_RATE_CHARGE
                                     && data.getUserUse() == AnchorPoint.PRODUCT_RECHARGE_STATUS_NOT_PAY) {
-                                Launcher.openBuyPage(getActivity(), data);
+                                if (LocalUser.getUser().isLogin()) {
+                                    Launcher.openBuyPage(getActivity(), data);
+                                } else {
+                                    Launcher.with(getActivity(), LoginActivity.class).execute();
+                                }
                             } else {
                                 String url = String.format(Client.PAGE_URL_POINT_DETAIL, data.getId());
                                 Launcher.with(getActivity(), WebActivity.class).putExtra(WebActivity.EX_URL, url).execute();
@@ -399,7 +403,7 @@ public class AnchorPointFragment extends BaseFragment {
                     mNeedPay.setSelected(alreadyPay);
                 }
 
-                if (anchorPoint.getDatapraise() == Praise.IS_PRAISE) {
+                if (anchorPoint.getPraise() == Praise.IS_PRAISE) {
                     mPrise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_praise, 0, 0, 0);
                 } else {
                     mPrise.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_miss_unpraise, 0, 0, 0);

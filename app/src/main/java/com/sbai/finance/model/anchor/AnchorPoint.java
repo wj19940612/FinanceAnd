@@ -41,14 +41,14 @@ public class AnchorPoint implements PayProductInfo, Parcelable {
     private int userUse;    //用户是否已购买  0 没有购买  1 购买
     private String viewDesc; //内容
     private String viewTitle;
-    private int datapraise;  // 0 没点赞  1 已点赞
+    private int praise;  // 0 没点赞  1 已点赞
 
-    public int getDatapraise() {
-        return datapraise;
+    public int getPraise() {
+        return praise;
     }
 
-    public void setDatapraise(int datapraise) {
-        this.datapraise = datapraise;
+    public void setPraise(int praise) {
+        this.praise = praise;
     }
 
     public int getCommentCount() {
@@ -193,7 +193,7 @@ public class AnchorPoint implements PayProductInfo, Parcelable {
         dest.writeInt(this.userUse);
         dest.writeString(this.viewDesc);
         dest.writeString(this.viewTitle);
-        dest.writeInt(this.datapraise);
+        dest.writeInt(this.praise);
     }
 
     protected AnchorPoint(Parcel in) {
@@ -210,7 +210,7 @@ public class AnchorPoint implements PayProductInfo, Parcelable {
         this.userUse = in.readInt();
         this.viewDesc = in.readString();
         this.viewTitle = in.readString();
-        this.datapraise = in.readInt();
+        this.praise = in.readInt();
     }
 
     public static final Creator<AnchorPoint> CREATOR = new Creator<AnchorPoint>() {

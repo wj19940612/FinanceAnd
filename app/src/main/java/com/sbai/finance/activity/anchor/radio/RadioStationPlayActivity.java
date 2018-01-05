@@ -140,7 +140,6 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        refreshReplyData();
         requestAudioDetails(true);
     }
 
@@ -232,6 +231,7 @@ public class RadioStationPlayActivity extends MediaPlayActivity {
         boolean pauseRadioIsNotThisAudio = (audio == null || mRadio.getId() != audio.getAudioId());
         if (mMediaPlayService != null
                 && pauseRadioIsNotThisAudio
+                && !MissAudioManager.get().isPaused(mRadio)
                 && automaticPlay) {
             mMediaPlayService.startPlay(mRadio, MediaPlayService.MEDIA_SOURCE_RECOMMEND_RADIO);
             mRadioPlayLL.setPlayStatus(mRadio);
